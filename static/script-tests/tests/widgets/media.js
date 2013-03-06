@@ -1,0 +1,1 @@
+jstestdriver.console.warn("widgets/media.js untested!");

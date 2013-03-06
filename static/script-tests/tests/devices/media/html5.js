@@ -1,0 +1,1 @@
+jstestdriver.console.warn("devices/media/html5.js untested!");
