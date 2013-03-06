@@ -1,0 +1,10 @@
+<object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px;"></object>
+<script type="text/javascript" language="javascript">
+//<![CDATA[
+	var app = document.getElementById('appmgr').getOwnerApplication(document);
+	app.privateData.keyset.setValue(0x330);
+	app.privateData.keyset.value = 0x330;
+//]]>
+</script>
+
+<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute;"></object>

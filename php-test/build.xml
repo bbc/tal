@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<project name="antie tests" default="test">
+	<property name="app.dir" value="../php" />
+	<property name="tests.dir" value="." />
+	<property name="reports.dir" value="reports" />
+	<includepath classpath="${app.dir}" />
+	<target name="test" depends="dir_setup" >
+		<phpunit haltonerror="true" haltonfailure="true" printsummary="true">
+			<batchtest>
+				<fileset dir="${tests.dir}">
+					<include name="**/*.php" />
+				</fileset>				
+			</batchtest>
+			<formatter type="plain" usefile="false" />
+			<formatter type="xml" usefile="true" todir="${reports.dir}" outfile="test-results.xml" />
+		</phpunit>
+		<phpunitreport format="noframes" todir="${reports.dir}/html" infile="${reports.dir}/test-results.xml" />
+	</target>
+	<target name="coverage" depends="dir_setup" >
+		<coverage-setup database="${reports.dir}/database">
+			<fileset dir="${app.dir}">
+				<include name="*.php" />
+			</fileset>		
+		</coverage-setup>	
+		<phpunit codecoverage="true">
+			<batchtest>
+				<fileset dir="${tests.dir}">
+					<include name="**/*.php" />
+				</fileset>
+			</batchtest>
+		</phpunit>
+		<coverage-report outfile="${reports.dir}/coverage.xml">
+			<report todir="${reports.dir}/coverage" />
+		</coverage-report>
+	</target>
+	<target name="dir_setup">
+		<mkdir dir="${reports.dir}" />
+		<mkdir dir="${reports.dir}/html" />
+		<mkdir dir="${reports.dir}/coverage" />
+	</target>
+</project>
