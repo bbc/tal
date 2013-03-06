@@ -1,0 +1,1 @@
+jstestdriver.console.warn("widgets/scrubbar.js untested!");

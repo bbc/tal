@@ -1,0 +1,1 @@
+jstestdriver.console.warn("devices/media/samsung_maple.js untested!");
