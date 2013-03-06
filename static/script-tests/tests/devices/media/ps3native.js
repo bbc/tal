@@ -1,0 +1,1 @@
+jstestdriver.console.warn("devices/media/ps3native.js untested!");
