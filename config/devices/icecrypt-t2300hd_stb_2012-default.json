@@ -1,0 +1,102 @@
+{
+  "pageStrategy": "html5",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/styletopleft",
+      "antie/devices/media/html5",
+      "antie/devices/net/default",
+      "antie/devices/data/nativejson",
+      "antie/devices/storage/cookie",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/exit/closewindow"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumBitRate": 3600,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "412": "REWIND",
+      "417": "FAST_FWD",
+      "413": "STOP",
+      "415": "PLAY",
+      "460": "SUBTITLE",
+      "463": "PLAY_PAUSE",
+      "40": "DOWN",
+      "19": "PAUSE",
+      "461": "BACK",
+      "13": "ENTER",
+      "457": "INFO",
+      "32": "BACK_SPACE",
+      "39": "RIGHT",
+      "38": "UP",
+      "37": "LEFT"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true
+  }
+}
