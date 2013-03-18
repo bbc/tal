@@ -1,0 +1,14 @@
+.redbox {
+  background-color: rgb(211,37,40);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+  color: white;
+  font-family: 'Sintony', sans-serif;
+}
+
+.lead-white {
+  color: #fff;
+}
+
