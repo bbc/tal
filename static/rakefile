@@ -83,6 +83,10 @@ task :selenium => [ :wait_for_server ] do
 		puts "[INFO] Starting Web Browser Via Chrome Driver"
 		$webdriver_object = Selenium::WebDriver.for :chrome
 		$webdriver_object.navigate.to CAPTURE_URL
+	when "firefox"
+		puts "[INFO] Starting Web Browser Via Firefox Driver"
+		$webdriver_object = Selenium::WebDriver.for :firefox
+		$webdriver_object.navigate.to CAPTURE_URL
 	else 
 		puts "[INFO] Starting Web Browser Via Web Driver ( #{$params[ :webdriverurl ]} )"
 		$webdriver_object = Selenium::WebDriver.for(:remote, :desired_capabilities => :chrome, :url => $params[ :webdriverurl ] )

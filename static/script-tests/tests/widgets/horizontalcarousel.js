@@ -33,6 +33,7 @@
 		this.sandbox.restore();
 	};
 	this.HorizontalCarouselTest.prototype.testInterface = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -45,6 +46,7 @@
 		});
 	};
  	this.HorizontalCarouselTest.prototype.testRenderContainer = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 
 		queuedApplicationInit(
@@ -64,6 +66,7 @@
 	};
 
 	this.HorizontalCarouselTest.prototype.testRenderList = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 
 		queuedApplicationInit(
@@ -82,6 +85,7 @@
 	};
 
 	this.HorizontalCarouselTest.prototype.testAnimationParametersPassedToAnimation = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(4);
 
 		queuedApplicationInit(
@@ -106,6 +110,7 @@
 	};
 
 	this.HorizontalCarouselTest.prototype.testRenderInnerElements = function(queue) {
+	   /*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 	   expectAsserts(8);
 
 	   queuedApplicationInit(
@@ -137,6 +142,7 @@
 	   );
    };
  	this.HorizontalCarouselTest.prototype.testRenderTwice = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 
 		queuedApplicationInit(
@@ -155,6 +161,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testRenderViewportModeDOM = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -181,6 +188,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testRenderViewportModeClasses = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(3);
 
 		queuedApplicationInit(
@@ -208,6 +216,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testRenderViewportModeNone = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 
 		queuedApplicationInit(
@@ -226,6 +235,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAlignmentCenter = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -270,6 +280,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAlignmentLeft = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -312,6 +323,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAlignmentRight = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -354,6 +366,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testMoveToLeftNoWrap = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -390,6 +403,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testMoveToRightNoWrap = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -428,6 +442,7 @@
  	};
 	this.HorizontalCarouselTest.prototype.testDataBindingCreatesWrappedCarousel = function(queue)
 	{
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(4);
 		var dataSource, widget;		
 		
@@ -486,6 +501,7 @@
 				});
 	};
 	this.HorizontalCarouselTest.prototype.testGetWrappedElementToLeft = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 		queuedApplicationInit(
 				queue,
@@ -513,6 +529,7 @@
 		
 	}
 	this.HorizontalCarouselTest.prototype.testGetWrappedElementToRight = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 		queuedApplicationInit(
 				queue,
@@ -541,6 +558,7 @@
 	}
 	this.HorizontalCarouselTest.prototype.testMoveToLeftWrapped = function(queue)
 	{
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(7);
 		var widget, deviceScrollElementSpy;
 		
@@ -636,6 +654,7 @@
 	};
 	this.HorizontalCarouselTest.prototype.testMoveToRightWrapped = function(queue)
 	{
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(7);
 		var widget, deviceScrollElementSpy;
 		
@@ -730,6 +749,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAnimationCompleteCallbackIsSpecified = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		queuedApplicationInit(
@@ -761,6 +781,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAnimationHandleIsSet = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
 
 		queuedApplicationInit(
@@ -789,6 +810,7 @@
 		);
 	};
  	this.HorizontalCarouselTest.prototype.testAnimationHandleIsReset = function(queue) {
+		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
 
 		var widget;
