@@ -79,6 +79,7 @@ task :selenium => [ :wait_for_server ] do
 	case $params[ :webdriverurl ]
 	when false
 		puts "[INFO] No Browser Automation Selected ( see webdriverurl param ) - Browser Must Be Started Manually"
+		puts "[INFO] Navigate Browser To #{CAPTURE_URL}"
 	when "chrome"
 		puts "[INFO] Starting Web Browser Via Chrome Driver"
 		$webdriver_object = Selenium::WebDriver.for :chrome
@@ -231,7 +232,7 @@ def shutDown
 			$webdriver_object.quit
 		rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
         	   Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-        	   puts "[ERROR] Chrome Driver Error When Trying To Close." 
+        	   puts "[ERROR] Web Driver Error When Trying To Close." 
     	end
 	end
 
