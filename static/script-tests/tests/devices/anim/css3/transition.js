@@ -93,10 +93,10 @@
         var trans, obj;
         loadT(
             queue, 
-            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement) {
+            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var self, options, transDef, transEnds;
                 expectAsserts(2);
-                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement, true);
                 
@@ -121,6 +121,8 @@
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var existingTransDef, tEnds, el;
                 expectAsserts(2);
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 applySpy = sinon.spy(TransitionElement.prototype, "applyDefinition");
                 
@@ -186,9 +188,11 @@
         var trans, obj;
         loadT(
             queue, 
-            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement) {
+            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var spy;
                 expectAsserts(1);
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
@@ -205,9 +209,11 @@
         var trans, obj;
         loadT(
             queue, 
-            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement) {
+            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var spy;
                 expectAsserts(1);
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
@@ -224,9 +230,11 @@
         var trans, obj;
         loadT(
             queue, 
-            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement) {
+            function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var spy, fromSpy, toSpy;
                 expectAsserts(1);
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
@@ -248,7 +256,8 @@
                 var spy, forceSpy, fromSpy, toSpy, tDefApplySpy;
                 expectAsserts(1);
                 
-                forceSpy = sinon.spy(TransitionElement.prototype, "forceUpdate");
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                forceSpy = this.sandbox.spy(TransitionElement.prototype, "forceUpdate");
                 
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
@@ -271,7 +280,8 @@
                 var spy, forceSpy, fromSpy, toSpy, tDefApplySpy;
                 expectAsserts(3);
                 
-                forceSpy = sinon.spy(TransitionElement.prototype, "forceUpdate");
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                forceSpy = this.sandbox.spy(TransitionElement.prototype, "forceUpdate");
                 
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
@@ -295,6 +305,9 @@
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var obj, options, endPoints, lastPropCall;
                 expectAsserts(2);
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                
                 lastPropCall = {};
                 options = {
                     to: {
@@ -326,6 +339,7 @@
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, lastPropCall, el;
                 expectAsserts(2);
+                
                 lastPropCall = {};
                 options = {
                     to: {
@@ -364,6 +378,9 @@
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, lastPropCall, el, stopSpy;
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                
                 options = {
                     to: {
                         "someParam": 50
@@ -392,6 +409,9 @@
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, lastPropCall, el, stopSpy, transDef;
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                
                 options = {
                     to: {
                         "someParam": 50
@@ -419,6 +439,9 @@
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, lastPropCall, el, stopSpy, transDef;
+                
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                
                 options = {
                     to: {
                         "someParam": 50
