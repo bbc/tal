@@ -37,7 +37,7 @@
 	this.DefaultNetworkTest.prototype.waitFor = function(callbacks, timeInMillis) {
 		var notify = callbacks.add(function() { });
 		setTimeout(notify, timeInMillis);
-	}
+	};
 	
 	this.DefaultNetworkTest.prototype.testLoadScriptWithTimedOutResponse = function(queue) {
 		expectAsserts(1);
@@ -54,7 +54,7 @@
 						assert("Expected on success not to be called", false);
 					}
 				};
-				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 10, "test");
+				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 100, "test1");
 				this.waitFor(callbacks, 1000);
 			});
 		});
@@ -229,13 +229,14 @@
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Waiting for data to load", function(callbacks) {
 				var opts = {
-					onLoad: callbacks.addErrback(function() {}),
+					onLoad: callbacks.addErrback('Data should not have loaded succesfully'),
 					onError: callbacks.add(function() {assert(true);})
 				};
-				device.loadAuthenticatedURL("invalid:protocol", opts);
+				device.loadAuthenticatedURL("/test/script-tests/fixtures/doesnotexist.json", opts);
 			});
 		});
 	};
+
 
 	this.DefaultNetworkTest.prototype.testLoadURL = function(queue) {
 		expectAsserts(1);
@@ -253,6 +254,7 @@
 			});
 		});
 	};
+	
 	this.DefaultNetworkTest.prototype.testLoadURLError = function(queue) {
 		expectAsserts(1);
 
@@ -263,7 +265,7 @@
 					onLoad: callbacks.addErrback(function() {}),
 					onError: callbacks.add(function() {assert(true);})
 				};
-				device.loadURL("invalid:protocol", opts);
+				device.loadURL("/test/script-tests/fixtures/doesnotexist.json", opts);
 			});
 		});
 	};
@@ -274,13 +276,10 @@
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Wait for cross domain post", function(callbacks) {
-				var onLoad = callbacks.add(function() {
-					assert(true);
-				});
-				var onError = callbacks.addErrback(function() {});
+
 				device.crossDomainPost("http://endpoint.invalid/test", {"goodbye":"salford", "hello":"world"}, {
-					onLoad: onLoad,
-					onError: onError,
+					onLoad: callbacks.add(function() { assert(true); }),
+					onError: callbacks.addErrback('post should complete succesfully'),
 					blankUrl: "/test/script-tests/fixtures/blank.html"
 				});
 
@@ -307,4 +306,5 @@
 		});
 
 	};
-})();
+	
+}());
