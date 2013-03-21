@@ -1,16 +1,9 @@
-require "net/http"
-require "uri"
-require "find"
 require 'rubygems'
+require 'net/http'
 require 'selenium-webdriver'
 require 'json'
-
-def require_rel(path)
-      require File.join(File.dirname(caller[0]), path.to_str)
-end
-
-require_rel( "unit-testing/lcov-file.rb" )
-require_rel( "unit-testing/rake-helper.rb")
+require './unit-testing/lcov-file.rb'
+require './unit-testing/rake-helper.rb'
 
 $params = {
 	:jtd_runnerMode => OptionArg( "runnerMode", "QUIET" ),
@@ -41,7 +34,7 @@ CAPTURE_URL         = "#{$params[ :server ]}/capture"
 
 #paths to required files
 CONFIG_PATH        = "js-test-driver-rt.conf"
-PRELUDE_PATH       = "prelude-jstest.js"
+PRELUDE_PATH       = "script-tests/prelude.js"
 JTD_JAR_PATH       = "unit-testing/JsTestDriver-1.3.3d.jar"
 COVERAGE_FILE_NAME = "jsTestDriver.conf-coverage.dat"
 
@@ -255,7 +248,7 @@ server: http://localhost:9876
 
 load:
 #library files
-  - prelude-jstest.js
+  - script-tests/prelude.js
   - script-tests/lib/require.js
   - script-tests/lib/queuedrequire.js
   - script-tests/lib/mockapplication.js
@@ -318,4 +311,3 @@ plugin:
     jar: "unit-testing/plugins/coverage-1.3.5.jar"
     module: "com.google.jstestdriver.coverage.CoverageModule"
 eos
-
