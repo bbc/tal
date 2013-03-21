@@ -1,0 +1,112 @@
+{
+  "pageStrategy": "playstation3",
+  "modules": {
+    "base": "antie/devices/ps3",
+    "modifiers": [
+      "antie/devices/media/ps3native",
+      "antie/devices/anim/styletopleft",
+      "antie/devices/data/json2",
+      "antie/devices/net/default",
+      "antie/devices/storage/cookie",
+      "antie/devices/net/xhrthiswindow",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/exit/history"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "plain"
+          ],
+          "maximumBitRate": 3600,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "suppliers": [
+            "sis_http"
+          ],
+          "encodings": [
+            "aac"
+          ]
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "8": "BACK",
+      "32": "ENTER",
+      "37": "LEFT",
+      "38": "UP",
+      "39": "RIGHT",
+      "40": "DOWN",
+      "113": "BACK_SPACE",
+      "126": "FAST_FWD",
+      "127": "REWIND",
+      "128": "PLAY",
+      "129": "STOP",
+      "130": "PAUSE",
+      "131": "EXIT",
+      "alpha": [
+        65,
+        90
+      ],
+      "numeric": [
+        48,
+        57
+      ]
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 720,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p",
+        "ps3"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p",
+        "ps3"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": false
+  }
+}

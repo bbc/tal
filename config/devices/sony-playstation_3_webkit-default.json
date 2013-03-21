@@ -1,0 +1,117 @@
+{
+  "_comment": "mediasets property introduced to fix BBC Sport (Olympics) for launch in non-HD mode",
+  "pageStrategy": "playstation3",
+  "modules": {
+    "base": "antie/devices/ps3base",
+    "modifiers": [
+      "antie/devices/media/html5",
+      "antie/devices/anim/styletopleft",
+      "antie/devices/data/nativejson",
+      "antie/devices/net/default",
+      "antie/devices/storage/cookie",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/exit/history"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "mediasets": {
+    "tv": "stb-all-h264",
+    "radio": "stb-aac"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumBitRate": 3600,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "suppliers": [
+            "sis_http"
+          ],
+          "encodings": [
+            "aac"
+          ]
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "8": "BACK",
+      "13": "ENTER",
+      "43": "ENTER",
+      "37": "LEFT",
+      "38": "UP",
+      "39": "RIGHT",
+      "40": "DOWN",
+      "113": "BACK_SPACE",
+      "126": "FAST_FWD",
+      "127": "REWIND",
+      "128": "PLAY",
+      "129": "STOP",
+      "130": "PAUSE",
+      "47": "SUBTITLE",
+      "131": "EXIT",
+      "alpha": [
+        65,
+        90
+      ],
+      "numeric": [
+        96,
+        105
+      ]
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 720,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true
+  }
+}
