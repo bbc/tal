@@ -1,0 +1,39 @@
+@startuml
+Application->ComponentContainer:showComponent(module A)
+ComponentContainer->RequireJS: require(module A)
+ComponentContainer-->Application:
+RequireJS-->ComponentContainer: Component A
+ComponentContainer->"Component A": init()
+"Component A"-->ComponentContainer:
+note over "Component A": fire event "load"
+note over "Component A": fire event "beforerender"
+ComponentContainer->"Component A": render(...)
+note over "Component A": fire event "beforeshow"
+note over "Component A": Component Shown
+note over "Component A": fire event "aftershow"
+Application->ComponentContainer:showComponent(module B)
+ComponentContainer->RequireJS: require(module B)
+ComponentContainer-->Application:
+RequireJS-->ComponentContainer: Component B
+ComponentContainer->"Component B": init()
+"Component B"-->ComponentContainer:
+note over "Component B": fire event "load"
+note over "Component B": fire event "beforerender"
+ComponentContainer->"Component B": render(...)
+note over "Component A": fire event "beforehide"
+note over "Component A": Component Hidden
+note over "Component A": fire event "afterhide"
+note over "Component B": fire event "beforeshow"
+note over "Component B": Component Shown
+note over "Component B": fire event "aftershow"
+Application->ComponentContainer:showComponent(module A)
+ComponentContainer-->Application:
+note over "Component A": fire event "beforerender"
+ComponentContainer->"Component A": render(...)
+note over "Component B": fire event "beforehide"
+note over "Component B": Component Hidden
+note over "Component B": fire event "afterhide"
+note over "Component A": fire event "beforeshow"
+note over "Component A": Component Shown
+note over "Component A": fire event "aftershow"
+@enduml

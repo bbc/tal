@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='launching_the_application'>Launching the application</h1>
+
+<p>Before continuing, it would be worthwhile to familiarise yourself with some <a href='/tal/overview/concepts.html'>concepts</a> used in the framework, including the <a href='/tal/overview/components.html'>Component system</a>.</p>
+
+<h2 id='antieapplication'>antie/application</h2>
+
+<p>Every antie application launches from a javascript require module. This module must be an extension of antie/application.</p>
+
+<p>To launch the application, the module must be loaded by require, and the returned function be used as a constructor, passing the following parameters.</p>
+
+<ol>
+<li>An element in which to house the app</li>
+
+<li>A path to the application&#8217;s css directory</li>
+
+<li>A path to the application&#8217;s image directory</li>
+
+<li>A callback function that will be executed after the module&#8217;s ready() function is called</li>
+</ol>
+
+<h2 id='loading_and_instantiating'>Loading and instantiating</h2>
+
+<p>In the example index, the code below was added to load and instatiate the application:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>require</span><span class='p'>(</span> 
+    <span class='p'>[</span>
+        <span class='s1'>&#39;sampleapp/appui/sampleapp&#39;</span>
+    <span class='p'>],</span>
+    <span class='kd'>function</span><span class='p'>(</span><span class='nx'>SampleApp</span><span class='p'>)</span> <span class='p'>{</span>
+    
+        <span class='nx'>require</span><span class='p'>.</span><span class='nx'>ready</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+        
+            <span class='kd'>function</span> <span class='nx'>onReady</span><span class='p'>()</span> <span class='p'>{</span>
+                <span class='kd'>var</span> <span class='nx'>staticLoadingScreen</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementById</span><span class='p'>(</span><span class='s1'>&#39;static-loading-screen&#39;</span><span class='p'>);</span> 
+                <span class='nx'>staticLoadingScreen</span><span class='p'>.</span><span class='nx'>parentNode</span><span class='p'>.</span><span class='nx'>removeChild</span><span class='p'>(</span><span class='nx'>staticLoadingScreen</span><span class='p'>);</span> 
+            <span class='p'>};</span>
+                                
+            <span class='k'>new</span> <span class='nx'>SampleApp</span><span class='p'>(</span>
+                <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementById</span><span class='p'>(</span><span class='s1'>&#39;app&#39;</span><span class='p'>),</span> 
+                <span class='s1'>&#39;static/style/&#39;</span><span class='p'>,</span> 
+                <span class='s1'>&#39;static/img/&#39;</span><span class='p'>,</span>
+                <span class='nx'>onReady</span>
+            <span class='p'>);</span> 
+        <span class='p'>});</span>
+    <span class='p'>}</span>
+<span class='p'>);</span> 
+</code></pre></div>
+<p>The call to require does the following</p>
+
+<ol>
+<li>Loads &#8216;static/script/appui/sampleapp.js&#8217;, the returned function is passed as SampleApp</li>
+
+<li>Waits for the DOM to finish loading (<code>require.ready()</code>)</li>
+
+<li>Invokes SampleApp as a constructor function, passing the required parameters. This launches the application.</li>
+</ol>
+
+<p>In this case the callback (<code>onReady()</code>) is simply used to remove the loading screen.</p>
+
+<h2 id='sampleappjs'>sampleapp.js</h2>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>require</span><span class='p'>.</span><span class='nx'>def</span><span class='p'>(</span><span class='s1'>&#39;sampleapp/appui/sampleapp&#39;</span><span class='p'>,</span>
+    <span class='p'>[</span>
+        <span class='s1'>&#39;antie/application&#39;</span><span class='p'>,</span>
+        <span class='s1'>&#39;antie/widgets/container&#39;</span>
+    <span class='p'>],</span>
+    <span class='kd'>function</span><span class='p'>(</span><span class='nx'>Application</span><span class='p'>,</span> <span class='nx'>Container</span><span class='p'>)</span> <span class='p'>{</span>
+    
+        <span class='k'>return</span> <span class='nx'>Application</span><span class='p'>.</span><span class='nx'>extend</span><span class='p'>({</span>
+            <span class='nx'>init</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>appDiv</span><span class='p'>,</span> <span class='nx'>styleDir</span><span class='p'>,</span> <span class='nx'>imgDir</span><span class='p'>,</span> <span class='nx'>callback</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='kd'>var</span> <span class='nx'>self</span><span class='p'>;</span>
+                <span class='nx'>self</span> <span class='o'>=</span> <span class='k'>this</span><span class='p'>;</span>
+                
+                <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_super</span><span class='p'>(</span><span class='nx'>appDiv</span><span class='p'>,</span> <span class='nx'>styleDir</span><span class='p'>,</span> <span class='nx'>imgDir</span><span class='p'>,</span> <span class='nx'>callback</span><span class='p'>);</span>
+                
+                <span class='c1'>// Sets the root widget of the application to be</span>
+                <span class='c1'>// an empty container</span>
+                <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_setRootContainer</span> <span class='o'>=</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+                    <span class='kd'>var</span> <span class='nx'>container</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Container</span><span class='p'>();</span>
+                    <span class='nx'>container</span><span class='p'>.</span><span class='nx'>outputElement</span> <span class='o'>=</span> <span class='nx'>appDiv</span><span class='p'>;</span>
+                    <span class='nx'>self</span><span class='p'>.</span><span class='nx'>setRootWidget</span><span class='p'>(</span><span class='nx'>container</span><span class='p'>);</span>
+                <span class='p'>};</span>
+            <span class='p'>},</span>
+            
+            <span class='nx'>run</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+                <span class='c1'>// Called from run() as we need the framework to be ready beforehand.</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_setRootContainer</span><span class='p'>();</span>
+                <span class='c1'>// Create maincontainer and add simple component to it</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addComponentContainer</span><span class='p'>(</span><span class='s2'>&quot;maincontainer&quot;</span><span class='p'>,</span> <span class='s2'>&quot;sampleapp/appui/components/simple&quot;</span><span class='p'>);</span>
+            <span class='p'>}</span>
+        <span class='p'>});</span>     
+    <span class='p'>}</span>
+<span class='p'>);</span>
+</code></pre></div>
+<h2 id='responsibilities'> Responsibilities</h2>
+
+<p>Any module extending Application should</p>
+
+<ul>
+<li>Pass some values through to the constructor of its superclass (anite/Application) to initialise the framework</li>
+
+<li>Set the root widget of the application</li>
+</ul>
+
+<p>In addition it may</p>
+
+<ul>
+<li>Add one or more component containers to the application for housing UI elements.</li>
+
+<li>Add the initial component(s) of the application into the containers.</li>
+</ul>
+
+<p>Once the UI is ready to accept user input, you should call this module&#8217;s <code>ready()</code> method, inherited from Application.</p>
+
+<p>In this example we set the root widget, define a single component container and push a simple component into it. The newly created component will take the responsibility for calling the <code>ready()</code> method when it has been rendered.</p>
+
+<h2 id='running_the_application'>Running the application</h2>
+
+<p>The <code>run()</code> function is called once by the framework, after the framework has finished initialising.</p>
+
+<p>The <code>_setRootContainer()</code> method defined in the constructor is called from <code>run()</code> to set the root widget of the application.</p>
+
+<p><code>_setRootContainer()</code> creates an instance of antie/widget/container, sets it to output to the application div passed into the constructor, then sets the container as the root of the application.</p>
+
+<p>The <code>addComponentContainer()</code> method:</p>
+
+<ol>
+<li>Creates a component container within the application div</li>
+
+<li>Adds a component to it</li>
+</ol>
+
+<p>The first argument will be set as the id of the container, the second is the require definition name of the component.</p>
+
+<p>Next <a href='firstcomponent.html'>A first component</a></p>
+
+<p>Previous <a href='createanindex.html'>Creating an index</a></p>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+

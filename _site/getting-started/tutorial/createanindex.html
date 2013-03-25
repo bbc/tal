@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='creating_an_index'>Creating an index</h1>
+<p class='lead'>Creating an entry point for your TAL Application.</p>
+<p>The framework is primarily JavaScript. However, there are device specific choices that need to be made at the page construction stage, before any JavaScript is executed.</p>
+
+<p>The example below demonstrates one way to create an index page based upon these choices. It is the initial point a device will reach when a user launches your application.</p>
+
+<p>It is important to understand there are some things the framework does not do that are necessary for a functioning application:</p>
+
+<ul>
+<li>Device detection - Determining what sort of device has just reached your application. This is outside the scope of the project.</li>
+
+<li>Page construction - We provide methods to work out how to build an index, but don&#8217;t actually build it for you. This is to allow for flexibility.</li>
+</ul>
+
+<h3 id='what_must_the_index_do'>What must the index do?</h3>
+
+<p>The index should be placed in the root of your application and acts as an entry point. It needs to be delivered as a page formatted appropriately for the device, and should accomplish the following:</p>
+
+<ul>
+<li>Load a configuration file for the type of device using the application</li>
+
+<li>Define an &#8216;Application ID&#8217; string and substitute this into the configuration wherever the token <code>%application%</code> appears</li>
+
+<li>Provide the substituted configuration as a nested object within a javascript global variable &#8216;antie&#8217;</li>
+
+<li>Load any device specific api code / plugin objects</li>
+
+<li>Configure require.js to alias the application id to the application&#8217;s javascript directory, and alias <code>antie</code> to antie&#8217;s static directory</li>
+
+<li>Load require.js</li>
+
+<li>Load the application&#8217;s initial CSS</li>
+
+<li>Load and launch the application</li>
+</ul>
+
+<p>Optionally, it can create and remove a loading screen while it waits for the application to initialise.</p>
+
+<h3 id='how_can_the_index_vary'>How can the index vary?</h3>
+
+<p>The following may vary between families of device.</p>
+
+<ul>
+<li>Document Mime Type</li>
+
+<li>The DocType tag (e.g. <code>&lt;!DOCTYPE html&gt;</code> )</li>
+
+<li>The root html tag (e.g. <code>&lt;html&gt;</code> )</li>
+
+<li>Additional requirements in the html head block (to load device specific javaScript APIs via <code>&lt;script&gt;</code> tags for example)</li>
+
+<li>Additional requirements in the html body block (to load device specific video plugins for example)</li>
+</ul>
+
+<p>&#8216;Page Strategies&#8217; encapsulate these variations. By default they are located in antie/config/pagestrategy.</p>
+
+<p>A class <code>AntieFramework</code> is provided in <code>php/antieframework.php</code>. It contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.</p>
+
+<p>If you do not wish to use php in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology.</p>
+
+<h2 id='an_example_index'>An example index</h2>
+
+<p>Below is an example of how to use <code>AntieFramework</code> to build a simple index. The supplied code has been written for clarity, not elegance, but should be simple to adapt.</p>
+
+<p>The example uses some methods of AntieFramework. They all take a decoded device configuration file as a parameter.</p>
+<table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>getMimeType($config)</code></td><td style='text-align: left;'>Some devices need pages to be delivered with a specific mime type. <code>getMimeType()</code> returns an appropriate type for the device</td>
+</tr><tr><td style='text-align: left;'><code>getDocType($config)</code></td><td style='text-align: left;'>Returns a device appropriate doctype tag, such as <code>&lt;!DOCTYPE html&gt;</code></td>
+</tr><tr><td style='text-align: left;'><code>getRootHtmlTag($config)</code></td><td style='text-align: left;'>Returns a device appropriate opening page tag, such as <code>&lt;html&gt;</code></td>
+</tr><tr><td style='text-align: left;'><code>getDeviceHeaders($config)</code></td><td style='text-align: left;'>Returns any device specific content to go in the <code>&lt;head&gt;</code> block, such as device api <code>&lt;script&gt;</code> tags</td>
+</tr><tr><td style='text-align: left;'><code>getDeviceBody($config)</code></td><td style='text-align: left;'>Returns any device specific content to go in the <code>&lt;body&gt;</code> block, such as device plugin objects</td>
+</tr></tbody></table>
+<p>As noted, device detection is out of ANTIE&#8217;s scope, so we pass in the name of the device configuration as a url parameter.</p>
+
+<p><code>index.php</code></p>
+<div class='highlight'><pre><code class='html+php'><span class='cp'>&lt;?php</span>
+
+<span class='c1'>// INIT AND CONFIG LOAD</span>
+
+<span class='c1'>// Check TAL is available</span>
+<span class='k'>if</span> <span class='p'>(</span><span class='o'>!</span><span class='nb'>file_exists</span><span class='p'>(</span><span class='s1'>&#39;antie/php/antieframework.php&#39;</span><span class='p'>))</span> <span class='p'>{</span>
+    <span class='k'>echo</span> <span class='s2'>&quot;&lt;h2&gt;Framework error&lt;/h2&gt;&quot;</span><span class='p'>;</span>
+    <span class='k'>echo</span> <span class='s2'>&quot;&lt;h4&gt;antieframework.php can not be found.&lt;/h4&gt;&quot;</span><span class='p'>;</span>
+    <span class='k'>echo</span> <span class='s2'>&quot;&lt;h4&gt;Please install TAL to a folder &#39;antie&#39; in your application&#39;s root&lt;/h4&gt;&quot;</span><span class='p'>;</span>
+    <span class='k'>exit</span><span class='p'>;</span>
+<span class='p'>}</span>
+
+<span class='k'>require</span><span class='p'>(</span><span class='s1'>&#39;antie/php/antieframework.php&#39;</span><span class='p'>);</span>
+
+<span class='c1'>// Set up application ID and path to framework configuration directory</span>
+<span class='nv'>$application_id</span> <span class='o'>=</span> <span class='s2'>&quot;sampleapp&quot;</span><span class='p'>;</span>
+<span class='nv'>$antie_config_path</span> <span class='o'>=</span> <span class='s1'>&#39;antie/config&#39;</span><span class='p'>;</span>
+
+<span class='c1'>// Create an AntieFramework instance</span>
+<span class='nv'>$antie</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>AntieFramework</span><span class='p'>(</span><span class='nv'>$antie_config_path</span><span class='p'>);</span>
+
+<span class='c1'>// Get brand and model from url parameters, or use </span>
+<span class='c1'>// brand = default, model = webkit</span>
+<span class='nv'>$device_brand</span> <span class='o'>=</span> <span class='nb'>isset</span><span class='p'>(</span><span class='nv'>$_GET</span><span class='p'>[</span><span class='s1'>&#39;brand&#39;</span><span class='p'>])</span><span class='o'>?</span> <span class='nv'>$_GET</span><span class='p'>[</span><span class='s1'>&#39;brand&#39;</span><span class='p'>]</span> <span class='o'>:</span> <span class='s1'>&#39;default&#39;</span><span class='p'>;</span>
+<span class='nv'>$device_model</span> <span class='o'>=</span> <span class='nb'>isset</span><span class='p'>(</span><span class='nv'>$_GET</span><span class='p'>[</span><span class='s1'>&#39;model&#39;</span><span class='p'>])</span><span class='o'>?</span> <span class='nv'>$_GET</span><span class='p'>[</span><span class='s1'>&#39;model&#39;</span><span class='p'>]</span> <span class='o'>:</span> <span class='s1'>&#39;webkit&#39;</span><span class='p'>;</span>
+
+<span class='c1'>// Normalises to lower case with spaces replaced by underscores</span>
+<span class='nv'>$device_brand</span> <span class='o'>=</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>normaliseKeyNames</span><span class='p'>(</span><span class='nv'>$device_brand</span><span class='p'>);</span>
+<span class='nv'>$device_model</span> <span class='o'>=</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>normaliseKeyNames</span><span class='p'>(</span><span class='nv'>$device_model</span><span class='p'>);</span>
+
+<span class='c1'>// Framework device config files in format BRAND-MODEL-default.json </span>
+<span class='c1'>// Construct filename from this and config path</span>
+<span class='nv'>$device_configuration_name</span> <span class='o'>=</span> <span class='nv'>$device_brand</span> <span class='o'>.</span> <span class='s2'>&quot;-&quot;</span> <span class='o'>.</span> <span class='nv'>$device_model</span><span class='p'>;</span>
+<span class='nv'>$device_configuration_file_path</span> <span class='o'>=</span> <span class='nv'>$antie_config_path</span> <span class='o'>.</span> <span class='s2'>&quot;/devices/&quot;</span> <span class='o'>.</span> <span class='nv'>$device_configuration_name</span> <span class='o'>.</span> <span class='s2'>&quot;-default.json&quot;</span><span class='p'>;</span>
+
+<span class='c1'>// Load in device configuration</span>
+<span class='k'>try</span> <span class='p'>{</span>
+    <span class='nv'>$device_configuration</span> <span class='o'>=</span> <span class='o'>@</span><span class='nb'>file_get_contents</span><span class='p'>(</span><span class='nv'>$device_configuration_file_path</span><span class='p'>);</span>
+    <span class='k'>if</span><span class='p'>(</span><span class='o'>!</span><span class='nv'>$device_configuration</span><span class='p'>)</span>
+        <span class='k'>throw</span> <span class='k'>new</span> <span class='nx'>Exception</span><span class='p'>(</span><span class='s2'>&quot;Device (</span><span class='si'>$device_configuration_name</span><span class='s2'>) not supported&quot;</span><span class='p'>);</span>
+<span class='p'>}</span> <span class='k'>catch</span><span class='p'>(</span><span class='nx'>Exception</span> <span class='nv'>$e</span><span class='p'>){</span>
+    <span class='k'>echo</span> <span class='nv'>$e</span><span class='o'>-&gt;</span><span class='na'>getMessage</span><span class='p'>();</span> <span class='k'>exit</span><span class='p'>;</span>
+<span class='p'>}</span>
+
+<span class='c1'>// Substitute appid wherever /%applicaion%/ is present in device configuration</span>
+<span class='nv'>$device_configuration</span> <span class='o'>=</span> <span class='nb'>preg_replace</span><span class='p'>(</span><span class='s1'>&#39;/%application%/m&#39;</span><span class='p'>,</span> <span class='nv'>$application_id</span><span class='p'>,</span> <span class='nv'>$device_configuration</span><span class='p'>);</span>
+
+<span class='c1'>// Decode to php object</span>
+<span class='nv'>$device_configuration_decoded</span> <span class='o'>=</span> <span class='nb'>json_decode</span><span class='p'>(</span><span class='nv'>$device_configuration</span><span class='p'>);</span>
+
+
+
+<span class='c1'>// PAGE GENERATION</span>
+
+<span class='c1'>// Set document mime type</span>
+<span class='nx'>header</span><span class='p'>(</span><span class='s2'>&quot;Content-Type: &quot;</span> <span class='o'>.</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>getMimeType</span><span class='p'>(</span><span class='nv'>$device_configuration_decoded</span><span class='p'>));</span>
+
+<span class='c1'>// Set doctype and opening html tag</span>
+<span class='k'>echo</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>getDocType</span><span class='p'>(</span><span class='nv'>$device_configuration_decoded</span><span class='p'>);</span>
+<span class='k'>echo</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>getRootHtmlTag</span><span class='p'>(</span><span class='nv'>$device_configuration_decoded</span><span class='p'>);</span>
+<span class='cp'>?&gt;</span>
+
+
+
+<span class='c'>&lt;!-- HEAD --&gt;</span>
+
+<span class='nt'>&lt;head&gt;</span>
+    <span class='c'>&lt;!-- Device specific head block (API loading etc) --&gt;</span>
+<span class='cp'>&lt;?php</span>
+    <span class='k'>echo</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>getDeviceHeaders</span><span class='p'>(</span><span class='nv'>$device_configuration_decoded</span><span class='p'>);</span>
+    <span class='cp'>?&gt;</span>
+
+    <span class='c'>&lt;!-- Set up require aliases --&gt;</span>
+    <span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span><span class='nt'>&gt;</span>
+        <span class='kd'>var</span> <span class='nx'>require</span> <span class='o'>=</span> <span class='p'>{</span>
+            <span class='nx'>baseUrl</span><span class='o'>:</span> <span class='s2'>&quot;&quot;</span><span class='p'>,</span>
+            <span class='nx'>paths</span><span class='o'>:</span> <span class='p'>{</span>
+                <span class='cp'>&lt;?php</span> <span class='k'>echo</span> <span class='nv'>$application_id</span><span class='p'>;</span> <span class='cp'>?&gt;</span><span class='o'>:</span> <span class='s1'>&#39;static/script&#39;</span><span class='p'>,</span>
+                <span class='nx'>antie</span> <span class='o'>:</span> <span class='s2'>&quot;antie/static/script&quot;</span>
+            <span class='p'>},</span>
+            <span class='nx'>priority</span><span class='o'>:</span> <span class='p'>[],</span>
+            <span class='nx'>callback</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{}</span>
+        <span class='p'>};</span>
+    <span class='nt'>&lt;/script&gt;</span>
+
+    <span class='c'>&lt;!-- Load require.js --&gt;</span>
+    <span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span> <span class='na'>src=</span><span class='s'>&quot;antie/static/script/lib/require.js&quot;</span><span class='nt'>&gt;&lt;/script&gt;</span>
+
+    <span class='c'>&lt;!-- Load application base style sheet --&gt;</span>
+    <span class='nt'>&lt;link</span> <span class='na'>rel=</span><span class='s'>&quot;stylesheet&quot;</span> <span class='na'>href=</span><span class='s'>&quot;static/style/base.css&quot;</span><span class='nt'>/&gt;</span>
+
+    <span class='c'>&lt;!-- Expose device config to framework --&gt;</span>
+    <span class='nt'>&lt;script&gt;</span>
+        <span class='kd'>var</span> <span class='nx'>antie</span> <span class='o'>=</span> <span class='p'>{</span>
+            <span class='nx'>framework</span><span class='o'>:</span> <span class='p'>{</span>
+                <span class='nx'>deviceConfiguration</span><span class='o'>:</span> <span class='cp'>&lt;?php</span> <span class='k'>echo</span> <span class='nv'>$device_configuration</span> <span class='cp'>?&gt;</span>
+            <span class='p'>}</span>
+        <span class='p'>}</span>
+    <span class='nt'>&lt;/script&gt;</span>
+
+<span class='nt'>&lt;/head&gt;</span>
+
+
+
+<span class='c'>&lt;!-- BODY --&gt;</span>
+
+<span class='nt'>&lt;body</span> <span class='na'>style=</span><span class='s'>&quot;background: #000;&quot;</span><span class='nt'>&gt;</span>
+
+<span class='c'>&lt;!-- Add in device specific body (Plugins etc) --&gt;</span>
+<span class='cp'>&lt;?php</span> <span class='k'>echo</span> <span class='nv'>$antie</span><span class='o'>-&gt;</span><span class='na'>getDeviceBody</span><span class='p'>(</span><span class='nv'>$device_configuration_decoded</span><span class='p'>);</span> <span class='cp'>?&gt;</span>
+
+<span class='c'>&lt;!-- Create a loading message --&gt;</span>
+<span class='nt'>&lt;div</span> <span class='na'>id=</span><span class='s'>&quot;static-loading-screen&quot;</span> <span class='na'>style=</span><span class='s'>&quot;position: absolute; width: 100%; height: 100%; background: #000;&quot;</span><span class='nt'>&gt;</span>
+    Application is loading...
+<span class='nt'>&lt;/div&gt;</span>
+
+<span class='c'>&lt;!-- Create a div to house the app --&gt;</span>
+<span class='nt'>&lt;div</span> <span class='na'>id=</span><span class='s'>&quot;app&quot;</span> <span class='na'>class=</span><span class='s'>&quot;display-none&quot;</span><span class='nt'>&gt;&lt;/div&gt;</span>
+
+<span class='c'>&lt;!-- Load the application and launch, remove loading screen via callback --&gt;</span>
+<span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&#39;text/javascript&#39;</span><span class='nt'>&gt;</span>
+    <span class='nx'>require</span><span class='p'>(</span>
+            <span class='p'>[</span>
+                <span class='s1'>&#39;sampleapp/appui/sampleapp&#39;</span>
+            <span class='p'>],</span>
+            <span class='kd'>function</span><span class='p'>(</span><span class='nx'>SampleApp</span><span class='p'>)</span> <span class='p'>{</span>
+
+                <span class='nx'>require</span><span class='p'>.</span><span class='nx'>ready</span><span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+                    <span class='kd'>function</span> <span class='nx'>onReady</span><span class='p'>()</span> <span class='p'>{</span>
+                        <span class='kd'>var</span> <span class='nx'>staticLoadingScreen</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementById</span><span class='p'>(</span><span class='s1'>&#39;static-loading-screen&#39;</span><span class='p'>);</span>
+                        <span class='nx'>staticLoadingScreen</span><span class='p'>.</span><span class='nx'>parentNode</span><span class='p'>.</span><span class='nx'>removeChild</span><span class='p'>(</span><span class='nx'>staticLoadingScreen</span><span class='p'>);</span>
+                    <span class='p'>};</span>
+
+                    <span class='k'>new</span> <span class='nx'>SampleApp</span><span class='p'>(</span>
+                            <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementById</span><span class='p'>(</span><span class='s1'>&#39;app&#39;</span><span class='p'>),</span>
+                            <span class='s1'>&#39;static/style/&#39;</span><span class='p'>,</span>
+                            <span class='s1'>&#39;static/img/&#39;</span><span class='p'>,</span>
+                            <span class='nx'>onReady</span>
+                    <span class='p'>);</span>
+                <span class='p'>});</span>
+            <span class='p'>}</span>
+    <span class='p'>);</span>
+<span class='nt'>&lt;/script&gt;</span>
+
+<span class='nt'>&lt;/body&gt;</span>
+<span class='nt'>&lt;/html&gt;</span>
+</code></pre></div><ul class='pager'>
+  <li><a href='installation.html'>Previous</a></li>
+  <li><a href='applicationclass.html'>Next</a></li>
+</ul>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+      .sidebar-fixed {
+        position: fixed;
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body data-spy="scroll" data-target="#sidenav">
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container-fluid">
+            
+      <div class="row-fluid">
+      
+      <div class="span2">
+        
+        <div class="span2 sidebar-fixed">
+          
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+          <p></p>
+
+        
+          <div class="sidenav nav-tabs" id="sidenav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Widgets</li>
+              <li class="active"><a href="#widget">Widget</a></li>
+              <li><a href="#container">Container</a></li>
+              <li><a href="#component">Component</a></li>
+              <li><a href="#componentcontainer">ComponentContainer</a></li>
+              <li><a href="#label">Label</a></li>
+              <li><a href="#image">Image</a></li>
+              <li><a href="#list">List</a></li>
+              <li><a href="#listitem">ListItem</a></li>
+              <li><a href="#horizontallist">HorizontalList</a></li>
+              <li><a href="#verticallist">VerticalList</a></li>
+              <li><a href="#grid">Grid</a></li>
+              <li><a href="#horizontalcarousel">Carousel</a></li>
+              <li><a href="#media">Media</a></li>
+              <li><a href="#horizontalprogress">Progress</a></li>
+              <li><a href="#horizontalslider">Slider</a></li>
+              <li><a href="#scrubbar">ScrubBar</a></li>
+              <li><a href="#keyboard">KeyBoard</a></li>
+              <li><a href="#textpager">TextPager</a></li>
+            </ul>
+          </div>
+        
+        </div>
+        
+      </div>
+      
+      <div class="span9" style="margin-left: 40px">
+      
+        <h1 id='working_with_widgets'>Working With Widgets</h1>
+<p class='lead'>The TV Application Layer provides a number of ready-made widgets to help you build your application interface.
+You can use these widgets out-of-the-box, or extend them for re-use in your applications.</p>
+<p>This page lists all the framework widgets, but there are some other important topics relating to widgets:</p>
+
+<ul>
+<li><a href='media-playback.html'>Media Playback</a></li>
+
+<li><a href='focus-management.html'>Focus Management</a></li>
+
+<li><a href='data-binding.html'>Data Binding</a></li>
+</ul>
+
+<h2 id='widget'>Widget</h2>
+
+<p>This is the base widget, all other widgets are subclasses of this.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Widget.html'>widget.js</a>.</p>
+
+<h2 id='container'>Container</h2>
+
+<p>The super class for all widgets that can contain other widgets.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Container.html'>container.js</a>.</p>
+
+<h2 id='component'>Component</h2>
+
+<p>A dynamically loadable re-usable block of UI. See <a href='../overview/components.html'>Components</a> for detailed documentation.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Component.html'>component.js</a> for the Javascript documentation.</p>
+
+<h2 id='componentcontainer'>ComponentContainer</h2>
+
+<p>A placeholder into which to load Components. See <a href='../overview/components.html'>Components</a> for detailed documentation.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.ComponentContainer.html'>componentcontainer.js</a> for the Javascript documentation.</p>
+
+<h2 id='button'>Button</h2>
+
+<p>A UI element that can obtain spatial navigation focus. See the <a href='focus-management.html'>focus management</a> overview.</p>
+
+<p>The button widget is the only widget that is currently able to receive focus. When a button is focused, pressing the VK_ENTER key will fire a <code>select</code> event.</p>
+
+<p><img alt='Button' src='/tal/img/widgets/button.png' /></p>
+
+<p>A <em>Button</em> usually contains either a <em>Label</em> , <em>Image</em> or <em>Container</em> but could contain any component (It does not make sense to put anything inside a button that deals with navigation though).</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>okButton</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Button</span><span class='p'>(</span><span class='s2'>&quot;okButton&quot;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>okButtonText</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Label</span><span class='p'>(</span><span class='s2'>&quot;okButtonLabel&quot;</span><span class='p'>,</span> <span class='s2'>&quot;ok&quot;</span><span class='p'>);</span>
+<span class='nx'>okButton</span><span class='p'>.</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='nx'>okButtonText</span><span class='p'>);</span>
+
+<span class='kd'>var</span> <span class='nx'>cancelButton</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Button</span><span class='p'>(</span><span class='s2'>&quot;cancelButton&quot;</span><span class='p'>);</span>
+<span class='kd'>var</span> <span class='nx'>cancelButtonText</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Label</span><span class='p'>(</span><span class='s2'>&quot;cancelButtonLabel&quot;</span><span class='p'>,</span> <span class='s2'>&quot;cancel&quot;</span><span class='p'>);</span>
+<span class='nx'>cancelButton</span><span class='p'>.</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='nx'>cancelButtonText</span><span class='p'>);</span>
+</code></pre></div>
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Button.html'>button.js</a> for the Javascript documentation.</p>
+
+<p>See <a href='data-binding.html#Creating_a_Formatter'>Creating a Formatter</a> to learn how to create a button using a formatter.</p>
+
+<h2 id='label'>Label</h2>
+
+<p>A UI Text element.</p>
+
+<p>See <a href='/tal//jsdoc/symbols/antie.widgets.Label.html'>label.js</a> for the Javascript documentation.</p>
+
+<h2 id='image'>Image</h2>
+
+<p>An image.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Image.html'>image.js</a> for the Javascript documentation.</p>
+
+<h2 id='list'>List</h2>
+
+<p>The <em>List</em> widget holds a linear collection of UI elements. It has two direct subclasses <em>HorizontalList</em> and <em>VerticalList</em>. As the <em>List</em> has no intrinsic styling, the only difference between a <em>HorizontalList</em> and a <em>VerticalList</em> is their response to user input. A <em>HorizontalList</em> is navigated with left and right, and a <em>VerticalList</em> is navigated with up and down.</p>
+
+<p><img alt='Button' src='/tal/img/widgets/list.png' /></p>
+
+<p>You can either fill a List with child UI elements directly:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>list</span><span class='p'>.</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='k'>new</span> <span class='nx'>Button</span><span class='p'>(</span><span class='s1'>&#39;button_id&#39;</span><span class='p'>));</span>
+</code></pre></div>
+<p>or associate a <em>DataSource</em> with a <em>List</em> to populate list data from an array object: (see <a href='data-binding.html'>Data Binding</a>).</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>verticalList</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>VerticalList</span><span class='p'>(</span><span class='s2'>&quot;verticalList&quot;</span><span class='p'>,</span> <span class='nx'>formatter</span><span class='p'>,</span> <span class='nx'>dataSource</span><span class='p'>);</span>
+</code></pre></div>
+<p>See also:</p>
+
+<ul>
+<li><a href='/tal/widgets/focus-management.html'>Focus Management</a> &#8211; focus handling in a <em>List</em></li>
+
+<li><a href='/tal/jsdoc/symbols/antie.widgets.List.html'>list.js</a> &#8211; Javascript documentation.</li>
+</ul>
+
+<h2 id='listitem'>ListItem</h2>
+
+<p>Wrapper widget for list items when the list&#8217;s render mode is <em>RENDER_MODE_LIST</em>.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.ListItem.html'>listitem.js</a> for the Javascript documentation.</p>
+
+<h2 id='horizontallist'>HorizontalList</h2>
+
+<p>A list where items are navigated between using <code>VK_LEFT</code> and <code>VK_RIGHT</code>.</p>
+
+<p><img alt='Horizontal List' src='/tal/img/widgets/horizontallist.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.HorizontalList.html'>horizontallist.js</a> for the Javascript documentation.</p>
+
+<h2 id='verticallist'>VerticalList</h2>
+
+<p>A list where items are navigated between using <code>VK_UP</code> and <code>VK_DOWN</code>.</p>
+
+<p><img alt='Vertical List' src='/tal/img/widgets/verticallist.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.VerticalList.html'>verticallist.js</a> for the Javascript documentation.</p>
+
+<h2 id='grid'>Grid</h2>
+
+<p>A 2D grid of containers which can be navigated between using <code>VK_LEFT</code>, <code>VK_RIGHT</code>, <code>VK_DOWN</code> and <code>VK_UP</code>.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Grid.html'>grid.js</a> for the Javascript documentation.</p>
+
+<h2 id='horizontalcarousel'>HorizontalCarousel</h2>
+
+<p>A carousel is a sideways scrolling list, in which an item can be focused using <code>VK_LEFT</code> and <code>VK_RIGHT</code>. The list elements are scrolled as the user navigates, so that the focused element remains in the centre of the carousel.</p>
+
+<p>Carousels can have various wrap modes:</p>
+
+<ul>
+<li><code>WRAP_MODE_NONE</code> &#8211; The carousel is <strong>bookended</strong> - you can&#8217;t navigate through all elements in a full circle</li>
+
+<li><code>WRAP_MODE_NAVIGATION_ONLY</code> &#8211; You can circle through all elements, however there is a visual break at the end of the carousel before you move back to the first element</li>
+
+<li><code>WRAP_MODE_VISUAL</code> &#8211; You can circle through all elements, and items at the beginning of the carousel are visible from the end of the carousel, so it forms a continuous loop</li>
+</ul>
+
+<p>The default setting is <code>WRAP_MODE_VISUAL</code>. You can set the wrap mode using: horizontalCarousel.setWrapMode(HorizontalCarousel.WRAP_MODE_NONE);</p>
+
+<p>Carousels are designed to be constructed via <a href='data-binding.html'>Data Binding</a></p>
+
+<p><img alt='Horizontal Carousel' src='/tal/img/widgets/horizontalcarousel.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.HorizontalCarousel.html'>horizontalcarousel.js</a> for the javascript documentation.</p>
+
+<h2 id='media'>Media</h2>
+
+<p>Video and audio playout. Note: Do not construct a <em>Media</em> widget directly. Use <code>Device.createPlayer(...)</code></p>
+
+<p>See <a href='media-playback.html'>Media Playback</a> for more details, and <a href='/tal/jsdoc/symbols/antie.widgets.Media.html'>media.js</a> for the javascript documentation.</p>
+
+<h2 id='horizontalprogress'>HorizontalProgress</h2>
+
+<p>Indicates a position via a horizontal progress bar (must be styled by the application).</p>
+
+<p><img alt='Horizontal Progress' src='/tal/img/widgets/horizontalprogress.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.HorizontalProgress.html'>horizontalprogress.js</a>.</p>
+
+<h2 id='horizontalslider'>HorizontalSlider</h2>
+
+<p>Allows a value to be set by sliding a control along a slider using <code>VK_LEFT</code> and <code>VK_RIGHT</code>.</p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.HorizontalSlider.html'>horizontalslider.js</a> for the javascript documentation.</p>
+
+<h2 id='scrubbar'>ScrubBar</h2>
+
+<p>Extends <em>HorizontalSlider</em> to also allow the indication of a buffered range.</p>
+
+<p><img alt='Scrub Bar' src='/tal/img/widgets/scrubbar.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.ScrubBar.html'>scrubbar.js</a> for the javascript documentation.</p>
+
+<h2 id='keyboard'>KeyBoard</h2>
+
+<p>Versatile on-screen keyboard.</p>
+
+<p><img alt='Key Board' src='/tal/img/widgets/keyboard.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.Keyboard.html'>keyboard.js</a> for the javascript documentation.</p>
+
+<h2 id='textpager'>TextPager</h2>
+
+<p>Allows large blocks of text to be paged.</p>
+
+<p><img alt='Text Pager' src='/tal/img/widgets/textpager.png' /></p>
+
+<p>See <a href='/tal/jsdoc/symbols/antie.widgets.TextPager.html'>textpager.js</a> for the javascript documentation.</p>
+
+<h1 id='creating_new_widgets'>Creating New Widgets</h1>
+
+<p>To create a new widget, extend the base <em>Widget</em>, <em>Container</em> or another one of the built-in widgets.</p>
+
+<p>You must implement the <code>render(device)</code> method, which must return an output element (generated from the <em>createX</em> (e.g. <code>createContainer</code>) methods implemented by the provided device. If your widget extends <em>Container</em> you are also responsible for rendering the children (by calling their render methods).</p>
+
+<p>The <code>render()</code> method must also set the <code>outputElement</code> property on the widget with the same value as it returns. For performance reasons, you should not re-render a widget if it already has an <code>outputElement</code> set, instead you should update this element.</p>
+
+<p>An example implementation of the render method is:</p>
+<div class='highlight'><pre><code class='javascript'>  <span class='k'>if</span><span class='p'>(</span><span class='o'>!</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='k'>this</span><span class='p'>.</span><span class='nx'>outputElement</span> <span class='o'>=</span> <span class='nx'>device</span><span class='p'>.</span><span class='nx'>createContainer</span><span class='p'>(</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>id</span><span class='p'>,</span> <span class='k'>this</span><span class='p'>.</span><span class='nx'>getClasses</span><span class='p'>(),</span> <span class='s2'>&quot;#&quot;</span><span class='p'>);</span>
+      <span class='k'>for</span><span class='p'>(</span><span class='kd'>var</span> <span class='nx'>i</span><span class='o'>=</span><span class='mi'>0</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>&lt;</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>_childWidgetOrder</span><span class='p'>.</span><span class='nx'>length</span><span class='p'>;</span> <span class='nx'>i</span><span class='o'>++</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='nx'>device</span><span class='p'>.</span><span class='nx'>appendChildElement</span><span class='p'>(</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span> <span class='k'>this</span><span class='p'>.</span><span class='nx'>_childWidgetOrder</span><span class='p'>[</span><span class='nx'>i</span><span class='p'>].</span><span class='nx'>render</span><span class='p'>(</span><span class='nx'>device</span><span class='p'>));</span>
+      <span class='p'>}</span>
+    <span class='p'>}</span>
+  <span class='k'>return</span> <span class='k'>this</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>;</span>
+</code></pre></div>
+
+      </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+    
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+    
+  </body>
+</html>
+

@@ -1,0 +1,4 @@
+UML Diagrams are generated using Plant UML
+http://plantuml.sourceforge.net/
+The source is stored in this directory so it can be regenerated.
+The generated diagrams are left in img

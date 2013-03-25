@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='animation'>Animation</h1>
+<p class='lead'>The Framework provides a number of methods to animate objects on the screen. Animation methods are provided through the device abstraction layer, allowing for the method of animation to be optimised on a device-by-device basis.</p>
+<p>These methods are primarily intended for widget developers.</p>
+
+<h2 id='animation_methods'>Animation methods</h2>
+
+<p>The following methods control animation:</p>
+
+<ul>
+<li><code>device.moveElementTo(options)</code></li>
+
+<li><code>device.scrollElementTo(options)</code></li>
+
+<li><code>device.hideElement(options)</code></li>
+
+<li><code>device.showElement(options)</code></li>
+
+<li><code>device.stopAnimation(handle)</code></li>
+</ul>
+
+<p>All animation methods except <code>stopAnimation()</code> take an options object and return an animation handle. <code>stopAnimation()</code> takes this animation handle.</p>
+
+<p>As a minimum the <code>options</code> object needs the property</p>
+
+<ul>
+<li><code>options.el</code> - The current output element of the widget to be animated.</li>
+</ul>
+
+<p>In addition they all understand</p>
+
+<ul>
+<li><code>options.duration</code></li>
+
+<li><code>options.onComplete</code></li>
+
+<li><code>options.skipAnim</code></li>
+
+<li><code>options.fps</code></li>
+</ul>
+
+<p>The movement methods also understand</p>
+
+<ul>
+<li><code>options.easing</code></li>
+</ul>
+
+<h2 id='animation_properties'>Animation properties</h2>
+
+<p>Animations can be configured via a set of properties. These are either passed directly to the animation methods as properties of an options object, or defined in the device configuration file. The order of presidence is:</p>
+
+<pre><code>  options object &gt; device configuration &gt; default</code></pre>
+
+<p>with the exception of the global animation toggle, which always overrides any other setting.</p>
+
+<h3 id='duration'>duration</h3>
+
+<p>How long the animation should take to complete in milliseconds.</p>
+
+<h3 id='oncomplete'>onComplete</h3>
+
+<p>A callback function that will be executed when the animation has completed.</p>
+
+<h3 id='skipanim'>skipAnim</h3>
+
+<p>default=false</p>
+
+<p>A boolean property, if true the animation is skipped - i.e. it completes instantly and any callback is fired immediately. Overridden to true by the global animationDisabled device configuration property.</p>
+
+<h3 id='easing'>easing</h3>
+
+<p>default=easeFromTo</p>
+
+<p>An easing function that defines how the rate the animation progresses over time. Only available on the movement functions (fades are always linear)</p>
+
+<p>Acceptable values are:</p>
+
+<ul>
+<li>linear</li>
+
+<li>easeInCubic</li>
+
+<li>easeOutCubic</li>
+
+<li>easeInOutCubic</li>
+
+<li>easeInCirc</li>
+
+<li>easeOutCirc</li>
+
+<li>easeInOutCirc</li>
+
+<li>easeInExpo</li>
+
+<li>easeOutExpo</li>
+
+<li>easeInOutExpo</li>
+
+<li>easeInQuad</li>
+
+<li>easeOutQuad</li>
+
+<li>easeInOutQuad</li>
+
+<li>easeInQuart</li>
+
+<li>easeOutQuart</li>
+
+<li>easeInOutQuart</li>
+
+<li>easeInQuint</li>
+
+<li>easeOutQuint</li>
+
+<li>easeInOutQuint</li>
+
+<li>easeInSine</li>
+
+<li>easeOutSine</li>
+
+<li>easeInOutSine</li>
+
+<li>easeInBack</li>
+
+<li>easeOutBack</li>
+
+<li>easeInOutBack</li>
+
+<li>easeFromTo (equal to easeInOutQuart)</li>
+</ul>
+
+<p>The following are currently supported with the styletopleft animation scheme, but not with the css3 animation scheme. They may be added to css3 or dropped from styletopleft at a later date, so should be avoided if compatibility is required.</p>
+
+<ul>
+<li>elastic</li>
+
+<li>swingFrom</li>
+
+<li>swingTo</li>
+
+<li>swingFromTo</li>
+
+<li>bounce</li>
+
+<li>bouncePast</li>
+
+<li>easeFrom (equal to easeInQuart)</li>
+
+<li>easeTo</li>
+</ul>
+
+<h3 id='fps'>fps</h3>
+
+<p>default=25</p>
+
+<p>This is only used for animation methods where the positions are calculated within javascript (i.e. not css3) It determines the update rate of the animation (frames per second)</p>
+
+<h3 id='hiding_and_showing_widgets'>Hiding and Showing Widgets</h3>
+
+<p>The best practice to hide and show widgets is normally to use Container&#8217;s <code>appendChildWidget()</code> and <code>removeChildWidget()</code> methods. This will remove the widget from the UI graph and also from the rendered DOM. If however you wish to fade a widget out, or hide it from the user without removing it from either the UI graph or DOM, you can use:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>device</span><span class='p'>.</span><span class='nx'>hideElement</span><span class='p'>({</span>
+    <span class='nx'>el</span><span class='o'>:</span> <span class='nx'>widget</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span>       <span class='c1'>// mandatory</span>
+    <span class='nx'>skipAnim</span><span class='o'>:</span> <span class='kc'>true</span><span class='p'>,</span>                 <span class='c1'>// optional</span>
+    <span class='nx'>onComplete</span><span class='o'>:</span> <span class='kd'>function</span> <span class='p'>()</span> <span class='p'>{</span>       <span class='c1'>// optional</span>
+        <span class='c1'>// on complete functionality</span>
+    <span class='p'>}</span>
+<span class='p'>});</span>
+</code></pre></div>
+<p>You can then re-show the widget using:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>device</span><span class='p'>.</span><span class='nx'>showElement</span><span class='p'>({</span>
+    <span class='nx'>el</span><span class='o'>:</span> <span class='nx'>widget</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span>       <span class='c1'>// mandatory</span>
+    <span class='nx'>skipAnim</span><span class='o'>:</span> <span class='kc'>true</span><span class='p'>,</span>                 <span class='c1'>// optional</span>
+    <span class='nx'>onComplete</span><span class='o'>:</span> <span class='kd'>function</span> <span class='p'>()</span> <span class='p'>{</span>       <span class='c1'>// optional</span>
+        <span class='c1'>// on complete functionality</span>
+    <span class='p'>}</span>
+<span class='p'>});</span>
+</code></pre></div>
+<h3 id='moving_and_scrolling_widgets'>Moving and scrolling Widgets</h3>
+
+<p>The <code>moveElementTo()</code> and <code>scrollElementTo()</code> methods have an additional <code>to</code> object as a property of <code>options</code>.</p>
+
+<p>This must contain at least one of the following properties:</p>
+
+<ul>
+<li><code>options.to.top</code>: The destination value of the top edge of the element (as an integer, in pixels).</li>
+
+<li><code>options.to.left</code>: The destination value of the left edge of the element (as an integer, in pixels).</li>
+</ul>
+
+<p>If you only need to move/scroll along a single axis, only supply one property.</p>
+
+<h4 id='moveelementto'> moveElementTo()</h4>
+
+<p>Widgets may be moved within their container using the following method:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>device</span><span class='p'>.</span><span class='nx'>moveElementTo</span><span class='p'>({</span>
+    <span class='nx'>el</span><span class='o'>:</span> <span class='nx'>widget</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span>   <span class='c1'>// mandatory</span>
+    <span class='nx'>to</span><span class='o'>:</span> <span class='p'>{</span>
+        <span class='nx'>top</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>               <span class='c1'>// needs one item, more are optional</span>
+        <span class='nx'>left</span><span class='o'>:</span> <span class='mi'>300</span>
+    <span class='p'>},</span>
+    <span class='nx'>skipAnim</span><span class='o'>:</span> <span class='kc'>true</span><span class='p'>,</span>             <span class='c1'>// optional</span>
+    <span class='nx'>fps</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>                   <span class='c1'>// optional</span>
+    <span class='nx'>duration</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>              <span class='c1'>// optional</span>
+    <span class='nx'>easing</span><span class='o'>:</span> <span class='s1'>&#39;easeIn&#39;</span><span class='p'>,</span>           <span class='c1'>// optional</span>
+    <span class='nx'>offset</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>                <span class='c1'>// optional</span>
+    <span class='nx'>onComplete</span><span class='o'>:</span> <span class='kd'>function</span> <span class='p'>()</span> <span class='p'>{</span>   <span class='c1'>// optional</span>
+        <span class='c1'>// functionality to run after animation has finished</span>
+    <span class='p'>}</span>
+<span class='p'>});</span>
+</code></pre></div>
+<p><em>Note:</em> You must provide styling to the element to ensure it can be positioned (i.e. <code>position: absolute</code>, or <code>relative</code>).</p>
+
+<h4 id='scrollelementto'>scrollElementTo()</h4>
+
+<p>Widgets may be scrolled within a container using the following method:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>device</span><span class='p'>.</span><span class='nx'>scrollElementTo</span><span class='p'>({</span>
+    <span class='nx'>el</span><span class='o'>:</span> <span class='nx'>widget</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span>   <span class='c1'>// mandatory</span>
+    <span class='nx'>to</span><span class='o'>:</span> <span class='p'>{</span>
+        <span class='nx'>top</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>               <span class='c1'>// needs one item, more are optional</span>
+        <span class='nx'>left</span><span class='o'>:</span> <span class='mi'>300</span>
+    <span class='p'>},</span>
+    <span class='nx'>skipAnim</span><span class='o'>:</span> <span class='kc'>true</span><span class='p'>,</span>             <span class='c1'>// optional</span>
+    <span class='nx'>fps</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>                   <span class='c1'>// optional</span>
+    <span class='nx'>duration</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>              <span class='c1'>// optional</span>
+    <span class='nx'>easing</span><span class='o'>:</span> <span class='s1'>&#39;easeIn&#39;</span><span class='p'>,</span>           <span class='c1'>// optional</span>
+    <span class='nx'>offset</span><span class='o'>:</span> <span class='mi'>100</span><span class='p'>,</span>                <span class='c1'>// optional</span>
+    <span class='nx'>onComplete</span><span class='o'>:</span> <span class='kd'>function</span> <span class='p'>()</span> <span class='p'>{</span>   <span class='c1'>// optional</span>
+        <span class='c1'>// functionality to run after animation has finished</span>
+    <span class='p'>}</span>
+<span class='p'>});</span>
+</code></pre></div>
+<p><em>Note:</em> If an animation method other than &#8216;scrolloffset&#8217; is used, a mask element must be created to wrap the output element. The moveElementTo(&#8230;) method will then be used on the inner element to move the visible area within the mask. The mask element must be styled to be a offset parent (i.e. <code>position: absolute</code>, or <code>relative</code>), have a size, and have <code>overflow: hidden</code>.</p>
+
+<h2 id='aborting_animations'>Aborting Animations</h2>
+
+<p>Each of the above methods return an animation handle. The format and structure of this handle will vary based on the animation method used by the device, so should not be relied upon with your application, e.g:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>animationHandle</span> <span class='o'>=</span> <span class='nx'>device</span><span class='p'>.</span><span class='nx'>scrollElementTo</span><span class='p'>({</span>
+                        <span class='nx'>el</span><span class='o'>:</span> <span class='nx'>widget</span><span class='p'>.</span><span class='nx'>outputElement</span><span class='p'>,</span>
+                        <span class='nx'>to</span><span class='o'>:</span> <span class='p'>{</span>
+                            <span class='nx'>top</span><span class='o'>:</span> <span class='mi'>0</span><span class='p'>,</span>
+                            <span class='nx'>left</span><span class='o'>:</span> <span class='mi'>0</span>
+                        <span class='p'>});</span>
+</code></pre></div>
+<p>To abort a currently running animation, call:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>device</span><span class='p'>.</span><span class='nx'>stopAnimation</span><span class='p'>(</span><span class='nx'>animationHandle</span><span class='p'>);</span>
+</code></pre></div>
+<p>Any completion callback for the animation will still be called.</p>
+
+<p><em>Note:</em> It is very important to call <code>stopAnimation()</code> if an animation will be interrupted by any means. This includes calling moveElementTo before a previous call has completed or hiding an animating element. If you fail to do this you may see visual discontinuities (styletopleft) or create a memory leak / experience strange callback behaviour (css3).</p>
+
+<h2 id='configuring_animations_via_the_device_configuration_files'>Configuring animations via the device configuration files</h2>
+
+<p>You may configure the default show/hide fade behaviour of all widgets on a specific device via the defaults property of a device config file.</p>
+
+<p>See <a href='/tal/overview/device-configuration.html'>Device Configuration</a></p>
+
+<h3 id='global_application_specific_off_switch'>Global application specific OFF switch</h3>
+
+<p>To switch off animation for a device within your application, overriding any animation settings in TAL, add the following as a property of the relevant application device configuration file:</p>
+<div class='highlight'><pre><code class='javascript'><span class='s2'>&quot;animationDisabled&quot;</span> <span class='o'>:</span> <span class='kc'>true</span>
+</code></pre></div>
+<h2 id='additional_methods_on_horizontalcarousel'>Additional methods on HorizontalCarousel</h2>
+
+<p>Three values have now been publicly exposed and are available to be defined on a per instance basis, both on and after instantiation.</p>
+
+<h4 id='carouselsetwidgetanimationfpsfps'>carousel.setWidgetAnimationFPS(fps)</h4>
+
+<p>Accepts Integer to set frames per second for the carousel</p>
+
+<p>&#8211; Default value is 25 fps</p>
+
+<h4 id='carouselgetwidgetanimationfps'>carousel.getWidgetAnimationFPS()</h4>
+
+<p>Returns an Integer that reflects currently set frames per second set for the carousel</p>
+
+<h4 id='carouselsetwidgetanimationdurationduration'>carousel.setWidgetAnimationDuration(duration)</h4>
+
+<p>Accepts Integer to set duration of animation for the carousel</p>
+
+<p>&#8211; Default value is 750ms</p>
+
+<h4 id='carouselgetwidgetanimationduration'>carousel.getWidgetAnimationDuration()</h4>
+
+<p>Returns an Integer that reflects currently set duration of animation for the carousel</p>
+
+<h4 id='carouselsetwidgetanimationeasingeasing'>carousel.setWidgetAnimationEasing(easing)</h4>
+
+<p>Accepts a String to set easing type for the carousel</p>
+
+<p>&#8211; Default value is easeFromTo.</p>
+
+<h4 id='carouselgetwidgetanimationeasing'>carousel.getWidgetAnimationEasing()</h4>
+
+<p>Returns a String that reflects currently easing type for the carousel</p>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+

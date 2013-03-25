@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='data_binding'>Data Binding</h1>
+
+<p>The framework provides a mechanism, &#8216;Data Binding&#8217; for constructing complex widgets from data feeds.</p>
+
+<p>Specifically, lists and carousels can be populated based on data provided in an object array.</p>
+
+<p>Data Binding is a multi-stage process.</p>
+
+<ol>
+<li>Create a <em>DataSource</em></li>
+
+<li>Create a <em>Formatter</em>. Its job is to use the information provided by the <em>DataSource</em> to populate a widget</li>
+
+<li>Create a widget passing the <em>Formatter</em> to its constructor</li>
+
+<li>Bind the <em>DataSource</em> to the widget - the supplied data will now be used by the <em>Formatter</em> and the widget populated</li>
+</ol>
+
+<h2 id='creating_a_datasource'>Creating a DataSource</h2>
+
+<p>The <em>DataSource</em> object (antie/datasource) provides an interface for <em>List</em> (or extensions from <em>List</em> such as <em>HorizontalCarousel</em>) to obtain data.</p>
+
+<p>When creating a <em>DataSource</em> you must supply</p>
+
+<ol>
+<li>A component which will take ownership of the data</li>
+
+<li>An object extended from antie/class. The object must contain a method that accepts a callback object as a parameter. The callback object contains <code>onSuccess()</code> and <code>onError()</code> callback functions. The method should invoke the <code>onSuccess()</code> callback with an array of data objects if data is obtained successfully, or invoke <code>onError()</code> if an error occurs.</li>
+
+<li>The name of the method that will fire the callbacks.</li>
+</ol>
+
+<p>This is best illustrated with an example.</p>
+
+<p>Instantiating the DataSource From within a <em>Component</em>:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>dataSource</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>DataSource</span><span class='p'>(</span><span class='k'>this</span><span class='p'>,</span> <span class='k'>new</span> <span class='nx'>SimpleFeed</span><span class='p'>(),</span> <span class='s2'>&quot;loadData&quot;</span><span class='p'>);</span>
+</code></pre></div>
+<p>For this example, we&#8217;ve used a class called <em>SimpleFeed</em> which contains some static data. There&#8217;s no way this can fail to load, so we ignore the <code>onError()</code> callback.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>require</span><span class='p'>.</span><span class='nx'>def</span><span class='p'>(</span><span class='s2'>&quot;myapp/simplefeed&quot;</span><span class='p'>,</span>
+    <span class='p'>[</span>
+        <span class='s2'>&quot;antie/class&quot;</span>
+    <span class='p'>],</span>
+    <span class='kd'>function</span><span class='p'>(</span><span class='nx'>Class</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='nx'>Class</span><span class='p'>.</span><span class='nx'>extend</span><span class='p'>({</span>
+            <span class='c1'>// You will probably want to do something</span>
+            <span class='c1'>// more useful then returning static data.</span>
+            <span class='c1'>// An array of objects is expected.</span>
+            <span class='nx'>loadData</span> <span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>callbacks</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='nx'>callbacks</span><span class='p'>.</span><span class='nx'>onSuccess</span><span class='p'>(</span>
+                    <span class='p'>[</span>
+                        <span class='p'>{</span>
+                            <span class='s2'>&quot;id&quot;</span><span class='o'>:</span><span class='s2'>&quot;1&quot;</span><span class='p'>,</span>
+                            <span class='s2'>&quot;title&quot;</span><span class='o'>:</span><span class='s2'>&quot;cherry&quot;</span>
+                        <span class='p'>},</span>
+                        <span class='p'>{</span>
+                            <span class='s2'>&quot;id&quot;</span><span class='o'>:</span><span class='s2'>&quot;2&quot;</span><span class='p'>,</span>
+                            <span class='s2'>&quot;title&quot;</span><span class='o'>:</span><span class='s2'>&quot;strawberry&quot;</span>
+                        <span class='p'>},</span>
+                        <span class='p'>{</span>
+                            <span class='s2'>&quot;id&quot;</span><span class='o'>:</span><span class='s2'>&quot;3&quot;</span><span class='p'>,</span>
+                            <span class='s2'>&quot;title&quot;</span><span class='o'>:</span><span class='s2'>&quot;peach&quot;</span>
+                        <span class='p'>},</span>
+                        <span class='p'>{</span>
+                            <span class='s2'>&quot;id&quot;</span><span class='o'>:</span><span class='s2'>&quot;4&quot;</span><span class='p'>,</span>
+                            <span class='s2'>&quot;title&quot;</span><span class='o'>:</span><span class='s2'>&quot;apple&quot;</span>
+                        <span class='p'>},</span>
+                        <span class='p'>{</span>
+                            <span class='s2'>&quot;id&quot;</span><span class='o'>:</span><span class='s2'>&quot;5&quot;</span><span class='p'>,</span>
+                            <span class='s2'>&quot;title&quot;</span><span class='o'>:</span><span class='s2'>&quot;melon&quot;</span>
+                        <span class='p'>}</span>
+                    <span class='p'>]</span>
+                <span class='p'>);</span>
+            <span class='p'>}</span>
+        <span class='p'>});</span>
+    <span class='p'>});</span>
+</code></pre></div>
+<h2 id='creating_a_formatter'>Creating a Formatter</h2>
+
+<p>A <em>Formatter</em> must provide the <code>format()</code> method. <code>format()</code> should return a widget that makes up a single item for a <em>List</em> or <em>Carousel</em>.</p>
+
+<p>An item can be something simple like a <em>Button</em> (see below), or a more complicated composite such as a <em>List</em>, <em>Carousel</em> or <em>Container</em> full of widgets.</p>
+
+<p><code>format()</code> is supplied with an iterator with which to access the data it will use. You should call iterator.next() within the <code>format()</code> function to acquire a data item (one of the objects in the array defined by the feed).</p>
+
+<p>Here is a simple formatter that creates a labeled button for each item in the <em>SimpleFeed</em>:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>require</span><span class='p'>.</span><span class='nx'>def</span><span class='p'>(</span><span class='s2'>&quot;myapp/simpleformatter&quot;</span><span class='p'>,</span>
+    <span class='p'>[</span>
+        <span class='s2'>&quot;antie/formatter&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;antie/widgets/label&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;antie/widgets/button&quot;</span>
+    <span class='p'>],</span>
+    <span class='kd'>function</span><span class='p'>(</span><span class='nx'>Formatter</span><span class='p'>,</span> <span class='nx'>Label</span><span class='p'>,</span> <span class='nx'>Button</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='nx'>Formatter</span><span class='p'>.</span><span class='nx'>extend</span><span class='p'>({</span>
+            <span class='nx'>format</span> <span class='o'>:</span> <span class='kd'>function</span> <span class='p'>(</span><span class='nx'>iterator</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='kd'>var</span> <span class='nx'>button</span><span class='p'>,</span> <span class='nx'>item</span><span class='p'>;</span>
+                <span class='nx'>item</span> <span class='o'>=</span> <span class='nx'>iterator</span><span class='p'>.</span><span class='nx'>next</span><span class='p'>();</span>
+                <span class='nx'>button</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>Button</span><span class='p'>(</span><span class='s2'>&quot;fruit&quot;</span> <span class='o'>+</span> <span class='nx'>item</span><span class='p'>.</span><span class='nx'>id</span><span class='p'>);</span>
+                <span class='nx'>button</span><span class='p'>.</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='k'>new</span> <span class='nx'>Label</span><span class='p'>(</span><span class='nx'>item</span><span class='p'>.</span><span class='nx'>title</span><span class='p'>));</span>
+                <span class='k'>return</span> <span class='nx'>button</span><span class='p'>;</span>
+            <span class='p'>}</span>
+        <span class='p'>});</span>
+    <span class='p'>}</span>
+<span class='p'>);</span>
+</code></pre></div>
+<h2 id='data_binding_with_a_horizontalcarousel'>Data binding with a <em>HorizontalCarousel</em></h2>
+
+<p>Now to tie them together in a component. This example creates a <em>HorizontalCarousel</em>, but a plain <em>List</em> will work in the same way.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>require</span><span class='p'>.</span><span class='nx'>def</span><span class='p'>(</span><span class='s2'>&quot;myapp/simplecarouselcomponent&quot;</span><span class='p'>,</span>
+    <span class='p'>[</span>
+        <span class='s2'>&quot;antie/widgets/component&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;antie/datasource&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;antie/widgets/horizontalcarousel&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;myapp/simpleformatter&quot;</span><span class='p'>,</span>
+        <span class='s2'>&quot;myapp/simplefeed&quot;</span>
+
+    <span class='p'>],</span>
+    <span class='kd'>function</span> <span class='p'>(</span><span class='nx'>Component</span><span class='p'>,</span> <span class='nx'>DataSource</span><span class='p'>,</span> <span class='nx'>HorizontalCarousel</span><span class='p'>,</span> <span class='nx'>SimpleFormatter</span><span class='p'>,</span> <span class='nx'>SimpleFeed</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='nx'>Component</span><span class='p'>.</span><span class='nx'>extend</span><span class='p'>({</span>
+            <span class='nx'>init</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+                <span class='kd'>var</span> <span class='nx'>self</span><span class='p'>,</span> <span class='nx'>simpleFormatter</span><span class='p'>,</span> <span class='nx'>simpleFeed</span><span class='p'>;</span>
+                
+                <span class='c1'>// make sure you call _super()!</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_super</span><span class='p'>(</span><span class='s2'>&quot;simplecarouselcomponent&quot;</span><span class='p'>);</span>
+                <span class='nx'>self</span> <span class='o'>=</span> <span class='k'>this</span><span class='p'>;</span>
+                
+                <span class='c1'>// Create a new formatter and feed</span>
+                <span class='nx'>simpleFormatter</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>SimpleFormatter</span><span class='p'>();</span>
+                <span class='nx'>simpleFeed</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>SimpleFeed</span><span class='p'>();</span>
+                
+                <span class='c1'>// Create a DataSource, this uses the feed to get data and presents it to the formatter</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_dataSource</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>DataSource</span><span class='p'>(</span><span class='k'>this</span><span class='p'>,</span> <span class='nx'>simpleFeed</span><span class='p'>,</span> <span class='s2'>&quot;loadData&quot;</span><span class='p'>);</span>
+                
+                <span class='c1'>// Create a new carousel with the formatter</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_carousel</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>HorizontalCarousel</span><span class='p'>(</span><span class='s2'>&quot;simplecarousel&quot;</span><span class='p'>,</span> <span class='nx'>simpleFormatter</span><span class='p'>);</span>
+                
+                <span class='c1'>// Add it to the component</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>_carousel</span><span class='p'>);</span>
+                
+                <span class='c1'>// We want to rebind every time the component is pushed, so listen for beforerender.           </span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span>
+                    <span class='s2'>&quot;beforerender&quot;</span><span class='p'>,</span> 
+                    <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> 
+                        <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onBeforeRender</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> 
+                    <span class='p'>}</span>
+                <span class='p'>);</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onBeforeRender</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// do the bind (and build the carousel&#39;s items)</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_carousel</span><span class='p'>.</span><span class='nx'>setDataSource</span><span class='p'>(</span><span class='k'>this</span><span class='p'>.</span><span class='nx'>_dataSource</span><span class='p'>);</span>
+            <span class='p'>}</span>
+        <span class='p'>});</span>
+    <span class='p'>}</span>
+<span class='p'>);</span>
+</code></pre></div>
+<p>In the example, the DataSource is bound to the widget after it has been constructed. It is possible to pass the dataSource to the widget as a third parameter in its constructor, but it is more common to bind on <code>beforerender</code> to ensure widgets are reconstructed if the component is hidden and reshown.</p>
+
+<h2 id='data_binding_events'>Data binding events</h2>
+
+<p><em>List</em> and any extensions of <em>List</em> fire the following three events related to data binding:</p>
+<table><thead><tr><th>Event name</th><th>Event description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>beforedatabind</code></td><td style='text-align: left;'>Fired just before before the load method is called on a DataSource.</td>
+</tr><tr><td style='text-align: left;'><code>databound</code></td><td style='text-align: left;'>Fired when data has loaded and any items generated by the <em>Formatter</em> have been added. This event has an <code>iterator</code> property giving you a reference to the data that has been bound. <em>Note:</em> You will need to <code>reset()</code> the iterator to read all the data.</td>
+</tr><tr><td style='text-align: left;'><code>databindingerror</code></td><td style='text-align: left;'>Fired if there is an exception or non-success response whilst performing any network requests.</td>
+</tr></tbody></table>
+<h2 id='storing_bound_data_for_later_use'>Storing bound data for later use</h2>
+
+<p>If you would like to associate data with one of the created widgets for later retrieval, you can use the <code>setDataItem()</code> method on a <em>Widget</em> from within a <em>Formatter</em>. It can be retrieved by calling <code>getDataItem()</code>.</p>
+
+<h2 id='focus_issues_when_data_binding'>Focus issues when data binding</h2>
+
+<p>The framework will not set default focus on a widget which is not &#8216;focussable&#8217;, i.e. one which is not a <em>Button</em> or does not contain buttons.</p>
+
+<p>As data bound widgets are initially empty, when you need default focus to fall on a data bound widget, you may need to manually set focus post bind in some circumstances.</p>
+
+<p>This can be done using the <code>setActiveChildWidget()</code> method of <em>Component</em> or a higher level <em>Container</em> within a function that listens for the <code>databound</code> event on the widget in question.</p>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+

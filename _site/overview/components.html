@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='components'>Components</h1>
+<p class='lead'>Components are UI modules that enable re-use within your application.</p>
+<p>Components are the method used by the Framework to provide modular re-usable sections of UI. They make use of <em>RequireJS</em> to allow blocks of UI to either be lazily loaded when first needed, or be packaged into the initial JavaScript downloaded when the User-Agent starts the application.</p>
+
+<p>Components act as singletons - the framework only allows one instance of a component to be onscreen at any one time, this means a component&#8217;s init(&#8230;) method will only be called once per session. If you wish to have multiple, but similar components on-screen simultaneously, you can subclass Components in the same manner as any other widget.</p>
+
+<p>ComponentContainers are most often found at the top-level of an application, however they may be placed anywhere in the UI graph, including within other Components.</p>
+
+<p>Note: You should NEVER load a component via the dependency list of a RequireJS module (other than when subclassing a Component), doing so will prevent the component from loading correctly. You should instead use the methods provided on the ComponentContainer widget (see <a href='#showing_a_component'>Showing a Component</a>).</p>
+
+<h2 id='defining_a_component'>Defining a Component</h2>
+
+<p>To define a component, create a module in your application&#8217;s appui/components folder extending the Component widget, e.g:</p>
+<div class='highlight'><pre><code class='javascript'><span class='cm'>/**</span>
+<span class='cm'> * @fileOverview &lt;DESCRIPTION&gt;</span>
+<span class='cm'> */</span>
+<span class='nx'>require</span><span class='p'>.</span><span class='nx'>def</span><span class='p'>(</span><span class='s2'>&quot;&lt;APPNAME&gt;/appui/components/&lt;COMPONENT&gt;&quot;</span><span class='p'>,</span>
+    <span class='p'>[</span>
+        <span class='s2'>&quot;antie/widgets/component&quot;</span>
+    <span class='p'>],</span>
+    <span class='kd'>function</span> <span class='p'>(</span><span class='nx'>Component</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='cm'>/**</span>
+<span class='cm'>         * &lt;DESCRIPTION&gt;</span>
+<span class='cm'>         * @name &lt;APPNAME&gt;.appui.components.&lt;COMPONENT&gt;</span>
+<span class='cm'>         * @class</span>
+<span class='cm'>         * @extends antie.widgets.Component</span>
+<span class='cm'>         * @requires ...</span>
+<span class='cm'>         */</span>
+        <span class='k'>return</span> <span class='nx'>Component</span><span class='p'>.</span><span class='nx'>extend</span><span class='p'>(</span><span class='cm'>/** @lends &lt;APPNAME&gt;.appui.components.&lt;COMPONENT&gt;.prototype */</span><span class='p'>{</span>
+            <span class='nx'>init</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>_super</span><span class='p'>(</span><span class='s2'>&quot;&lt;COMPONENTID&gt;&quot;</span><span class='p'>);</span>
+                <span class='kd'>var</span> <span class='nx'>self</span> <span class='o'>=</span> <span class='k'>this</span><span class='p'>;</span>
+
+                <span class='c1'>// Add component lifecycle event listeners</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;load&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onLoad</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;beforerender&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onBeforeRender</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;beforeshow&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onBeforeShow</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;aftershow&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onAfterShow</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;beforehide&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onBeforeHide</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+                <span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;afterhide&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span> <span class='nx'>self</span><span class='p'>.</span><span class='nx'>_onAfterHide</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>);</span> <span class='p'>});</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onLoad</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called when component is first loaded.</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onBeforeRender</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called before a component is rendered.</span>
+                <span class='c1'>// This is the best place to set data-specific content.</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onBeforeShow</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called after the component is rendered but before it is visible.</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onAfterShow</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called after the component is visible.</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onBeforeHide</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called before the component is hidden.</span>
+            <span class='p'>},</span>
+            <span class='nx'>_onAfterHide</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>ev</span><span class='p'>)</span> <span class='p'>{</span>
+                <span class='c1'>// Called after the component is hidden.</span>
+            <span class='p'>}</span>
+        <span class='p'>});</span>
+    <span class='p'>}</span>
+<span class='p'>);</span>
+</code></pre></div>
+<h2 id='showing_a_component'>Showing a Component</h2>
+
+<p>You can show a component using the ComponentContainer.showComponent(&#8230;) method or pushComponent(&#8230;) method (see below about <a href='#using_componentcontainer_history'>Using ComponentContainer History</a>).</p>
+
+<p>For example, to load a component defined in &#8220;helloworld/appui/components/hellocomponent.js&#8221; you would first create a ComponentContainer into which to load it.</p>
+
+<p>There are 2 methods to do this: - manually:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>container</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>ComponentContainer</span><span class='p'>(</span><span class='s2'>&quot;topleftContainer&quot;</span><span class='p'>);</span>
+<span class='nx'>application</span><span class='p'>.</span><span class='nx'>getRootWidget</span><span class='p'>().</span><span class='nx'>appendChildWidget</span><span class='p'>(</span><span class='nx'>container</span><span class='p'>);</span>
+</code></pre></div>
+<ul>
+<li>via the Applications addComponentContainer shortcut:</li>
+</ul>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>container</span> <span class='o'>=</span> <span class='nx'>application</span><span class='p'>.</span><span class='nx'>addComponentContainer</span><span class='p'>(</span><span class='s2'>&quot;topLeftContainer&quot;</span><span class='p'>);</span>
+</code></pre></div>
+<p>You then tell your ComponentContainer to load and show the hellocomponent:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>container</span><span class='p'>.</span><span class='nx'>showComponent</span><span class='p'>(</span><span class='s2'>&quot;helloworld/appui/components/hellocomponent&quot;</span><span class='p'>);</span>
+</code></pre></div>
+<p>The showComponent method takes an optional second argument. This argument can be any arbitrary object and is passed as the &#8220;args&#8221; property of the beforerender, beforeshow and aftershow events on the loaded Container. This allows you to reuse your component, initialising the UI with different data depending on different arguments (see <a href='#using_componentevents'>Using ComponentEvents</a>).</p>
+
+<p>An example would be to have a dialog component that has a different title and text:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>container</span><span class='p'>.</span><span class='nx'>showComponent</span><span class='p'>(</span><span class='s2'>&quot;helloworld/appui/components/dialogcomponent&quot;</span><span class='p'>,</span>
+                                <span class='p'>{</span><span class='nx'>title</span><span class='o'>:</span> <span class='s2'>&quot;Do you want to continue?&quot;</span><span class='p'>,</span> <span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Yes/OK&quot;</span><span class='p'>});</span>
+
+<span class='nx'>container</span><span class='p'>.</span><span class='nx'>showComponent</span><span class='p'>(</span><span class='s2'>&quot;helloworld/appui/components/dialogcomponent&quot;</span><span class='p'>,</span>
+                                <span class='p'>{</span><span class='nx'>title</span><span class='o'>:</span> <span class='s2'>&quot;Warning: Hull breach in progress&quot;</span><span class='p'>,</span> <span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Sound the alarm&quot;</span><span class='p'>});</span>
+</code></pre></div>
+<p>The same can be achieved by using the object and using the show component shortcut:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>application</span><span class='p'>.</span><span class='nx'>showComponent</span><span class='p'>(</span><span class='s2'>&quot;topLeftContainer&quot;</span><span class='p'>,</span> <span class='s2'>&quot;helloworld/appui/components/dialogcomponent&quot;</span><span class='p'>,</span>
+                                              <span class='p'>{</span><span class='nx'>title</span><span class='o'>:</span> <span class='s2'>&quot;Info: Alarm active&quot;</span><span class='p'>,</span> <span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Cancel Alarm&quot;</span><span class='p'>});</span>
+</code></pre></div>
+<p>You can simplify the process of adding a ComponentContainer and loading a Component into it using:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>container</span> <span class='o'>=</span> <span class='nx'>application</span><span class='p'>.</span><span class='nx'>addComponentContainer</span><span class='p'>(</span><span class='s2'>&quot;topLeftContainer&quot;</span><span class='p'>,</span>
+                                                  <span class='s2'>&quot;helloworld/appui/components/hellocomponent&quot;</span><span class='p'>,</span>
+                                                  <span class='p'>{</span><span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Hello World!&quot;</span><span class='p'>});</span>
+</code></pre></div>
+<h2 id='querying_a_componentcontainer'>Querying a ComponentContainer</h2>
+
+<p>You can obtain a details about the currently loaded Component within a ComponentContainer using:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>component</span> <span class='o'>=</span> <span class='nx'>container</span><span class='p'>.</span><span class='nx'>getContent</span><span class='p'>();</span>
+<span class='kd'>var</span> <span class='nx'>module</span> <span class='o'>=</span> <span class='nx'>container</span><span class='p'>.</span><span class='nx'>getCurrentModule</span><span class='p'>();</span>
+<span class='kd'>var</span> <span class='nx'>args</span> <span class='o'>=</span> <span class='nx'>container</span><span class='p'>.</span><span class='nx'>getCurrentArguments</span><span class='p'>();</span>
+</code></pre></div>
+<h2 id='hiding_a_component'>Hiding a Component</h2>
+
+<p>To hide a Component you can call the hide() method on either the Component or the ComponentContainer which holds it, e.g.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>container</span><span class='p'>.</span><span class='nx'>hide</span><span class='p'>();</span>
+</code></pre></div>
+<p>Or within a Component&#8217;s code:</p>
+<div class='highlight'><pre><code class='javascript'><span class='k'>this</span><span class='p'>.</span><span class='nx'>hide</span><span class='p'>();</span>
+</code></pre></div>
+<p>Note: After calling <code>hide()</code> the ComponentContainer will be empty. If you wish to return to the previous loaded Component, use the ComponentContainer history functionality.</p>
+
+<h2 id='using_componentcontainer_history'>Using ComponentContainer History</h2>
+
+<p>ComponentContainers have the ability to maintain a history stack of loaded Components along with the arguments passed to them when they were shown. To maintain history, instead of calling showComponent, call pushComponent (with the same arguments), e.g.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>container</span><span class='p'>.</span><span class='nx'>pushComponent</span><span class='p'>(</span><span class='s2'>&quot;helloworld/appui/components/hellocomponent&quot;</span><span class='p'>,</span> <span class='p'>{</span><span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Hello World!&quot;</span><span class='p'>});</span>
+<span class='nx'>container</span><span class='p'>.</span><span class='nx'>pushComponent</span><span class='p'>(</span><span class='s2'>&quot;helloworld/appui/components/hellocomponent&quot;</span><span class='p'>,</span> <span class='p'>{</span><span class='nx'>text</span><span class='o'>:</span> <span class='s2'>&quot;Hello Universe!&quot;</span><span class='p'>});</span>
+</code></pre></div>
+<p>Due to the singleton design of Components there is very little overhead in maintaining the history.</p>
+
+<p>When you wish to return to the previous Component, call the back() method on the ComponentContainer:</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>container</span><span class='p'>.</span><span class='nx'>back</span><span class='p'>();</span>
+</code></pre></div>
+<h2 id='maintaining_state_within_the_history'>Maintaining State Within the History</h2>
+
+<p>You may find that you need to persist state information alongside the Component within the history, for example the currently focused Button, so that when you return to the Component, you can restore the Component to the same state as it was before it was pushed on to the history stack.</p>
+
+<p>The framework calls a getCurrentState() method on the Component before pushing in on to the history stack. You should implement this method in your Component and return any data you wish to persist.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>getCurrentState</span><span class='o'>:</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+        <span class='k'>return</span> <span class='k'>this</span><span class='p'>.</span><span class='nx'>getCurrentApplication</span><span class='p'>().</span><span class='nx'>getFocussedWidget</span><span class='p'>();</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>When the Component is shown again via a call to back(), this returned data will be passed to the beforerender, beforeshow and aftershow event handlers in the state property of the event object.</p>
+<div class='highlight'><pre><code class='javascript'><span class='k'>this</span><span class='p'>.</span><span class='nx'>addEventListener</span><span class='p'>(</span><span class='s2'>&quot;aftershow&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>evt</span><span class='p'>)</span> <span class='p'>{</span>
+        <span class='kd'>var</span> <span class='nx'>previouslyFocusedButton</span> <span class='o'>=</span> <span class='nx'>evt</span><span class='p'>.</span><span class='nx'>state</span><span class='p'>;</span>
+        <span class='nx'>previouslyFocusedButton</span><span class='p'>.</span><span class='nx'>focus</span><span class='p'>();</span>
+<span class='p'>});</span>
+</code></pre></div>
+<h2 id='using_componentevents'>Using ComponentEvents</h2>
+
+<p>As mentioned above, using events (namely ComponentEvent) are critical for successful use of Components. As Components are singletons, events are the only way your component can be informed that it must update its content with new data, etc. each time it is shown.</p>
+
+<p>The important events are:</p>
+
+<h3 id='load'>load</h3>
+
+<p>This event is fired once, the first time a Component is loaded. At this point the Component will have been initialised but not placed into the UI graph, i.e. this event will not bubble.</p>
+
+<h3 id='beforerender'>beforerender</h3>
+
+<p>This event is fired each time a Component is shown. The Component will be in the UI graph (its parent being a ComponentContainer), but it will not yet have been rendered (via the render(&#8230;) method).</p>
+
+<p><em>Note: If you wish to bind data to any widgets within a Component, beforerender is the correct place to do it. You should also update any Labels, Images, etc. with any content that varies based on the args property of this event.</em></p>
+
+<h3 id='beforeshow'>beforeshow</h3>
+
+<p>This event is fired each time a Component is shown. The Component will be in the UI graph and will have been rendered (outputElement will not be null). However it will not be visible (e.g. DOM element will have visibility: hidden)</p>
+
+<h3 id='aftershow'>aftershow</h3>
+
+<p>This event is fired each time a Component is shown. This Component will be in the UI graph, will have been rendered, and will be visible to the user.</p>
+
+<p><em>Note: Either beforeshow or aftershow are the recommended places for overlays/modal Components to capture focus.</em></p>
+
+<h3 id='beforehide'>beforehide</h3>
+
+<p>This event is fired each time a Component is hidden. The Component will be in the UI graph, will have been rendered, and will currently be visible to the user.</p>
+
+<p><em>Note: You may call <code>preventDefault()</code> on this event to prevent the rendered output from being removed from the DOM. This is particularly useful if you wish to cross-fade, etc., however you MUST ensure the Component&#8217;s DOM element is removed before the Component is shown again.</em></p>
+
+<h3 id='afterhide'>afterhide</h3>
+
+<p>This event is fired each time a Component is hidden. The Component will be in the UI graph, but will have been remove from the output (unless <code>preventDefault()</code> was called in a beforehide listener).</p>
+
+<h2 id='component_lifecycle'>Component Lifecycle</h2>
+
+<p>The following sequence diagram illustrates loading Component A (defined in Module A) into a ComponentContainer using <code>ComponentContainer.showComponent(...)</code>. The application then uses <code>showComponent(...)</code> again to show Component B within the same ComponentContainer. Later the application then shows Component A again.</p>
+
+<p>Note how <code>ComponentContainer.showComponent(...)</code> is asynchronous. If the module has not yet been loaded, it calls RequireJS which loads the module asynchronously. If the module has already been loaded, <code>showComponent(...)</code> begins the process of showing the component asynchronously and returns instantly.</p>
+
+<p><img alt='Sequence Diagram' src='/tal/img/overview/components_sequence.png' /></p>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+ 
+    {% include analytics.html %}
+
+    <!-- Le styles -->
+    <link href="{{site.baseurl}}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{site.baseurl}}/css/main.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        background-color: rgb(211,37,40);
+      }
+      p {
+        font-size: 21px;
+        font-weight: 200;
+        line-height: 30px;
+        color: white;
+      }
+      p > a {
+        color: white;
+      }
+    </style>
+    <link href="{{site.baseurl}}/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="{{site.baseurl}}/css/main.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="{{site.baseurl}}/img/favicon.png">
+  </head>
+
+  <body>
+
+    {% include navbar.html %}
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+    
+    <div>
+            
+      <div class="row-fluid span12 redbox">
+        
+        <img src="img/tal-logo-landing.png" />
+        
+        <hr />
+        
+        <div>
+          <p class="lead lead-white">
+            <a class="btn btn-large btn-inverse" type="button" href="https://github.com/fmtvp/tal/zipball/master">
+              <i class="icon-download-alt icon-white"></i> Download TAL
+            </a>
+          </p>
+          
+          <p>
+            {% include contact-bar.html %}
+          </p>
+          
+          <p class="lead">
+            {{ content }}
+          </p>
+            
+          </p>
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+    
+    {% include javascript_includes.html %}
+
+  </body>
+</html>
+

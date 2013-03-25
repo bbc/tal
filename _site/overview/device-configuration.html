@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+        <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+    <!-- Web fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>
+
+    <!-- Le styles -->
+    <link href="/tal/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/tal/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/tal/css/pygments.css" rel="stylesheet">
+    <link href="/tal/css/main.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/tal/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/tal/img/favicon.png">
+    
+  </head>
+
+  <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+        <a class="brand" href="/tal/index.html"><img src="/tal/img/bbclogo.png"></a>
+        <ul class="nav">
+
+          <!-- Landing Page -->          
+          <li class="active"><a href="/tal/index.html">Home</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Getting Started<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/getting-started/introducing-tal.html">Introducing TAL</a></li>
+              <li><a href="/tal/getting-started/tutorial/installation.html">Installation</a></li>
+              <li><a href="/tal/getting-started/tutorial/createanindex.html">The Index</a></li>
+              <li><a href="/tal/getting-started/tutorial/applicationclass.html">Launch the App</a></li>
+              <li><a href="/tal/getting-started/tutorial/firstcomponent.html">First Component</a></li>
+              <li><a href="/tal/getting-started/tutorial/layout.html">Example Layout &amp; Style</a></li>
+            </ul>
+          </li>
+
+          <!-- Technical overview sections -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Overview<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/overview/concepts.html">Concepts</a></li>
+              <li class="divider"></li>
+              <li><a href="/tal/overview/device-configuration.html">Device Config</a></li>
+              <li><a href="/tal/overview/components.html">Components</a></li>
+              <li><a href="/tal/overview/layouts.html">Layouts and Style</a></li>
+              <li><a href="/tal/overview/events.html">Events</a></li>
+            </ul>
+          </li>
+          
+          <!-- Widget documentation -->
+          <li class="dropdown active">
+            <a href="/tal/widgets" class="dropdown-toggle" data-toggle="dropdown">Widgets<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/widgets/working-with-widgets.html">Working With Widgets</a></li>
+              <li><a href="/tal/widgets/data-binding.html">Data Binding</a></li>
+              <li><a href="/tal/widgets/media-playback.html">Media Playback</a></li>
+              <li><a href="/tal/other/broadcast.html">Broadcast TV</a></li>
+              <li><a href="/tal/widgets/focus-management.html">Focus Management</a></li>
+              <li><a href="/tal/widgets/animation.html">Animation</a></li>
+            </ul>
+          </li>
+          
+          <!-- Miscelaneous topics -->
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/tal/other/storage.html">Storage</a></li>
+              <li><a href="/tal/other/exiting.html">Exiting</a></li>
+              <li><a href="/tal/other/networking.html">Networking</a></li>
+              <li><a href="/tal/other/contributing.html">Contributing</a></li>
+              <li><a href="/tal/other/contact.html">Contact</a></li>
+            </ul>
+          </li>
+          
+          <!-- Class documentation -->
+          <li class="active"><a href="/tal/jsdoc/index.html">JS Doc</a></li>
+          
+          <!-- Getting started pages -->
+          <li class="active"><a href="/tal/testing.html">Testing</a></li>
+          
+          <!-- FAQ Section -->
+          <li class="active"><a href="/tal/faq.html">FAQ</a></li>
+        
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <a href="https://github.com/fmtvp/tal"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+    
+    <div class="container">
+            
+      <div class="row-fluid">
+      
+                <div class="span2">
+
+          <img src="/tal/img/tal-logo-bw.jpg"></img>
+
+          <p></p>
+          <br />
+
+          <p><code>ANTIE v1.0</code></p>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/zipball/master"><i class="icon-download-alt icon-white"></i> Download ZIP</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal/tarball/master"><i class="icon-download-alt icon-white"></i> Download TAR</a>
+          <a class="btn btn-block btn-danger" type="button" href="https://github.com/fmtvp/tal"><i class="icon-eye-open icon-white"></i> View on GitHub</a>
+
+          <div>
+            <p></p>
+            <p>
+              <a href="https://twitter.com/TALOpenSource" class="twitter-follow-button" data-show-count="false">Follow us</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+            <p>
+              <a href="https://twitter.com/share" class="twitter-share-button" data-via="TALOpenSource">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="span9" style="margin-left: 40px">
+      
+          <h1 id='device_configuration_files'>Device Configuration Files</h1>
+<p class='lead'>Device configurations are managed by a set of JSON files.
+Each file represents a device or family of similar devices.</p>
+<p>Configuration is split into two sets. The framework configuration files which specify a set of default values required by the framework itself, and an application file which can override these defaults and include additional configuration properties relevant to an application.</p>
+
+<h2 id='framework_configuration'>Framework Configuration</h2>
+
+<p>The following properties are required within each framework device configuration:</p>
+
+<h3 id='pagestrategy_string'>pageStrategy (string)</h3>
+
+<p>Used in page construction (see <a href='/tal/getting-started/tutorial/createanindex.html'>Creating an Index</a>)</p>
+<table><thead><tr><th>Strategy</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>html5</code></td><td style='text-align: left;'>For html5 compatible browsers. Use this if supported by device</td>
+</tr><tr><td style='text-align: left;'><code>hbbtv</code></td><td style='text-align: left;'>For hbbtv compatible devices</td>
+</tr><tr><td style='text-align: left;'><code>samsungmaple</code></td><td style='text-align: left;'>For samsung devices running in maple mode (use html5 instead unless specifically needed)</td>
+</tr></tbody></table>
+<h3 id='modules_object'>modules (object)</h3>
+
+<p>The require modules which should be loaded to implement the device abstraction layer.</p>
+
+<h4 id='modulesbase_string'>modules.base (string)</h4>
+
+<p>The module on which the device is based. This will usually be antie/devices/browserdevice.</p>
+
+<h4 id='modulesmodifiers_array'>modules.modifiers (array)</h4>
+
+<p>Mix-in modules to support common implementations of the abstraction layer. This must contain one module from each of the following namespaces</p>
+
+<ul>
+<li><code>antie/devices/anim/*</code> &#8211; Animation</li>
+
+<li><code>antie/devices/media/*</code> &#8211; Media playback</li>
+
+<li><code>antie/devices/data/*</code> &#8211; JSON parsing</li>
+
+<li><code>antie/devices/net/*</code> &#8211; Network implementation</li>
+
+<li><code>antie/devices/storage/*</code> &#8211; Persistent storage implementation</li>
+
+<li><code>antie/devices/exit/*</code> &#8211; Application exit method</li>
+</ul>
+
+<p>It should also include all of the supported modules from</p>
+
+<ul>
+<li><code>antie/devices/logging/*</code> - Log output method</li>
+</ul>
+
+<h5 id='animation_modifiers'>Animation Modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/anim/noanim</code></td><td style='text-align: left;'>Device does not support animation - It will be disabled within the framework.</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/anim/css3</code></td><td style='text-align: left;'>Animation via css3 transitions - Generally the best performance, if it works use this.</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/anim/styletopleft</code></td><td style='text-align: left;'>Animation via tweening style.top and style.left with JavaScript. For reasonably quick devices which do not support css3.</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/anim/scrolloffset</code></td><td style='text-align: left;'>Deprecated</td>
+</tr></tbody></table>
+<h5 id='media_modifiers'>Media modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/media/html5</code></td><td style='text-align: left;'>The html5 <code>&lt;video&gt;</code> element is used for media playback.</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/media/cehtml</code></td><td style='text-align: left;'>CE-HTML is used for media playback</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/media/samsung_maple</code></td><td style='text-align: left;'>Samsung&#8217;s Device API and Player object are used for media playback</td>
+</tr></tbody></table>
+<h5 id='data_modifiers'>Data modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/data/nativejson</code></td><td style='text-align: left;'>ECMAScript 5 JSON object used for parsing</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/data/json2</code></td><td style='text-align: left;'>Douglas Crockford&#8217;s json2.js library used for parsing</td>
+</tr></tbody></table>
+<h5 id='network_modifiers'>Network modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/net/default</code></td><td style='text-align: left;'>Use XHR for network requests</td>
+</tr></tbody></table>
+<h5 id='storage_modifiers'>Storage modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/storage/cookie</code></td><td style='text-align: left;'>Use persistant cookies for storage</td>
+</tr></tbody></table>
+<h5 id='exit_modifiers'>Exit modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/exit/history</code></td><td style='text-align: left;'>Exits the application by going to the first item in the browser history</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/exit/closewindow</code></td><td style='text-align: left;'>Exits the application by calling window.close()</td>
+</tr></tbody></table>
+<h5 id='logging_modifiers'>Logging modifiers</h5>
+<table><thead><tr><th>Module name</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'><code>antie/devices/logging/default</code></td><td style='text-align: left;'>Log messages are output via the global <code>console</code> object</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/logging/onscreen</code></td><td style='text-align: left;'>Log messages are displayed on screen in a DIV element</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/logging/consumelog</code></td><td style='text-align: left;'>Log messages are disabled</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/logging/alert</code></td><td style='text-align: left;'>Log messages output via window.alert()</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/logging/jstestdriver</code></td><td style='text-align: left;'>Log messages output via the jstestdriver console object (for use within unit tests)</td>
+</tr><tr><td style='text-align: left;'><code>antie/devices/logging/xhr</code></td><td style='text-align: left;'>Remote logging</td>
+</tr></tbody></table>
+<h3 id='logging_object'>logging (object)</h3>
+
+<h4 id='logginglevel_string'>logging.level (string)</h4>
+
+<p>The framework supports the following log types, in ascending severity</p>
+
+<ol>
+<li><code>log</code></li>
+
+<li><code>debug</code></li>
+
+<li><code>info</code></li>
+
+<li><code>warn</code></li>
+
+<li><code>error</code></li>
+</ol>
+
+<p>If the <code>logging.level</code> property is set to one the above types, the framework logs all messages of equal or greater severity then that specified, i.e. the type specified and all those below it in the list.</p>
+
+<p>There are two more options</p>
+
+<ul>
+<li><code>all</code></li>
+
+<li><code>none</code></li>
+</ul>
+
+<p>Which log all or no messages respectively.</p>
+
+<p>All framework configurations should have this value set to <code>none</code>. If logging is required it should be overridden by applications only during development.</p>
+
+<h3 id='streaming_object'>streaming (object)</h3>
+
+<p>Details of media support for the device, including codecs, protocols and limits.</p>
+
+<p>The default is <code>%href%</code></p>
+
+<h4 id='streamingvideo_object'>streaming.video (object)</h4>
+
+<p>Video specific media information</p>
+
+<h5 id='streamingvideomediauriformat_string'>streaming.video.mediaURIFormat (string)</h5>
+
+<p>One or more tags (e.g. %tagname%) used when building media URLs.</p>
+
+<h5 id='streamingvideosupported_array_of_profile_objects'>streaming.video.supported (array of profile objects)</h5>
+
+<p>An array of supported profile objects. (see below)</p>
+
+<h4 id='streamingaudio_object'>streaming.audio (object)</h4>
+
+<p>Audio specific media information</p>
+
+<h5 id='streamingaudiomediauriformat_string'>streaming.audio.mediaURIFormat (string)</h5>
+
+<p>See steaming.video.mediaURIFormat</p>
+
+<h5 id='streamingaudiosupported_array_of_profile_objects'>streaming.audio.supported (array of profile objects)</h5>
+
+<p>An array of supported profile objects. (See below)</p>
+
+<h4 id='profile_objects'>Profile objects</h4>
+
+<p><code>profile.protocols</code> <strong>(array of strings)</strong></p>
+
+<p>Supported protocols, eg. &#8216;http&#8217;, &#8216;https&#8217;, &#8216;rtmp&#8217;</p>
+
+<p><code>profile.encodings</code> <strong>(array of strings)</strong></p>
+
+<p>An array of encodings, e.g. &#8216;h264&#8217;, &#8216;mp3&#8217;, &#8216;wmv&#8217;</p>
+
+<p><code>profile.maximumBitRate</code> <strong>(integer)</strong> maximum bit rate supported by the device in kbps</p>
+
+<p><code>profile.maximumVideoLines</code> <strong>(integer, video profiles only)</strong> The maximum number of horizontal lines (i.e. vertical resolution) the device supports. e.g. 1080.</p>
+
+<h3 id='input_object'>input (object)</h3>
+
+<p>Information about user input</p>
+
+<h4 id='inputmapobject'>input.map(object)</h4>
+
+<p>Map from raw key codes to their semantic meanings. Valid symbols for the mappings are as follows (bold are mandatory):</p>
+
+<ul>
+<li><strong>UP</strong></li>
+
+<li><strong>DOWN</strong></li>
+
+<li><strong>LEFT</strong></li>
+
+<li><strong>RIGHT</strong></li>
+
+<li><strong>ENTER</strong></li>
+
+<li>BACK</li>
+
+<li>SPACE</li>
+
+<li>BACK_SPACE</li>
+
+<li>PLAY</li>
+
+<li>PAUSE</li>
+
+<li>PLAY_PAUSE</li>
+
+<li>STOP</li>
+
+<li>PREV</li>
+
+<li>NEXT</li>
+
+<li>FAST_FWD</li>
+
+<li>REWIND</li>
+
+<li>SUBTITLE</li>
+
+<li>INFO</li>
+
+<li>VOLUME_UP</li>
+
+<li>VOLUME_DOWN</li>
+
+<li>MUTE</li>
+
+<li>A &#8211; Z</li>
+
+<li>0 &#8211; 9</li>
+</ul>
+
+<p>The map may also contain the following shortcuts:</p>
+<table><thead><tr><th>Shortcut</th><th>Description</th></tr></thead><tbody><tr><td style='text-align: left;'>alpha</td><td style='text-align: left;'>An array of 2 numbers specifying the range A-Z</td>
+</tr><tr><td style='text-align: left;'>alpha</td><td style='text-align: left;'>An array of 2 numbers specifying the range A-Z</td>
+</tr><tr><td style='text-align: left;'>numeric</td><td style='text-align: left;'>An array of 2 numbers specifying the range 0-9</td>
+</tr><tr><td style='text-align: left;'>multitap</td><td style='text-align: left;'>Details of number -&gt; character mappings when multi-tap is used. If provided, must contain an array of 10 strings (one for each number). The characters of each string will be cycled through when the digits 0-9 are repeatedly pressed.</td>
+</tr></tbody></table>
+<p>Care should be exercised when using optional keys within an application as not all devices will support them.</p>
+
+<h3 id='accessibility_object'>accessibility (object)</h3>
+
+<p>Accessibility related device information</p>
+
+<h4 id='accessibilitycaptions_object'>accessibility.captions (object)</h4>
+
+<p>Device support of subtitles</p>
+
+<h5 id='accessibilitycaptionssupported_array_of_strings'>accessibility.captions.supported (array of strings)</h5>
+
+<p>An array of MIME types for supported subtitle formats (e.g. <code>application/ttaf+xml</code>)</p>
+
+<h3 id='layouts_array_of_layout_objects'>layouts (array of layout objects)</h3>
+
+<p>Details of resolutions the device&#8217;s browser may run in, these must be supported by each application that wishes to run on the device.</p>
+
+<h3 id='layout_objects'>Layout objects</h3>
+
+<p><code>layout.width</code> (integer)</p>
+
+<p>Minimum screen width required for this layout in pixels</p>
+
+<p><code>layout.height</code> (integer)</p>
+
+<p>Minimum screen height required for this layout in pixels</p>
+
+<p><code>layout.module</code> (string)</p>
+
+<p>Application require module used to configure this layout (%application% tag will be replaced by the application ID)</p>
+
+<p><code>layout.classes</code> (array of strings) CSS Class names to add to the top-level element when this layout is used.</p>
+
+<p><code>layout.css</code> (array of strings) Additional CSS files to load for this layout (relative to the styleBaseUrl passed to the application constructor)</p>
+
+<h3 id='networking_object'>networking (object)</h3>
+
+<p>Network related information</p>
+
+<h4 id='networkingsupportsjsonp_boolean'>networking.supportsJSONP (boolean)</h4>
+
+<p>Whether a device can successfully load JSON objects via JSONP.</p>
+
+<h2 id='optional_properties'>Optional properties</h2>
+
+<p>The following properties may be added to framework device configuration files, but are not compulsary</p>
+
+<h3 id='_comment_string'>_comment (string)</h3>
+
+<p>A human readable comment about the configuration</p>
+
+<h3 id='defaults_object'>defaults (object)</h3>
+
+<p>Animation defaults</p>
+
+<h4 id='defaultsshowelementfade_object'>defaults.showElementFade (object)</h4>
+
+<p>An animation options object describing how fade-ins should behave. See <a href='/tal/widgets/animation.html'>Animation</a>.</p>
+
+<h4 id='defaultshideelementfade_object'>defaults.hideElementFade (object)</h4>
+
+<p>An animation options object describing how fade-outs should behave. See <a href='/tal/widgets/animation.html'>Animation</a>.</p>
+
+<h2 id='application_configuration'>Application Configuration</h2>
+
+<p>In addition to the framework configuration, it is likely you will want to specify application specific properties per device.</p>
+
+<p>It is TAL convention to do this via a separate JSON file, then merge the two to a single variable stored at <code>antie.framework.deviceConfiguration</code></p>
+
+<p>You should never access this variable directly, instead use the <code>antie.device</code> method <code>getConfig()</code></p>
+
+<p>There is a method <code>mergeConfigurations()</code> in the <em>AntieFramework</em> php class for merging device configurations. Note that <code>mergeConfigurations()</code> overrides any properties present in the original with those present in the patch.</p>
+
+<h2 id='example_framework_configuration_file'>Example Framework Configuration file</h2>
+<div class='highlight'><pre><code class='json'><span class='p'>{</span>
+  <span class='nt'>&quot;pageStrategy&quot;</span><span class='p'>:</span> <span class='s2'>&quot;html5&quot;</span><span class='p'>,</span>
+  <span class='nt'>&quot;modules&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;base&quot;</span><span class='p'>:</span> <span class='s2'>&quot;antie/devices/browserdevice&quot;</span><span class='p'>,</span>
+    <span class='nt'>&quot;modifiers&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+      <span class='s2'>&quot;antie/devices/anim/styletopleft&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/media/html5&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/net/default&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/data/nativejson&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/storage/cookie&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/logging/onscreen&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/logging/xhr&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/logging/jstestdriver&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;antie/devices/exit/closewindow&quot;</span>
+    <span class='p'>]</span>
+  <span class='p'>},</span>
+  <span class='nt'>&quot;logging&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;level&quot;</span><span class='p'>:</span> <span class='s2'>&quot;none&quot;</span>
+  <span class='p'>},</span>
+  <span class='nt'>&quot;streaming&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;video&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+      <span class='nt'>&quot;mediaURIFormat&quot;</span><span class='p'>:</span> <span class='s2'>&quot;%href%&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;supported&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+        <span class='p'>{</span>
+          <span class='nt'>&quot;protocols&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+            <span class='s2'>&quot;http&quot;</span>
+          <span class='p'>],</span>
+          <span class='nt'>&quot;encodings&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+            <span class='s2'>&quot;h264&quot;</span>
+          <span class='p'>],</span>
+          <span class='nt'>&quot;transferFormat&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+            <span class='s2'>&quot;hls&quot;</span><span class='p'>,</span>
+            <span class='s2'>&quot;plain&quot;</span>
+          <span class='p'>],</span>
+          <span class='nt'>&quot;maximumBitRate&quot;</span><span class='p'>:</span> <span class='mi'>3600</span><span class='p'>,</span>
+          <span class='nt'>&quot;maximumVideoLines&quot;</span><span class='p'>:</span> <span class='mi'>1080</span>
+        <span class='p'>}</span>
+      <span class='p'>]</span>
+    <span class='p'>},</span>
+    <span class='nt'>&quot;audio&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+      <span class='nt'>&quot;mediaURIFormat&quot;</span><span class='p'>:</span> <span class='s2'>&quot;%href%&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;supported&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+        <span class='p'>{</span>
+          <span class='nt'>&quot;protocols&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+            <span class='s2'>&quot;http&quot;</span>
+          <span class='p'>],</span>
+          <span class='nt'>&quot;encodings&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+            <span class='s2'>&quot;aac&quot;</span>
+          <span class='p'>],</span>
+          <span class='nt'>&quot;maximumBitRate&quot;</span><span class='p'>:</span> <span class='mi'>192</span>
+        <span class='p'>}</span>
+      <span class='p'>]</span>
+    <span class='p'>}</span>
+  <span class='p'>},</span>
+  <span class='nt'>&quot;input&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;map&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+      <span class='nt'>&quot;13&quot;</span><span class='p'>:</span> <span class='s2'>&quot;ENTER&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;37&quot;</span><span class='p'>:</span> <span class='s2'>&quot;LEFT&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;38&quot;</span><span class='p'>:</span> <span class='s2'>&quot;UP&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;39&quot;</span><span class='p'>:</span> <span class='s2'>&quot;RIGHT&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;40&quot;</span><span class='p'>:</span> <span class='s2'>&quot;DOWN&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;112&quot;</span><span class='p'>:</span> <span class='s2'>&quot;SUBTITLE&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;113&quot;</span><span class='p'>:</span> <span class='s2'>&quot;PLAY&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;415&quot;</span><span class='p'>:</span> <span class='s2'>&quot;PLAY&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;114&quot;</span><span class='p'>:</span> <span class='s2'>&quot;PLAY_PAUSE&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;19&quot;</span><span class='p'>:</span> <span class='s2'>&quot;PLAY_PAUSE&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;402&quot;</span><span class='p'>:</span> <span class='s2'>&quot;PLAY_PAUSE&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;115&quot;</span><span class='p'>:</span> <span class='s2'>&quot;STOP&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;413&quot;</span><span class='p'>:</span> <span class='s2'>&quot;STOP&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;116&quot;</span><span class='p'>:</span> <span class='s2'>&quot;FAST_FWD&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;417&quot;</span><span class='p'>:</span> <span class='s2'>&quot;FAST_FWD&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;117&quot;</span><span class='p'>:</span> <span class='s2'>&quot;REWIND&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;412&quot;</span><span class='p'>:</span> <span class='s2'>&quot;REWIND&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;166&quot;</span><span class='p'>:</span> <span class='s2'>&quot;BACK&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;8&quot;</span><span class='p'>:</span> <span class='s2'>&quot;BACK&quot;</span>
+    <span class='p'>}</span>
+  <span class='p'>},</span>
+  <span class='nt'>&quot;accessibility&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;captions&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+      <span class='nt'>&quot;supported&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+        <span class='s2'>&quot;application/ttaf+xml&quot;</span>
+      <span class='p'>]</span>
+    <span class='p'>}</span>
+  <span class='p'>},</span>
+  <span class='nt'>&quot;layouts&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+    <span class='p'>{</span>
+      <span class='nt'>&quot;width&quot;</span><span class='p'>:</span> <span class='mi'>960</span><span class='p'>,</span>
+      <span class='nt'>&quot;height&quot;</span><span class='p'>:</span> <span class='mi'>540</span><span class='p'>,</span>
+      <span class='nt'>&quot;module&quot;</span><span class='p'>:</span> <span class='s2'>&quot;%application%/appui/layouts/540p&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;classes&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+        <span class='s2'>&quot;browserdevice540p&quot;</span>
+      <span class='p'>]</span>
+    <span class='p'>},</span>
+    <span class='p'>{</span>
+      <span class='nt'>&quot;width&quot;</span><span class='p'>:</span> <span class='mi'>1280</span><span class='p'>,</span>
+      <span class='nt'>&quot;height&quot;</span><span class='p'>:</span> <span class='mi'>720</span><span class='p'>,</span>
+      <span class='nt'>&quot;module&quot;</span><span class='p'>:</span> <span class='s2'>&quot;%application%/appui/layouts/720p&quot;</span><span class='p'>,</span>
+      <span class='nt'>&quot;classes&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+        <span class='s2'>&quot;browserdevice720p&quot;</span>
+      <span class='p'>]</span>
+    <span class='p'>}</span>
+  <span class='p'>],</span>
+  <span class='nt'>&quot;networking&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+    <span class='nt'>&quot;supportsJSONP&quot;</span><span class='p'>:</span> <span class='kc'>true</span>
+  <span class='p'>}</span>
+<span class='p'>}</span>
+</code></pre></div>
+
+        </div>
+      
+      </div>
+      
+    </div> <!-- /container -->
+
+      <div class="footer">
+    <div class="container">
+      <p>TAL is an Open Source BBC project from TV Platforms in Salford</p>
+      <p>All code and documentation is licensed under Apache License v2.0</p>
+      <p>Documentation built using <a href="http://jekyllrb.com/">Jekyll</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and <a href="http://pygments.org/">Pygments</a>. Hosted on GitHub pages.</p>
+    </div>
+  </div>
+    
+        <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/tal/js/jquery.min.js"></script>
+    <script src="/tal/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>
+
