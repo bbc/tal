@@ -46,6 +46,9 @@ TV Applications with.  It is not a copy or a mirror.
 **Answer:** TAL will work on most HTML-based Connected TV devices and it's structured 
 in such a way that it's relatively easy to add support for a device that isn't already supported.
 
+### **Question:** Does the TV Application Layer work on Sony TV, Blu-ray players and PS3?
+**Answer:** TAL is technically able to run on most Sony devices from 2011 onwards, please contact them for more detailed information.
+
 ### **Question:** How does a new device get supported?  
 **Answer:** TAL works by using a json format configuration file to define which modules to load 
 for a specific device.  The config/devices folder contains the specific device files that are
