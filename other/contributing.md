@@ -27,7 +27,7 @@ TAL and lets us know that everything you contribute is your own. This ensures we
 safely include it under the terms of the Apache Licence, Version 2.0, protecting
 the project and anyone who uses it.
 
-The CLA is a license agreement only; it does not transfer copyright ownership and
+The CLA is a licence agreement only; it does not transfer copyright ownership and
 does not change your rights to use your own Contributions for any other purpose.
 
 ### Completing the Contributor License Agreement
