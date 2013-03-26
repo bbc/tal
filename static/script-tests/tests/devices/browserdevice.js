@@ -192,6 +192,8 @@
      * @param queue
      */
     this.BrowserDeviceTest.prototype.testGetStylesheetElements = function(queue) {
+    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
+    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/css3transitions.css">*/
         expectAsserts(1);
 
         queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
