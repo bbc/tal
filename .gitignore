@@ -1,2 +1,3 @@
 .project
 static/script-tests/prelude.js
+static/js-test-driver-rt.conf
