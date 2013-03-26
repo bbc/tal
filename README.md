@@ -1,6 +1,5 @@
-![TAL](http://fmtvp.github.com/tal/img/tal-logo-bw-small.jpg)
-
 #TAL -- TV Application Layer
+![TAL](http://fmtvp.github.com/tal/img/tal-logo-bw-small.jpg)
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
 whilst increasing the reach of BBC TV applications such as *iPlayer*. Today all of the BBC's HTML-based
