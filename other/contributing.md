@@ -32,7 +32,7 @@ does not change your rights to use your own Contributions for any other purpose.
 
 ### Completing the Contributor License Agreement
 
-You can find the CLA [here]({{site.baseurl}}/cla.html).
+You can find the CLA [here]({{site.baseurl}}other/tal_contributor_licence_agreement.pdf).
 
 When completing the CLA, please be very careful to enter all the information
 requested, including your email address and Github user name if you have forked
