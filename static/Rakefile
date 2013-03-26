@@ -1,0 +1,313 @@
+require 'rubygems'
+require 'net/http'
+require 'selenium-webdriver'
+require 'json'
+require './unit-testing/lcov-file.rb'
+require './unit-testing/rake-helper.rb'
+
+$params = {
+	:jtd_runnerMode => OptionArg( "runnerMode", "QUIET" ),
+	:jtd_tests      => OptionArg( "tests", "all" ),
+	:jtd_server     => OptionArg( "server", "http://localhost:9876" ),
+	:jtd_output     => OptionArg( "testOutput", nil ),
+	:jtd_verbose    => SwitchArg( "verbose" ),
+	:jtd_port       => OptionArg( "port", 9876 ),
+	:output         => PlainArg( "testOutput", false ),
+	:coverage       => PlainArg( "coverage", false ),
+	:webdriverurl   => PlainArg( "webdriverurl", false ),
+	:server         => PlainArg( "server", "http://localhost:9876" ),
+	:port           => 9876
+}
+
+if( $params[ :server ] )
+	uri = URI( $params[ :server ] )
+	if( uri.port == 80 )
+		puts "[ERROR] Server Address Must Include Port ( Port != 80 )"
+		fail
+	else
+		$params[ :port ] = uri.port;
+	end
+end
+
+#setup data
+CAPTURE_URL         = "#{$params[ :server ]}/capture"
+
+#paths to required files
+CONFIG_PATH        = "js-test-driver-rt.conf"
+PRELUDE_PATH       = "script-tests/prelude.js"
+JTD_JAR_PATH       = "unit-testing/JsTestDriver-1.3.3d.jar"
+COVERAGE_FILE_NAME = "jsTestDriver.conf-coverage.dat"
+
+#jstestdriver commands
+SERVER_COMMAND     = "java -jar #{JTD_JAR_PATH} --config #{CONFIG_PATH} #{$params[ :jtd_runner_mode ]} #{$params[ :jtd_port ]}"
+TEST_COMMAND       = "java -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
+
+$script_files  	   = ''
+$test_files		   = ''
+$jtd_config 	   = ''
+$jtd_server_pid    = 0
+$webdriver_object  = nil
+
+task :help do
+	puts "rakefile to help run unittests"
+	puts ""
+	puts "setup=<path/to/file>                   - Path to a json file that specifies any of the following options."
+	puts "runnerMode=<QUIET|DEBUG>               - Sets JsTestDriver's runnerMode option. Optional,Default: QUIET"
+	puts "tests=<REGEX>                          - Sets JsTestDriver's tests option. Optional,Default: ALL"
+	puts "testOutput=<path/to/dir>               - Sets JsTestDriver's testOutput option. Optional,Default:'' (No Output To File)"
+	puts "verbose=<1|0>                          - Sets JsTestDriver's verbose option. Optional,Default: 0"
+	puts "coverage=<1|0>                         - Turns On Coverage. Default: 0"
+	puts "webdriverurl=<chrome|url/to/webdriver> - Controls browser automation, Optional, Default: ''"
+	puts "                                         'chrome' will automate browser via chrome driver"
+	puts "                                         otherise interpreted as a URL to a webdriver instance"
+	puts "                                         default behaviour will require manual driving of the browser to capture page"
+	puts ""
+	puts "Examples"
+	puts "rake coverage=1                                  - runs tests with coverage but no browser autmation"
+	puts "rake testOutput=test-results webdriverurl=chrome - runs tests, automates browser via chromedriver and outputs results to file"
+end
+
+#automate browser
+task :selenium => [ :wait_for_server ] do 
+	case $params[ :webdriverurl ]
+	when false
+		puts "[INFO] No Browser Automation Selected ( see webdriverurl param ) - Browser Must Be Started Manually"
+		puts "[INFO] Navigate Browser To #{CAPTURE_URL}"
+	when "chrome"
+		puts "[INFO] Starting Web Browser Via Chrome Driver"
+		$webdriver_object = Selenium::WebDriver.for :chrome
+		$webdriver_object.navigate.to CAPTURE_URL
+	when "firefox"
+		puts "[INFO] Starting Web Browser Via Firefox Driver"
+		$webdriver_object = Selenium::WebDriver.for :firefox
+		$webdriver_object.navigate.to CAPTURE_URL
+	else 
+		puts "[INFO] Starting Web Browser Via Web Driver ( #{$params[ :webdriverurl ]} )"
+		$webdriver_object = Selenium::WebDriver.for(:remote, :desired_capabilities => :chrome, :url => $params[ :webdriverurl ] )
+		$webdriver_object.navigate.to CAPTURE_URL
+	end
+end
+
+#generates list of scripts to be added to the config
+task :generate_script_file_list do
+	puts "[INFO] Generating Script List"
+
+	Dir.glob("script/**/*.js").each do |x|
+		$script_files += "  - " + x + "\n"
+	end
+end
+
+#generates list of tests to be added to the config
+task :generate_test_file_list  do
+	puts "[INFO] Generating Test List"
+
+	Dir.glob("script-tests/**/*.js").each do |x|
+		$test_files += "  - " + x + "\n"
+	end
+	$test_files = remove_lines( $test_files, [ "interactivehtml", "queuedrequire", "fixtures"] )
+end
+
+#generate prelude file
+task :generate_prelude_file do
+	puts "[INFO] Building Prelude File"
+
+	$text_prelude = $text_prelude.gsub( "${SERVER}", $params[ :server ] );
+
+	file = File.open( PRELUDE_PATH, "w" )
+	file.write( $text_prelude )
+	file.flush();
+	file.close();
+end
+
+#generates the jstestdriver config file
+task :generate_jtd_config_file => [ :generate_script_file_list, :generate_test_file_list, :generate_prelude_file ] do
+	puts "[INFO] Building JsTestDriver Config File"
+	
+	$jtd_config = $jtd_config + $jtd_template
+
+	$jtd_config = $jtd_config.gsub( "#test-block", "#test-block\n" + $test_files );
+	$jtd_config = $jtd_config.gsub( "#script-block", "#script-block\n" + $script_files ); 
+
+	if( $params[ :coverage ])
+		puts "[INFO] Adding Coverage To JsTestDriver Config File"
+		$jtd_config = $jtd_config.gsub( "#plugin-block", "#plugin-block\n" + $text_coverage_plugin );
+	end
+
+	file = File.open( CONFIG_PATH, "w" )
+	file.write( $jtd_config )
+	file.flush();
+	file.close();
+end
+
+#start the js-test-driver server
+task :start_jtd_server => [ :generate_jtd_config_file ] do
+	puts( "[INFO] Starting JsTestDriver Server: " + SERVER_COMMAND )
+	$jtd_server_pid = fork do
+		exec SERVER_COMMAND
+		exit !127
+	end
+end
+
+#waits for the jtd server to become active
+task :wait_for_server => [ :start_jtd_server ] do
+	puts "[INFO] Waiting For JsTestDriver Server To Start";
+	uri = URI.parse( $params[ :server ] )
+
+    while true
+      sleep( 10 );
+      begin
+      	response = Net::HTTP.get_response( uri )
+      	if( response.code == "200" )
+      		puts "[INFO] Server Started"
+            break;
+     	end
+     	puts "response = #{response.code}"
+      rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
+             Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+      end
+    end
+end
+
+#waits for a browser to connect to the server
+task :wait_for_browser => [ :wait_for_server ] do
+	puts "[INFO] Waiting For Browser To Connect To JsTestDriverServer"
+	uri = URI.parse( $params[ :server ] )
+
+  	while true
+    	begin
+	      	response = Net::HTTP.get_response( uri )
+	      	if( response.code == "200" )
+	        	if( !response.body().index( "Browsers: (0)" ) )
+	        		puts "[INFO] Browser Connected"	
+	          		break;
+	        	end
+	      	end
+	    rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
+        	   Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+    	end
+    end
+end
+
+desc "run the javascript unit tests - run rake help for arguments"
+task :test => [ :selenium, :wait_for_browser ] do
+	puts "[INFO] Starting Tests " + TEST_COMMAND
+	system( TEST_COMMAND )
+end
+
+at_exit do
+   shutDown()
+end
+
+#default - run the tests
+task :default => [:test] do
+	if( $jtd_output && $params[ :coverage ] )
+		process_coverage();
+	end
+end
+
+#used remove unwanted file from the coverage results
+def process_coverage 
+	if( File.exist?( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }") )
+		puts "[INFO] Processing Coverage File"
+		lcov = LCOVFile.new( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }" )
+		lcov.outputToLCOV( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }" )
+	end
+end
+
+#shutdown and clean up
+def shutDown
+	puts "[INFO] Shutting Down"
+	
+	if( $webdriver_object )
+		puts "[INFO] Waiting For Chrome Driver To Quit"
+		begin
+			sleep( 5 )
+			$webdriver_object.quit
+		rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
+        	   Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+        	   puts "[ERROR] Web Driver Error When Trying To Close." 
+    	end
+	end
+
+	if( $jtd_server_pid != 0 ) 
+		Process.kill "TERM", $jtd_server_pid
+	end
+
+	if( File.exists?( CONFIG_PATH ) )
+		File.delete( CONFIG_PATH )
+	end
+
+	if( File.exists?( PRELUDE_PATH ) )
+		File.delete( PRELUDE_PATH )
+	end
+end
+
+#the jstestdriver config
+$jtd_template = <<-eos
+server: http://localhost:9876
+
+load:
+#library files
+  - script-tests/prelude.js
+  - script-tests/lib/require.js
+  - script-tests/lib/queuedrequire.js
+  - script-tests/lib/mockapplication.js
+  - script-tests/lib/sinon.js
+  - script-tests/api/*.js
+  - script-tests/mocks/*.js
+ # - script-tests/lib/css3transitions.css
+ # - script-tests/lib/carousels.css
+#script-block
+
+test:
+#test-block
+
+serve:
+#serve-block
+  - script-tests/lib/*.css
+  - script-tests/fixtures/*.js
+  - script-tests/fixtures/*.css
+  - script-tests/fixtures/*.json
+  - script-tests/fixtures/*.html
+  - script-tests/fixtures/requiremodule.js
+  - script-tests/fixtures/dynamicstylesheet.css
+  - script-tests/fixtures/layouts/default.js
+  - script-tests/fixtures/layouts/toobig.js
+  - script-tests/fixtures/components/buttoncomponent.js
+  - script-tests/fixtures/components/emptycomponent.js
+  - script-tests/fixtures/components/eventtestcomponent.js
+  - script/devices/anim/css3.js
+  - script/devices/anim/noanim.js
+  - script/devices/anim/styletopleft.js
+  - script/devices/anim/tween.js
+
+#plugin-block
+
+timeout: 360
+eos
+
+#the prelude file template
+$text_prelude = <<-eos
+(function() {
+	this.antie = {
+		framework: {
+			deviceConfiguration: {"modules":{"base":"antie\/devices\/browserdevice","modifiers":["antie\/devices\/anim\/styletopleft","antie\/devices\/media\/html5","antie\/devices\/data\/json2","antie\/devices\/net\/default"]},"mediasets":{"tv":"stb-all-h264","radio":"stb-aac"},"streaming":{"video":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["h264"],"maximumBitRate":2800,"maximumVideoLines":1080}]},"audio":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["aac"]}]}},"input":{"map":{"13":"ENTER","37":"LEFT","38":"UP","39":"RIGHT","40":"DOWN","83":"SUBTITLE","73":"INFO"}},"accessibility":{"captions":{"supported":["application\/ttaf+xml"]}},"layouts":[{"width":999999,"height":999999,"module":"fixtures\/layouts\/toobig","classes":["toobig"]},{"width":960,"height":540,"module":"fixtures\/layouts\/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","widgets":{"horizontalprogress":{"animate":false},"componentcontainer":{"fade":false},"horizontalcarousel":{"fade":true,"bindDelay":10}},"components":[]}
+		}
+	};
+
+	this.require = {
+	  baseUrl: "${SERVER}/test/script-tests",
+	  paths: {
+		  antie: "${SERVER}/test/script"
+	  }
+	};
+})();
+eos
+
+#the coverage pluging section - this gets plugged into the jstestdriver config file when coverage is on
+$text_coverage_plugin = <<-eos
+plugin:
+  - name: "coverage"
+    jar: "unit-testing/plugins/coverage-1.3.5.jar"
+    module: "com.google.jstestdriver.coverage.CoverageModule"
+eos
