@@ -13,6 +13,4 @@ All our documentation is hosted on [GitHub pages](http://fmtvp.github.com/tal).
 We also have a [sample application](http://github.com/fmtvp/talexample) that you can use as a guide to
 help you build your own applications.
 
-
-
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/81b276db21d339cd95a3198c0aac146f "githalytics.com")](http://githalytics.com/fmtvp/TAL)
