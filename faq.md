@@ -14,14 +14,17 @@ title: FAQ
 ### **Question:** Where has it come from?  
 **Answer:** TAL was created by the BBC to build TV Applications.
 
+### **Question:** Who can use this?  
+**Answer:** TAL is available to everyone under the terms of the Apache V2.0 open source licence.
+
+### **Question:** The terms of the Apache Licence won't work for me.  Are there any other options?  
+**Answer:** TAL is available is available under dual licencing terms.  You can contact us for an alternative approach.
+
 ### **Question:** Why has the BBC shared TAL via Open Source?
 **Answer:** The biggest technical reason for making TAL available as an open source project
 is so that it can be picked up and contributed to by others (manufacturers, content providers,
 3rd parties), helping to standardise the the way TV Applications are made, and benefitting
 everyone.
-
-### **Question:** Who can use this?  
-**Answer:** TAL is available to everyone under the terms of the Apache V2.0 open source licence.
 
 ### **Question:** How do I use GitHub?
 **Answer:** There is a [short tutorial](http://try.github.com/levels/1/challenges/1) that
