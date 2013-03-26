@@ -13,7 +13,7 @@ that it can be deployed to all HTML-based TV devices.
 
 All our documentation is hosted on [GitHub pages](http://fmtvp.github.com/tal). Take a look at 
 our [faq](http://fmtvp.github.com/tal/faq.html) for some high-level information, or dive straight into our
-[javascript documentation](http://gmtvp.github.com/tal/jsdoc/index.html) for our code reference docs.
+[javascript documentation](http://fmtvp.github.com/tal/jsdoc/index.html) for our code reference docs.
 
 We also have a [sample application](http://github.com/fmtvp/talexample) that you can use as a guide to
 help you build your own applications.
