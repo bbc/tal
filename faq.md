@@ -58,11 +58,10 @@ Secondly, it could be that the manufacturer hasn't granted permission for the fi
 * Create a a file in the format BRAND-MODEL-default.json (where BRAND is the relevant Manufacturer name and 
 MODEL refers to all the devices the config applies to). Typically a manufacturer will use
 similar hardware and browser across a whole range of devices from a manufacturer.
-* Update the JSON file to reflect the appropriate choices for that device or device range. See [explanation](overview/device-configuration.html)]
+* Update the JSON file to reflect the appropriate choices for that device or device range. See [explanation](overview/device-configuration.html)
 * Contribute the change back by following our [contributors page](other/contributing.html).
 
-### **Question:** As a manufacturer that already has iPlayer running on my device how do we make our 
-device available on TAL?
+### **Question:** As a manufacturer that already has iPlayer running on my device how do we make our device available on TAL?
 **Answer:** We ask all manufacturers for permission to share the device configuration file specific to their device.
 If you haven't completed the waiver document and want to then please fill out and return the [waiver]({site.baseurl}/other/tal-waiver.pdf)
 
