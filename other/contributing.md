@@ -5,6 +5,8 @@ title: TAL | Contributing
 # Contributing
 
 <p class="lead">TAL is licensed under Apache v2.0</p>
+TAL is  licensed under a dual licensing approach.
+You are welcome to make submissions under the Apache v 2.0 license.  
 
 We welcome any contributors. There are two ways you might become a contributor:
 
@@ -35,3 +37,7 @@ You can find the CLA [here]({{site.baseurl}}/cla.html).
 When completing the CLA, please be very careful to enter all the information
 requested, including your email address and Github user name if you have forked
 code for us to merge.
+
+In the event that Open Source does not meet your requirements as a contributor, 
+the BBC is happy to licence TAL to you under a  separate licence agreement. 
+Please contact us for details of these terms.
