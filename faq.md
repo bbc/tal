@@ -61,6 +61,11 @@ similar hardware and browser across a whole range of devices from a manufacturer
 * Update the JSON file to reflect the appropriate choices for that device or device range. See [explanation](overview/device-configuration.html)]
 * Contribute the change back by following our [contributors page](other/contributing.html).
 
+### **Question:** As a manufacturer that already has iPlayer running on my device how do we make our 
+device available on TAL?
+**Answer:** We ask all manufacturers for permission to share the device configuration file specific to their device.
+If you haven't completed the waiver document and want to then please fill out and return the [waiver]({site.baseurl}/other/tal-waiver.pdf)
+
 ### **Question:** How does the right device configuration get chosen for each device?
 **Answer:** Internally the BBC has a database that matches device-browser user-agents to device-configuration files 
 (BRAND-MODEL-default.json), but that is not part of what is being shared here.  See the
