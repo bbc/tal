@@ -18,8 +18,8 @@ title: FAQ
 **Answer:** TAL is available to everyone under the terms of the Apache V2.0 open source licence.
 
 ### **Question:** The terms of the Apache Licence don't meet our requirements.  Are there any other options?  
-**Answer:** the BBC is happy to licence TAL to you under a  separate licence agreement. Please 
-contact us for details of these terms.
+**Answer:** the BBC has adopted a dual licensing approach and can make available TAL under a separate 
+proprietary licence agreement. Please contact us for details of these terms.
 
 ### **Question:** Why has the BBC shared TAL via Open Source?
 **Answer:** The biggest technical reason for making TAL available as an open source project
