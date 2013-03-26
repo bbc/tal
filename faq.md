@@ -14,14 +14,18 @@ title: FAQ
 ### **Question:** Where has it come from?  
 **Answer:** TAL was created by the BBC to build TV Applications.
 
+### **Question:** Who can use this?  
+**Answer:** TAL is available to everyone under the terms of the Apache V2.0 open source licence.
+
+### **Question:** The terms of the Apache Licence don't meet our requirements.  Are there any other options?  
+**Answer:** the BBC is happy to licence TAL to you under a  separate licence agreement. Please 
+contact us for details of these terms.
+
 ### **Question:** Why has the BBC shared TAL via Open Source?
 **Answer:** The biggest technical reason for making TAL available as an open source project
 is so that it can be picked up and contributed to by others (manufacturers, content providers,
 3rd parties), helping to standardise the the way TV Applications are made, and benefitting
 everyone.
-
-### **Question:** Who can use this?  
-**Answer:** TAL is available to everyone under the terms of the Apache V2.0 open source licence.
 
 ### **Question:** How do I use GitHub?
 **Answer:** There is a [short tutorial](http://try.github.com/levels/1/challenges/1) that
@@ -58,8 +62,12 @@ Secondly, it could be that the manufacturer hasn't granted permission for the fi
 * Create a a file in the format BRAND-MODEL-default.json (where BRAND is the relevant Manufacturer name and 
 MODEL refers to all the devices the config applies to). Typically a manufacturer will use
 similar hardware and browser across a whole range of devices from a manufacturer.
-* Update the JSON file to reflect the appropriate choices for that device or device range. See [explanation](overview/device-configuration.html)]
+* Update the JSON file to reflect the appropriate choices for that device or device range. See [explanation](overview/device-configuration.html)
 * Contribute the change back by following our [contributors page](other/contributing.html).
+
+### **Question:** As a manufacturer that already has iPlayer running on my device how do we make our device available on TAL?
+**Answer:** We ask all manufacturers for permission to share the device configuration file specific to their device.
+If you haven't completed the waiver document and want to then please fill out and return the [waiver]({site.baseurl}/other/tal-waiver.pdf)
 
 ### **Question:** How does the right device configuration get chosen for each device?
 **Answer:** Internally the BBC has a database that matches device-browser user-agents to device-configuration files 
