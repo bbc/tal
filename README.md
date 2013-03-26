@@ -8,9 +8,9 @@ There are hundreds of different devices in the marketplace and they all use slig
 to achieve the same result. The purpose of TAL is to allow you to write an application once, and be confident
 that it can be deployed to all HTML-based TV devices.
 
-All our documentation is hosted on [GitHub pages](https://fmtvp.github.com/tal).
+All our documentation is hosted on [GitHub pages](http://fmtvp.github.com/tal).
 
-We also have a [sample application](https://github.com/fmtvp/talexample) that you can use as a guide to
+We also have a [sample application](http://github.com/fmtvp/talexample) that you can use as a guide to
 help you build your own applications.
 
 
