@@ -46,18 +46,20 @@ TV Applications with.  It is not a copy or a mirror.
 **Answer:** TAL will work on most HTML-based Connected TV devices and it's structured 
 in such a way that it's relatively easy to add support for a device that isn't already supported.
 
-### **Question:** Does the TV Application Layer work on Sony TV, Blu-ray players and PS3?
-**Answer:** TAL is technically able to run on most Sony devices from 2011 onwards, please contact them for more detailed information.
-
-### **Question:** How does a new device get supported?  
-**Answer:** TAL works by using a json format configuration file to define which modules to load 
-for a specific device.  The config/devices folder contains the specific device files that are
-currently supported
+### **Question:** Is there a list of supported devices?
+**Answer:** TAL will work on Samsung devices (2010 onwards), Panasonic (2011 onwards), 
+Sony (2011 onwards), Toshiba (2011 onwards), LG (2012 onwards) and a whole range of others.  Please see the [config folder](https://github.com/fmtvp/tal/tree/master/config/devices)
 
 ### **Question:** Where is the device configuration for the 'ACME 2013' device?   
 **Answer:** There are two likely answers for this.  The first is that TAL doesn't work on that device 
 (either the BBC have not not seen it yet or when we did, there was a problem getting TAL to run on it).  
 Secondly, it could be that the manufacturer hasn't granted permission for the file to be hosted here.
+
+### **Question:** Does the TV Application Layer work on Sony TV, Blu-ray players and PS3?
+**Answer:** TAL is technically able to run on most Sony devices from 2011 onwards, please contact them for more detailed information.
+
+### **Question:** Does the TV Application Layer work on Samsung TVs and Blu-ray players?
+**Answer:** TAL is technically able to run on most Samsung devices from 2010 onwards, please contact them for more detailed information.
 
 ### **Question:** How do I submit a device configuration file for the 'ACME 2013' device?
 **Answer:** Using one of the existing device configuration files as a guide:
