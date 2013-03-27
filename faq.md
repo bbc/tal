@@ -94,7 +94,9 @@ in looking at integrating their solutions with TAL.
 ### **Question:** Is TAL trying to enforce any standards?
 **Answer:** TAL has been built pragmatically. We've followed standards where possible and tried to 
 encourage manufacturers to do the same, but where its not possible for some reason, we may solve the 
-problem creatively.
+problem creatively. We provide implementations of abstractions complying with 
+industry standards (W3C, HbbTV, DTG). For example, TAL abstracts the W3C and CE-HTML specifications which 
+achieve the common goal of media playback.
 
 ### **Question:** Does TAL support HbbTVs?
 **Answer:** Yes, we've included a default configuration file in the TAL project code.
