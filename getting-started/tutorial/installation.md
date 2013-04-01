@@ -9,6 +9,7 @@ title: Installation and Configuration
 
 Create a new directory to house your application and configure your web server to serve files from it.
 If you are going to make use of the (minimal) php included within the framework, you will also need [php5](http://php.net/downloads.php) installed and configured.
+
 If you intend to use IIS, you can install PHP from <http://php.iis.net/>, or via the Web Platform Installer. You must also enable the CGI feature in IIS (Control Pannel-->Turn Windows features on or off-->Internet Information Services-->World Wide Web Services-->Application Development Features-->CGI).
 
 Within the application directory, check out the TAL repo to a folder named 'antie' (the internal name for TAL)
