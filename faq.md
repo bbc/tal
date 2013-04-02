@@ -51,8 +51,8 @@ in such a way that it's relatively easy to add support for a device that isn't a
 Sony (2011 onwards), Toshiba (2011 onwards), LG (2012 onwards) and a whole range of others.  Please see the [config folder](https://github.com/fmtvp/tal/tree/master/config/devices)
 
 ### **Question:** Where is the device configuration for the 'ACME 2013' device?   
-**Answer:** There are two likely answers for this.  The first is that TAL doesn't work on that device 
-(either the BBC have not not seen it yet or when we did, there was a problem getting TAL to run on it).  
+**Answer:** There are two likely answers to this.  The first is that TAL doesn't work on that device 
+(either the BBC has not seen it yet or when we did, there was a problem getting TAL to run on it).  
 Secondly, it could be that the manufacturer hasn't granted permission for the file to be hosted here.
 
 ### **Question:** Does the TV Application Layer work on Sony TV, Blu-ray players and PS3?
