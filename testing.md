@@ -40,7 +40,7 @@ To capture a browser and start the tests, navigate to
 
 To see a list of options
 
-    rake --help
+    rake help
 
 ### Writing tests
 
