@@ -30,11 +30,10 @@ require.def(
 	'antie/devices/exit/openclosewindow',
 	['antie/devices/browserdevice'],
 	function(Device) {
-
         /**
-	     * Exits the application by invoking window.open() on the current window,
-	     * then window.close().
-	    */
+         * Exits the application by invoking window.open() on the current window,
+         * then window.close().
+         */
         Device.prototype.exit = function() {
             // Workaround to make the browser think this window was opened via script
             window.open('', '_self');
