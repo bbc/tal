@@ -87,22 +87,22 @@
         }
     },
     "layouts": [
-        {
-            "width": 1280,
-            "height": 720,
-            "module": "%application%/appui/layouts/720p",
-            "classes": [
-                "browserdevice720p"
-            ]
-        },
-        {
-            "width": 1920,
-            "height": 1080,
-            "module": "%application%/appui/layouts/1080p",
-            "classes": [
-                "browserdevice1080p"
-            ]
-        }
+      {
+        "width": 960,
+        "height": 540,
+        "module": "%application%/appui/layouts/540p",
+        "classes": [
+          "browserdevice540p"
+        ]
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "module": "%application%/appui/layouts/720p",
+        "classes": [
+          "browserdevice720p"
+        ]
+      }
     ],
     "networking": {
         "supportsJSONP": true
