@@ -54,18 +54,18 @@ require.def(
 				var from = {};
 				if (startTop !== undefined) {
 					from.top = startTop + "px";
-				};
+				}
 				if (startLeft !== undefined) {
 					from.left = startLeft + "px";
-				};
+				}
 
 				var to = {};
 				if (options.to.top !== undefined) {
 					to.top = (options.to.top) + "px";
-				};
+				}
 				if (options.to.left !== undefined) {
 					to.left = (options.to.left) + "px";
-				};
+				}
 
 				return this._tween({
 					el: options.el,
@@ -82,10 +82,21 @@ require.def(
 		}
         /* documented in antie.devices.Device */
 		Device.prototype.scrollElementTo = function(options) {
-			// Take a copy of the options object to avoid modifying the original. Need to do this rather than
+			// Helper function to return an object that inherits from the original
+			function inherit(original) {
+				function Inherited() {}
+				
+				Inherited.prototype = original;
+				return new Inherited();
+			}
+			
+			// Make a new modifiable options object inheriting from the original. Need to do this rather than
 			// simply reverting any changes before returning, as the tweening library calls onComplete() which
 			// may require an unchanged object.
-			var newOptions = {};
+			var newOptions = inherit(options);
+			if (options.to) {
+				newOptions.to = inherit(options.to);
+			}
 
 			// Check validity of call and use child element as the real target
 			if (new RegExp("_mask$").test(options.el.id)) {
@@ -99,23 +110,12 @@ require.def(
 				return null;
 			}
 			
-			// Now we know the call is valid, copy all other properties from options to newOptions.
-			for (p in options) {
-				// 'el' has already been handled, the 'to' property is specially handled below.
-				if(p !== 'to' && p !== 'el' && options.hasOwnProperty(p)) {
-					newOptions[p] = options[p];
-				}
-			}
-			
 			// Make a copy of the 'to' property, with the sign of the 'top' and 'left' properties flipped.
-			if (options.to) {
-				newOptions.to = {};
-				if (options.to.left !== undefined) {
-					newOptions.to.left = -options.to.left;
-				}
-				if (options.to.top !== undefined) {
-					newOptions.to.top = -options.to.top;
-				}
+			if (options.to && options.to.left) {
+				newOptions.to.left = -options.to.left;
+			}
+			if (options.to && options.to.top) {
+				newOptions.to.top = -options.to.top;
 			}
 
 			var startLeft = newOptions.el.style.left.replace(/px/, '') || 0;
@@ -131,9 +131,9 @@ require.def(
 			// Performance consideration: if left or top is null they are ignored to prevent the additional
 			// work animating them.
 
-			var startLeft = parseInt(options.el.style.left.replace(/px|em|pt/,"")) || 0;
+			var startLeft = parseInt(options.el.style.left.replace(/px|em|pt/,""), 10) || 0;
 			var changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
-			var startTop = parseInt(options.el.style.top.replace(/px|em|pt/,"")) || 0;
+			var startTop = parseInt(options.el.style.top.replace(/px|em|pt/,""), 10) || 0;
 			var changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
 
 			return movesScroll.apply( this, [ startLeft, startTop, changeLeft, changeTop, options ] );
@@ -144,7 +144,7 @@ require.def(
 			if (this.getConfig().animationDisabled || options.skipAnim) {
 				options.el.style.visibility = "hidden";
 				options.el.style.opacity = 0;
-				if (typeof options.onComplete == "function") {
+				if (typeof options.onComplete === "function") {
 					options.onComplete();
 				}
 			} else {
@@ -153,7 +153,7 @@ require.def(
 					el: options.el,
 					style: options.el.style,
 					from: {
-                        opacity: isNaN(parseInt(options.el.style.opacity)) ? 1 : parseFloat(options.el.style.opacity)
+                        opacity: isNaN(parseInt(options.el.style.opacity, 10)) ? 1 : parseFloat(options.el.style.opacity)
 					},
 					to: {
 						opacity: 0
@@ -176,7 +176,7 @@ require.def(
 			if (this.getConfig().animationDisabled || options.skipAnim) {
 				options.el.style.visibility = "visible";
 				options.el.style.opacity = 1;
-				if (typeof options.onComplete == "function") {
+				if (typeof options.onComplete === "function") {
 					options.onComplete();
 				}
 			} else {
@@ -185,7 +185,7 @@ require.def(
 					el: options.el,
 					style: options.el.style,
 					from: {
-                        opacity : isNaN(parseInt(options.el.style.opacity)) ? 0 :parseFloat(options.el.style.opacity)
+                        opacity : isNaN(parseInt(options.el.style.opacity, 10)) ? 0 : parseFloat(options.el.style.opacity)
 					},
 					to: {
 						opacity: 1
