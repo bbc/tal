@@ -1,4 +1,4 @@
-<object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px;"></object>
+<object id="appmgr" type="application/oipfApplicationManager"></object>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 	var app = document.getElementById('appmgr').getOwnerApplication(document);
