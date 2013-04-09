@@ -185,18 +185,18 @@ require.def('antie/devices/device',
                 this.filteredLoggingMethods = filterLoggingMethods(config, selectLoggingStrategy(config, this.loggingStrategies));
 
                 function filterLoggingMethods(config, loggingMethods) {
+                    /* jshint -W086 */ // We're falling through case statements deliberately
                     var filteredLogging = ignoreLoggingMethods;
 
                     if (config.logging && config.logging.level) {
                         var level = config.logging.level;
                         switch (level) {
                             case 'all':
-                            case 'log':
-                                filteredLogging.log = loggingMethods.log;
                             case 'debug':
                                 filteredLogging.debug = loggingMethods.debug;
                             case 'info':
                                 filteredLogging.info = loggingMethods.info;
+                                filteredLogging.log = loggingMethods.log;
                             case 'warn':
                                 filteredLogging.warn = loggingMethods.warn;
                             case 'error':
