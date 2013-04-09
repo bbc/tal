@@ -25,8 +25,15 @@
 (function() {
 	this.LoggingTest = AsyncTestCase("Logging");
 	
+   this.LoggingTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
+
+    this.LoggingTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
+
 	this.LoggingTest.prototype.testDefaultLog = function(queue) {
-		
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the LOG method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
@@ -37,11 +44,10 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "log");
+		var logSpy = this.sandbox.spy( console, "log");
 		
 		application.getDevice().getLogger().log( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.log.restore();
 		
 		}, config );
 	};
@@ -58,11 +64,10 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "debug");
+		var logSpy = this.sandbox.spy( console, "debug");
 		
 		application.getDevice().getLogger().debug( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.debug.restore();
 		
 		}, config );
 	};
@@ -78,11 +83,10 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "info");
+		var logSpy = this.sandbox.spy( console, "info");
 		
 		application.getDevice().getLogger().info( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.info.restore();
 		
 		}, config );
 	};
@@ -98,11 +102,10 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "warn");
+		var logSpy = this.sandbox.spy( console, "warn");
 		
 		application.getDevice().getLogger().warn( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.warn.restore();
 		
 		}, config );
 	};
@@ -118,11 +121,10 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "error");
+		var logSpy = this.sandbox.spy( console, "error");
 		
 		application.getDevice().getLogger().error( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.error.restore();
 		
 		}, config );
 	};
@@ -139,16 +141,14 @@
 		expectAsserts(2);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy 	 = sinon.spy( console, "log"  );
-		var errorSpy = sinon.spy( console, "error" );
+		var logSpy 	 = this.sandbox.spy( console, "log"  );
+		var errorSpy = this.sandbox.spy( console, "error" );
 		
 		application.getDevice().getLogger().log( "Log Message" );
 		application.getDevice().getLogger().error( "Error Message" );
 		
 		assertFalse( logSpy.calledOnce );
-		console.log.restore();
 		assertTrue( errorSpy.calledOnce );
-		console.error.restore();
 		
 		}, config );
 	};
@@ -164,13 +164,11 @@
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy 	 = sinon.spy( console, "log"  );
+		var logSpy 	 = this.sandbox.spy( console, "log"  );
 				
 		application.getDevice().getLogger().log( "Log Message" );
 		
-		
 		assertFalse( logSpy.calledOnce );
-		console.log.restore();
 		
 		}, config );
 	};
@@ -274,11 +272,4 @@
 		assertTrue( loggingMethods.log == xhrLoggingMethods.log );
 		}, config );
 	};
-	
-	
-	
-	
-	
-	
-	
 })();
