@@ -131,6 +131,30 @@
 		}, config );
 	};
 	
+   this.LoggingTest.prototype.testLoggingLevelError = function(queue) {
+        // set log level to Error with default (console) logger. Ensure error messages ONLY are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "error", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assertFalse('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+
 	this.LoggingTest.prototype.testLoggingLevelWarn = function(queue) {
 		// set log level to Warn with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
@@ -154,6 +178,78 @@
 
 		}, config );
 	};
+	
+   this.LoggingTest.prototype.testLoggingLevelInfo = function(queue) {
+        // set log level to Info with default (console) logger. Ensure error, warn, log and info messages ONLY are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "info", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+    
+    this.LoggingTest.prototype.testLoggingLevelDebug = function(queue) {
+        // set log level to Debug with default (console) logger. Ensure all messages are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "debug", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assert('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+    
+    this.LoggingTest.prototype.testLoggingLevelAll = function(queue) {
+        // set log level to All with default (console) logger. Ensure all messages are logged (equivalent to 'debug' level).
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "all", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assert('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
 	
 	this.LoggingTest.prototype.testLoggingLevelNone = function(queue) {
 	    // set log level to None with default (console) logger. Ensure error and warn messages ONLY are logged.
