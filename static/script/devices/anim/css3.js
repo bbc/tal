@@ -48,7 +48,7 @@ require.def(
         
         /* documented in antie.devices.Device */
 		Device.prototype.scrollElementTo = function(options) {
-		    var changed, skipAnim, transEndPoints, trans, self;
+		    var transEndPoints, trans, self;
             self = this;
             
 			if(new RegExp("_mask$").test(options.el.id)) {
@@ -88,7 +88,7 @@ require.def(
 
 		/* documented in antie.devices.Device */
 		Device.prototype.moveElementTo = function(options) {
-            var moveTop, moveLeft, trans, skipping, transEndPoints;
+            var trans, transEndPoints;
 
             transEndPoints = new TransitionEndPoints(
                 {
@@ -176,7 +176,7 @@ require.def(
 			return false;
 		};
 		
-		Device.prototype.stopAnimation = function(transition, skipToEnd) {
+		Device.prototype.stopAnimation = function(transition) {
             transition.stop(true);
         };
 	}
