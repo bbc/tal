@@ -428,18 +428,20 @@
 		}, config);
 	};
 	this.CSS3AnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
+			var startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("hidden", this.div.style.visibility);
 					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.hideElement({
 					el: this.div,
@@ -449,6 +451,30 @@
 			});
 		}, config);
 	};
+	
+   this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(3);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var startTime = Date.now();
+            this.createScrollableDiv(device);
+
+            queue.call("Wait for tween", function(callbacks) {
+                var onComplete = callbacks.add(function() {
+                    assertEquals("hidden", this.div.style.visibility);
+                    assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.hideElement({
+                    el: this.div,
+                    onComplete: onComplete
+                });
+            });
+        }, config);
+    };
 
 	this.CSS3AnimationTest.prototype.testShowElementWithAnim = function(queue) {
 		expectAsserts(3);
@@ -475,18 +501,20 @@
 		}, config);
 	};
 	this.CSS3AnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
+			var startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("visible", this.div.style.visibility);
 					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.showElement({
 					el: this.div,
@@ -496,7 +524,31 @@
 			});
 		}, config);
 	};
-	
+
+    this.CSS3AnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(3);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var startTime = Date.now();
+            this.createScrollableDiv(device);
+
+            queue.call("Wait for tween", function(callbacks) {
+                var onComplete = callbacks.add(function() {
+                    assertEquals("visible", this.div.style.visibility);
+                    assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.showElement({
+                    el: this.div,
+                    onComplete: onComplete
+                });
+            });
+        }, config);
+    };
+
     /**
      * Where specific parameters for FPS, duration and easing are passed to showElement(), ensure
      * these are passed on the CSS3 transition property.
