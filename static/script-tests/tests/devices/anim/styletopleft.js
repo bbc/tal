@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
     this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation");
 
     this.StyleTopLeftAnimationTest.prototype.setUp = function() {
@@ -270,7 +271,7 @@
                         skipAnim: false,
                         onComplete: hideElementonComplete
                     });
-                }
+                };
 
                 var showElementonComplete = callbacks.add(function() {
                     assertEquals(1, Math.round(parseFloat(div.style.opacity)));
@@ -555,10 +556,10 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div,
-            	fps: 15,
-            	duration: 123,
-            	easing: "easeOutQuad"
+                el: div,
+                fps: 15,
+                duration: 123,
+                easing: "easeOutQuad"
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -585,10 +586,10 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div,
-            	fps: 16,
-            	duration: 321,
-            	easing: "elastic"
+                el: div,
+                fps: 16,
+                duration: 321,
+                easing: "elastic"
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -616,7 +617,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div // No animation properties provided, defaults will be used
+                el: div // No animation properties provided, defaults will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -644,7 +645,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div // No animation properties provided, defaults will be used
+                el: div // No animation properties provided, defaults will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -672,7 +673,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div // No animation properties provided, config will be used
+                el: div // No animation properties provided, config will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -700,7 +701,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div // No animation properties provided, config will be used
+                el: div // No animation properties provided, config will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -721,8 +722,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.moveElementTo);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.moveElementTo);
         }, config);
     };
     
@@ -737,8 +738,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.scrollElementTo);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.scrollElementTo);
         }, config);
     };
     
@@ -753,8 +754,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.showElement);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.showElement);
         }, config);
     };
     
@@ -769,8 +770,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.hideElement);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.hideElement);
         }, config);
     };
     
@@ -781,37 +782,37 @@
      * @param {function} optionsParamFunction The function to execute on the device object.
      */
     function _assertNoSideEffects(device, optionsParamFunction) {
-    	var div = _createScrollableDiv(device);
-    	
-    	// Create two options objects - one to pass to the styletopleft method, one for reference
+        var div = _createScrollableDiv(device);
+    
+        // Create two options objects - one to pass to the styletopleft method, one for reference
         var options1 = _createStandardOptionsForElement(div);
         var options2 = _createStandardOptionsForElement(div);
         
         // Ensure that options1 is the same as options2 after the call to styletopleft.
         // (assertEquals does a deep comparison)
-    	var onComplete = function() {
-    		assertEquals('Options is the same after tween has completed', options1, options2);
-    	};
-    	
-    	// Configure onComplete method on options object.
-    	options1.onComplete = onComplete;
-    	options2.onComplete = onComplete;
-    	
-    	// Perform the styletopleft method.
-    	optionsParamFunction.call(device, options1);
-    };
+        var onComplete = function() {
+            assertEquals('Options is the same after tween has completed', options1, options2);
+        };
+    
+        // Configure onComplete method on options object.
+        options1.onComplete = onComplete;
+        options2.onComplete = onComplete;
+    
+        // Perform the styletopleft method.
+        optionsParamFunction.call(device, options1);
+    }
     
     /**
      * Helper: Create a scrollable div, for testing scrollElementTo() functionality.
      * @param {antie.devices.Device} device The device, with styletopleft functionality.
      */
     function _createScrollableDiv(device) {
-    	var div = device.createContainer("id_mask"),
-    	inner = device.createContainer("id");
-    	
-    	device.appendChildElement(div, inner);
-    	return div;
-    };
+        var div = device.createContainer("id_mask"),
+        inner = device.createContainer("id");
+    
+        device.appendChildElement(div, inner);
+        return div;
+    }
     
     /**
      * Helper: Create a standardised options object for passing to scrollElementTo() and moveElementTo().
@@ -819,23 +820,23 @@
      * @param {Element} element DOM Element which the options object applies to.
      * @param {Function} [onComplete] Optional callback to be passed in the options object, called when the tween completes.
      */
-    function _createStandardOptionsForElement(element, onComplete) {
-    	return {
-    		el: element,
-			from: {
+    function _createStandardOptionsForElement(element) {
+        return {
+            el: element,
+            from: {
                 opacity: 0,
                 top: 0,
                 left: 0
-			},
-			to: {
-				opacity: 1,
-				top: 100,
-				left: 100
-			},
-			fps: 25,
-			duration: 10,
-			easing: 'linear',
-			skipAnim: true
-    	};
-    };
+            },
+            to: {
+                opacity: 1,
+                top: 100,
+                left: 100
+            },
+            fps: 25,
+            duration: 10,
+            easing: 'linear',
+                skipAnim: true
+            };
+    }
 })();
