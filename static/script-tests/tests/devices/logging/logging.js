@@ -131,54 +131,49 @@
 		}, config );
 	};
 	
-	this.LoggingTest.prototype.testLoggingLevel = function(queue) {
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+	this.LoggingTest.prototype.testLoggingLevelWarn = function(queue) {
+		// set log level to Warn with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-					"level": "warn"
+					"level": "warn", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
-		expectAsserts(2);
+		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = this.sandbox.spy(console, "log");
-		var errorSpy = this.sandbox.spy(console, "error");
-		
-		application.getDevice().getLogger().log( "Log Message" );
-		application.getDevice().getLogger().error( "Error Message" );
-		
-		assertFalse( logSpy.calledOnce );
-		assertTrue( errorSpy.calledOnce );
-		
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingLevelNone = function(queue) {
-	    // set logging level to None. Ensure that no logging methods are called.
+	    // set log level to None with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-					"level": "none"
+				    "level": "none", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			
-		var logSpy = this.sandbox.spy(console, "log");
-		var errorSpy = this.sandbox.spy(console, "error");
-		var warnSpy = this.sandbox.spy(console, "warn");
-		var infoSpy = this.sandbox.spy(console, "info");
-		var debugSpy = this.sandbox.spy(console, "debug");
-				
-		application.getDevice().getLogger().error( "Log Message" );
+
+		var stubbedMethods = stubLogMethods(this.sandbox, console);
+		logMessageAtAllLevels(application.getDevice().getLogger());
 		
-		assertFalse(logSpy.called);
-		assertFalse(errorSpy.called);
-		assertFalse(warnSpy.called);
-		assertFalse(infoSpy.called);
-		assertFalse(debugSpy.called);
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assertFalse('Called log.warn', stubbedMethods.warn.called);
+        assertFalse('Called log.error', stubbedMethods.error.called);
 		
 		}, config );
 	};
@@ -282,4 +277,22 @@
 		assertEquals(xhrLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
+
+    function stubLogMethods(sandbox, console) {
+        return {
+            debug: sandbox.stub(console, 'debug'),
+            info: sandbox.stub(console, 'info'),
+            log: sandbox.stub(console, 'log'),
+            warn: sandbox.stub(console, 'warn'),
+            error: sandbox.stub(console, 'error')
+        };
+    }
+
+    function logMessageAtAllLevels(logger) {
+        logger.debug('Debug message');
+        logger.info('Info message');
+        logger.log('Log message');
+        logger.warn('Warn message');
+        logger.error('Error message');
+    }
 })();
