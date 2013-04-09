@@ -23,7 +23,11 @@
  */
 
 (function() {
-	this.CSS3AnimationTest = AsyncTestCase("Css3Animation");
+    // How many milliseconds to give a 'no animation' transition to complete
+    var noAnimToleranceMs = 20;
+    
+    // jshint newcap: false
+    this.CSS3AnimationTest = AsyncTestCase("Css3Animation");
 
 	this.CSS3AnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -78,20 +82,22 @@
 	};
 
 	this.CSS3AnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config;
 		config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner, self;
+			var device, inner, self, startTime;
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
 			self = this;
+			startTime = Date.now();
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("-100px", inner.style.getPropertyValue("left"));
 					assertEquals("-200px", inner.style.getPropertyValue("top"));
+					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 
 				device.scrollElementTo({
@@ -166,19 +172,21 @@
 	};
 
 	this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner;
+			var device, inner, startTime;
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
+			startTime = Date.now();
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("-100px", inner.style.getPropertyValue("left"));
 					assertEquals("-200px", inner.style.getPropertyValue("top"));
+					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.scrollElementTo({
 					el: this.div,
@@ -192,6 +200,35 @@
 			});
 		}, config);
 	};
+	
+   this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(3);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, inner, startTime;
+            device = application.getDevice();
+            inner = this.createScrollableDiv(device);
+            startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var onComplete = callbacks.add(function() {
+                    assertEquals("-100px", inner.style.getPropertyValue("left"));
+                    assertEquals("-200px", inner.style.getPropertyValue("top"));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.scrollElementTo({
+                    el: this.div,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+            });
+        }, config);
+    };
 
 	/**
 	 * scrollElementTo() requires an element with an ID ending in _mask. Ensure that the method
@@ -274,19 +311,21 @@
 	};	
 
 	this.CSS3AnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, div;
+			var device, div, startTime;
 			device = application.getDevice();
 			div = this.createScrollableDiv(device);
+			startTime = Date.now();
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("100px", div.style.getPropertyValue("left"));
 					assertEquals("200px", div.style.getPropertyValue("top"));
+					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 				device.moveElementTo({
 					el: div,
@@ -303,20 +342,22 @@
 	};
 
 	this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, div;
+			var device, div, startTime;
 			device = application.getDevice();
 			div = this.createScrollableDiv(device);
+			startTime = Date.now();
 
 			queue.call("Wait for tween", function(callbacks) {
 
 				var onComplete = callbacks.add(function() {
 					assertEquals("100px", div.style.getPropertyValue("left"));
 					assertEquals("200px", div.style.getPropertyValue("top"));
+					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.moveElementTo({
 					el: div,
@@ -330,20 +371,53 @@
 			});
 		}, config);
 	};
+	
+   this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(3);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, div, startTime;
+            device = application.getDevice();
+            div = this.createScrollableDiv(device);
+            startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals("100px", div.style.getPropertyValue("left"));
+                    assertEquals("200px", div.style.getPropertyValue("top"));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.moveElementTo({
+                    el: div,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+            });
+        }, config);
+    };
+
 
 	this.CSS3AnimationTest.prototype.testHideElementWithAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
+			var startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("hidden", this.div.style.visibility);
 					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 				device.hideElement({
 					el: this.div,
@@ -377,18 +451,20 @@
 	};
 
 	this.CSS3AnimationTest.prototype.testShowElementWithAnim = function(queue) {
-		expectAsserts(2);
+		expectAsserts(3);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
+			var startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("visible", this.div.style.visibility);
 					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 				device.showElement({
 					el: this.div,
@@ -540,8 +616,8 @@
     this.CSS3AnimationTest.prototype.testConfigurationShowAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-        // This is the configuration!!        
-        var config, div;
+        // This is the configuration!!
+        var config;
         config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
         ],"deviceConfigurationKey":"devices-html5-1","defaults":{"showElementFade":{"fps":11, "duration": 555, "easing": "easeInCubic"}}};
