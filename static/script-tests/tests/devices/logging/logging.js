@@ -23,6 +23,8 @@
  */
 
 (function() {
+    // jshint newcap: false
+    /* global console */
 	this.LoggingTest = AsyncTestCase("Logging");
 	
    this.LoggingTest.prototype.setUp = function() {
@@ -38,13 +40,13 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = this.sandbox.spy( console, "log");
+		var logSpy = this.sandbox.spy(console, "log");
 		
 		application.getDevice().getLogger().log( "Log Message" );
 		assertTrue( logSpy.calledOnce );
@@ -57,7 +59,7 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
@@ -77,7 +79,7 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
@@ -96,7 +98,7 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
@@ -115,7 +117,7 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
@@ -134,15 +136,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "warn"
+					"level": "warn"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(2);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy 	 = this.sandbox.spy( console, "log"  );
-		var errorSpy = this.sandbox.spy( console, "error" );
+		var logSpy = this.sandbox.spy(console, "log");
+		var errorSpy = this.sandbox.spy(console, "error");
 		
 		application.getDevice().getLogger().log( "Log Message" );
 		application.getDevice().getLogger().error( "Error Message" );
@@ -158,7 +160,7 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "none"
+					"level": "none"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(5);
@@ -187,15 +189,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "alert"
+					"level": "all", "strategy" : "alert"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/alert' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/alert' ];
 		
 		assertEquals(alertLoggingMethods.log, loggingMethods.log);
 		}, config );
@@ -207,15 +209,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "consumelog"
+					"level": "all", "strategy" : "consumelog"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		consumeLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/consumelog' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var consumeLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/consumelog' ];
 		
 		assertEquals(consumeLoggingMethods.log, loggingMethods.log);
 		}, config );
@@ -227,15 +229,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "jstestdriver"
+					"level": "all", "strategy" : "jstestdriver"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		jsTestDriverLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/jstestdriver' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var jsTestDriverLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/jstestdriver' ];
 		
 		assertEquals(jsTestDriverLoggingMethods.log, loggingMethods.log);
 		}, config );
@@ -247,15 +249,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "onscreen"
+					"level": "all", "strategy" : "onscreen"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		onscreenLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var onscreenLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
 		
 		assertEquals(onscreenLoggingMethods.log, loggingMethods.log);
 		}, config );
@@ -267,15 +269,15 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "xhr"
+					"level": "all", "strategy" : "xhr"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		xhrLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/xhr' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var xhrLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/xhr' ];
 		
 		assertEquals(xhrLoggingMethods.log, loggingMethods.log);
 		}, config );
