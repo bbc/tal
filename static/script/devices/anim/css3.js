@@ -126,7 +126,8 @@ require.def(
                     visibility: "hidden"
                 },
                 duration: options.duration,
-                onComplete: options.onComplete
+                onComplete: options.onComplete,
+                skipAnim: shouldSkipAnim(options, this)
             };
             
 		    transDef = new OptionsTransitionDefinition(transOpts, config);
@@ -154,7 +155,8 @@ require.def(
                     visibility: "visible"
                 },
                 duration: options.duration,
-                onComplete: options.onComplete
+                onComplete: options.onComplete,
+                skipAnim: shouldSkipAnim(options, this)
             };
             
             transDef = new OptionsTransitionDefinition(transOpts, config);
