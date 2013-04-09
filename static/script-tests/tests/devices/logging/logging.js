@@ -23,25 +23,33 @@
  */
 
 (function() {
+    // jshint newcap: false
+    /* global console */
 	this.LoggingTest = AsyncTestCase("Logging");
 	
+   this.LoggingTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
+
+    this.LoggingTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
+
 	this.LoggingTest.prototype.testDefaultLog = function(queue) {
-		
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the LOG method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "log");
+		var logSpy = this.sandbox.spy(console, "log");
 		
 		application.getDevice().getLogger().log( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.log.restore();
 		
 		}, config );
 	};
@@ -51,18 +59,17 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "debug");
+		var logSpy = this.sandbox.spy( console, "debug");
 		
 		application.getDevice().getLogger().debug( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.debug.restore();
 		
 		}, config );
 	};
@@ -72,17 +79,16 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "info");
+		var logSpy = this.sandbox.spy( console, "info");
 		
 		application.getDevice().getLogger().info( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.info.restore();
 		
 		}, config );
 	};
@@ -92,17 +98,16 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "warn");
+		var logSpy = this.sandbox.spy( console, "warn");
 		
 		application.getDevice().getLogger().warn( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.warn.restore();
 		
 		}, config );
 	};
@@ -112,173 +117,278 @@
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-			  	"level": "all"
+				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy = sinon.spy( console, "error");
+		var logSpy = this.sandbox.spy( console, "error");
 		
 		application.getDevice().getLogger().error( "Log Message" );
 		assertTrue( logSpy.calledOnce );
-		console.error.restore();
 		
 		}, config );
 	};
 	
-	this.LoggingTest.prototype.testLoggingLevel = function(queue) {
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+   this.LoggingTest.prototype.testLoggingLevelError = function(queue) {
+        // set log level to Error with default (console) logger. Ensure error messages ONLY are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "error", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assertFalse('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+
+	this.LoggingTest.prototype.testLoggingLevelWarn = function(queue) {
+		// set log level to Warn with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "warn"
+					"level": "warn", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
-		expectAsserts(2);
+		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy 	 = sinon.spy( console, "log"  );
-		var errorSpy = sinon.spy( console, "error" );
-		
-		application.getDevice().getLogger().log( "Log Message" );
-		application.getDevice().getLogger().error( "Error Message" );
-		
-		assertFalse( logSpy.calledOnce );
-		console.log.restore();
-		assertTrue( errorSpy.calledOnce );
-		console.error.restore();
-		
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
 		}, config );
 	};
+	
+   this.LoggingTest.prototype.testLoggingLevelInfo = function(queue) {
+        // set log level to Info with default (console) logger. Ensure error, warn, log and info messages ONLY are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "info", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+    
+    this.LoggingTest.prototype.testLoggingLevelDebug = function(queue) {
+        // set log level to Debug with default (console) logger. Ensure all messages are logged.
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "debug", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assert('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
+    
+    this.LoggingTest.prototype.testLoggingLevelAll = function(queue) {
+        // set log level to All with default (console) logger. Ensure all messages are logged (equivalent to 'debug' level).
+        var config = {
+                "modules":{"base":"antie/devices/browserdevice",
+                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
+                    "level": "all", "strategy": "default"
+                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        
+        expectAsserts(5);
+        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            
+        var stubbedMethods = stubLogMethods(this.sandbox, console);
+        logMessageAtAllLevels(application.getDevice().getLogger());
+
+        assert('Called log.debug', stubbedMethods.debug.called);
+        assert('Called log.info', stubbedMethods.info.called);
+        assert('Called log.log', stubbedMethods.log.called);
+        assert('Called log.warn', stubbedMethods.warn.called);
+        assert('Called log.error', stubbedMethods.error.called);
+
+        }, config );
+    };
 	
 	this.LoggingTest.prototype.testLoggingLevelNone = function(queue) {
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+	    // set log level to None with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "none"
+				    "level": "none", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-		expectAsserts(1);
+		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			
-		var logSpy 	 = sinon.spy( console, "log"  );
-				
-		application.getDevice().getLogger().log( "Log Message" );
+
+		var stubbedMethods = stubLogMethods(this.sandbox, console);
+		logMessageAtAllLevels(application.getDevice().getLogger());
 		
-		
-		assertFalse( logSpy.calledOnce );
-		console.log.restore();
+        assertFalse('Called log.debug', stubbedMethods.debug.called);
+        assertFalse('Called log.info', stubbedMethods.info.called);
+        assertFalse('Called log.log', stubbedMethods.log.called);
+        assertFalse('Called log.warn', stubbedMethods.warn.called);
+        assertFalse('Called log.error', stubbedMethods.error.called);
 		
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetAlert = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the Alert logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "alert"
+					"level": "all", "strategy" : "alert"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/alert' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/alert' ];
 		
-		assertTrue( loggingMethods.log == alertLoggingMethods.log );
+		assertEquals(alertLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetConsume = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+        // ensure the Consume logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "consumelog"
+					"level": "all", "strategy" : "consumelog"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		consumeLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/consumelog' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var consumeLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/consumelog' ];
 		
-		assertTrue( loggingMethods.log == consumeLoggingMethods.log );
+		assertEquals(consumeLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetJsTestDriver = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+        // ensure the JsTestDriver logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "jstestdriver"
+					"level": "all", "strategy" : "jstestdriver"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		jsTestDriverLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/jstestdriver' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var jsTestDriverLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/jstestdriver' ];
 		
-		assertTrue( loggingMethods.log == jsTestDriverLoggingMethods.log );
+		assertEquals(jsTestDriverLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetOnScreen = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the onscreen logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "onscreen"
+					"level": "all", "strategy" : "onscreen"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var onscreenLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
 		
-		assertTrue( loggingMethods.log == alertLoggingMethods.log );
+		assertEquals(onscreenLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
-	this.LoggingTest.prototype.testLoggingSetJsTestDriver = function(queue) {
+	this.LoggingTest.prototype.testLoggingSetXhr = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the XHR logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
-				  	"level": "all", "strategy" : "xhr"
+					"level": "all", "strategy" : "xhr"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		loggingMethods = application.getDevice().getLogger();
-		xhrLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/xhr' ];
+		var loggingMethods = application.getDevice().getLogger();
+		var xhrLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/xhr' ];
 		
-		assertTrue( loggingMethods.log == xhrLoggingMethods.log );
+		assertEquals(xhrLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
-	
-	
-	
-	
-	
-	
-	
+
+    function stubLogMethods(sandbox, console) {
+        return {
+            debug: sandbox.stub(console, 'debug'),
+            info: sandbox.stub(console, 'info'),
+            log: sandbox.stub(console, 'log'),
+            warn: sandbox.stub(console, 'warn'),
+            error: sandbox.stub(console, 'error')
+        };
+    }
+
+    function logMessageAtAllLevels(logger) {
+        logger.debug('Debug message');
+        logger.info('Info message');
+        logger.log('Log message');
+        logger.warn('Warn message');
+        logger.error('Error message');
+    }
 })();
