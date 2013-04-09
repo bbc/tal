@@ -154,28 +154,36 @@
 	};
 	
 	this.LoggingTest.prototype.testLoggingLevelNone = function(queue) {
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+	    // set logging level to None. Ensure that no logging methods are called.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
 				  	"level": "none"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-		expectAsserts(1);
+		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
-		var logSpy 	 = this.sandbox.spy( console, "log"  );
+		var logSpy = this.sandbox.spy(console, "log");
+		var errorSpy = this.sandbox.spy(console, "error");
+		var warnSpy = this.sandbox.spy(console, "warn");
+		var infoSpy = this.sandbox.spy(console, "info");
+		var debugSpy = this.sandbox.spy(console, "debug");
 				
-		application.getDevice().getLogger().log( "Log Message" );
+		application.getDevice().getLogger().error( "Log Message" );
 		
-		assertFalse( logSpy.calledOnce );
+		assertFalse(logSpy.called);
+		assertFalse(errorSpy.called);
+		assertFalse(warnSpy.called);
+		assertFalse(infoSpy.called);
+		assertFalse(debugSpy.called);
 		
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetAlert = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the Alert logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
@@ -189,13 +197,13 @@
 		loggingMethods = application.getDevice().getLogger();
 		alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/alert' ];
 		
-		assertTrue( loggingMethods.log == alertLoggingMethods.log );
+		assertEquals(alertLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetConsume = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+        // ensure the Consume logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
@@ -209,13 +217,13 @@
 		loggingMethods = application.getDevice().getLogger();
 		consumeLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/consumelog' ];
 		
-		assertTrue( loggingMethods.log == consumeLoggingMethods.log );
+		assertEquals(consumeLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetJsTestDriver = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+        // ensure the JsTestDriver logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
@@ -229,13 +237,13 @@
 		loggingMethods = application.getDevice().getLogger();
 		jsTestDriverLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/jstestdriver' ];
 		
-		assertTrue( loggingMethods.log == jsTestDriverLoggingMethods.log );
+		assertEquals(jsTestDriverLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
 	this.LoggingTest.prototype.testLoggingSetOnScreen = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the onscreen logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
@@ -247,15 +255,15 @@
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			
 		loggingMethods = application.getDevice().getLogger();
-		alertLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
+		onscreenLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/onscreen' ];
 		
-		assertTrue( loggingMethods.log == alertLoggingMethods.log );
+		assertEquals(onscreenLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 	
-	this.LoggingTest.prototype.testLoggingSetJsTestDriver = function(queue) {
+	this.LoggingTest.prototype.testLoggingSetXhr = function(queue) {
 		
-		//load all logging modules and set logging level to warn - but don't select a logging strat - test that we get the default module and call the ERROR module but no LOG
+		// ensure the XHR logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
 				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog"]},"logging": {
@@ -269,7 +277,7 @@
 		loggingMethods = application.getDevice().getLogger();
 		xhrLoggingMethods = application.getDevice().loggingStrategies[ 'antie/devices/logging/xhr' ];
 		
-		assertTrue( loggingMethods.log == xhrLoggingMethods.log );
+		assertEquals(xhrLoggingMethods.log, loggingMethods.log);
 		}, config );
 	};
 })();
