@@ -210,10 +210,11 @@ require.def('antie/devices/device',
                 function selectLoggingStrategy(config, loggingStrategies) {
 
                     if (config.logging && config.logging.strategy) {
-                        configuredLoggingStrategy = 'antie/' + 'devices/' + 'logging/' + config.logging.strategy;
+                        var configuredLoggingStrategy = 'antie/' + 'devices/' + 'logging/' + config.logging.strategy;
 
-                        if (loggingStrategies[ configuredLoggingStrategy ])
-                            return loggingStrategies[ configuredLoggingStrategy ];
+                        if (loggingStrategies[configuredLoggingStrategy]) {
+                            return loggingStrategies[configuredLoggingStrategy];
+                        }
                     }
 
                     //no logging methods set - use default logging
