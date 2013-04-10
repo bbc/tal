@@ -145,6 +145,46 @@
         }, config);
     };
 
+    /**
+     * Test scrollElementTo() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id_mask");
+            var inner = device.createContainer("id");
+            var startTime = Date.now();
+            device.appendChildElement(div, inner);
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
+                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.scrollElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
+
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
         expectAsserts(4);
 
@@ -455,6 +495,43 @@
         }, config);
     };
 
+    /**
+     * Test moveElementTo() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
+                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.moveElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
         expectAsserts(4);
 
@@ -507,6 +584,38 @@
                 device.hideElement({
                     el: div,
                     skipAnim: true,
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
+    /**
+     * Test hideElement() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals("hidden", div.style.visibility);
+                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.hideElement({
+                    el: div,
                     onComplete: onComplete
                 });
                 assertFalse(tweenSpy.called);
@@ -572,7 +681,39 @@
             });
         }, config);
     };
-    
+
+    /**
+     * Test showElement() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals("visible", div.style.visibility);
+                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.showElement({
+                    el: div,
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
     /**
      * Where specific parameters for FPS, duration and easing are passed to showElement(), ensure
      * these are passed on to the tweening engine.
