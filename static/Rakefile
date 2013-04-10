@@ -196,6 +196,10 @@ end
 
 at_exit do
    shutDown()
+
+   if ($? && $?.exited?)
+      exit($?.exitstatus)
+   end
 end
 
 #default - run the tests
