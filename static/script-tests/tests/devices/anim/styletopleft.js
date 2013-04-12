@@ -834,12 +834,15 @@
                 //console.log('Beginning wait for style.left to change at ' + getDuration());
 
                 // Wait until assertions have been done. Assert that the two divs have been updated by comparing
-                // their respective left positions. Comparison happens at a pixel level, as minor subpixel
-                // differences still happen... for some reason!!
+                // their respective left positions.
+                // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
+                // in its timing even within itself, resulting in slightly different tween values from the same
+                // input.
                 var assertions = callbacks.add(function() {
+                    var tolerance = 5;
                     //console.log('div1.style.left: ' + div1.style.left);
                     //console.log('div2.style.left: ' + div2.style.left);
-                    assertEquals('Expecting div1 and div2 styles to be equal', Math.round(parseFloat(div1.style.left), 0), Math.round(parseFloat(div2.style.left), 0));
+                    assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
                 });
 
                 // Poll for changes every 10ms. Perform assertions when one property changes.  
