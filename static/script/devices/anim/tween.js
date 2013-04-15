@@ -94,13 +94,16 @@ require.def(
 	        }
 	        else {
 	            // We have some DOM updates to do. Do each one in sequence, then clear the queue ready for the next round.
-	            for (var i = 0; i < queue.length; i++) {
-	                var q = queue[i];
-                    step(q.options, q.values, q.type);
+	            try {
+	                for (var i = 0; i < queue.length; i++) {
+	                    var q = queue[i];
+                        step(q.options, q.values, q.type);
+	                }
 	            }
-	            
-	            // Truncating the array length to zero clears it.
-	            queue.length = 0;
+	            finally {
+	                // Truncating the array length to zero clears it.
+	                queue.length = 0;
+	            }
 	        }
 	    }
 	    
@@ -121,10 +124,7 @@ require.def(
             }
             else if (type === UPDATETYPE_COMPLETE) {
                 if (typeof options.onComplete === 'function') {
-                    try {
-                        options.onComplete();
-                    }
-                    catch(err) {} // Don't allow dodgy callbacks to wreck us
+                    options.onComplete();
                 }
             }
 	    }
