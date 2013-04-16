@@ -531,22 +531,6 @@ require.def("antie/devices/browserdevice",
                 };
             },
             /**
-             * Scroll an element to be centered on the given position.
-             * @param {Element} el The element you wish to scroll.
-             * @param {Integer} [left] The x-coordinate you wish to center on. If null, the x-coordinate will not be altered.
-             * @param {Integer} [top] The y-coordinate you wish to center on. If null, the y-coordinate will not be altered.
-             * @param {Boolean} [skipAnim] By default the scroll will be animated, pass <code>true</code> here to prevent animation.
-             * @param {Function} [onComplete] Callback function to be called when the scroll has been completed.
-             * @returns A handle to any animation started by this movement. {@see #stopAnimation}
-             */
-            scrollElementToCenter: function(el, left, top, skipAnim, onComplete) {
-                var size = this.getElementSize(el);
-                var newLeft = (left !== null) ? (left - (size.width / 2)) : null;
-                var newTop = (top !== null) ? (top - (size.height / 2)) : null;
-
-                return this.scrollElementTo(el, newLeft, newTop, skipAnim, onComplete);
-            },
-            /**
              * Gets the available browser screen size.
              * @returns An object with width and height properties.
              */

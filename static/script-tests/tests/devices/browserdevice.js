@@ -823,36 +823,7 @@
 		});
 
 	};
-	this.BrowserDeviceTest.prototype.testScrollElementToCenter = function(queue) {
-		expectAsserts(1);
 
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
-			this.div = device.createContainer("id_mask");
-			document.body.appendChild(this.div);
-			this.div.style.overflow = "hidden";
-			this.div.style.width = "10px";
-			this.div.style.height = "10px";
-			this.div.style.position = "absolute";
-			var inner = device.createContainer("id");
-			inner.style.position = "absolute";
-			inner.style.top = 0;
-			inner.style.left = 0;
-			inner.style.width = "1000px";
-			inner.style.height = "1000px";
-			device.appendChildElement(this.div, inner);
-
-			var scrollElementToSpy = this.sandbox.spy(device, 'scrollElementTo');
-			device.scrollElementToCenter(this.div, 100, 100);
-			assert(scrollElementToSpy.calledWith(this.div, 95, 95));
-			this.div.parentNode.removeChild(this.div);
-			this.div = null;
-		});
-
-	};
-	
-	
 	function stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, sandbox) {
 	    "use strict";
 	    var talKey, stubs;
