@@ -774,6 +774,87 @@
         }, config);
     };
     
+    /** Kick off two animations slightly separated in time (less than one frame). Assert that updates to
+     * the underlying DOM elements are forced into synchronisation.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testAnimationsDoNotInterleaveMoveElementTo = function(queue) {
+        expectAsserts(1);
+
+        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            function getDuration() {
+                return Date.now() - startTime;
+            }
+
+            var startTime = Date.now();
+            var device = application.getDevice();
+            var div1 = device.createContainer("id");
+            var div2 = device.createContainer("id2");
+            div1.style.left = '0px';
+            div2.style.left = '0px';
+
+            // Start moving div1 immediately
+            device.moveElementTo({
+                el: div1,
+                style: div1.style,
+                to: {
+                    top: 100,
+                    left: 100
+                },
+                skipAnim: false,
+                fps: 5,
+                duration: 300
+            });
+
+            // Start moving div2 after 50ms, a quarter of a frame at 5fps
+            queue.call('Kick off second animation after a delay', function(callbacks) {
+                var moveElement = callbacks.add(function() {
+                    device.moveElementTo({
+                        el: div2,
+                        style: div2.style,
+                        to: {
+                            top: 100,
+                            left: 100
+                        },
+                        skipAnim: false,
+                        fps: 5,
+                        duration: 300
+                    });
+                });
+
+                setTimeout(moveElement, 50);
+            });
+
+            // Poll for the style.left properties changing on the two divs. Ensure this happens at the same time
+            // (as far as possible with polling :/)
+            queue.call('Wait for style.left to change', function(callbacks) {
+                // Wait until assertions have been done. Assert that the two divs have been updated by comparing
+                // their respective left positions.
+                // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
+                // in its timing even within itself, resulting in slightly different tween values from the same
+                // input.
+                var assertions = callbacks.add(function() {
+                    var tolerance = 5;
+                    //console.log('div1.style.left: ' + div1.style.left);
+                    //console.log('div2.style.left: ' + div2.style.left);
+                    assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
+                });
+
+                // Poll for changes every 10ms. Perform assertions when one property changes.  
+                var timer = setInterval(function() {
+                    // If either style.left property has changed, ensure the other has too
+                    if (parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1) {
+                        //console.log('Running assertions after ' + getDuration());
+                        clearInterval(timer);
+                        assertions();
+                    }
+                }, 10);
+            });
+        }, config);
+    };
+
     /**
      * Helper: For one of the functions in styletopleft that takes an options object as its parameter,
      * ensure that the function does not have the side-effect of modifying the options object.
