@@ -811,7 +811,6 @@
             // Start moving div2 after 50ms, a quarter of a frame at 5fps
             queue.call('Kick off second animation after a delay', function(callbacks) {
                 var moveElement = callbacks.add(function() {
-                    //console.log('Starting second animation at ' + getDuration());
                     device.moveElementTo({
                         el: div2,
                         style: div2.style,
@@ -831,8 +830,6 @@
             // Poll for the style.left properties changing on the two divs. Ensure this happens at the same time
             // (as far as possible with polling :/)
             queue.call('Wait for style.left to change', function(callbacks) {
-                //console.log('Beginning wait for style.left to change at ' + getDuration());
-
                 // Wait until assertions have been done. Assert that the two divs have been updated by comparing
                 // their respective left positions.
                 // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
