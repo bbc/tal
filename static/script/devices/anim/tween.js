@@ -112,15 +112,15 @@ require.def(
 	     */
 	    function step(options, tweenValues, type) {
             if (type === UPDATETYPE_STEP) {
-	        for (var p in options.to) {
-                if (tweenValues[p]) {
-                    if (/scroll/.test(p)) {
-                        options.el[p] = tweenValues[p];
-                    } else {
-                        options.el.style[p] = tweenValues[p];
+                for (var p in options.to) {
+                    if (tweenValues[p]) {
+                        if (/scroll/.test(p)) {
+                            options.el[p] = tweenValues[p];
+                        } else {
+                            options.el.style[p] = tweenValues[p];
+                        }
                     }
                 }
-            }
             }
             else if (type === UPDATETYPE_COMPLETE) {
                 if (typeof options.onComplete === 'function') {
