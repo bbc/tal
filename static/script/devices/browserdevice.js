@@ -568,6 +568,78 @@ require.def("antie/devices/browserdevice",
                 return unescape(window.location.hash.replace(/^#/, '')).split('/');
             },
             /**
+             * Launch a new application at the specified URL, passing in query string data and
+             * a route.
+             * @param {String} location The URL to launch (include protocol, host and port)
+             * @param {Object} [data]   Properties to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
+             * @param {Array}  [route]  Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             */
+            setLocation: function(location, data, route) {
+                var windowLocation = this._windowLocation || window.location; // For unit testing
+                var query = '';
+                var hash = '';
+
+                // Construct a query string.
+                if (data) {
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            // Keys with values get 'key=value' syntax, valueless keys just get 'key'
+                            if (data[key] === undefined || data[key] === null) {
+                                query += key + '&';
+                            }
+                            else {
+                                query += key + '=' + data[key] + '&'; 
+                            }
+                        }
+                    }
+                    // Trim the last & off, add a leading ?
+                    if (query.length > 0) {
+                        query = '?' + query.slice(0, -1);
+                    }
+                }
+
+                // Construct the route string.
+                if (route && route.length > 0) {
+                    hash = '#' + route.join('/');
+                }
+
+                // Send the browser to the final URL
+                windowLocation.assign(location + query + hash);
+            },
+            /**
+             * Return the URL of the current application, with no route or query string information -
+             * @see getCurrentRoute(), @see getLocationData().
+             * @returns {String} URL of the current application, including protocol, host and port.
+             */
+            getLocation: function() {
+                var location = this._windowLocation || window.location; // For unit testing
+                return location.protocol + '//' + location.host + location.pathname;
+            },
+            /**
+             * Returns the query string of the current application as an object containing properties with
+             * string values.
+             * Keys without values are represented by properties with the value 'undefined'. Empty string values are
+             * represented in the object as property with an empty string value.
+             * @returns {Object} Properties contained in the query string.
+             */
+            getLocationData: function() {
+                var location = this._windowLocation || window.location; // For unit testing
+                if (!location.search) {
+                    return {};
+                }
+
+                var queryKeyValuePairs = window.unescape(location.search).replace(/^\?/, '').split('&');
+                var queryKeyValuePair;
+                var queryData = {};
+                for (var i = 0; i < queryKeyValuePairs.length; i++) {
+                    // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
+                    queryKeyValuePair = queryKeyValuePairs[i].split('='); 
+                    queryData[queryKeyValuePair[0]] = queryKeyValuePair[1];
+                }
+
+                return queryData;
+            },
+            /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
              * @returns A reference (e.g. URL) of the resource that launched the application.
              */

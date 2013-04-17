@@ -1108,7 +1108,7 @@
             host: 'test.invalid:12345',
             pathname: '/testurl/',
             hash: '#route',
-            query: '?a=x&b=&z'
+            search: '?a=x&b=&z'
         };
     }
 
