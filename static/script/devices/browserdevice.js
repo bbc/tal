@@ -570,32 +570,43 @@ require.def("antie/devices/browserdevice",
             /**
              * Launch a new application at the specified URL, passing in query string data and
              * a route.
-             * @param {String} location The URL to launch (include protocol, host and port)
-             * @param {Object} [data]   Properties to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
-             * @param {Array}  [route]  Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             * @param {String}  location    The URL to launch (include protocol, host and port)
+             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
+             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
              */
-            setLocation: function(location, data, route) {
+            setLocation: function(location, data, route, overwrite) {
                 var windowLocation = this._windowLocation || window.location; // For unit testing
                 var query = '';
                 var hash = '';
+                var key;
 
-                // Construct a query string.
+                // Get existing query data, or start a brand new object if applicable.
+                var mergedData = overwrite ? {} : this.getLocationData();
+
+                // Merge in the query data passed to this function, which takes precedence over anything existing.
                 if (data) {
-                    for (var key in data) {
+                    for (key in data) {
                         if (data.hasOwnProperty(key)) {
-                            // Keys with values get 'key=value' syntax, valueless keys just get 'key'
-                            if (data[key] === undefined || data[key] === null) {
-                                query += key + '&';
-                            }
-                            else {
-                                query += key + '=' + data[key] + '&'; 
-                            }
+                            mergedData[key] = data[key];
                         }
                     }
-                    // Trim the last & off, add a leading ?
-                    if (query.length > 0) {
-                        query = '?' + query.slice(0, -1);
+                }
+                // Construct a query string out of the merged data.
+                for (key in mergedData) {
+                    if (mergedData.hasOwnProperty(key)) {
+                        // Keys with values get 'key=value' syntax, valueless keys just get 'key'
+                        if (mergedData[key] === undefined || mergedData[key] === null) {
+                            query += key + '&';
+                        }
+                        else {
+                            query += key + '=' + mergedData[key] + '&'; 
+                        }
                     }
+                }
+                // Trim the last & off, add a leading ?
+                if (query.length > 0) {
+                    query = '?' + query.slice(0, -1);
                 }
 
                 // Construct the route string.

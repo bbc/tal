@@ -1027,7 +1027,7 @@
     /**
      * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationQuery = function(queue) {
+    this.BrowserDeviceTest.prototype.testSetLocationQueryAppend = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1036,13 +1036,41 @@
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
                 // Patch the window.location object on browserdevice. Set up with canned data.
                 device._windowLocation = {
-                    assign: this.sandbox.stub()
+                    assign: this.sandbox.stub(),
+                    search: '?device=sample&config=precert'
                 };
                 device.setLocation('http://example.com:55555/path/to/test.html', {
                     a: 'x',
                     b: '',
                     z: undefined
                 });
+
+                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x&b=&z', device._windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
+     */
+    this.BrowserDeviceTest.prototype.testSetLocationQueryOverride = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = {
+                    assign: this.sandbox.stub(),
+                    search: '?device=sample&config=precert'
+                };
+                device.setLocation('http://example.com:55555/path/to/test.html', {
+                    a: 'x',
+                    b: '',
+                    z: undefined
+                }, null, true);
                 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
                 assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x&b=&z', device._windowLocation.assign.getCall(0).args[0]);

@@ -529,11 +529,12 @@ require.def('antie/devices/device',
             /**
              * Launch a new application at the specified URL, passing in query string data and
              * a route.
-             * @param {String} location The URL to launch (include protocol, host and port)
-             * @param {Object} [data]   Properties to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
-             * @param {Array}  [route]  Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             * @param {String}  location    The URL to launch (include protocol, host and port)
+             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
+             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
              */
-            setLocation: function(location, data, route) {
+            setLocation: function(location, data, route, overwrite) {
             },
             /**
              * Return the URL of the current application, with no route or query string information -
