@@ -588,7 +588,7 @@ require.def("antie/devices/browserdevice",
                 if (data) {
                     for (key in data) {
                         if (data.hasOwnProperty(key)) {
-                            mergedData[key] = data[key];
+                            mergedData[key] = data[key]; // No need to escape here...
                         }
                     }
                 }
@@ -597,10 +597,10 @@ require.def("antie/devices/browserdevice",
                     if (mergedData.hasOwnProperty(key)) {
                         // Keys with values get 'key=value' syntax, valueless keys just get 'key'
                         if (mergedData[key] === undefined || mergedData[key] === null) {
-                            query += key + '&';
+                            query += window.encodeURIComponent(key) + '&';
                         }
                         else {
-                            query += key + '=' + mergedData[key] + '&'; 
+                            query += window.encodeURIComponent(key) + '=' + window.encodeURIComponent(mergedData[key]) + '&'; 
                         }
                     }
                 }
@@ -639,13 +639,18 @@ require.def("antie/devices/browserdevice",
                     return {};
                 }
 
-                var queryKeyValuePairs = window.unescape(location.search).replace(/^\?/, '').split('&');
-                var queryKeyValuePair;
+                // Split query string to array by & character
+                var queryKeyValuePairs = location.search.replace(/^\?/, '').split('&');
+                var queryKeyValuePair, value;
                 var queryData = {};
                 for (var i = 0; i < queryKeyValuePairs.length; i++) {
                     // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
                     queryKeyValuePair = queryKeyValuePairs[i].split('='); 
-                    queryData[queryKeyValuePair[0]] = queryKeyValuePair[1];
+                    value = queryKeyValuePair[1];
+                    if (queryKeyValuePair[1] !== undefined && queryKeyValuePair[1] !== null) {
+                        value = window.decodeURIComponent(value);
+                    }
+                    queryData[window.decodeURIComponent(queryKeyValuePair[0])] = value;
                 }
 
                 return queryData;

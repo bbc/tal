@@ -994,7 +994,7 @@
                 device._windowLocation = getWindowLocationMock();
                 
                 assertEquals('Correct query data returned', {
-                    a: 'x',
+                    a: 'x=y',
                     b: '',
                     z: undefined
                 }, device.getLocationData());
@@ -1040,13 +1040,13 @@
                     search: '?device=sample&config=precert'
                 };
                 device.setLocation('http://example.com:55555/path/to/test.html', {
-                    a: 'x',
+                    a: 'x=y',
                     b: '',
                     z: undefined
                 });
 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x&b=&z', device._windowLocation.assign.getCall(0).args[0]);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z', device._windowLocation.assign.getCall(0).args[0]);
             }
         );
     };
@@ -1067,13 +1067,13 @@
                     search: '?device=sample&config=precert'
                 };
                 device.setLocation('http://example.com:55555/path/to/test.html', {
-                    a: 'x',
+                    a: 'x=y',
                     b: '',
                     z: undefined
                 }, null, true);
                 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x&b=&z', device._windowLocation.assign.getCall(0).args[0]);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z', device._windowLocation.assign.getCall(0).args[0]);
             }
         );
     };
@@ -1115,14 +1115,14 @@
                     assign: this.sandbox.stub()
                 };
                 device.setLocation('http://example.com:55555/path/to/test.html', {
-                    a: 'x',
+                    a: 'x=y',
                     b: '',
                     z: undefined
                 },
                 ['here', 'is', 'a', 'route']);
                 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x&b=&z#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
             }
         );
     };
@@ -1136,7 +1136,7 @@
             host: 'test.invalid:12345',
             pathname: '/testurl/',
             hash: '#route',
-            search: '?a=x&b=&z'
+            search: '?a=x%3Dy&b=&z'
         };
     }
 
