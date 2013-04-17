@@ -961,7 +961,157 @@
             }
         );
     };
-    
+
+    /**
+     * Test that getLocation() returns the correct base URL.
+     */
+    this.BrowserDeviceTest.prototype.testGetLocationUrl = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = getWindowLocationMock();
+                
+                assertEquals('Correct URL returned', 'https://test.invalid:12345/testurl/', device.getLocation());
+            }
+        );
+    };
+
+    /**
+     * Test that getLocationData() returns the correct set of query string data.
+     */
+    this.BrowserDeviceTest.prototype.testGetLocationData = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = getWindowLocationMock();
+                
+                assertEquals('Correct query data returned', {
+                    a: 'x',
+                    b: '',
+                    z: undefined
+                }, device.getLocationData());
+            }
+        );
+    };
+
+    /**
+     * Test that setLocation() with just a URL attempts to navigate to the correct URL.
+     */
+    this.BrowserDeviceTest.prototype.testSetLocationUrl = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = {
+                    assign: this.sandbox.stub()
+                };
+                device.setLocation('http://example.com:55555/path/to/test.html');
+                
+                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html', device._windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
+     */
+    this.BrowserDeviceTest.prototype.testSetLocationQuery = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = {
+                    assign: this.sandbox.stub()
+                };
+                device.setLocation('http://example.com:55555/path/to/test.html', {
+                    a: 'x',
+                    b: '',
+                    z: undefined
+                });
+                
+                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x&b=&z', device._windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Test that setLocation() with a URL and route only attempts to navigate to the correct URL.
+     */
+    this.BrowserDeviceTest.prototype.testSetLocationRoute = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = {
+                    assign: this.sandbox.stub()
+                };
+                device.setLocation('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
+                
+                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Test that setLocation() with a URL, query and route attempts to navigate to the correct URL.
+     */
+    this.BrowserDeviceTest.prototype.testSetLocationFull = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                // Patch the window.location object on browserdevice. Set up with canned data.
+                device._windowLocation = {
+                    assign: this.sandbox.stub()
+                };
+                device.setLocation('http://example.com:55555/path/to/test.html', {
+                    a: 'x',
+                    b: '',
+                    z: undefined
+                },
+                ['here', 'is', 'a', 'route']);
+                
+                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
+                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x&b=&z#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Helper function for testGetLocation() and testGetLocationData(). A mock of window.location data.
+     */
+    function getWindowLocationMock() {
+        return {
+            protocol: 'https:',
+            host: 'test.invalid:12345',
+            pathname: '/testurl/',
+            hash: '#route',
+            query: '?a=x&b=&z'
+        };
+    }
+
     // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
     /*
     this.BrowserDeviceTest.prototype.testFirefox19OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
