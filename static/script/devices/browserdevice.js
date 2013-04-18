@@ -647,7 +647,7 @@ require.def("antie/devices/browserdevice",
                     // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
                     queryKeyValuePair = queryKeyValuePairs[i].split('='); 
                     value = queryKeyValuePair[1];
-                    if (queryKeyValuePair[1] !== undefined && queryKeyValuePair[1] !== null) {
+                    if (queryKeyValuePair[1]) {
                         value = window.decodeURIComponent(value);
                     }
                     queryData[window.decodeURIComponent(queryKeyValuePair[0])] = value;
