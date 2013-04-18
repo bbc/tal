@@ -547,7 +547,7 @@ require.def('antie/devices/device',
              * Returns the query string of the current application as an object containing properties with
              * string values.
              * Keys without values are represented by properties with the value 'undefined'. Empty string values are
-             * represented in the object as property with an empty string value.
+             * represented in the object as a property with an empty string value.
              * @returns {Object} Properties contained in the query string.
              */
             getLocationData: function() {
