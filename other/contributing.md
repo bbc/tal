@@ -8,7 +8,7 @@ title: TAL | Contributing
 TAL is  licensed under a dual licensing approach.
 You are welcome to make submissions under the Apache v 2.0 licence.  
 
-We welcome any contributors. There are two ways you might become a contributor:
+There are two ways you might become a contributor:
 
 ## Contributing small patches and bug fixes
 
@@ -41,3 +41,8 @@ code for us to merge.
 The BBC has adapted a dual licensing approach and can make available TAL under a 
 separate propietary licence agreement. 
 Please contact us for details of these terms.
+
+### Acceptance Criteria
+
+We welcome contributions. In order for us to accept a contribution we require that code 
+is supported by [tests]({{site.baseurl}}/testing.html) and documentation.
