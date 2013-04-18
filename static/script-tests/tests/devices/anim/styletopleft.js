@@ -23,6 +23,10 @@
  */
 
 (function() {
+    // How many milliseconds to give a 'no animation' transition to complete
+    var noAnimToleranceMs = 20;
+
+    // jshint newcap: false
     this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation");
 
     this.StyleTopLeftAnimationTest.prototype.setUp = function() {
@@ -34,7 +38,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -44,6 +48,7 @@
             var device = application.getDevice();
             var div = device.createContainer("id_mask");
             var inner = device.createContainer("id");
+            var startTime = Date.now();
             device.appendChildElement(div, inner);
 
             queue.call("Wait for tween", function(callbacks) {
@@ -52,6 +57,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
                     assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.scrollElementTo({
                     el: div,
@@ -68,7 +74,7 @@
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -83,20 +89,27 @@
             inner.style.top = "200px";
             inner.style.left = "100px";
 
-            var tweenSpy = this.sandbox.spy(device, '_tween');
-            device.scrollElementTo({
-                el: div,
-                style: div.style,
-                to: {
-                    left: 100,
-                    top: 200
-                }
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assert('onComplete called', true);
+                });
+                device.scrollElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
             });
-            assertFalse(tweenSpy.called);
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -106,6 +119,7 @@
             var device = application.getDevice();
             var div = device.createContainer("id_mask");
             var inner = device.createContainer("id");
+            var startTime = Date.now();
             device.appendChildElement(div, inner);
 
             queue.call("Wait for tween", function(callbacks) {
@@ -114,6 +128,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
                     assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.scrollElementTo({
                     el: div,
@@ -130,8 +145,48 @@
         }, config);
     };
 
+    /**
+     * Test scrollElementTo() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id_mask");
+            var inner = device.createContainer("id");
+            var startTime = Date.now();
+            device.appendChildElement(div, inner);
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
+                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.scrollElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
+
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -140,6 +195,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -147,6 +203,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
                     assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.moveElementTo({
                     el: div,
@@ -204,7 +261,7 @@
         }, config);
     };
 
-    this.StyleTopLeftAnimationTest.prototype.testHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
+    this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(2);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
@@ -270,7 +327,7 @@
                         skipAnim: false,
                         onComplete: hideElementonComplete
                     });
-                }
+                };
 
                 var showElementonComplete = callbacks.add(function() {
                     assertEquals(1, Math.round(parseFloat(div.style.opacity)));
@@ -370,7 +427,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimNoMovement = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -383,20 +440,28 @@
             div.style.top = "200px";
             div.style.left = "100px";
 
-            var tweenSpy = this.sandbox.spy(device, '_tween');
-            device.moveElementTo({
-                el: div,
-                style: div.style,
-                to: {
-                    left: 100,
-                    top: 200
-                }
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assert('onComplete called', true);
+                });
+
+                device.moveElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
             });
-            assertFalse(tweenSpy.called);
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -405,6 +470,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -412,6 +478,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
                     assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.moveElementTo({
                     el: div,
@@ -428,8 +495,45 @@
         }, config);
     };
 
+    /**
+     * Test moveElementTo() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
+                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.moveElementTo({
+                    el: div,
+                    style: div.style,
+                    to: {
+                        left: 100,
+                        top: 200
+                    },
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -438,6 +542,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -445,6 +550,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
                     assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.hideElement({
                     el: div,
@@ -456,7 +562,7 @@
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -465,6 +571,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -472,6 +579,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
                     assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.hideElement({
                     el: div,
@@ -483,8 +591,40 @@
         }, config);
     };
 
+    /**
+     * Test hideElement() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals("hidden", div.style.visibility);
+                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.hideElement({
+                    el: div,
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -493,6 +633,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -500,6 +641,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
                     assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.showElement({
                     el: div,
@@ -511,7 +653,7 @@
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -520,6 +662,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
+            var startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
                 var tweenSpy = this.sandbox.spy(device, '_tween');
@@ -527,6 +670,7 @@
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
                     assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.showElement({
                     el: div,
@@ -537,7 +681,39 @@
             });
         }, config);
     };
-    
+
+    /**
+     * Test showElement() skips animation when specified in config.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
+        expectAsserts(4);
+
+        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
+        ],"deviceConfigurationKey":"devices-html5-1"};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer("id");
+            var startTime = Date.now();
+
+            queue.call("Wait for tween", function(callbacks) {
+                var tweenSpy = this.sandbox.spy(device, '_tween');
+
+                var onComplete = callbacks.add(function() {
+                    assertEquals("visible", div.style.visibility);
+                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
+                });
+                device.showElement({
+                    el: div,
+                    onComplete: onComplete
+                });
+                assertFalse(tweenSpy.called);
+            });
+        }, config);
+    };
+
     /**
      * Where specific parameters for FPS, duration and easing are passed to showElement(), ensure
      * these are passed on to the tweening engine.
@@ -555,10 +731,10 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div,
-            	fps: 15,
-            	duration: 123,
-            	easing: "easeOutQuad"
+                el: div,
+                fps: 15,
+                duration: 123,
+                easing: "easeOutQuad"
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -585,10 +761,10 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div,
-            	fps: 16,
-            	duration: 321,
-            	easing: "elastic"
+                el: div,
+                fps: 16,
+                duration: 321,
+                easing: "elastic"
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -616,7 +792,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div // No animation properties provided, defaults will be used
+                el: div // No animation properties provided, defaults will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -644,7 +820,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div // No animation properties provided, defaults will be used
+                el: div // No animation properties provided, defaults will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -672,7 +848,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
-            	el: div // No animation properties provided, config will be used
+                el: div // No animation properties provided, config will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -700,7 +876,7 @@
             
             var tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
-            	el: div // No animation properties provided, config will be used
+                el: div // No animation properties provided, config will be used
             });
             
             assert('Tween called once', tweenStub.calledOnce);
@@ -721,8 +897,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.moveElementTo);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.moveElementTo);
         }, config);
     };
     
@@ -737,8 +913,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.scrollElementTo);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.scrollElementTo);
         }, config);
     };
     
@@ -753,8 +929,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.showElement);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.showElement);
         }, config);
     };
     
@@ -769,8 +945,8 @@
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-        	var device = application.getDevice();
-        	_assertNoSideEffects(device, device.hideElement);
+            var device = application.getDevice();
+            _assertNoSideEffects(device, device.hideElement);
         }, config);
     };
     
@@ -862,37 +1038,37 @@
      * @param {function} optionsParamFunction The function to execute on the device object.
      */
     function _assertNoSideEffects(device, optionsParamFunction) {
-    	var div = _createScrollableDiv(device);
-    	
-    	// Create two options objects - one to pass to the styletopleft method, one for reference
+        var div = _createScrollableDiv(device);
+    
+        // Create two options objects - one to pass to the styletopleft method, one for reference
         var options1 = _createStandardOptionsForElement(div);
         var options2 = _createStandardOptionsForElement(div);
         
         // Ensure that options1 is the same as options2 after the call to styletopleft.
         // (assertEquals does a deep comparison)
-    	var onComplete = function() {
-    		assertEquals('Options is the same after tween has completed', options1, options2);
-    	};
-    	
-    	// Configure onComplete method on options object.
-    	options1.onComplete = onComplete;
-    	options2.onComplete = onComplete;
-    	
-    	// Perform the styletopleft method.
-    	optionsParamFunction.call(device, options1);
-    };
+        var onComplete = function() {
+            assertEquals('Options is the same after tween has completed', options1, options2);
+        };
+    
+        // Configure onComplete method on options object.
+        options1.onComplete = onComplete;
+        options2.onComplete = onComplete;
+    
+        // Perform the styletopleft method.
+        optionsParamFunction.call(device, options1);
+    }
     
     /**
      * Helper: Create a scrollable div, for testing scrollElementTo() functionality.
      * @param {antie.devices.Device} device The device, with styletopleft functionality.
      */
     function _createScrollableDiv(device) {
-    	var div = device.createContainer("id_mask"),
-    	inner = device.createContainer("id");
-    	
-    	device.appendChildElement(div, inner);
-    	return div;
-    };
+        var div = device.createContainer("id_mask"),
+        inner = device.createContainer("id");
+    
+        device.appendChildElement(div, inner);
+        return div;
+    }
     
     /**
      * Helper: Create a standardised options object for passing to scrollElementTo() and moveElementTo().
@@ -900,23 +1076,23 @@
      * @param {Element} element DOM Element which the options object applies to.
      * @param {Function} [onComplete] Optional callback to be passed in the options object, called when the tween completes.
      */
-    function _createStandardOptionsForElement(element, onComplete) {
-    	return {
-    		el: element,
-			from: {
+    function _createStandardOptionsForElement(element) {
+        return {
+            el: element,
+            from: {
                 opacity: 0,
                 top: 0,
                 left: 0
-			},
-			to: {
-				opacity: 1,
-				top: 100,
-				left: 100
-			},
-			fps: 25,
-			duration: 10,
-			easing: 'linear',
-			skipAnim: true
-    	};
-    };
+            },
+            to: {
+                opacity: 1,
+                top: 100,
+                left: 100
+            },
+            fps: 25,
+            duration: 10,
+            easing: 'linear',
+                skipAnim: true
+            };
+    }
 })();
