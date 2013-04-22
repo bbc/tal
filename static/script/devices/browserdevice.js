@@ -570,19 +570,19 @@ require.def("antie/devices/browserdevice",
             /**
              * Launch a new application at the specified URL, passing in query string data and
              * a route.
-             * @param {String}  location    The URL to launch (include protocol, host and port)
+             * @param {String}  url         The URL to launch (include protocol, host and port)
              * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
              * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
              * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
              */
-            setLocation: function(location, data, route, overwrite) {
+            launchAppFromURL: function(url, data, route, overwrite) {
                 var windowLocation = this._windowLocation || window.location; // For unit testing
                 var query = '';
                 var hash = '';
                 var key;
 
                 // Get existing query data, or start a brand new object if applicable.
-                var mergedData = overwrite ? {} : this.getLocationData();
+                var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
 
                 // Merge in the query data passed to this function, which takes precedence over anything existing.
                 if (data) {
@@ -615,14 +615,14 @@ require.def("antie/devices/browserdevice",
                 }
 
                 // Send the browser to the final URL
-                windowLocation.assign(location + query + hash);
+                windowLocation.assign(url + query + hash);
             },
             /**
              * Return the URL of the current application, with no route or query string information -
-             * @see getCurrentRoute(), @see getLocationData().
+             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
              * @returns {String} URL of the current application, including protocol, host and port.
              */
-            getLocation: function() {
+            getCurrentAppURL: function() {
                 var location = this._windowLocation || window.location; // For unit testing
                 return location.protocol + '//' + location.host + location.pathname;
             },
@@ -631,9 +631,9 @@ require.def("antie/devices/browserdevice",
              * string values.
              * Keys without values are represented by properties with the value 'undefined'. Empty string values are
              * represented in the object as a property with an empty string value.
-             * @returns {Object} Properties contained in the query string.
+             * @returns {Object} Object containing properties held in the query string.
              */
-            getLocationData: function() {
+            getCurrentAppURLParameters: function() {
                 var location = this._windowLocation || window.location; // For unit testing
                 if (!location.search) {
                     return {};

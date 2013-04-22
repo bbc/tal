@@ -529,28 +529,28 @@ require.def('antie/devices/device',
             /**
              * Launch a new application at the specified URL, passing in query string data and
              * a route.
-             * @param {String}  location    The URL to launch (include protocol, host and port)
+             * @param {String}  url         The URL to launch (include protocol, host and port)
              * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
              * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
              * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
              */
-            setLocation: function(location, data, route, overwrite) {
+            launchAppFromURL: function(url, data, route, overwrite) {
             },
             /**
              * Return the URL of the current application, with no route or query string information -
-             * @see getCurrentRoute(), @see getLocationData().
+             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
              * @returns {String} URL of the current application, including protocol, host and port.
              */
-            getLocation: function() {
+            getCurrentAppURL: function() {
             },
             /**
              * Returns the query string of the current application as an object containing properties with
              * string values.
              * Keys without values are represented by properties with the value 'undefined'. Empty string values are
              * represented in the object as a property with an empty string value.
-             * @returns {Object} Properties contained in the query string.
+             * @returns {Object} Object containing properties held in the query string.
              */
-            getLocationData: function() {
+            getCurrentAppURLParameters: function() {
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.

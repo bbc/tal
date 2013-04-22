@@ -965,7 +965,7 @@
     /**
      * Test that getLocation() returns the correct base URL.
      */
-    this.BrowserDeviceTest.prototype.testGetLocationUrl = function(queue) {
+    this.BrowserDeviceTest.prototype.testGetCurrentAppURL = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -975,7 +975,7 @@
                 // Patch the window.location object on browserdevice. Set up with canned data.
                 device._windowLocation = getWindowLocationMock();
                 
-                assertEquals('Correct URL returned', 'https://test.invalid:12345/testurl/', device.getLocation());
+                assertEquals('Correct URL returned', 'https://test.invalid:12345/testurl/', device.getCurrentAppURL());
             }
         );
     };
@@ -983,7 +983,7 @@
     /**
      * Test that getLocationData() returns the correct set of query string data.
      */
-    this.BrowserDeviceTest.prototype.testGetLocationData = function(queue) {
+    this.BrowserDeviceTest.prototype.testGetCurrentAppURLParameters = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -997,7 +997,7 @@
                     a: 'x=y',
                     b: '',
                     z: undefined
-                }, device.getLocationData());
+                }, device.getCurrentAppURLParameters());
             }
         );
     };
@@ -1005,7 +1005,7 @@
     /**
      * Test that setLocation() with just a URL attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationUrl = function(queue) {
+    this.BrowserDeviceTest.prototype.testLaunchAppFromURL = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1016,7 +1016,7 @@
                 device._windowLocation = {
                     assign: this.sandbox.stub()
                 };
-                device.setLocation('http://example.com:55555/path/to/test.html');
+                device.launchAppFromURL('http://example.com:55555/path/to/test.html');
                 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
                 assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html', device._windowLocation.assign.getCall(0).args[0]);
@@ -1027,7 +1027,7 @@
     /**
      * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationQueryAppend = function(queue) {
+    this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryAppend = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1039,7 +1039,7 @@
                     assign: this.sandbox.stub(),
                     search: '?device=sample&config=precert'
                 };
-                device.setLocation('http://example.com:55555/path/to/test.html', {
+                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
                     a: 'x=y',
                     b: '',
                     z: undefined
@@ -1054,7 +1054,7 @@
     /**
      * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationQueryOverride = function(queue) {
+    this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryOverride = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1066,7 +1066,7 @@
                     assign: this.sandbox.stub(),
                     search: '?device=sample&config=precert'
                 };
-                device.setLocation('http://example.com:55555/path/to/test.html', {
+                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
                     a: 'x=y',
                     b: '',
                     z: undefined
@@ -1081,7 +1081,7 @@
     /**
      * Test that setLocation() with a URL and route only attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationRoute = function(queue) {
+    this.BrowserDeviceTest.prototype.testLaunchAppFromURLRoute = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1092,7 +1092,7 @@
                 device._windowLocation = {
                     assign: this.sandbox.stub()
                 };
-                device.setLocation('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
+                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
                 
                 assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
                 assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
@@ -1103,7 +1103,7 @@
     /**
      * Test that setLocation() with a URL, query and route attempts to navigate to the correct URL.
      */
-    this.BrowserDeviceTest.prototype.testSetLocationFull = function(queue) {
+    this.BrowserDeviceTest.prototype.testLaunchAppFromURLFull = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1114,7 +1114,7 @@
                 device._windowLocation = {
                     assign: this.sandbox.stub()
                 };
-                device.setLocation('http://example.com:55555/path/to/test.html', {
+                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
                     a: 'x=y',
                     b: '',
                     z: undefined
