@@ -963,7 +963,7 @@
     };
 
     /**
-     * Test that getLocation() returns the correct base URL.
+     * Test that getCurrentAppURL() returns the correct base URL.
      */
     this.BrowserDeviceTest.prototype.testGetCurrentAppURL = function(queue) {
         queuedRequire(queue, 
@@ -981,7 +981,7 @@
     };
 
     /**
-     * Test that getLocationData() returns the correct set of query string data.
+     * Test that getCurrentAppURLParameters() returns the correct set of query string data.
      */
     this.BrowserDeviceTest.prototype.testGetCurrentAppURLParameters = function(queue) {
         queuedRequire(queue, 
@@ -1003,7 +1003,7 @@
     };
 
     /**
-     * Test that setLocation() with just a URL attempts to navigate to the correct URL.
+     * Test that launchAppFromURL() with just a URL attempts to navigate to the correct URL.
      */
     this.BrowserDeviceTest.prototype.testLaunchAppFromURL = function(queue) {
         queuedRequire(queue, 
@@ -1025,7 +1025,7 @@
     };
 
     /**
-     * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
+     * Test that launchAppFromURL() with a URL and query only attempts to navigate to the correct URL.
      */
     this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryAppend = function(queue) {
         queuedRequire(queue, 
@@ -1052,7 +1052,7 @@
     };
 
     /**
-     * Test that setLocation() with a URL and query only attempts to navigate to the correct URL.
+     * Test that launchAppFromURL() with a URL and query only attempts to navigate to the correct URL.
      */
     this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryOverride = function(queue) {
         queuedRequire(queue, 
@@ -1079,7 +1079,7 @@
     };
 
     /**
-     * Test that setLocation() with a URL and route only attempts to navigate to the correct URL.
+     * Test that launchAppFromURL() with a URL and route only attempts to navigate to the correct URL.
      */
     this.BrowserDeviceTest.prototype.testLaunchAppFromURLRoute = function(queue) {
         queuedRequire(queue, 
@@ -1101,7 +1101,7 @@
     };
 
     /**
-     * Test that setLocation() with a URL, query and route attempts to navigate to the correct URL.
+     * Test that launchAppFromURL() with a URL, query and route attempts to navigate to the correct URL.
      */
     this.BrowserDeviceTest.prototype.testLaunchAppFromURLFull = function(queue) {
         queuedRequire(queue, 
@@ -1128,7 +1128,7 @@
     };
 
     /**
-     * Helper function for testGetLocation() and testGetLocationData(). A mock of window.location data.
+     * Helper function for testGetCurrentAppURL(), etc. A mock of window.location data.
      */
     function getWindowLocationMock() {
         return {
