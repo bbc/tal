@@ -1,7 +1,9 @@
 <object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px;"></object>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
-	var app = document.getElementById('appmgr').getOwnerApplication(document);
+	var appMgr = document.getElementById('appmgr');
+	var app = appMgr.getOwnerApplication(Window.document);
+	app.show();
 	app.privateData.keyset.setValue(0x330);
 	app.privateData.keyset.value = 0x330;
 //]]>
