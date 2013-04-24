@@ -58,7 +58,7 @@
             this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', getWindowLocationStub);
             
             assertEquals('Correct query data returned', {
-                a: 'x=y',
+                a: 'x=0',
                 b: '',
                 z: undefined
             }, application.getCurrentAppURLParameters());
@@ -73,7 +73,7 @@
         
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             // Replace BrowserDevice.setWindowLocation() with a stub.
-            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocation');
+            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl');
             application.launchAppFromURL('http://example.com:55555/path/to/test.html');
                 
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
@@ -95,15 +95,15 @@
                 };
             });
             
-            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocation');
+            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl');
             application.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                a: 'x=y',
+                a: 'x=0',
                 b: '',
                 z: undefined
             });
 
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3D0&b=&z', setWindowLocationStub.getCall(0).args[0]);
         });
     };
 
@@ -121,16 +121,16 @@
                 };
             });
             
-            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocation');
+            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl');
 
             application.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                a: 'x=y',
+                a: 'x=0',
                 b: '',
                 z: undefined
             }, null, true);
             
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z', setWindowLocationStub.getCall(0).args[0]);
         });
     };
 
@@ -142,7 +142,7 @@
         
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             // Replace BrowserDevice.setWindowLocation() with a stub.
-            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocation');
+            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl');
             application.launchAppFromURL('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
             
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
@@ -158,16 +158,16 @@
         
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             // Replace BrowserDevice.setWindowLocation() with a stub.
-            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocation');
+            var setWindowLocationStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl');
             application.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                a: 'x=y',
+                a: 'x=0',
                 b: '',
                 z: undefined
             },
             ['here', 'is', 'a', 'route']);
             
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z#here/is/a/route', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z#here/is/a/route', setWindowLocationStub.getCall(0).args[0]);
             });
     };
 
@@ -180,7 +180,7 @@
             host: 'test.invalid:12345',
             pathname: '/testurl/',
             hash: '#route',
-            search: '?a=x%3Dy&b=&z'
+            search: '?a=x%3D0&b=&z'
         };
     }
 })();

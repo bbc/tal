@@ -584,7 +584,7 @@ require.def("antie/devices/browserdevice",
              * to manipulate the current location more easily.
              * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            setWindowLocation: function(url) {
+            setWindowLocationUrl: function(url) {
                 var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
                 windowLocation.assign(url);
             },

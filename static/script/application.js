@@ -445,7 +445,7 @@ require.def('antie/application',
                 }
 
                 // Send the browser to the final URL
-                this.getDevice().setWindowLocation(url + query + hash);
+                this.getDevice().setWindowLocationUrl(url + query + hash);
             },
             /**
              * Return the URL of the current application, with no route or query string information -

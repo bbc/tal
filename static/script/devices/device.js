@@ -541,7 +541,7 @@ require.def('antie/devices/device',
              * to manipulate the current location more easily.
              * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            setWindowLocation: function(url) {
+            setWindowLocationUrl: function(url) {
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.

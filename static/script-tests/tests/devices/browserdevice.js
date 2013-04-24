@@ -995,9 +995,9 @@
     };
     
     /**
-     * Test that device.setWindowLocation() calls functionality on underlying window.location.
+     * Test that device.setWindowLocationUrl() calls functionality on underlying window.location.
      */
-    this.BrowserDeviceTest.prototype.testSetWindowLocation = function(queue) {
+    this.BrowserDeviceTest.prototype.testSetWindowLocationUrl = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
@@ -1012,7 +1012,7 @@
                 };
 
                 device._windowLocation = windowLocation; 
-                device.setWindowLocation(targetUrl);
+                device.setWindowLocationUrl(targetUrl);
 
                 assertEquals('window.location.assign call count', 1, windowLocation.assign.callCount);
                 assertEquals('Correct URL passed through', targetUrl, windowLocation.assign.getCall(0).args[0]);
