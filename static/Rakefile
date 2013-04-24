@@ -8,6 +8,7 @@ require './unit-testing/rake-helper.rb'
 $params = {
 	:jtd_runnerMode => OptionArg( "runnerMode", "QUIET" ),
 	:jtd_tests      => OptionArg( "tests", "all" ),
+	:jtd_file       => OptionArg( "file", "" ),
 	:jtd_server     => OptionArg( "server", "http://localhost:9876" ),
 	:jtd_output     => OptionArg( "testOutput", nil ),
 	:jtd_verbose    => SwitchArg( "verbose" ),
@@ -16,7 +17,8 @@ $params = {
 	:coverage       => PlainArg( "coverage", false ),
 	:webdriverurl   => PlainArg( "webdriverurl", false ),
 	:server         => PlainArg( "server", "http://localhost:9876" ),
-	:port           => 9876
+	:port           => 9876,
+	:cleanup        => PlainArg( "cleanup", true )
 }
 
 if( $params[ :server ] )
@@ -42,11 +44,54 @@ COVERAGE_FILE_NAME = "jsTestDriver.conf-coverage.dat"
 SERVER_COMMAND     = "java -jar #{JTD_JAR_PATH} --config #{CONFIG_PATH} #{$params[ :jtd_runner_mode ]} #{$params[ :jtd_port ]}"
 TEST_COMMAND       = "java -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
 
-$script_files  	   = ''
 $test_files		   = ''
 $jtd_config 	   = ''
 $jtd_server_pid    = 0
 $webdriver_object  = nil
+
+file CONFIG_PATH => PRELUDE_PATH do
+    generate_script_file_list
+    generate_test_file_list
+    generate_jtd_config_file
+end
+
+file PRELUDE_PATH do
+    generate_prelude_file
+end
+
+#start the js-test-driver server
+desc "boot the jsTestDriver server"
+task :start_jtd_server => CONFIG_PATH do
+    puts( "[INFO] Starting JsTestDriver Server: " + SERVER_COMMAND )
+    $jtd_server_pid = fork do
+        exec SERVER_COMMAND
+        exit !127
+    end
+end
+
+desc "run the javascript unit tests"
+task :test do
+    wait_for_browser
+    puts "[INFO] Starting Tests " + TEST_COMMAND
+    system( TEST_COMMAND )
+end
+
+desc "Launch and navigate a browser to the jsTestDriver server."
+task :attatch_browser do
+    selenium
+end
+
+desc "remove auto generated files"
+task :clean do
+    shutDown
+end
+
+#default - run the tests
+task :default => [:start_jtd_server, :attatch_browser, :test, :clean] do
+    if( $jtd_output && $params[ :coverage ] )
+        process_coverage();
+    end
+end
 
 task :help do
 	puts "rakefile to help run unittests"
@@ -67,52 +112,29 @@ task :help do
 	puts "rake testOutput=test-results webdriverurl=chrome - runs tests, automates browser via chromedriver and outputs results to file"
 end
 
-#automate browser
-task :selenium => [ :wait_for_server ] do 
-	case $params[ :webdriverurl ]
-	when false
-		puts "[INFO] No Browser Automation Selected ( see webdriverurl param ) - Browser Must Be Started Manually"
-		puts "[INFO] Navigate Browser To #{CAPTURE_URL}"
-	when "chrome"
-		puts "[INFO] Starting Web Browser Via Chrome Driver"
-		$webdriver_object = Selenium::WebDriver.for :chrome
-		$webdriver_object.navigate.to CAPTURE_URL
-	when "firefox"
-		puts "[INFO] Starting Web Browser Via Firefox Driver"
-		$webdriver_object = Selenium::WebDriver.for :firefox
-		$webdriver_object.navigate.to CAPTURE_URL
-	else 
-		puts "[INFO] Starting Web Browser Via Web Driver ( #{$params[ :webdriverurl ]} )"
-		$webdriver_object = Selenium::WebDriver.for(:remote, :desired_capabilities => :chrome, :url => $params[ :webdriverurl ] )
-		$webdriver_object.navigate.to CAPTURE_URL
-	end
-end
-
 #generates list of scripts to be added to the config
-task :generate_script_file_list do
+def generate_script_file_list
+    $script_files = ''
 	puts "[INFO] Generating Script List"
-
-	Dir.glob("script/**/*.js").each do |x|
+	FileList["script/**/*.js"].each do |x|
 		$script_files += "  - " + x + "\n"
 	end
 end
 
 #generates list of tests to be added to the config
-task :generate_test_file_list  do
+def generate_test_file_list
 	puts "[INFO] Generating Test List"
 
-	Dir.glob("script-tests/**/*.js").each do |x|
+	FileList["script-tests/**/*.js"].each do |x|
 		$test_files += "  - " + x + "\n"
 	end
 	$test_files = remove_lines( $test_files, [ "interactivehtml", "queuedrequire", "fixtures"] )
 end
 
 #generate prelude file
-task :generate_prelude_file do
+def generate_prelude_file
 	puts "[INFO] Building Prelude File"
-
 	$text_prelude = $text_prelude.gsub( "${SERVER}", $params[ :server ] );
-
 	file = File.open( PRELUDE_PATH, "w" )
 	file.write( $text_prelude )
 	file.flush();
@@ -120,7 +142,7 @@ task :generate_prelude_file do
 end
 
 #generates the jstestdriver config file
-task :generate_jtd_config_file => [ :generate_script_file_list, :generate_test_file_list, :generate_prelude_file ] do
+def generate_jtd_config_file
 	puts "[INFO] Building JsTestDriver Config File"
 	
 	$jtd_config = $jtd_config + $jtd_template
@@ -139,22 +161,34 @@ task :generate_jtd_config_file => [ :generate_script_file_list, :generate_test_f
 	file.close();
 end
 
-#start the js-test-driver server
-task :start_jtd_server => [ :generate_jtd_config_file ] do
-	puts( "[INFO] Starting JsTestDriver Server: " + SERVER_COMMAND )
-	$jtd_server_pid = fork do
-		exec SERVER_COMMAND
-		exit !127
-	end
+#automate browser
+def selenium
+    wait_for_server
+    case $params[ :webdriverurl ]
+    when false
+        puts "[INFO] No Browser Automation Selected ( see webdriverurl param ) - Browser Must Be Started Manually"
+        puts "[INFO] Navigate Browser To #{CAPTURE_URL}"
+    when "chrome"
+        puts "[INFO] Starting Web Browser Via Chrome Driver"
+        $webdriver_object = Selenium::WebDriver.for :chrome
+        $webdriver_object.navigate.to CAPTURE_URL
+    when "firefox"
+        puts "[INFO] Starting Web Browser Via Firefox Driver"
+        $webdriver_object = Selenium::WebDriver.for :firefox
+        $webdriver_object.navigate.to CAPTURE_URL
+    else 
+        puts "[INFO] Starting Web Browser Via Web Driver ( #{$params[ :webdriverurl ]} )"
+        $webdriver_object = Selenium::WebDriver.for(:remote, :desired_capabilities => :chrome, :url => $params[ :webdriverurl ] )
+        $webdriver_object.navigate.to CAPTURE_URL
+    end
 end
 
 #waits for the jtd server to become active
-task :wait_for_server => [ :start_jtd_server ] do
+def wait_for_server
 	puts "[INFO] Waiting For JsTestDriver Server To Start";
 	uri = URI.parse( $params[ :server ] )
 
     while true
-      sleep( 10 );
       begin
       	response = Net::HTTP.get_response( uri )
       	if( response.code == "200" )
@@ -169,7 +203,7 @@ task :wait_for_server => [ :start_jtd_server ] do
 end
 
 #waits for a browser to connect to the server
-task :wait_for_browser => [ :wait_for_server ] do
+def wait_for_browser
 	puts "[INFO] Waiting For Browser To Connect To JsTestDriverServer"
 	uri = URI.parse( $params[ :server ] )
 
@@ -186,27 +220,6 @@ task :wait_for_browser => [ :wait_for_server ] do
         	   Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
     	end
     end
-end
-
-desc "run the javascript unit tests - run rake help for arguments"
-task :test => [ :selenium, :wait_for_browser ] do
-	puts "[INFO] Starting Tests " + TEST_COMMAND
-	system( TEST_COMMAND )
-end
-
-at_exit do
-   shutDown()
-
-   if ($? && $?.exited?)
-      exit($?.exitstatus)
-   end
-end
-
-#default - run the tests
-task :default => [:test] do
-	if( $jtd_output && $params[ :coverage ] )
-		process_coverage();
-	end
 end
 
 #used remove unwanted file from the coverage results
@@ -308,7 +321,7 @@ $text_prelude = <<-eos
 })();
 eos
 
-#the coverage pluging section - this gets plugged into the jstestdriver config file when coverage is on
+#the coverage plugin section - this gets plugged into the jstestdriver config file when coverage is on
 $text_coverage_plugin = <<-eos
 plugin:
   - name: "coverage"
