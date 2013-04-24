@@ -568,92 +568,25 @@ require.def("antie/devices/browserdevice",
                 return unescape(window.location.hash.replace(/^#/, '')).split('/');
             },
             /**
-             * Launch a new application at the specified URL, passing in query string data and
-             * a route.
-             * @param {String}  url         The URL to launch (include protocol, host and port)
-             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
-             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
-             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
+             * Get an object giving access to the current URL, query string, hash etc.
+             * @returns {Object} Object containing, at a minimum, the properties:
+             * hash, host, pathname, protocol, search. These correspond to the properties
+             * in the window.location DOM API.
+             * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
+             * this information in a more generic way.
              */
-            launchAppFromURL: function(url, data, route, overwrite) {
-                var windowLocation = this._windowLocation || window.location; // For unit testing
-                var query = '';
-                var hash = '';
-                var key;
-
-                // Get existing query data, or start a brand new object if applicable.
-                var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
-
-                // Merge in the query data passed to this function, which takes precedence over anything existing.
-                if (data) {
-                    for (key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            mergedData[key] = data[key]; // No need to escape here...
-                        }
-                    }
-                }
-                // Construct a query string out of the merged data.
-                for (key in mergedData) {
-                    if (mergedData.hasOwnProperty(key)) {
-                        // Keys with values get 'key=value' syntax, valueless keys just get 'key'
-                        if (mergedData[key] === undefined || mergedData[key] === null) {
-                            query += window.encodeURIComponent(key) + '&';
-                        }
-                        else {
-                            query += window.encodeURIComponent(key) + '=' + window.encodeURIComponent(mergedData[key]) + '&'; 
-                        }
-                    }
-                }
-                // Trim the last & off, add a leading ?
-                if (query.length > 0) {
-                    query = '?' + query.slice(0, -1);
-                }
-
-                // Construct the route string.
-                if (route && route.length > 0) {
-                    hash = '#' + route.join('/');
-                }
-
-                // Send the browser to the final URL
-                windowLocation.assign(url + query + hash);
+            getWindowLocation: function() {
+                var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
+                return windowLocation;
             },
             /**
-             * Return the URL of the current application, with no route or query string information -
-             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
-             * @returns {String} URL of the current application, including protocol, host and port.
+             * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application
+             * to manipulate the current location more easily.
+             * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            getCurrentAppURL: function() {
-                var location = this._windowLocation || window.location; // For unit testing
-                return location.protocol + '//' + location.host + location.pathname;
-            },
-            /**
-             * Returns the query string of the current application as an object containing properties with
-             * string values.
-             * Keys without values are represented by properties with the value 'undefined'. Empty string values are
-             * represented in the object as a property with an empty string value.
-             * @returns {Object} Object containing properties held in the query string.
-             */
-            getCurrentAppURLParameters: function() {
-                var location = this._windowLocation || window.location; // For unit testing
-                if (!location.search) {
-                    return {};
-                }
-
-                // Split query string to array by & character
-                var queryKeyValuePairs = location.search.replace(/^\?/, '').split('&');
-                var queryKeyValuePair, value;
-                var queryData = {};
-                for (var i = 0; i < queryKeyValuePairs.length; i++) {
-                    // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
-                    queryKeyValuePair = queryKeyValuePairs[i].split('='); 
-                    value = queryKeyValuePair[1];
-                    if (queryKeyValuePair[1]) {
-                        value = window.decodeURIComponent(value);
-                    }
-                    queryData[window.decodeURIComponent(queryKeyValuePair[0])] = value;
-                }
-
-                return queryData;
+            setWindowLocation: function(url) {
+                var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
+                windowLocation.assign(url);
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.

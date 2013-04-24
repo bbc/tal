@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
 	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice");
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
@@ -963,182 +964,61 @@
     };
 
     /**
-     * Test that getCurrentAppURL() returns the correct base URL.
+     * Test that device.getWindowLocation() returns values from underlying window.location.
      */
-    this.BrowserDeviceTest.prototype.testGetCurrentAppURL = function(queue) {
+    this.BrowserDeviceTest.prototype.testGetWindowLocation = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
             ], 
             function(BrowserDevice) {
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = getWindowLocationMock();
                 
-                assertEquals('Correct URL returned', 'https://test.invalid:12345/testurl/', device.getCurrentAppURL());
+                // Stub out window.location used by BrowserDevice
+                var windowLocation = {
+                    protocol: 'https:',
+                    host: 'test.invalid:12345',
+                    pathname: '/testurl/',
+                    hash: '#route',
+                    search: '?a=x%3Dy&b=&z'
+                };
+                device._windowLocation = windowLocation; 
+
+                var getWindowLocation = device.getWindowLocation();
+                assertEquals('Correct protocol returned', windowLocation.protocol, getWindowLocation.protocol);
+                assertEquals('Correct host returned', windowLocation.host, getWindowLocation.host);
+                assertEquals('Correct pathname returned', windowLocation.pathname, getWindowLocation.pathname);
+                assertEquals('Correct hash returned', windowLocation.hash, getWindowLocation.hash);
+                assertEquals('Correct search returned', windowLocation.search, getWindowLocation.search);
             }
         );
     };
-
+    
     /**
-     * Test that getCurrentAppURLParameters() returns the correct set of query string data.
+     * Test that device.setWindowLocation() calls functionality on underlying window.location.
      */
-    this.BrowserDeviceTest.prototype.testGetCurrentAppURLParameters = function(queue) {
+    this.BrowserDeviceTest.prototype.testSetWindowLocation = function(queue) {
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
             ], 
             function(BrowserDevice) {
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = getWindowLocationMock();
-                
-                assertEquals('Correct query data returned', {
-                    a: 'x=y',
-                    b: '',
-                    z: undefined
-                }, device.getCurrentAppURLParameters());
-            }
-        );
-    };
+                var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
 
-    /**
-     * Test that launchAppFromURL() with just a URL attempts to navigate to the correct URL.
-     */
-    this.BrowserDeviceTest.prototype.testLaunchAppFromURL = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = {
+                // Stub out window.location.assign
+                var windowLocation = {
                     assign: this.sandbox.stub()
                 };
-                device.launchAppFromURL('http://example.com:55555/path/to/test.html');
-                
-                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html', device._windowLocation.assign.getCall(0).args[0]);
+
+                device._windowLocation = windowLocation; 
+                device.setWindowLocation(targetUrl);
+
+                assertEquals('window.location.assign call count', 1, windowLocation.assign.callCount);
+                assertEquals('Correct URL passed through', targetUrl, windowLocation.assign.getCall(0).args[0]);
             }
         );
     };
-
-    /**
-     * Test that launchAppFromURL() with a URL and query only attempts to navigate to the correct URL.
-     */
-    this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryAppend = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = {
-                    assign: this.sandbox.stub(),
-                    search: '?device=sample&config=precert'
-                };
-                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                    a: 'x=y',
-                    b: '',
-                    z: undefined
-                });
-
-                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z', device._windowLocation.assign.getCall(0).args[0]);
-            }
-        );
-    };
-
-    /**
-     * Test that launchAppFromURL() with a URL and query only attempts to navigate to the correct URL.
-     */
-    this.BrowserDeviceTest.prototype.testLaunchAppFromURLQueryOverride = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = {
-                    assign: this.sandbox.stub(),
-                    search: '?device=sample&config=precert'
-                };
-                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                    a: 'x=y',
-                    b: '',
-                    z: undefined
-                }, null, true);
-                
-                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z', device._windowLocation.assign.getCall(0).args[0]);
-            }
-        );
-    };
-
-    /**
-     * Test that launchAppFromURL() with a URL and route only attempts to navigate to the correct URL.
-     */
-    this.BrowserDeviceTest.prototype.testLaunchAppFromURLRoute = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = {
-                    assign: this.sandbox.stub()
-                };
-                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
-                
-                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
-            }
-        );
-    };
-
-    /**
-     * Test that launchAppFromURL() with a URL, query and route attempts to navigate to the correct URL.
-     */
-    this.BrowserDeviceTest.prototype.testLaunchAppFromURLFull = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                // Patch the window.location object on browserdevice. Set up with canned data.
-                device._windowLocation = {
-                    assign: this.sandbox.stub()
-                };
-                device.launchAppFromURL('http://example.com:55555/path/to/test.html', {
-                    a: 'x=y',
-                    b: '',
-                    z: undefined
-                },
-                ['here', 'is', 'a', 'route']);
-                
-                assert('window.location.assign() called', device._windowLocation.assign.calledOnce);
-                assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3Dy&b=&z#here/is/a/route', device._windowLocation.assign.getCall(0).args[0]);
-            }
-        );
-    };
-
-    /**
-     * Helper function for testGetCurrentAppURL(), etc. A mock of window.location data.
-     */
-    function getWindowLocationMock() {
-        return {
-            protocol: 'https:',
-            host: 'test.invalid:12345',
-            pathname: '/testurl/',
-            hash: '#route',
-            search: '?a=x%3Dy&b=&z'
-        };
-    }
 
     // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
     /*

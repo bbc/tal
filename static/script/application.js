@@ -398,6 +398,93 @@ require.def('antie/application',
 			route: function(route) {
 				// intentionally left blank
 			},
+            /**
+             * Launch a new application at the specified URL, passing in query string data and
+             * a route.
+             * @param {String}  url         The URL to launch (include protocol, host and port)
+             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
+             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
+             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
+             */
+            launchAppFromURL: function(url, data, route, overwrite) {
+                var query = '';
+                var hash = '';
+                var key;
+
+                // Get existing query data, or start a brand new object if applicable.
+                var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
+
+                // Merge in the query data passed to this function, which takes precedence over anything existing.
+                if (data) {
+                    for (key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            mergedData[key] = data[key]; // No need to escape here...
+                        }
+                    }
+                }
+                // Construct a query string out of the merged data.
+                for (key in mergedData) {
+                    if (mergedData.hasOwnProperty(key)) {
+                        // Keys with values get 'key=value' syntax, valueless keys just get 'key'
+                        if (mergedData[key] === undefined || mergedData[key] === null) {
+                            query += window.encodeURIComponent(key) + '&';
+                        }
+                        else {
+                            query += window.encodeURIComponent(key) + '=' + window.encodeURIComponent(mergedData[key]) + '&'; 
+                        }
+                    }
+                }
+                // Trim the last & off, add a leading ?
+                if (query.length > 0) {
+                    query = '?' + query.slice(0, -1);
+                }
+
+                // Construct the route string.
+                if (route && route.length > 0) {
+                    hash = '#' + route.join('/');
+                }
+
+                // Send the browser to the final URL
+                this.getDevice().setWindowLocation(url + query + hash);
+            },
+            /**
+             * Return the URL of the current application, with no route or query string information -
+             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
+             * @returns {String} URL of the current application, including protocol, host and port.
+             */
+            getCurrentAppURL: function() {
+                var location = this.getDevice().getWindowLocation();
+                return location.protocol + '//' + location.host + location.pathname;
+            },
+            /**
+             * Returns the query string of the current application as an object containing properties with
+             * string values.
+             * Keys without values are represented by properties with the value 'undefined'. Empty string values are
+             * represented in the object as a property with an empty string value.
+             * @returns {Object} Object containing properties held in the query string.
+             */
+            getCurrentAppURLParameters: function() {
+                var location = this.getDevice().getWindowLocation();
+                if (!location.search) {
+                    return {};
+                }
+
+                // Split query string to array by & character
+                var queryKeyValuePairs = location.search.replace(/^\?/, '').split('&');
+                var queryKeyValuePair, value;
+                var queryData = {};
+                for (var i = 0; i < queryKeyValuePairs.length; i++) {
+                    // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
+                    queryKeyValuePair = queryKeyValuePairs[i].split('='); 
+                    value = queryKeyValuePair[1];
+                    if (queryKeyValuePair[1]) {
+                        value = window.decodeURIComponent(value);
+                    }
+                    queryData[window.decodeURIComponent(queryKeyValuePair[0])] = value;
+                }
+
+                return queryData;
+            },
 			/**
 			 * Destroys the application, allowing you to run another. This is mainly for use when building
 			 * unit or BDD tests.

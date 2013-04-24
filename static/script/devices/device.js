@@ -527,30 +527,21 @@ require.def('antie/devices/device',
             getCurrentRoute: function() {
             },
             /**
-             * Launch a new application at the specified URL, passing in query string data and
-             * a route.
-             * @param {String}  url         The URL to launch (include protocol, host and port)
-             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
-             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
-             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
+             * Get an object giving access to the current URL, query string, hash etc.
+             * @returns {Object} Object containing, at a minimum, the properties:
+             * hash, host, pathname, protocol, search. These correspond to the properties
+             * in the window.location DOM API.
+             * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
+             * this information in a more generic way.
              */
-            launchAppFromURL: function(url, data, route, overwrite) {
+            getWindowLocation: function() {
             },
             /**
-             * Return the URL of the current application, with no route or query string information -
-             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
-             * @returns {String} URL of the current application, including protocol, host and port.
+             * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application
+             * to manipulate the current location more easily.
+             * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            getCurrentAppURL: function() {
-            },
-            /**
-             * Returns the query string of the current application as an object containing properties with
-             * string values.
-             * Keys without values are represented by properties with the value 'undefined'. Empty string values are
-             * represented in the object as a property with an empty string value.
-             * @returns {Object} Object containing properties held in the query string.
-             */
-            getCurrentAppURLParameters: function() {
+            setWindowLocation: function(url) {
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
