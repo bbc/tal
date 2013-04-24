@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
 	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice");
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
@@ -961,7 +962,64 @@
             }
         );
     };
+
+    /**
+     * Test that device.getWindowLocation() returns values from underlying window.location.
+     */
+    this.BrowserDeviceTest.prototype.testGetWindowLocation = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                
+                // Stub out window.location used by BrowserDevice
+                var windowLocation = {
+                    protocol: 'https:',
+                    host: 'test.invalid:12345',
+                    pathname: '/testurl/',
+                    hash: '#route',
+                    search: '?a=x%3Dy&b=&z'
+                };
+                device._windowLocation = windowLocation; 
+
+                var getWindowLocation = device.getWindowLocation();
+                assertEquals('Correct protocol returned', windowLocation.protocol, getWindowLocation.protocol);
+                assertEquals('Correct host returned', windowLocation.host, getWindowLocation.host);
+                assertEquals('Correct pathname returned', windowLocation.pathname, getWindowLocation.pathname);
+                assertEquals('Correct hash returned', windowLocation.hash, getWindowLocation.hash);
+                assertEquals('Correct search returned', windowLocation.search, getWindowLocation.search);
+            }
+        );
+    };
     
+    /**
+     * Test that device.setWindowLocationUrl() calls functionality on underlying window.location.
+     */
+    this.BrowserDeviceTest.prototype.testSetWindowLocationUrl = function(queue) {
+        queuedRequire(queue, 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
+
+                // Stub out window.location.assign
+                var windowLocation = {
+                    assign: this.sandbox.stub()
+                };
+
+                device._windowLocation = windowLocation; 
+                device.setWindowLocationUrl(targetUrl);
+
+                assertEquals('window.location.assign call count', 1, windowLocation.assign.callCount);
+                assertEquals('Correct URL passed through', targetUrl, windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
     // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
     /*
     this.BrowserDeviceTest.prototype.testFirefox19OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
