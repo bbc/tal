@@ -95,7 +95,11 @@ end
 at_exit do
     if $dirty == true
         shutDown
-    end     
+    end
+    
+    if ($? && $?.exited?)
+      exit($?.exitstatus)
+   end     
 end
 
 #default - run the tests
