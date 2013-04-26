@@ -527,6 +527,23 @@ require.def('antie/devices/device',
             getCurrentRoute: function() {
             },
             /**
+             * Get an object giving access to the current URL, query string, hash etc.
+             * @returns {Object} Object containing, at a minimum, the properties:
+             * hash, host, pathname, protocol, search. These correspond to the properties
+             * in the window.location DOM API.
+             * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
+             * this information in a more generic way.
+             */
+            getWindowLocation: function() {
+            },
+            /**
+             * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application
+             * to manipulate the current location more easily.
+             * @param {String} url Full URL to navigate to, including search and hash if applicable.
+             */
+            setWindowLocationUrl: function(url) {
+            },
+            /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
              * @returns A reference (e.g. URL) of the resource that launched the application.
              */
