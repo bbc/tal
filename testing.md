@@ -43,11 +43,11 @@ To see a list of options
     rake help
     
 
-Some of the more useful command line options provided by JsTestDriver can be set via rake. Use rake help to see what is supported. Commonly you will want to run a subset of the tests. This can be achieved by specifying tests=/regular expression/ on the command line. eg. rake tests="Network". The regular expression is being matched against the label given to the test cases in the JavaScript test file. eg. this.DefaultNetworkTest = AsyncTestCase("Network (Default)");
+Some of the more useful command line options provided by JsTestDriver can be set via rake. Use rake help to see what is supported. Commonly you will want to run a subset of the tests. This can be achieved by specifying `tests=/your reg ex/` on the command line. eg. `rake tests="Network"`. The regular expression is being matched against the label given to the test cases in the JavaScript test file. eg. `this.DefaultNetworkTest = AsyncTestCase("Network (Default)")`;
 
-Specifying verbose=1 will on the command line will provide a more verbose output - useful for when tests are failing.
+Specifying `verbose=1` on the command line will provide a more verbose output - useful for when tests are failing.
 
-Another useful feature is the browser automation and ability to use a Selenium Grid. Use webdriverurl=chrome, on the command line, to have the test launch a Chrome instance, run the tests and exit. The webdriverurl argument can also be a url to a Selenium Grid instance.
+Another useful feature is the browser automation and ability to use a Selenium Grid. Use `webdriverurl=chrome`, on the command line, to have the test launch a Chrome instance, run the tests and exit. The webdriverurl argument can also be a url to a Selenium Grid instance.
 
 
     
