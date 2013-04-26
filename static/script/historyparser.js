@@ -29,30 +29,54 @@ require.def("antie/historyparser",
         "antie/class"
     ],
     function(Class) {
-        return Class.extend({
+        'use strict';
+        var HistoryParser;
+        HistoryParser = Class.extend({
+            
             backUrl: function(url) {
-                var recentHistory, remainingHistories;
-                
+                var recentHistory, remainingHistories, routeFound;
+
                 function splitHistories() {
                     var allHistories, i;
-                    allHistories = url.split('&history=');
+                    allHistories = url.split(HistoryParser.historyToken);
                     recentHistory = allHistories.pop();
                     allHistories.shift();
                     for(i = 0; i !== allHistories.length; i += 1) {
-                        allHistories[i] = '&history=' + allHistories[i];
+                        allHistories[i] =  HistoryParser.historyToken + allHistories[i];
                     }
                     remainingHistories = allHistories.join();
                 }
                 
-                splitHistories();
-
-                if(remainingHistories) {
-                    return recentHistory + '#' + remainingHistories;
-                } else {
+                function processRoute() {
+                    var restoredRoute;
+                    restoredRoute = recentHistory.replace(HistoryParser.routeToken, '#');
+                    if (restoredRoute !== recentHistory) {
+                        routeFound = true;
+                        recentHistory = restoredRoute;
+                    }   
+                }
+                
+                function buildBackUrl() {
+                    var urlWithRoute, urlWithoutRoute;
+                    urlWithRoute = recentHistory + remainingHistories;
+                    urlWithoutRoute = recentHistory + '#' + remainingHistories;
+                    if(remainingHistories) {
+                        return (routeFound ? urlWithRoute : urlWithoutRoute);
+                    }
                     return recentHistory;
                 }
+                
+                routeFound = false;
+                splitHistories();
+                processRoute();
+                return buildBackUrl();
             }            
             
         });
+        
+        HistoryParser.historyToken = '&history=';
+        HistoryParser.routeToken = '&route=';
+        
+        return HistoryParser;
     }
 );
