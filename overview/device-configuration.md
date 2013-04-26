@@ -263,9 +263,7 @@ An animation options object describing how fade-outs should behave. See [Animati
 
 In addition to the framework configuration, it is likely you will want to specify application specific properties per device.
 
-It is TAL convention to do this via a separate JSON file, then merge the two to a single variable stored at `antie.framework.deviceConfiguration`
-
-You should never access this variable directly, instead use the `antie.device` method `getConfig()`
+It is TAL convention to do this via a separate JSON file, then merge the two to a single object
 
 There is a method `mergeConfigurations()` in the _AntieFramework_ php class for merging device configurations. Note that `mergeConfigurations()` overrides any properties present in the original with those present in the patch.
 
