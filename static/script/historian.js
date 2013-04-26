@@ -24,32 +24,32 @@
  * Please contact us for an alternative licence
  */
 
-require.def("antie/historyparser",
+require.def("antie/historian",
     [
         "antie/class"
     ],
     function(Class) {
         'use strict';
-        var HistoryParser;
-        HistoryParser = Class.extend({
+        var Historian;
+        Historian = Class.extend({
             
             backUrl: function(url) {
                 var recentHistory, remainingHistories, routeFound;
 
                 function splitHistories() {
                     var allHistories, i;
-                    allHistories = url.split(HistoryParser.historyToken);
+                    allHistories = url.split(Historian.historyToken);
                     recentHistory = allHistories.pop();
                     allHistories.shift();
                     for(i = 0; i !== allHistories.length; i += 1) {
-                        allHistories[i] =  HistoryParser.historyToken + allHistories[i];
+                        allHistories[i] =  Historian.historyToken + allHistories[i];
                     }
                     remainingHistories = allHistories.join();
                 }
                 
                 function processRoute() {
                     var restoredRoute;
-                    restoredRoute = recentHistory.replace(HistoryParser.routeToken, '#');
+                    restoredRoute = recentHistory.replace(Historian.routeToken, '#');
                     if (restoredRoute !== recentHistory) {
                         routeFound = true;
                         recentHistory = restoredRoute;
@@ -74,9 +74,9 @@ require.def("antie/historyparser",
             
         });
         
-        HistoryParser.historyToken = '&history=';
-        HistoryParser.routeToken = '&route=';
+        Historian.historyToken = '&history=';
+        Historian.routeToken = '&route=';
         
-        return HistoryParser;
+        return Historian;
     }
 );
