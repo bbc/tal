@@ -35,7 +35,20 @@ require.def("antie/historian",
         
         Historian = Class.extend({
             init: function(currentUrl) {
+                var self = this;
+                
+                function splitHistoryToArray() {
+                    var i;
+                    self._historyArray = self._currentUrl.split(Historian.HISTORY_TOKEN);
+                    self._historyArray.shift(); // dump non-history portion of url
+                    for(i = 0; i !== self._historyArray.length; i += 1) {
+                        self._historyArray[i] =  Historian.HISTORY_TOKEN + self._historyArray[i];
+                    }
+                }
+                
                 this._currentUrl = currentUrl;
+                splitHistoryToArray();
+
             },
             /**
              * Returns a URL to navigate back to the previous application
@@ -45,16 +58,11 @@ require.def("antie/historian",
                 var recent, remaining, fragmentSeparator, self;
                 self = this;
                 
-                function splitIntoRecentAndRemaining() {
-                    var historyArray, i;
-                    if(self._currentUrl.indexOf(Historian.HISTORY_TOKEN) !== -1) {
-                        historyArray = self._currentUrl.split(Historian.HISTORY_TOKEN);
-                        recent = historyArray.pop();
-                        historyArray.shift(); // dump non-history portion of url
-                        for(i = 0; i !== historyArray.length; i += 1) {
-                            historyArray[i] =  Historian.HISTORY_TOKEN + historyArray[i];
-                        }
-                        remaining = historyArray.join();
+                function findRecentAndRemaining() {
+                    var history = self._historyArray;
+                    if (history.length > 0) {
+                        recent = history[history.length - 1].split(Historian.HISTORY_TOKEN)[1];
+                        remaining = history.slice(0, history.length - 1).join("");
                     } else {
                         recent = remaining = '';
                     }
@@ -75,7 +83,7 @@ require.def("antie/historian",
                 }
                 
                 fragmentSeparator = '#';
-                splitIntoRecentAndRemaining();
+                findRecentAndRemaining();
                 processRoute();
                 return buildBackUrl();
             },
@@ -102,8 +110,11 @@ require.def("antie/historian",
                 replaceRouteInSource();
                 fragmentSeparator = routeInDestination() ? '' : '#';
                 return destinationUrl + fragmentSeparator + Historian.HISTORY_TOKEN + self._currentUrl;
-            }
-            
+            },
+
+            toString: function() {
+                return this._historyArray.join("");
+            }            
         });
         
         Historian.HISTORY_TOKEN = '&history=';

@@ -571,11 +571,10 @@ require.def("antie/devices/browserdevice",
             },
             
             /**
-             * gets the current history (urls previous applications exited from including route)
-             * @returns an array of unencoded urls, with the most recent application the last element.
-             * Each url in the history may also include a route as a fragment
+             * gets historian for current location
+             * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
              */
-            getHistory: function() {
+            getHistorian: function() {
                 var unsescaped, history, i;
                 return new Historian(decodeURI(this.getWindowLocation().href));
             },

@@ -23,7 +23,7 @@
  */
 
 (function() {
-    /* jshint newcap: false */
+    /* jshint newcap: false, onevar: false */
 	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice");
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
