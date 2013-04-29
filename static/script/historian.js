@@ -31,8 +31,12 @@ require.def("antie/historian",
     function(Class) {
         'use strict';
         var Historian;
+        //device = Application.getCurrentApplication.getDevice();
+        
         Historian = Class.extend({
-            
+            init: function(url) {
+                
+            },
             backUrl: function(url) {
                 var recentHistory, remainingHistories, routeFound;
 
@@ -70,7 +74,23 @@ require.def("antie/historian",
                 splitHistories();
                 processRoute();
                 return buildBackUrl();
-            }            
+            },
+            
+            forward: function(destinationUrl, currentUrl) {
+                var fragmentSeparator;
+                function routeInDestination() {
+                    return (destinationUrl.indexOf('#') !== -1);
+                }
+                function replaceRouteInSource() {
+                    if (currentUrl.indexOf('#') !== -1) {
+                        currentUrl = currentUrl.replace('#', Historian.routeToken);
+                    }
+                }
+                replaceRouteInSource();
+                fragmentSeparator = routeInDestination() ? '' : '#';
+                return destinationUrl + fragmentSeparator + Historian.historyToken + currentUrl;
+            }
+
             
         });
         
