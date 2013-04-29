@@ -17,14 +17,13 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
-                assertEquals('http://www.bbc.co.uk/iplayer/', 
-                    historian.backUrl('http://www.bbc.co.uk/catal/#&history=http://www.bbc.co.uk/iplayer/'));    
+                historian = new Historian('http://www.bbc.co.uk/catal/#&history=http://www.bbc.co.uk/iplayer/');
+                assertEquals('http://www.bbc.co.uk/iplayer/', historian.back());    
             }
         );
     };
     
-    this.HistorianTest.prototype.testFirstHistoryReturned = function(queue) {
+    this.HistorianTest.prototype.testNoHistoryReturnsEmptyString = function(queue) {
         queuedRequire(
             queue,
             [
@@ -32,9 +31,22 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
-                assertEquals('http://www.bbc.co.uk/sprtiptv/#&history=http://www.bbc.co.uk/iplayer/', 
-                    historian.backUrl('http://www.bbc.co.uk/catal/#&history=http://www.bbc.co.uk/iplayer/&history=http://www.bbc.co.uk/sprtiptv/'));    
+                historian = new Historian('http://www.bbc.co.uk/catal/');
+                assertEquals('', historian.back());    
+            }
+        );
+    };
+    
+    this.HistorianTest.prototype.testFirstOfTwoHistoriesReturned = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian;
+                historian = new Historian('http://www.bbc.co.uk/catal/#&history=http://www.bbc.co.uk/iplayer/&history=http://www.bbc.co.uk/sprtiptv/');
+                assertEquals('http://www.bbc.co.uk/sprtiptv/#&history=http://www.bbc.co.uk/iplayer/', historian.back());    
             }
         );
     };
@@ -46,9 +58,8 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
-                assertEquals('http://www.bbc.co.uk/iplayer/', 
-                    historian.backUrl('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/'));    
+                historian = new Historian('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/');
+                assertEquals('http://www.bbc.co.uk/iplayer/', historian.back());    
             }
         );
     };
@@ -60,9 +71,8 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
-                assertEquals('http://www.bbc.co.uk/iplayer/#/some/other/route', 
-                    historian.backUrl('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route'));    
+                historian = new Historian('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route');
+                assertEquals('http://www.bbc.co.uk/iplayer/#/some/other/route', historian.back());    
             }
         );
     };
@@ -74,9 +84,8 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
-                assertEquals('http://www.bbc.co.uk/sprtiptv/#/yet/another/route&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route', 
-                    historian.backUrl('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route&history=http://www.bbc.co.uk/sprtiptv/&route=/yet/another/route'));    
+                historian = new Historian('http://www.bbc.co.uk/catal/#/some/route/&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route&history=http://www.bbc.co.uk/sprtiptv/&route=/yet/another/route');
+                assertEquals('http://www.bbc.co.uk/sprtiptv/#/yet/another/route&history=http://www.bbc.co.uk/iplayer/&route=/some/other/route', historian.back());    
             }
         );
     };
@@ -88,9 +97,9 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
+                historian = new Historian('http://www.bbc.co.uk/catal/');
                 assertEquals('http://www.bbc.co.uk/iplayer/#&history=http://www.bbc.co.uk/catal/', 
-                    historian.forward('http://www.bbc.co.uk/iplayer/','http://www.bbc.co.uk/catal/'));    
+                    historian.forward('http://www.bbc.co.uk/iplayer/'));    
             }
         );
     };
@@ -102,9 +111,9 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
+                historian = new Historian('http://www.bbc.co.uk/catal/');
                 assertEquals('http://www.bbc.co.uk/iplayer/#/favourites/&history=http://www.bbc.co.uk/catal/', 
-                    historian.forward('http://www.bbc.co.uk/iplayer/#/favourites/','http://www.bbc.co.uk/catal/'));    
+                    historian.forward('http://www.bbc.co.uk/iplayer/#/favourites/'));    
             }
         );
     };
@@ -116,9 +125,24 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian();
+                historian = new Historian('http://www.bbc.co.uk/catal/#/Experimental/');
                 assertEquals('http://www.bbc.co.uk/iplayer/#&history=http://www.bbc.co.uk/catal/&route=/Experimental/', 
-                    historian.forward('http://www.bbc.co.uk/iplayer/','http://www.bbc.co.uk/catal/#/Experimental/'));    
+                    historian.forward('http://www.bbc.co.uk/iplayer/'));    
+            }
+        );
+    };
+    
+    this.HistorianTest.prototype.testForwardUrlWithSourceAndDestinationRoutes = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian;
+                historian = new Historian('http://www.bbc.co.uk/catal/#/Experimental/');
+                assertEquals('http://www.bbc.co.uk/iplayer/#favourites/&history=http://www.bbc.co.uk/catal/&route=/Experimental/', 
+                    historian.forward('http://www.bbc.co.uk/iplayer/#favourites/'));    
             }
         );
     };

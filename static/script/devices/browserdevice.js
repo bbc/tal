@@ -27,9 +27,10 @@
 require.def("antie/devices/browserdevice",
     [
         "antie/devices/device",
-        "antie/events/keyevent"
+        "antie/events/keyevent",
+        "antie/historian"
     ],
-    function(Device, KeyEvent) {
+    function(Device, KeyEvent, Historian) {
 
         function trim(str) {
             return str.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -565,8 +566,20 @@ require.def("antie/devices/browserdevice",
              * @returns The current route (location within the application).
              */
             getCurrentRoute: function() {
-                return unescape(window.location.hash.replace(/^#/, '')).split('/');
+                var unescaped = unescape(window.location.hash).split(Historian.HISTORY_TOKEN, 1)[0];
+                return (unescaped.replace(/^#/, '').split('/'));
             },
+            
+            /**
+             * gets the current history (urls previous applications exited from including route)
+             * @returns an array of unencoded urls, with the most recent application the last element.
+             * Each url in the history may also include a route as a fragment
+             */
+            getHistory: function() {
+                var unsescaped, history, i;
+                return new Historian(decodeURI(this.getWindowLocation().href));
+            },
+            
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:

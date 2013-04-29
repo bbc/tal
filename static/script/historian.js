@@ -34,63 +34,80 @@ require.def("antie/historian",
         //device = Application.getCurrentApplication.getDevice();
         
         Historian = Class.extend({
-
-            backUrl: function(url) {
-                var recentHistory, remainingHistories, fragmentSeparator;
+            init: function(currentUrl) {
+                this._currentUrl = currentUrl;
+            },
+            /**
+             * Returns a URL to navigate back to the previous application
+             * @returns {String} The first history item in currentUrl as a non-encoded URL, or the empty string if there is no history.
+             */
+            back: function() {
+                var recent, remaining, fragmentSeparator, self;
+                self = this;
                 
-                function splitHistories() {
-                    var allHistories, i;
-                    allHistories = url.split(Historian.historyToken);
-                    recentHistory = allHistories.pop();
-                    allHistories.shift();
-                    for(i = 0; i !== allHistories.length; i += 1) {
-                        allHistories[i] =  Historian.historyToken + allHistories[i];
+                function splitIntoRecentAndRemaining() {
+                    var historyArray, i;
+                    if(self._currentUrl.indexOf(Historian.HISTORY_TOKEN) !== -1) {
+                        historyArray = self._currentUrl.split(Historian.HISTORY_TOKEN);
+                        recent = historyArray.pop();
+                        historyArray.shift(); // dump non-history portion of url
+                        for(i = 0; i !== historyArray.length; i += 1) {
+                            historyArray[i] =  Historian.HISTORY_TOKEN + historyArray[i];
+                        }
+                        remaining = historyArray.join();
+                    } else {
+                        recent = remaining = '';
                     }
-                    remainingHistories = allHistories.join();
                 }
                 
                 function processRoute() {
-                    if(recentHistory.indexOf(Historian.routeToken) !== -1) {
+                    if(recent.indexOf(Historian.ROUTE_TOKEN) !== -1) {
                         fragmentSeparator = '';
-                        recentHistory = recentHistory.replace(Historian.routeToken, '#');
+                        recent = recent.replace(Historian.ROUTE_TOKEN, '#');
                     }
                 }
                 
                 function buildBackUrl() {
-                    if(remainingHistories) {
-                        return recentHistory + fragmentSeparator + remainingHistories;
+                    if(remaining) {
+                        return recent + fragmentSeparator + remaining;
                     }
-                    return recentHistory;
+                    return recent;
                 }
                 
                 fragmentSeparator = '#';
-                splitHistories();
+                splitIntoRecentAndRemaining();
                 processRoute();
                 return buildBackUrl();
             },
             
-            forward: function(destinationUrl, currentUrl) {
-                var fragmentSeparator;
+            /**
+             * Returns a URL that allows navigation to the destination url while preserving history.
+             * @param {String} destinationUrl, The non uri-encoded destination url including route fragment if applicable.
+             * @returns {String} A non encoded uri with history information appended, the exact format of this is subject to change and should not be depended upon.
+             */
+            forward: function(destinationUrl) {
+                var fragmentSeparator, self;
+                self = this;
                 
                 function routeInDestination() {
                     return (destinationUrl.indexOf('#') !== -1);
                 }
                 
                 function replaceRouteInSource() {
-                    if (currentUrl.indexOf('#') !== -1) {
-                        currentUrl = currentUrl.replace('#', Historian.routeToken);
+                    if (self._currentUrl.indexOf('#') !== -1) {
+                        self._currentUrl = self._currentUrl.replace('#', Historian.ROUTE_TOKEN);
                     }
                 }
                 
                 replaceRouteInSource();
                 fragmentSeparator = routeInDestination() ? '' : '#';
-                return destinationUrl + fragmentSeparator + Historian.historyToken + currentUrl;
+                return destinationUrl + fragmentSeparator + Historian.HISTORY_TOKEN + self._currentUrl;
             }
             
         });
         
-        Historian.historyToken = '&history=';
-        Historian.routeToken = '&route=';
+        Historian.HISTORY_TOKEN = '&history=';
+        Historian.ROUTE_TOKEN = '&route=';
         
         return Historian;
     }

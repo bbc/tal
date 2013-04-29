@@ -23,7 +23,7 @@
  */
 
 (function() {
-    // jshint newcap: false
+    /* jshint newcap: false */
 	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice");
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
@@ -779,6 +779,37 @@
 		});
 
 	};
+	   this.BrowserDeviceTest.prototype.testGetCurrentRouteIgnoresHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            window.location.hash = "#test1/test2/test3&history=http://www.sometest.com/test";
+            assertEquals(["test1","test2","test3"], device.getCurrentRoute());
+        });
+
+    };
+    
+    this.BrowserDeviceTest.prototype.testGetHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, 
+            [   
+                "antie/devices/browserdevice",
+                "antie/historian"
+            ], 
+            function(BrowserDevice, Historian) {
+                var historySpy;
+                historySpy = this.sandbox.spy(Historian.prototype, 'init');
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                device._windowLocation = {
+                    href: "http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"
+                }
+                device.getHistory();
+                assert(historySpy.calledWith("http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"));
+            });
+        };
+    
 	this.BrowserDeviceTest.prototype.testSetCurrentRoute = function(queue) {
 		expectAsserts(1);
 
