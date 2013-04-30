@@ -85,7 +85,7 @@ class LCOVFile
 			end
 			lineIndex += 1
 
-			if( (!fileName.include? "script-tests") && (!fileName.include? "script/lib") ) 
+			if( (!fileName.include? "script-tests") && (!fileName.include? "script/lib") && (!fileName.include? "script/devices/data") ) 
 				@lcovEntries.push( lcovEntry );
 			end
 		end
