@@ -501,7 +501,7 @@ require.def('antie/application',
 			 * Exits application back to whatever initially launched it (widget, broadcast or another TAL application)
 			 */
 			exit: function() {
-			    
+			    this.getDevice().exit();
 			}
 		});
 
