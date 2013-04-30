@@ -320,10 +320,6 @@ serve:
   - script-tests/fixtures/components/buttoncomponent.js
   - script-tests/fixtures/components/emptycomponent.js
   - script-tests/fixtures/components/eventtestcomponent.js
-  - script/devices/anim/css3.js
-  - script/devices/anim/noanim.js
-  - script/devices/anim/styletopleft.js
-  - script/devices/anim/tween.js
 
 #plugin-block
 
