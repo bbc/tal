@@ -90,7 +90,7 @@
 
                 application.exit();
                 assert(setUrlStub.calledOnce);
-                
+                assert(setUrlStub.calledWith('http://www.back.com/'));
             }
         );
     };
