@@ -495,6 +495,13 @@ require.def('antie/application',
 			destroy: function () {
 				applicationObject = undefined;
 				ComponentContainer.destroy();
+			},
+			
+			/**
+			 * Exits application back to whatever initially launched it (widget, broadcast or another TAL application)
+			 */
+			exit: function() {
+			    
 			}
 		});
 
