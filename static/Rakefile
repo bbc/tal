@@ -42,7 +42,7 @@ COVERAGE_FILE_NAME = "jsTestDriver.conf-coverage.dat"
 
 #jstestdriver commands
 SERVER_COMMAND     = "java -jar #{JTD_JAR_PATH} --config #{CONFIG_PATH} #{$params[ :jtd_runner_mode ]} #{$params[ :jtd_port ]}"
-TEST_COMMAND       = "java -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
+TEST_COMMAND       = "java -Xmx1G -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
 
 $test_files		   = ''
 $jtd_config 	   = ''
@@ -104,8 +104,8 @@ end
 
 #default - run the tests
 task :default => [:setupAutoClean, :start_jtd_server, :attatch_browser, :test, :clean] do
-    if( $jtd_output && $params[ :coverage ] )
-        process_coverage();
+    if( $params[ :output ] && $params[ :coverage ] )
+    	process_coverage();
     end
 end
 
@@ -239,11 +239,20 @@ def wait_for_browser
 end
 
 #used remove unwanted file from the coverage results
-def process_coverage 
-	if( File.exist?( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }") )
+def process_coverage
+	if( File.exist?( "#{$params[ :output ]}/#{COVERAGE_FILE_NAME}") )
 		puts "[INFO] Processing Coverage File"
-		lcov = LCOVFile.new( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }" )
-		lcov.outputToLCOV( "#{$jtd_outputName}/#{COVERAGE_FILE_NAME }" )
+		lcov = LCOVFile.new( "#{$params[ :output ]}/#{COVERAGE_FILE_NAME}" )
+		lcov.outputToLCOV( "#{$params[ :output ]}/#{COVERAGE_FILE_NAME}" )
+
+		gen_html_path = `which genhtml`
+
+		if( gen_html_path )
+			Dir.chdir("#{$params[ :output ]}/")
+			system( "genhtml #{COVERAGE_FILE_NAME}" )
+		else
+			puts "[INFO] Genhtml Not Found"
+		end
 	end
 end
 

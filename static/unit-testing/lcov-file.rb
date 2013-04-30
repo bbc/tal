@@ -121,6 +121,6 @@ class LCOVFile
 			lcovString += entry.outputToLCOV
 		end
 
-		File.open(local_filename, 'w') {|f| f.write(lcovString) }
+		File.open(pathToOutputFile, 'w') {|f| f.write(lcovString) }
 	end
 end
