@@ -410,6 +410,7 @@ require.def('antie/application',
                 var query = '';
                 var hash = '';
                 var key;
+                var completeUrl = '';
 
                 // Get existing query data, or start a brand new object if applicable.
                 var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
@@ -443,9 +444,11 @@ require.def('antie/application',
                 if (route && route.length > 0) {
                     hash = '#' + route.join('/');
                 }
-
+                
+                completeUrl = this.getDevice().getHistorian().forward(url + query + hash);
+                
                 // Send the browser to the final URL
-                this.getDevice().setWindowLocationUrl(url + query + hash);
+                this.getDevice().setWindowLocationUrl(completeUrl);
             },
             /**
              * Return the URL of the current application, with no route or query string information -

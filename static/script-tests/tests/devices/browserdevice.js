@@ -779,7 +779,7 @@
 		});
 
 	};
-	   this.BrowserDeviceTest.prototype.testGetCurrentRouteIgnoresHistory = function(queue) {
+	this.BrowserDeviceTest.prototype.testGetCurrentRouteIgnoresHistory = function(queue) {
         expectAsserts(1);
 
         queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
@@ -788,6 +788,52 @@
             assertEquals(["test1","test2","test3"], device.getCurrentRoute());
         });
 
+    };
+    
+    this.BrowserDeviceTest.prototype.testSetCurrentRoutePreservesHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            window.location.hash = "#test1/test2/test3&history=http://www.sometest.com/test";
+            device.setCurrentRoute(["test4", "test5", "test6"]);
+            assertEquals("&history=http://www.sometest.com/test", device.getHistorian().toString());
+        });
+
+    };
+    
+    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            window.location.hash = "#test1/test2/test3";
+            device.setCurrentRoute(["test4", "test5", "test6"]);
+            assertEquals("#test4/test5/test6", window.location.hash);
+        });
+
+    };
+    
+    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteButHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            window.location.hash = "#test1/test2/test3&history=http://www.test.com";
+            device.setCurrentRoute([]);
+            assertEquals("#&history=http://www.test.com", window.location.hash);
+        });
+    };
+    
+    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteOrHistory = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            window.location.hash = "#test1/test2/test3";
+            device.setCurrentRoute([]);
+            assertEquals("", window.location.hash);
+        });
     };
     
     this.BrowserDeviceTest.prototype.testGetHistory = function(queue) {
@@ -805,7 +851,7 @@
                 device._windowLocation = {
                     href: "http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"
                 }
-                device.getHistory();
+                device.getHistorian();
                 assert(historySpy.calledWith("http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"));
             });
         };

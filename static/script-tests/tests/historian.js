@@ -147,6 +147,21 @@
         );
     };
     
+    this.HistorianTest.prototype.testForwardUrlWithNoHistory = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian;
+                historian = new Historian('');
+                assertEquals('http://www.test2.com/test2/#favourites/', 
+                    historian.forward('http://www.test2.com/test2/#favourites/'));    
+            }
+        );
+    };
+    
     this.HistorianTest.prototype.testToStringReturnsOnlyHistory = function(queue) {
         queuedRequire(
             queue,

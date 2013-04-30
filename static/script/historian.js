@@ -107,6 +107,10 @@ require.def("antie/historian",
                     }
                 }
                 
+                if (this._currentUrl === '') {
+                    return destinationUrl;
+                }
+                
                 replaceRouteInSource();
                 fragmentSeparator = routeInDestination() ? '' : '#';
                 return destinationUrl + fragmentSeparator + Historian.HISTORY_TOKEN + self._currentUrl;

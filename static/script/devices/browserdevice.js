@@ -555,10 +555,12 @@ require.def("antie/devices/browserdevice",
              * @param {Array} route A route pointing to a location within the application.
              */
             setCurrentRoute: function(route) {
+                var history = this.getHistorian().toString();
+                
                 if (route.length > 0) {
-                    window.location.hash = "#" + route.join("/");
+                    window.location.hash = "#" + route.join("/") + history;
                 } else {
-                    window.location.hash = "";
+                    window.location.hash = (history === '') ? '' : '#' + history;
                 }
             },
             /**
