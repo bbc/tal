@@ -15,12 +15,7 @@ function AntieFramework(configPath) {
 	 * @param string|bool $configPath The directory path to the antie config directory.
 	 */
 	var __construct = function(configPath) {
-		configPath = configPath || false;
-
-		if (configPath) {
-			configPath += "/";
-		}
-		_configPath = configPath;
+		_configPath = (configPath === "undefined") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
 	}
 	/**
 	 * Returns the doctype required by this device. The doctype is used in the returned HTML page.
@@ -83,7 +78,7 @@ function AntieFramework(configPath) {
 	 * @return string The normalized value.
 	 */
 	var normaliseKeyNames = function(value) {
-		return value.replace("/[^a-zA-Z0-9]/m", "_").toLowerCase();
+		return value.replace(/[^a-zA-Z0-9]/gi, "_").toLowerCase();
 	}
 	/**
 	 * Returns a JSON formatted device configuration from the file system
@@ -93,10 +88,9 @@ function AntieFramework(configPath) {
 	 * @return string of JSON. Empty string if not found.
 	 */
 	var getConfigurationFromFilesystem = function(key, type) {
-		var configurationJSON = "";
-		configurationPath = [_configPath, type, "/", key, ".json"].join("");
-
-		configurationJSON = fs.readFileSync([process.cwd(), "/",  configurationPath].join(""));
+		var configurationJSON = {};
+		var configurationPath = [_configPath, type, "/", key, ".json"].join("");
+		configurationJSON = JSON.parse(fs.readFileSync([configurationPath].join("")).toString());
 		return configurationJSON;
 	}
 	/**
@@ -120,7 +114,7 @@ function AntieFramework(configPath) {
 	var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
 		var returnFile = "";
 		try {
-			returnFile = fs.readFileSync([process.cwd(), "/", _configPath, "pagestrategy/", pageStrategy, "/", element].join(""));
+			returnFile = fs.readFileSync([ _configPath, "pagestrategy/", pageStrategy, "/", element].join(""));
 		} catch (e) {
 			returnFile = defaultValue
 		}
@@ -136,13 +130,16 @@ function AntieFramework(configPath) {
 	 * object.
 	 */
 	var mergeConfigurations = function(original, patch) {
-		patch.forEach(function(key, value) {
-			if (original.hasOwnProperty(key) && typeof original[key] === "object" && typeof value === "object") {
-				original[key] = mergeConfigurations(original[key], value);
+		var key, hashOwn = Object.prototype.hasOwnProperty;
+		
+		for (key in patch) {
+			if (hashOwn.call(key)) {
+				original[key] = mergeConfigurations(original[key], patch[key]);
 			} else {
-				original[key] = value;
+				original[key] = patch[key];
 			}
-		});
+		}
+				
 		return original;
 	}
 	__construct(configPath);
