@@ -501,7 +501,12 @@ require.def('antie/application',
 			 * Exits application back to whatever initially launched it (widget, broadcast or another TAL application)
 			 */
 			exit: function() {
-			    this.getDevice().exit();
+			    var backUrl = this.getDevice().getHistorian().back();
+                if (backUrl === "") {
+			        this.getDevice().exit();
+			    } else {
+			        this.getDevice().setWindowLocationUrl(backUrl);
+			    }
 			}
 		});
 

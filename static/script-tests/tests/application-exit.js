@@ -67,4 +67,31 @@
             }
         );
     };
+    
+    this.ApplicationExitTest.prototype.testExitHistoryCallsLastHistory = function(queue) {
+        
+        queuedApplicationInit(
+            queue, 
+            "lib/mockapplication", 
+            [
+                "antie/devices/browserdevice"
+            ], 
+            function(application, BrowserDevice) {
+                var setUrlStub;
+                
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/#&history=http://www.back.com/"
+                    };
+                });
+                
+                setUrlStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl', function() {});
+
+                application.exit();
+                assert(setUrlStub.calledOnce);
+                
+            }
+        );
+    };
 }());
