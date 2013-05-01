@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing base antie.Formatter class.
+ * @fileOverview Requirejs module containing base antie.Historian class.
  *
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -30,10 +30,7 @@ require.def("antie/historian",
     ],
     function(Class) {
         'use strict';
-        var Historian;
-        //device = Application.getCurrentApplication.getDevice();
-        
-        Historian = Class.extend({
+        var Historian = Class.extend({
             init: function(currentUrl) {
                 var self = this;
                 
@@ -48,8 +45,8 @@ require.def("antie/historian",
                 
                 this._currentUrl = currentUrl;
                 splitHistoryToArray();
-
             },
+
             /**
              * Returns a URL to navigate back to the previous application
              * @returns {String} The first history item in currentUrl as a non-encoded URL, or the empty string if there is no history.
@@ -116,6 +113,10 @@ require.def("antie/historian",
                 return destinationUrl + fragmentSeparator + Historian.HISTORY_TOKEN + self._currentUrl;
             },
 
+            /**
+             * Returns a string representation of the current history stack. This is not useful externally.
+             * @returns {String} A string representing the current history stack, to be appended to the current route within the application.
+             */
             toString: function() {
                 return this._historyArray.join("");
             }            

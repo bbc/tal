@@ -577,7 +577,6 @@ require.def("antie/devices/browserdevice",
              * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
              */
             getHistorian: function() {
-                var unsescaped, history, i;
                 return new Historian(decodeURI(this.getWindowLocation().href));
             },
             
