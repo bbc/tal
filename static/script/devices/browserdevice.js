@@ -599,7 +599,13 @@ require.def("antie/devices/browserdevice",
              */
             setWindowLocationUrl: function(url) {
                 var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
-                windowLocation.assign(url);
+
+                // Prefer assign(), but some devices don't have this function.
+                if (typeof windowLocation.assign === 'function') {
+                    windowLocation.assign(url);
+                } else {
+                    windowLocation.href = url;
+                }
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
