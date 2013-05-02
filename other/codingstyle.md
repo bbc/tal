@@ -25,7 +25,7 @@ The length of Comments and Documentation should be limited to 80 characters. In 
 Use comments of the "this was done because" type...
 
 ```js
-//This is to allow the data to bind before the interface is shown.
+    //This is to allow the data to bind before the interface is shown.
 ```
 
 Do not use "this does" type of comments...
@@ -97,11 +97,11 @@ Do not use the comma operator to place multiple statements on a single line. It 
 
 ### Non Function Blocks - *No*
 
-Non-function code blocks should not be used. JavaScript does not support block scope and using Non-function code blocks harms readability.
+Non-function code blocks should not be used. JavaScript does not support block scope and using non-function code blocks harms readability.
 
 ## Semantic
 
-Semantic issue are less subjective, though not completely so. However, most of the items listed below are accepted industry practice, arrived at due to valid reasoning in regards to readability, security and performance. 
+Semantic issues are less subjective, though not completely so. However, most of the items listed below are accepted industry practice, arrived at due to valid reasoning in regards to readability, security and performance. 
 
 Keep in mind that TAL runs on a wide variety of devices and some of the guidelines detailed here may need to be deviated from, or completely rethought to accommodate known device issues.
 
@@ -134,7 +134,7 @@ This produces the following output:
 Boom!
 ```
 
-When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the objects prototype. If this is not the required functionality then hasOwnProperty should be used to filter out any unwanted members. Like so...
+When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty should be used to filter out any unwanted members. Like so...
 
 ```js
 for (var prop in obj) { 
@@ -154,7 +154,7 @@ var myObject = {};
 var myArray = {};
 ```
 
-This form is more readable and is also shorter. In JavaScript it also possible to override the Object class. This means that calling ```new Object()``` would return an instance of the overridden object - using an Object literal guarantees that the object returned is a vanilla JavaScript Object.
+This form is more readable and is also shorter. In JavaScript it possible to override the Object class. This means that calling ```new Object()``` would return an instance of the overridden object - using an Object literal guarantees that the object returned is a vanilla JavaScript Object.
 
 ### Associative Arrays - *No*
 
@@ -162,7 +162,7 @@ Never use arrays as a map, hash or an associative array. Always use a plain obje
 
 ### Triadic Operator (?) - *Sparingly*
 
-JavaScript support a triadic If. 
+JavaScript supports a triadic If. 
 
 ```js
 var a = (something === true) ? thisvalue : thatvalue;
