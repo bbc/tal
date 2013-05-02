@@ -312,51 +312,51 @@ Use of JSHint is highly encouraged. Many of the worst JavaScript offences can be
 
 These are the current setting used for developing in the TAL code base...
 
-```
-browser: true,
-onevar: false,
-smarttabs: true,
-curly: true,
-eqeqeq: true,   
-forin: true,
-immed: true,
-newcap: true,
-noarg: true,
-nonew: true,
-plusplus: true,
-undef: true, 
-unused: true
-```
+
+    browser: true,
+    onevar: false,
+    smarttabs: true,
+    curly: true,
+    eqeqeq: true,   
+    forin: true,
+    immed: true,
+    newcap: true,
+    noarg: true,
+    nonew: true,
+    plusplus: true,
+    undef: true, 
+    unused: true
+
 
 And these define the most common global variables found in the TAL codebase and TAL unit tests.
 
-```
-require: true,
-antie: true,
-sinon: true,
-assert: true,
-expectAsserts: true,
-assertEquals: true,
-queuedRequire: true,
-queuedApplicationInit: true,
-queuedComponentInit: true,
-assertClassName: true,
-assertSame: true,
-assertNotEquals: true,
-assertException: true,
-assertFalse: true,
-assertTrue: true,
-assertNull: true,
-assertInstanceOf: true,
-assertNoException: true,
-assertMatch: true,
-assertNotNull: true,
-assertNotSame: true,
-assertUndefined: true,
-assertNotUndefined: true,
-AsyncTestCase: true,
-jstestdriver: true
-```
+
+    require: true,
+    antie: true,
+    sinon: true,
+    assert: true,
+    expectAsserts: true,
+    assertEquals: true,
+    queuedRequire: true,
+    queuedApplicationInit: true,
+    queuedComponentInit: true,
+    assertClassName: true,
+    assertSame: true,
+    assertNotEquals: true,
+    assertException: true,
+    assertFalse: true,
+    assertTrue: true,
+    assertNull: true,
+    assertInstanceOf: true,
+    assertNoException: true,
+    assertMatch: true,
+    assertNotNull: true,
+    assertNotSame: true,
+    assertUndefined: true,
+    assertNotUndefined: true,
+    AsyncTestCase: true,
+    jstestdriver: true
+
 
 
 
