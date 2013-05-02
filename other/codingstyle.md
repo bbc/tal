@@ -37,7 +37,7 @@ Do not use "this does" type of comments...
 
 ### JSDoc - *Required*
 
-Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc/) style comments to annotate Classes and APIs. Including all parameters, return values, accessibility, types, exceptions thrown and any edges cases.
+Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc) style comments to annotate Classes and APIs. Including all parameters, return values, accessibility, types, exceptions thrown and any edges cases.
 
 ### Braces - *Line End*
 
