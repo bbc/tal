@@ -114,7 +114,7 @@ Keep in mind that TAL runs on a wide variety of devices and some of the guidelin
 
 Always use the ```var``` keyword when declaring variables. Declaring variables without the ```var``` keyword is legal but will add the name to the global namespace. This is rarely what is intended and is often said to pollute the global name space.
 
-### Comparison Operator - *Use Strict*
+### Comparison Operator - *Use Strict Versions*
 
 JavaScript supports strict ( ```===/!==``` ) and type-converting ( ```==/!=``` ) comparisons. See [Mozilla Comparison Operators]( https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Comparison_Operators ) for a good overview. The type conversion rules are complicated and therefore the strict comparison operator is preferred unless a particular type conversion effect is required...
 
@@ -322,7 +322,7 @@ These are the current setting used for developing in the TAL code base...
 
 ```
 browser: true,
-onevar: true,
+onevar: false,
 smarttabs: true,
 curly: true,
 eqeqeq: true,
