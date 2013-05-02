@@ -44,7 +44,7 @@ Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc) style comments to annotat
 Braces should appear at the end of a line and after a single space. The closing brace should be indented to match the indentation of the line of code that holds the starting brace.
 
 ```js
-if (importantVariable === true){
+if (importantVariable === true) {
      importantFunction();
 } 
 ```
@@ -52,7 +52,7 @@ if (importantVariable === true){
 For ```if``` Statements with an ```else``` case the ```else``` should be on the same line as the closing brace
 
 ```js
-if (importantVariable === true){
+if (importantVariable === true) {
      importantFunction();
 } else {
      notSoImportantFunction();
