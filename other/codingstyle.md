@@ -29,13 +29,13 @@ The length of Comments and Documentation should be limited to 80 characters. In 
 
 Use comments of the "this was done because" type...
 
-```js
+```
   //This is to allow the data to bind before the interface is shown.
 ```
 
 Do not use "this does" type of comments...
 
-```js 
+``` 
   //Loop around the widgets to find the widget with the given ID
 ```
  If the code is written correctly and appropriate variable names chosen then a quick scan of the code should reveal what it does. If code is being written with reference to an article or web page then a comment including the URL to that resource is helpful. If a particular algorithm is being used then make reference to the common name of the algorithm.
