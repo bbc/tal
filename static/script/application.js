@@ -498,15 +498,24 @@ require.def('antie/application',
 			},
 			
 			/**
-			 * Exits application back to whatever initially launched it (widget, broadcast or another TAL application)
+			 * Navigates back to whatever launched the application (either a parent TAL application, or a straightforward exit
+			 * if the history stack is empty).
 			 */
-			exit: function() {
+			back: function() {
 			    var backUrl = this.getDevice().getHistorian().back();
                 if (backUrl === "") {
 			        this.getDevice().exit();
 			    } else {
 			        this.getDevice().setWindowLocationUrl(backUrl);
 			    }
+			},
+
+			/**
+			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
+			 * application in the history stack.
+			 */
+			exit: function() {
+			    this.getDevice().exit();
 			}
 		});
 

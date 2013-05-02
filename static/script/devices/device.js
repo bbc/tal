@@ -606,7 +606,7 @@ require.def('antie/devices/device',
             isHDEnabled: function() {
             },
             /**
-             * Exits the application.
+             * Exits the application directly - no history.
              */
             exit: function() {
                 throw new Error('Not supported on this device.');

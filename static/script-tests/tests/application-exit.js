@@ -40,7 +40,7 @@
         }
     };
 
-    this.ApplicationExitTest.prototype.testExitWithNoHistoryCallsDeviceExit = function(queue) {
+    this.ApplicationExitTest.prototype.testBackWithNoHistoryCallsDeviceExit = function(queue) {
         
         queuedApplicationInit(
             queue, 
@@ -61,14 +61,14 @@
                 device = application.getDevice();
                 exitStub = this.sandbox.stub(device, 'exit', function() {});
                 
-                application.exit();
+                application.back();
                 assert(exitStub.calledOnce);
                 
             }
         );
     };
     
-    this.ApplicationExitTest.prototype.testExitHistoryCallsLastHistory = function(queue) {
+    this.ApplicationExitTest.prototype.testBackHistoryCallsLastHistory = function(queue) {
         
         queuedApplicationInit(
             queue, 
@@ -88,7 +88,7 @@
                 
                 setUrlStub = this.sandbox.stub(BrowserDevice.prototype, 'setWindowLocationUrl', function() {});
 
-                application.exit();
+                application.back();
                 assert(setUrlStub.calledOnce);
                 assert(setUrlStub.calledWith('http://www.back.com/'));
             }
