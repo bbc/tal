@@ -510,6 +510,15 @@ require.def('antie/application',
 			    }
 			},
 
+            /**
+             * Returns a Boolean value to indicate whether the application can go back to a parent TAL application (True)
+             * or will simply exit if back() is called (False).
+             * @returns {Boolean} True if the application can return to a parent TAL application.
+             */
+            canGoBack: function() {
+                return this.getDevice().getHistorian().toString() !== '';
+            },
+
 			/**
 			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
 			 * application in the history stack.

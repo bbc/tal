@@ -94,4 +94,44 @@
             }
         );
     };
+
+    this.ApplicationExitTest.prototype.testCanGoBackWithNoHistoryReturnsFalse = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/"
+                    };
+                });
+
+                assertFalse('canGoBack()', application.canGoBack());
+            }
+        );
+    };
+
+    this.ApplicationExitTest.prototype.testCanGoBackWithHistoryReturnsTrue = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/#&history=http://www.back.com/"
+                    };
+                });
+
+                assert('canGoBack()', application.canGoBack());
+            }
+        );
+    };
 }());
