@@ -30,13 +30,13 @@ The length of Comments and Documentation should be limited to 80 characters. In 
 Use comments of the "this was done because" type...
 
 ```js
-    //This is to allow the data to bind before the interface is shown.
+  //This is to allow the data to bind before the interface is shown.
 ```
 
 Do not use "this does" type of comments...
 
 ```js 
-//Loop around the widgets to find the widget with the given ID
+  //Loop around the widgets to find the widget with the given ID
 ```
  If the code is written correctly and appropriate variable names chosen then a quick scan of the code should reveal what it does. If code is being written with reference to an article or web page then a comment including the URL to that resource is helpful. If a particular algorithm is being used then make reference to the common name of the algorithm.
 
@@ -49,19 +49,19 @@ Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc) style comments to annotat
 Braces should appear at the end of a line and after a single space. The closing brace should be indented to match the indentation of the line of code that holds the starting brace.
 
 ```js
-if (importantVariable === true) {
-     importantFunction();
-} 
+  if (importantVariable === true) {
+       importantFunction();
+  } 
 ```
 
 For ```if``` Statements with an ```else``` case the ```else``` should be on the same line as the closing brace
 
 ```js
-if (importantVariable === true) {
-     importantFunction();
-} else {
-     notSoImportantFunction();
-}
+  if (importantVariable === true) {
+       importantFunction();
+  } else {
+       notSoImportantFunction();
+  }
 ```
 
 These rules apply for all compound statements. ```while```, ```for```, ```switch```, etc. The same conventions apply for any text representing JSON data.
@@ -82,17 +82,17 @@ HorizontalCarousel.ALIGNMENT_CENTER = 0;
 Always use braced code blocks when writing control statements ( ```if```, ```for```, ```switch```, etc )
 
 ```js
-if (goodIf === true) {
-     safeAndReadable();
-}
+  if (goodIf === true) {
+       safeAndReadable();
+  }
 ```
 
 ```If```'s without a braced code block are more easily broken when extra statements are added...
 
 ```js
-if (badIf == true)
-     notSafe();
-     easilyMissThatThisFunctionIsNotExecuted()
+  if (badIf == true)
+       notSafe();
+       easilyMissThatThisFunctionIsNotExecuted()
 ```
 
 
@@ -123,30 +123,30 @@ JavaScript supports strict ( ```===/!==``` ) and type-converting ( ```==/!=``` )
 When iterating over Arrays always use a standard ```for``` loop - never the ```for``` ```in``` style of loop. Doing so will iterate over all members even those inherited from the prototype. For Example...
 
 ```js
-Array.prototype.foo = "Boom!"
-myArray = [ 1,2,3 ]
-for (var x in myArray) {
-     console.log( myArray[ x ] );
-}
+  Array.prototype.foo = "Boom!"
+  myArray = [ 1,2,3 ]
+  for (var x in myArray) {
+       console.log( myArray[ x ] );
+  }
 ```
 
 This produces the following output:
 
 ```js
-1
-2
-3
-Boom!
+  1
+  2
+  3
+  Boom!
 ```
 
 When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty should be used to filter out any unwanted members. Like so...
 
 ```js
-for (var prop in obj) { 
-    if(obj.hasOwnProperty(prop)){    
-        // prop is not inherited  
-    } 
-}
+  for (var prop in obj) { 
+      if(obj.hasOwnProperty(prop)){    
+          // prop is not inherited  
+      } 
+  }
 ```
 
 
@@ -155,8 +155,8 @@ for (var prop in obj) {
 When declaring new instance of an Object or an Array prefer using the Object and Array literal notation. 
 
 ```js
-var myObject = {};
-var myArray = {};
+  var myObject = {};
+  var myArray = {};
 ```
 
 This form is more readable and is also shorter. In JavaScript it possible to override the Object class. This means that calling ```new Object()``` would return an instance of the overridden object - using an Object literal guarantees that the object returned is a vanilla JavaScript Object.
@@ -170,7 +170,7 @@ Never use arrays as a map, hash or an associative array. Always use a plain obje
 JavaScript supports a triadic If. 
 
 ```js
-var a = (something === true) ? thisvalue : thatvalue;
+  var a = (something === true) ? thisvalue : thatvalue;
 ```
 It can help readability but should be used sparingly and never used in a compound/nested way.
 
@@ -179,16 +179,16 @@ It can help readability but should be used sparingly and never used in a compoun
 This construct...
 
 ```js
-if (x) {  
-    function foo() {} 
+  if (x) {  
+      function foo() {} 
 }
 ```
 
 is support by most JavaScript engines but it is not defined in the ECMAScript spec. This alternative should be used instead...
 
 ```js
-if (x) { 
-    var foo = function() {} 
+  if (x) { 
+      var foo = function() {} 
 }
 ```
 
@@ -197,9 +197,9 @@ if (x) {
 JavaScript has several wrapper types, classes that wrap primitive types. These classes are ```Boolean```, ```String```, and ```Number```. Never use these directly to create primitives...
 
 ```js
-var x = new Boolean(false);
-if (x) { 
-    alert('hi');  // Shows 'hi'. 
+  var x = new Boolean(false);
+  if (x) { 
+      alert('hi');  // Shows 'hi'. 
 }
 ```
 There is no reason to use them and as the code example shows they give unexpected results.
@@ -209,9 +209,9 @@ There is no reason to use them and as the code example shows they give unexpecte
 When adding methods to objects the preference is to add the method to the constructor's prototype.
 
 ```js
-Function MyConstructor(){
-}
-MyConstructor.myMethod = function() {}
+  Function MyConstructor(){
+  }
+  MyConstructor.myMethod = function() {}
 ```
 To add the method inside the constructor via the this reference would cause the method to be duplicated for each instance of the object created. Increasing the memory overhead for each object instantiated.
 
@@ -223,7 +223,7 @@ Adding members to an object should be done in the Constructor.
 Normally the only time ```delete``` should be needed is to remove items from a hash. Use ```null``` when a reference to an object is no longer needed...
 
 ```js
-this.mediaPlayer = null
+  this.mediaPlayer = null
 ```
 
 Delete can be slow as it has to manipulate the underlying object.
@@ -237,11 +237,11 @@ Delete can be slow as it has to manipulate the underlying object.
 Do not use ```with```. It reduces readability considerable and makes code harder to debug.
 
 ```js
-myObject = { x: 10 }
-with (MyObject) {
-     var x = 3;
-    console.log( x );
-}
+  myObject = { x: 10 }
+  with (MyObject) {
+       var x = 3;
+      console.log( x );
+  }
 ```
 
 In this case ```var x``` looks like a local variable but has actually modified ```myObject.x```
@@ -256,15 +256,14 @@ Modifying Built-In types is considered bad. A built-in type may have already bee
 When using the ```this``` reference the programmer needs to be very aware of the calling context. As this example shows...
 
 ```js
-function MyObject(){
-     this.x = 10;
-     this.callback = function() { return this.x }
-}
-
-var x = 0;
-var myObject = new MyObject();
-var callback = myObject.callback()
-callback()
+  function MyObject(){
+       this.x = 10;
+       this.callback = function() { return this.x }
+  }
+  var x = 0;
+  var myObject = new MyObject();
+  var callback = myObject.callback()
+  callback()
 ```
 
 
@@ -273,13 +272,13 @@ At this point the ```this``` reference points to the ```Window``` object and wil
 Re-writing the constructor to use...
 
 ```js
-function MyObject(){
-     var self = this;
-     this.x = 10;
-     this.callback = function() { 
+  function MyObject(){
+    var self = this;
+    this.x = 10;
+    this.callback = function() { 
                         return self.x;
                      }
-}
+  }
 ```
 
 causes the ```self``` variable to be *closed-over* by the ```callback``` function. Now ```self``` always references ```this``` in the expected context.
@@ -290,14 +289,13 @@ The TAL code base generally uses ```self``` rather than ```that``` - some care s
 In some cases it may be beneficial to use ```bind``` to ensure the expected context for a function...
 
 ```js
-function MyObject(){
-     this.x = 10;
-     function callback(){
-          return this.x
-     }
-     this.callback = callback.bind( this );
-}
-
+  function MyObject(){
+       this.x = 10;
+       function callback(){
+            return this.x
+       }
+       this.callback = callback.bind( this );
+  }
 var x = 0;
 var myObject = new MyObject();
 var callback = myObject.callback()
