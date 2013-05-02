@@ -583,14 +583,31 @@ require.def("antie/devices/browserdevice",
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:
-             * hash, host, pathname, protocol, search. These correspond to the properties
+             * hash, host, href, pathname, protocol, search. These correspond to the properties
              * in the window.location DOM API.
              * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
              * this information in a more generic way.
              */
             getWindowLocation: function() {
-                var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
-                return windowLocation;
+                var windowLocation, copyProps, prop, i, newLocation;
+                windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
+
+                // Has the device missed the route off the href? Fix this.
+                if (windowLocation.hash && windowLocation.hash.length > 1 && windowLocation.href && windowLocation.href.lastIndexOf('#') === -1) {
+                    // Copy properties to new object, as modifying href on the original window.location triggers a navigation.
+                    newLocation = {};
+                    copyProps = ['assign', 'hash', 'host', 'href', 'pathname', 'protocol', 'search'];
+                    for (i = 0; i < copyProps.length; i++) {
+                        prop = copyProps[i];
+                        if (windowLocation[prop] !== undefined) {
+                            newLocation[prop] = windowLocation[prop];
+                        }
+                    }
+                    newLocation.href = newLocation.href + newLocation.hash;
+                }
+
+                // Use copy of window.location if it was created, otherwise the original.
+                return newLocation || windowLocation;
             },
             /**
              * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application

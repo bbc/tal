@@ -1057,7 +1057,8 @@
                     host: 'test.invalid:12345',
                     pathname: '/testurl/',
                     hash: '#route',
-                    search: '?a=x%3Dy&b=&z'
+                    search: '?a=x%3Dy&b=&z',
+                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z#route'
                 };
                 device._windowLocation = windowLocation; 
 
@@ -1067,6 +1068,63 @@
                 assertEquals('Correct pathname returned', windowLocation.pathname, getWindowLocation.pathname);
                 assertEquals('Correct hash returned', windowLocation.hash, getWindowLocation.hash);
                 assertEquals('Correct search returned', windowLocation.search, getWindowLocation.search);
+                assertEquals('Correct href returned', windowLocation.href, getWindowLocation.href);
+            }
+        );
+    };
+
+    /**
+     * Test that device.getWindowLocation() returns the full URL for location.href, even when the underlying DOM API doesn't give the right value. The scamp.
+     */
+    this.BrowserDeviceTest.prototype.testGetWindowLocationHrefCorrection = function(queue) {
+        queuedRequire(queue,
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+                // The 'href' value here is dodgy - it doesn't include the hash on the end
+                var windowLocation = {
+                    protocol: 'https:',
+                    host: 'test.invalid:12345',
+                    pathname: '/testurl/',
+                    hash: '#route',
+                    search: '?a=x%3Dy&b=&z',
+                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z'
+                };
+                device._windowLocation = windowLocation;
+
+                var getWindowLocation = device.getWindowLocation();
+                assertEquals('Correct href returned', 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z#route', getWindowLocation.href);
+            }
+        );
+    };
+
+    /**
+     * Test that device.getWindowLocation() returns the full URL for location.href when there is no route to append
+     */
+    this.BrowserDeviceTest.prototype.testGetWindowLocationHrefCorrectionNotOverzealous = function(queue) {
+        queuedRequire(queue,
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+                // Href doesn't have a hash because there is no hash
+                var windowLocation = {
+                    protocol: 'https:',
+                    host: 'test.invalid:12345',
+                    pathname: '/testurl/',
+                    hash: '#',
+                    search: '?a=x%3Dy&b=&z',
+                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z'
+                };
+                device._windowLocation = windowLocation;
+
+                var getWindowLocation = device.getWindowLocation();
+                assertEquals('Correct href returned', 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z', getWindowLocation.href);
             }
         );
     };
@@ -1078,7 +1136,7 @@
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice"
-            ], 
+            ],
             function(BrowserDevice) {
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
                 var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
@@ -1088,11 +1146,34 @@
                     assign: this.sandbox.stub()
                 };
 
-                device._windowLocation = windowLocation; 
+                device._windowLocation = windowLocation;
                 device.setWindowLocationUrl(targetUrl);
 
                 assertEquals('window.location.assign call count', 1, windowLocation.assign.callCount);
                 assertEquals('Correct URL passed through', targetUrl, windowLocation.assign.getCall(0).args[0]);
+            }
+        );
+    };
+
+    /**
+     * Test that device.setWindowLocationUrl() uses the alternative navigation approach when window.location.assign() is unavailable.
+     */
+    this.BrowserDeviceTest.prototype.testSetWindowLocationUrlAlternative = function(queue) {
+        queuedRequire(queue,
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(BrowserDevice) {
+                var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
+
+                // window.location.assign() does not exist
+                var windowLocation = {};
+
+                device._windowLocation = windowLocation;
+                device.setWindowLocationUrl(targetUrl);
+
+                assertEquals('location.href property set', targetUrl, windowLocation.href);
             }
         );
     };
