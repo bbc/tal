@@ -172,7 +172,7 @@ It can help readability but should be used sparingly and never used in a compoun
 This construct...
 
 
-      if (x) {  
+    if (x) {  
           function foo() {} 
     }
 
@@ -180,7 +180,7 @@ This construct...
 is support by most JavaScript engines but it is not defined in the ECMAScript spec. This alternative should be used instead...
 
 
-      if (x) { 
+    if (x) { 
           var foo = function() {} 
     }
 
@@ -190,8 +190,8 @@ is support by most JavaScript engines but it is not defined in the ECMAScript sp
 JavaScript has several wrapper types, classes that wrap primitive types. These classes are ```Boolean```, ```String```, and ```Number```. Never use these directly to create primitives...
 
 
-      var x = new Boolean(false);
-      if (x) { 
+    var x = new Boolean(false);
+    if (x) { 
           alert('hi');  // Shows 'hi'. 
     }
 
@@ -250,8 +250,10 @@ When using the ```this``` reference the programmer needs to be very aware of the
 
 
     function MyObject(){
-         this.x = 10;
-         this.callback = function() { return this.x }
+        this.x = 10;
+        this.callback = function() { 
+                            return this.x }
+                        }
     }
     var x = 0;
     var myObject = new MyObject();
@@ -263,7 +265,6 @@ When using the ```this``` reference the programmer needs to be very aware of the
 At this point the ```this``` reference points to the ```Window``` object and will return a value of **0** instead of the expected **10**
 
 Re-writing the constructor to use...
-
 
     function MyObject(){
       var self = this;
@@ -316,7 +317,7 @@ browser: true,
 onevar: false,
 smarttabs: true,
 curly: true,
-eqeqeq: true,
+eqeqeq: true,   
 forin: true,
 immed: true,
 newcap: true,
