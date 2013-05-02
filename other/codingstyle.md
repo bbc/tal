@@ -1,3 +1,8 @@
+---
+layout: default
+title: Coding Guidelines
+---
+
 # TV Application Layer Coding Standards & Guidelines
 
 TAL JavaScript development uses the following coding standards. Some of these are mandatory, some are not. For some of these issues there are arguments for and against. The most value to a team is not, particularly, from the individual guidelines themselves but more from the fact they encourage consistency. Which, in turn, improves readability. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
