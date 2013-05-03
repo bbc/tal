@@ -204,7 +204,54 @@ require.def(
 
 			setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
-		};
+		},
+		
+		Device.prototype.executeCrossDomainGet = function(url, onSuccess, onFailure, timeout, id) {
+           var self = this;
+           var callbacks;
+           if (this.getConfig().supportsCors){
+               callbacks =  {
+                    onLoad : function(jsonResponse) {
+                        onSuccess(self.decodeJson(jsonResponse))
+                    },
+                    onError : onFailure
+               }                     
+               this.loadURL( url, callbacks );
+           } else {
+                callbacks = {
+                    onSuccess : onSuccess,
+                    onError : onFailure
+                }   
+                this.loadScript( url + "?callback=%callback%", /%callback%/, callbacks, timeout, id);
+           }
+        },
+        
+        /**
+		 * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
+		 * @param {String} url The URL to post to.
+		 * @param {Object} data json payload to issue.
+		 * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
+		 * used for the name of the form filed if the iframe hack is used
+		 */
+		Device.prototype.executeCrossDomainPost = function( url, data, opts ) {
+           var payload = this.encodeJson(data);
+           if (this.getConfig().supportsCors){
+      		    var modifiedOpts = {
+                	onLoad : opts.onLoad,
+                	onError : opts.onError,
+                	headers : {
+                   		"Content-Type" : "application/json"
+                	},
+                	data : payload,
+                	method : "POST"
+            	};
+            	this.loadURL(url, modifiedOpts);              
+           } else {
+           	   var formData = {}
+           	   formData[ opts.fieldName ] = payload;
+           	   this.crossDomainPost( url, formData, { onLoad :opts.onLoad, onError : opts.onError } );
+           }
+        };	        
 	}
 );
 
