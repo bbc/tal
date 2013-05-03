@@ -32,19 +32,13 @@ require.def("antie/historian",
         'use strict';
         var Historian = Class.extend({
             init: function(currentUrl) {
-                var self = this;
+                var i;
                 
-                function splitHistoryToArray() {
-                    var i;
-                    self._historyArray = self._currentUrl.split(Historian.HISTORY_TOKEN);
-                    self._historyArray.shift(); // dump non-history portion of url
-                    for(i = 0; i !== self._historyArray.length; i += 1) {
-                        self._historyArray[i] =  Historian.HISTORY_TOKEN + self._historyArray[i];
-                    }
+                this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
+                this._currentUrl = this._historyArray.shift(); // non-history portion of the URL
+                for(i = 0; i !== this._historyArray.length; i += 1) {
+                    this._historyArray[i] =  Historian.HISTORY_TOKEN + this._historyArray[i];
                 }
-                
-                this._currentUrl = currentUrl;
-                splitHistoryToArray();
             },
 
             /**
@@ -94,7 +88,7 @@ require.def("antie/historian",
                 var fragmentSeparator, self;
                 self = this;
                 
-                function routeInDestination() {
+                function isRouteInDestination() {
                     return (destinationUrl.indexOf('#') !== -1);
                 }
                 
@@ -104,13 +98,26 @@ require.def("antie/historian",
                     }
                 }
                 
+                function addCurrentUrlToHistory() {
+                    self._historyArray.unshift(Historian.HISTORY_TOKEN + self._currentUrl);
+                }
+
+                // Some devices have a de facto URL length limit of around 1000 characters, so trim URL by dropping history elements.
+                function trimUrlHistoryToLength() {
+                    while (self._historyArray.length > 0 && self.toString().length + destinationUrl.length > 999) {
+                        self._historyArray.pop();
+                    }
+                }
+
                 if (this._currentUrl === '') {
                     return destinationUrl;
                 }
                 
                 replaceRouteInSource();
-                fragmentSeparator = routeInDestination() ? '' : '#';
-                return destinationUrl + fragmentSeparator + Historian.HISTORY_TOKEN + self._currentUrl;
+                addCurrentUrlToHistory();
+                trimUrlHistoryToLength();
+                fragmentSeparator = isRouteInDestination() ? '' : '#';
+                return destinationUrl + fragmentSeparator + this.toString();
             },
 
             /**
