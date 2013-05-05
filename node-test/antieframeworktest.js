@@ -1,5 +1,5 @@
-var fs = require('fs');
-var assert = require('assert');
+var fs = require("fs");
+var assert = require("assert");
 var AntieFramework = require("../node/antieframework.js");
 
 
@@ -8,41 +8,41 @@ var AntieFrameworkTest = function() {
 	var framework;
 
 	var setUpNormalConfig = function() {
-		framework = new AntieFramework("testconfig/config/");		
+		framework = new AntieFramework("testconfig/", "testconfig/config/");		
 	}
 	
 	var testGenericTV1DeviceHasNoHeaders = function() {
 		setUpNormalConfig();
-		headers = framework.getDeviceHeaders(getGenericDevice1Config());
-		assert.equal(headers, '');
+		var headers = framework.getDeviceHeaders(getGenericDevice1Config());
+		assert.equal(headers, "");
 	}
 	
 	var testGenericTV1DeviceHasNoBody = function ()
     {
     	setUpNormalConfig();
         body = framework.getDeviceBody(getGenericDevice1Config());
-        assert.equal(body, '');
+        assert.equal(body, "");
     }
     
      var testGenericTV1DeviceHasDefaultMimeType  = function ()
     {
     	setUpNormalConfig();
     	mimeType = framework.getMimeType(getGenericDevice1Config());
-    	assert.equal(mimeType, 'text/html');
+    	assert.equal(mimeType, "text/html");
     }
     
     var testGenericTV1DeviceHasDefaultRootElement = function ()
     {
     	setUpNormalConfig();
     	rootElement = framework.getRootHtmlTag(getGenericDevice1Config());
-    	assert.equal(rootElement, '<html>');
+    	assert.equal(rootElement, "<html>");
     }
     
     var testGenericTV1DeviceHasDefaultDocType = function ()
     {
     	setUpNormalConfig();
     	docType = framework.getDocType(getGenericDevice1Config());
-    	assert.equal(docType, '<!DOCTYPE html>');
+    	assert.equal(docType, "<!DOCTYPE html>");
     }
     
     var testGenericTV2DeviceHasExpectedHeader = function ()
@@ -50,86 +50,88 @@ var AntieFrameworkTest = function() {
     	setUpNormalConfig();
     	
     	headers = framework.getDeviceHeaders(getGenericDevice2Config());
-    	assert.equal(headers, 'expectedheader');
+    	assert.equal(headers, "expectedheader");
     }
     
     var testGenericTV2DeviceHasExpectedBody = function ()
     {
     	setUpNormalConfig();
     	body = framework.getDeviceBody(getGenericDevice2Config());
-    	assert.equal(body, 'expectedbody');
+    	assert.equal(body, "expectedbody");
     }
     
     var testGenericTV2DeviceHasExpectedMimeType = function ()
     {
     	setUpNormalConfig();
     	mimeType = framework.getMimeType(getGenericDevice2Config());
-    	assert.equal(mimeType, 'expectedmimetype');
+    	assert.equal(mimeType, "expectedmimetype");
     }
     
     var testGenericTV2DeviceHasExpectedRootElement = function ()
     {
     	setUpNormalConfig();
     	rootElement = framework.getRootHtmlTag(getGenericDevice2Config());
-    	assert.equal(rootElement, 'expectedrootelement');
+    	assert.equal(rootElement, "expectedrootelement");
     }
     
     var testGenericTV2DeviceHasExpectedDocType = function ()
     {
     	setUpNormalConfig();
     	docType = framework.getDocType(getGenericDevice2Config());
-    	assert.equal(docType, 'expecteddoctype');
+    	assert.equal(docType, "expecteddoctype");
     }
     
     var testNormaliseKeyNamesReplacesSpecialCharactersWithUnderscores = function ()
     {
     	setUpNormalConfig();
-        assert.equal('one_two_three', framework.normaliseKeyNames('one$two(three'));
+        assert.equal( framework.normaliseKeyNames("one$two(three"), "one_two_three");
     }
     
     var testNormaliseKeyNamesLowercases =  function ()
     {
     	setUpNormalConfig();
-        assert.equal('one_two_three', framework.normaliseKeyNames('one_TWO_Three'));
+        assert.equal(framework.normaliseKeyNames("one_TWO_Three"), "one_two_three");
     }
     
     var testGetDeviceConfig = function ()
     {
     	setUpNormalConfig();
         deviceConfigJSON = getGenericDevice1Config();
-        assert.equal('antie/devices/browserdevice', deviceConfigJSON.modules.base);
+        assert.equal(deviceConfigJSON.modules.base, "antie/devices/browserdevice");
     }
     
     var testGetAppConfig = function ()
     {
     	setUpNormalConfig();
-        appConfigJSON = framework.getConfigurationFromFilesystem('generic-tv1', 'applicationconfig');
-        assert.equal('generic-tv1', appConfigJSON.deviceConfigurationKey);
+        appConfigJSON = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv1", "applicationconfig"));
+        assert.equal( appConfigJSON.deviceConfigurationKey, "generic-tv1");
     }
     
     var testGetAppConfigAlt = function ()
     {
     	setUpNormalConfig();
-    	appConfigJSON = framework.getConfigurationFromFilesystem('generic-tv2', 'applicationconfig');
-    	assert.equal('generic-tv2', appConfigJSON.deviceConfigurationKey);
+    	appConfigJSON = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv2", "applicationconfig"));
+    	assert.equal(appConfigJSON.deviceConfigurationKey, "generic-tv2");
     }
     
     var testAppConfigOverridesDeviceConfigWhenMerged = function ()
     {
     	setUpNormalConfig();
         deviceConfigJSON = getGenericDevice1Config();
-        appConfigJSON = framework.getConfigurationFromFilesystem('generic-tv1', 'applicationconfig');
+        appConfigJSON = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv1", "applicationconfig"));
         mergedConfig = framework.mergeConfigurations( deviceConfigJSON, appConfigJSON );
-        assert.equal( 'overridetest', mergedConfig.deviceelements.deviceelement1 );
+        assert.equal(mergedConfig.deviceelements.deviceelement1, "overridetest");
     }
   
 	function getGenericDevice1Config() {
-		return framework.getConfigurationFromFilesystem('generic-tv1',  'deviceconfig');
+		var json = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv1",  "deviceconfig"));
+		return json;
 	}
 	
 	function getGenericDevice2Config()
     {
-        return framework.getConfigurationFromFilesystem('generic-tv2',  'deviceconfig');
+    	var json = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv2",  "deviceconfig"));
+        return json;
     }
 
 	var getFramework = function() {
@@ -161,6 +163,7 @@ var AntieFrameworkTest = function() {
 var test = new AntieFrameworkTest();
 
 test.testGenericTV1DeviceHasNoHeaders();
+
 test.testGenericTV1DeviceHasNoBody();
 test.testGenericTV1DeviceHasDefaultMimeType();
 test.testGenericTV1DeviceHasDefaultRootElement();
@@ -176,4 +179,5 @@ test.testGetDeviceConfig();
 test.testGetAppConfig();
 test.testGetAppConfigAlt();
 test.testAppConfigOverridesDeviceConfigWhenMerged();
+
 
