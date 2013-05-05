@@ -1,7 +1,7 @@
 function AntieFramework(configPath) {
 
 	var _configPath;
-	var fs = require('fs');
+	var fs = require("fs");
 
 	if (!(this instanceof AntieFramework)) {
 		return new AntieFramework(config);
@@ -25,18 +25,18 @@ function AntieFramework(configPath) {
 	 */
 	var getDocType = function(deviceConfig) {
 		var devicePageStrategy = deviceConfig.pageStrategy;
-		return getPageStrategyElement(devicePageStrategy, 'doctype', '<!DOCTYPE html>');
+		return getPageStrategyElement(devicePageStrategy, "doctype", "<!DOCTYPE html>");
 	}
 	/**
 	 * Returns The mimetype that needs to be associated with the HTTP response for this device.
 	 *
 	 * @param object $deviceConfig The device configuration information for the device that made the request.
 	 * @return string The HTTP mimetype required by this device. If this value is not found in the page strategy
-	 * default return value is 'text/html'.
+	 * default return value is "text/html".
 	 */
 	var getMimeType = function(deviceConfig) {
 		var devicePageStrategy = deviceConfig.pageStrategy;
-		return getPageStrategyElement(devicePageStrategy, 'mimetype', 'text/html');
+		return getPageStrategyElement(devicePageStrategy, "mimetype", "text/html");
 	}
 	/**
 	 * Returns the root HTML tag to be used in the HTML response.
@@ -47,7 +47,7 @@ function AntieFramework(configPath) {
 	 */
 	var getRootHtmlTag = function(deviceConfig) {
 		var devicePageStrategy = deviceConfig.pageStrategy;
-		return getPageStrategyElement(devicePageStrategy, 'rootelement', '<html>');
+		return getPageStrategyElement(devicePageStrategy, "rootelement", "<html>");
 	}
 	/**
 	 * Returns any extra HTML content that the device requires to be placed in the HTML <head>.
@@ -57,7 +57,7 @@ function AntieFramework(configPath) {
 	 */
 	var getDeviceHeaders = function(deviceConfig) {
 		var devicePageStrategy = deviceConfig.pageStrategy;
-		return getPageStrategyElement(devicePageStrategy, 'header', "");
+		return getPageStrategyElement(devicePageStrategy, "header", "");
 	}
 	/**
 	 * Returns any extra HTML content that the device requires to be placed in the HTML <body>.
@@ -67,7 +67,7 @@ function AntieFramework(configPath) {
 	 */
 	var getDeviceBody = function(deviceConfig) {
 		var devicePageStrategy = deviceConfig.pageStrategy;
-		return getPageStrategyElement(devicePageStrategy, 'body', "");
+		return getPageStrategyElement(devicePageStrategy, "body", "");
 	}
 	/**
 	 * Replaces whitespace with underscores and lowercases all uppercase characters. Used to compare strings where
@@ -90,7 +90,7 @@ function AntieFramework(configPath) {
 	var getConfigurationFromFilesystem = function(key, type) {
 		var configurationJSON = {};
 		var configurationPath = [_configPath, type, "/", key, ".json"].join("");
-		configurationJSON = JSON.parse(fs.readFileSync([configurationPath].join("")).toString());
+		configurationJSON = fs.readFileSync([configurationPath].join("")).toString();
 		return configurationJSON;
 	}
 	/**
@@ -113,10 +113,10 @@ function AntieFramework(configPath) {
 	 */
 	var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
 		var returnFile = "";
-		try {
-			returnFile = fs.readFileSync([ _configPath, "pagestrategy/", pageStrategy, "/", element].join(""));
+ 		try {
+			returnFile = fs.readFileSync([ _configPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
 		} catch (e) {
-			returnFile = defaultValue
+			returnFile = defaultValue;
 		}
 		return returnFile;
 	}
