@@ -1,25 +1,22 @@
-function AntieFramework(configPath, frameworkPath) {
+/**
+ * The class constructor.
+ *
+ * Sets the config path used to locate pageStrategy elements, defaults to the current working directory if no config
+ * path is provided.
+ * @param string configPath The directory path to the antie config directory.
+ * @param string frameworkPath The directory path to the antie config directory.
+ */
 
-	var _configPath;
-	var _frameworkPath;
-	var fs = require("fs");
+var AntieFramework = function(configPath, frameworkPath) {
 
 	if (!(this instanceof AntieFramework)) {
 		return new AntieFramework(configPath, frameworkPath);
 	}
 
-	/**
-	 * The class constructor.
-	 *
-	 * Sets the config path used to locate pageStrategy elements, defaults to the current working directory if no config
-	 * path is provided.
-	 * @param string configPath The directory path to the antie config directory.
-	 * @param string frameworkPath The directory path to the antie config directory.
-	 */
-	var __construct = function(configPath, frameworkPath) {
-		_configPath = (configPath === "") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
-		_frameworkPath = (frameworkPath === "") ? process.cwd() + "/" : process.cwd() + "/" + frameworkPath;
-	}
+	var  _configPath = (configPath === "") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
+	var  _frameworkPath = (frameworkPath === "") ? process.cwd() + "/" : process.cwd() + "/" + frameworkPath;
+	var fs = require("fs");
+	
 	/**
 	 * Returns the doctype required by this device. The doctype is used in the returned HTML page.
 	 *
@@ -116,8 +113,8 @@ function AntieFramework(configPath, frameworkPath) {
 	 */
 	var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
 		var returnFile = "";
- 		try {
-			returnFile = fs.readFileSync([ _frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
+		try {
+			returnFile = fs.readFileSync([_frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
 		} catch (e) {
 			returnFile = defaultValue;
 		}
@@ -132,9 +129,10 @@ function AntieFramework(configPath, frameworkPath) {
 	 * @return object The original device configuration along with any overridden properties as defined in the patch
 	 * object.
 	 */
+
 	var mergeConfigurations = function(original, patch) {
 		var key, hashOwn = Object.prototype.hasOwnProperty;
-		
+
 		for (key in patch) {
 			if (hashOwn.call(key)) {
 				original[key] = mergeConfigurations(original[key], patch[key]);
@@ -142,10 +140,9 @@ function AntieFramework(configPath, frameworkPath) {
 				original[key] = patch[key];
 			}
 		}
-				
+
 		return original;
 	}
-	__construct(configPath, frameworkPath);
 
 	return {
 		normaliseKeyNames : normaliseKeyNames,
