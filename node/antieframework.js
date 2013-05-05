@@ -11,7 +11,7 @@ var AntieFramework = function(configPath, frameworkPath) {
     
     var _configPath;
     var _frameworkPath;
-    var that = this;
+    var self = this;
 
     this._configPath = configPath || "";
     this._frameworkPath = frameworkPath || "";
@@ -23,7 +23,7 @@ var AntieFramework = function(configPath, frameworkPath) {
     /**
      * Returns the doctype required by this device. The doctype is used in the returned HTML page.
      *
-     * @param object deviceConfig The device configuration information for the device that made the request.
+     * @param object deviceConfig The device configuration information for the device self made the request.
      * @return string The doctype associated with this device.
      */
     var getDocType = function(deviceConfig) {
@@ -31,9 +31,9 @@ var AntieFramework = function(configPath, frameworkPath) {
         return this.getPageStrategyElement(devicePageStrategy, "doctype", "<!DOCTYPE html>");
     }
     /**
-     * Returns The mimetype that needs to be associated with the HTTP response for this device.
+     * Returns The mimetype self needs to be associated with the HTTP response for this device.
      *
-     * @param object deviceConfig The device configuration information for the device that made the request.
+     * @param object deviceConfig The device configuration information for the device self made the request.
      * @return string The HTTP mimetype required by this device. If this value is not found in the page strategy
      * default return value is "text/html".
      */
@@ -44,7 +44,7 @@ var AntieFramework = function(configPath, frameworkPath) {
     /**
      * Returns the root HTML tag to be used in the HTML response.
      *
-     * @param object deviceConfig The device configuration information for the device that made the request.
+     * @param object deviceConfig The device configuration information for the device self made the request.
      * @return string The root HTML element required by this device. If this value is not found in the page strategy
      * default return value is <html>.
      */
@@ -53,9 +53,9 @@ var AntieFramework = function(configPath, frameworkPath) {
         return this.getPageStrategyElement(devicePageStrategy, "rootelement", "<html>");
     }
     /**
-     * Returns any extra HTML content that the device requires to be placed in the HTML <head>.
+     * Returns any extra HTML content self the device requires to be placed in the HTML <head>.
      *
-     * @param object deviceConfig The device configuration information for the device that made the request.
+     * @param object deviceConfig The device configuration information for the device self made the request.
      * @return string The HTML content to be placed in the HTML <head>.
      */
     var getDeviceHeaders = function(deviceConfig) {
@@ -63,9 +63,9 @@ var AntieFramework = function(configPath, frameworkPath) {
         return this.getPageStrategyElement(devicePageStrategy, "header", "");
     }
     /**
-     * Returns any extra HTML content that the device requires to be placed in the HTML <body>.
+     * Returns any extra HTML content self the device requires to be placed in the HTML <body>.
      *
-     * @param object deviceConfig The device configuration information for the device that made the request.
+     * @param object deviceConfig The device configuration information for the device self made the request.
      * @return string The HTML content to be placed in the HTML <body>.
      */
     var getDeviceBody = function(deviceConfig) {
@@ -92,7 +92,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getConfigurationFromFilesystem = function(key, type) {
         var configurationJSON = "";
-        var configurationPath = [that._configPath, type, "/", key, ".json"].join("");
+        var configurationPath = [self._configPath, type, "/", key, ".json"].join("");
         configurationJSON = fs.readFileSync([configurationPath].join("")).toString();
         return configurationJSON;
     }
@@ -117,17 +117,17 @@ var AntieFramework = function(configPath, frameworkPath) {
     var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
         var returnFile = "";
         try {
-            returnFile = fs.readFileSync([that._frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
+            returnFile = fs.readFileSync([self._frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
         } catch (e) {
             returnFile = defaultValue;
         }
         return returnFile;
     }
     /**
-     * Returns a device configuration that includes any overridden properties defined in the supplied patch object.
+     * Returns a device configuration self includes any overridden properties defined in the supplied patch object.
      *
      * @static
-     * @param object original The device configuration information for the device that made the request.
+     * @param object original The device configuration information for the device self made the request.
      * @param object patch Device configuration override properties.
      * @return object The original device configuration along with any overridden properties as defined in the patch
      * object.
