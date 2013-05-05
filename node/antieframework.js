@@ -13,8 +13,8 @@ var AntieFramework = function(configPath, frameworkPath) {
 		return new AntieFramework(configPath, frameworkPath);
 	}
 
-	var  _configPath = (configPath === "") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
-	var  _frameworkPath = (frameworkPath === "") ? process.cwd() + "/" : process.cwd() + "/" + frameworkPath;
+	var _configPath = configPath || "";
+	var _frameworkPath = frameworkPath || "";
 	
 	/**
 	 * Returns the doctype required by this device. The doctype is used in the returned HTML page.
