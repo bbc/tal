@@ -283,7 +283,7 @@ The TAL code base generally uses ```self``` rather than ```that``` - some care s
 In some cases it may be beneficial to use ```bind``` to ensure the expected context for a function...
 
 
-   function MyObject(){
+    function MyObject(){
            this.x = 10;
            function callback(){
                 return this.x
