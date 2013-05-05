@@ -1,10 +1,11 @@
-function AntieFramework(configPath) {
+function AntieFramework(configPath, frameworkPath) {
 
 	var _configPath;
+	var _frameworkPath;
 	var fs = require("fs");
 
 	if (!(this instanceof AntieFramework)) {
-		return new AntieFramework(config);
+		return new AntieFramework(configPath, frameworkPath);
 	}
 
 	/**
@@ -12,15 +13,17 @@ function AntieFramework(configPath) {
 	 *
 	 * Sets the config path used to locate pageStrategy elements, defaults to the current working directory if no config
 	 * path is provided.
-	 * @param string|bool $configPath The directory path to the antie config directory.
+	 * @param string configPath The directory path to the antie config directory.
+	 * @param string frameworkPath The directory path to the antie config directory.
 	 */
-	var __construct = function(configPath) {
-		_configPath = (configPath === "undefined") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
+	var __construct = function(configPath, frameworkPath) {
+		_configPath = (configPath === "") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
+		_frameworkPath = (frameworkPath === "") ? process.cwd() + "/" : process.cwd() + "/" + frameworkPath;
 	}
 	/**
 	 * Returns the doctype required by this device. The doctype is used in the returned HTML page.
 	 *
-	 * @param object $deviceConfig The device configuration information for the device that made the request.
+	 * @param object deviceConfig The device configuration information for the device that made the request.
 	 * @return string The doctype associated with this device.
 	 */
 	var getDocType = function(deviceConfig) {
@@ -30,7 +33,7 @@ function AntieFramework(configPath) {
 	/**
 	 * Returns The mimetype that needs to be associated with the HTTP response for this device.
 	 *
-	 * @param object $deviceConfig The device configuration information for the device that made the request.
+	 * @param object deviceConfig The device configuration information for the device that made the request.
 	 * @return string The HTTP mimetype required by this device. If this value is not found in the page strategy
 	 * default return value is "text/html".
 	 */
@@ -41,7 +44,7 @@ function AntieFramework(configPath) {
 	/**
 	 * Returns the root HTML tag to be used in the HTML response.
 	 *
-	 * @param object $deviceConfig The device configuration information for the device that made the request.
+	 * @param object deviceConfig The device configuration information for the device that made the request.
 	 * @return string The root HTML element required by this device. If this value is not found in the page strategy
 	 * default return value is <html>.
 	 */
@@ -52,7 +55,7 @@ function AntieFramework(configPath) {
 	/**
 	 * Returns any extra HTML content that the device requires to be placed in the HTML <head>.
 	 *
-	 * @param object $deviceConfig The device configuration information for the device that made the request.
+	 * @param object deviceConfig The device configuration information for the device that made the request.
 	 * @return string The HTML content to be placed in the HTML <head>.
 	 */
 	var getDeviceHeaders = function(deviceConfig) {
@@ -62,7 +65,7 @@ function AntieFramework(configPath) {
 	/**
 	 * Returns any extra HTML content that the device requires to be placed in the HTML <body>.
 	 *
-	 * @param object $deviceConfig The device configuration information for the device that made the request.
+	 * @param object deviceConfig The device configuration information for the device that made the request.
 	 * @return string The HTML content to be placed in the HTML <body>.
 	 */
 	var getDeviceBody = function(deviceConfig) {
@@ -74,7 +77,7 @@ function AntieFramework(configPath) {
 	 * capitalization is not guaranteed.
 	 *
 	 * @static
-	 * @param string $value The value to be normalized.
+	 * @param string value The value to be normalized.
 	 * @return string The normalized value.
 	 */
 	var normaliseKeyNames = function(value) {
@@ -83,8 +86,8 @@ function AntieFramework(configPath) {
 	/**
 	 * Returns a JSON formatted device configuration from the file system
 	 *
-	 * @param $key The unique device identifier, typically brand-model.
-	 * @param $type The $_configPath sub-directory where the device configuration is located.
+	 * @param key The unique device identifier, typically brand-model.
+	 * @param type The _configPath sub-directory where the device configuration is located.
 	 * @return string of JSON. Empty string if not found.
 	 */
 	var getConfigurationFromFilesystem = function(key, type) {
@@ -100,21 +103,21 @@ function AntieFramework(configPath) {
 	 * on the class of device. This is required to support multiple specification standards such as HTML5, PlayStation 3,
 	 * HBBTV and Maple.
 	 *
-	 * The page strategy elements are contained in a directory structure located in $this->_configpath/pagestrategy.
+	 * The page strategy elements are contained in a directory structure located in _configpath/pagestrategy.
 	 *
 	 * Typical page strategy elements include: the HTTP header mimetype property, HTML doctype, HTML head, HTML root
 	 * element & HTML body. For example the HTML <head> and <body> may need to contain vendor specific code/markup.
 	 *
-	 * @param string $pageStrategy The page strategy used by this device.
-	 * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
+	 * @param string pageStrategy The page strategy used by this device.
+	 * @param string element The page strategy property to return (Sub-directory of _configpath/pagestrategy
 	 * directory).
-	 * @param string $default The default value to return if the page strategy does not contain the requested element.
+	 * @param string default The default value to return if the page strategy does not contain the requested element.
 	 * @return string An element (property) of the page strategy or the default value.
 	 */
 	var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
 		var returnFile = "";
  		try {
-			returnFile = fs.readFileSync([ _configPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
+			returnFile = fs.readFileSync([ _frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
 		} catch (e) {
 			returnFile = defaultValue;
 		}
@@ -124,8 +127,8 @@ function AntieFramework(configPath) {
 	 * Returns a device configuration that includes any overridden properties defined in the supplied patch object.
 	 *
 	 * @static
-	 * @param object $original The device configuration information for the device that made the request.
-	 * @param object $patch Device configuration override properties.
+	 * @param object original The device configuration information for the device that made the request.
+	 * @param object patch Device configuration override properties.
 	 * @return object The original device configuration along with any overridden properties as defined in the patch
 	 * object.
 	 */
@@ -142,7 +145,7 @@ function AntieFramework(configPath) {
 				
 		return original;
 	}
-	__construct(configPath);
+	__construct(configPath, frameworkPath);
 
 	return {
 		normaliseKeyNames : normaliseKeyNames,
