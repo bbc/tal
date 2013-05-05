@@ -6,7 +6,7 @@
  * @param string configPath The directory path to the antie config directory.
  * @param string frameworkPath The directory path to the antie config directory.
  */
-
+var fs = require("fs");
 var AntieFramework = function(configPath, frameworkPath) {
 
 	if (!(this instanceof AntieFramework)) {
@@ -15,7 +15,6 @@ var AntieFramework = function(configPath, frameworkPath) {
 
 	var  _configPath = (configPath === "") ? process.cwd() + "/" : process.cwd() + "/" + configPath;
 	var  _frameworkPath = (frameworkPath === "") ? process.cwd() + "/" : process.cwd() + "/" + frameworkPath;
-	var fs = require("fs");
 	
 	/**
 	 * Returns the doctype required by this device. The doctype is used in the returned HTML page.
