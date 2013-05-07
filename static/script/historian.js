@@ -30,7 +30,13 @@ require.def("antie/historian",
     ],
     function(Class) {
         'use strict';
+
+        // History stack is built up with most recent item at the FRONT (first), oldest items at the BACK (last). 
         var Historian = Class.extend({
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function(currentUrl) {
                 var i;
                 
@@ -52,8 +58,8 @@ require.def("antie/historian",
                 function findRecentAndRemaining() {
                     var history = self._historyArray;
                     if (history.length > 0) {
-                        recent = history[history.length - 1].split(Historian.HISTORY_TOKEN)[1];
-                        remaining = history.slice(0, history.length - 1).join("");
+                        recent = history[0].split(Historian.HISTORY_TOKEN)[1];
+                        remaining = history.slice(1, history.length).join("");
                     } else {
                         recent = remaining = '';
                     }

@@ -46,7 +46,7 @@
             function(Historian) {
                 var historian;
                 historian = new Historian('http://www.test.com/test/#&history=http://www.test2.com/test2/&history=http://www.test3.com/test3/');
-                assertEquals('http://www.test3.com/test3/#&history=http://www.test2.com/test2/', historian.back());    
+                assertEquals('http://www.test2.com/test2/#&history=http://www.test3.com/test3/', historian.back());
             }
         );
     };
@@ -85,7 +85,7 @@
             function(Historian) {
                 var historian;
                 historian = new Historian('http://www.test.com/test/#/some/route/&history=http://www.test2.com/test2/&route=/some/other/route&history=http://www.test3.com/test3/&route=/yet/another/route');
-                assertEquals('http://www.test3.com/test3/#/yet/another/route&history=http://www.test2.com/test2/&route=/some/other/route', historian.back());    
+                assertEquals('http://www.test2.com/test2/#/some/other/route&history=http://www.test3.com/test3/&route=/yet/another/route', historian.back());
             }
         );
     };
