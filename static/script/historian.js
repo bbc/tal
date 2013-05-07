@@ -135,8 +135,8 @@ require.def("antie/historian",
             }            
         });
         
-        Historian.HISTORY_TOKEN = '&history=';
-        Historian.ROUTE_TOKEN = '&route=';
+        Historian.HISTORY_TOKEN = '&*history=';
+        Historian.ROUTE_TOKEN = '&*route=';
         
         return Historian;
     }
