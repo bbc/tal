@@ -599,7 +599,7 @@ require.def("antie/devices/browserdevice",
                     copyProps = ['assign', 'hash', 'host', 'href', 'pathname', 'protocol', 'search'];
                     for (i = 0; i < copyProps.length; i++) {
                         prop = copyProps[i];
-                        if (windowLocation[prop] !== undefined) {
+                        if (windowLocation.hasOwnProperty(prop)) {
                             newLocation[prop] = windowLocation[prop];
                         }
                     }
