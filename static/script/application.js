@@ -515,7 +515,7 @@ require.def('antie/application',
              * or will simply exit if back() is called (False).
              * @returns {Boolean} True if the application can return to a parent TAL application.
              */
-            canGoBack: function() {
+            hasHistory: function() {
                 return this.getDevice().getHistorian().toString() !== '';
             },
 

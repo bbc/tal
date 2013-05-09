@@ -95,7 +95,7 @@
         );
     };
 
-    this.ApplicationExitTest.prototype.testCanGoBackWithNoHistoryReturnsFalse = function(queue) {
+    this.ApplicationExitTest.prototype.testHasHistoryWithNoHistoryReturnsFalse = function(queue) {
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
@@ -110,12 +110,12 @@
                     };
                 });
 
-                assertFalse('canGoBack()', application.canGoBack());
+                assertFalse('hasHistory()', application.hasHistory());
             }
         );
     };
 
-    this.ApplicationExitTest.prototype.testCanGoBackWithHistoryReturnsTrue = function(queue) {
+    this.ApplicationExitTest.prototype.testHasHistoryWithHistoryReturnsTrue = function(queue) {
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
@@ -130,7 +130,7 @@
                     };
                 });
 
-                assert('canGoBack()', application.canGoBack());
+                assert('hasHistory()', application.hasHistory());
             }
         );
     };
