@@ -175,54 +175,6 @@
         );
     };
 
-    /**
-     * Test that having the &history token in the URL doesn't break the URL-splitting logic.
-     */
-    this.HistorianTest.prototype.testForwardUrlWithHistoryInUrl = function(queue) {
-        queuedRequire(
-            queue,
-            [
-                'antie/historian'
-            ],
-            function(Historian) {
-                var historian;
-                historian = new Historian('http://www.test.com/test/?blah&history=woo');
-                assertEquals('http://www.test2.com/test2/?test1&history=test2#&*history=http://www.test.com/test/?blah&history=woo', 
-                    historian.forward('http://www.test2.com/test2/?test1&history=test2'));
-            }
-        );
-    };
-
-    this.HistorianTest.prototype.testBackWithHistoryInUrl = function(queue) {
-        queuedRequire(
-            queue,
-            [
-                'antie/historian'
-            ],
-            function(Historian) {
-                var historian;
-                historian = new Historian('http://www.test.com/test/?blah&history=woo#some/route&*history=http://www.example.com&*route=a/route');
-                assertEquals('http://www.example.com#a/route', 
-                    historian.back());
-            }
-        );
-    };
-
-    this.HistorianTest.prototype.testToStringWithHistoryInUrl = function(queue) {
-        queuedRequire(
-            queue,
-            [
-                'antie/historian'
-            ],
-            function(Historian) {
-                var historian;
-                historian = new Historian('http://www.test.com/test/?blah&history=woo#some/route&*history=http://www.example.com&*route=another/route');
-                assertEquals('&*history=http://www.example.com&*route=another/route', 
-                    historian.toString());
-            }
-        );
-    };
-
     this.HistorianTest.prototype.testToStringReturnsOnlyHistory = function(queue) {
         queuedRequire(
             queue,
