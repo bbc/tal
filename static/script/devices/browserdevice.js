@@ -27,9 +27,10 @@
 require.def("antie/devices/browserdevice",
     [
         "antie/devices/device",
-        "antie/events/keyevent"
+        "antie/events/keyevent",
+        "antie/historian"
     ],
-    function(Device, KeyEvent) {
+    function(Device, KeyEvent, Historian) {
 
         function trim(str) {
             return str.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -554,10 +555,12 @@ require.def("antie/devices/browserdevice",
              * @param {Array} route A route pointing to a location within the application.
              */
             setCurrentRoute: function(route) {
+                var history = this.getHistorian().toString();
+                
                 if (route.length > 0) {
-                    window.location.hash = "#" + route.join("/");
+                    window.location.hash = "#" + route.join("/") + history;
                 } else {
-                    window.location.hash = "";
+                    window.location.hash = (history === '') ? '' : '#' + history;
                 }
             },
             /**
@@ -565,19 +568,46 @@ require.def("antie/devices/browserdevice",
              * @returns The current route (location within the application).
              */
             getCurrentRoute: function() {
-                return unescape(window.location.hash.replace(/^#/, '')).split('/');
+                var unescaped = unescape(window.location.hash).split(Historian.HISTORY_TOKEN, 1)[0];
+                return (unescaped.replace(/^#/, '').split('/'));
             },
+            
+            /**
+             * gets historian for current location
+             * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
+             */
+            getHistorian: function() {
+                return new Historian(decodeURI(this.getWindowLocation().href));
+            },
+            
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:
-             * hash, host, pathname, protocol, search. These correspond to the properties
+             * hash, host, href, pathname, protocol, search. These correspond to the properties
              * in the window.location DOM API.
              * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
              * this information in a more generic way.
              */
             getWindowLocation: function() {
-                var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
-                return windowLocation;
+                var windowLocation, copyProps, prop, i, newLocation;
+                windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
+
+                // Has the device missed the route off the href? Fix this.
+                if (windowLocation.hash && windowLocation.hash.length > 1 && windowLocation.href && windowLocation.href.lastIndexOf('#') === -1) {
+                    // Copy properties to new object, as modifying href on the original window.location triggers a navigation.
+                    newLocation = {};
+                    copyProps = ['assign', 'hash', 'host', 'href', 'pathname', 'protocol', 'search'];
+                    for (i = 0; i < copyProps.length; i++) {
+                        prop = copyProps[i];
+                        if (windowLocation.hasOwnProperty(prop)) {
+                            newLocation[prop] = windowLocation[prop];
+                        }
+                    }
+                    newLocation.href = newLocation.href + newLocation.hash;
+                }
+
+                // Use copy of window.location if it was created, otherwise the original.
+                return newLocation || windowLocation;
             },
             /**
              * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application
@@ -586,7 +616,13 @@ require.def("antie/devices/browserdevice",
              */
             setWindowLocationUrl: function(url) {
                 var windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
-                windowLocation.assign(url);
+
+                // Prefer assign(), but some devices don't have this function.
+                if (typeof windowLocation.assign === 'function') {
+                    windowLocation.assign(url);
+                } else {
+                    windowLocation.href = url;
+                }
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
