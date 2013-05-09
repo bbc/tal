@@ -529,7 +529,7 @@ require.def('antie/devices/device',
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:
-             * hash, host, pathname, protocol, search. These correspond to the properties
+             * hash, host, href, pathname, protocol, search. These correspond to the properties
              * in the window.location DOM API.
              * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
              * this information in a more generic way.
@@ -606,7 +606,7 @@ require.def('antie/devices/device',
             isHDEnabled: function() {
             },
             /**
-             * Exits the application.
+             * Exits the application directly - no history.
              */
             exit: function() {
                 throw new Error('Not supported on this device.');

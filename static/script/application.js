@@ -410,6 +410,7 @@ require.def('antie/application',
                 var query = '';
                 var hash = '';
                 var key;
+                var completeUrl = '';
 
                 // Get existing query data, or start a brand new object if applicable.
                 var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
@@ -443,9 +444,11 @@ require.def('antie/application',
                 if (route && route.length > 0) {
                     hash = '#' + route.join('/');
                 }
-
+                
+                completeUrl = this.getDevice().getHistorian().forward(url + query + hash);
+                
                 // Send the browser to the final URL
-                this.getDevice().setWindowLocationUrl(url + query + hash);
+                this.getDevice().setWindowLocationUrl(completeUrl);
             },
             /**
              * Return the URL of the current application, with no route or query string information -
@@ -492,6 +495,36 @@ require.def('antie/application',
 			destroy: function () {
 				applicationObject = undefined;
 				ComponentContainer.destroy();
+			},
+			
+			/**
+			 * Navigates back to whatever launched the application (either a parent TAL application, or a straightforward exit
+			 * if the history stack is empty).
+			 */
+			back: function() {
+			    var backUrl = this.getDevice().getHistorian().back();
+                if (backUrl === "") {
+			        this.getDevice().exit();
+			    } else {
+			        this.getDevice().setWindowLocationUrl(backUrl);
+			    }
+			},
+
+            /**
+             * Returns a Boolean value to indicate whether the application can go back to a parent TAL application (True)
+             * or will simply exit if back() is called (False).
+             * @returns {Boolean} True if the application can return to a parent TAL application.
+             */
+            hasHistory: function() {
+                return this.getDevice().getHistorian().toString() !== '';
+            },
+
+			/**
+			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
+			 * application in the history stack.
+			 */
+			exit: function() {
+			    this.getDevice().exit();
 			}
 		});
 
