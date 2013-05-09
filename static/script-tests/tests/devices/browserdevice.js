@@ -784,7 +784,7 @@
 
         queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&history=http://www.sometest.com/test";
+            window.location.hash = "#test1/test2/test3&*history=http://www.sometest.com/test";
             assertEquals(["test1","test2","test3"], device.getCurrentRoute());
         });
 
@@ -795,9 +795,9 @@
 
         queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&history=http://www.sometest.com/test";
+            window.location.hash = "#test1/test2/test3&*history=http://www.sometest.com/test";
             device.setCurrentRoute(["test4", "test5", "test6"]);
-            assertEquals("&history=http://www.sometest.com/test", device.getHistorian().toString());
+            assertEquals("&*history=http://www.sometest.com/test", device.getHistorian().toString());
         });
 
     };
@@ -819,9 +819,9 @@
 
         queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&history=http://www.test.com";
+            window.location.hash = "#test1/test2/test3&*history=http://www.test.com";
             device.setCurrentRoute([]);
-            assertEquals("#&history=http://www.test.com", window.location.hash);
+            assertEquals("#&*history=http://www.test.com", window.location.hash);
         });
     };
     
@@ -849,10 +849,10 @@
                 historySpy = this.sandbox.spy(Historian.prototype, 'init');
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
                 device._windowLocation = {
-                    href: "http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"
-                }
+                    href: "http://www.test0.com/blah/#test1/test2/test3&*history=http://www.test.com&*history=http://www.test2.com"
+                };
                 device.getHistorian();
-                assert(historySpy.calledWith("http://www.test0.com/blah/#test1/test2/test3&history=http://www.test.com&history=http://www.test2.com"));
+                assert(historySpy.calledWith("http://www.test0.com/blah/#test1/test2/test3&*history=http://www.test.com&*history=http://www.test2.com"));
             });
         };
     

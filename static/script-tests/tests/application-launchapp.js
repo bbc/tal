@@ -113,7 +113,7 @@
             application.launchAppFromURL('http://example.com:55555/path/to/test.html');
                 
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#&history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#&*history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
         });
     };
 
@@ -140,7 +140,7 @@
             });
 
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3D0&b=&z#&history=http://www.test.com/?device=sample&config=precert', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3D0&b=&z#&*history=http://www.test.com/?device=sample&config=precert', setWindowLocationStub.getCall(0).args[0]);
         });
     };
 
@@ -168,7 +168,7 @@
             }, null, true);
             
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z#&history=http://www.test.com/?device=sample&config=precert', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z#&*history=http://www.test.com/?device=sample&config=precert', setWindowLocationStub.getCall(0).args[0]);
         });
     };
 
@@ -193,7 +193,7 @@
             application.launchAppFromURL('http://example.com:55555/path/to/test.html', {}, ['here', 'is', 'a', 'route']);
             
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#here/is/a/route&history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html#here/is/a/route&*history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
             });
     };
 
@@ -223,7 +223,7 @@
             ['here', 'is', 'a', 'route']);
        
             assert('window.location.assign() called', setWindowLocationStub.calledOnce);
-            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z#here/is/a/route&history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
+            assertEquals('Correct URL', 'http://example.com:55555/path/to/test.html?a=x%3D0&b=&z#here/is/a/route&*history=http://www.test.com/original/', setWindowLocationStub.getCall(0).args[0]);
             });
     };
 
