@@ -3,3 +3,5 @@ static/script-tests/prelude.js
 static/js-test-driver-rt.conf
 chromedriver.log
 *sublime-*
+.DS_Store
+/.settings
