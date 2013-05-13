@@ -109,9 +109,10 @@ require.def("antie/historian",
                 }
 
                 // Some devices have a de facto URL length limit of around 1000 characters, so trim URL by dropping history elements.
+                // Keep the oldest history entry - drop oldest items from the middle.
                 function trimUrlHistoryToLength() {
-                    while (self._historyArray.length > 0 && self.toString().length + destinationUrl.length > 999) {
-                        self._historyArray.pop();
+                    while (self._historyArray.length > 1 && self.toString().length + destinationUrl.length > 999) {
+                        self._historyArray.splice(-2, 1);
                     }
                 }
 
