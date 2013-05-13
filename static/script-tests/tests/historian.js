@@ -261,7 +261,7 @@
         );
     };
 
-    this.HistorianTest.prototype.testBroadcastOriginSetTrue = function(queue) {
+    this.HistorianTest.prototype.testBroadcastOriginSetTrueWithUrlAndBroadcast = function(queue) {
         queuedRequire(
             queue,
             [
@@ -269,6 +269,19 @@
             ],
             function(Historian) {
                 var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com&*history=broadcast');
+                assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
+            }
+        );
+    };
+
+    this.HistorianTest.prototype.testBroadcastOriginSetTrueWithJustBroadcast = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test#&*history=broadcast');
                 assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );
