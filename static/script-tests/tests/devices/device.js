@@ -127,4 +127,15 @@
         });
     };
 
+    this.DeviceTest.prototype.testExitToBroadcast = function(queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/device"], function(Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            assertException("Default device implementation should throw exception on exitToBroadcast()", function() {
+                device.exitToBroadcast();
+            });
+        });
+    };
+
 })();
