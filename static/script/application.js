@@ -498,33 +498,37 @@ require.def('antie/application',
 			},
 			
 			/**
-			 * Navigates back to whatever launched the application (either a parent TAL application, or a straightforward exit
-			 * if the history stack is empty).
+			 * Navigates back to whatever launched the application (a parent TAL application, broadcast, or exit).
 			 */
 			back: function() {
-			    var backUrl = this.getDevice().getHistorian().back();
-                if (backUrl === "") {
-			        this.getDevice().exit();
-			    } else {
-			        this.getDevice().setWindowLocationUrl(backUrl);
+			    var historian = this.getDevice().getHistorian();
+			    if (historian.hasHistory()) {
+			        this.getDevice().setWindowLocationUrl(historian.back());
+			    }
+			    else {
+			        this.exit();
 			    }
 			},
 
             /**
-             * Returns a Boolean value to indicate whether the application can go back to a parent TAL application (True)
-             * or will simply exit if back() is called (False).
+             * Returns a Boolean value to indicate whether the application can go back to a parent TAL application.
              * @returns {Boolean} True if the application can return to a parent TAL application.
              */
             hasHistory: function() {
-                return this.getDevice().getHistorian().toString() !== '';
+                return this.getDevice().getHistorian().hasHistory();
             },
 
 			/**
 			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
-			 * application in the history stack.
+			 * application in the history stack. Will exit to broadcast if the first TAL application was launched from
+			 * broadcast.
 			 */
 			exit: function() {
-			    this.getDevice().exit();
+                if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
+                    this.getDevice().exitToBroadcast();
+                } else {
+                    this.getDevice().exit();
+                }
 			}
 		});
 

@@ -611,6 +611,9 @@ require.def('antie/devices/device',
             exit: function() {
                 throw new Error('Not supported on this device.');
             },
+            exitToBroadcast: function() {
+                throw new Error('Broadcast exit is not supported on this device.');
+            },
             /**
              * Get a storage provider of a given type for the specified namespace.
              * @param {Number} storageType The type of storage required (either <code>StorageProvider.STORAGE_TYPE_SESSION</code> or <code>StorageProvider.STORAGE_TYPE_PERSISTENT</code>).
