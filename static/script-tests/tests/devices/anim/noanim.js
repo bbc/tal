@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
     this.NoAnimAnimationTest = AsyncTestCase("Animation (noanim)");
 
     this.NoAnimAnimationTest.prototype.setUp = function() {
@@ -49,8 +50,8 @@
             queue.call("Scroll element into new position", function(callbacks) {
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
-                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                 });
                 device.scrollElementTo({
                     el: div,
@@ -79,8 +80,8 @@
             queue.call("Move element into new position", function(callbacks) {
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                 });
                 device.moveElementTo({
                     el: div,
@@ -109,7 +110,7 @@
 
             queue.call("Hide the element", function(callbacks) {
                 var onComplete = callbacks.add(function() {
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                     assertEquals("hidden", div.style.visibility);
                 });
                 device.hideElement({
@@ -134,7 +135,7 @@
 
             queue.call("Show the element", function(callbacks) {
                 var onComplete = callbacks.add(function() {
-                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(1, parseFloat(div.style.opacity));
                     assertEquals("visible", div.style.visibility);
                 });
                 device.showElement({
@@ -156,5 +157,5 @@
             var device = application.getDevice();
             assertTrue(device.isAnimationDisabled());
         }, config);
-    }
+    };
 })();
