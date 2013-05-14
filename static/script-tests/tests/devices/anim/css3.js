@@ -416,7 +416,7 @@
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("hidden", this.div.style.visibility);
-					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+					assertEquals(0, parseFloat(this.div.style.opacity));
 					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 				device.hideElement({
@@ -440,7 +440,7 @@
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("hidden", this.div.style.visibility);
-					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+					assertEquals(0, parseFloat(this.div.style.opacity));
 					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.hideElement({
@@ -465,7 +465,7 @@
             queue.call("Wait for tween", function(callbacks) {
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", this.div.style.visibility);
-                    assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
+                    assertEquals(0, parseFloat(this.div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.hideElement({
@@ -489,7 +489,7 @@
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("visible", this.div.style.visibility);
-					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+					assertEquals(1, parseFloat(this.div.style.opacity));
 					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
 				});
 				device.showElement({
@@ -513,7 +513,7 @@
 			queue.call("Wait for tween", function(callbacks) {
 				var onComplete = callbacks.add(function() {
 					assertEquals("visible", this.div.style.visibility);
-					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+					assertEquals(1, parseFloat(this.div.style.opacity));
 					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
 				});
 				device.showElement({
@@ -538,7 +538,7 @@
             queue.call("Wait for tween", function(callbacks) {
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", this.div.style.visibility);
-                    assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
+                    assertEquals(1, parseFloat(this.div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.showElement({

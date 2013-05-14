@@ -55,8 +55,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
-                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.scrollElementTo({
@@ -126,8 +126,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
-                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.scrollElementTo({
@@ -166,8 +166,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(-100, Math.round(parseFloat(inner.style.left.replace(/px$/, ''))));
-                    assertEquals(-200, Math.round(parseFloat(inner.style.top.replace(/px$/, ''))));
+                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.scrollElementTo({
@@ -201,8 +201,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.moveElementTo({
@@ -239,8 +239,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                 });
                 device.moveElementTo({
                     el: div,
@@ -276,7 +276,7 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                 });
                 device.hideElement({
                     el: div,
@@ -330,12 +330,12 @@
                 };
 
                 var showElementonComplete = callbacks.add(function() {
-                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(1, parseFloat(div.style.opacity));
                     hideElement();
                 });
 
                 var hideElementonComplete = callbacks.add(function() {
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                 });
 
                 device.showElement({
@@ -371,8 +371,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(0, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                 });
                 device.moveElementTo({
                     el: div,
@@ -406,8 +406,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
                 });
                 device.moveElementTo({
                     el: div,
@@ -476,8 +476,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.moveElementTo({
@@ -514,8 +514,8 @@
                 var tweenSpy = this.sandbox.spy(device, '_tween');
 
                 var onComplete = callbacks.add(function() {
-                    assertEquals(100, Math.round(parseFloat(div.style.left.replace(/px$/, ''))));
-                    assertEquals(200, Math.round(parseFloat(div.style.top.replace(/px$/, ''))));
+                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.moveElementTo({
@@ -549,7 +549,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.hideElement({
@@ -578,7 +578,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.hideElement({
@@ -611,7 +611,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(0, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.hideElement({
@@ -640,7 +640,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
-                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(1, parseFloat(div.style.opacity));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
                 });
                 device.showElement({
@@ -669,7 +669,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
-                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(1, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.showElement({
@@ -702,7 +702,7 @@
 
                 var onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
-                    assertEquals(1, Math.round(parseFloat(div.style.opacity)));
+                    assertEquals(1, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
                 });
                 device.showElement({
@@ -1092,7 +1092,7 @@
             fps: 25,
             duration: 10,
             easing: 'linear',
-                skipAnim: true
-            };
+            skipAnim: true
+        };
     }
 })();

@@ -113,7 +113,7 @@ require.def(
 	    function step(options, tweenValues, type) {
             if (type === UPDATETYPE_STEP) {
                 for (var p in options.to) {
-                    if (tweenValues[p]) {
+                    if (tweenValues[p] !== null && tweenValues[p] !== undefined) {
                         if (/scroll/.test(p)) {
                             options.el[p] = tweenValues[p];
                         } else {
