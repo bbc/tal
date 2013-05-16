@@ -521,11 +521,12 @@ require.def('antie/application',
 			/**
 			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
 			 * application in the history stack. Will exit to broadcast if the first TAL application was launched from
-			 * broadcast.
+			 * broadcast and a broadcast exit modifier is loaded.
 			 */
 			exit: function() {
-                if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
-                    this.getDevice().exitToBroadcast();
+                var exitToBroadcast = this.getDevice().exitToBroadcast;
+                if (exitToBroadcast !== Device.prototype.exitToBroadcast && this.getDevice().getHistorian().hasBroadcastOrigin()) {
+                    exitToBroadcast();
                 } else {
                     this.getDevice().exit();
                 }
