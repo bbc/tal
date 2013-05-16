@@ -144,6 +144,34 @@
         );
     };
 
+    this.ApplicationExitTest.prototype.testExitWithBroadcastHistoryButNoExitToBroadcastImplementationCallsDeviceExit = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                var device, exitStub;
+
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/#&*history=broadcast"
+                    };
+                });
+
+                device = application.getDevice();
+                // Because we aren't stubbing device.exitToBroadcast(), application.exit()
+                // can see that it isn't implemented and will call device.exit() instead.
+                exitStub = this.sandbox.stub(device, 'exit', function() {});
+
+                application.exit();
+                assert(exitStub.calledOnce);
+            }
+        );
+    };
+
     this.ApplicationExitTest.prototype.testBackHistoryCallsLastHistory = function(queue) {
         
         queuedApplicationInit(
