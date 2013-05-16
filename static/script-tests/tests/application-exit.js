@@ -40,7 +40,7 @@
         }
     };
 
-    this.ApplicationExitTest.prototype.testBackWithNoHistoryCallsDeviceExit = function(queue) {
+    this.ApplicationExitTest.prototype.testBackWithNoHistoryCallsExit = function(queue) {
         
         queuedApplicationInit(
             queue, 
@@ -49,7 +49,7 @@
                 "antie/devices/browserdevice"
             ], 
             function(application, BrowserDevice) {
-                var device, exitStub;
+                var exitStub;
                 
                 // Configure BrowserDevice.getWindowLocation() to return canned data
                 this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
@@ -58,8 +58,7 @@
                     };
                 });
                 
-                device = application.getDevice();
-                exitStub = this.sandbox.stub(device, 'exit', function() {});
+                exitStub = this.sandbox.stub(application, 'exit', function() {});
                 
                 application.back();
                 assert(exitStub.calledOnce);
@@ -67,7 +66,84 @@
             }
         );
     };
-    
+
+    this.ApplicationExitTest.prototype.testExitWithNoHistoryCallsDeviceExit = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                var device, exitStub;
+
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/"
+                    };
+                });
+
+                device = application.getDevice();
+                exitStub = this.sandbox.stub(device, 'exit', function() {});
+
+                application.exit();
+                assert(exitStub.calledOnce);
+            }
+        );
+    };
+
+    this.ApplicationExitTest.prototype.testBackWithBroadcastHistoryCallsExit = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                var exitStub;
+
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/#&*history=broadcast"
+                    };
+                });
+
+                exitStub = this.sandbox.stub(application, 'exit', function() {});
+
+                application.back();
+                assert(exitStub.calledOnce);
+            }
+        );
+    };
+
+    this.ApplicationExitTest.prototype.testExitWithBroadcastHistoryCallsExitToBroadcast = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            [
+                "antie/devices/browserdevice"
+            ],
+            function(application, BrowserDevice) {
+                var device, exitToBroadcastStub;
+
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: "http://www.test.com/#&*history=broadcast"
+                    };
+                });
+
+                device = application.getDevice();
+                exitToBroadcastStub = this.sandbox.stub(device, 'exitToBroadcast', function() {});
+
+                application.exit();
+                assert(exitToBroadcastStub.calledOnce);
+            }
+        );
+    };
+
     this.ApplicationExitTest.prototype.testBackHistoryCallsLastHistory = function(queue) {
         
         queuedApplicationInit(
