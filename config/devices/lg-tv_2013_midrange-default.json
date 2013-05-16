@@ -12,7 +12,8 @@
             "antie/devices/logging/onscreen",
             "antie/devices/logging/xhr",
             "antie/devices/logging/jstestdriver",
-            "antie/devices/exit/openclosewindow"
+            "antie/devices/exit/netcast",
+            "antie/devices/exit/broadcast/netcast"
         ]
     },
     "logging": {

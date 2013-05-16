@@ -109,9 +109,10 @@ require.def("antie/historian",
                 }
 
                 // Some devices have a de facto URL length limit of around 1000 characters, so trim URL by dropping history elements.
+                // Keep the oldest history entry - drop oldest items from the middle.
                 function trimUrlHistoryToLength() {
-                    while (self._historyArray.length > 0 && self.toString().length + destinationUrl.length > 999) {
-                        self._historyArray.pop();
+                    while (self._historyArray.length > 1 && self.toString().length + destinationUrl.length > 999) {
+                        self._historyArray.splice(-2, 1);
                     }
                 }
 
@@ -132,11 +133,39 @@ require.def("antie/historian",
              */
             toString: function() {
                 return this._historyArray.join("");
-            }            
+            },
+
+            /**
+             * Returns a Boolean to indicate whether the history stack contains valid return URLs. This excludes the 'return to broadcast' special case.
+             * @returns {Boolean} True if the history stack contains one or more valid return URLs.
+             */
+            hasHistory: function() {
+                var self = this;
+                function hasBroadcastEntryOnly() {
+                    var broadcastItem = Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
+                    return self._historyArray.length === 1 && self._historyArray[0] === broadcastItem;
+                }
+
+                if (this._historyArray.length === 0) {
+                    return false;
+                } else {
+                    // Has a URL history, unless there's only one history item and it's the 'return to broadcast' special case.
+                    return !hasBroadcastEntryOnly();
+                }
+            },
+
+            /**
+             * Returns a Boolean to indicate whether the first entry in the history stack is the special 'broadcast' entry.
+             * @returns {Boolean} True if the first entry in the history stack is the special 'broadcast' entry.
+             */
+            hasBroadcastOrigin: function() {
+                return this._historyArray.length > 0 && this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
+            }
         });
         
         Historian.HISTORY_TOKEN = '&*history=';
         Historian.ROUTE_TOKEN = '&*route=';
+        Historian.BROADCAST_ENTRY = 'broadcast';
         
         return Historian;
     }

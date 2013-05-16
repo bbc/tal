@@ -203,29 +203,100 @@
                 // url we get back has to be under 1000 characters, despite the fact this url should take it over the edge
                 forwardUrl = historian.forward('http://www.example.com/long-url-is-long/relatively-speaking');
 
-                assertEquals('URL with oldest two history elements dropped', 'http://www.example.com/long-url-is-long/relatively-speaking#&*history=http://www.111.com/test/&*route=/some/route/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/', forwardUrl);
+                assertEquals('URL with oldest element kept, next two oldest history elements dropped', 'http://www.example.com/long-url-is-long/relatively-speaking#&*history=http://www.111.com/test/&*route=/some/route/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.888.com/test2/', forwardUrl);
                 assert('URL less than 1000 characters', forwardUrl.length <= 1000);
             }
         );
     };
 
-
-    this.HistorianTest.prototype.testUntrimmableHistoryDropsAllHistory = function(queue) {
+    this.HistorianTest.prototype.testHasHistoryReturnsFalseWithNoHistory = function(queue) {
         queuedRequire(
             queue,
             [
                 'antie/historian'
             ],
             function(Historian) {
-                var historian, forwardUrl;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://reallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveitreallylongurlsolongyouwontbelieveit.com');
-                forwardUrl = historian.forward('http://www.example.com/long-url-is-long/relatively-speaking#some-route');
-
-                // Have to drop the entire history to make it fit
-                assertEquals('URL has dropped most history', 'http://www.example.com/long-url-is-long/relatively-speaking#some-route&*history=http://www.test.com/test/&*route=/some/route/', forwardUrl);
+                var historian = new Historian('http://www.test.com/test/');
+                assertFalse('hasHistory()', historian.hasHistory());
             }
         );
     };
 
+    this.HistorianTest.prototype.testHasHistoryReturnsTrueWithUrlHistory = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com');
+                assert('hasHistory()', historian.hasHistory());
+            }
+        );
+    };
 
+    this.HistorianTest.prototype.testHasHistoryReturnsFalseWithOnlyBroadcastHistory = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test/#&*history=broadcast');
+                assertFalse('hasHistory()', historian.hasHistory());
+            }
+        );
+    };
+
+    this.HistorianTest.prototype.testHasHistoryReturnsTrueWithRealHistoryPlusBroadcastHistory = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com&*history=broadcast');
+                assert('hasHistory()', historian.hasHistory());
+            }
+        );
+    };
+
+    this.HistorianTest.prototype.testBroadcastOriginSetTrueWithUrlAndBroadcast = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com&*history=broadcast');
+                assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
+            }
+        );
+    };
+
+    this.HistorianTest.prototype.testBroadcastOriginSetTrueWithJustBroadcast = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test#&*history=broadcast');
+                assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
+            }
+        );
+    };
+
+    this.HistorianTest.prototype.testBroadcastOriginSetFalse = function(queue) {
+        queuedRequire(
+            queue,
+            [
+                'antie/historian'
+            ],
+            function(Historian) {
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com');
+                assertFalse('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
+            }
+        );
+    };
 }());
