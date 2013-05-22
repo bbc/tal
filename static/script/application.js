@@ -524,9 +524,8 @@ require.def('antie/application',
 			 * broadcast and a broadcast exit modifier is loaded.
 			 */
 			exit: function() {
-                var exitToBroadcast = this.getDevice().exitToBroadcast;
-                if (exitToBroadcast !== Device.prototype.exitToBroadcast && this.getDevice().getHistorian().hasBroadcastOrigin()) {
-                    exitToBroadcast();
+                if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
+                    this.getDevice().exitToBroadcast();
                 } else {
                     this.getDevice().exit();
                 }
