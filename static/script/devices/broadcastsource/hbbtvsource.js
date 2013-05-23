@@ -48,12 +48,23 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 }
 
                 this._setBroadcastToFullScreen();
+                
+                // adding as instance rather then class var as module instantiated via method
+                this._playStates = {
+                    UNREALIZED: 0,
+                    CONNECTING: 1,
+                    PRESENTING: 2,
+                    STOPPED: 3
+                };
             },
             showCurrentChannel: function () {
                 // check if exception is thrown by bindToCurrentChannel???
                 this._broadcastVideoObject.bindToCurrentChannel();
             },
             stopCurrentChannel: function () {
+                if (this.getPlayState() === this._playStates.UNREALIZED) {
+                    this._broadcastVideoObject.bindToCurrentChannel();
+                }
                 this._broadcastVideoObject.stop();
             },
             getCurrentChannelName: function () {
@@ -94,7 +105,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             }
         });
-
+          
         Device.prototype.createBroadcastSource = function() {
             return new HbbTVSource();
         };
