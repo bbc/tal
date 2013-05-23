@@ -25,7 +25,7 @@
  */
 
 require.def(
-    'antie/devices/anim/css3/transitionendpoints',
+    'antie/devices/anim/shared/transitionendpoints',
     [
         'antie/class'
     ],

@@ -30,7 +30,7 @@ require.def(
 	   'antie/devices/browserdevice',
 	   'antie/devices/anim/css3/transition',
 	   'antie/devices/anim/css3/optionstransitiondefinition',
-	   'antie/devices/anim/css3/transitionendpoints'
+	   'antie/devices/anim/shared/transitionendpoints'
 	],
 	function(Device,  Transition, OptionsTransitionDefinition, TransitionEndPoints) {
         "use strict";

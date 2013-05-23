@@ -41,7 +41,7 @@
     function loadTEP(queue, fn) {
         queuedRequire(queue,
             [
-                'antie/devices/anim/css3/transitionendpoints'
+                'antie/devices/anim/shared/transitionendpoints'
             ],
             fn
         );
