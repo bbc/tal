@@ -37,12 +37,35 @@
         this.sandbox.restore();
     };
 
+    this.StyleTopLeftAnimationTest.prototype.getDefaultConfig = function() {
+        config = {
+            "modules": {
+                "base": "antie/devices/browserdevice",
+                "modifiers": [
+                    'antie/devices/data/json2',
+                    'antie/devices/anim/styletopleft'
+                ]
+            },
+            "input": {
+                "map": {}
+            },
+            "layouts": [
+                {
+                    "width": 960,
+                    "height": 540,
+                    "module": "fixtures/layouts/default",
+                    "classes": ["browserdevice540p"]
+                }
+            ],
+            "deviceConfigurationKey": "devices-html5-1"
+        };
+        return config;
+    };
+
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -76,9 +99,7 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -111,9 +132,7 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -151,10 +170,8 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(4);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
-
+        var config = this.getDefaultConfig(); 
+        config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id_mask");
@@ -188,9 +205,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -227,9 +242,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimAndNoDefaultValues = function(queue) {
         expectAsserts(3);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -264,9 +277,7 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -303,9 +314,7 @@
     this.StyleTopLeftAnimationTest.prototype.testShowAndHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(3);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -359,9 +368,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoLeftValue = function(queue) {
         expectAsserts(3);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -394,9 +401,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoTopValue = function(queue) {
         expectAsserts(3);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -429,9 +434,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimNoMovement = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -463,9 +466,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -501,10 +502,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(4);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
-
+        var config = this.getDefaultConfig(); 
+        config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
@@ -535,9 +534,7 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -564,9 +561,7 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -597,10 +592,8 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
         expectAsserts(4);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
-
+        var config = this.getDefaultConfig(); 
+        config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var div = device.createContainer("id");
@@ -626,9 +619,7 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -655,9 +646,7 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -688,9 +677,8 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
         expectAsserts(4);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
+        this.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -721,9 +709,7 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -751,9 +737,7 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -782,9 +766,7 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -810,9 +792,7 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -838,9 +818,14 @@
         expectAsserts(4);
 
         // This is the configuration!!        
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1","defaults":{"showElementFade":{"fps":11, "duration": 888, "easing": "easeInCubic"}}};
+        var config = this.getDefaultConfig();
+        config.defaults = {
+            "showElementFade": {
+                "fps": 11, 
+                "duration": 888, 
+                "easing": "easeInCubic"
+            }
+        };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -866,9 +851,14 @@
         expectAsserts(4);
 
         // This is the configuration!!        
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1","defaults":{"hideElementFade":{"fps" : 22, "duration": 777, "easing": "easeInQuint"}}};
+        var config = this.getDefaultConfig();
+        config.defaults = {
+            "hideElementFade": {
+                "fps": 22, 
+                "duration": 777, 
+                "easing": "easeInQuint"
+            }
+        };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -893,8 +883,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsMoveElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -909,8 +898,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsScrollElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -925,8 +913,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsShowElement = function(queue) {
         expectAsserts(1);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -941,8 +928,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsHideElement = function(queue) {
         expectAsserts(1);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -956,8 +942,7 @@
     this.StyleTopLeftAnimationTest.prototype.testAnimationsDoNotInterleaveMoveElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             function getDuration() {
