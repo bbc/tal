@@ -159,7 +159,7 @@
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
                 hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
-                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource.playStates.UNREALIZED);
+                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
                 broadcastSource.stopCurrentChannel();
                 assertTrue("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
             }, 
@@ -179,7 +179,7 @@
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
                 hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
-                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource.playStates.PRESENTING);
+                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
                 broadcastSource.stopCurrentChannel();
                 assertFalse("Native HBBTV bindToCurrentChannel function not called", hbbtvBindSpy.called);
             }, 

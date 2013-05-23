@@ -50,7 +50,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._setBroadcastToFullScreen();
                 
                 // adding as instance rather then class var as module instantiated via method
-                this.playStates = {
+                this._playStates = {
                     UNREALIZED: 0,
                     CONNECTING: 1,
                     PRESENTING: 2,
@@ -62,7 +62,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.bindToCurrentChannel();
             },
             stopCurrentChannel: function () {
-                if (this.getPlayState() === this.playStates.UNREALIZED) {
+                if (this.getPlayState() === this._playStates.UNREALIZED) {
                     this._broadcastVideoObject.bindToCurrentChannel();
                 }
                 this._broadcastVideoObject.stop();
