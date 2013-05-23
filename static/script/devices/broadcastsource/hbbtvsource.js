@@ -54,6 +54,9 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.bindToCurrentChannel();
             },
             stopCurrentChannel: function () {
+                if (this.getPlayState() === 0) {
+                    this._broadcastVideoObject.bindToCurrentChannel();
+                }
                 this._broadcastVideoObject.stop();
             },
             getCurrentChannelName: function () {

@@ -142,8 +142,48 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.stopCurrentChannel();
-            assertTrue("Native HBBTV bindToCurrentChannel function called", hbbtvApiSpy.called);
+            assertTrue("Native HBBTV stop function called", hbbtvApiSpy.called);
         }, config);
+    };
+    
+    this.hbbtvSource.prototype.testStopCurrentChannelCallsBindWhenUnrealized = function(queue) {
+        expectAsserts(1);
+        var config;
+        config = this.getGenericHBBTVConfig();
+        
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
+                hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
+                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", 0);
+                broadcastSource = application.getDevice().createBroadcastSource();
+                broadcastSource.stopCurrentChannel();
+                assertTrue("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
+            }, 
+        config);
+    };
+    
+    this.hbbtvSource.prototype.testStopCurrentChannelDoesNotCallBindWhenNotUnrealized = function(queue) {
+        expectAsserts(1);
+        var config;
+        config = this.getGenericHBBTVConfig();
+        
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
+                hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
+                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", 1);
+                broadcastSource = application.getDevice().createBroadcastSource();
+                broadcastSource.stopCurrentChannel();
+                assertFalse("Native HBBTV bindToCurrentChannel function not called", hbbtvBindSpy.called);
+            }, 
+        config);
     };
 
     this.hbbtvSource.prototype.testgetCurrentChannelNameGetsTheHBBTVCurrentChannelProperty = function(queue) {
