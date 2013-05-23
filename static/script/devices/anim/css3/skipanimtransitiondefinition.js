@@ -54,7 +54,7 @@ require.def(
                     }
                 },
                 
-                getPropertyDuration: function (property) {
+                getPropertyDuration: function () {
                     return 0;
                 }
             }

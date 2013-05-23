@@ -140,7 +140,7 @@ require.def(
             },
             
             takeOut: function(transitionDefinition) {
-                var property, subProps, i;
+                var subProps, i;
                 subProps = transitionDefinition.getProperties();
                 for (i = 0; i !== subProps.length; i += 1) {
                     if(this.hasProperty(subProps[i])) {

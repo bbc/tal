@@ -48,8 +48,8 @@ require.def(
                     }
                 },
                 
-                setFromOptions: function(options, config) {
-                    var property, units, from;
+                setFromOptions: function(options) {
+                    var property, from;
                     from = options.from || {};
                     this.units = options.units || {};
                     this._skipAnim = options.skipAnim;
