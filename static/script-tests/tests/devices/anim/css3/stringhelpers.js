@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     function loadSH(queue, fn) {
         queuedRequire(queue,
             ['antie/devices/anim/css3/stringhelpers'],

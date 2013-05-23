@@ -35,7 +35,6 @@ require.def(
     
     function(Class, TransitionElement, ExisitingTransitionDefinition, SkipAnimTransitionDefinition) {
         "use strict";
-        // var device;
         
         return Class.extend(
             {
@@ -46,7 +45,7 @@ require.def(
                  * @param {Object} element the DOM element the transition is to be applied to
                  */
                 init: function(transDef, endPoints, element) {
-                    var existingTransitions, combinedTransitions, shouldSkip;
+                    var combinedTransitions, shouldSkip;
                     
                     this._endPoints = endPoints;
                     this._completed = false;
@@ -76,7 +75,7 @@ require.def(
                 },
                 
                 stop: function(skipToEnd) {
-                    var currentStyle, currentProps, transitionTargets, prop, dummy, i;
+                    var currentStyle, currentProps, transitionTargets, prop, i;
                     if(!this._completed) {
                         
                         if(typeof skipToEnd !== 'boolean') {
@@ -105,7 +104,7 @@ require.def(
                 },           
                 
                 _setInitialValues: function() {
-                    var properties, origin, i, prop, value, currentStyle;
+                    var properties, origin, i, prop;
                     properties = this._endPoints.getProperties();
                     
                     for(i = 0; i !== properties.length; i += 1) {
@@ -131,7 +130,7 @@ require.def(
                     var self;
                     self = this;
                     function endFn(evt) {
-                        var i, endEvents, endEvent, currentTransitions, resetTransitions;
+                        var resetTransitions;
                         
                         // check either called directly or event is firing for property on this transition
                         
