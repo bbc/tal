@@ -678,7 +678,7 @@
         expectAsserts(4);
 
         var config = this.getDefaultConfig();
-        this.animationDisabled = "true";
+        config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
