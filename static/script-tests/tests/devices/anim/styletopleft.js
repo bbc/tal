@@ -38,7 +38,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.getDefaultConfig = function() {
-        config = {
+        var config = {
             "modules": {
                 "base": "antie/devices/browserdevice",
                 "modifiers": [
@@ -68,16 +68,18 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id_mask");
-            var inner = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, inner, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id_mask");
+            inner = device.createContainer("id");
+            startTime = Date.now();
             device.appendChildElement(div, inner);
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
                     assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
@@ -102,18 +104,19 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id_mask");
-            var inner = device.createContainer("id");
+            var device, div, inner;
+            device = application.getDevice();
+            div = device.createContainer("id_mask");
+            inner = device.createContainer("id");
             device.appendChildElement(div, inner);
 
             inner.style.top = "200px";
             inner.style.left = "100px";
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
-
-                var onComplete = callbacks.add(function() {
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
+                onComplete = callbacks.add(function() {
                     assert('onComplete called', true);
                 });
                 device.scrollElementTo({
@@ -135,16 +138,18 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id_mask");
-            var inner = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, inner, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id_mask");
+            inner = device.createContainer("id");
+            startTime = Date.now();
             device.appendChildElement(div, inner);
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
                     assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -173,16 +178,18 @@
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id_mask");
-            var inner = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, inner, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id_mask");
+            inner = device.createContainer("id");
+            startTime = Date.now();
             device.appendChildElement(div, inner);
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
                     assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -208,14 +215,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
@@ -245,13 +254,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                 });
@@ -280,13 +291,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(0, parseFloat(div.style.opacity));
                 });
                 device.hideElement({
@@ -317,13 +330,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, hideElement, showElementonComplete, hideElementonComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var hideElement = function() {
+                hideElement = function() {
                     device.hideElement({
                         el: div,
                         style: div.style,
@@ -338,12 +353,12 @@
                     });
                 };
 
-                var showElementonComplete = callbacks.add(function() {
+                showElementonComplete = callbacks.add(function() {
                     assertEquals(1, parseFloat(div.style.opacity));
                     hideElement();
                 });
 
-                var hideElementonComplete = callbacks.add(function() {
+                hideElementonComplete = callbacks.add(function() {
                     assertEquals(0, parseFloat(div.style.opacity));
                 });
 
@@ -371,13 +386,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                 });
@@ -404,13 +421,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
                 });
@@ -437,16 +456,18 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div;
+            device = application.getDevice();
+            div = device.createContainer("id");
 
             div.style.top = "200px";
             div.style.left = "100px";
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assert('onComplete called', true);
                 });
 
@@ -469,14 +490,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -505,14 +528,16 @@
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
                     assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -537,14 +562,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
                     assertEquals(0, parseFloat(div.style.opacity));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
@@ -564,14 +591,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
                     assertEquals(0, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -595,14 +624,16 @@
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("hidden", div.style.visibility);
                     assertEquals(0, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -622,14 +653,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
                     assertEquals(1, parseFloat(div.style.opacity));
                     assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
@@ -649,14 +682,16 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
                     assertEquals(1, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -681,14 +716,16 @@
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
-            var startTime = Date.now();
+            var device, div, startTime;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            startTime = Date.now();
 
             queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy = this.sandbox.spy(device, '_tween');
+                var tweenSpy, onComplete;
+                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                var onComplete = callbacks.add(function() {
+                onComplete = callbacks.add(function() {
                     assertEquals("visible", div.style.visibility);
                     assertEquals(1, parseFloat(div.style.opacity));
                     assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
@@ -712,10 +749,11 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div,
                 fps: 15,
@@ -740,10 +778,11 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div,
                 fps: 16,
@@ -769,10 +808,11 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div // No animation properties provided, defaults will be used
             });
@@ -795,10 +835,11 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div // No animation properties provided, defaults will be used
             });
@@ -828,10 +869,11 @@
         };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div // No animation properties provided, config will be used
             });
@@ -861,10 +903,11 @@
         };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var div = device.createContainer("id");
+            var device, div, tweenStub;
+            device = application.getDevice();
+            div = device.createContainer("id");
             
-            var tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = this.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div // No animation properties provided, config will be used
             });
@@ -945,14 +988,12 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            function getDuration() {
-                return Date.now() - startTime;
-            }
-
-            var startTime = Date.now();
-            var device = application.getDevice();
-            var div1 = device.createContainer("id");
-            var div2 = device.createContainer("id2");
+            var startTime, device, div1, div2;
+            
+            startTime = Date.now();
+            device = application.getDevice();
+            div1 = device.createContainer("id");
+            div2 = device.createContainer("id2");
             div1.style.left = '0px';
             div2.style.left = '0px';
 
@@ -991,12 +1032,13 @@
             // Poll for the style.left properties changing on the two divs. Ensure this happens at the same time
             // (as far as possible with polling :/)
             queue.call('Wait for style.left to change', function(callbacks) {
+                var assertions, timer;
                 // Wait until assertions have been done. Assert that the two divs have been updated by comparing
                 // their respective left positions.
                 // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
                 // in its timing even within itself, resulting in slightly different tween values from the same
                 // input.
-                var assertions = callbacks.add(function() {
+                assertions = callbacks.add(function() {
                     var tolerance = 5;
                     //console.log('div1.style.left: ' + div1.style.left);
                     //console.log('div2.style.left: ' + div2.style.left);
@@ -1004,10 +1046,9 @@
                 });
 
                 // Poll for changes every 10ms. Perform assertions when one property changes.  
-                var timer = setInterval(function() {
+                timer = setInterval(function() {
                     // If either style.left property has changed, ensure the other has too
                     if (parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1) {
-                        //console.log('Running assertions after ' + getDuration());
                         clearInterval(timer);
                         assertions();
                     }
@@ -1023,15 +1064,16 @@
      * @param {function} optionsParamFunction The function to execute on the device object.
      */
     function _assertNoSideEffects(device, optionsParamFunction) {
-        var div = _createScrollableDiv(device);
+        var div, options1, options2, onComplete;
+        div = _createScrollableDiv(device);
     
         // Create two options objects - one to pass to the styletopleft method, one for reference
-        var options1 = _createStandardOptionsForElement(div);
-        var options2 = _createStandardOptionsForElement(div);
+        options1 = _createStandardOptionsForElement(div);
+        options2 = _createStandardOptionsForElement(div);
         
         // Ensure that options1 is the same as options2 after the call to styletopleft.
         // (assertEquals does a deep comparison)
-        var onComplete = function() {
+        onComplete = function() {
             assertEquals('Options is the same after tween has completed', options1, options2);
         };
     
