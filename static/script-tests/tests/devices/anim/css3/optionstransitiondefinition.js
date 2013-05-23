@@ -23,7 +23,7 @@
  */
 
 (function() {
-    var mockTransElement, properties, durations, delays, timingFns;
+    /* jshint newcap: false */
     
     this.OptionsTransitionDefinitionTest = AsyncTestCase("OptionsTransitionDefinition");
     

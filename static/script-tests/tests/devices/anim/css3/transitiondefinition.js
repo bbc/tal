@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     function loadTD(queue, fn) {
         queuedRequire(queue,
             ['antie/devices/anim/css3/transitiondefinition'],
@@ -405,7 +406,7 @@
     this.TransitionDefinitionTest.prototype.testAddingDefinitionToAnotherAddsProperties = function(queue) {
         loadTD(queue,
             function(TransitionDefinition){
-                var tDef1, tdef2;
+                var tDef1, tDef2;
 
                 tDef1 = new TransitionDefinition();
                 tDef1.setProperty('prop1');
@@ -429,7 +430,7 @@
     this.TransitionDefinitionTest.prototype.testAddingDefinitionToAnotherCopiesAttributes = function(queue) {
         loadTD(queue,
             function(TransitionDefinition){
-                var tDef1, tdef2, delay1, dur1, fn1, delay2, dur2, fn2, delay3, dur3, fn3;
+                var tDef1, tDef2, delay1, dur1, fn1, delay2, dur2, fn2, delay3, dur3, fn3;
                
                 delay1 = 10;
                 dur1 = 100;
@@ -496,7 +497,7 @@
     this.TransitionDefinitionTest.prototype.testAddingDefinitionOverwritesDuplicateParameters = function(queue) {
         loadTD(queue,
             function(TransitionDefinition){
-                var tDef1, tdef2, delay1, dur1, fn1, delay2, dur2, fn2;
+                var tDef1, tDef2, delay1, dur1, fn1, delay2, dur2, fn2, delay3, dur3, fn3;
                
                 delay1 = 1111;
                 dur1 = 1111;

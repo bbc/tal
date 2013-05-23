@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     this.TransitionEndPointsTest = AsyncTestCase("TransitionEndPoints");
 
     this.TransitionEndPointsTest.prototype.setUp = function() {
@@ -172,7 +173,7 @@
     };
     
     this.TransitionEndPointsTest.prototype.testSetFromOptionsSetsOnComplete = function(queue) {
-        var transEnds;
+        var transEnds, dummy;
         loadTEP(
             queue, 
             function(TransitionEndPoints) {
@@ -182,7 +183,7 @@
                         "someParam":    "whatever"
                     },
                     onComplete: function() {
-                        var dummy = "evaluate something";
+                        dummy = "evaluate something";
                     }
                 };
                 transEnds = new TransitionEndPoints();
@@ -243,6 +244,7 @@
     };
     
     this.TransitionEndPointsTest.prototype.testUnitsFallBackToDefaults = function(queue) {
+        var transEnds;
         loadTEP(
             queue, 
             function(TransitionEndPoints) {

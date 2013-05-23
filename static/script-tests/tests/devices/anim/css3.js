@@ -409,8 +409,9 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var startTime = Date.now();
+			var device, startTime;
+			device = application.getDevice();
+			startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
@@ -433,8 +434,9 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var startTime = Date.now();
+			var device, startTime;
+			device = application.getDevice();
+			startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
@@ -458,8 +460,9 @@
         var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var startTime = Date.now();
+            var device, startTime;
+            device = application.getDevice();
+            startTime = Date.now();
             this.createScrollableDiv(device);
 
             queue.call("Wait for tween", function(callbacks) {
@@ -482,8 +485,9 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var startTime = Date.now();
+			var device, startTime;
+			device = application.getDevice();
+			startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
@@ -506,8 +510,9 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var startTime = Date.now();
+			var device, startTime;
+			device = application.getDevice();
+			startTime = Date.now();
 			this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
@@ -531,8 +536,9 @@
         var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            var startTime = Date.now();
+            var device, startTime;
+            device = application.getDevice();
+            startTime = Date.now();
             this.createScrollableDiv(device);
 
             queue.call("Wait for tween", function(callbacks) {

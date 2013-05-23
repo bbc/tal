@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     function loadTE(queue, fn) {
         queuedRequire(queue,
             [
@@ -35,7 +36,6 @@
     }
     
     function getMockPropMap(){
-        var propMap;
         return {
             "transition-property": "transition-property",
             "transition-timing-function": "transition-timing-function",
@@ -234,7 +234,7 @@
     this.TransitionElementTest.prototype.testSetStyleProperty = function(queue) {
         loadTE(queue,
             function(TransitionElement, MockElement) {
-                var transEl, value, setObj;
+                var transEl, setObj;
                 setObj = {};
                 transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
                 sinon.stub(transEl.mockEl.style, "setProperty", function(prop, value) {

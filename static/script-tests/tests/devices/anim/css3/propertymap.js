@@ -23,7 +23,7 @@
  */
 
 (function() {
-    var self = this;
+    /* jshint newcap: false */
     function loadPM(queue, fn) {
         queuedRequire(queue,
             ['antie/devices/anim/css3/propertymap'],
