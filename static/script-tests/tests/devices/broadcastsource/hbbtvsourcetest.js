@@ -181,7 +181,7 @@
                 hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
                 hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
                 broadcastSource.stopCurrentChannel();
-                assertFalse("Native HBBTV bindToCurrentChannel function not called", hbbtvBindSpy.called);
+                assertFalse("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
             }, 
         config);
     };
