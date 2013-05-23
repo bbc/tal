@@ -39,12 +39,12 @@ require.def(
          */
         TransitionEndPoints = Class.extend(
             {
-                init: function(options, config) {
+                init: function(options) {
                     this._to = {};
                     this._from = {};
                     this._onComplete = function() {};
                     if(options) {
-                        this.setFromOptions(options, config);
+                        this.setFromOptions(options);
                     }
                 },
                 

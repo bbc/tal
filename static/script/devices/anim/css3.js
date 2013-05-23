@@ -73,8 +73,7 @@ require.def(
                     units: options.units,
                     onComplete: options.onComplete,
                     skipAnim: shouldSkipAnim(options, self)
-                },
-                getConfig('scrollElementFade', self)
+                }
 			);
 			
 			trans = new Transition(
@@ -97,8 +96,7 @@ require.def(
                     units: options.units,
                     onComplete: options.onComplete,
                     skipAnim: shouldSkipAnim(options, this)
-                }, 
-                getConfig('moveElementFade', this)
+                }
             );
             
             if(transEndPoints.hasProperty('top') || transEndPoints.hasProperty('left')) {
@@ -132,7 +130,7 @@ require.def(
             
 		    transDef = new OptionsTransitionDefinition(transOpts, config);
             transDef.setPropertyDuration('visibility', 0);
-            transEndPoints = new TransitionEndPoints(transOpts, config);
+            transEndPoints = new TransitionEndPoints(transOpts);
             
             return new Transition(
                 transDef, 
@@ -161,7 +159,7 @@ require.def(
             
             transDef = new OptionsTransitionDefinition(transOpts, config);
             transDef.setPropertyDelay('visibility', transDef.getPropertyDuration('opacity'));
-            transEndPoints = new TransitionEndPoints(transOpts, config);
+            transEndPoints = new TransitionEndPoints(transOpts);
             
             return new Transition(
                 transDef, 
