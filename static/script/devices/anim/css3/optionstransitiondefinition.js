@@ -28,10 +28,9 @@
 require.def(
     'antie/devices/anim/css3/optionstransitiondefinition',
     [
-        'antie/devices/anim/css3/transitiondefinition',
-        'antie/devices/anim/css3/easinglookup'
+        'antie/devices/anim/css3/transitiondefinition'
     ],
-    function(TransitionDefinition, EasingLookup) {
+    function(TransitionDefinition) {
         "use strict";
         return TransitionDefinition.extend(
             {

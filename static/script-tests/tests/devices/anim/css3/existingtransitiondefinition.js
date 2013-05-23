@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     var mockTransElement, properties, durations, delays, timingFns;
     
     this.ExistingTransitionDefinitionTest = AsyncTestCase("ExistingTransitionDefinition");

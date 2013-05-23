@@ -94,7 +94,7 @@ require.def(
                 },
                 
                 applyDefinition: function(transitionDefinition) {
-                    var transProperties, propertyParams, property, delays, durations, props, timingFns, i;
+                    var transProperties, property, delays, durations, props, timingFns, i;
                     delays = []; 
                     props = []; 
                     timingFns = []; 
@@ -136,7 +136,7 @@ require.def(
                 },
                 
                 _getCssCsvPropValueAsArray: function(cssProp) {
-                    var i, value, prop, propArr, retArr;
+                    var value, propArr, retArr;
                     retArr = [];
                     value = this._element.style.getPropertyValue(this._propMap[cssProp]);
                     

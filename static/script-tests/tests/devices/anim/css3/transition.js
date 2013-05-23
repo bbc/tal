@@ -23,6 +23,7 @@
  */
 
 (function() {
+    /* jshint newcap: false */
     this.TransitionTest = AsyncTestCase("Transition");
 
     this.TransitionTest.prototype.setUp = function() {
@@ -94,7 +95,6 @@
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
-                var self, options, transDef, transEnds;
                 expectAsserts(2);
                 this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 obj = {};
@@ -115,7 +115,7 @@
     };
     
     this.TransitionTest.prototype.testTransitionRemovedAfterCompletion = function(queue) {
-        var trans, existingTransDef, newTransDef, applySpy, existingProperties, obj;
+        var trans, newTransDef, applySpy, existingProperties;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
@@ -299,7 +299,7 @@
     };
     
     this.TransitionTest.prototype.testCallingStopWithNoParamFiresCallbackAndSkipsToEnd = function(queue) {
-        var trans, obj;
+        var trans;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
@@ -333,7 +333,7 @@
     };
     
     this.TransitionTest.prototype.testCallingStopWithSkipToEndFalseFiresCallbackAndSkipsToComputedValue = function(queue) {
-        var trans, obj;
+        var trans;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
@@ -377,7 +377,7 @@
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
-                var options, endPoints, lastPropCall, el, stopSpy;
+                var trans, options, endPoints, el, stopSpy;
                 
                 this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
@@ -408,7 +408,7 @@
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
-                var options, endPoints, lastPropCall, el, stopSpy, transDef;
+                var options, endPoints, el, stopSpy, transDef, trans;
                 
                 this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
@@ -438,7 +438,7 @@
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
-                var options, endPoints, lastPropCall, el, stopSpy, transDef;
+                var options, endPoints, el, stopSpy, transDef, trans;
                 
                 this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
