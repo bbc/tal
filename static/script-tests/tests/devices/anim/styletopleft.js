@@ -1188,6 +1188,49 @@
         );
     };
     
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
+        var config;
+        config = this.getDefaultConfig();
+        config.animationDisabled = "true";
+
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var el, device;
+                device = application.getDevice();
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                device.tweenElementStyle(
+                    {
+                        el: el,
+                        to: {
+                            bottom: 100,
+                            right: 200
+                        },
+                        duration: 50,
+                        units: {
+                            bottom: "FEET"
+                        },
+                        skipAnim: true
+                    }
+                );
+                
+                assertEquals("Bottom has correct units", "100FEET", el.style.bottom);
+                assertEquals("Right has correct units", "200px", el.style.right);
+            }, 
+            config
+        );
+    };
+    
     /** Kick off two animations slightly separated in time (less than one frame). Assert that updates to
      * the underlying DOM elements are forced into synchronisation.
      */
