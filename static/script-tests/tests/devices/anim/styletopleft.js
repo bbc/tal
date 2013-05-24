@@ -979,6 +979,215 @@
         }, config);
     };
     
+    this.StyleTopLeftAnimationTest.prototype.testFromValuesSetInTweenElementStyle = function(queue) {
+        var config = this.getDefaultConfig();
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var device, div, el;
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                
+                
+                device = application.getDevice();
+                div = _createScrollableDiv(device);
+                
+                device.tweenElementStyle(
+                    {
+                        el: el,
+                        from: {
+                            bottom: 30,
+                            right: 50
+                        },
+                        to: {
+                            bottom: 0,
+                            right: 100
+                        },
+                        duration: 100
+                    }
+                );
+                assertTrue('From value of bottom has been set', parseInt(el.style.bottom, 10) > 20);
+                assertTrue('From value of right has been set', parseInt(el.style.right, 10) < 60);
+            }, 
+            config
+        );
+    };
+    
+    this.StyleTopLeftAnimationTest.prototype.testToValuesReachedAfterTweenElementStyle = function(queue) {
+        var config;
+        config = this.getDefaultConfig();
+        expectAsserts(2);
+
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var device, div, el;
+                
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                device = application.getDevice();
+                div = _createScrollableDiv(device);
+                
+                device.tweenElementStyle(
+                    {
+                        el: el,
+                        from: {
+                            bottom: 30,
+                            right: 50
+                        },
+                        to: {
+                            bottom: 0,
+                            right: 100
+                        },
+                        duration: 30
+                    }
+                );
+                
+                queue.call('Check destinations after animation', function(callbacks) {
+                    var assertDestinationReached = callbacks.add(
+                        function () {
+                        assertEquals('To value of bottom has been set', 0, parseInt(el.style.bottom, 10));
+                        assertEquals('To value of right has been set', 100, parseInt(el.style.right, 10));
+                    });
+                    setTimeout(assertDestinationReached, 100);
+                });
+
+            }, 
+            config
+        );
+    };
+    
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleEqualEndpointsReturnNull = function(queue) {
+        var config;
+        config = this.getDefaultConfig();
+
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var el, device, tween;
+                device = application.getDevice();
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                tween = device.tweenElementStyle(
+                    {
+                        el: el,
+                        to: {
+                            bottom: 0,
+                            right: 600
+                        },
+                        duration: 30
+                    }
+                );
+                
+                assertEquals("Equal Endpoints return null", tween, null);
+            }, 
+            config
+        );
+    };
+    
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsSkipAnim = function(queue) {
+        var config;
+        config = this.getDefaultConfig();
+
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var el, device;
+                device = application.getDevice();
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                device.tweenElementStyle(
+                    {
+                        el: el,
+                        to: {
+                            bottom: 100,
+                            right: 200
+                        },
+                        duration: 3000,
+                        skipAnim: true
+                    }
+                );
+                
+                assertEquals("Bottom target reached immediately", "100px", el.style.bottom);
+            }, 
+            config
+        );
+    };
+    
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsGlobalAnimDisable = function(queue) {
+        var config;
+        config = this.getDefaultConfig();
+        config.animationDisabled = "true";
+
+        queuedApplicationInit(
+            queue, 
+            'lib/mockapplication', 
+            [], 
+            function(application) {
+                var el, device;
+                device = application.getDevice();
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                device.tweenElementStyle(
+                    {
+                        el: el,
+                        to: {
+                            bottom: 100,
+                            right: 200
+                        },
+                        duration: 3000
+                    }
+                );
+                
+                assertEquals("Bottom target reached immediately", "100px", el.style.bottom);
+            }, 
+            config
+        );
+    };
+    
     /** Kick off two animations slightly separated in time (less than one frame). Assert that updates to
      * the underlying DOM elements are forced into synchronisation.
      */

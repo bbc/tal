@@ -122,6 +122,24 @@ require.def(
                     return equal;
                 },
                 
+                completeOriginsUsingElement: function(el) {
+                    function shouldReplace() {   
+                        return (elementValue !== null && elementValue !== undefined && self._from[property] === undefined);
+                    }
+                    
+                    var elementValue, self, property;
+                    self = this;
+                    
+                    for (property in this._to) {
+                        if(this._to.hasOwnProperty(property)) { 
+                             elementValue = el.style.getPropertyValue(property); 
+                             if(shouldReplace(property)) {
+                                this._from[property] = elementValue; 
+                            }
+                        }
+                    }
+                },
+                
                 _addValuesToFrom: function(property, options) {
                     if(options.from && options.from.hasOwnProperty(property)) {
                         this._from[property] = this.addUnitsToPropertyValue(property, options.from[property]);
@@ -132,7 +150,9 @@ require.def(
         
         TransitionEndPoints.defaultUnits = {
             top:    "px",
-            left:   "px"
+            left:   "px",
+            bottom: "px",
+            right:  "px"
         };
         
         return TransitionEndPoints;

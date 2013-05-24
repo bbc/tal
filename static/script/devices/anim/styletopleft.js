@@ -28,10 +28,12 @@ require.def(
 	'antie/devices/anim/styletopleft',
 	[
 		'antie/devices/browserdevice',
+		'antie/devices/anim/shared/transitionendpoints',
 		'antie/devices/anim/tween'
 	],
-	function(Device)  {
+	function(Device, TransitionEndPoints)  {
 		function movesScroll( startLeft, startTop, changeLeft, changeTop, options ){
+		    var to, from;
 			if ((changeLeft === 0) && (changeTop === 0)) {
 					if (options.onComplete) {
 						options.onComplete();
@@ -51,7 +53,7 @@ require.def(
 					options.onComplete();
 				}
 			} else {
-				var from = {};
+				from = {};
 				if (startTop !== undefined) {
 					from.top = startTop + "px";
 				}
@@ -59,7 +61,7 @@ require.def(
 					from.left = startLeft + "px";
 				}
 
-				var to = {};
+				to = {};
 				if (options.to.top !== undefined) {
 					to.top = (options.to.top) + "px";
 				}
@@ -82,6 +84,7 @@ require.def(
 		}
         /* documented in antie.devices.Device */
 		Device.prototype.scrollElementTo = function(options) {
+		    var startLeft, changeLeft, startTop, changeTop, newOptions;
 			// Helper function to return an object that inherits from the original
 			function inherit(original) {
 				function Inherited() {}
@@ -93,7 +96,7 @@ require.def(
 			// Make a new modifiable options object inheriting from the original. Need to do this rather than
 			// simply reverting any changes before returning, as the tweening library calls onComplete() which
 			// may require an unchanged object.
-			var newOptions = inherit(options);
+			newOptions = inherit(options);
 			if (options.to) {
 				newOptions.to = inherit(options.to);
 			}
@@ -118,29 +121,31 @@ require.def(
 				newOptions.to.top = -options.to.top;
 			}
 
-			var startLeft = newOptions.el.style.left.replace(/px/, '') || 0;
-			var changeLeft = (options.to.left !== undefined) ? (options.to.left - Math.abs(startLeft)) : 0;
-			var startTop = newOptions.el.style.top.replace(/px/, '') || 0;
-			var changeTop = (options.to.top !== undefined) ? (options.to.top - Math.abs(startTop)) : 0;
+			startLeft = newOptions.el.style.left.replace(/px/, '') || 0;
+			changeLeft = (options.to.left !== undefined) ? (options.to.left - Math.abs(startLeft)) : 0;
+			startTop = newOptions.el.style.top.replace(/px/, '') || 0;
+			changeTop = (options.to.top !== undefined) ? (options.to.top - Math.abs(startTop)) : 0;
 
 			return movesScroll.apply( this, [ startLeft, startTop, changeLeft, changeTop, newOptions ] );
 		};
 
         /* documented in antie.devices.Device */
 		Device.prototype.moveElementTo = function(options) {
+		    var startLeft, changeLeft, startTop, changeTop;
 			// Performance consideration: if left or top is null they are ignored to prevent the additional
 			// work animating them.
 
-			var startLeft = parseInt(options.el.style.left.replace(/px|em|pt/,""), 10) || 0;
-			var changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
-			var startTop = parseInt(options.el.style.top.replace(/px|em|pt/,""), 10) || 0;
-			var changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
+			startLeft = parseInt(options.el.style.left.replace(/px|em|pt/,""), 10) || 0;
+			changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
+			startTop = parseInt(options.el.style.top.replace(/px|em|pt/,""), 10) || 0;
+			changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
 
 			return movesScroll.apply( this, [ startLeft, startTop, changeLeft, changeTop, options ] );
 		};
 
         /* documented in antie.devices.device */
 		Device.prototype.hideElement = function(options) {
+		    var animationDefaults;
 			if (this.getConfig().animationDisabled || options.skipAnim) {
 				options.el.style.visibility = "hidden";
 				options.el.style.opacity = 0;
@@ -148,7 +153,7 @@ require.def(
 					options.onComplete();
 				}
 			} else {
-				var animationDefaults = this.getConfig().defaults && this.getConfig().defaults.hideElementFade || {};
+				animationDefaults = this.getConfig().defaults && this.getConfig().defaults.hideElementFade || {};
 				return this._tween({
 					el: options.el,
 					style: options.el.style,
@@ -173,6 +178,7 @@ require.def(
 
 		/* documented in antie.devices.device */
 		Device.prototype.showElement = function(options) {
+		    var animationDefaults;
 			if (this.getConfig().animationDisabled || options.skipAnim) {
 				options.el.style.visibility = "visible";
 				options.el.style.opacity = 1;
@@ -180,7 +186,7 @@ require.def(
 					options.onComplete();
 				}
 			} else {
-				var animationDefaults = this.getConfig().defaults && this.getConfig().defaults.showElementFade || {};
+				animationDefaults = this.getConfig().defaults && this.getConfig().defaults.showElementFade || {};
 				return this._tween({
 					el: options.el,
 					style: options.el.style,
@@ -200,7 +206,57 @@ require.def(
 				});
 			}
 		};
+        
+        Device.prototype.tweenElementStyle = function(options) {
+            
+            var endPoints;
 
+            function skipAnimation() {
+                var i, properties, property;
+                properties = endPoints.getProperties();
+                for(i = 0; i !== properties.length; i += 1) {
+                    property = properties[i];
+                    options.el.style[property] = endPoints.getPropertyDestination(property);
+                }
+            }
+            
+            function getTweenOptions(){
+                var i, properties, property, tweenOptions;
+                properties = endPoints.getProperties();
+                tweenOptions = {
+                    el: options.el,
+                    style: options.el.style,
+                    fps: options.el.fps,
+                    duration: options.duration,
+                    easing:options.easing,
+                    onComplete: options.onComplete
+                };
+                tweenOptions.to = {};
+                tweenOptions.from = {};
+                
+                for(i = 0; i !== properties.length; i += 1) {
+                    property = properties[i];
+                    tweenOptions.to[property] = endPoints.getPropertyDestination(property);
+                    tweenOptions.from[property] = endPoints.getPropertyOrigin(property);
+                }
+                return tweenOptions;
+            }
+            
+            endPoints = new TransitionEndPoints(options);
+            endPoints.completeOriginsUsingElement(options.el);
+            
+            if(endPoints.toAndFromAllEqual()) {
+                return null;
+            } 
+            
+            if(options.skipAnim  || this.getConfig().animationDisabled) {
+                skipAnimation();
+                return undefined;
+            }
+            
+            return this._tween(getTweenOptions());
+        };
+        
         /* documented in antie.devices.Device */
 		Device.prototype.stopAnimation = function(anim) {
 			anim.stop(true);
