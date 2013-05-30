@@ -168,6 +168,28 @@ require.def(
             );
   
         };
+        
+        Device.prototype.tweenElementStyle = function(options) {
+            var transDef, transEndPoints;
+            transDef = new OptionsTransitionDefinition(options, {});
+
+            transEndPoints = new TransitionEndPoints(
+                {
+                    to: options.to,
+                    from: options.from,
+                    units: options.units,
+                    onComplete: options.onComplete,
+                    skipAnim: shouldSkipAnim(options, this)
+                }
+            );
+
+            return new Transition(
+                transDef,
+                transEndPoints,
+                options.el
+            );
+
+        };
 
 		/* documented in antie.devices.device */
 		Device.prototype.isAnimationDisabled = function(){

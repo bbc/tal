@@ -133,7 +133,7 @@ require.def(
                     for (property in this._to) {
                         if(this._to.hasOwnProperty(property)) { 
                              elementValue = el.style.getPropertyValue(property); 
-                             if(shouldReplace(property)) {
+                             if(shouldReplace()) {
                                 this._from[property] = elementValue; 
                             }
                         }
@@ -152,7 +152,9 @@ require.def(
             top:    "px",
             left:   "px",
             bottom: "px",
-            right:  "px"
+            right:  "px",
+            width:  "px",
+            height: "px"
         };
         
         return TransitionEndPoints;
