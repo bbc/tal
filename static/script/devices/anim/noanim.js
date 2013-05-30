@@ -26,8 +26,9 @@
 
 require.def(
 	'antie/devices/anim/noanim',
-	['antie/devices/browserdevice'],
-	function(Device) {
+	['antie/devices/browserdevice',
+    'antie/devices/anim/shared/transitionendpoints'],
+	function(Device, TransitionEndPoints) {
         /* documented in antie.devices.Device */
 		Device.prototype.scrollElementTo = function(options) {
 			if(new RegExp("_mask$").test(options.el.id)) {
@@ -111,6 +112,30 @@ require.def(
 				options.onComplete();
 			}
 		};
+
+        Device.prototype.tweenElementStyle = function(options) {
+            var transEndPoints, i, prop, properties, elStyle;
+            elStyle = options.el.style;
+
+            transEndPoints = new TransitionEndPoints(
+                {
+                    to: options.to,
+                    from: options.from,
+                    units: options.units
+                }
+            );
+
+            properties = transEndPoints.getProperties();
+
+            for (i = 0; i !== properties.length; i += 1){
+                prop = properties[i];
+                elStyle.setProperty(prop, transEndPoints.getPropertyDestination(prop), '');
+            };
+
+            if (typeof options.onComplete === "function") {
+                options.onComplete();
+            }
+        }
 
         /* documented in antie.devices.device */
 		Device.prototype.stopAnimation = function(anim) {
