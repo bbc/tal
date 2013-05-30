@@ -52,6 +52,7 @@ require.def(
 				if (options.onComplete) {
 					options.onComplete();
 				}
+                return null;
 			} else {
 				from = {};
 				if (startTop !== undefined) {
@@ -152,6 +153,7 @@ require.def(
 				if (typeof options.onComplete === "function") {
 					options.onComplete();
 				}
+                return null;
 			} else {
 				animationDefaults = this.getConfig().defaults && this.getConfig().defaults.hideElementFade || {};
 				return this._tween({
@@ -185,6 +187,7 @@ require.def(
 				if (typeof options.onComplete === "function") {
 					options.onComplete();
 				}
+                return undefined;
 			} else {
 				animationDefaults = this.getConfig().defaults && this.getConfig().defaults.showElementFade || {};
 				return this._tween({
@@ -228,7 +231,7 @@ require.def(
                     style: options.el.style,
                     fps: options.el.fps,
                     duration: options.duration,
-                    easing:options.easing,
+                    easing: options.easing,
                     onComplete: options.onComplete
                 };
                 tweenOptions.to = {};
