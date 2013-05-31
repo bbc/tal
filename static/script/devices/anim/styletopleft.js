@@ -214,6 +214,12 @@ require.def(
             
             var endPoints;
 
+            function fireComplete() {
+                if(options.onComplete) {
+                    options.onComplete();
+                }
+            }
+
             function skipAnimation() {
                 var i, properties, property;
                 properties = endPoints.getProperties();
@@ -249,11 +255,13 @@ require.def(
             endPoints.completeOriginsUsingElement(options.el);
             
             if(endPoints.toAndFromAllEqual()) {
+                fireComplete();
                 return null;
             } 
             
             if(options.skipAnim  || this.getConfig().animationDisabled) {
                 skipAnimation();
+                fireComplete();
                 return undefined;
             }
             

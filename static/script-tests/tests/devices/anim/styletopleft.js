@@ -978,7 +978,91 @@
             _assertNoSideEffects(device, device.hideElement);
         }, config);
     };
-    
+
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenSkipped = function(queue) {
+        var config = this.getDefaultConfig();
+        expectAsserts(1);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
+            function(application) {
+                var device, div, el, options, completeSpy;
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+
+                options = {
+                    el: el,
+                    from: {
+                        bottom: 30,
+                        right: 50
+                    },
+                    to: {
+                        bottom: 0,
+                        right: 100
+                    },
+                    duration: 100,
+
+                    onComplete: function() {
+                    },
+                    skipAnim: true
+                };
+
+                device = application.getDevice();
+                completeSpy = this.sandbox.spy(options, 'onComplete');
+                device.tweenElementStyle(options);
+                assertTrue("onComplete called", completeSpy.calledOnce);
+            },
+            config
+        );
+    };
+
+    this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenNoChange = function(queue) {
+        var config = this.getDefaultConfig();
+        expectAsserts(1);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
+            function(application) {
+                var device, div, el, options, completeSpy;
+                el = {
+                    style: {
+                        getPropertyValue: function(property) {
+                            return el.style[property];
+                        },
+                        bottom: "0px",
+                        right: "600px"
+                    }
+                };
+                options = {
+                    el: el,
+                    to: {
+                        bottom: 0,
+                        right: 600
+                    },
+                    duration: 100,
+                    onComplete: function() {
+                    },
+                    skipAnim: true
+                };
+
+                device = application.getDevice();
+                completeSpy = this.sandbox.spy(options, 'onComplete');
+                device.tweenElementStyle(options);
+                assertTrue("onComplete called", completeSpy.calledOnce);
+            },
+            config
+        );
+    };
+
     this.StyleTopLeftAnimationTest.prototype.testFromValuesSetInTweenElementStyle = function(queue) {
         var config = this.getDefaultConfig();
         queuedApplicationInit(
@@ -1045,7 +1129,7 @@
                 };
                 device = application.getDevice();
                 div = _createScrollableDiv(device);
-                
+
                 device.tweenElementStyle(
                     {
                         el: el,
