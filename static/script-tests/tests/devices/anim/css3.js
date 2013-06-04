@@ -27,7 +27,7 @@
     var noAnimToleranceMs = 20;
     
     // jshint newcap: false
-    this.CSS3AnimationTest = AsyncTestCase("Css3Animation");
+    this.CSS3AnimationTest = AsyncTestCase("Css3AnimationTest");
 
 	this.CSS3AnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -60,7 +60,30 @@
 		return inner;
 	};
 
-
+    this.CSS3AnimationTest.prototype.getDefaultCssConfig = function() {
+        return {
+            "modules": {
+                "base": "antie/devices/browserdevice",
+                "modifiers": [
+                    'antie/devices/data/json2',
+                    'antie/devices/anim/css3'
+                ]
+            },
+            "input": {
+                "map": {}
+            },
+            "layouts": [
+                {
+                    "width": 960,
+                    "height": 540,
+                    "module": "fixtures/layouts/default",
+                    "classes": ["browserdevice540p"]
+                }
+            ],
+            "deviceConfigurationKey": "devices-html5-1"
+        };
+    };
+    
 	/**
 	 * Get the transition properties for a given element from its CSS.
 	 */
@@ -85,7 +108,7 @@
 		expectAsserts(3);
 
 		var config;
-		config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, self, startTime;
@@ -117,7 +140,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementToWithNoLeftValue = function(queue) {
 		expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, self;
@@ -146,7 +169,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementToWithNoTopValue = function(queue) {
 		expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, self;
@@ -174,7 +197,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, startTime;
@@ -204,7 +227,8 @@
    this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
+        config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, inner, startTime;
@@ -237,7 +261,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementRejectsNonMaskElement = function(queue) {
 		expectAsserts(1);
 		
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, result;
@@ -263,7 +287,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementToRequiresMaskElement = function(queue) {
 		expectAsserts(1);
 		
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, result;
@@ -289,7 +313,7 @@
 	this.CSS3AnimationTest.prototype.testScrollElementToRequiresMaskElementChild = function(queue) {
 		expectAsserts(1);
 		
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, inner, result;
@@ -313,7 +337,7 @@
 	this.CSS3AnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, div, startTime;
@@ -344,7 +368,7 @@
 	this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, div, startTime;
@@ -375,7 +399,8 @@
    this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
+        config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, startTime;
@@ -406,7 +431,7 @@
 	this.CSS3AnimationTest.prototype.testHideElementWithAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, startTime;
@@ -431,7 +456,7 @@
 	this.CSS3AnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, startTime;
@@ -457,7 +482,8 @@
    this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig(); 
+        config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, startTime;
@@ -482,7 +508,7 @@
 	this.CSS3AnimationTest.prototype.testShowElementWithAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, startTime;
@@ -507,7 +533,7 @@
 	this.CSS3AnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
 		expectAsserts(3);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device, startTime;
@@ -533,7 +559,8 @@
     this.CSS3AnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = {"animationDisabled": "true", "modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig(); 
+        config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, startTime;
@@ -562,9 +589,7 @@
     this.CSS3AnimationTest.prototype.testSpecificShowAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, transition;
@@ -590,9 +615,7 @@
     this.CSS3AnimationTest.prototype.testSpecificHideAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, transition;
@@ -619,9 +642,7 @@
     this.CSS3AnimationTest.prototype.testDefaultShowAnimationPropertiesPassedToTransiton = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, transition;
@@ -647,9 +668,7 @@
     this.CSS3AnimationTest.prototype.testDefaultHideAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = this.getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, transition;
@@ -676,9 +695,15 @@
 
         // This is the configuration!!
         var config;
-        config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1","defaults":{"showElementFade":{"fps":11, "duration": 555, "easing": "easeInCubic"}}};
+        config = this.getDefaultCssConfig();
+        
+        config.defaults = {
+            "showElementFade": {
+                "fps": 11, 
+                "duration": 555,
+                "easing": "easeInCubic"
+            }
+        };
 
         queuedApplicationInit(
             queue, 
@@ -708,9 +733,15 @@
         expectAsserts(2);
 
         // This is the configuration!!        
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1","defaults":{"hideElementFade":{"fps" : 22, "duration": 777, "easing": "easeInQuint"}}};
+        var config;
+        config = this.getDefaultCssConfig();
+        config.defaults = {
+            "hideElementFade": {
+                "fps": 22, 
+                "duration": 777,
+                "easing": "easeInQuint"
+             }
+        };
 
         queuedApplicationInit(
             queue, 
@@ -730,6 +761,136 @@
                 assert('Check prototype override: ', durSpy.called);
                 assert('Check config value made it through: ', durSpy.returned(777));
             }, config
+        );
+    };
+
+    this.CSS3AnimationTest.prototype.getElement = function(styleProps) {
+        var el, prop, additionalProperties;
+        additionalProperties = styleProps || {};
+        el = {
+            style: {
+                setProperty: function(property, value) {
+                    el.style[property] = value;
+                },
+                getPropertyValue: function(property) {
+                    return el.style[property];
+                }
+            },
+            addEventListener: function(name, f) {},
+            removeEventListener: function(name, f) {}
+        };
+        return el;
+
+        for (prop in additionalProperties) {
+            if(prop.hasOwnProperty(prop)) {
+                el.style[prop] = styleProps[prop];
+            }
+        }
+    };
+
+    this.CSS3AnimationTest.prototype.testTweenElementStyleSetsStartAndEnd = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
+            function(application, MockElement) {
+                var device, transition, el, options, setSpy;
+                device = application.getDevice();
+                el = this.getElement({
+                    width: "10px",
+                    height: "10px"
+                });
+                setSpy = this.sandbox.spy(el.style, 'setProperty');
+
+                queue.call("Wait for tween", function(callbacks) {
+                    var onComplete;
+                    onComplete = callbacks.add(function() {
+                        assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
+                    });
+
+                    options = {
+                        el: el,
+                        from: { width: 60 },
+                        to: { width: 100 },
+                        duration: 50,
+                        onComplete: onComplete
+                    };
+
+                    device.tweenElementStyle(options);
+                    assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
+                    setTimeout(onComplete, 50);
+                });
+            },
+            config
+        );
+    };
+
+    this.CSS3AnimationTest.prototype.testTweenElementStyleFiresOnComplete = function(queue) {
+        expectAsserts(1);
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
+            function(application, MockElement) {
+                var device, transition, el, options, listenSpy;
+                device = application.getDevice();
+                el = this.getElement();
+
+                options = {
+                    el: el,
+                    from: { width: 60 },
+                    to: { width: 100 },
+                    duration: 50,
+                    onComplete: function(){},
+                    skipAnim: true
+                };
+
+                listenSpy = this.sandbox.spy(el, 'addEventListener');
+
+                device.tweenElementStyle(options);
+                assertTrue('onComplete callback added', listenSpy.calledOnce);
+
+            },
+            config
+        );
+    };
+
+    this.CSS3AnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
+        expectAsserts(1);
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
+            function(application, MockElement) {
+                var device, transition, el, options, fromSpy;
+                device = application.getDevice();
+                el = this.getElement();
+
+                options = {
+                    el: el,
+                    from: { width: 60 },
+                    to: { width: 100 },
+                    units: {
+                        width: "PIES"
+                    },
+                    duration: 50,
+                    onComplete: function(){},
+                    skipAnim: true
+                };
+
+                fromSpy = this.sandbox.spy(el.style, 'setProperty');
+                device.tweenElementStyle(options);
+                assertTrue('onComplete callback added', fromSpy.calledWith('width', '60PIES'));
+            },
+            config
         );
     };
 }());

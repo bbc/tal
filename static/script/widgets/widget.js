@@ -26,7 +26,7 @@
 
 /**
  * User interface widgets.
- * @name antie.widgets
+ * @name antie.widgets.Widget
  * @namespace
  */
 
