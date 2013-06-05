@@ -47,8 +47,6 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     throw new Error('Unable to initialise HbbTV broadcast source');
                 }
 
-                this._setBroadcastToFullScreen();
-
                 // adding as instance rather then class var as module instantiated via method
                 this._playStates = {
                     UNREALIZED: 0,
@@ -59,6 +57,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             showCurrentChannel: function () {
                 // check if exception is thrown by bindToCurrentChannel???
+                this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.bindToCurrentChannel();
             },
             stopCurrentChannel: function () {
