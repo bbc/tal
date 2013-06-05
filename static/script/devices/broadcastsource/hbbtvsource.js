@@ -48,7 +48,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 }
 
                 this._setBroadcastToFullScreen();
-                
+
                 // adding as instance rather then class var as module instantiated via method
                 this._playStates = {
                     UNREALIZED: 0,
@@ -105,7 +105,18 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             }
         });
-          
+
+        Device.prototype.isBroadcastSourceSupported = function() {
+            var broadcastSource = new HbbTVSource();
+
+            // Sometimes devices do not provide the broadcastVideoObject if the app is not launched from broadcast
+            if(broadcastSource._broadcastVideoObject.stop !== undefined) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
         Device.prototype.createBroadcastSource = function() {
             return new HbbTVSource();
         };

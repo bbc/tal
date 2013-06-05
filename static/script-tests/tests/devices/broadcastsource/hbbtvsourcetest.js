@@ -64,6 +64,28 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHbbTvApiIsAvailableReturnsTrue = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            assertTrue(device.isBroadcastSourceSupported());
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHbbTvApiIsNotAvailableReturnsFalse = function(queue) {
+        expectAsserts(1);
+
+        this.disableHBBTVSpecificApis();
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            assertFalse(device.isBroadcastSourceSupported());
+        }, config);
+    };
+
     this.hbbtvSource.prototype.testCreateBroadcastSourceSetsTheBroadcastToFullScreenAt720p = function(queue) {
         expectAsserts(2);
 
@@ -145,16 +167,16 @@
             assertTrue("Native HBBTV stop function called", hbbtvApiSpy.called);
         }, config);
     };
-    
+
     this.hbbtvSource.prototype.testStopCurrentChannelCallsBindWhenUnrealized = function(queue) {
         expectAsserts(1);
         var config;
         config = this.getGenericHBBTVConfig();
-        
+
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
@@ -162,19 +184,19 @@
                 hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
                 broadcastSource.stopCurrentChannel();
                 assertTrue("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
-            }, 
+            },
         config);
     };
-    
+
     this.hbbtvSource.prototype.testStopCurrentChannelDoesNotCallBindWhenNotUnrealized = function(queue) {
         expectAsserts(1);
         var config;
         config = this.getGenericHBBTVConfig();
-        
+
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
@@ -182,7 +204,7 @@
                 hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
                 broadcastSource.stopCurrentChannel();
                 assertFalse("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
-            }, 
+            },
         config);
     };
 
@@ -272,6 +294,14 @@
 
         var target = document.getElementsByTagName('body')[0];
         target.appendChild(hbbtvPlugin);
+    };
+
+    this.hbbtvSource.prototype.disableHBBTVSpecificApis = function(){
+        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
+        hbbtvPlugin.bindToCurrentChannel = undefined;
+        hbbtvPlugin.stop = undefined;
+        hbbtvPlugin.playState = undefined;
+        hbbtvPlugin.currentChannel = undefined;
     };
 
     this.hbbtvSource.prototype.removeHBBTVSpecificApis = function() {
