@@ -106,14 +106,20 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
         });
 
         Device.prototype.isBroadcastSourceSupported = function() {
-            var broadcastSource = new HbbTVSource();
+            var broadcastSourceSupported = true;
 
-            // Sometimes devices do not provide the broadcastVideoObject if the app is not launched from broadcast
-            if(broadcastSource._broadcastVideoObject.stop !== undefined) {
-                return true;
-            } else {
-                return false;
+            try {
+                var broadcastSource = new HbbTVSource();
+
+                // Sometimes devices do not provide the broadcastVideoObject if the app is not launched from broadcast
+                if (typeof broadcastSource._broadcastVideoObject.stop === "undefined") {
+                    broadcastSourceSupported = false;
+                }
+            } catch(e) {
+                broadcastSourceSupported = false;
             }
+
+            return broadcastSourceSupported;
         };
 
         Device.prototype.createBroadcastSource = function() {
