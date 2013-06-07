@@ -98,6 +98,38 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenPlayStateIsUnrealizedAndBindToCurrentChannelThrowsExceptionReturnsFalse = function(queue) {
+        expectAsserts(1);
+
+        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
+        hbbtvPlugin.bindToCurrentChannel = function() {
+            throw Error("BindToCurrentChannel Error");
+        };
+        this.sandbox.stub(this.hbbtvPlugin, "playState", 0);
+
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            assertFalse(device.isBroadcastSourceSupported());
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testCallingIsBroadcastSourceSupportedTwiceOnlyChecksIfBroadcastSourceObjectIsAccessableOnce = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/hbbtvsource"], function(application, HbbtvTvSource) {
+            var hbbtvSourceConstructor = this.sandbox.spy(HbbtvTvSource.prototype, "init");
+
+            var device = application.getDevice();
+            device.isBroadcastSourceSupported();
+            device.isBroadcastSourceSupported();
+
+            assertTrue("HbbTVSource constructor called only once", hbbtvSourceConstructor.calledOnce);
+        }, config);
+    };
+
     this.hbbtvSource.prototype.testShowCurrentChannelSetsTheBroadcastToFullScreenAt720p = function(queue) {
         expectAsserts(2);
 
@@ -179,6 +211,27 @@
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.stopCurrentChannel();
             assertTrue("Native HBBTV stop function called", hbbtvApiSpy.called);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testStopCurrentChannelThrowsExceptionIfPlayStateIsUnrealizedAndBindToCurrentChannelThrowsException = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+            this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
+
+            var hbbtvPlugin = document.getElementById('broadcastVideoObject');
+            hbbtvPlugin.bindToCurrentChannel = function() {
+                throw Error("BindToCurrentChannel error");
+            };
+
+            assertException("Unable to bind to current channel", function() {
+                broadcastSource.stopCurrentChannel();
+            });
         }, config);
     };
 
