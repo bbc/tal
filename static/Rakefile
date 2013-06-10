@@ -47,6 +47,7 @@ TEST_COMMAND       = "java -Xmx1G -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_o
 $test_files		   = ''
 $jtd_config 	   = ''
 $jtd_server_pid    = 0
+$test_exit_code    = 0
 $webdriver_object  = nil
 $dirty = false
 
@@ -75,6 +76,7 @@ task :test do
     wait_for_browser
     puts "[INFO] Starting Tests " + TEST_COMMAND
     system( TEST_COMMAND )
+    $test_exit_code = $?.exitstatus
 end
 
 desc "Launch and navigate a browser to the jsTestDriver server."
@@ -96,10 +98,8 @@ at_exit do
     if $dirty == true
         shutDown
     end
-    
-    if ($? && $?.exited?)
-      exit($?.exitstatus)
-   end     
+
+    exit($test_exit_code)
 end
 
 #default - run the tests
@@ -261,7 +261,7 @@ def shutDown
 	puts "[INFO] Shutting Down"
 	
 	if( $webdriver_object )
-		puts "[INFO] Waiting For Chrome Driver To Quit"
+		puts "[INFO] Waiting For WebDriver To Quit"
 		begin
 			sleep( 5 )
 			$webdriver_object.quit
