@@ -1,4 +1,5 @@
 #TAL -- TV Application Layer
+[<img src="https://api.travis-ci.org/fmtvp/tal.png?branch=master" align="right" alt="Build Status" />](https://travis-ci.org/fmtvp/tal)
 ![TAL](http://fmtvp.github.com/tal/img/tal-logo-bw-small.jpg)
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development

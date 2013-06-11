@@ -43,7 +43,7 @@
             [
                 'antie/devices/anim/css3/transition',
                 'antie/devices/anim/css3/transitiondefinition',
-                'antie/devices/anim/css3/transitionendpoints',
+                'antie/devices/anim/shared/transitionendpoints',
                 'mocks/mockelement',
                 'antie/devices/anim/css3/transitionelement'
             ],

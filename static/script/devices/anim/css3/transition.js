@@ -75,13 +75,13 @@ require.def(
                 },
                 
                 stop: function(skipToEnd) {
-                    var currentStyle, currentProps, transitionTargets, prop, i;
+                    var currentStyle, currentProps, transitionTargets, prop, i, skip;
                     if(!this._completed) {
-                        
-                        if(typeof skipToEnd !== 'boolean') {
-                            skipToEnd = true;
+                        skip = skipToEnd;
+                        if(typeof skip !== 'boolean') {
+                            skip = true;
                         }
-                        if(skipToEnd) {
+                        if(skip) {
                             this._endFn();
                         } else {
                             transitionTargets = this._ownTransitions.getProperties();

@@ -40,10 +40,9 @@ require.def(
                  * @param config animation configuration object
                  */
                 init: function(options, config) {
-                    var units, property, timeEasing;
+                    var property, timeEasing;
                     config = config || {};
                     this._super();
-                    units = options.units || {};
                     for(property in options.to) {
                         if(options.to.hasOwnProperty(property)) {
                             timeEasing = options.easing || config.easing;

@@ -473,6 +473,24 @@ require.def('antie/devices/device',
             showElement: function(options) {
             },
             /**
+             * -PROTECTED- Tweens a property (or properties) of an element's style from one value to another.
+             * Note fps only used by styletopleft modifier.
+             * @param {Object} options Details of the element whose style will be tweened, with parameters describing tween.
+             * @param {Element} options.el The element with a style you wish to tween.
+             * @param {Object} options.to A property: value map of the style properties you wish to tween and the numerical value of its destination, e.g { width: 30 }
+             * @param {Number} options.duration: The duration of the tween in ms
+             * @param {Object} options.from A property: value map of the style properties you wish to set at the start of the animation, e.g. { width: 0 }. If unset, the existing value will be used.
+             * @param {Boolean} [options.skipAnim] By default the tween will be animated. Set this to true for the tween to occur immediately. Any onComplete callback will still fire.
+             * @param {Function} [options.onComplete] Callback function to be called when the tween is complete.
+             * @param {String} [options.easing] Easing style for animation.
+             * @param {Object} [options.units] Units to be appended to the style values in a property -> value map. (e.g. { width: 'px' }). Defaults are set in antie.devices.anim.shared.transitionendpoints
+             * @param {Number} [options.fps] Frames per second of animation (styletopleft only)
+             * @returns {Object} A handle to animation started. This should only be used for passing to stopAnimation and nothing else should be inferred by its value. If no animation occurs, null may be returned but should not be used as an indicator.
+             */
+            tweenElementStyle: function(options){
+
+            },
+            /**
              * Stops the specified animation. The any completeHandler for the animation will be executed.
              * @param {object} anim A handle to the animation you wish to stop.
              */

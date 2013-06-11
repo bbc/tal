@@ -25,7 +25,7 @@
  */
 
 require.def(
-    'antie/devices/anim/css3/transitionendpoints',
+    'antie/devices/anim/shared/transitionendpoints',
     [
         'antie/class'
     ],
@@ -39,12 +39,12 @@ require.def(
          */
         TransitionEndPoints = Class.extend(
             {
-                init: function(options, config) {
+                init: function(options) {
                     this._to = {};
                     this._from = {};
                     this._onComplete = function() {};
                     if(options) {
-                        this.setFromOptions(options, config);
+                        this.setFromOptions(options);
                     }
                 },
                 
@@ -122,6 +122,24 @@ require.def(
                     return equal;
                 },
                 
+                completeOriginsUsingElement: function(el) {
+                    function shouldReplace() {   
+                        return (elementValue !== null && elementValue !== undefined && self._from[property] === undefined);
+                    }
+                    
+                    var elementValue, self, property;
+                    self = this;
+                    
+                    for (property in this._to) {
+                        if(this._to.hasOwnProperty(property)) { 
+                             elementValue = el.style.getPropertyValue(property); 
+                             if(shouldReplace()) {
+                                this._from[property] = elementValue; 
+                            }
+                        }
+                    }
+                },
+                
                 _addValuesToFrom: function(property, options) {
                     if(options.from && options.from.hasOwnProperty(property)) {
                         this._from[property] = this.addUnitsToPropertyValue(property, options.from[property]);
@@ -132,7 +150,11 @@ require.def(
         
         TransitionEndPoints.defaultUnits = {
             top:    "px",
-            left:   "px"
+            left:   "px",
+            bottom: "px",
+            right:  "px",
+            width:  "px",
+            height: "px"
         };
         
         return TransitionEndPoints;
