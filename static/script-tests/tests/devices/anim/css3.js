@@ -820,6 +820,9 @@
                         onComplete: onComplete
                     };
 
+                    // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                    this.sandbox.stub(window, 'getComputedStyle');
+
                     device.tweenElementStyle(options);
                     assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
                     setTimeout(onComplete, 50);
@@ -850,6 +853,9 @@
                     onComplete: function(){},
                     skipAnim: true
                 };
+
+                // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                this.sandbox.stub(window, 'getComputedStyle');
 
                 listenSpy = this.sandbox.spy(el, 'addEventListener');
 
@@ -885,6 +891,9 @@
                     onComplete: function(){},
                     skipAnim: true
                 };
+
+                // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                this.sandbox.stub(window, 'getComputedStyle');
 
                 fromSpy = this.sandbox.spy(el.style, 'setProperty');
                 device.tweenElementStyle(options);
