@@ -203,11 +203,11 @@ end
 def wait_for_server
 	puts "[INFO] Waiting For JsTestDriver Server To Start";
 	uri = URI.parse( $params[ :server ] )
+    lastResponseCode = "0"
 
     while true
       begin
       	response = Net::HTTP.get_response( uri )
-        lastResponseCode = response.code
       	if( response.code == "200" )
       		puts "[INFO] Server Started"
             break;
