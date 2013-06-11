@@ -59,6 +59,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Check if exception is thrown by bindToCurrentChannel?
                 this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.bindToCurrentChannel();
+                this._broadcastVideoObject.style.display = "block";
             },
             stopCurrentChannel: function () {
                 try {
@@ -70,6 +71,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 }
 
                 this._broadcastVideoObject.stop();
+                this._broadcastVideoObject.style.display = "none";
             },
             getCurrentChannelName: function () {
                 var channelConfig = this._broadcastVideoObject.currentChannel;
@@ -107,51 +109,15 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
-            },
-            /**
-             * Checks that the broadcastVideoObject is in a state that will allow the device to control broadcast.
-             */
-            _checkBroadcastObjectIsAccessible : function() {
-                // Sometimes the broadcastVideoObject methods are undefined if the app is not launched from broadcast
-                if (typeof this._broadcastVideoObject.stop === "undefined") {
-                    return false;
-                }
-
-                // Sometimes the broadcastVideoObject methods are defined but throw an exception if
-                // the app is not launched from broadcast (security exception?)
-                try {
-                    this.stopCurrentChannel();
-                } catch(e) {
-                    return false;
-                }
-
-                return true;
             }
         });
 
         Device.prototype.isBroadcastSourceSupported = function() {
-            var isDeviceSupported = true;
-
-            try {
-                var broadcastSource = new HbbTVSource();
-                isDeviceSupported = broadcastSource._checkBroadcastObjectIsAccessible();
-            } catch (e) {
-                isDeviceSupported = false;
-            }
-
-            Device.prototype.isBroadcastSourceSupported = function() {
-                return isDeviceSupported;
-            };
-
-            return isDeviceSupported;
+            return this.getHistorian().hasBroadcastOrigin();
         };
 
         Device.prototype.createBroadcastSource = function() {
             return new HbbTVSource();
         };
-
-        // Return the HbbTVSource object for unit testing purposes only, HbbTVSource objects should
-        // be instantiated using getCurrentApplication().getDevice().createBroadcastSource();
-        return HbbTVSource;
     }
 );
