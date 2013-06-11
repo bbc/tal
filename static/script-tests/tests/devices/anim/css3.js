@@ -776,16 +776,16 @@
                     return el.style[property];
                 }
             },
-            addEventListener: function(name, f) {},
-            removeEventListener: function(name, f) {}
+            addEventListener: function() {},
+            removeEventListener: function() {}
         };
-        return el;
 
         for (prop in additionalProperties) {
             if(prop.hasOwnProperty(prop)) {
                 el.style[prop] = styleProps[prop];
             }
         }
+        return el;
     };
 
     this.CSS3AnimationTest.prototype.testTweenElementStyleSetsStartAndEnd = function(queue) {
@@ -797,8 +797,8 @@
             queue,
             'lib/mockapplication',
             [],
-            function(application, MockElement) {
-                var device, transition, el, options, setSpy;
+            function(application) {
+                var device, el, options, setSpy;
                 device = application.getDevice();
                 el = this.getElement({
                     width: "10px",
@@ -840,8 +840,8 @@
             queue,
             'lib/mockapplication',
             [],
-            function(application, MockElement) {
-                var device, transition, el, options, listenSpy;
+            function(application) {
+                var device, el, options, listenSpy;
                 device = application.getDevice();
                 el = this.getElement();
 
@@ -875,8 +875,8 @@
             queue,
             'lib/mockapplication',
             [],
-            function(application, MockElement) {
-                var device, transition, el, options, fromSpy;
+            function(application) {
+                var device, el, options, fromSpy;
                 device = application.getDevice();
                 el = this.getElement();
 
@@ -897,7 +897,7 @@
 
                 fromSpy = this.sandbox.spy(el.style, 'setProperty');
                 device.tweenElementStyle(options);
-                assertTrue('onComplete callback added', fromSpy.calledWith('width', '60PIES'));
+                assertTrue('setProperty called with expected parameters', fromSpy.calledWith('width', '60PIES'));
             },
             config
         );
