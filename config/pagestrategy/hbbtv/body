@@ -9,4 +9,4 @@
 //]]>
 </script>
 
-<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute;"></object>
+<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute; display: none;"></object>
