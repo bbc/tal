@@ -207,11 +207,15 @@ def wait_for_server
     while true
       begin
       	response = Net::HTTP.get_response( uri )
+        lastResponseCode = response.code
       	if( response.code == "200" )
       		puts "[INFO] Server Started"
             break;
      	end
-     	puts "response = #{response.code}"
+        if( response.code != lastResponseCode )
+          lastResponseCode = response.code
+          puts "response = #{response.code}"
+        end
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
              Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
       end
