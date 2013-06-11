@@ -277,7 +277,7 @@
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Wait for cross domain post", function(callbacks) {
 
-				device.crossDomainPost("http://endpoint.invalid/test", {"goodbye":"salford", "hello":"world"}, {
+				device.crossDomainPost("http://example.com/test", {"goodbye":"salford", "hello":"world"}, {
 					onLoad: callbacks.add(function() { assert(true); }),
 					onError: callbacks.addErrback('post should complete succesfully'),
 					blankUrl: "/test/script-tests/fixtures/blank.html"
