@@ -820,7 +820,7 @@
                         onComplete: onComplete
                     };
 
-                    // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                    // The real Gecko implementation throws an exception when fed a fake element
                     this.sandbox.stub(window, 'getComputedStyle');
 
                     device.tweenElementStyle(options);
@@ -854,7 +854,7 @@
                     skipAnim: true
                 };
 
-                // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                // The real Gecko implementation throws an exception when fed a fake element
                 this.sandbox.stub(window, 'getComputedStyle');
 
                 listenSpy = this.sandbox.spy(el, 'addEventListener');
@@ -892,7 +892,7 @@
                     skipAnim: true
                 };
 
-                // Firefox cries if you try to call this on a fake DOM element, so stub it out
+                // The real Gecko implementation throws an exception when fed a fake element
                 this.sandbox.stub(window, 'getComputedStyle');
 
                 fromSpy = this.sandbox.spy(el.style, 'setProperty');
