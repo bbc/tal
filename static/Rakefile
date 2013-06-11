@@ -203,6 +203,7 @@ end
 def wait_for_server
 	puts "[INFO] Waiting For JsTestDriver Server To Start";
 	uri = URI.parse( $params[ :server ] )
+    lastResponseCode = "0"
 
     while true
       begin
@@ -211,7 +212,10 @@ def wait_for_server
       		puts "[INFO] Server Started"
             break;
      	end
-     	puts "response = #{response.code}"
+        if( response.code != lastResponseCode )
+          lastResponseCode = response.code
+          puts "response = #{response.code}"
+        end
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNREFUSED, Errno::ECONNRESET, EOFError,
              Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
       end
