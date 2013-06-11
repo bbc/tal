@@ -796,8 +796,8 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application) {
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
                 var device, el, options, setSpy;
                 device = application.getDevice();
                 el = this.getElement({
@@ -820,8 +820,7 @@
                         onComplete: onComplete
                     };
 
-                    // The real Gecko implementation throws an exception when fed a fake element
-                    this.sandbox.stub(window, 'getComputedStyle');
+                    this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
 
                     device.tweenElementStyle(options);
                     assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
@@ -839,8 +838,8 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application) {
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
                 var device, el, options, listenSpy;
                 device = application.getDevice();
                 el = this.getElement();
@@ -854,8 +853,7 @@
                     skipAnim: true
                 };
 
-                // The real Gecko implementation throws an exception when fed a fake element
-                this.sandbox.stub(window, 'getComputedStyle');
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
 
                 listenSpy = this.sandbox.spy(el, 'addEventListener');
 
@@ -874,8 +872,8 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application) {
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
                 var device, el, options, fromSpy;
                 device = application.getDevice();
                 el = this.getElement();
@@ -892,8 +890,7 @@
                     skipAnim: true
                 };
 
-                // The real Gecko implementation throws an exception when fed a fake element
-                this.sandbox.stub(window, 'getComputedStyle');
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
 
                 fromSpy = this.sandbox.spy(el.style, 'setProperty');
                 device.tweenElementStyle(options);
