@@ -47,8 +47,6 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     throw new Error('Unable to initialise HbbTV broadcast source');
                 }
 
-                this._setBroadcastToFullScreen();
-                
                 // adding as instance rather then class var as module instantiated via method
                 this._playStates = {
                     UNREALIZED: 0,
@@ -58,13 +56,19 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 };
             },
             showCurrentChannel: function () {
-                // check if exception is thrown by bindToCurrentChannel???
+                // Check if exception is thrown by bindToCurrentChannel?
+                this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.bindToCurrentChannel();
             },
             stopCurrentChannel: function () {
-                if (this.getPlayState() === this._playStates.UNREALIZED) {
-                    this._broadcastVideoObject.bindToCurrentChannel();
+                try {
+                    if (this.getPlayState() === this._playStates.UNREALIZED) {
+                        this._broadcastVideoObject.bindToCurrentChannel();
+                    }
+                } catch(e) {
+                    throw Error("Unable to bind to current channel");
                 }
+
                 this._broadcastVideoObject.stop();
             },
             getCurrentChannelName: function () {
@@ -103,11 +107,51 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
+            },
+            /**
+             * Checks that the broadcastVideoObject is in a state that will allow the device to control broadcast.
+             */
+            _checkBroadcastObjectIsAccessible : function() {
+                // Sometimes the broadcastVideoObject methods are undefined if the app is not launched from broadcast
+                if (typeof this._broadcastVideoObject.stop === "undefined") {
+                    return false;
+                }
+
+                // Sometimes the broadcastVideoObject methods are defined but throw an exception if
+                // the app is not launched from broadcast (security exception?)
+                try {
+                    this.stopCurrentChannel();
+                } catch(e) {
+                    return false;
+                }
+
+                return true;
             }
         });
-          
+
+        Device.prototype.isBroadcastSourceSupported = function() {
+            var isDeviceSupported = true;
+
+            try {
+                var broadcastSource = new HbbTVSource();
+                isDeviceSupported = broadcastSource._checkBroadcastObjectIsAccessible();
+            } catch (e) {
+                isDeviceSupported = false;
+            }
+
+            Device.prototype.isBroadcastSourceSupported = function() {
+                return isDeviceSupported;
+            };
+
+            return isDeviceSupported;
+        };
+
         Device.prototype.createBroadcastSource = function() {
             return new HbbTVSource();
         };
+
+        // Return the HbbTVSource object for unit testing purposes only, HbbTVSource objects should
+        // be instantiated using getCurrentApplication().getDevice().createBroadcastSource();
+        return HbbTVSource;
     }
 );

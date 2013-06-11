@@ -1,10 +1,17 @@
 <object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px;"></object>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
-	var app = document.getElementById('appmgr').getOwnerApplication(document);
-	app.privateData.keyset.setValue(0x330);
-	app.privateData.keyset.value = 0x330;
+	var appMgr = document.getElementById('appmgr');
+
+	// Sometimes devices do not provide the appmgr if the app is not launched from broadcast
+	if(appMgr.getOwnerApplication) {
+        var app = appMgr.getOwnerApplication(document);
+        app.privateData.keyset.setValue(0x330);
+        app.privateData.keyset.value = 0x330;
+	} else {
+	    // The device must not have hbbtv APIs available
+	}
 //]]>
 </script>
 
-<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute;"></object>
+<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute; width: 0px; height: 0px;"></object>
