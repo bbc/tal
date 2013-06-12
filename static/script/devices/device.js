@@ -629,8 +629,11 @@ require.def('antie/devices/device',
             exit: function() {
                 throw new Error('Not supported on this device.');
             },
+            /**
+             * Exits to broadcast if this function has been overloaded by a modifier. Otherwise, calls exit().
+             */
             exitToBroadcast: function() {
-                throw new Error('Broadcast exit is not supported on this device.');
+                this.exit();
             },
             /**
              * Get a storage provider of a given type for the specified namespace.

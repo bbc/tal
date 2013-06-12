@@ -140,18 +140,8 @@ require.def("antie/historian",
              * @returns {Boolean} True if the history stack contains one or more valid return URLs.
              */
             hasHistory: function() {
-                var self = this;
-                function hasBroadcastEntryOnly() {
-                    var broadcastItem = Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
-                    return self._historyArray.length === 1 && self._historyArray[0] === broadcastItem;
-                }
-
-                if (this._historyArray.length === 0) {
-                    return false;
-                } else {
-                    // Has a URL history, unless there's only one history item and it's the 'return to broadcast' special case.
-                    return !hasBroadcastEntryOnly();
-                }
+                var historyMinimumLength = this.hasBroadcastOrigin() ? 2 : 1;
+                return this._historyArray.length >= historyMinimumLength;
             },
 
             /**
