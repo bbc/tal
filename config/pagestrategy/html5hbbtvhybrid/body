@@ -5,9 +5,9 @@
 
 	// Sometimes devices do not provide the appmgr if the app is not launched from broadcast
 	if(appMgr.getOwnerApplication) {
-        var app = appMgr.getOwnerApplication(document);
-        app.privateData.keyset.setValue(0x330);
-        app.privateData.keyset.value = 0x330;
+	        var app = appMgr.getOwnerApplication(document);
+	        app.privateData.keyset.setValue(0x330);
+	        app.privateData.keyset.value = 0x330;
 	} else {
 	    // The device must not have hbbtv APIs available
 	}
