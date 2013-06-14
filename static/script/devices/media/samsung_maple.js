@@ -389,6 +389,7 @@ require.def(
                 this.stop();
             },
             _resetVideoSize: function() {
+                // Workaround for the Samsung 2010 device: video playback starts in a small window by default.
                 if (this._mediaType === "video") {
                     var dimensions = this.getCurrentApplication().getDevice().getScreenSize();
                     this.setWindow(0, 0, dimensions.width, dimensions.height);
