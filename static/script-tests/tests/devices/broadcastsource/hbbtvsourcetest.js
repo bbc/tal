@@ -64,71 +64,41 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHbbTvApiIsAvailableReturnsTrue = function(queue) {
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
         expectAsserts(1);
 
         var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
             var device = application.getDevice();
+
+            var historian = device.getHistorian();
+
+            this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
+                return false;
+            });
+
+
+            assertFalse(device.isBroadcastSourceSupported());
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianHasBroadcastOriginReturnsTrue = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
+            var device = application.getDevice();
+
+            var historian = device.getHistorian();
+
+            this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
+                return true;
+            });
+
             assertTrue(device.isBroadcastSourceSupported());
         }, config);
     };
 
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHbbTvApiIsNotAvailableReturnsFalse = function(queue) {
-        expectAsserts(1);
-
-        this.disableHBBTVSpecificApis();
-
-        var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            assertFalse(device.isBroadcastSourceSupported());
-        }, config);
-    };
-
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenBroadcastObjectNotPresentReturnsFalse = function(queue) {
-        expectAsserts(1);
-
-        this.removeHBBTVSpecificApis();
-
-        var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            assertFalse(device.isBroadcastSourceSupported());
-        }, config);
-    };
-
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenPlayStateIsUnrealizedAndBindToCurrentChannelThrowsExceptionReturnsFalse = function(queue) {
-        expectAsserts(1);
-
-        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
-        hbbtvPlugin.bindToCurrentChannel = function() {
-            throw Error("BindToCurrentChannel Error");
-        };
-        this.sandbox.stub(this.hbbtvPlugin, "playState", 0);
-
-
-        var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            assertFalse(device.isBroadcastSourceSupported());
-        }, config);
-    };
-
-    this.hbbtvSource.prototype.testCallingIsBroadcastSourceSupportedTwiceOnlyChecksIfBroadcastSourceObjectIsAccessableOnce = function(queue) {
-        expectAsserts(1);
-
-        var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/hbbtvsource"], function(application, HbbtvTvSource) {
-            var hbbtvSourceConstructor = this.sandbox.spy(HbbtvTvSource.prototype, "init");
-
-            var device = application.getDevice();
-            device.isBroadcastSourceSupported();
-            device.isBroadcastSourceSupported();
-
-            assertTrue("HbbTVSource constructor called only once", hbbtvSourceConstructor.calledOnce);
-        }, config);
-    };
 
     this.hbbtvSource.prototype.testShowCurrentChannelSetsTheBroadcastToFullScreenAt720p = function(queue) {
         expectAsserts(2);
@@ -359,14 +329,6 @@
 
         var target = document.getElementsByTagName('body')[0];
         target.appendChild(hbbtvPlugin);
-    };
-
-    this.hbbtvSource.prototype.disableHBBTVSpecificApis = function() {
-        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
-        hbbtvPlugin.bindToCurrentChannel = undefined;
-        hbbtvPlugin.stop = undefined;
-        hbbtvPlugin.playState = undefined;
-        hbbtvPlugin.currentChannel = undefined;
     };
 
     this.hbbtvSource.prototype.removeHBBTVSpecificApis = function() {

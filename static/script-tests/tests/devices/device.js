@@ -132,9 +132,9 @@
 
         queuedRequire(queue, ["antie/devices/device"], function(Device) {
             var device = new Device(antie.framework.deviceConfiguration);
-            assertException("Default device implementation should throw exception on exitToBroadcast()", function() {
-                device.exitToBroadcast();
-            });
+            var exitStub = this.sandbox.stub(device, 'exit');
+            device.exitToBroadcast();
+            assertEquals("Default device implementation calls exit() on exitToBroadcast()", 1, exitStub.callCount);
         });
     };
 

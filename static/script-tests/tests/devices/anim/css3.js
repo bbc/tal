@@ -776,16 +776,16 @@
                     return el.style[property];
                 }
             },
-            addEventListener: function(name, f) {},
-            removeEventListener: function(name, f) {}
+            addEventListener: function() {},
+            removeEventListener: function() {}
         };
-        return el;
 
         for (prop in additionalProperties) {
             if(prop.hasOwnProperty(prop)) {
                 el.style[prop] = styleProps[prop];
             }
         }
+        return el;
     };
 
     this.CSS3AnimationTest.prototype.testTweenElementStyleSetsStartAndEnd = function(queue) {
@@ -796,9 +796,9 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application, MockElement) {
-                var device, transition, el, options, setSpy;
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
+                var device, el, options, setSpy;
                 device = application.getDevice();
                 el = this.getElement({
                     width: "10px",
@@ -820,6 +820,8 @@
                         onComplete: onComplete
                     };
 
+                    this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
+
                     device.tweenElementStyle(options);
                     assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
                     setTimeout(onComplete, 50);
@@ -836,9 +838,9 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application, MockElement) {
-                var device, transition, el, options, listenSpy;
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
+                var device, el, options, listenSpy;
                 device = application.getDevice();
                 el = this.getElement();
 
@@ -850,6 +852,8 @@
                     onComplete: function(){},
                     skipAnim: true
                 };
+
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
 
                 listenSpy = this.sandbox.spy(el, 'addEventListener');
 
@@ -868,9 +872,9 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            [],
-            function(application, MockElement) {
-                var device, transition, el, options, fromSpy;
+            ['antie/devices/anim/css3/transitionelement'],
+            function(application, TransitionElement) {
+                var device, el, options, fromSpy;
                 device = application.getDevice();
                 el = this.getElement();
 
@@ -886,9 +890,11 @@
                     skipAnim: true
                 };
 
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
+
                 fromSpy = this.sandbox.spy(el.style, 'setProperty');
                 device.tweenElementStyle(options);
-                assertTrue('onComplete callback added', fromSpy.calledWith('width', '60PIES'));
+                assertTrue('setProperty called with expected parameters', fromSpy.calledWith('width', '60PIES'));
             },
             config
         );
