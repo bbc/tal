@@ -203,8 +203,10 @@ require.def(
                     this._getSamsungFormattedUrl += "|COMPONENT=HLS";
                 }
 
-                dimensions = this.getCurrentApplication().getDevice().getScreenSize();
-                this.setWindow(0, 0, dimensions.width, dimensions.height);
+                if (this._mediaType === "video") {
+                    dimensions = this.getCurrentApplication().getDevice().getScreenSize();
+                    this.setWindow(0, 0, dimensions.width, dimensions.height);
+                }
             },
             getSources: function() {
                 return [this.mediaSource];
