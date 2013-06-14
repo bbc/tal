@@ -9,7 +9,7 @@ To create a new object you have to indicate the `configPath` and the `frameworkP
 ```javascript
 var configPath = "config/";
 var frameworkPath = "config/framework/";
-var antie = require("node/antieframework");
+var AntieFramework = require("node/antieframework");
 
 var antie = new AntieFramework(configPath, frameworkPath);
 ```
