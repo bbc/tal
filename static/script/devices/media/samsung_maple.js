@@ -182,7 +182,6 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(sources, tags) {
-                var dimensions;
                 this.videoPlayerState = {
                     durationSeconds  : 0,
                     currentTime: 0,
@@ -203,10 +202,7 @@ require.def(
                     this._getSamsungFormattedUrl += "|COMPONENT=HLS";
                 }
 
-                if (this._mediaType === "video") {
-                    dimensions = this.getCurrentApplication().getDevice().getScreenSize();
-                    this.setWindow(0, 0, dimensions.width, dimensions.height);
-                }
+                this._resetVideoSize();
             },
             getSources: function() {
                 return [this.mediaSource];
@@ -283,6 +279,7 @@ require.def(
                     // if we are in the initial set up, lets try resuming instead
                     if ((!jumped || jumped < 0) && this.videoPlayerState.currentTime < 1) {
                         this.playerPlugin.Stop();
+                        this._resetVideoSize();
                         this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, timeToSeekTo);
                     }
                 } else if (offsetInSeconds < 0) {
@@ -390,6 +387,12 @@ require.def(
             },
             destroy: function() {
                 this.stop();
+            },
+            _resetVideoSize: function() {
+                if (this._mediaType === "video") {
+                    var dimensions = this.getCurrentApplication().getDevice().getScreenSize();
+                    this.setWindow(0, 0, dimensions.width, dimensions.height);
+                }
             }
         });
 
