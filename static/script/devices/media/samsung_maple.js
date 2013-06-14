@@ -271,6 +271,7 @@ require.def(
                 // TODO: Samsung implementation
                 return false;
             },
+            // attribute double currentTime;
             setCurrentTime: function(timeToSeekTo) {
                 var offsetInSeconds = timeToSeekTo - this.videoPlayerState.currentTime;
                 if (offsetInSeconds > 0) {
