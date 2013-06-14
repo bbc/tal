@@ -279,7 +279,7 @@ require.def(
                     var jumped = this.playerPlugin.JumpForward(offsetInSeconds);
                     // Jump forward appears not to work consistently in the initial moments of a video playback.
                     // if we are in the initial set up, lets try resuming instead
-                    if((!jumped || jumped < 0) && this.videoPlayerState.currentTime < 1 ) {
+                    if ((!jumped || jumped < 0) && this.videoPlayerState.currentTime < 1) {
                         this.playerPlugin.Stop();
                         this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, timeToSeekTo);
                     }
