@@ -35,28 +35,28 @@ require.def(
         'antie/mediasource'
     ],
     function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
-		function audioLevelCorrection(t) {
-			return t * 40.0;
-		}
- 		function invertAudioLevelCorrection(x) {
-			 return x / 40.0;
-		}
+        function audioLevelCorrection(t) {
+            return t * 40.0;
+        }
+        function invertAudioLevelCorrection(x) {
+            return x / 40.0;
+        }
         var SamsungPlayer = Media.extend({
             init: function(id, mediaType) {
                 this._super(id);
 
                 this.playerPlugin = document.getElementById('playerPlugin');
-	            this.audioPlugin = document.getElementById('audioPlugin');
-	            this.tvmwPlugin = document.getElementById('pluginObjectTVMW');
-	            this.originalSource = this.tvmwPlugin.GetSource();
+                this.audioPlugin = document.getElementById('audioPlugin');
+                this.tvmwPlugin = document.getElementById('pluginObjectTVMW');
+                this.originalSource = this.tvmwPlugin.GetSource();
 
-				this.mediaSource = null;
+                this.mediaSource = null;
 
-				var self = this;
-	            window.addEventListener('unload', function () {
-					self.playerPlugin.Stop();
-					self.tvmwPlugin.SetSource(self.originalSource);
-				}, false);
+                var self = this;
+                window.addEventListener('unload', function () {
+                    self.playerPlugin.Stop();
+                    self.tvmwPlugin.SetSource(self.originalSource);
+                }, false);
 
                 if (mediaType == "audio") {
                     this._mediaType = "audio";
@@ -72,8 +72,8 @@ require.def(
                     playbackRate: undefined,
                     paused: false,
                     ended: false,
-	                seeking: false,
-	                playing: false
+                    seeking: false,
+                    playing: false
                 };
 
                 this.registerEventHandlers();
@@ -87,15 +87,15 @@ require.def(
                 // functions attached later.
                 var self = this;
 
-				window.SamsungMapleOnBufferingStart = function() {
-					self.bubbleEvent(new MediaEvent("waiting", self));
-				};
-				this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
+                window.SamsungMapleOnBufferingStart = function() {
+                    self.bubbleEvent(new MediaEvent("waiting", self));
+                };
+                this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
 
-				window.SamsungMapleOnBufferingComplete = function() {
-					self.bubbleEvent(new MediaEvent("playing", self));
-				};
-				this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
+                window.SamsungMapleOnBufferingComplete = function() {
+                    self.bubbleEvent(new MediaEvent("playing", self));
+                };
+                this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
 
                 window.SamsungMapleOnConnectionFailed = function() {
                     self.bubbleEvent(new MediaErrorEvent(self, "Connection failed"));
@@ -128,44 +128,44 @@ require.def(
                     self.videoPlayerState.durationSeconds = self.playerPlugin.GetDuration() / 1000;
                     self.bubbleEvent(new MediaEvent("loadedmetadata", self));
                     self.bubbleEvent(new MediaEvent("durationchange", self));
-	                self.bubbleEvent(new MediaEvent("canplay", self));
-	                self.bubbleEvent(new MediaEvent("canplaythrough", self));
-		           
+                    self.bubbleEvent(new MediaEvent("canplay", self));
+                    self.bubbleEvent(new MediaEvent("canplaythrough", self));
+
                 };
                 this.playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
 
                 window.SamsungMapleOnCurrentPlayTime = function (timeMs) {
                     var seconds = timeMs / 1000.0;
-	                if ((self.mediaSource.isLiveStream() && self.videoPlayerState.ended == false) ||
-		                       (seconds >= 0 && seconds < self.videoPlayerState.durationSeconds)) {
-		                self.videoPlayerState.currentTime = seconds;
-		                if (self.videoPlayerState.seeking) {
-			                self.videoPlayerState.seeking = false;
-			                self.bubbleEvent(new MediaEvent('seeked', self));
-		                }
-		                if (self.videoPlayerState.playing === false) {
-			                self.bubbleEvent(new MediaEvent('play', self));
-			                self.bubbleEvent(new MediaEvent('playing', self));
-			                self.videoPlayerState.playing = true;
-		                }
-		                else {
-		                	// don't throw a timeupdate on the first event
-		                	window.SamsungMapleOnTimeUpdate(seconds);
-		                }
-	                }
+                    if ((self.mediaSource.isLiveStream() && self.videoPlayerState.ended == false) ||
+                        (seconds >= 0 && seconds < self.videoPlayerState.durationSeconds)) {
+                        self.videoPlayerState.currentTime = seconds;
+                        if (self.videoPlayerState.seeking) {
+                            self.videoPlayerState.seeking = false;
+                            self.bubbleEvent(new MediaEvent('seeked', self));
+                        }
+                        if (self.videoPlayerState.playing === false) {
+                            self.bubbleEvent(new MediaEvent('play', self));
+                            self.bubbleEvent(new MediaEvent('playing', self));
+                            self.videoPlayerState.playing = true;
+                        }
+                        else {
+                            // don't throw a timeupdate on the first event
+                            window.SamsungMapleOnTimeUpdate(seconds);
+                        }
+                    }
                 };
                 this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
 
-				window.SamsungMapleOnTimeUpdate = function(seconds) {
-					self.bubbleEvent(new MediaEvent("timeupdate", self));
-				};
+                window.SamsungMapleOnTimeUpdate = function(seconds) {
+                    self.bubbleEvent(new MediaEvent("timeupdate", self));
+                };
             },
 
             render: function(device) {
-				if (!this.outputElement){
-                	this.outputElement = document.createElement("div");
-				}
-				return this.outputElement;
+                if (!this.outputElement) {
+                    this.outputElement = document.createElement("div");
+                }
+                return this.outputElement;
             },
 
             // (not part of HTML5 media)
@@ -182,7 +182,6 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(sources, tags) {
-                var dimensions;
                 this.videoPlayerState = {
                     durationSeconds  : 0,
                     currentTime: 0,
@@ -192,19 +191,18 @@ require.def(
                     seeking: false,
                     playing: false
                 };
-                
-				this.mediaSource = sources[0];
+
+                this.mediaSource = sources[0];
                 this.playerPlugin.Stop();
                 // SamsungMaple.pluginAPI.setOffScreenSaver(); // @see http://www.samsungdforum.com/Board/FAQView?BoardID=28797
                 this.tvmwPlugin.SetMediaSource();
 
-				this._getSamsungFormattedUrl = this.mediaSource.getURL(tags);
-				if(this.mediaSource.isLiveStream()) {
+                this._getSamsungFormattedUrl = this.mediaSource.getURL(tags);
+                if (this.mediaSource.isLiveStream()) {
                     this._getSamsungFormattedUrl += "|COMPONENT=HLS";
-				}
-				
-				dimensions = this.getCurrentApplication().getDevice().getScreenSize();
-				this.setWindow(0, 0, dimensions.width, dimensions.height);
+                }
+
+                this._resetVideoSize();
             },
             getSources: function() {
                 return [this.mediaSource];
@@ -245,10 +243,10 @@ require.def(
                 this.videoPlayerState.playing = false;
 
                 if (this.videoPlayerState.currentTime > 0) {
-                	this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
+                    this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
                 }
                 else {
-                	this.playerPlugin.Play(this._getSamsungFormattedUrl);
+                    this.playerPlugin.Play(this._getSamsungFormattedUrl);
                 }
             },
             // DOMString canPlayType(in DOMString type);
@@ -275,14 +273,22 @@ require.def(
             },
             // attribute double currentTime;
             setCurrentTime: function(timeToSeekTo) {
-	            var offsetInSeconds = timeToSeekTo - this.videoPlayerState.currentTime;
-	            if (offsetInSeconds >= 0){
-		            this.playerPlugin.JumpForward(offsetInSeconds);
-	            } else {
-		            this.playerPlugin.JumpBackward(Math.abs(offsetInSeconds));
-	            }
-	            this.videoPlayerState.seeking = true;
-	            this.bubbleEvent(new MediaEvent('seeking', this));
+                var offsetInSeconds = timeToSeekTo - this.videoPlayerState.currentTime;
+                if (offsetInSeconds > 0) {
+                    var jumped = this.playerPlugin.JumpForward(offsetInSeconds);
+                    // Jump forward appears not to work consistently in the initial moments of a video playback.
+                    // if we are in the initial set up, lets try resuming instead
+                    // Samsung 2010 returns -1 for failure. Newer API returns false.
+                    if ((!jumped || jumped < 0) && this.videoPlayerState.currentTime < 1) {
+                        this.playerPlugin.Stop();
+                        this._resetVideoSize();
+                        this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, timeToSeekTo);
+                    }
+                } else if (offsetInSeconds < 0) {
+                    this.playerPlugin.JumpBackward(Math.abs(offsetInSeconds));
+                }
+                this.videoPlayerState.seeking = true;
+                this.bubbleEvent(new MediaEvent('seeking', this));
                 this.videoPlayerState.currentTime = timeToSeekTo;
             },
             getCurrentTime: function() {
@@ -306,7 +312,7 @@ require.def(
             },
             // readonly attribute boolean paused;
             getPaused: function() {
-	            return this.videoPlayerState.paused;
+                return this.videoPlayerState.paused;
             },
             // attribute double defaultPlaybackRate;
             getDefaultPlaybackRate: function() {
@@ -355,10 +361,10 @@ require.def(
             // void play();
             play: function() {
                 if (this.videoPlayerState.paused) {
-                   this.playerPlugin.Resume();
-                   this.videoPlayerState.paused = false;
-                   this.bubbleEvent(new MediaEvent("play", this));
-                   this.bubbleEvent(new MediaEvent("playing", this));
+                    this.playerPlugin.Resume();
+                    this.videoPlayerState.paused = false;
+                    this.bubbleEvent(new MediaEvent("play", this));
+                    this.bubbleEvent(new MediaEvent("playing", this));
                 }
             },
             stop: function() {
@@ -368,8 +374,10 @@ require.def(
             pause: function() {
                 var self = this;
                 self.playerPlugin.Pause();
-	            self.videoPlayerState.paused = true;
-	            window.setTimeout(function(){self.bubbleEvent(new MediaEvent("pause", self))}, 0);
+                self.videoPlayerState.paused = true;
+                window.setTimeout(function() {
+                    self.bubbleEvent(new MediaEvent("pause", self))
+                }, 0);
             },
             // attribute boolean controls;
             setNativeControls: function(controls) {
@@ -381,6 +389,13 @@ require.def(
             },
             destroy: function() {
                 this.stop();
+            },
+            _resetVideoSize: function() {
+                // Workaround for the Samsung 2010 device: video playback starts in a small window by default.
+                if (this._mediaType === "video") {
+                    var dimensions = this.getCurrentApplication().getDevice().getScreenSize();
+                    this.setWindow(0, 0, dimensions.width, dimensions.height);
+                }
             }
         });
 
@@ -390,61 +405,61 @@ require.def(
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
             return Media.EMBED_MODE_BACKGROUND;
         };
-		/**
-		 * Check to see if volume control is supported on this device.
-		 * @returns Boolean true if volume control is supported.
-		 */
-		Device.prototype.isVolumeControlSupported = function() {
-			return true;
-		};
-		/**
-		 * Get the current volume.
-		 * @returns The current volume (0.0 to 1.0)
-		 */
-		Device.prototype.getVolume = function() {
-			var audio = document.getElementById('audioPlugin');
-			return invertAudioLevelCorrection(audio.GetVolume());
-		};
-		/**
-		 * Set the current volume.
-		 * @param {Float} volume The new volume level (0.0 to 1.0).
-		 */
-		Device.prototype.setVolume = function(volume) {
-			var audio = document.getElementById('audioPlugin');
-			if(volume > 1.0	) {
-				this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " > 1.0). Clipped to 1.0");
-				volume = 1.0;
-			} else if(volume < 0.0) {
-				this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " < 0.0). Clipped to 0.0");
-				volume = 0;
-			}
+        /**
+         * Check to see if volume control is supported on this device.
+         * @returns Boolean true if volume control is supported.
+         */
+        Device.prototype.isVolumeControlSupported = function() {
+            return true;
+        };
+        /**
+         * Get the current volume.
+         * @returns The current volume (0.0 to 1.0)
+         */
+        Device.prototype.getVolume = function() {
+            var audio = document.getElementById('audioPlugin');
+            return invertAudioLevelCorrection(audio.GetVolume());
+        };
+        /**
+         * Set the current volume.
+         * @param {Float} volume The new volume level (0.0 to 1.0).
+         */
+        Device.prototype.setVolume = function(volume) {
+            var audio = document.getElementById('audioPlugin');
+            if (volume > 1.0) {
+                this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " > 1.0). Clipped to 1.0");
+                volume = 1.0;
+            } else if (volume < 0.0) {
+                this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " < 0.0). Clipped to 0.0");
+                volume = 0;
+            }
 
-			var currentVolume = audio.GetVolume();
-			var newVolume = audioLevelCorrection(volume);
+            var currentVolume = audio.GetVolume();
+            var newVolume = audioLevelCorrection(volume);
 
-			if((newVolume > currentVolume) && (newVolume - currentVolume < 1.0)) {
-				newVolume = currentVolume + 1;
-			} else if((newVolume < currentVolume) && (currentVolume - newVolume < 1.0)) {
-				newVolume = currentVolume - 1;
-			}
-			audio.SetVolume(newVolume);
-			return newVolume;
-		};
-		/**
-		 * Check to see if the volume is currently muted.
-		 * @returns Boolean true if the device is currently muted. Otherwise false.
-		 */
-		Device.prototype.getMuted = function() {
-			var audio = document.getElementById('audioPlugin');
-			return audio.GetSystemMute();
-		};
-		/**
-		 * Mute or unmute the device.
-		 * @param {Boolean} muted The new muted state. Boolean true to mute, false to unmute.
-		 */
-		Device.prototype.setMuted = function(muted) {
-			var audio = document.getElementById('audioPlugin');
-			audio.SetSystemMute(muted);
-		};
+            if ((newVolume > currentVolume) && (newVolume - currentVolume < 1.0)) {
+                newVolume = currentVolume + 1;
+            } else if ((newVolume < currentVolume) && (currentVolume - newVolume < 1.0)) {
+                newVolume = currentVolume - 1;
+            }
+            audio.SetVolume(newVolume);
+            return newVolume;
+        };
+        /**
+         * Check to see if the volume is currently muted.
+         * @returns Boolean true if the device is currently muted. Otherwise false.
+         */
+        Device.prototype.getMuted = function() {
+            var audio = document.getElementById('audioPlugin');
+            return audio.GetSystemMute();
+        };
+        /**
+         * Mute or unmute the device.
+         * @param {Boolean} muted The new muted state. Boolean true to mute, false to unmute.
+         */
+        Device.prototype.setMuted = function(muted) {
+            var audio = document.getElementById('audioPlugin');
+            audio.SetSystemMute(muted);
+        };
     }
 );
