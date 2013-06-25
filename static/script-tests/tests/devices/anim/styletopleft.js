@@ -1394,6 +1394,48 @@
     };
 
     /**
+     * Stopping an animation should send it immediately to its end state. Assert that the animation is in
+     * its end state immediately after cancellation with no need to wait for a callback.
+     */
+    this.StyleTopLeftAnimationTest.prototype.testMoveElementJumpsImmediatelyToEndWhenCancelled = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getDefaultConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, div, anim;
+            device = application.getDevice();
+            div = device.createContainer("id");
+            div.style.left = '0px';
+            div.style.top = '0px';
+
+            anim = device.moveElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                duration: 250
+            });
+
+            // Check that the element hasn't gone to its end state immediately.
+            assertFalse('Element in its end position (left)', div.style.top === "100px");
+            assertFalse('Element in its end position (top)', div.style.top === "200px");
+
+            queue.call('Wait a moment and cancel the animation', function(callbacks) {
+                // Wait a fraction of a second, cancel animation, then check it's jumped to its end state.
+                setTimeout(callbacks.add(function() {
+                    device.stopAnimation(anim);
+                    assertEquals('Element in its end position (left)', '100px', div.style.left);
+                    assertEquals('Element in its end position (top)', '200px', div.style.top);
+                }), 100);
+            });
+        }, config);
+    };
+
+    /**
      * Helper: For one of the functions in styletopleft that takes an options object as its parameter,
      * ensure that the function does not have the side-effect of modifying the options object.
      * @param {antie.devices.Device} device The device object containing the styletopleft functionality.
