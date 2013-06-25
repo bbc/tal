@@ -34,8 +34,6 @@ require.def(
         // A set of queues of DOM updates to perform. Each animation framerate gets its own queue
         // so they are in sync between themselves.
         var animQueues = {};
-        var UPDATETYPE_STEP = 'step';
-        var UPDATETYPE_COMPLETE = 'complete';
 
         /**
          * Internal function: given a new tween value for an animation, add it to a queue
@@ -43,10 +41,10 @@ require.def(
          * create it and start the update cycle after half a frame has elapsed, to give other
          * animation updates a chance to come in.
          */
-        function addTweenToQueue(fps, options, tweenValues, type) {
+        function addTweenToQueue(options, tweenValues) {
             // A separate queue exists for each framerate. Get or create the appropriate queue.
-            var queueKey = 'fps' + fps;
-            var frameIntervalMs = 1000 / fps;
+            var queueKey = 'fps' + options.fps;
+            var frameIntervalMs = 1000 / options.fps;
             var queue = animQueues[queueKey];
 
             // Create a new queue if one doesn't already exist (implemented as an array).
@@ -63,13 +61,34 @@ require.def(
                 setTimeout(function() { startIntervalTimer(queue, frameIntervalMs); }, frameIntervalMs / 2);
 
                 // First tween in a cycle should be applied immediately. It contains initial values.
-                step(options, tweenValues, type);
+                step(options, tweenValues);
             }
             else {
                 // Queue is already being processed. Add the new entry to the queue.
-                queue.push({options: options, values: tweenValues, type: type});
+                queue.push({options: options, values: tweenValues});
             }
+        }
 
+        /**
+         * Internal function: When we receive a callback to say an animation
+         * has completed (either it's been cancelled or it's finished), drain
+         * any outstanding steps from the queue. This ensures that in the case
+         * of clients cancelling the animation, the element stops being updated
+         * immediately.
+         */
+        function drainTweensFromQueue(options) {
+            var queue, i, q;
+            queue = animQueues['fps' + options.fps];
+            if (queue) {
+                for (i = 0; i < queue.length; i++) {
+                    q = queue[i];
+                    if (q.options === options) {
+                        step(q.options, q.values);
+                        queue.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
         }
 
         /**
@@ -90,14 +109,14 @@ require.def(
             if (queue.length === 0) {
                 clearInterval(queue.intervalId);
                 queue.isProcessing = false;
-                delete queue.intervalId;
+                queue.intervalId = null;
             }
             else {
                 // We have some DOM updates to do. Do each one in sequence, then clear the queue ready for the next round.
                 try {
                     for (var i = 0; i < queue.length; i++) {
                         var q = queue[i];
-                        step(q.options, q.values, q.type);
+                        step(q.options, q.values);
                     }
                 }
                 finally {
@@ -110,21 +129,14 @@ require.def(
         /**
          * Internal function. Perform the DOM updates required for the update.
          */
-        function step(options, tweenValues, type) {
-            if (type === UPDATETYPE_STEP) {
-                for (var p in options.to) {
-                    if (tweenValues[p] !== null && tweenValues[p] !== undefined) {
-                        if (/scroll/.test(p)) {
-                            options.el[p] = tweenValues[p];
-                        } else {
-                            options.el.style[p] = tweenValues[p];
-                        }
+        function step(options, tweenValues) {
+            for (var p in options.to) {
+                if (tweenValues[p] !== null && tweenValues[p] !== undefined) {
+                    if (/scroll/.test(p)) {
+                        options.el[p] = tweenValues[p];
+                    } else {
+                        options.el.style[p] = tweenValues[p];
                     }
-                }
-            }
-            else if (type === UPDATETYPE_COMPLETE) {
-                if (typeof options.onComplete === 'function') {
-                    options.onComplete();
                 }
             }
         }
@@ -134,6 +146,7 @@ require.def(
             var self = this;
 
             var opts = {
+                    el: options.el,
                     initialState: options.from || {},
                     from: options.from || {},
                     to: options.to || {},
@@ -152,7 +165,7 @@ require.def(
                         }
                     },
                     step: function () {
-                        addTweenToQueue(opts.fps, options, this, UPDATETYPE_STEP);
+                        addTweenToQueue(opts, this);
                     },
                     callback: function () {
                         if(options.className) {
@@ -161,7 +174,15 @@ require.def(
                         }
                         self.removeClassFromElement(self.getTopLevelElement(), "animating");
                         self.addClassToElement(self.getTopLevelElement(), "notanimating");
-                        addTweenToQueue(opts.fps, options, null, UPDATETYPE_COMPLETE);
+                        // Send this animation to its final state immediately.
+                        drainTweensFromQueue(opts);
+                        if (this) {
+                            step(opts, this);
+                        }
+                        // Fire client callback if it exists
+                        if (typeof options.onComplete === 'function') {
+                            options.onComplete();
+                        }
                     }
             };
 
