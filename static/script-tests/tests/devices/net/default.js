@@ -353,6 +353,27 @@
 		});			                
 	},
 	
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedAllowsCallbackNameChange = function(queue) {
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice({ "supportsCors" : false });
+            var testUrl = "http://test";
+            var callbackKey = "jsonpCallback";
+            var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
+            device.executeCrossDomainGet(testUrl, {}, {callbackKey: callbackKey});
+            assertEquals(testUrl + "?jsonpCallback=%callback%", loadScriptStub.getCall(0).args[0]);
+        });
+    };
+    
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedRespectsExistingQueryParameters = function(queue) {
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice({ "supportsCors" : false });
+            var testUrl = "http://test?existingQueryString=blah";
+            var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
+            device.executeCrossDomainGet(testUrl, {});
+            assertEquals("http://test?callback=%callback%&existingQueryString=blah", loadScriptStub.getCall(0).args[0]);
+        });
+    };
+	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsLoadUrlWithJsonPayloadWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({ "supportsCors" : true });
