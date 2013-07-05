@@ -249,9 +249,10 @@ require.def(
          * used for the name of the form filed if the iframe hack is used
          */
         Device.prototype.executeCrossDomainPost = function(url, data, opts) {
-           var payload = this.encodeJson(data);
+           var payload, modifiedOpts, formData;
+           payload = this.encodeJson(data);
            if (configSupportsCORS(this.getConfig())) {
-               var modifiedOpts = {
+               modifiedOpts = {
                     onLoad: opts.onLoad,
                     onError: opts.onError,
                     headers: {
@@ -262,11 +263,11 @@ require.def(
                };
                this.loadURL(url, modifiedOpts);
            } else {
-               var formData = {}
+               formData = {};
                formData[opts.fieldName] = payload;
                this.crossDomainPost(url, formData, {
                    onLoad: opts.onLoad,
-                   onError : opts.onError
+                   onError: opts.onError
                });
            }
         };
