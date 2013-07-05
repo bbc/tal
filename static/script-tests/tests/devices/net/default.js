@@ -309,7 +309,7 @@
 	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({ "supportsCors" : true });
+			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
 			var resp = "{ \"test\" : \"myValue\" }";
 			var testUrl = "http://test";
 			var loadUrlSpy = this.sandbox.stub(BrowserDevice.prototype, 'loadURL', function(url, callbacks){
@@ -325,7 +325,7 @@
 	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({ "supportsCors" : true });
+			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
 			var errorSpy = this.sandbox.spy();
 			var testUrl = "http://test";
 			var loadUrlSpy = this.sandbox.stub(BrowserDevice.prototype, 'loadURL', function(url, callbacks){
@@ -340,7 +340,7 @@
 	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetDelegatesToLoadScriptWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({ "supportsCors" : false });
+			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
 			var successSpy = this.sandbox.spy();
 			var errorSpy = this.sandbox.spy();
 			var loadUrlSpy = this.sandbox.spy();
@@ -355,7 +355,7 @@
 	
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedAllowsCallbackNameChange = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-            var device = new BrowserDevice({ "supportsCors" : false });
+            var device = new BrowserDevice({"networking": { "supportsCORS": false }});
             var testUrl = "http://test";
             var callbackKey = "jsonpCallback";
             var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
@@ -366,7 +366,7 @@
     
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedRespectsExistingQueryParameters = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-            var device = new BrowserDevice({ "supportsCors" : false });
+            var device = new BrowserDevice({"networking": { "supportsCORS": false }});
             var testUrl = "http://test?existingQueryString=blah";
             var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
             device.executeCrossDomainGet(testUrl, {});
@@ -376,7 +376,7 @@
 	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsLoadUrlWithJsonPayloadWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({ "supportsCors" : true });
+			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
 			var loadUrlStub = this.sandbox.stub(BrowserDevice.prototype, 'loadURL');			
 			
 			var message = { test : "myValue" };
@@ -407,7 +407,7 @@
 	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsCrossDomainPostWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({ "supportsCors" : false });
+			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
 			
 			var testUrl = "http://test";
 			var message = { test : "myValue" };

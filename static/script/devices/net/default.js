@@ -222,7 +222,7 @@ require.def(
            var self, callbackKey, callbackQuery;
            self = this;
            options = options || {};
-           if (this.getConfig().supportsCors) {
+           if (configSupportsCORS(this.getConfig())) {
                this.loadURL(url, {
                    onLoad: function(jsonResponse) {
                        callbacks.onSuccess(self.decodeJson(jsonResponse));
@@ -250,7 +250,7 @@ require.def(
 		 */
 		Device.prototype.executeCrossDomainPost = function( url, data, opts ) {
            var payload = this.encodeJson(data);
-           if (this.getConfig().supportsCors){
+           if (configSupportsCORS(this.getConfig())) {
       		    var modifiedOpts = {
                 	onLoad : opts.onLoad,
                 	onError : opts.onError,
@@ -267,6 +267,10 @@ require.def(
            	   this.crossDomainPost( url, formData, { onLoad :opts.onLoad, onError : opts.onError } );
            }
         };	        
+
+        function configSupportsCORS(config) {
+            return config && config.networking && config.networking.supportsCORS;
+        }
 	}
 );
 
