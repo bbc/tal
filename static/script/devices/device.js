@@ -615,7 +615,7 @@ require.def('antie/devices/device',
              * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
              * the device, falling back to a JSON-P call otherwise.
              * @param {String} url The URL to load. A callback GET parameter will be appended if JSON-P is used.
-             * @param {Object} callbacks Object containing onLoad and onError callbacks. onLoad will be called
+             * @param {Object} callbacks Object containing onSuccess and onError callbacks. onSuccess will be called
              * with the decoded JSON object if the call is successful.
              * @param {Object} [options] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
              * @param {Number} [options.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
