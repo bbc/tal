@@ -623,7 +623,7 @@ require.def('antie/devices/device',
              * @param {String} [options.callbackKey=callback] Key to use in query string when passing callback function name
              * for JSON-P call. Default: callback
              */
-            executeCrossDomainGet = function(url, callbacks, options) {
+            executeCrossDomainGet: function(url, callbacks, options) {
             },
             /**
              * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
@@ -632,7 +632,7 @@ require.def('antie/devices/device',
              * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
              * used for the name of the form filed if the iframe hack is used
              */
-            executeCrossDomainPost = function(url, data, opts) {
+            executeCrossDomainPost: function(url, data, opts) {
             },
             /**
              * Forces the device to pre-load an image.
