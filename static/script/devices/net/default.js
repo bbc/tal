@@ -240,33 +240,36 @@ require.def(
                this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
            }
         },
-        
+
         /**
-		 * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
-		 * @param {String} url The URL to post to.
-		 * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
-		 * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
-		 * used for the name of the form filed if the iframe hack is used
-		 */
-		Device.prototype.executeCrossDomainPost = function( url, data, opts ) {
+         * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
+         * @param {String} url The URL to post to.
+         * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
+         * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
+         * used for the name of the form filed if the iframe hack is used
+         */
+        Device.prototype.executeCrossDomainPost = function(url, data, opts) {
            var payload = this.encodeJson(data);
            if (configSupportsCORS(this.getConfig())) {
-      		    var modifiedOpts = {
-                	onLoad : opts.onLoad,
-                	onError : opts.onError,
-                	headers : {
-                   		"Content-Type" : "application/json"
-                	},
-                	data : payload,
-                	method : "POST"
-            	};
-            	this.loadURL(url, modifiedOpts);              
+               var modifiedOpts = {
+                    onLoad: opts.onLoad,
+                    onError: opts.onError,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    data: payload,
+                    method: "POST"
+               };
+               this.loadURL(url, modifiedOpts);
            } else {
-           	   var formData = {}
-           	   formData[ opts.fieldName ] = payload;
-           	   this.crossDomainPost( url, formData, { onLoad :opts.onLoad, onError : opts.onError } );
+               var formData = {}
+               formData[opts.fieldName] = payload;
+               this.crossDomainPost(url, formData, {
+                   onLoad: opts.onLoad,
+                   onError : opts.onError
+               });
            }
-        };	        
+        };
 
         function configSupportsCORS(config) {
             return config && config.networking && config.networking.supportsCORS;
