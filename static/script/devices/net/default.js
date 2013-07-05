@@ -207,7 +207,8 @@ require.def(
 		},
 		
 		Device.prototype.executeCrossDomainGet = function(url, callbacks, options) {
-           var self = this;
+           var self, callbackKey, callbackQuery;
+           self = this;
            options = options || {};
            if (this.getConfig().supportsCors) {
                this.loadURL(url, {
@@ -217,7 +218,14 @@ require.def(
                    onError: callbacks.onError
                });
            } else {
-                this.loadScript( url + "?callback=%callback%", /%callback%/, callbacks, options.timeout, options.id);
+               callbackKey = options.callbackKey || 'callback';
+               callbackQuery = '?' + callbackKey + '=%callback%';
+               if(url.indexOf('?') === -1) {
+                   url = url + callbackQuery;
+               } else {
+                   url = url.replace('?', callbackQuery + '&');
+               }
+               this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
            }
         },
         
