@@ -318,7 +318,7 @@
 			});
 			
 			var successSpy = this.sandbox.spy();
-			device.executeCrossDomainGet(testUrl, successSpy);
+			device.executeCrossDomainGet(testUrl, {onSuccess: successSpy});
 			assert(successSpy.calledWith({ test : "myValue" }));
 		});			                
 	},
@@ -333,7 +333,7 @@
 				callbacks.onError();
 			});
 			
-			device.executeCrossDomainGet(testUrl, {}, errorSpy);
+			device.executeCrossDomainGet(testUrl, {onError: errorSpy});
 			assert(errorSpy.calledOnce);
 		});			                
 	},
@@ -348,8 +348,8 @@
 			var testTimeout = 1;
 			var testUrl = "http://test";
 			var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});			
-			device.executeCrossDomainGet(testUrl, successSpy, errorSpy, testTimeout, myId);
-			assert(loadScriptStub.calledWith(testUrl + "?callback=%callback%", /%callback%/, { onSuccess : successSpy, onError : errorSpy }, testTimeout, myId));
+			device.executeCrossDomainGet(testUrl, {onSuccess: successSpy, onError: errorSpy}, {timeout: testTimeout, id: myId});
+			assert(loadScriptStub.calledWith(testUrl + "?callback=%callback%", /%callback%/, {onSuccess : successSpy, onError : errorSpy}, testTimeout, myId));
 		});			                
 	},
 	

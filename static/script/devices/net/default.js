@@ -206,23 +206,18 @@ require.def(
 			createIframe();
 		},
 		
-		Device.prototype.executeCrossDomainGet = function(url, onSuccess, onFailure, timeout, id) {
+		Device.prototype.executeCrossDomainGet = function(url, callbacks, options) {
            var self = this;
-           var callbacks;
-           if (this.getConfig().supportsCors){
-               callbacks =  {
-                    onLoad : function(jsonResponse) {
-                        onSuccess(self.decodeJson(jsonResponse))
-                    },
-                    onError : onFailure
-               }                     
-               this.loadURL( url, callbacks );
+           options = options || {};
+           if (this.getConfig().supportsCors) {
+               this.loadURL(url, {
+                   onLoad: function(jsonResponse) {
+                       callbacks.onSuccess(self.decodeJson(jsonResponse));
+                   },
+                   onError: callbacks.onError
+               });
            } else {
-                callbacks = {
-                    onSuccess : onSuccess,
-                    onError : onFailure
-                }   
-                this.loadScript( url + "?callback=%callback%", /%callback%/, callbacks, timeout, id);
+                this.loadScript( url + "?callback=%callback%", /%callback%/, callbacks, options.timeout, options.id);
            }
         },
         
