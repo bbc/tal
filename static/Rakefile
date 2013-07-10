@@ -232,6 +232,7 @@ def wait_for_browser
 	      	response = Net::HTTP.get_response( uri )
 	      	if( response.code == "200" )
 	        	if( !response.body().index( "Browsers: (0)" ) )
+	        		sleep( 5 );
 	        		puts "[INFO] Browser Connected"	
 	          		break;
 	        	end
@@ -296,13 +297,17 @@ server: http://localhost:9876
 
 load:
 #library files
+  - http://john.dev.pod.bbc/pal/catal/catal/deviceconfig?
   - script-tests/prelude.js
   - script-tests/lib/require.js
   - script-tests/lib/queuedrequire.js
   - script-tests/lib/mockapplication.js
   - script-tests/lib/sinon.js
+  - script-tests/lib/devicecheck.js
   - script-tests/api/*.js
   - script-tests/mocks/*.js
+  - script-tests/fixtures/layouts/*.js
+  - script-tests/fixtures/components/*.js
  # - script-tests/lib/css3transitions.css
  # - script-tests/lib/carousels.css
 #script-block

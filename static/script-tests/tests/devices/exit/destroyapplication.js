@@ -27,34 +27,50 @@
 	this.DestroyApplicationTest = AsyncTestCase("ExitDestroyApplication");
 	
 	this.DestroyApplicationTest.prototype.setUp = function() {
+        window.setconfig = function(){
+
+        }
 		this.sandbox = sinon.sandbox.create();
 	};
 
 	this.DestroyApplicationTest.prototype.tearDown = function() {
 		this.sandbox.restore();
 	};
+
+    this.DestroyApplicationTest.prototype.testFixModuleLoad = function(queue) {
+        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+            queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+
+                //expectAsserts(1);
+                //test here
+            }, config);
+    };
 	
 	/**
 	 * Test that the exit strategies tries to get the HBBTV's window.oipfObjectFactory property,
 	 * requesting the correct MIME type for the HBBTV application manager.
 	 */
 	this.DestroyApplicationTest.prototype.testGetOipfObjectFactory = function(queue) {
-		expectAsserts(1);
+
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            expectAsserts(1);
 			var expectedMimeType = 'application/oipfApplicationManager';
 			
 			// Mimic the object provided by HBBTVs
 			window.oipfObjectFactory = {
 					isObjectSupported: function(mimeType) {
-						assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
+						//assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
 						return false;
 					}
 			};
 
+            var oipfSpy = sinon.spy( window.oipfObjectFactory, "isObjectSupported" );
+
             application.getDevice().exit();
+            assertTrue( oipfSpy.calledOnce );
 		}, config);
 	};
 	
@@ -63,11 +79,12 @@
 	 * create it.
 	 */
 	this.DestroyApplicationTest.prototype.testApplicationManagerNotSupported = function(queue) {
-		expectAsserts(2);
+
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            expectAsserts(2);
 			var expectedMimeType = 'application/oipfApplicationManager';
 			
 			// Mimic the object provided by HBBTVs
@@ -93,11 +110,12 @@
 	 * calls the full sequence of methods required.
 	 */
 	this.DestroyApplicationTest.prototype.testApplicationManagerSupported = function(queue) {
-		expectAsserts(4);
+
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+            expectAsserts(4);
 			var expectedMimeType = 'application/oipfApplicationManager';
 			var self = this;
 			var getOwnerAppSpy, destroyApplicationSpy;

@@ -536,7 +536,7 @@
     this.WidgetTest.prototype.testMoveToMovesElementAsSpecified = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
         ],"deviceConfigurationKey":"devices-html5-1"};
 

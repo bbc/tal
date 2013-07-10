@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.CookieStorageProviderTest = AsyncTestCase("Storage (Cookie)");
+	this.CookieStorageProviderTest = AsyncTestCase("Storage_Cookie");
 
 	this.CookieStorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -160,12 +160,13 @@
 	this.CookieStorageProviderTest.prototype.testCookiesAreRead = function(queue) {
 		expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/nativejson','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
 			var obj = {
 				"hello": ["house","street","town","region","country","continent","world","solar system","galaxy", "universe"]
 			};
+            jstestdriver.console.log( application.getDevice().encodeJson );
 			document.cookie = "test1=" + encodeURIComponent(application.getDevice().encodeJson(obj));
 
 			var storage = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
@@ -194,4 +195,6 @@
 
 		}, config);
 	};
+
+    validateTestAgainstDeviceModifiers(['antie/devices/storage/cookie'], this.CookieStorageProviderTest);
 })();

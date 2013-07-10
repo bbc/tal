@@ -65,7 +65,6 @@
             "modules": {
                 "base": "antie/devices/browserdevice",
                 "modifiers": [
-                    'antie/devices/data/json2',
                     'antie/devices/anim/css3'
                 ]
             },
