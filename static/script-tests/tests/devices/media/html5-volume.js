@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HTML5VolumeTest = AsyncTestCase("HTML5 (Volume)");
+	this.HTML5VolumeTest = AsyncTestCase("HTML5_Volume");
 
 	this.HTML5VolumeTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -338,4 +338,7 @@
 
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/media/html5'], this.HTML5VolumeTest);
+
 })();

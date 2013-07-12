@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.NoAnimAnimationTest = AsyncTestCase("Animation (noanim)");
+    this.NoAnimAnimationTest = AsyncTestCase("Animation_NoAnim");
 
     this.NoAnimAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -232,4 +232,6 @@
             assertTrue("onComplete fired", spy.calledOnce);
         }, config);
     };
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/noanim'], this.NoAnimAnimationTest);
 })();

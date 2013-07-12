@@ -155,7 +155,7 @@
 	this.HTML5WaitingEventFix.prototype.testWaitingEventIsNotFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsStopped = function(queue) {
 		expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
@@ -210,5 +210,8 @@
 
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/media/html5waitingfix'], this.HTML5WaitingEventFix);
+
 
 })();

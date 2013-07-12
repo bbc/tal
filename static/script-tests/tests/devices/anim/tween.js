@@ -98,4 +98,6 @@
 			});
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/styletopleft'], this.TweenAnimationTest);
 })();

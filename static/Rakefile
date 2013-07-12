@@ -13,6 +13,8 @@ $params = {
 	:jtd_output     => OptionArg( "testOutput", nil ),
 	:jtd_verbose    => SwitchArg( "verbose" ),
 	:jtd_port       => OptionArg( "port", 9876 ),
+  :dev_conf_file  => PlainArg( "path_to_device_config_file", false ),
+  :url_to_conf    => PlainArg( "url_to_device_config", false ),
 	:output         => PlainArg( "testOutput", false ),
 	:coverage       => PlainArg( "coverage", false ),
 	:webdriverurl   => PlainArg( "webdriverurl", false ),
@@ -163,6 +165,12 @@ def generate_jtd_config_file
 	
 	$jtd_config = $jtd_config + $jtd_template
 
+  if( $params[ :url_to_conf ] != false )
+    $jtd_config = $jtd_config.gsub( "${DYNAMICPRELUDE}", "  - " + $params[ :url_to_conf ] + "\n" );
+  else
+    $jtd_config = $jtd_config.gsub( "${DYNAMICPRELUDE}", "" )
+  end
+
 	$jtd_config = $jtd_config.gsub( "#test-block", "#test-block\n" + $test_files );
 	$jtd_config = $jtd_config.gsub( "#script-block", "#script-block\n" + $script_files ); 
 
@@ -297,13 +305,13 @@ server: http://localhost:9876
 
 load:
 #library files
-  - http://john.dev.pod.bbc/pal/catal/catal/deviceconfig?
   - script-tests/prelude.js
+${DYNAMICPRELUDE}
   - script-tests/lib/require.js
   - script-tests/lib/queuedrequire.js
   - script-tests/lib/mockapplication.js
   - script-tests/lib/sinon.js
-  - script-tests/lib/devicecheck.js
+  - script-tests/lib/ondevicetestconfigvalidate.js
   - script-tests/api/*.js
   - script-tests/mocks/*.js
   - script-tests/fixtures/layouts/*.js
@@ -350,6 +358,7 @@ $text_prelude = <<-eos
 		  antie: "${SERVER}/test/script"
 	  }
 	};
+
 })();
 eos
 

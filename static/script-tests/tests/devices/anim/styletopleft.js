@@ -1499,4 +1499,6 @@
             skipAnim: true
         };
     }
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/styletopleft'], this.StyleTopLeftAnimationTest);
 })();

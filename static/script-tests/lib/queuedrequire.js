@@ -128,12 +128,6 @@ function __qr(){
 	 * @param {Object} [configOverride] Optional device/application onfiguration.
 	 */
 	this.queuedApplicationInit = function(queue, applicationModuleName, otherDeps, callback, configOverride) {
-        if( devicecheck !== undefined ){
-            if( !devicecheck(configOverride) ){
-                expectAsserts( 0 );
-                return;
-            }
-        }
 
         var application;
 		var testCase = queue.q_.testCase_;

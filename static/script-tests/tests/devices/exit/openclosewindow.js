@@ -85,4 +85,6 @@
             assert("window.close() called after window.open()", windowCloseStub.calledAfter(windowOpenStub));
         }, config);
     };
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/openclosewindow'], this.ExitOpenCloseWindowTest);
 })();

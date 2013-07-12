@@ -111,7 +111,6 @@
 	 */
 	this.DestroyApplicationTest.prototype.testApplicationManagerSupported = function(queue) {
 
-
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -159,5 +158,7 @@
 			assertEquals('destroyApplication call count', 1, destroyApplicationSpy.callCount);
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/destroyapplication'], this.DestroyApplicationTest);
 
 })();

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.DefaultNetworkTest = AsyncTestCase("Network (Default)");
+	this.DefaultNetworkTest = AsyncTestCase("Network_Default");
 
 	this.DefaultNetworkTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -306,5 +306,8 @@
 		});
 
 	};
-	
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/net/default'], this.DefaultNetworkTest);
+
+
 }());

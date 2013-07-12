@@ -41,4 +41,6 @@
             application.getDevice().exit();
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);
 })();

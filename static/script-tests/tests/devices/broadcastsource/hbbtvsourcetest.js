@@ -353,4 +353,6 @@
         ],"deviceConfigurationKey":"devices-html5-1"};
     };
 
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/broadcastsource/hbbtvsource'], this.hbbtvSource);
+
 })();
