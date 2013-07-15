@@ -50,13 +50,14 @@ The following may vary between families of device.
 
 'Page Strategies' encapsulate these variations. By default they are located in antie/config/pagestrategy.
 
-A class `AntieFramework` is provided in `php/antieframework.php`. It contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.
+A class `AntieFramework` contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.
+This class is provided in `php/antieframework.php` if using the PHP implementation, or `node/antieframework.js` if using the nodejs implementation.
 
-If you do not wish to use php in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology.
+If you do not wish to use php or nodejs in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology.
 
-## An example index
+## An example index (PHP)
 
-Below is an example of how to use `AntieFramework` to build a simple index.
+Below is an example of how to use `AntieFramework` to build a simple index using php.
 The supplied code has been written for clarity, not elegance, but should be simple to adapt.
 
 The example uses some methods of AntieFramework. They all take a decoded device configuration file as a parameter.
@@ -221,6 +222,43 @@ echo $antie->getRootHtmlTag($device_configuration_decoded);
 </body>
 </html>
 {% endhighlight %}
+
+
+
+## An example index (NodeJS)
+
+Below is an example of how to use `AntieFramework` to build a simple index using nodejs.
+The supplied code has been written for clarity, not elegance, but should be simple to adapt.
+
+To create a new object you have to indicate the `configPath` and the `frameworkPath`- this is the main difference between the PHP implementation and this one.
+An example constructor using these variables might be:
+
+{% highlight javascript %}
+var configPath = "config/";
+var frameworkPath = "config/framework/";
+var AntieFramework = require("node/antieframework");
+
+var antie = new AntieFramework(configPath, frameworkPath);
+{% endhighlight %}
+
+The [example](https://github.com/fmtvp/talexample) uses some methods of AntieFramework. Most of them take a decoded device configuration file as a parameter.
+
+| Method                       | Description |
+| ---------------------------- | ----------- |
+| `antie.getMimeType(deviceConfig);`       | Some devices need pages to be delivered with a specific mime type. `getMimeType()` returns an appropriate type for the device |
+| `antie.getDocType(deviceConfig); `        | Returns a device appropriate doctype tag, such as `<!DOCTYPE html>` |
+| `antie.getRootHtmlTag(deviceConfig);`    | Returns a device appropriate opening page tag, such as `<html>` |
+| `antie.getDeviceHeaders(deviceConfig);`  | Returns any device specific content to go in the `<head>` block, such as device api `<script>` tags |
+| `antie.getDeviceBody(deviceConfig);`     | Returns any device specific content to go in the `<body>` block, such as device plugin objects |
+| `antie.normaliseKeyNames(normString);`     | Normalizes key names e.g. converts `$` and `)` into `_`, and converts the name to lower case |
+| `antie.getConfigurationFromFilesystem(key, type);`     | Gets a configuration from the file system. Takes a unique device identifier and the `this._configPath` sub-directory where the device configuration is located |
+| `antie.getPageStrategyElement(pageStrategy,`<br>`element, defaultValue);`     | Get a page strategy element, or return the default value if the page strategy does not contain the requested element |
+| `antie.mergeConfigurations(originalConfiguration,`<br>` patchConfiguration);`     | Merges the original configuration with the device configuration override properties |
+
+As noted, device detection is out of ANTIE's scope, so we pass in the name of the device configuration as a url parameter.
+
+An example project that uses this framework can be found [here](https://github.com/fmtvp/talexample).
+
 
 <ul class="pager">
   <li><a href="installation.html">Previous</a></li>
