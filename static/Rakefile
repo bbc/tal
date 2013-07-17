@@ -129,6 +129,7 @@ task :help do
 	puts "verbose=<1|0>                                          - Sets JsTestDriver's verbose option. Optional,Default: 0"
 	puts "coverage=<1|0>                                         - Turns On Coverage. Default: 0"
 	puts "path_to_device_config_file=<url/to/device/config>      - Runs the tests that are only relevant to the provided device config."
+  puts "url_to_device_config=<url/to/device/config>            - Runs the tests that are only relevant to the provided device config."
 	puts "webdriverurl=<chrome|url/to/webdriver>                 - Controls browser automation, Optional, Default: ''"
 	puts "                                                         'chrome' will automate browser via chrome driver"
 	puts "                                                          otherise interpreted as a URL to a webdriver instance"
