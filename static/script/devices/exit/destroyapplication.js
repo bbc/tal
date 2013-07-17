@@ -44,30 +44,20 @@ require.def(
 	    */
         Device.prototype.exit = function() {
         	var factory = window.oipfObjectFactory;
-            jstestdriver.console.log( "exit1");
-        	
+
         	// Check that the OIPF factory is implemented and supports the application manager
         	if(factory && factory.isObjectSupported(APPMANAGER_MIME_TYPE)) {
-                jstestdriver.console.log( "exit2");
         		var appManager = factory.createApplicationManagerObject();
-                jstestdriver.console.log( "exit3");
-        		
+
         		if(appManager) {
-                    jstestdriver.console.log( "exit4");
         			// Ask the application manager for an Application object for this app
         			var ownerApp = appManager.getOwnerApplication(window.document);
-                    jstestdriver.console.log( "exit5");
-        			
+
         			if(ownerApp) {
-                        jstestdriver.console.log( "exit6");
         				// Destroy this app and finish
         				ownerApp.destroyApplication();
-                        jstestdriver.console.log( "exit7");
         			}
         		}
-        	}else
-            {
-                jstestdriver.console.log( "no factory");
             }
         }
     }

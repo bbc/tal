@@ -6,14 +6,10 @@
 var onDeviceTestConfigValidation = {
     removeTestsForIncompatibleDevices : function( modifiers, testObject ){
 
-        if( !window.testOnDevice ){
+        //this indicates we are testing on a device and want to exclude tests based on configs
+        if( !window.deviceConfig ){
             return;
         }
-
-//        console.log( "****TESTREMOVE****" );
-//        console.log( window.deviceConfig );
-//        console.log( "****MODIFIERS****" );
-//        console.log( modifiers );
 
         for( var m0 in modifiers ){
             //look for each modifier in the actual device configuration
@@ -22,8 +18,7 @@ var onDeviceTestConfigValidation = {
                 for( var tr in testObject.prototype ){
                     if( tr.indexOf( "test" ) === 0 ){
                         delete testObject.prototype[ tr ];
-                        console.log( "removing tests " + tr );
-                        jstestdriver.console.log( "removing tests " + tr );
+                        jstestdriver.console.log( "modifier " + modifiers[ m0 ] + " not found. removing tests " + tr );
                     }
                 }
             }

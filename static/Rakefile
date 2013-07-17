@@ -76,7 +76,15 @@ end
 desc "run the javascript unit tests"
 task :test do
     wait_for_browser
-    puts "[INFO] Starting Tests " + TEST_COMMAND
+
+    if( $params[ :url_to_conf ] == false && $params[ :dev_conf_file ] )
+      puts "[INFO] Starting Tests On Device ( #{$params[ :dev_conf_file ]} )\n" + TEST_COMMAND
+    elsif ( $params[ :url_to_conf ] != false )
+      puts "[INFO] Starting Tests On Device ( #{$params[ :url_to_conf ]} )\n" + TEST_COMMAND
+    else
+      puts "[INFO] Starting Tests \n" + TEST_COMMAND
+    end
+
     system( TEST_COMMAND )
     $test_exit_code = $?.exitstatus
 end
@@ -151,12 +159,27 @@ end
 
 #generate prelude file
 def generate_prelude_file
-	puts "[INFO] Building Prelude File"
-	$text_prelude = $text_prelude.gsub( "${SERVER}", $params[ :server ] );
-	file = File.open( PRELUDE_PATH, "w" )
-	file.write( $text_prelude )
-	file.flush();
-	file.close();
+
+  #for testing on a device via a path to a device config this should read the config file
+  #copy in the prelude_on_device text replace the device config
+  if( $params[ :url_to_conf ] == false && $params[ :dev_conf_file ] )
+    deviceconfig = IO.read( $params[ :dev_conf_file ] );
+    $text_prelude = $text_prelude_on_device.gsub( '"${DEVICECONFIG}"', deviceconfig );
+  #if the device config is being server from and endpoint then that endpoint should have already
+  #defined window.deviceconfig so just start with text_prelude_on_device
+  elsif( $params[ :url_to_conf ] != false )
+    $text_prelude = $text_prelude_on_device;
+  end
+
+  $text_prelude = $text_prelude.gsub( "${SERVER}", $params[ :server ] );
+
+  puts $text_prelude;
+
+  file = File.open( PRELUDE_PATH, "w" )
+  file.write( $text_prelude )
+  file.flush();
+  file.close();
+
 end
 
 #generates the jstestdriver config file
@@ -305,8 +328,8 @@ server: http://localhost:9876
 
 load:
 #library files
-  - script-tests/prelude.js
 ${DYNAMICPRELUDE}
+  - script-tests/prelude.js
   - script-tests/lib/require.js
   - script-tests/lib/queuedrequire.js
   - script-tests/lib/mockapplication.js
@@ -358,6 +381,47 @@ $text_prelude = <<-eos
 		  antie: "${SERVER}/test/script"
 	  }
 	};
+
+})();
+eos
+
+$text_prelude_on_device = <<-eos
+
+(function() {
+
+  //the device config required for the device that is being tested
+  if( !window.deviceConfig ){
+    window.deviceConfig = "${DEVICECONFIG}";
+  }
+
+  //generic device config
+	this.antie = {
+		framework: {
+			deviceConfiguration: {"modules":{"base":"antie\/devices\/browserdevice","modifiers":["antie\/devices\/anim\/styletopleft","antie\/devices\/media\/html5","antie\/devices\/data\/json2","antie\/devices\/net\/default"]},"mediasets":{"tv":"stb-all-h264","radio":"stb-aac"},"streaming":{"video":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["h264"],"maximumBitRate":2800,"maximumVideoLines":1080}]},"audio":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["aac"]}]}},"input":{"map":{"13":"ENTER","37":"LEFT","38":"UP","39":"RIGHT","40":"DOWN","83":"SUBTITLE","73":"INFO"}},"accessibility":{"captions":{"supported":["application\/ttaf+xml"]}},"layouts":[{"width":999999,"height":999999,"module":"fixtures\/layouts\/toobig","classes":["toobig"]},{"width":960,"height":540,"module":"fixtures\/layouts\/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","widgets":{"horizontalprogress":{"animate":false},"componentcontainer":{"fade":false},"horizontalcarousel":{"fade":true,"bindDelay":10}},"components":[]}
+		}
+	};
+
+	this.require = {
+	  baseUrl: "${SERVER}/test/script-tests",
+	  paths: {
+		  antie: "${SERVER}/test/script"
+	  }
+	};
+
+  //replace the generic device config with a specific device config - to be safe store of the layouts as these are specific to the testing harness
+  var layouts = this.antie.framework.deviceConfiguration.layouts;
+
+  //replace the generic device config with the specific device config
+	this.antie = {
+		framework: {
+			deviceConfiguration: window.deviceConfig
+		}
+	};
+
+  //but restore the layouts
+	this.antie.framework.deviceConfiguration.layouts = layouts;
+
+  console.log( this.antie );
 
 })();
 eos
