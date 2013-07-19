@@ -2,7 +2,7 @@
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 	var appMgr = document.getElementById('appmgr');
-	var app = appMgr.getOwnerApplication(Window.document);
+	var app = appMgr.getOwnerApplication(window.document);
 	app.show();
 	app.privateData.keyset.setValue(0x330);
 	app.privateData.keyset.value = 0x330;
