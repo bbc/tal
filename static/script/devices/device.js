@@ -612,6 +612,29 @@ require.def('antie/devices/device',
             crossDomainPost: function(url, opts) {
             },
             /**
+             * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
+             * the device, falling back to a JSON-P call otherwise.
+             * @param {String} url The URL to load. A callback GET parameter will be appended if JSON-P is used.
+             * @param {Object} callbacks Object containing onSuccess and onError callbacks. onSuccess will be called
+             * with the decoded JSON object if the call is successful.
+             * @param {Object} [options] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
+             * @param {Number} [options.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
+             * @param {String} [options.id] Used in the callback function name for the JSON-P call. Default: a random string.
+             * @param {String} [options.callbackKey=callback] Key to use in query string when passing callback function name
+             * for JSON-P call. Default: callback
+             */
+            executeCrossDomainGet: function(url, callbacks, options) {
+            },
+            /**
+             * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
+             * @param {String} url The URL to post to.
+             * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
+             * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
+             * used for the name of the form filed if the iframe hack is used
+             */
+            executeCrossDomainPost: function(url, data, opts) {
+            },
+            /**
              * Forces the device to pre-load an image.
              * @param {String} url The URL of the image to preload.
              */
