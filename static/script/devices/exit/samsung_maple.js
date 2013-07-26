@@ -33,7 +33,6 @@ require.def(
 	     * Exits the application by navigating to the first page in the browsers history.
 	    */
         Device.prototype.exit = function() {
-            jstestdriver.console.log( "samsung-maple" );
            new Common.API.Widget().sendReturnEvent();
         }
 

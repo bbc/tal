@@ -554,7 +554,6 @@
 
                 queue.call("Wait for tween", function(callbacks) {
                     var onComplete = callbacks.add(function() {
-                        console.log("widget::::", widget.outputElement);
                         assertEquals(200, Math.round(parseFloat(widget.outputElement.style.left.replace(/px$/, ''))));
                         assertEquals(300, Math.round(parseFloat(widget.outputElement.style.top.replace(/px$/, ''))));
                     });

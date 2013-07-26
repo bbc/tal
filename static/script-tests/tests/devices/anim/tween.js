@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.TweenAnimationTest = AsyncTestCase("Animation (Tween)");
+	this.TweenAnimationTest = AsyncTestCase("Animation_Tween");
 
 	this.TweenAnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

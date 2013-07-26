@@ -84,9 +84,9 @@
 		);
 	};
 
-	/*this.HorizontalCarouselTest.prototype.testAnimationParametersPassedToAnimation = function(queue) {
+	this.HorizontalCarouselTest.prototype.testAnimationParametersPassedToAnimation = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
-	/*	expectAsserts(4);
+		expectAsserts(4);
 
 		queuedApplicationInit(
 				queue,
@@ -107,7 +107,7 @@
 					assertEquals(widget._activeWidgetAnimationEasing, 'easeOutBounce');
 				}
 		);
-	};*/
+	};
 
 	this.HorizontalCarouselTest.prototype.testRenderInnerElements = function(queue) {
 	   /*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/

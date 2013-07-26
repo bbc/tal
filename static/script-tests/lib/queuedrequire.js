@@ -42,9 +42,6 @@ function __qr(){
 	var requireModules = {};
 
 	require.ready(function() {
-
-
-        console.log( "require.ready" );
 		var originalRequireDef = require.def;
 		var originalRequireDefine = require.define;
 		var originalRequireLoad = require.load;
@@ -62,7 +59,6 @@ function __qr(){
 		require.load = function(moduleName, contextName) {
 			var module = requireModules[moduleName];
 			if(module) {
-				//console.log('require.load - resetting');
 				require.s.contexts["_"].specified[moduleName] = true;
 				require.s.contexts["_"].loaded[moduleName] = false;
 				setTimeout(function() {

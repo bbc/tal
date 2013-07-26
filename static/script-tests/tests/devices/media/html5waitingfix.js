@@ -24,7 +24,7 @@
 
 (function() {
 
-	this.HTML5WaitingEventFix = AsyncTestCase("HTML5 (Waiting Event Fix)");
+	this.HTML5WaitingEventFix = AsyncTestCase("HTML5_WaitingEventFix");
 
 	this.HTML5WaitingEventFix.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

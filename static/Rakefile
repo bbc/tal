@@ -174,9 +174,6 @@ def generate_prelude_file
   end
 
   $text_prelude = $text_prelude.gsub( "${SERVER}", $params[ :server ] );
-
-  puts $text_prelude;
-
   file = File.open( PRELUDE_PATH, "w" )
   file.write( $text_prelude )
   file.flush();
@@ -422,9 +419,6 @@ $text_prelude_on_device = <<-eos
 
   //but restore the layouts
 	this.antie.framework.deviceConfiguration.layouts = layouts;
-
-  console.log( this.antie );
-
 })();
 eos
 

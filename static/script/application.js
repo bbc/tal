@@ -200,7 +200,6 @@ require.def('antie/application',
 					}
 					cssLoadedCallback();
 				} else {
-					console.log('no callback');
 					for(i = 0; i !== css.length; i += 1) {
 						this._device.loadStyleSheet(styleBaseUrl + css[i]);
 					}
