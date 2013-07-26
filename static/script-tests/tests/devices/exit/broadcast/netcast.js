@@ -58,4 +58,7 @@
             assert(netCastExitStub.calledOnce);
         }, config);
     };
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/broadcast/netcast'], this.BroadcastExitNetCastTest);
+
 }());

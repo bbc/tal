@@ -44,21 +44,21 @@ require.def(
 	    */
         Device.prototype.exit = function() {
         	var factory = window.oipfObjectFactory;
-        	
+
         	// Check that the OIPF factory is implemented and supports the application manager
-        	if(factory && factory.isObjectSupported(APPMANAGER_MIME_TYPE)) {       	
+        	if(factory && factory.isObjectSupported(APPMANAGER_MIME_TYPE)) {
         		var appManager = factory.createApplicationManagerObject();
-        		
+
         		if(appManager) {
         			// Ask the application manager for an Application object for this app
         			var ownerApp = appManager.getOwnerApplication(window.document);
-        			
+
         			if(ownerApp) {
         				// Destroy this app and finish
         				ownerApp.destroyApplication();
         			}
         		}
-        	}
+            }
         }
     }
 );

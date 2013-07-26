@@ -42,7 +42,6 @@ function __qr(){
 	var requireModules = {};
 
 	require.ready(function() {
-		console.log( "require.ready" );
 		var originalRequireDef = require.def;
 		var originalRequireDefine = require.define;
 		var originalRequireLoad = require.load;
@@ -60,7 +59,6 @@ function __qr(){
 		require.load = function(moduleName, contextName) {
 			var module = requireModules[moduleName];
 			if(module) {
-				//console.log('require.load - resetting');
 				require.s.contexts["_"].specified[moduleName] = true;
 				require.s.contexts["_"].loaded[moduleName] = false;
 				setTimeout(function() {
@@ -126,7 +124,8 @@ function __qr(){
 	 * @param {Object} [configOverride] Optional device/application onfiguration.
 	 */
 	this.queuedApplicationInit = function(queue, applicationModuleName, otherDeps, callback, configOverride) {
-		var application;
+
+        var application;
 		var testCase = queue.q_.testCase_;
 		var originalTearDown = testCase.tearDown;
 		var div = document.createElement("div");
@@ -147,7 +146,7 @@ function __qr(){
 			var ApplicationClass = requireCallbackArguments.shift();
 			queue.call("Wait for application to be ready", function(callbacks) {
 				var onReady = callbacks.add(function() {
-					callback.apply(testCase, [application].concat(requireCallbackArguments));
+                        callback.apply(testCase, [application].concat(requireCallbackArguments));
 				});
 				application = new ApplicationClass(div, null, null, onReady, configOverride);
 			});

@@ -33,7 +33,7 @@
 	this.DestroyApplicationTest.prototype.tearDown = function() {
 		this.sandbox.restore();
 	};
-	
+
 	/**
 	 * Test that the exit strategies tries to get the HBBTV's window.oipfObjectFactory property,
 	 * requesting the correct MIME type for the HBBTV application manager.
@@ -49,12 +49,15 @@
 			// Mimic the object provided by HBBTVs
 			window.oipfObjectFactory = {
 					isObjectSupported: function(mimeType) {
-						assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
+						//assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
 						return false;
 					}
 			};
 
+            var oipfSpy = sinon.spy( window.oipfObjectFactory, "isObjectSupported" );
+
             application.getDevice().exit();
+            assertTrue( oipfSpy.calledOnce );
 		}, config);
 	};
 	
@@ -141,5 +144,7 @@
 			assertEquals('destroyApplication call count', 1, destroyApplicationSpy.callCount);
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/destroyapplication'], this.DestroyApplicationTest);
 
 })();

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.CookieStorageProviderTest = AsyncTestCase("Storage (Cookie)");
+    this.CookieStorageProviderTest = AsyncTestCase("Storage_Cookie");
 
 	this.CookieStorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -160,7 +160,7 @@
 	this.CookieStorageProviderTest.prototype.testCookiesAreRead = function(queue) {
 		expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/nativejson','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
 			var obj = {
@@ -194,4 +194,6 @@
 
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/storage/cookie'], this.CookieStorageProviderTest);
 })();

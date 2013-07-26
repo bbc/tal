@@ -536,7 +536,7 @@
     this.WidgetTest.prototype.testMoveToMovesElementAsSpecified = function(queue) {
         expectAsserts(2);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
+        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
         ],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -554,7 +554,6 @@
 
                 queue.call("Wait for tween", function(callbacks) {
                     var onComplete = callbacks.add(function() {
-                        console.log("widget::::", widget.outputElement);
                         assertEquals(200, Math.round(parseFloat(widget.outputElement.style.left.replace(/px$/, ''))));
                         assertEquals(300, Math.round(parseFloat(widget.outputElement.style.top.replace(/px$/, ''))));
                     });

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.SessionStorageProviderTest = AsyncTestCase("Storage (Session)");
+	this.SessionStorageProviderTest = AsyncTestCase("Storage_Session");
 
 	this.SessionStorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -154,4 +154,7 @@
 			assertEquals("world", storage2.getItem("hello"));
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/storage/session'], this.SessionStorageProviderTest);
+
 })();
