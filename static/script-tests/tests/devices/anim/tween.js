@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.TweenAnimationTest = AsyncTestCase("Animation (Tween)");
+	this.TweenAnimationTest = AsyncTestCase("Animation_Tween");
 
 	this.TweenAnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -36,7 +36,7 @@
 	this.TweenAnimationTest.prototype.testTween = function(queue) {
 		expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
@@ -69,7 +69,7 @@
 	this.TweenAnimationTest.prototype.testTweenClasses = function(queue) {
 		expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
@@ -98,4 +98,6 @@
 			});
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/styletopleft'], this.TweenAnimationTest);
 })();

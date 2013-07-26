@@ -74,4 +74,7 @@
 			assertEquals("AUDIOURL", url);
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(["antie/mediasource", "antie/audiosource"], this.AudioSourceTest);
+
 })();

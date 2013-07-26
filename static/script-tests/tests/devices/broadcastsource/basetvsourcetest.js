@@ -147,4 +147,6 @@
         ],"deviceConfigurationKey":"devices-html5-1"};
     };
 
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/broadcastsource/basetvsource'], this.baseTvSource);
+
 })();

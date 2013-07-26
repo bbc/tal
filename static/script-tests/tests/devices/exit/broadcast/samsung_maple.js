@@ -71,4 +71,7 @@
             assert(sendExitEventStub.calledOnce);
         }, config);
     };
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/broadcast/samsung_maple'], this.BroadcastExitSamsungTest);
+
 }());

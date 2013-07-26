@@ -65,7 +65,6 @@
             "modules": {
                 "base": "antie/devices/browserdevice",
                 "modifiers": [
-                    'antie/devices/data/json2',
                     'antie/devices/anim/css3'
                 ]
             },
@@ -899,4 +898,7 @@
             config
         );
     };
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/css3'], this.CSS3AnimationTest);
+
 }());

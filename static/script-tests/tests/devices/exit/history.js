@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HistoryExitTest = AsyncTestCase("Exit (History)");
+	this.HistoryExitTest = AsyncTestCase("Exit_History");
 
 	this.HistoryExitTest.prototype.testExit = function(queue) {
 		expectAsserts(1);
@@ -40,4 +40,6 @@
             application.getDevice().exit();
 		}, config);
 	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);
 })();

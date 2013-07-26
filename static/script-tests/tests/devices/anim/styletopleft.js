@@ -42,7 +42,6 @@
             "modules": {
                 "base": "antie/devices/browserdevice",
                 "modifiers": [
-                    'antie/devices/data/json2',
                     'antie/devices/anim/styletopleft'
                 ]
             },
@@ -1500,4 +1499,6 @@
             skipAnim: true
         };
     }
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/styletopleft'], this.StyleTopLeftAnimationTest);
 })();
