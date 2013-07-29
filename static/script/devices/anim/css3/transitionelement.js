@@ -121,7 +121,7 @@ require.def(
                 forceUpdate: function(property) {
                     var style = this.getComputedStyle();
                     return (style) ? style[property] : null;
-                }, 
+                },
                 
                 getStylePropertyValue: function(property) {
                     return this._element.style.getPropertyValue(property);
@@ -180,7 +180,11 @@ require.def(
                     var timingString;
                     timingString = this._strHelper.buildCsvString(timings);
                     this.setStylePropertyValue(this._propMap["transition-timing-function"], timingString);
-                }
+                },
+
+				isEventTarget: function(evt) {
+					return evt.target === this._element;
+				}
             }
         );
     }
