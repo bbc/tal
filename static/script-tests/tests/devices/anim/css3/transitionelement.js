@@ -247,7 +247,32 @@
             }
         );
     };
-    
-    
-    
+
+    this.TransitionElementTest.prototype.testIsEventOnElementTrueWhenElementTargetMatches = function(queue) {
+        loadTE(queue,
+            function(TransitionElement, MockElement) {
+                var transEl, testEvent;
+
+                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                testEvent = {target: transEl.mockEl};
+                
+                assertTrue("isEventTarget returns true when the events target is the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));
+
+            }
+        );
+    };
+
+    this.TransitionElementTest.prototype.testIsEventOnElementFalseWhenElementTargetDoesNotMatch = function(queue) {
+        loadTE(queue,
+            function(TransitionElement, MockElement) {
+                var transEl, testEvent;
+
+                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                testEvent = {target: new MockElement()};
+                
+                assertFalse("isEventTarget returns false when the events target is not the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));
+
+            }
+        );
+    };
 }());

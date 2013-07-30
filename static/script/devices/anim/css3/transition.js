@@ -134,7 +134,7 @@ require.def(
                         
                         // check either called directly or event is firing for property on this transition
                         
-                        if(!evt || self._ownTransitions.hasProperty(evt.propertyName)){
+                        if(!evt || (self._transEl.isEventTarget(evt) && self._ownTransitions.hasProperty(evt.propertyName))){
                             self._completed = true;
                             self._transEl.removeCallback(endFn);
 
