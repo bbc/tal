@@ -59,7 +59,7 @@ and
 
 `url_to_device_config=<url/to/device/config>`
 
-With `path_to_device_config=<path/to/device/config>` this should be a path to one of the existing; for example `../config/devices/chrome-20_0-default.json`
+With `path_to_device_config=<path/to/device/config>` this should be a path to one of the existing device config files; for example `../config/devices/chrome-20_0-default.json`
 
 With `url_to_device_config=<url/to/device/config>` this should be a url which supplies the correct config for the device to be tested. The device config should be returned in a particular format, like this...
 
@@ -180,7 +180,7 @@ With `url_to_device_config=<url/to/device/config>` this should be a url which su
 
 see `ondevicetesting-deviceconfig.php` in the php directory for a working example that can provide the config in the required format.
 
-To make a set of tests 'device aware' some extra code should be added to the tests. For example, the History strategy tests use a specific modifer. The following line of code 
+To make a set of tests 'device aware' some extra code should be added to the tests. For example, the History strategy tests use a specific modifer. The following line of code:
 
 ```onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);```
 
