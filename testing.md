@@ -49,8 +49,166 @@ Specifying `verbose=1` on the command line will provide a more verbose output - 
 
 Another useful feature is the browser automation and ability to use a Selenium Grid. Use `webdriverurl=chrome`, on the command line, to have the test launch a Chrome instance, run the tests and exit. The webdriverurl argument can also be a url to a Selenium Grid instance.
 
+###Testing On Devices
 
-    
+These test can also be run on directly on devices. This requires being able to navigate the device's browser to the JsTestDriver capture page, as the selenium browser automation can not be used. Not all test are compatible with all devices. To avoid any false negative fails the test harness can be made to reject tests which are not compatible with the device. To do this the rake file has two options to provide a suitable device config to be used during the tests.
+
+`path_to_device_config=<path/to/device/config>`
+
+and
+
+`url_to_device_config=<url/to/device/config>`
+
+With `path_to_device_config=<path/to/device/config>` this should be a path to one of the existing; for example `../config/devices/chrome-20_0-default.json`
+
+With `url_to_device_config=<url/to/device/config>` this should be a url which supplies the correct config for the device to be tested. The device config should be returned in a particular format, like this...
+
+```
+(function() {
+    	window.deviceConfig ={
+			  "pageStrategy": "html5",
+			  "modules": {
+			    "base": "antie/devices/browserdevice",
+			    "modifiers": [
+			      "antie/devices/anim/styletopleft",
+			      "antie/devices/media/html5",
+			      "antie/devices/net/default",
+			      "antie/devices/data/json2",
+			      "antie/devices/logging/default",
+			      "antie/devices/logging/alert",
+			      "antie/devices/logging/xhr",
+			      "antie/devices/logging/jstestdriver",
+			      "antie/devices/storage/cookie",
+			      "antie/devices/exit/history"
+			    ]
+			  },
+			  "logging": {
+			    "level": "none"
+			  },
+			  "streaming": {
+			    "video": {
+			      "mediaURIFormat": "%href%",
+			      "supported": [
+			        {
+			          "protocols": [
+			            "http"
+			          ],
+			          "encodings": [
+			            "h264"
+			          ],
+			          "transferFormat": [
+			            "plain"
+			          ],
+			          "maximumBitRate": 3600,
+			          "maximumVideoLines": 1080
+			        }
+			      ]
+			    },
+			    "audio": {
+			      "mediaURIFormat": "%href%",
+			      "supported": [
+			        {
+			          "protocols": [
+			            "http"
+			          ],
+			          "encodings": [
+			            "aac"
+			          ]
+			        }
+			      ]
+			    }
+			  },
+			  "input": {
+			    "map": {
+			      "13": "ENTER",
+			      "37": "LEFT",
+			      "38": "UP",
+			      "39": "RIGHT",
+			      "40": "DOWN",
+			      "48": "0",
+			      "49": "1",
+			      "50": "2",
+			      "51": "3",
+			      "52": "4",
+			      "53": "5",
+			      "54": "6",
+			      "55": "7",
+			      "56": "8",
+			      "57": "9",
+			      "8": "BACK"
+			    }
+			  },
+			  "accessibility": {
+			    "captions": {
+			      "supported": [
+			        "application/ttaf+xml"
+			      ]
+			    }
+			  },
+			  "layouts": [
+			    {
+			      "width": 960,
+			      "height": 540,
+			      "module": "%application%/appui/layouts/540p",
+			      "classes": [
+			        "browserdevice540p"
+			      ]
+			    },
+			    {
+			      "width": 1280,
+			      "height": 720,
+			      "module": "%application%/appui/layouts/720p",
+			      "classes": [
+			        "browserdevice720p"
+			      ]
+			    },
+			    {
+			      "width": 1920,
+			      "height": 1080,
+			      "module": "%application%/appui/layouts/1080p",
+			      "classes": [
+			        "browserdevice1080p"
+			      ]
+			    }
+			  ],
+			  "networking": {
+			    "supportsJSONP": true
+			  }
+			};
+})();
+```
+
+see `ondevicetesting-deviceconfig.php` in the php directory for a working example that can provide the config in the required format.
+
+To make a set of tests 'device aware' some extra code should be added to the tests. For example, the History strategy tests use a specific modifer. The following line of code 
+
+```onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);```
+
+asserts that the `antie/device/exit/history` modifier is present in the current device config and if not the test will NOT be executed. The full unit test can be seen below.
+
+```
+(function() {
+    this.HistoryExitTest = AsyncTestCase("Exit_History");
+
+	this.HistoryExitTest.prototype.testExit = function(queue) {
+		expectAsserts(1);
+
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/history"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+			var expected = 0 - (history.length -1);
+			sinon.stub(history, 'go', function(length) {
+				history.go.restore();
+				assertEquals("History.go(length) is " + length, expected, length);
+			});
+
+            application.getDevice().exit();
+		}, config);
+	};
+
+    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);
+})();
+```    
 
 ### Writing tests
 
