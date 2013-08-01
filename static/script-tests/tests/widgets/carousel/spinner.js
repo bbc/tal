@@ -72,20 +72,21 @@
                 var device, animOptions, mask, spinner, dummyStrip, dummyElement, moveArgs;
 
                 animOptions = {
-                    onComplete: function () { return true; },
+                    onComplete: this.sandbox.stub(),
                     skipAnim: "test"
                 };
 
                 dummyElement = {dummy: 'element'};
                 dummyStrip = { outputElement: dummyElement };
-                device = { moveElementTo: this.sandbox.stub() };
+                device = { moveElementTo: this.sandbox.stub().yieldsTo('onComplete') };
                 mask = { getWidgetStrip: this.sandbox.stub().returns(dummyStrip) };
                 spinner = new Spinner(device, mask, verticalOrientation);
 
                 spinner.moveContentsTo(-100, animOptions);
                 moveArgs = device.moveElementTo.getCall(0).args[0];
-                assertEquals('onComplete passed to moveElementTo', animOptions.onComplete, moveArgs.onComplete);
+
                 assertEquals('skipAnim passed to moveElementTo', animOptions.skipAnim, moveArgs.skipAnim);
+                assertTrue('onComplete passed to moveElementTo', animOptions.onComplete.calledOnce);
             }
         );
     };
@@ -108,7 +109,7 @@
                 dummyStrip = { outputElement: dummyElement };
                 device = { moveElementTo: this.sandbox.stub() };
                 mask = { getWidgetStrip: this.sandbox.stub().returns(dummyStrip) };
-                this.sandbox.stub(verticalOrientation);
+                this.sandbox.stub(verticalOrientation, 'edge');
                 spinner = new Spinner(device, mask, verticalOrientation);
 
                 spinner.moveContentsTo(-100, animOptions);
@@ -119,6 +120,88 @@
         );
     };
 
+    this.SpinnerTest.prototype.testInProgressAnimationIsStoppedBySubsequentAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner;
+                device = application.getDevice();
+                this.sandbox.stub(device, 'moveElementTo').returns("test");
+                device.stopAnimation = this.sandbox.stub();
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, {});
+                assertFalse("stopAnimation called after first move", device.stopAnimation.called);
+                spinner.moveContentsTo(20, {});
+                assertTrue("stopAnimation called after second move", device.stopAnimation.called);
+                assertEquals("stopAnimation called with first move handle after second move",
+                    "test",
+                    device.stopAnimation.getCall(0).args[0]);
+            }
+        );
+    };
 
+    this.SpinnerTest.prototype.testCompletedAnimationNotStoppedBySubsequentAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner;
+                device = application.getDevice();
+                this.sandbox.stub(device, 'moveElementTo').yieldsTo('onComplete');
+                device.stopAnimation = this.sandbox.stub();
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, {});
+                spinner.moveContentsTo(20, {});
+                assertFalse("stopAnimation called after second move",
+                    device.stopAnimation.called);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testChainedAnimationNotStopped = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, stopStub;
+
+                function chain() {
+                    spinner.moveContentsTo(20, {});
+                }
+
+                device = application.getDevice();
+                this.sandbox.stub(device, 'moveElementTo').yieldsTo('onComplete');
+                device.moveElementTo.returns("test");
+                stopStub = this.sandbox.stub(device, 'stopAnimation');
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, { onComplete: chain });
+                assertTrue("chained move executed", device.moveElementTo.calledTwice);
+                assertFalse("stopAnimation called after chained move",
+                    stopStub.called);
+            }
+        );
+    };
 
 }());

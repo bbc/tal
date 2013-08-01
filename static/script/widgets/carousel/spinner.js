@@ -35,8 +35,10 @@ require.def('antie/widgets/carousel/spinner',
          * @extends antie.widgets.Class
 
          */
-        var Spinner;
+        var MAX_INT, Spinner;
+        MAX_INT = Math.floor(Number.MAX_VALUE - 1);
         Spinner = Class.extend(/** @lends antie.Class.prototype */ {
+
             /**
              * @constructor
              * @ignore
@@ -45,25 +47,56 @@ require.def('antie/widgets/carousel/spinner',
                 this._device = device;
                 this._mask = mask;
                 this._orientation = orientation;
+                this._animating = false;
+                this._currentAnimation = null;
             },
 
             moveContentsTo: function (relativePixels, animOptions) {
-                var destination, moveElementOptions;
-                destination = {};
-                moveElementOptions = {};
-                destination[this._getEdge()] = relativePixels;
-                moveElementOptions.el = this._mask.getWidgetStrip().outputElement;
-                moveElementOptions.to = destination;
-                moveElementOptions.duration = 150;
-                moveElementOptions.easing = 'linear';
-                if (animOptions && animOptions.onComplete) {
-                    moveElementOptions.onComplete = animOptions.onComplete;
+                var moveElementOptions;
+                moveElementOptions = this._getOptions(animOptions, relativePixels);
+                if (this._animating && this._currentAnimation) {
+                    this._device.stopAnimation(this._currentAnimation);
                 }
-                if (animOptions && animOptions.skipAnim) {
-                    moveElementOptions.skipAnim = animOptions.skipAnim;
-                }
+                this._animating = true;
+                this._currentAnimation = this._device.moveElementTo(moveElementOptions);
+            },
 
-                this._device.moveElementTo(moveElementOptions);
+            _getOptions: function (options, relativePixels) {
+                var destination, clonedOptions;
+                destination = {};
+                destination[this._getEdge()] = relativePixels;
+                clonedOptions = this._shallowCloneOptions(options);
+                clonedOptions.el = this._mask.getWidgetStrip().outputElement;
+                clonedOptions.to = destination;
+                clonedOptions.duration = 150;
+                clonedOptions.easing = 'linear';
+                clonedOptions.onComplete = this._getWrappedOnComplete(options);
+                return clonedOptions;
+            },
+
+            _getWrappedOnComplete: function (options) {
+                var self;
+                self = this;
+                function wrappedComplete() {
+                    self._clearAnimating();
+                    if (options.onComplete && typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
+
+                }
+                return wrappedComplete;
+            },
+
+            _clearAnimating: function () {
+                this._animating = false;
+                this._currentAnimation = null;
+            },
+
+            _shallowCloneOptions: function (options) {
+                options = options || {};
+                function Cloner() {}
+                Cloner.prototype = options;
+                return new Cloner();
             },
 
             _getEdge: function () {
