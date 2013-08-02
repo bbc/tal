@@ -58,14 +58,14 @@
                 };
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.bindAll(fakeWidget);
 
                 assertTrue("Item formatter called", fakeFormatter.format.calledOnce);
-                assertTrue("Widget append called", fakeWidget.append.calledOnce);
-                assertEquals("Formatted item appended to widget", fakeItem, fakeWidget.append.getCall(0).args[0]);
+                assertTrue("Widget append called", fakeWidget.appendChildWidget.calledOnce);
+                assertEquals("Formatted item appended to widget", fakeItem, fakeWidget.appendChildWidget.getCall(0).args[0]);
             }
         );
     };
@@ -100,7 +100,7 @@
             [
                 "antie/widgets/carousel/binder",
                 "antie/formatter",
-                "antie/widgets/carousel",
+                'antie/widgets/carousel/carouselcore',
                 "antie/iterator"
             ],
             function (application, Binder, Formatter, Carousel, Iterator) {
@@ -127,7 +127,7 @@
                 binder.bindAll(carousel);
 
                 assertTrue("DataSource converted to iterator on bind", Iterator.prototype.init.calledWith(dataSource));
-                assertTrue("Widget appended to carousel", carousel.append.called);
+                assertTrue("Widget appended to carousel", carousel.appendChildWidget.called);
             }
         );
     };
@@ -164,14 +164,14 @@
                 };
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.bindAll(fakeWidget);
 
                 sinon.assert.callOrder(
-                    fakeWidget.append.withArgs(fakeItem),
-                    fakeWidget.append.withArgs(fakeItem2)
+                    fakeWidget.appendChildWidget.withArgs(fakeItem),
+                    fakeWidget.appendChildWidget.withArgs(fakeItem2)
                 );
 
             }
@@ -214,14 +214,14 @@
                 };
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.bindAll(fakeWidget);
 
                 sinon.assert.callOrder(
-                    fakeWidget.append.withArgs(fakeItem),
-                    fakeWidget.append.withArgs(fakeItem2)
+                    fakeWidget.appendChildWidget.withArgs(fakeItem),
+                    fakeWidget.appendChildWidget.withArgs(fakeItem2)
                 );
 
             }
@@ -252,7 +252,7 @@
                 binder = new Binder(fakeFormatter, fakeDataSource);
 
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
 
@@ -305,7 +305,7 @@
 
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.bindAll(fakeWidget);
@@ -327,7 +327,7 @@
                     it,
                     fakeWidget.bubbleEvent.getCall(1).args[0].iterator
                 );
-                assertTrue("bubble called after append", fakeWidget.bubbleEvent.calledAfter(fakeWidget.append));
+                assertTrue("bubble called after appendChildWidget", fakeWidget.bubbleEvent.calledAfter(fakeWidget.appendChildWidget));
 
             }
         );
@@ -358,7 +358,7 @@
                 });
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    append: this.sandbox.stub(),
+                    appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.bindAll(fakeWidget);

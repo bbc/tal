@@ -56,7 +56,7 @@ require.def('antie/widgets/carousel/binder',
 
                             while (it.hasNext()) {
                                 boundItem = self._formatter.format(it);
-                                widget.append(boundItem);
+                                widget.appendChildWidget(boundItem);
                             }
 
                             widget.bubbleEvent(new DataBoundEvent("databound", widget, it));

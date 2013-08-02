@@ -158,7 +158,7 @@
                 "antie/widgets/carousel/mask"
             ],
             function (application, Aligner, BeforeAlignEvent, Navigator, Mask) {
-                var aligner, mask, firedEvent, navigator;
+                var aligner, mask, firedEvent;
                 this.sandbox.stub(Mask.prototype);
                 this.sandbox.stub(BeforeAlignEvent.prototype);
 

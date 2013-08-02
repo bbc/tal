@@ -1,6 +1,4 @@
 /**
- * @fileOverview Requirejs module containing the antie.widgets.Carousel abstract class.
- *
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
@@ -25,124 +23,97 @@
  */
 
 require.def('antie/widgets/carousel',
-	[
-		'antie/widgets/container',
-        'antie/widgets/carousel/navigators/bookendednavigator',
-        'antie/widgets/carousel/mask',
-        'antie/widgets/carousel/strips/widgetstrip',
-        'antie/widgets/carousel/aligners/aligner',
-        'antie/widgets/carousel/orientations/vertical',
-        'antie/widgets/carousel/orientations/horizontal'
-	],
-	function (
-        Container,
-        BookendedNavigator,
-        Mask,
-        WidgetStrip,
-        Aligner,
-        verticalOrientation,
-        horizontalOrientation
-    ) {
-		"use strict";
-		/**
-		 * The Carousel widget extends the container widget to manage a carousel of any orientation
-		 * @name antie.widgets.Carousel
-		 * @class
-		 * @extends antie.widgets.Widget
+    [
+        'antie/widgets/carousel/carouselcore',
+        'antie/widgets/container'
+    ],
+    function (CarouselCore, Container) {
+        "use strict";
+        return CarouselCore.extend({
+            init: function (id, orientation) {
+                this._super(id, orientation);
 
-		 */
-		var Carousel = Container.extend(/** @lends antie.widgets.Container.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function (id, orientation) {
-				this.id = id;
-				this._super(id);
-                this._setOrientation(orientation || Carousel.orientations.VERTICAL);
-                this.setWidgetStrip(WidgetStrip);
-				this._mask = new Mask(this.id + '_CarouselMask', this._widgetStrip, this._orientation);
-				this.appendChildWidget(this._mask);
-                this.setNavigator(BookendedNavigator);
-                this._aligner = new Aligner(this._mask);
-                this._setAlignEventsFromMaskToHaveCarouselAsTarget();
-			},
-
-			render: function (device) {
-                this.outputElement = this._mask.render(device);
-				return this.outputElement;
-			},
-
-			append: function (widget) {
-                widget.addClass('carouselItem');
-				this._widgetStrip.append(widget);
-			},
-
-			alignNext: function () {
-                this._aligner.alignNext(this._navigator);
-			},
-
-            alignPrevious: function () {
-                this._aligner.alignPrevious(this._navigator);
-			},
-
-            alignToIndex: function (index, options) {
-                this._aligner.alignToIndex(index, options);
             },
 
-            setAlignPoint: function (pixelsFromEdgeToWidgetEdge) {
-                this._mask.setAlignPoint(pixelsFromEdgeToWidgetEdge);
-            },
-
-            getActiveIndex: function () {
-                return this._navigator.currentIndex();
-            },
-
-            setActiveIndex: function (index) {
-                this._navigator.setIndex(index);
-            },
-
-            setNavigator: function (Navigator) {
-                this._navigator = new Navigator(this._widgetStrip);
-            },
-
-            setWidgetStrip: function (WidgetStrip) {
-                this._widgetStrip = new WidgetStrip(this.id + '_WidgetStrip', this._orientation);
-                if (this._navigator) {
-                    this._navigator.setContainer(this._widgetStrip);
-                }
-                if (this._mask) {
-                    this._mask.setWidgetStrip(this._widgetStrip);
+            setActiveChildWidget: function (widget) {
+                if (widget === this._mask) {
+                    return this._super(widget);
+                } else {
+                    return this.setActiveWidget(widget);
                 }
             },
 
-            items: function () {
-                return this._widgetStrip.widgets();
+            hasChildWidget: function (id) {
+                if (id === this._mask.id) {
+                    return this._super(id);
+                } else {
+                    return this._widgetStrip.hasChildWidget(id);
+                }
             },
 
-            _setOrientation: function (orientation) {
-                this._orientation = orientation;
+            getActiveChildWidget: function () {
+                return this._widgetStrip.getActiveChildWidget();
             },
 
-            _setAlignEventsFromMaskToHaveCarouselAsTarget: function () {
-                var self = this;
-                this.addEventListener('beforealign', function (ev) {
-                    if (ev.target === self._mask) {
-                        ev.target = self;
-                    }
-                });
-                this.addEventListener('afteralign', function (ev) {
-                    if (ev.target === self._mask) {
-                        ev.target = self;
-                    }
-                });
+            appendChildWidget: function (widget) {
+                return this.append(widget);
+            },
+
+            getChildWidget: function (id) {
+                if (id === this._mask.id) {
+                    return this._mask;
+                } else {
+                    return this._widgetStrip.getChildWidget(id);
+                }
+            },
+
+            getChildWidgetCount: function () {
+                return this._widgetStrip.getChildWidgetCount();
+            },
+
+            getChildWidgets: function () {
+                return this.items();
+            },
+
+            setActiveChildIndex: function (index) {
+                return this.setActiveIndex(index);
+            },
+
+            getActiveChildIndex: function () {
+                return this.getActiveIndex();
+            },
+
+            addClass: function (className) {
+                if (this._widgetStrip) {
+                    return this._widgetStrip.addClass(className);
+                }
+            },
+
+            hasClass: function (className) {
+                if (this._widgetStrip) {
+                    return this._widgetStrip.hasClass(className);
+                } else {
+                    return false;
+                }
+            },
+
+            removeClass: function (className) {
+                if (this._widgetStrip) {
+                    return this._widgetStrip.removeClass(className);
+                }
+            },
+
+            getClasses: function () {
+                if (this._widgetStrip) {
+                    return this._widgetStrip.getClasses();
+                } else {
+                    return [];
+                }
+            },
+
+            _directAppend: function (widget) {
+                Container.prototype.appendChildWidget.call(this, widget);
             }
-
-		});
-        Carousel.orientations = {
-            VERTICAL: verticalOrientation,
-            HORIZONTAL: horizontalOrientation
-        };
-		return Carousel;
-	}
+        });
+    }
 );
