@@ -1497,6 +1497,9 @@ var require, define;
                 //useful to know.
                 node.detachEvent("onreadystatechange", req.onScriptLoad);
             }
+            if (node) {
+                node.parentNode.removeChild(node);
+            }
         }
     };
 
