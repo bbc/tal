@@ -202,13 +202,12 @@
 
     this.CarouselTest.prototype.testGetChildWidgetWithMaskIdCallsCore = function (queue) {
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
-            var carousel;
+            var carousel, widget;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
             CarouselCore.prototype.getChildWidget = this.sandbox.stub();
             carousel = new Carousel();
-            carousel.getChildWidget(carousel._mask.id);
-            assertTrue(CarouselCore.prototype.getChildWidget.calledOnce);
-            assertFalse(WidgetStrip.prototype.getChildWidget.called);
+            widget = carousel.getChildWidget(carousel._mask.id);
+            assertEquals(carousel._mask, widget);
         }
         this.queueTest(queue, testFunction);
     };
@@ -220,7 +219,6 @@
             CarouselCore.prototype.getChildWidget = this.sandbox.stub();
             carousel = new Carousel();
             carousel.getChildWidget("testId");
-            assertFalse(CarouselCore.prototype.getChildWidget.called);
             assertTrue(WidgetStrip.prototype.getChildWidget.calledOnce);
         }
         this.queueTest(queue, testFunction);

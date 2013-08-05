@@ -568,6 +568,48 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testNextIndexCallsNavigator = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/navigators/bookendednavigator"
+            ],
+            function (application, CarouselCore, WidgetStrip, Navigator) {
+                var carousel, nextIndex;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                nextIndex = 5;
+                Navigator.prototype.nextIndex.returns(nextIndex);
+                carousel = new CarouselCore('myCarousel');
+                assertEquals("next index returned from navigator",
+                    nextIndex, carousel.nextIndex());
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testPreviousIndexCallsNavigator = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/navigators/bookendednavigator"
+            ],
+            function (application, CarouselCore, WidgetStrip, Navigator) {
+                var carousel, previousIndex;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                previousIndex = 4;
+                Navigator.prototype.previousIndex.returns(previousIndex);
+                carousel = new CarouselCore('myCarousel');
+                assertEquals("next index returned from navigator",
+                    previousIndex, carousel.previousIndex());
+            }
+        );
+    };
+
     this.CarouselCoreTest.prototype.testSetActiveWidgetSetsIndexOnNavigator = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -591,8 +633,296 @@
                 assertTrue("setActiveWidget sets on navigator", Navigator.prototype.setIndex.called);
             }
         );
-    }
+    };
 
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerStopsUpKeyPropogation = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent",
+                "antie/widgets/container"
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, container, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.previousIndex = this.sandbox.stub().returns(3);
+                carousel = new CarouselCore('myCarousel');
+                container = new Container();
+                container.bubbleEvent = this.sandbox.stub();
+                container.appendChildWidget(carousel);
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
+                carousel.bubbleEvent(upEvent);
+                assertFalse(container.bubbleEvent.called);
+            }
+        );
+    };
 
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerStopsDownKeyPropogation = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent",
+                "antie/widgets/container"
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, container, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                carousel = new CarouselCore('myCarousel');
+                container = new Container();
+                container.bubbleEvent = this.sandbox.stub();
+                container.appendChildWidget(carousel);
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(upEvent);
+                assertFalse(container.bubbleEvent.called);
+            }
+        );
+    };
 
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerBubblesLeftKeyEvent = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent",
+                "antie/widgets/container"
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, container, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                carousel = new CarouselCore('myCarousel');
+                container = new Container();
+                container.bubbleEvent = this.sandbox.stub();
+                container.appendChildWidget(carousel);
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_LEFT);
+                carousel.bubbleEvent(upEvent);
+                assertTrue(container.bubbleEvent.called);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerCausesUpKeyToAlignPrevious = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
+                var carousel, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.previousIndex = this.sandbox.stub().returns(3);
+                carousel = new CarouselCore('myCarousel');
+                this.sandbox.spy(carousel, 'alignPrevious');
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
+                carousel.bubbleEvent(upEvent);
+                assertTrue(carousel.alignPrevious.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerCausesDownKeyToAlignNext = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
+                var carousel, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.nextIndex = this.sandbox.stub().returns(3);
+                carousel = new CarouselCore('myCarousel');
+                this.sandbox.spy(carousel, 'alignNext');
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(upEvent);
+                assertTrue(carousel.alignNext.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerCausesSetActiveIndexOnBeforeAlign = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/beforealignevent"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, BeforeAlignEvent) {
+                var carousel, beforeAlignEvent, targetIndex;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                carousel = new CarouselCore('myCarousel');
+                targetIndex = 1;
+                this.sandbox.spy(carousel, 'setActiveIndex');
+
+                beforeAlignEvent = new BeforeAlignEvent(carousel, targetIndex);
+                carousel.bubbleEvent(beforeAlignEvent);
+                assertTrue(carousel.setActiveIndex.withArgs(targetIndex).calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
+                var carousel, upEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.previousIndex.returns(null);
+                carousel = new CarouselCore('myCarousel');
+                this.sandbox.spy(carousel, 'alignPrevious');
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
+                carousel.bubbleEvent(upEvent);
+                assertFalse(carousel.alignPrevious.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerDoesNotAlignOnDownWhenNoNextIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
+                var carousel, downEvent;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.nextIndex.returns(null);
+                carousel = new CarouselCore('myCarousel');
+                this.sandbox.spy(carousel, 'alignNext');
+                downEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(downEvent);
+                assertFalse(carousel.alignNext.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerBubblesUpEventWhenNoPreviousIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent",
+                "antie/widgets/container"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, upEvent, container;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.previousIndex.returns(null);
+                carousel = new CarouselCore();
+                container = new Container();
+                container.bubbleEvent = this.sandbox.stub();
+                container.appendChildWidget(carousel);
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
+                carousel.bubbleEvent(upEvent);
+                assertTrue(container.bubbleEvent.called);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testDefaultKeyHandlerBubblesDownEventWhenNoNextIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/events/keyevent",
+                "antie/widgets/container"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, downEvent, container;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                Navigator.prototype.nextIndex.returns(null);
+                carousel = new CarouselCore();
+                container = new Container();
+                container.bubbleEvent = this.sandbox.stub();
+                container.appendChildWidget(carousel);
+                downEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(downEvent);
+                assertTrue(container.bubbleEvent.called);
+            }
+        );
+    };
 }());

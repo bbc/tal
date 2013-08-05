@@ -32,7 +32,8 @@ require.def('antie/widgets/carousel/carouselcore',
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/aligners/aligner',
         'antie/widgets/carousel/orientations/vertical',
-        'antie/widgets/carousel/orientations/horizontal'
+        'antie/widgets/carousel/orientations/horizontal',
+        'antie/events/keyevent'
 	],
 	function (
         Container,
@@ -41,7 +42,8 @@ require.def('antie/widgets/carousel/carouselcore',
         WidgetStrip,
         Aligner,
         verticalOrientation,
-        horizontalOrientation
+        horizontalOrientation,
+        KeyEvent
     ) {
 		"use strict";
 		/**
@@ -66,6 +68,7 @@ require.def('antie/widgets/carousel/carouselcore',
                 this.setNavigator(BookendedNavigator);
                 this._aligner = new Aligner(this._mask);
                 this._setAlignEventsFromMaskToHaveCarouselAsTarget();
+                this._setDefaultKeyHandler();
 			},
 
 			render: function (device) {
@@ -100,6 +103,14 @@ require.def('antie/widgets/carousel/carouselcore',
 
             setActiveIndex: function (index) {
                 this._navigator.setIndex(index);
+            },
+
+            nextIndex: function () {
+                return this._navigator.nextIndex();
+            },
+
+            previousIndex: function () {
+                return this._navigator.previousIndex();
             },
 
             setActiveWidget: function (widget) {
@@ -147,6 +158,29 @@ require.def('antie/widgets/carousel/carouselcore',
 
             _directAppend: function (widget) {
                 return this.appendChildWidget(widget);
+            },
+
+            _setDefaultKeyHandler: function () {
+                var self = this;
+                this.addEventListener('keydown', function (ev) {
+                    switch (ev.keyCode) {
+                    case KeyEvent.VK_UP:
+                        if (self.previousIndex() !== null) {
+                            self.alignPrevious();
+                            ev.stopPropagation();
+                        }
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (self.nextIndex() !== null) {
+                            self.alignNext();
+                            ev.stopPropagation();
+                            break;
+                        }
+                    }
+                });
+                this.addEventListener('beforealign', function (ev) {
+                    self.setActiveIndex(ev.alignedIndex);
+                });
             }
 		});
 
