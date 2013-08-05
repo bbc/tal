@@ -24,17 +24,17 @@
 
 (function () {
 	/* jshint newcap: false, strict: false */
-	this.CarouselTest = AsyncTestCase("Carousel");
+	this.CarouselCoreTest = AsyncTestCase("CarouselCore");
 
-	this.CarouselTest.prototype.setUp = function () {
+	this.CarouselCoreTest.prototype.setUp = function () {
 		this.sandbox = sinon.sandbox.create();
 	};
 
-	this.CarouselTest.prototype.tearDown = function () {
+	this.CarouselCoreTest.prototype.tearDown = function () {
 		this.sandbox.restore();
 	};
 
-	this.CarouselTest.prototype.testCarouselCreatesOneMaskWithCorrectId = function (queue) {
+	this.CarouselCoreTest.prototype.testCarouselCreatesOneMaskWithCorrectId = function (queue) {
 		var self = this;
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
@@ -42,16 +42,16 @@
 				'antie/widgets/carousel/carouselcore',
 				"antie/widgets/widget"
 			],
-			function (application, Carousel, Widget) {
+			function (application, CarouselCore, Widget) {
 				var carousel, createWidgetSpy;
 				createWidgetSpy = self.sandbox.spy(Widget.prototype, 'init').withArgs('myCarousel_CarouselMask');
-				carousel = new Carousel('myCarousel');
+				carousel = new CarouselCore('myCarousel');
 				assertTrue(createWidgetSpy.calledOnce);
 			}
 		);
 	};
 
-	this.CarouselTest.prototype.testCarouselCreatesOneWidgetStripWithCorrectId = function (queue) {
+	this.CarouselCoreTest.prototype.testCarouselCreatesOneWidgetStripWithCorrectId = function (queue) {
 		var self = this;
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
@@ -59,39 +59,39 @@
 				'antie/widgets/carousel/carouselcore',
 				"antie/widgets/container"
 			],
-			function (application, Carousel, Container) {
+			function (application, CarouselCore, Container) {
 				var carousel, createContainerStub;
 				createContainerStub = self.sandbox.spy(Container.prototype, 'init').withArgs('myCarousel_WidgetStrip');
-				carousel = new Carousel('myCarousel');
+				carousel = new CarouselCore('myCarousel');
 				assertTrue(createContainerStub.calledOnce);
 			}
 		);
 	};
 
-	this.CarouselTest.prototype.testMaskAddedAsChildOfCarousel = function (queue) {
+	this.CarouselCoreTest.prototype.testMaskAddedAsChildOfCarousel = function (queue) {
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
 			['antie/widgets/carousel/carouselcore',
             "antie/widgets/carousel/mask"],
-			function (application, Carousel, Mask) {
+			function (application, CarouselCore, Mask) {
 				var carousel, appendStub, appendedWidget;
-                appendStub = this.sandbox.stub(Carousel.prototype, 'appendChildWidget');
-				carousel = new Carousel('myCarousel');
+                appendStub = this.sandbox.stub(CarouselCore.prototype, 'appendChildWidget');
+				carousel = new CarouselCore('myCarousel');
                 appendedWidget = appendStub.getCall(0).args[0];
 				assertTrue("Mask added as child of carousel", appendedWidget instanceof Mask);
 			}
 		);
 	};
 
-	this.CarouselTest.prototype.testCarouselRendersMask = function (queue) {
+	this.CarouselCoreTest.prototype.testCarouselRendersMask = function (queue) {
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
 			['antie/widgets/carousel/carouselcore'],
-			function (application, Carousel) {
+			function (application, CarouselCore) {
 				var carousel, renderSpy, device;
 				device = application.getDevice();
 
-				carousel = new Carousel('myCarousel');
+				carousel = new CarouselCore('myCarousel');
 
 				renderSpy = this.sandbox.stub(carousel._mask, 'render');
 				carousel.render(device);
@@ -101,15 +101,15 @@
 		);
 	};
 
-    this.CarouselTest.prototype.testCarouselRenderSetsOutputElementToElementReturnedByMaskRender = function (queue) {
+    this.CarouselCoreTest.prototype.testCarouselRenderSetsOutputElementToElementReturnedByMaskRender = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             ['antie/widgets/carousel/carouselcore'],
-            function (application, Carousel) {
+            function (application, CarouselCore) {
                 var carousel, device;
                 device = application.getDevice();
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
 
                 this.sandbox.stub(carousel._mask, 'render').returns("test");
                 carousel.render(device);
@@ -119,11 +119,11 @@
         );
     };
 
-	this.CarouselTest.prototype.testAppendAddsToWidgetStrip = function (queue) {
+	this.CarouselCoreTest.prototype.testAppendAddsToWidgetStrip = function (queue) {
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
 			['antie/widgets/carousel/carouselcore'],
-			function (application, Carousel) {
+			function (application, CarouselCore) {
 				var carousel, appendChildStub, appendedFromCarouselWidget;
 
 				appendedFromCarouselWidget = {
@@ -131,7 +131,7 @@
                     addClass: this.sandbox.stub()
                 };
 
-				carousel = new Carousel('myCarousel');
+				carousel = new CarouselCore('myCarousel');
 				carousel._widgetStrip.append = this.sandbox.stub().withArgs(appendedFromCarouselWidget);
 
 				carousel.append(appendedFromCarouselWidget);
@@ -141,16 +141,16 @@
 		);
 	};
 
-    this.CarouselTest.prototype.testAppendAddsCarouselItemClassToWidget = function (queue) {
+    this.CarouselCoreTest.prototype.testAppendAddsCarouselItemClassToWidget = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             ['antie/widgets/carousel/carouselcore'],
-            function (application, Carousel) {
+            function (application, CarouselCore) {
                 var carousel, fakeWidget;
 
                 fakeWidget = { addClass: this.sandbox.stub() };
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel._widgetStrip.append = this.sandbox.stub();
 
                 carousel.append(fakeWidget);
@@ -160,20 +160,20 @@
         );
     };
 
-    this.CarouselTest.prototype.testItemsReturnsWidgetStripWidgets = function (queue) {
+    this.CarouselCoreTest.prototype.testItemsReturnsWidgetStripWidgets = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             ['antie/widgets/carousel/carouselcore'],
-            function (application, Carousel) {
+            function (application, CarouselCore) {
                 var carousel, fakeWidget;
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel._widgetStrip.widgets = this.sandbox.stub().returns(["test"]);
                 assertEquals("Widget strip widgets returned", ["test"], carousel.items());
             }
         );
     };
 
-    this.CarouselTest.prototype.testNavigationDefaultsToBookend = function (queue) {
+    this.CarouselCoreTest.prototype.testNavigationDefaultsToBookend = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -181,17 +181,17 @@
                 "antie/widgets/button",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, Carousel, Button, BookendedNavigator) {
+            function (application, CarouselCore, Button, BookendedNavigator) {
                 var carousel, navSpy;
-                navSpy = this.sandbox.spy(Carousel.prototype, 'setNavigator');
-                carousel = new Carousel('myCarousel');
+                navSpy = this.sandbox.spy(CarouselCore.prototype, 'setNavigator');
+                carousel = new CarouselCore('myCarousel');
                 assertTrue('Navigator set', navSpy.called);
                 assertEquals('Navigator set to bookended', navSpy.getCall(0).args[0], BookendedNavigator);
             }
         );
     };
 
-    this.CarouselTest.prototype.testSpinAlignsIndexedWidget = function (queue) {
+    this.CarouselCoreTest.prototype.testSpinAlignsIndexedWidget = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -199,12 +199,12 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, Carousel, Mask, BookendedNavigator) {
+            function (application, CarouselCore, Mask, BookendedNavigator) {
                 var carousel, maskStub, navStub, INDEX;
                 INDEX = 3;
                 maskStub = this.sandbox.stub(Mask.prototype, 'alignToIndex').withArgs(INDEX);
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel.alignToIndex(INDEX);
 
                 assertTrue("Mask asked to align to index", maskStub.calledOnce);
@@ -212,7 +212,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testSpinAlignmentSet = function (queue) {
+    this.CarouselCoreTest.prototype.testSpinAlignmentSet = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -221,13 +221,13 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, Carousel, Button, Mask, BookendedNavigator) {
+            function (application, CarouselCore, Button, Mask, BookendedNavigator) {
                 var carousel, maskStub, navStub;
                 var device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo');
                 maskStub = this.sandbox.stub(Mask.prototype, 'setAlignPoint');
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel.append(new Button());
                 carousel.setAlignPoint(50);
 
@@ -236,7 +236,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testWidgetStripSetDuringInit = function (queue) {
+    this.CarouselCoreTest.prototype.testWidgetStripSetDuringInit = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -244,28 +244,28 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/strips/widgetstrip"
             ],
-            function (application, Carousel, Mask, WidgetStrip) {
+            function (application, CarouselCore, Mask, WidgetStrip) {
                 var carousel, stripStub;
                 this.sandbox.stub(Mask.prototype);
                 this.sandbox.stub(WidgetStrip.prototype);
-                stripStub = this.sandbox.spy(Carousel.prototype, 'setWidgetStrip');
-                carousel = new Carousel('myCarousel');
+                stripStub = this.sandbox.spy(CarouselCore.prototype, 'setWidgetStrip');
+                carousel = new CarouselCore('myCarousel');
                 assertTrue("Widget Strip Set", stripStub.calledOnce);
             }
         );
     };
 
-    this.CarouselTest.prototype.testSetWidgetStripInitsStrip = function (queue) {
+    this.CarouselCoreTest.prototype.testSetWidgetStripInitsStrip = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, Carousel) {
+            function (application, CarouselCore) {
                 var carousel, FakeStrip;
                 FakeStrip = this.sandbox.spy();
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel._navigator.setContainer = this.sandbox.stub();
                 carousel._mask.setWidgetStrip = this.sandbox.stub();
                 carousel.setWidgetStrip(FakeStrip);
@@ -274,13 +274,13 @@
         );
     };
 
-    this.CarouselTest.prototype.testSetWidgetStripUpdatesNavigatorContainer = function (queue) {
+    this.CarouselCoreTest.prototype.testSetWidgetStripUpdatesNavigatorContainer = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, Carousel) {
+            function (application, CarouselCore) {
                 var carousel, FakeNav, FakeStrip;
                 FakeNav = function () {};
                 FakeNav.prototype = {
@@ -290,7 +290,7 @@
 
                 FakeStrip = this.sandbox.stub();
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel._mask.setWidgetStrip = this.sandbox.stub();
                 carousel.setNavigator(FakeNav);
                 carousel.setWidgetStrip(FakeStrip);
@@ -299,39 +299,39 @@
         );
     };
 
-    this.CarouselTest.prototype.testSetWidgetStripUpdatesMask = function (queue) {
+    this.CarouselCoreTest.prototype.testSetWidgetStripUpdatesMask = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore',
                 "antie/widgets/carousel/mask"
             ],
-            function (application, Carousel, Mask) {
+            function (application, CarouselCore, Mask) {
                 var carousel, FakeStrip;
                 this.sandbox.stub(Mask.prototype);
 
                 FakeStrip = this.sandbox.stub();
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel.setWidgetStrip(FakeStrip);
                 assertTrue("Setting widget strip updated mask", Mask.prototype.setWidgetStrip.calledOnce);
             }
         );
     };
 
-    this.CarouselTest.prototype.testGetActiveIndexReturnsNavigatorIndex = function (queue) {
+    this.CarouselCoreTest.prototype.testGetActiveIndexReturnsNavigatorIndex = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore',
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, Carousel, BookendedNavigator) {
+            function (application, CarouselCore, BookendedNavigator) {
                 var carousel, INDEX, returnedIndex;
                 INDEX = 3;
 
                 this.sandbox.stub(BookendedNavigator.prototype);
                 BookendedNavigator.prototype.currentIndex.returns(INDEX);
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 returnedIndex = carousel.getActiveIndex();
 
                 assertTrue("Navigator asked for index", BookendedNavigator.prototype.currentIndex.calledOnce);
@@ -340,19 +340,19 @@
         );
     };
 
-    this.CarouselTest.prototype.testSetActiveIndexUpdatesNavigator = function (queue) {
+    this.CarouselCoreTest.prototype.testSetActiveIndexUpdatesNavigator = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore',
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, Carousel, BookendedNavigator) {
+            function (application, CarouselCore, BookendedNavigator) {
                 var carousel, INDEX, returnedIndex;
                 INDEX = 3;
 
                 this.sandbox.stub(BookendedNavigator.prototype);
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 returnedIndex = carousel.setActiveIndex(4);
 
                 assertTrue("Navigator asked to set index", BookendedNavigator.prototype.setIndex.calledWith(4));
@@ -361,7 +361,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testSpinToNextAsksAlignerToMoveForwardUsingNavigator = function (queue) {
+    this.CarouselCoreTest.prototype.testSpinToNextAsksAlignerToMoveForwardUsingNavigator = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -369,12 +369,12 @@
                 "antie/widgets/carousel/navigators/navigator",
                 "antie/widgets/carousel/aligners/aligner"
             ],
-            function (application, Carousel, Navigator, Aligner) {
+            function (application, CarouselCore, Navigator, Aligner) {
                 var carousel, alignArgs;
 
                 this.sandbox.stub(Navigator.prototype);
                 this.sandbox.stub(Aligner.prototype);
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel.alignNext();
                 assertTrue("Aligner told to move forward", Aligner.prototype.alignNext.calledOnce);
                 alignArgs = Aligner.prototype.alignNext.firstCall.args;
@@ -383,7 +383,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testSpinToPreviousAsksNavigatorToMoveBackwardUsingNavigator = function (queue) {
+    this.CarouselCoreTest.prototype.testSpinToPreviousAsksNavigatorToMoveBackwardUsingNavigator = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -391,13 +391,13 @@
                 "antie/widgets/carousel/navigators/navigator",
                 "antie/widgets/carousel/aligners/aligner"
             ],
-            function (application, Carousel, Navigator, Aligner) {
+            function (application, CarouselCore, Navigator, Aligner) {
                 var carousel, alignArgs;
 
                 this.sandbox.stub(Navigator.prototype);
                 this.sandbox.stub(Aligner.prototype);
 
-                carousel = new Carousel('myCarousel');
+                carousel = new CarouselCore('myCarousel');
                 carousel.alignPrevious();
                 assertTrue("Aligner told to move backward", Aligner.prototype.alignPrevious.calledOnce);
                 alignArgs = Aligner.prototype.alignPrevious.firstCall.args;
@@ -406,41 +406,41 @@
         );
     };
 
-    this.CarouselTest.prototype.testDefaultOrientationIsVertical = function (queue) {
+    this.CarouselCoreTest.prototype.testDefaultOrientationIsVertical = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, Carousel, verticalOrientation) {
+            function (application, CarouselCore, verticalOrientation) {
                 var carousel;
 
-                this.sandbox.spy(Carousel.prototype, '_setOrientation');
-                carousel = new Carousel('myCarousel');
-                assertTrue(Carousel.prototype._setOrientation.calledWith(Carousel.orientations.VERTICAL));
+                this.sandbox.spy(CarouselCore.prototype, '_setOrientation');
+                carousel = new CarouselCore('myCarousel');
+                assertTrue(CarouselCore.prototype._setOrientation.calledWith(CarouselCore.orientations.VERTICAL));
 
             }
         );
     };
 
-    this.CarouselTest.prototype.testInitWithHorizontalOrientationSetsHorizontalOrientation = function (queue) {
+    this.CarouselCoreTest.prototype.testInitWithHorizontalOrientationSetsHorizontalOrientation = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, Carousel, verticalOrientation) {
+            function (application, CarouselCore, verticalOrientation) {
                 var carousel;
 
-                this.sandbox.spy(Carousel.prototype, '_setOrientation');
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
-                assertTrue(Carousel.prototype._setOrientation.calledWith(Carousel.orientations.HORIZONTAL));
+                this.sandbox.spy(CarouselCore.prototype, '_setOrientation');
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
+                assertTrue(CarouselCore.prototype._setOrientation.calledWith(CarouselCore.orientations.HORIZONTAL));
 
             }
         );
     };
 
-    this.CarouselTest.prototype.testOrientationPassedToMask = function (queue) {
+    this.CarouselCoreTest.prototype.testOrientationPassedToMask = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -448,10 +448,10 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/orientations/vertical"
             ],
-            function (application, Carousel, Mask, vertical) {
+            function (application, CarouselCore, Mask, vertical) {
                 var carousel;
                 this.sandbox.stub(Mask.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.VERTICAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.VERTICAL);
 
                 assertEquals("Mask created with vertical orientation", vertical, Mask.prototype.init.firstCall.args[2]);
 
@@ -459,7 +459,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testOrientationPassedToWidgetStrip = function (queue) {
+    this.CarouselCoreTest.prototype.testOrientationPassedToWidgetStrip = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -467,10 +467,10 @@
                 "antie/widgets/carousel/strips/widgetstrip",
                 "antie/widgets/carousel/orientations/horizontal"
             ],
-            function (application, Carousel, WidgetStrip, horizontal) {
+            function (application, CarouselCore, WidgetStrip, horizontal) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
 
                 assertEquals("Widget Strip created with vertical orientation", horizontal, WidgetStrip.prototype.init.firstCall.args[1]);
 
@@ -478,7 +478,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testBeforeAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testBeforeAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -487,10 +487,10 @@
                 "antie/widgets/carousel/orientations/horizontal",
                 "antie/events/beforealignevent"
             ],
-            function (application, Carousel, WidgetStrip, horizontal, BeforeAlignEvent) {
+            function (application, CarouselCore, WidgetStrip, horizontal, BeforeAlignEvent) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
                 carousel.bubbleEvent(new BeforeAlignEvent(carousel._mask, 0));
                 assertNotEquals("event target equals mask",
@@ -501,7 +501,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testBeforeAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testBeforeAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -510,10 +510,10 @@
                 "antie/widgets/carousel/orientations/horizontal",
                 "antie/events/beforealignevent"
             ],
-            function (application, Carousel, WidgetStrip, horizontal, BeforeAlignEvent) {
+            function (application, CarouselCore, WidgetStrip, horizontal, BeforeAlignEvent) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
                 carousel.bubbleEvent(new BeforeAlignEvent("test", 0));
 
@@ -523,7 +523,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testAfterAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testAfterAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -532,10 +532,10 @@
                 "antie/widgets/carousel/orientations/horizontal",
                 "antie/events/afteralignevent"
             ],
-            function (application, Carousel, WidgetStrip, horizontal, AfterAlignEvent) {
+            function (application, CarouselCore, WidgetStrip, horizontal, AfterAlignEvent) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
                 carousel.bubbleEvent(new AfterAlignEvent(carousel._mask, 0));
                 assertNotEquals("event target equals mask",
@@ -546,7 +546,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testAfterAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testAfterAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -555,10 +555,10 @@
                 "antie/widgets/carousel/orientations/horizontal",
                 "antie/events/afteralignevent"
             ],
-            function (application, Carousel, WidgetStrip, horizontal, AfterAlignEvent) {
+            function (application, CarouselCore, WidgetStrip, horizontal, AfterAlignEvent) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
-                carousel = new Carousel('myCarousel', Carousel.orientations.HORIZONTAL);
+                carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
                 carousel.bubbleEvent(new AfterAlignEvent("test", 0));
 
@@ -568,7 +568,7 @@
         );
     };
 
-    this.CarouselTest.prototype.testContainerAPIRedirectsToAppropriateClasses = function (queue) {
+    this.CarouselCoreTest.prototype.testSetActiveWidgetSetsIndexOnNavigator = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -579,79 +579,16 @@
                 "antie/widgets/button"
 
             ],
-            function (application, Carousel, WidgetStrip, Mask, Navigator, Button) {
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button) {
                 var carousel;
                 this.sandbox.stub(WidgetStrip.prototype);
                 this.sandbox.stub(Mask.prototype);
                 this.sandbox.stub(Button.prototype);
                 this.sandbox.stub(Navigator.prototype);
-                carousel = new Carousel('myCarousel');
-                assertFalse(WidgetStrip.prototype.append.called);
-                carousel.appendChildWidget(new Button());
-                assertTrue("Append child widget appends to widget strip", WidgetStrip.prototype.append.called);
-
-                assertFalse(WidgetStrip.prototype.getChildWidget.called);
-                carousel.getChildWidget();
-                assertTrue("getChildWidget gets from widget strip", WidgetStrip.prototype.getChildWidget.called);
-
-                assertFalse(WidgetStrip.prototype.getChildWidgetCount.called);
-                carousel.getChildWidgetCount();
-                assertTrue("getChildWidgetCount gets from widget strip", WidgetStrip.prototype.getChildWidgetCount.called);
-
-                assertFalse(WidgetStrip.prototype.getChildWidgets.called);
-                carousel.getChildWidgets();
-                assertTrue("getChildWidgets gets from widget strip", WidgetStrip.prototype.widgets.called);
-
-                assertFalse(WidgetStrip.prototype.hasChildWidget.called);
-                carousel.hasChildWidget(new Button());
-                assertTrue("hasChildWidget queries widget strip", WidgetStrip.prototype.hasChildWidget.called);
-
+                carousel = new CarouselCore('myCarousel');
                 assertFalse(Navigator.prototype.setIndex.called);
-                carousel.setActiveChildIndex(2);
-                assertTrue("setActiveIndex sets on navigator", Navigator.prototype.setIndex.called);
-
-                assertFalse(Navigator.prototype.currentIndex.called);
-                carousel.getActiveChildIndex(2);
-                assertTrue("setActiveIndex sets on navigator", Navigator.prototype.currentIndex.called);
-
-                carousel.addClass("setTest");
-                assertTrue("addClass passes through to widget strip", WidgetStrip.prototype.addClass.calledWith("setTest"));
-
-                carousel.hasClass("hasTest");
-                assertTrue("hasClass passes through to widget strip", WidgetStrip.prototype.hasClass.calledWith("hasTest"));
-
-                carousel.removeClass("removeClass");
-                assertTrue("removeClass passes through to widget strip", WidgetStrip.prototype.removeClass.calledWith("removeClass"));
-
-                assertFalse(WidgetStrip.prototype.getClasses.called);
-                carousel.getClasses();
-                assertTrue("getClasses passes through to widget strip", WidgetStrip.prototype.getClasses.called);
-
-            }
-        );
-    };
-
-    this.CarouselTest.prototype.testSetActiveChildWidgetSetsIndexOnNavigator = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/carouselcore',
-                "antie/widgets/carousel/strips/widgetstrip",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/button"
-
-            ],
-            function (application, Carousel, WidgetStrip, Mask, Navigator, Button) {
-                var carousel;
-                this.sandbox.stub(WidgetStrip.prototype);
-                this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(Button.prototype);
-                this.sandbox.stub(Navigator.prototype);
-                carousel = new Carousel('myCarousel');
-                assertFalse(Navigator.prototype.setIndex.called);
-                carousel.setActiveChildWidget(new Button());
-                assertTrue("setActiveChildWidget sets on navigator", Navigator.prototype.setIndex.called);
+                carousel.setActiveWidget(new Button());
+                assertTrue("setActiveWidget sets on navigator", Navigator.prototype.setIndex.called);
             }
         );
     }
