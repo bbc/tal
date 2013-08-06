@@ -23,9 +23,10 @@
  */
 require.def('antie/widgets/carousel/orientations/horizontal',
     [
-        'antie/class'
+        'antie/class',
+        'antie/events/keyevent'
     ],
-    function (Class) {
+    function (Class, KeyEvent) {
         "use strict";
         var Horizontal = Class.extend({
             dimension: function () {
@@ -36,6 +37,12 @@ require.def('antie/widgets/carousel/orientations/horizontal',
             },
             styleClass: function () {
                 return 'horizontal';
+            },
+            defaultKeys: function () {
+                return {
+                    PREVIOUS: KeyEvent.VK_LEFT,
+                    NEXT: KeyEvent.VK_RIGHT
+                };
             }
         });
 

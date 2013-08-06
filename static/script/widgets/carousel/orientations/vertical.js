@@ -23,9 +23,10 @@
  */
 require.def('antie/widgets/carousel/orientations/vertical',
     [
-        'antie/class'
+        'antie/class',
+        'antie/events/keyevent'
     ],
-    function (Class) {
+    function (Class, KeyEvent) {
         "use strict";
         var Vertical = Class.extend({
             dimension: function () {
@@ -36,6 +37,12 @@ require.def('antie/widgets/carousel/orientations/vertical',
             },
             styleClass: function () {
                 return 'vertical';
+            },
+            defaultKeys: function () {
+                return {
+                    PREVIOUS: KeyEvent.VK_UP,
+                    NEXT: KeyEvent.VK_DOWN
+                };
             }
         });
 

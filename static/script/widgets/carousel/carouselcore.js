@@ -68,7 +68,6 @@ require.def('antie/widgets/carousel/carouselcore',
                 this.setNavigator(BookendedNavigator);
                 this._aligner = new Aligner(this._mask);
                 this._setAlignEventsFromMaskToHaveCarouselAsTarget();
-                this._setDefaultKeyHandler();
 			},
 
 			render: function (device) {
@@ -138,6 +137,10 @@ require.def('antie/widgets/carousel/carouselcore',
                 return this._widgetStrip.widgets();
             },
 
+            orientation: function () {
+                return this._orientation;
+            },
+
             _setOrientation: function (orientation) {
                 this._orientation = orientation;
             },
@@ -158,29 +161,6 @@ require.def('antie/widgets/carousel/carouselcore',
 
             _directAppend: function (widget) {
                 return this.appendChildWidget(widget);
-            },
-
-            _setDefaultKeyHandler: function () {
-                var self = this;
-                this.addEventListener('keydown', function (ev) {
-                    switch (ev.keyCode) {
-                    case KeyEvent.VK_UP:
-                        if (self.previousIndex() !== null) {
-                            self.alignPrevious();
-                            ev.stopPropagation();
-                        }
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        if (self.nextIndex() !== null) {
-                            self.alignNext();
-                            ev.stopPropagation();
-                            break;
-                        }
-                    }
-                });
-                this.addEventListener('beforealign', function (ev) {
-                    self.setActiveIndex(ev.alignedIndex);
-                });
             }
 		});
 
