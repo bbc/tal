@@ -23,17 +23,17 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AlignFirstHandlerTest = AsyncTestCase("AlignFirstHandler");
+    this.KeyHandlerTest = AsyncTestCase("KeyHandler");
 
-    this.AlignFirstHandlerTest.prototype.setUp = function () {
+    this.KeyHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
     };
 
-    this.AlignFirstHandlerTest.prototype.tearDown = function () {
+    this.KeyHandlerTest.prototype.tearDown = function () {
         this.sandbox.restore();
     };
 
-    this.AlignFirstHandlerTest.prototype.runTest = function (queue, fn) {
+    this.KeyHandlerTest.prototype.runTest = function (queue, fn) {
         var self = this;
         function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
             self.sandbox.stub(WidgetStrip.prototype);
@@ -46,7 +46,7 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                'antie/widgets/carousel/keyhandlers/alignfirsthandler',
+                'antie/widgets/carousel/keyhandlers/keyhandler',
                 'antie/widgets/carousel/carouselcore',
                 "antie/widgets/carousel/strips/widgetstrip",
                 "antie/widgets/carousel/mask",
@@ -58,24 +58,24 @@
             ],
             wrapped
         );
-    },
+    };
 
-    this.AlignFirstHandlerTest.prototype.createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
+    this.KeyHandlerTest.prototype.createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
         var carousel, handler;
         carousel = new CarouselCore('myCarousel', orientation);
         handler = new Handler();
         handler.attach(carousel);
         return carousel;
-    },
+    };
 
-    this.AlignFirstHandlerTest.prototype.createContainerAndAppend = function (Container, toAppend) {
+    this.KeyHandlerTest.prototype.createContainerAndAppend = function (Container, toAppend) {
         var container;
         container = new Container();
         container.appendChildWidget(toAppend);
         return container;
-    },
+    };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerStopsUpKeyPropogation = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerStopsUpKeyPropogation = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
@@ -89,7 +89,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerStopsDownKeyPropogation = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerStopsDownKeyPropogation = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
@@ -103,7 +103,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerBubblesLeftKeyEvent = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerBubblesLeftKeyEvent = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
@@ -117,7 +117,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerCausesUpKeyToAlignPrevious = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerCausesUpKeyToAlignPrevious = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
@@ -131,7 +131,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerCausesDownKeyToAlignNext = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerCausesDownKeyToAlignNext = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
@@ -145,22 +145,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerCausesSetActiveIndexOnBeforeAlign = function (queue) {
-        this.runTest(queue,
-            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
-                var carousel, beforeAlignEvent, targetIndex;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                targetIndex = 1;
-                this.sandbox.spy(carousel, 'setActiveIndex');
-
-                beforeAlignEvent = new BeforeAlignEvent(carousel, targetIndex);
-                carousel.bubbleEvent(beforeAlignEvent);
-                assertTrue(carousel.setActiveIndex.withArgs(targetIndex).calledOnce);
-            }
-        );
-    };
-
-    this.AlignFirstHandlerTest.prototype.testHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, upEvent;
@@ -174,7 +159,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerDoesNotAlignOnDownWhenNoNextIndex = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnDownWhenNoNextIndex = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, downEvent;
@@ -188,7 +173,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerBubblesUpEventWhenNoPreviousIndex = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerBubblesUpEventWhenNoPreviousIndex = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, upEvent, container;
@@ -203,7 +188,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHandlerBubblesDownEventWhenNoNextIndex = function (queue) {
+    this.KeyHandlerTest.prototype.testHandlerBubblesDownEventWhenNoNextIndex = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, downEvent, container;
@@ -218,7 +203,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.testHorizontalHandlerStopsLeftKeyPropogation = function (queue) {
+    this.KeyHandlerTest.prototype.testHorizontalHandlerStopsLeftKeyPropogation = function (queue) {
         this.runTest(queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, container, upEvent;
