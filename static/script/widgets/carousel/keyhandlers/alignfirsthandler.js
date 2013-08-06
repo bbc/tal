@@ -23,47 +23,17 @@
  */
 require.def('antie/widgets/carousel/keyhandlers/alignfirsthandler',
     [
-        'antie/class'
+        'antie/widgets/carousel/keyhandlers/keyhandler'
     ],
-    function (Class) {
+    function (KeyHandler) {
         "use strict";
-        return Class.extend({
-            attach: function (carousel) {
-                this._carousel = carousel;
-                this._addKeyListeners();
-                this._addAlignmentListeners();
-            },
-
-            _addKeyListeners: function () {
-                var previousKey, nextKey, carousel;
-                carousel = this._carousel;
-                previousKey = carousel.orientation().defaultKeys().PREVIOUS;
-                nextKey = carousel.orientation().defaultKeys().NEXT;
-                carousel.addEventListener('keydown', function (ev) {
-                    switch (ev.keyCode) {
-                    case previousKey:
-                        if (carousel.previousIndex() !== null) {
-                            carousel.alignPrevious();
-                            ev.stopPropagation();
-                        }
-                        break;
-                    case nextKey:
-                        if (carousel.nextIndex() !== null) {
-                            carousel.alignNext();
-                            ev.stopPropagation();
-                        }
-                        break;
-                    }
-                });
-            },
-
+        return KeyHandler.extend({
             _addAlignmentListeners: function () {
                 var carousel = this._carousel;
-                carousel.addEventListener('beforealign', function (ev) {
+                carousel.addEventListener('afteralign', function (ev) {
                     carousel.setActiveIndex(ev.alignedIndex);
                 });
             }
         });
     }
-
 );

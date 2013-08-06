@@ -29,7 +29,7 @@ require.def('antie/widgets/carousel',
     ],
     function (CarouselCore, Container) {
         "use strict";
-        return CarouselCore.extend({
+        var Carousel = CarouselCore.extend({
             setActiveChildWidget: function (widget) {
                 if (widget === this._mask) {
                     return this._super(widget);
@@ -110,5 +110,9 @@ require.def('antie/widgets/carousel',
                 Container.prototype.appendChildWidget.call(this, widget);
             }
         });
+
+        Carousel.orientations = CarouselCore.orientations;
+        return Carousel;
+
     }
 );
