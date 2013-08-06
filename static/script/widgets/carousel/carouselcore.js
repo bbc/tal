@@ -77,8 +77,13 @@ require.def('antie/widgets/carousel/carouselcore',
 
 			append: function (widget) {
                 widget.addClass('carouselItem');
-				this._widgetStrip.append(widget);
+				return this._widgetStrip.append(widget);
 			},
+
+            insert: function (index, widget) {
+                widget.addClass('carouselItem');
+                return this._widgetStrip.insert(index, widget);
+            },
 
 			alignNext: function () {
                 this._aligner.alignNext(this._navigator);

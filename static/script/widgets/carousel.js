@@ -30,6 +30,11 @@ require.def('antie/widgets/carousel',
     function (CarouselCore, Container) {
         "use strict";
         var Carousel = CarouselCore.extend({
+
+            insertChildWidget: function (index, widget) {
+                return this.insert(index, widget);
+            },
+
             setActiveChildWidget: function (widget) {
                 if (widget === this._mask) {
                     return this._super(widget);

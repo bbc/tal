@@ -41,7 +41,11 @@ require.def('antie/widgets/carousel/binder',
                     this._formatter = formatter;
                 },
 
-                bindAll: function (widget) {
+                appendAllTo: function (widget) {
+                    this._bindAll(widget, this._appendItem);
+                },
+
+                _bindAll: function (widget, processItemFn) {
                     var callbacks, self, it;
                     self = this;
 
@@ -56,7 +60,7 @@ require.def('antie/widgets/carousel/binder',
 
                             while (it.hasNext()) {
                                 boundItem = self._formatter.format(it);
-                                widget.appendChildWidget(boundItem);
+                                processItemFn(widget, boundItem);
                             }
 
                             widget.bubbleEvent(new DataBoundEvent("databound", widget, it));
@@ -73,6 +77,10 @@ require.def('antie/widgets/carousel/binder',
                         callbacks.onSuccess(this._dataSource);
                     }
 
+                },
+
+                _appendItem: function (widget, item) {
+                    return widget.appendChildWidget(item);
                 }
             }
         );

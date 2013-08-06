@@ -61,7 +61,7 @@
                     appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 assertTrue("Item formatter called", fakeFormatter.format.calledOnce);
                 assertTrue("Widget append called", fakeWidget.appendChildWidget.calledOnce);
@@ -87,7 +87,7 @@
                 dataSource.load = this.sandbox.stub();
                 binder = new Binder(formatter, dataSource);
                 widget = new Widget();
-                binder.bindAll(widget);
+                binder.appendAllTo(widget);
                 assertFalse("load called on array datasource", dataSource.load.called);
 
             }
@@ -124,7 +124,7 @@
 
                 binder = new Binder(formatter, dataSource);
                 carousel = new Carousel();
-                binder.bindAll(carousel);
+                binder.appendAllTo(carousel);
 
                 assertTrue("DataSource converted to iterator on bind", Iterator.prototype.init.calledWith(dataSource));
                 assertTrue("Widget appended to carousel", carousel.appendChildWidget.called);
@@ -167,7 +167,7 @@
                     appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 sinon.assert.callOrder(
                     fakeWidget.appendChildWidget.withArgs(fakeItem),
@@ -217,7 +217,7 @@
                     appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 sinon.assert.callOrder(
                     fakeWidget.appendChildWidget.withArgs(fakeItem),
@@ -256,7 +256,7 @@
                     bubbleEvent: this.sandbox.stub()
                 };
 
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 assertTrue("event bubbled on widget",
                     fakeWidget.bubbleEvent.calledOnce);
@@ -308,7 +308,7 @@
                     appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 assertEquals("2 events, beforedatabind and databound bubbled on widget",
                     2,
@@ -361,7 +361,7 @@
                     appendChildWidget: this.sandbox.stub(),
                     bubbleEvent: this.sandbox.stub()
                 };
-                binder.bindAll(fakeWidget);
+                binder.appendAllTo(fakeWidget);
 
                 assertEquals("2 events, beforedatabind and databindingerror bubbled on widget",
                     2,

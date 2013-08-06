@@ -33,20 +33,36 @@ require.def('antie/widgets/factories/carouselfactory',
         "use strict";
         return Class.extend({
             newVerticalBookendedAlignFirstCarousel: function (id) {
-                var carousel, handler;
-                carousel = new Carousel(id, Carousel.orientations.VERTICAL);
-                handler = new AlignFirstHandler();
-                handler.attach(carousel);
-                return carousel;
+                return this._newCarousel({
+                    id: id,
+                    orientation: Carousel.orientations.VERTICAL,
+                    KeyHandlerClass: AlignFirstHandler
+                });
             },
 
             newVerticalVisuallyWrappedAlignFirstCarousel: function (id) {
+                return this._newCarousel({
+                    id: id,
+                    orientation: Carousel.orientations.VERTICAL,
+                    NavClass: WrappingNavigator,
+                    StripClass: WrappingStrip,
+                    KeyHandlerClass: AlignFirstHandler
+                });
+            },
+
+            _newCarousel: function (options) {
                 var carousel, handler;
-                carousel = new Carousel(id, Carousel.orientations.VERTICAL);
-                carousel.setNavigator(WrappingNavigator);
-                carousel.setWidgetStrip(WrappingStrip);
-                handler = new AlignFirstHandler();
-                handler.attach(carousel);
+                carousel = new Carousel(options.id, options.orientation);
+                if (options.NavClass) {
+                    carousel.setNavigator(options.NavClass);
+                }
+                if (options.StripClass) {
+                    carousel.setWidgetStrip(options.StripClass);
+                }
+                if (options.KeyHandlerClass) {
+                    handler = new options.KeyHandlerClass();
+                    handler.attach(carousel);
+                }
                 return carousel;
             }
         });

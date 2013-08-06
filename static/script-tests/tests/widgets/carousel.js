@@ -223,4 +223,16 @@
         }
         this.queueTest(queue, testFunction);
     };
+
+    this.CarouselTest.prototype.testInsertChildWidgetCallsInsert = function (queue) {
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
+            var carousel;
+            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
+            CarouselCore.prototype.insert = this.sandbox.stub();
+            carousel = new Carousel();
+            carousel.insertChildWidget(new Button());
+            assertTrue(CarouselCore.prototype.insert.calledOnce);
+        }
+        this.queueTest(queue, testFunction);
+    };
 }());

@@ -141,6 +141,28 @@
 		);
 	};
 
+    this.CarouselCoreTest.prototype.testInsertInsertsOnWidgetStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel, insertedWidget, insertIndex;
+                insertIndex = 3;
+                insertedWidget = {
+                    dummy: "dummyWidget",
+                    addClass: this.sandbox.stub()
+                };
+
+                carousel = new CarouselCore('myCarousel');
+                carousel._widgetStrip.insert = this.sandbox.stub().withArgs(insertIndex, insertedWidget);
+
+                carousel.insert(insertIndex, insertedWidget);
+
+                assertTrue("Carousel inserts widget in WidgetStrip", carousel._widgetStrip.insert.calledOnce);
+            }
+        );
+    };
+
     this.CarouselCoreTest.prototype.testAppendAddsCarouselItemClassToWidget = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -155,6 +177,21 @@
 
                 carousel.append(fakeWidget);
 
+                assertTrue("Carousel adds carouselItem class to appended widget", fakeWidget.addClass.calledWith('carouselItem'));
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testInsertAddsCarouselItemClassToWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel, fakeWidget;
+                fakeWidget = { addClass: this.sandbox.stub() };
+                carousel = new CarouselCore('myCarousel');
+                carousel._widgetStrip.insert = this.sandbox.stub();
+                carousel.insert(2, fakeWidget);
                 assertTrue("Carousel adds carouselItem class to appended widget", fakeWidget.addClass.calledWith('carouselItem'));
             }
         );

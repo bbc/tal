@@ -115,6 +115,33 @@
         );
     };
 
+    this.WrappingStripTest.prototype.testInsertCallsCreateClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, verticalOrientation) {
+                var strip, item, index;
+
+                strip = new WrappingStrip('testStrip', verticalOrientation);
+                item = {test: 'item'};
+                index = 2;
+                strip._removeClones = this.sandbox.stub();
+                strip.insertChildWidget = this.sandbox.stub().withArgs(index, item);
+                strip._createClones = this.sandbox.stub();
+                strip._getMaskLength = this.sandbox.stub().returns("test");
+
+                strip.insert(index, item);
+
+                assertTrue('_createClones is called', strip._createClones.calledOnce);
+                assertTrue('_getMaskLength is called', strip._createClones.calledOnce);
+                assertTrue('_createClones is called with result of _getMaskLength', strip._createClones.calledWith("test"));
+            }
+        );
+    };
+
     this.WrappingStripTest.prototype.testAppendToWrappingStripRemovesClones = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -135,6 +162,32 @@
 
                 item = new Button('item');
                 strip.append(item);
+
+                assertTrue('Remove clones is called', strip._removeClones.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testInsertRemovesClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                "antie/widgets/button",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, Button, verticalOrientation) {
+                var strip, item, index;
+                index = 3;
+                strip = new WrappingStrip('testStrip', verticalOrientation);
+
+                strip._removeClones = this.sandbox.stub();
+                strip._createClones = this.sandbox.stub();
+                strip.insertChildWidget = this.sandbox.stub();
+                strip._getMaskLength = this.sandbox.stub();
+
+                item = new Button('item');
+                strip.insert(index, item);
 
                 assertTrue('Remove clones is called', strip._removeClones.calledOnce);
             }
