@@ -235,4 +235,19 @@
         }
         this.queueTest(queue, testFunction);
     };
+
+    this.CarouselTest.prototype.testRemoveChildWidgetCallsRemove = function (queue) {
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
+            var carousel;
+            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
+            CarouselCore.prototype.remove = this.sandbox.stub();
+            carousel = new Carousel();
+            carousel.removeChildWidget(new Button(), false);
+            assertTrue(CarouselCore.prototype.remove.calledOnce);
+        }
+        this.queueTest(queue, testFunction);
+    };
+
+
+
 }());

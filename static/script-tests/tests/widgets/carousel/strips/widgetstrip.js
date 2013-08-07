@@ -297,4 +297,26 @@
             }
         );
     };
+
+    this.WidgetStripTest.prototype.testRemoveDelegatesToRemoveChildWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device, widget;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                widget = new Button();
+                strip.remove(widget, false);
+                assertTrue(Container.prototype.removeChildWidget.calledWith(widget, false));
+            }
+        );
+    };
 }());

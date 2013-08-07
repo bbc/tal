@@ -53,6 +53,13 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._refereshWidgetElements();
             },
 
+            remove: function (widget, retainElement) {
+                this._removeClones();
+                this._super(widget, retainElement);
+                this._createClones(this._getMaskLength());
+                this._refereshWidgetElements();
+            },
+
             getLengthToIndex: function (index) {
                 return this._getLengthOfElementArrayUpToIndex(this.getChildElements(), index + this._elementIndexOffset);
             },

@@ -32,8 +32,7 @@ require.def('antie/widgets/carousel/carouselcore',
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/aligners/aligner',
         'antie/widgets/carousel/orientations/vertical',
-        'antie/widgets/carousel/orientations/horizontal',
-        'antie/events/keyevent'
+        'antie/widgets/carousel/orientations/horizontal'
 	],
 	function (
         Container,
@@ -42,16 +41,14 @@ require.def('antie/widgets/carousel/carouselcore',
         WidgetStrip,
         Aligner,
         verticalOrientation,
-        horizontalOrientation,
-        KeyEvent
+        horizontalOrientation
     ) {
 		"use strict";
 		/**
 		 * The Carousel widget extends the container widget to manage a carousel of any orientation
-		 * @name antie.widgets.Carousel
+		 * @name antie.widgets.CarouselCore
 		 * @class
 		 * @extends antie.widgets.Widget
-
 		 */
 		var Carousel = Container.extend(/** @lends antie.widgets.Container.prototype */ {
 			/**
@@ -83,6 +80,13 @@ require.def('antie/widgets/carousel/carouselcore',
             insert: function (index, widget) {
                 widget.addClass('carouselItem');
                 return this._widgetStrip.insert(index, widget);
+            },
+
+            remove: function (widget, retainElement) {
+                if (this.hasChildWidget(widget.id)) {
+                    widget.removeClass('carouselItem');
+                    return this._widgetStrip.remove(widget, retainElement);
+                }
             },
 
 			alignNext: function () {

@@ -136,7 +136,34 @@
                 strip.insert(index, item);
 
                 assertTrue('_createClones is called', strip._createClones.calledOnce);
-                assertTrue('_getMaskLength is called', strip._createClones.calledOnce);
+                assertTrue('_getMaskLength is called', strip._getMaskLength.calledOnce);
+                assertTrue('_createClones is called with result of _getMaskLength', strip._createClones.calledWith("test"));
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRemoveCallsCreateClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, verticalOrientation) {
+                var strip, item;
+
+                strip = new WrappingStrip('testStrip', verticalOrientation);
+                item = {test: 'item'};
+
+                strip._removeClones = this.sandbox.stub();
+                strip.removeChildWidget = this.sandbox.stub().withArgs(item, false);
+                strip._createClones = this.sandbox.stub();
+                strip._getMaskLength = this.sandbox.stub().returns("test");
+
+                strip.remove(item, false);
+
+                assertTrue('_createClones is called', strip._createClones.calledOnce);
+                assertTrue('_getMaskLength is called', strip._getMaskLength.calledOnce);
                 assertTrue('_createClones is called with result of _getMaskLength', strip._createClones.calledWith("test"));
             }
         );
@@ -190,6 +217,59 @@
                 strip.insert(index, item);
 
                 assertTrue('Remove clones is called', strip._removeClones.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRemoveRemovesClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                "antie/widgets/button",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, Button, verticalOrientation) {
+                var strip, item;
+
+                strip = new WrappingStrip('testStrip', verticalOrientation);
+
+                strip._removeClones = this.sandbox.stub();
+                strip._createClones = this.sandbox.stub();
+                strip.removeChildWidget = this.sandbox.stub();
+                strip._getMaskLength = this.sandbox.stub();
+
+                item = new Button('item');
+                strip.remove(item, false);
+
+                assertTrue('Remove clones is called', strip._removeClones.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRemoveRefereshesElementArray = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                "antie/widgets/button",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, Button, verticalOrientation) {
+                var strip, item;
+
+                strip = new WrappingStrip('testStrip', verticalOrientation);
+
+                strip._removeClones = this.sandbox.stub();
+                strip._createClones = this.sandbox.stub();
+                strip._refereshWidgetElements = this.sandbox.stub();
+                strip.removeChildWidget = this.sandbox.stub();
+                strip._getMaskLength = this.sandbox.stub();
+
+                item = new Button('item');
+                strip.remove(item, false);
+
+                assertTrue('Remove clones is called', strip._refereshWidgetElements.calledOnce);
             }
         );
     };

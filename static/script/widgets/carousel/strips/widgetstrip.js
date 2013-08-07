@@ -49,6 +49,10 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this.insertChildWidget(index, widget);
             },
 
+            remove: function (widget, retainElement) {
+                return this.removeChildWidget(widget, retainElement);
+            },
+
             widgets: function () {
                 return this.getChildWidgets();
             },

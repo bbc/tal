@@ -31,8 +31,16 @@ require.def('antie/widgets/carousel',
         "use strict";
         var Carousel = CarouselCore.extend({
 
+            appendChildWidget: function (widget) {
+                return this.append(widget);
+            },
+
             insertChildWidget: function (index, widget) {
                 return this.insert(index, widget);
+            },
+
+            removeChildWidget: function (widget, retainElement) {
+                return this.remove(widget, retainElement);
             },
 
             setActiveChildWidget: function (widget) {
@@ -53,10 +61,6 @@ require.def('antie/widgets/carousel',
 
             getActiveChildWidget: function () {
                 return this._widgetStrip.getActiveChildWidget();
-            },
-
-            appendChildWidget: function (widget) {
-                return this.append(widget);
             },
 
             getChildWidget: function (id) {

@@ -163,6 +163,29 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testRemoveRemovesFromWidgetStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel, widget, retainElement;
+                retainElement = true;
+                widget = {
+                    dummy: "dummyWidget",
+                    removeClass: this.sandbox.stub()
+                };
+
+                carousel = new CarouselCore('myCarousel');
+                carousel.hasChildWidget = this.sandbox.stub().returns(true);
+                carousel._widgetStrip.remove = this.sandbox.stub().withArgs(widget, retainElement);
+
+                carousel.remove(widget, retainElement);
+
+                assertTrue("Carousel removes widget from WidgetStrip", carousel._widgetStrip.remove.calledOnce);
+            }
+        );
+    };
+
     this.CarouselCoreTest.prototype.testAppendAddsCarouselItemClassToWidget = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -193,6 +216,38 @@
                 carousel._widgetStrip.insert = this.sandbox.stub();
                 carousel.insert(2, fakeWidget);
                 assertTrue("Carousel adds carouselItem class to appended widget", fakeWidget.addClass.calledWith('carouselItem'));
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testRemoveRemovesCarouselItemClassFromChildWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel, widget;
+                widget = { removeClass: this.sandbox.stub() };
+                carousel = new CarouselCore('myCarousel');
+                carousel.hasChildWidget = this.sandbox.stub().returns(true);
+                carousel._widgetStrip.remove = this.sandbox.stub();
+                carousel.remove(widget, false);
+                assertTrue("Carousel removes carouselItem class from removed widget", widget.removeClass.calledWith('carouselItem'));
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testRemoveDoesNotRemoveCarouselItemClassFromNonChildWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel, widget;
+                widget = { removeClass: this.sandbox.stub() };
+                carousel = new CarouselCore('myCarousel');
+                carousel.hasChildWidget = this.sandbox.stub().returns(false);
+                carousel._widgetStrip.remove = this.sandbox.stub();
+                carousel.remove(widget, false);
+                assertFalse("Carousel does not remove carouselItem class from non child widget", widget.removeClass.calledWith('carouselItem'));
             }
         );
     };
