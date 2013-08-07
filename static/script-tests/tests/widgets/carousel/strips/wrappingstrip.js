@@ -988,4 +988,25 @@
         );
     };
 
+    this.WrappingStripTest.prototype.testRemoveAllDelegatesToRemoveChildWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip.removeAll();
+                assertTrue(Container.prototype.removeChildWidgets.calledOnce);
+            }
+        );
+    };
+
 }());

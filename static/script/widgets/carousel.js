@@ -43,6 +43,10 @@ require.def('antie/widgets/carousel',
                 return this.remove(widget, retainElement);
             },
 
+            removeChildWidgets: function () {
+                return this.removeAll();
+            },
+
             setActiveChildWidget: function (widget) {
                 if (widget === this._mask) {
                     return this._super(widget);

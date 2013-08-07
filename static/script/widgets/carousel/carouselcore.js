@@ -89,6 +89,10 @@ require.def('antie/widgets/carousel/carouselcore',
                 }
             },
 
+            removeAll: function () {
+                this._widgetStrip.removeAll();
+            },
+
 			alignNext: function () {
                 this._aligner.alignNext(this._navigator);
 			},

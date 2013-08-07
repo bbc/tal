@@ -186,6 +186,22 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testRemoveAllRemovesAllFromWidgetStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            ['antie/widgets/carousel/carouselcore'],
+            function (application, CarouselCore) {
+                var carousel;
+                carousel = new CarouselCore('myCarousel');
+                carousel._widgetStrip.removeAll = this.sandbox.stub();
+
+                carousel.removeAll();
+
+                assertTrue("Carousel removes widgets from WidgetStrip", carousel._widgetStrip.removeAll.calledOnce);
+            }
+        );
+    };
+
     this.CarouselCoreTest.prototype.testAppendAddsCarouselItemClassToWidget = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -251,6 +267,8 @@
             }
         );
     };
+
+
 
     this.CarouselCoreTest.prototype.testItemsReturnsWidgetStripWidgets = function (queue) {
         queuedApplicationInit(queue,

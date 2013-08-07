@@ -248,6 +248,18 @@
         this.queueTest(queue, testFunction);
     };
 
+    this.CarouselTest.prototype.testRemoveChildWidgetsCallsRemoveAll = function (queue) {
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
+            var carousel;
+            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
+            CarouselCore.prototype.removeAll = this.sandbox.stub();
+            carousel = new Carousel();
+            carousel.removeChildWidgets();
+            assertTrue(CarouselCore.prototype.removeAll.calledOnce);
+        }
+        this.queueTest(queue, testFunction);
+    };
+
 
 
 }());
