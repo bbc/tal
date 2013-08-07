@@ -11,9 +11,9 @@ some interesting community projects that we are aware of...
 
 ## TAL Example
 
-This is our [example application](https://github.com/fmtvp/taldocs) that you might want 
+This is our [example application](https://github.com/fmtvp/talexample) that you might want 
 to use to get started quick with your application. There is more documentation 
-[on the tutorial pages]({site.baseurl}/getting-started/tutorial/.html)
+[on the tutorial pages]({{site.baseurl}}/getting-started/tutorial.html).
 
 ## The Doctor on TAL
 
