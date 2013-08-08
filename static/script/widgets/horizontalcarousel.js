@@ -323,12 +323,14 @@ require.def('antie/widgets/horizontalcarousel',
 
 				switch (evt.keyCode) {
 					case KeyEvent.VK_LEFT:
+						this._alignToElement(this._activeChildWidget.outputElement, true);
 						if (this.selectPreviousChildWidget()) {
 							evt.stopPropagation();
 						}
 						
 						break;
 					case KeyEvent.VK_RIGHT:
+						this._alignToElement(this._activeChildWidget.outputElement, true);
 						if (this.selectNextChildWidget()) {
 							evt.stopPropagation();
 						}
@@ -412,12 +414,27 @@ require.def('antie/widgets/horizontalcarousel',
 						// TODO: For carousels with items that all have the same width we can use 'maskSize.width / 2'
 
 						var requiredWidth = this._multiWidthItems ? maskSize.width : Math.ceil(maskSize.width / 2);
-
+						var clonesAppended = new Array();
+						
 						while(copyWidth < requiredWidth) {
 							var w = this._childWidgetOrder[i];
 							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
 							clone.cloneOfWidget = w;
 
+							if(w.hasClass('button')) {
+								w.addEventListener("blur", function(evt){
+									for(var j=0; j<clonesAppended.length; j++){
+										device.removeClassFromElement(clonesAppended[j], 'buttonFocussed', true);
+									}
+								});
+								clone.onclick = w.outputElement.onclick;
+								clone.onmouseover=function(){
+									this.cloneOfWidget.focus(true);
+									device.addClassToElement(this, 'buttonFocussed');
+								};
+								clonesAppended.push(clone);
+							}
+							
 							if(w.hasClass('active')) {
 								device.removeClassFromElement(clone, 'active', true);
 							}
@@ -437,10 +454,26 @@ require.def('antie/widgets/horizontalcarousel',
 
 						copyWidth = 0;
 						i = this._childWidgetOrder.length-1;
+						var clonesPrepended = new Array();
+						
 						while(copyWidth < requiredWidth) {
 							var w = this._childWidgetOrder[i];
 							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
 							clone.cloneOfWidget = w;
+							
+							if(w.hasClass('button')) {
+								w.addEventListener("blur", function(evt){
+									for(var j=0; j<clonesPrepended.length; j++){
+										device.removeClassFromElement(clonesPrepended[j], 'buttonFocussed', true);
+									}
+								});
+								clone.onclick = w.outputElement.onclick;
+								clone.onmouseover=function(){
+									this.cloneOfWidget.focus(true);
+									device.addClassToElement(this, 'buttonFocussed');
+								};
+								clonesPrepended.push(clone);
+							}
 
 							if(w.hasClass('active')) {
 								device.removeClassFromElement(clone, 'active', true);
