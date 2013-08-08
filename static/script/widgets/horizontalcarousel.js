@@ -427,7 +427,9 @@ require.def('antie/widgets/horizontalcarousel',
 										device.removeClassFromElement(clonesAppended[j], 'buttonFocussed', true);
 									}
 								});
-								clone.onclick = w.outputElement.onclick;
+								clone.onclick=function(){
+									this.cloneOfWidget.select();
+								};
 								clone.onmouseover=function(){
 									this.cloneOfWidget.focus(true);
 									device.addClassToElement(this, 'buttonFocussed');
@@ -467,7 +469,9 @@ require.def('antie/widgets/horizontalcarousel',
 										device.removeClassFromElement(clonesPrepended[j], 'buttonFocussed', true);
 									}
 								});
-								clone.onclick = w.outputElement.onclick;
+								clone.onclick=function(){
+									this.cloneOfWidget.select();
+								};
 								clone.onmouseover=function(){
 									this.cloneOfWidget.focus(true);
 									device.addClassToElement(this, 'buttonFocussed');
