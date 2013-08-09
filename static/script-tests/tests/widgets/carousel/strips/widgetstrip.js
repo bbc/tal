@@ -33,28 +33,16 @@
         this.sandbox.restore();
     };
 
-    this.WidgetStripTest.prototype.stubElementSizesToStartAt100AndIncreaseBy100EachCall = function (application) {
-        var elCount, device;
+    this.WidgetStripTest.prototype.stubElementOffsetToReturn0 = function (application) {
+        var device;
         device = application.getDevice();
-        elCount = 0;
-        var firstElLength = 100;
-        this.sandbox.stub(device, 'getElementSize', function (el) {
-            var thisElLength;
-            thisElLength = firstElLength + firstElLength * elCount;
-            elCount += 1;
-            return {
-                width: thisElLength,
-                height: thisElLength
-            };
-        });
+        device.getElementOffset = this.sandbox.stub().returns({ left: 0, top: 0 });
     };
 
-    this.WidgetStripTest.prototype.stubElementSizesToReturn100 = function (application) {
-        var elCount, device;
+    this.WidgetStripTest.prototype.stubElementOffsetToReturn100 = function (application) {
+        var device;
         device = application.getDevice();
-        elCount = 0;
-        var firstElLength = 100;
-        device.getElementSize = this.sandbox.stub().returns({width: 100, height: 100});
+        device.getElementOffset = this.sandbox.stub().returns({top: 100, left: 100});
     };
 
     this.WidgetStripTest.prototype.createThreeButtonStrip = function (WidgetStrip, Button, orientation) {
@@ -77,27 +65,9 @@
             ],
             function (application, WidgetStrip, Button, orientation) {
                 var device, strip;
-                this.stubElementSizesToStartAt100AndIncreaseBy100EachCall(application);
+                this.stubElementOffsetToReturn0(application);
                 strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
                 assertEquals('Length to first index is 0', 0, strip.getLengthToIndex(0));
-            }
-        );
-    };
-
-    this.WidgetStripTest.prototype.testLengthToSecondIndexIsLengthOfFirstItem = function (queue) {
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/strips/widgetstrip',
-                'antie/widgets/button',
-                'antie/widgets/carousel/orientations/vertical'
-            ],
-            function (application, WidgetStrip, Button, orientation) {
-                var device, strip;
-                this.stubElementSizesToStartAt100AndIncreaseBy100EachCall(application);
-                strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
-                assertEquals('Length to second index is length of first item', 100, strip.getLengthToIndex(1));
             }
         );
     };
@@ -113,27 +83,9 @@
             ],
             function (application, WidgetStrip, Button, orientation) {
                 var strip;
-                this.stubElementSizesToStartAt100AndIncreaseBy100EachCall(application);
+                this.stubElementOffsetToReturn0(application);
                 strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
                 assertEquals('Length to second index is length of first item', 0, strip.getLengthToIndex(-1));
-            }
-        );
-    };
-
-    this.WidgetStripTest.prototype.testLengthToThirdIndexIsSumOfFirstTwoItemLengths = function (queue) {
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/strips/widgetstrip',
-                'antie/widgets/button',
-                'antie/widgets/carousel/orientations/vertical'
-            ],
-            function (application, WidgetStrip, Button, orientation) {
-                var device, strip;
-                this.stubElementSizesToStartAt100AndIncreaseBy100EachCall(application);
-                strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
-                assertEquals('Length to third index is sum of lengths of first two items', 300, strip.getLengthToIndex(2));
             }
         );
     };
@@ -148,8 +100,8 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WidgetStrip, Button, orientation) {
-                var strip;
-                this.stubElementSizesToReturn100(application);
+                var device, strip;
+                this.stubElementOffsetToReturn100(application);
                 strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
                 assertEquals('Length of all widgets is same as length to out of bounds index', strip.getLengthToIndex(3), strip.getLengthToIndex(4));
             }
@@ -167,9 +119,9 @@
             ],
             function (application, WidgetStrip, Button, orientation) {
                 var strip;
-                this.stubElementSizesToReturn100(application);
+                this.stubElementOffsetToReturn100(application);
                 strip = this.createThreeButtonStrip(WidgetStrip, Button, orientation);
-                assertEquals('Length of all widgets is same as length to out of bounds index', 0, strip.getLengthToIndex(-1));
+                assertEquals('Length of negative index is zero', 0, strip.getLengthToIndex(-1));
             }
         );
     };
@@ -253,7 +205,7 @@
         );
     };
 
-    this.WidgetStripTest.prototype.testOrientationUsedToGetLength = function (queue) {
+    this.WidgetStripTest.prototype.testOrientationUsedToGetEdge = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -265,12 +217,13 @@
                 var strip, device;
                 device = application.getDevice();
                 this.sandbox.stub(device);
-                this.sandbox.spy(verticalOrientation, 'dimension');
+                this.sandbox.spy(verticalOrientation, 'edge');
                 this.sandbox.stub(WidgetStrip.prototype, 'getChildWidgets').returns(["test", "test"]);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 device.getElementSize.returns({width: 10, height: 10});
+                device.getElementOffset.returns({top: 10, left: 10});
                 strip.getLengthToIndex(1);
-                assertTrue(verticalOrientation.dimension.called);
+                assertTrue(verticalOrientation.edge.called);
             }
         );
     };

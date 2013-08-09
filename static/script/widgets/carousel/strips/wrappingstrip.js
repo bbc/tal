@@ -89,21 +89,10 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             },
 
             _getLengthOfElementArrayUpToIndex: function (elementArray, index) {
-                var lengthOfElements, elementSize, element, i, device;
-                if (index < 0) {
-                    index = 0;
-                }
-                if (index > elementArray.length) {
-                    index = elementArray.length;
-                }
-                device = this.getCurrentApplication().getDevice();
-                lengthOfElements = 0;
-                for (i = 0; i !== index; i += 1) {
-                    element = elementArray[i];
-                    elementSize = device.getElementSize(element);
-                    lengthOfElements += elementSize[this._getDimension()];
-                }
-                return lengthOfElements;
+                var elementsUpToIndex, endIndex, length;
+                endIndex = this._getValidatedIndex(elementArray, index);
+                elementsUpToIndex = elementArray.slice(0, endIndex + 1);
+                return this._getOffsetToLastElementInArray(elementsUpToIndex);
             },
 
             _firstFocusableIndex: function (widgets) {
@@ -221,7 +210,12 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
 
             _getMaskLength: function () {
                 return this.parentWidget.getLength();
+            },
+
+            _getWidgetLength: function (widget) {
+                return this._getElementLength(widget.outputElement);
             }
+
         });
     }
 );
