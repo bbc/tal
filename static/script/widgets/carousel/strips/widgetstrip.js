@@ -85,20 +85,13 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             _getOffsetToLastElementInArray: function (elementArray) {
-                var i, currentElement, length, lastIndex;
+                var length, lastIndex;
                 length = 0;
                 lastIndex = elementArray.length - 1;
                 if (lastIndex >= 0) {
                     length = this._getElementOffset(elementArray[elementArray.length - 1]);
                 }
                 return length;
-
-            },
-
-            _getElementLength: function (element) {
-                var device;
-                device = this._getDevice();
-                return device.getElementSize(element)[this._getDimension()];
             },
 
             _getElementOffset: function (element) {

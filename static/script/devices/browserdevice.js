@@ -527,19 +527,19 @@ require.def("antie/devices/browserdevice",
              */
             getElementOffset: function(el) {
                 var rect, parentRect, offsets;
-                if (el && el.getBoundingClientRect && el.parentNode) {
-                    rect = el.getBoundingClientRect();
-                    parentRect = el.parentNode.getBoundingClientRect();
-                    offsets = {
-                        top: rect.top - parentRect.top,
-                        left: rect.left - parentRect.left
-                    };
-                } else {
+//                if (el && el.getBoundingClientRect && el.parentNode) {
+//                    rect = el.getBoundingClientRect();
+//                    parentRect = el.parentNode.getBoundingClientRect();
+//                    offsets = {
+//                        top: rect.top - parentRect.top,
+//                        left: rect.left - parentRect.left
+//                    };
+//                } else {
                     offsets = {
                         top: el.offsetTop,
                         left: el.offsetLeft
                     };
-                }
+//                }
                 return offsets;
             },
             /**
