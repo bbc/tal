@@ -131,7 +131,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 for (i = 0; i !== clonesOfRearItems.length; i += 1) {
                     device.prependChildElement(this.outputElement, clonesOfRearItems[i]);
                 }
-                this._prependedClones = clonesOfRearItems;
+                this._prependedClones = clonesOfRearItems.reverse();
                 this._appendedClones = clonesOfFrontItems;
                 this._clones = clonesOfRearItems.concat(clonesOfFrontItems);
                 this._refreshElements();

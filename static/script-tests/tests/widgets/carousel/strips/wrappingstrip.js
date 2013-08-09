@@ -471,7 +471,7 @@
 
                 assertEquals('6 elements cloned', 6, device.cloneElement.callCount);
                 assertEquals('Clones array consists of three clones in each direction',
-                    ["item4_clone", "item3_clone", "item2_clone", "item1_clone", "item2_clone", "item3_clone"],
+                    ["item2_clone", "item3_clone", "item4_clone", "item1_clone", "item2_clone", "item3_clone"],
                     strip._getClones());
                 assertTrue('appendChildElement called three times',
                     device.appendChildElement.calledThrice);
@@ -572,7 +572,7 @@
                 strip = new WrappingStrip('test', verticalOrientation);
 
                 strip._cloneFrontItems = this.sandbox.stub().returns(["one", "two"]);
-                strip._cloneRearItems = this.sandbox.stub().returns(["three", "four"]);
+                strip._cloneRearItems = this.sandbox.stub().returns(["four", "three"]);
                 strip._createClones(maskLength);
 
                 assertEquals('All clones returned by _getClones()', ["three", "four", "one", "two"], strip._getClones());
@@ -1005,6 +1005,36 @@
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.removeAll();
                 assertTrue(Container.prototype.removeChildWidgets.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testPrependedClonesInCorrectOrder = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device, button1, button2;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.cloneElement.returnsArg(0);
+                device.getElementSize.returns({height: 20, width: 20});
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip._getMaskLength = this.sandbox.stub().returns(30);
+                button1 = new Button();
+                button1.outputElement = 'one';
+                button2 = new Button();
+                button2.outputElement = 'two';
+                strip.append(button1);
+                strip.append(button2);
+
+                assertEquals(button1.outputElement, strip._getPrependedClones()[0]);
+                assertEquals(button2.outputElement, strip._getPrependedClones()[1]);
             }
         );
     };
