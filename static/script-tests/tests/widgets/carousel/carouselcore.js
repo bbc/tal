@@ -745,6 +745,52 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testRecalculateCallsRecalculateOnWidgetStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button"
 
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.recalculate();
+                assertTrue("recalculate calls recalculate on widgetstrip", WidgetStrip.prototype.recalculate.called);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testAutoCalculatCallsAutoCalculateOnWidgetStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.autoCalculate('foo');
+                assertTrue("autoCalculate calls autoCalculate on widgetstrip", WidgetStrip.prototype.autoCalculate.calledWith('foo'));
+            }
+        );
+    };
 
 }());

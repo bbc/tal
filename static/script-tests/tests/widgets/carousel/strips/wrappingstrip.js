@@ -247,33 +247,6 @@
         );
     };
 
-    this.WrappingStripTest.prototype.testRemoveRefereshesElementArray = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                "antie/widgets/carousel/strips/wrappingstrip",
-                "antie/widgets/button",
-                'antie/widgets/carousel/orientations/vertical'
-            ],
-            function (application, WrappingStrip, Button, verticalOrientation) {
-                var strip, item;
-
-                strip = new WrappingStrip('testStrip', verticalOrientation);
-
-                strip._removeClones = this.sandbox.stub();
-                strip._createClones = this.sandbox.stub();
-                strip._refereshWidgetElements = this.sandbox.stub();
-                strip.removeChildWidget = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub();
-
-                item = new Button('item');
-                strip.remove(item, false);
-
-                assertTrue('Remove clones is called', strip._refereshWidgetElements.calledOnce);
-            }
-        );
-    };
-
     this.WrappingStripTest.prototype.testGetLengthReturnsLengthToIndexPlusOffsetInElementsArray = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -1046,6 +1019,86 @@
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.removeAll();
                 assertTrue(Container.prototype.removeChildWidgets.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRecalcualteRemovesClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                Container.prototype.getChildWidgets.returns([]);
+                strip._getMaskLength = this.sandbox.stub().returns(45);
+                this.sandbox.stub(strip, '_removeClones');
+                this.sandbox.stub(strip, '_createClones');
+                strip.recalculate();
+                assertTrue(strip._removeClones.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRecalcualteCreatesClones = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip._getMaskLength = this.sandbox.stub().returns(45);
+                Container.prototype.getChildWidgets.returns([]);
+                this.sandbox.stub(strip, '_removeClones');
+                this.sandbox.stub(strip, '_createClones');
+                strip.recalculate();
+                assertTrue(strip._createClones.calledOnce);
+            }
+        );
+    };
+
+    this.WrappingStripTest.prototype.testRecalcualteNotCalledOnAppendRemoveOrInsertWhenAutoCalculateOff = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device, item;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip._getMaskLength = this.sandbox.stub().returns(45);
+                Container.prototype.getChildWidgets.returns([]);
+                this.sandbox.stub(strip, '_removeClones');
+                this.sandbox.stub(strip, '_createClones');
+                item = new Button();
+                strip.autoCalculate(false);
+                strip.append(item);
+                strip.insert(3, item);
+                strip.remove(item);
+                assertFalse(strip._removeClones.called);
+                assertFalse(strip._createClones.called);
             }
         );
     };

@@ -72,6 +72,14 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this._getOffsetToLastElementInArray(elements);
             },
 
+            recalculate: function () {
+
+            },
+
+            autoCalculate: function (on) {
+
+            },
+
             _getValidatedIndex: function (array, index) {
                 var endIndex;
                 endIndex = index;

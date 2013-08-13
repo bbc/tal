@@ -65,6 +65,7 @@ require.def('antie/widgets/carousel/carouselcore',
                 this.setNavigator(BookendedNavigator);
                 this._aligner = new Aligner(this._mask);
                 this._setAlignEventsFromMaskToHaveCarouselAsTarget();
+                this._autoCalculate = true;
 			},
 
 			render: function (device) {
@@ -107,6 +108,14 @@ require.def('antie/widgets/carousel/carouselcore',
 
             setAlignPoint: function (pixelsFromEdgeToWidgetEdge) {
                 this._mask.setAlignPoint(pixelsFromEdgeToWidgetEdge);
+            },
+
+            recalculate: function () {
+                this._widgetStrip.recalculate();
+            },
+
+            autoCalculate: function (on) {
+                this._widgetStrip.autoCalculate(on);
             },
 
             getActiveIndex: function () {

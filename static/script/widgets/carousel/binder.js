@@ -45,13 +45,30 @@ require.def('antie/widgets/carousel/binder',
                     this._bindAll(widget, this._appendItem);
                 },
 
-                _bindAll: function (widget, processItemFn) {
-                    var callbacks, self, it;
-                    self = this;
+                _bindAll: function (widget, processItemFn, preBindFn, postBindFn) {
+                    var callbacks, beforeBindEvent;
 
-                    callbacks = {
+                    callbacks = this._getCallbacks(widget, processItemFn, postBindFn);
+                    beforeBindEvent = new DataBoundEvent("beforedatabind", widget);
+
+                    if (typeof preBindFn === 'function') {
+                        preBindFn(beforeBindEvent);
+                    }
+
+                    widget.bubbleEvent(beforeBindEvent);
+                    if (!(this._dataSource instanceof Array)) {
+                        this._dataSource.load(callbacks);
+                    } else {
+                        callbacks.onSuccess(this._dataSource);
+                    }
+
+                },
+
+                _getCallbacks: function (widget, processItemFn, postBindFn) {
+                    var self = this;
+                    return {
                         onSuccess: function (data) {
-                            var boundItem;
+                            var it, boundItem, dataBoundEvent;
                             if (data instanceof Iterator) {
                                 it = data;
                             } else {
@@ -63,20 +80,17 @@ require.def('antie/widgets/carousel/binder',
                                 processItemFn(widget, boundItem);
                             }
 
-                            widget.bubbleEvent(new DataBoundEvent("databound", widget, it));
+                            dataBoundEvent = new DataBoundEvent("databound", widget, it);
+                            if (typeof postBindFn === 'function') {
+                                postBindFn(dataBoundEvent);
+                            }
+
+                            widget.bubbleEvent(dataBoundEvent);
                         },
                         onError: function (error) {
                             widget.bubbleEvent(new DataBoundEvent("databindingerror", widget, null, error));
                         }
                     };
-
-                    widget.bubbleEvent(new DataBoundEvent("beforedatabind", widget));
-                    if (!(this._dataSource instanceof Array)) {
-                        this._dataSource.load(callbacks);
-                    } else {
-                        callbacks.onSuccess(this._dataSource);
-                    }
-
                 },
 
                 _appendItem: function (widget, item) {
@@ -84,11 +98,6 @@ require.def('antie/widgets/carousel/binder',
                 }
             }
         );
-
         return Binder;
     }
 );
-/**
- * @constructor
- * @ignore
- */

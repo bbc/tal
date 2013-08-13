@@ -38,26 +38,22 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._elements = [];
                 this._elementIndexOffset = 0;
                 this.addClass('carouselwidgetstrip');
+                this._autoCalculate = true;
             },
 
             append: function (widget) {
-                this._removeClones();
-                this._addWidget(widget);
-                this._createClones(this._getMaskLength());
+                this._super(widget);
+                this.recalculate();
             },
 
             insert: function (index, widget) {
-                this._removeClones();
                 this._super(index, widget);
-                this._createClones(this._getMaskLength());
-                this._refereshWidgetElements();
+                this.recalculate();
             },
 
             remove: function (widget, retainElement) {
-                this._removeClones();
                 this._super(widget, retainElement);
-                this._createClones(this._getMaskLength());
-                this._refereshWidgetElements();
+                this.recalculate();
             },
 
             getLengthToIndex: function (index) {
@@ -68,6 +64,19 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 return this._elements;
             },
 
+            recalculate: function () {
+                if (this._autoCalculate === true) {
+                    this._removeClones();
+                    this._createClones(this._getMaskLength());
+                }
+            },
+
+            autoCalculate: function (on) {
+                if (typeof on === 'boolean') {
+                    this._autoCalculate = on;
+                }
+            },
+
             _refereshWidgetElements: function () {
                 var widgets, i;
                 this._widgetElements = [];
@@ -75,11 +84,6 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 for (i = 0; i !== widgets.length; i += 1) {
                     this._widgetElements.push(widgets[i].outputElement);
                 }
-            },
-
-            _addWidget: function (widget) {
-                this.appendChildWidget(widget);
-                this._refreshElements();
             },
 
             _refreshElements: function () {
@@ -194,6 +198,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._clones = [];
                 this._prependedClones = [];
                 this._appendedClones = [];
+                this._refreshElements();
             },
 
             _getPrependedClones: function () {
