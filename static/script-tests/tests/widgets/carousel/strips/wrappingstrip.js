@@ -1103,4 +1103,31 @@
         );
     };
 
+    this.WrappingStripTest.prototype.testManualRecalcualteStillRecalculatesWithAutoCalculateOff = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/wrappingstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Container.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip._getMaskLength = this.sandbox.stub().returns(45);
+                Container.prototype.getChildWidgets.returns([]);
+                this.sandbox.stub(strip, '_removeClones');
+                this.sandbox.stub(strip, '_createClones');
+                strip.autoCalculate(false);
+                strip.recalculate();
+                assertTrue(strip._removeClones.called);
+                assertTrue(strip._createClones.called);
+            }
+        );
+    };
+
 }());
