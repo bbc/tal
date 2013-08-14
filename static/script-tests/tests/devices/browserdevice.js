@@ -922,6 +922,48 @@
         
         return stubs;
 	}
+
+    function stubDeviceAndGetEventSpiesForNextKey(BrowserDevice, KeyEvent, device, sandbox) {
+        "use strict";
+        var talKey, stubs;
+        stubs = {};
+        // stub out event bubbling so we can detect but it does nothing
+        device._application = {};
+        stubs.eventStub = sandbox.stub();
+        device._application.bubbleEvent = stubs.eventStub;
+        // spy on KeyEvent init so we can test which events generated
+        talKey = sandbox.spy(KeyEvent.prototype, 'init');
+        stubs.talDown = talKey.withArgs('keydown', KeyEvent.VK_NEXT);
+        stubs.talUp = talKey.withArgs('keyup', KeyEvent.VK_NEXT);
+        stubs.talPress = talKey.withArgs('keypress', KeyEvent.VK_NEXT);
+        // stub out event key map
+        sandbox.stub(device, 'getKeyMap').returns( { "425": KeyEvent.VK_NEXT } );
+        // register TAL events to DOM events
+        device.addKeyEventListener();
+
+        return stubs;
+    }
+
+    function stubDeviceAndGetEventSpiesForPrevKey(BrowserDevice, KeyEvent, device, sandbox) {
+        "use strict";
+        var talKey, stubs;
+        stubs = {};
+        // stub out event bubbling so we can detect but it does nothing
+        device._application = {};
+        stubs.eventStub = sandbox.stub();
+        device._application.bubbleEvent = stubs.eventStub;
+        // spy on KeyEvent init so we can test which events generated
+        talKey = sandbox.spy(KeyEvent.prototype, 'init');
+        stubs.talDown = talKey.withArgs('keydown', KeyEvent.VK_PREV);
+        stubs.talUp = talKey.withArgs('keyup', KeyEvent.VK_PREV);
+        stubs.talPress = talKey.withArgs('keypress', KeyEvent.VK_PREV);
+        // stub out event key map
+        sandbox.stub(device, 'getKeyMap').returns( { "424": KeyEvent.VK_PREV } );
+        // register TAL events to DOM events
+        device.addKeyEventListener();
+
+        return stubs;
+    }
 	
 	function assertCorrectTalKeyTapBehaviour(stubs) {
 	    // Key tap = quick press and release of key.
@@ -938,6 +980,20 @@
             preventDefault: function(){}
         };
 	}
+
+    function getMockDomNextKeyEvent() {
+        return {
+            keyCode: 425, // Skip forward keycode
+            preventDefault: function(){}
+        };
+    }
+
+    function getMockDomPrevKeyEvent() {
+        return {
+            keyCode: 424, // Skip Backward keycode
+            preventDefault: function(){}
+        };
+    }
 	
 	this.BrowserDeviceTest.prototype.testFirefox3OSXStyleLeftKeyTapBehaviourNormalisedCorrectly = function(queue) {
         queuedRequire(queue, 
