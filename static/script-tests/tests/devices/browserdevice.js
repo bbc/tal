@@ -1012,7 +1012,55 @@
                 document.onkeydown(mockEvent);
                 document.onkeypress(mockEvent);
                 document.onkeyup(mockEvent);
-                
+
+                // check correct TAL behaviour
+                assertCorrectTalKeyTapBehaviour(stubs);
+            }
+        );
+    };
+
+    this.BrowserDeviceTest.prototype.testPrevKey = function(queue) {
+        queuedRequire(queue,
+            [
+                "antie/devices/browserdevice",
+                "antie/events/keyevent"
+            ],
+            function(BrowserDevice, KeyEvent) {
+                var device, stubs, mockEvent;
+
+                device = new BrowserDevice(antie.framework.deviceConfiguration);
+                stubs = stubDeviceAndGetEventSpiesForPrevKey(BrowserDevice, KeyEvent, device, this.sandbox);
+                mockEvent = getMockDomPrevKeyEvent();
+
+                // fire mock firefox 3 style events
+                document.onkeydown(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeyup(mockEvent);
+
+                // check correct TAL behaviour
+                assertCorrectTalKeyTapBehaviour(stubs);
+            }
+        );
+    };
+
+    this.BrowserDeviceTest.prototype.testNextKey = function(queue) {
+        queuedRequire(queue,
+            [
+                "antie/devices/browserdevice",
+                "antie/events/keyevent"
+            ],
+            function(BrowserDevice, KeyEvent) {
+                var device, stubs, mockEvent;
+
+                device = new BrowserDevice(antie.framework.deviceConfiguration);
+                stubs = stubDeviceAndGetEventSpiesForNextKey(BrowserDevice, KeyEvent, device, this.sandbox);
+                mockEvent = getMockDomNextKeyEvent();
+
+                // fire mock firefox 3 style events
+                document.onkeydown(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeyup(mockEvent);
+
                 // check correct TAL behaviour
                 assertCorrectTalKeyTapBehaviour(stubs);
             }
