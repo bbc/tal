@@ -219,16 +219,6 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
 
             _getMaskLength: function () {
                 return this.parentWidget.getLength();
-            },
-
-            _getWidgetLength: function (widget) {
-                return this._getElementLength(widget.outputElement);
-            },
-
-            _getElementLength: function (element) {
-                var device;
-                device = this._getDevice();
-                return device.getElementSize(element)[this._getDimension()];
             }
         });
     }

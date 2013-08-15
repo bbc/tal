@@ -1,4 +1,4 @@
-/**
+    /**
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
@@ -72,6 +72,12 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this._getOffsetToLastElementInArray(elements);
             },
 
+            lengthOfWidgetAtIndex: function (index) {
+                var widget;
+                widget = this.getChildWidgets()[index];
+                return this._getWidgetLength(widget);
+            },
+
             recalculate: function () {
 
             },
@@ -118,6 +124,16 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
 
             _getEdge: function () {
                 return this._orientation.edge();
+            },
+
+            _getWidgetLength: function (widget) {
+                return this._getElementLength(widget.outputElement);
+            },
+
+            _getElementLength: function (element) {
+                var device;
+                device = this._getDevice();
+                return device.getElementSize(element)[this._getDimension()];
             }
         });
 

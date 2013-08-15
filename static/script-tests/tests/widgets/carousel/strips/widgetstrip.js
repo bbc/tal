@@ -293,4 +293,48 @@
             }
         );
     };
+
+    this.WidgetStripTest.prototype.testLengthOfWidgetAtIndexReturnsHeightIfVertical = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 70, height: 50});
+                strip = new WidgetStrip('strip', verticalOrientation);
+                strip.getChildWidgets = this.sandbox.stub().returns(["widget"]);
+                strip.append(new Button());
+                assertEquals(50, strip.lengthOfWidgetAtIndex(0));
+            }
+        );
+    };
+
+    this.WidgetStripTest.prototype.testLengthOfWidgetAtIndexReturnsWidthIfHorizontal = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/horizontal',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 70, height: 50});
+                strip = new WidgetStrip('strip', horizontalOrientation);
+                strip.getChildWidgets = this.sandbox.stub().returns(["widget"]);
+                strip.append(new Button());
+                assertEquals(70, strip.lengthOfWidgetAtIndex(0));
+            }
+        );
+    };
 }());
