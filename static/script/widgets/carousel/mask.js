@@ -79,6 +79,46 @@ require.def('antie/widgets/carousel/mask',
                 return size[this._getDimension()];
             },
 
+            indicesVisibleWhenAlignedToIndex: function (index) {
+                var maskLength, visibleIndices;
+                maskLength = this.getLength();
+                visibleIndices = this._visibleIndixesBefore(index, maskLength).concat(
+                    this._visibleIndicesFrom(index, maskLength)
+                );
+                return visibleIndices;
+            },
+
+            _visibleIndixesBefore: function (index, maskLength) {
+                var distanceToMaskStart, currentIndex, indices;
+                indices = [];
+                currentIndex = index - 1;
+                distanceToMaskStart = this._alignmentPoint;
+                while (currentIndex !== -1 && distanceToMaskStart > 0) {
+                    if (distanceToMaskStart <= maskLength) {
+                        indices.unshift(currentIndex);
+                    }
+                    distanceToMaskStart -= this.getWidgetStrip().lengthOfWidgetAtIndex(currentIndex);
+                    currentIndex -= 1;
+                }
+                return indices;
+            },
+
+            _visibleIndicesFrom: function (index, maskLength) {
+                var widgetCount, distanceToMaskEnd, currentIndex, indices;
+                indices = [];
+                widgetCount = this.getWidgetStrip().getChildWidgetCount();
+                currentIndex = index;
+                distanceToMaskEnd = maskLength - this._alignmentPoint;
+                while (currentIndex !== widgetCount && distanceToMaskEnd > 0) {
+                    if (distanceToMaskEnd <= maskLength) {
+                        indices.push(currentIndex);
+                    }
+                    distanceToMaskEnd -= this.getWidgetStrip().lengthOfWidgetAtIndex(currentIndex);
+                    currentIndex += 1;
+                }
+                return indices;
+            },
+
             _moveContentsTo: function (relativePixels, options) {
                 this._spinner.moveContentsTo(relativePixels, options);
             },
