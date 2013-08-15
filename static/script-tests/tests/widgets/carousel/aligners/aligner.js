@@ -487,11 +487,11 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                aligner._wrapForward = this.sandbox.stub();
+                aligner._wrap = this.sandbox.stub();
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
                 aligner.alignNext(navigator);
 
-                assertTrue("wrapForward called", aligner._wrapForward.calledWith(1, 0));
+                assertTrue("wrapForward called", aligner._wrap.calledWith(1, 0, navigator, Aligner.directions.FORWARD));
             }
         );
     };
@@ -509,11 +509,11 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                aligner._wrapBackward = this.sandbox.stub();
+                aligner._wrap = this.sandbox.stub();
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
                 aligner.alignPrevious(navigator);
 
-                assertTrue("wrapBackward called", aligner._wrapBackward.calledWith(0, 1));
+                assertTrue("wrapBackward called", aligner._wrap.calledWith(0, 1, navigator, Aligner.directions.BACKWARD));
             }
         );
     };
