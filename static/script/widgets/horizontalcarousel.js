@@ -487,7 +487,7 @@ require.def('antie/widgets/horizontalcarousel',
              * @returns Boolean true if animation was called, otherwise false
              */
             show: function( options ){
-                this._super( options );
+              //  this._super( options );
                 var application = this.getCurrentApplication();
                 if(!application) {
                     return;
