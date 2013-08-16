@@ -336,6 +336,7 @@ require.def('antie/widgets/horizontalcarousel',
 						break;
 				}
 			},
+
 			/**
 			 * DataBound event handler. Clone carousel items to allow infinite scrolling.
 			 * @private
@@ -472,15 +473,39 @@ require.def('antie/widgets/horizontalcarousel',
 				}
 
 				// everything is now in place, show the carousel				
-				if(!this._keepHidden) {
-					var config = device.getConfig();
-					var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
-					device.showElement({
-						el: this._maskElement,
-						skipAnim: !animate
-					});
-				}
+                this.show({});
 			},
+
+            /**
+             * Shows the carousel.
+             * @param {Object}    options Details of the element to be shown, with optional parameters.
+             * @param {Boolean} [options.skipAnim] By default the showing of the element will be animated (faded in). Pass <code>true</code> here to prevent animation.
+             * @param {Function} [options.onComplete] Callback function to be called when the element has been shown.
+             * @param {Number}    [options.fps=25] Frames per second for fade animation.
+             * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
+             * @param {String}    [options.easing=linear] Easing style for fade animation.
+             * @returns Boolean true if animation was called, otherwise false
+             */
+            show: function( options ){
+                this._super( options );
+                var application = this.getCurrentApplication();
+                if(!application) {
+                    return;
+                }
+                var device = application.getDevice();
+
+                if(!this._keepHidden) {
+                    var config = device.getConfig();
+                    var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
+
+                    options.el = this._maskElement;
+                    options.skipAnim = !animate;
+
+                    return device.showElement(options);
+                }
+                return false;
+            },
+
 			/**
 			 * Set whether to support wrapping within the carousel.
 			 * @param {Integer} wrapMode 	Pass <code>HorizontalCarousel.WRAP_MODE_NONE</code> for no wrapping.
