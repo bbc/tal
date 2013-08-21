@@ -88,6 +88,10 @@ require.def('antie/widgets/carousel/mask',
                 return visibleIndices;
             },
 
+            stopAnimation: function () {
+
+            },
+
             _visibleIndixesBefore: function (index, maskLength) {
                 var distanceToMaskStart, currentIndex, indices;
                 indices = [];
