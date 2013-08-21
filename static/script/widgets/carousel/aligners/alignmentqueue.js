@@ -30,7 +30,7 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
         return Class.extend({
             init: function (mask) {
                 this._mask = mask;
-                this._skip = false;
+                this._setSkip(false);
                 this._queue = [];
             },
 
@@ -71,13 +71,15 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
             },
 
             complete: function () {
-                this._setSkip();
+                this._setSkip(true);
                 this._mask.stopAnimation();
             },
 
             _runFirstInQueue: function () {
                 if (this._queue.length > 0) {
                     this._queue[0]();
+                } else {
+                    this._setSkip(false);
                 }
             },
 
@@ -86,8 +88,8 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
                 this._runFirstInQueue();
             },
 
-            _setSkip: function () {
-                this._skip = true;
+            _setSkip: function (skip) {
+                this._skip = skip;
             }
         });
     }

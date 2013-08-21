@@ -173,4 +173,41 @@
             }
         );
     };
+
+    this.AlignmentQueueTest.prototype.testSkippingResetAfterQueueFinished = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Mask, AlignmentQueue) {
+                var queue, lastComplete, alignStub;
+                this.sandbox.stub(Mask.prototype, 'init');
+                lastComplete = null;
+                // to fake one non-instant align (to be stopped) followed by some instant aligns
+                alignStub = this.sandbox.stub(Mask.prototype, 'alignToIndex', function (index, options) {
+                    if (lastComplete === null) {
+                        lastComplete = options.onComplete;
+                    } else {
+                        options.onComplete();
+                    }
+                });
+                this.sandbox.stub(Mask.prototype, 'stopAnimation', function () {
+                    lastComplete();
+                });
+
+                queue = new AlignmentQueue(new Mask());
+                queue.add(3, {skipAnim: false});
+                queue.add(4, {skipAnim: false});
+                queue.start();
+                queue.complete();
+                queue.add(5, {skipAnim: false});
+                queue.start();
+                assertEquals("first call has original skipAnim", false, alignStub.firstCall.args[1].skipAnim);
+                assertEquals("second call has overridden skipAnim", true, alignStub.secondCall.args[1].skipAnim);
+                assertEquals("third call has original skipAnim", false, alignStub.thirdCall.args[1].skipAnim);
+            }
+        );
+    };
 }());
