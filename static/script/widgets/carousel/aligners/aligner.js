@@ -25,14 +25,16 @@ require.def('antie/widgets/carousel/aligners/aligner',
     [
         'antie/class',
         "antie/events/beforealignevent",
-        "antie/events/afteralignevent"
+        "antie/events/afteralignevent",
+        "antie/widgets/carousel/aligners/alignmentqueue"
     ],
-    function (Class, BeforeAlignEvent, AfterAlignEvent) {
+    function (Class, BeforeAlignEvent, AfterAlignEvent, AlignmentQueue) {
         "use strict";
         var Aligner;
         Aligner = Class.extend({
             init: function (mask) {
                 this._mask = mask;
+                this._queue = new AlignmentQueue(this._mask);
             },
 
             alignNext: function (navigator) {
@@ -103,18 +105,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _invisibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction) {
-                var self;
-                function alignAfterWrap() {
-                    self._finalAlign(toIndex);
-                }
-                self = this;
-                this._mask.alignToIndex(
-                    this._firstIndexToAlignForInvisibleActiveItemWrap(fromIndex, navigator, direction),
-                    {
-                        skipAnim: true,
-                        onComplete: alignAfterWrap
-                    }
-                );
+                var index = this._firstIndexToAlignForInvisibleActiveItemWrap(fromIndex, navigator, direction);
+                this._queue.add(index, {skipAnim: true});
+                this._queueFinalAlign(toIndex);
+                this._queue.start();
             },
 
             _firstIndexToAlignForInvisibleActiveItemWrap: function (fromIndex, navigator, direction) {
@@ -128,13 +122,11 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _visibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction) {
-                var self, firstAlignIndex;
-                function wrapAfterAlign() {
-                    self._finalAlign(toIndex, { skipAnim: true });
-                }
-                self = this;
+                var firstAlignIndex;
                 firstAlignIndex = this._firstIndexToAlignForVisibleActiveItemWrap(toIndex, navigator, direction);
-                this._mask.alignToIndex(firstAlignIndex, { onComplete: wrapAfterAlign });
+                this._queue.add(firstAlignIndex, {});
+                this._queueFinalAlign(toIndex, { skipAnim: true });
+                this._queue.start();
             },
 
             _firstIndexToAlignForVisibleActiveItemWrap: function (toIndex, navigator, direction) {
@@ -146,10 +138,11 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _moveNormally: function (toIndex, options) {
-                this._finalAlign(toIndex, options);
+                this._queueFinalAlign(toIndex, options);
+                this._queue.start();
             },
 
-            _finalAlign: function (toIndex,  options) {
+            _queueFinalAlign: function (toIndex,  options) {
                 var optionsWithCallback, self;
 
                 function OptionsClone() {}
@@ -169,7 +162,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
                     optionsWithCallback.onComplete = bubbleAfterAlign;
                 }
 
-                this._mask.alignToIndex(toIndex, optionsWithCallback);
+                this._queue.add(toIndex, optionsWithCallback);
             }
         });
 
