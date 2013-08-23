@@ -526,10 +526,21 @@ require.def("antie/devices/browserdevice",
              * @return An literal object containing properties, top and left.
              */
             getElementOffset: function(el) {
-                return {
-                    top: el.offsetTop,
-                    left: el.offsetLeft
-                };
+                var rect, parentRect, offsets;
+//                if (el && el.getBoundingClientRect && el.parentNode) {
+//                    rect = el.getBoundingClientRect();
+//                    parentRect = el.parentNode.getBoundingClientRect();
+//                    offsets = {
+//                        top: rect.top - parentRect.top,
+//                        left: rect.left - parentRect.left
+//                    };
+//                } else {
+                    offsets = {
+                        top: el.offsetTop,
+                        left: el.offsetLeft
+                    };
+//                }
+                return offsets;
             },
             /**
              * Gets the available browser screen size.
