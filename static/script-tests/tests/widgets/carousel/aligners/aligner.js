@@ -976,4 +976,56 @@
             }
         );
     };
+
+    this.AlignerTest.prototype.testOptionsPassedToMaskFromAlignNext = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+
+                mask = new Mask();
+                aligner = new Aligner(mask);
+
+                aligner.alignNext(new Navigator(), {
+                    skipAnim: "test"
+                });
+
+                assertTrue("Align to index called on mask", mask.alignToIndex.called);
+                assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testOptionsPassedToMaskFromAlignPrevious = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+
+                mask = new Mask();
+                aligner = new Aligner(mask);
+
+                aligner.alignPrevious(new Navigator(), {
+                    skipAnim: "test"
+                });
+
+                assertTrue("Align to index called on mask", mask.alignToIndex.called);
+                assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+            }
+        );
+    };
 }());

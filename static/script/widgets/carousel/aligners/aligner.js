@@ -37,14 +37,14 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 this._queue = new AlignmentQueue(this._mask);
             },
 
-            alignNext: function (navigator) {
+            alignNext: function (navigator, options) {
                 this._queue.complete();
-                this._align(navigator, Aligner.directions.FORWARD);
+                this._align(navigator, Aligner.directions.FORWARD, options);
             },
 
-            alignPrevious: function (navigator) {
+            alignPrevious: function (navigator, options) {
                 this._queue.complete();
-                this._align(navigator, Aligner.directions.BACKWARD);
+                this._align(navigator, Aligner.directions.BACKWARD, options);
             },
 
             alignToIndex: function (index, options) {
@@ -53,7 +53,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 this._moveNormally(index, options);
             },
 
-            _align: function (navigator, direction) {
+            _align: function (navigator, direction, options) {
                 var startIndex, targetIndex;
                 startIndex = navigator.currentIndex();
                 targetIndex = this._subsequentIndexInDirection(navigator, direction);
@@ -62,7 +62,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
                     if (this._isWrap(startIndex, targetIndex, direction)) {
                         this._wrap(startIndex, targetIndex, navigator, direction);
                     } else {
-                        this._moveNormally(targetIndex);
+                        this._moveNormally(targetIndex, options);
                     }
                 }
             },

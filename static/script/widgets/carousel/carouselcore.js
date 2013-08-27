@@ -94,12 +94,12 @@ require.def('antie/widgets/carousel/carouselcore',
                 this._widgetStrip.removeAll();
             },
 
-			alignNext: function () {
-                this._aligner.alignNext(this._navigator);
+			alignNext: function (options) {
+                this._aligner.alignNext(this._navigator, options);
 			},
 
-            alignPrevious: function () {
-                this._aligner.alignPrevious(this._navigator);
+            alignPrevious: function (options) {
+                this._aligner.alignPrevious(this._navigator, options);
 			},
 
             alignToIndex: function (index, options) {
