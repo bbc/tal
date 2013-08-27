@@ -91,6 +91,19 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 assertEquals('Index of second item returned', 1, navigator.nextIndex());
             },
 
+            testIndexAfterZeroWithFocussableNextWidget: function (NavClass, sandbox) {
+                var container, navigator, widget;
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container]);
+                container = new Container();
+                widget = this.createFocussableWidget();
+                container.getChildWidgets.returns([widget, widget]);
+                container.getChildWidgetCount.returns(2);
+
+                navigator = new NavClass(container);
+                assertEquals('Index of second item returned', 1, navigator.indexAfter(0));
+            },
+
             testPreviousIndexReturnsZeroWithTwoItemsAndActiveIndexOne: function (NavClass, sandbox) {
                 var container, navigator, widget;
                 this.setSandbox(sandbox);
@@ -103,6 +116,18 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
 
                 navigator = new NavClass(container);
                 assertEquals('Index of second item returned', 0, navigator.previousIndex());
+            },
+
+            testIndexBeforeOneWithFocussableIndexZero: function (NavClass, sandbox) {
+                var container, navigator, widget;
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container]);
+                container = new Container();
+                widget = this.createFocussableWidget();
+                container.getChildWidgets.returns([widget, widget]);
+                container.getChildWidgetCount.returns(2);
+                navigator = new NavClass(container);
+                assertEquals('Index of first item returned', 0, navigator.indexBefore(1));
             },
 
             testGetIndexReturnsIndexOfContainerActiveWidget: function (NavClass, sandbox) {
@@ -159,6 +184,21 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 assertEquals("Next enabled widget index returned", 2, index);
             },
 
+            testIndexAfterSkipsDisabledWidget: function (NavClass, sandbox) {
+                var navigator, container, widget, disabledWidget, index;
+
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container, Button]);
+
+                widget = this.createFocussableWidget();
+                disabledWidget = this.createNonFocussableWidget();
+                container = this.createContainerWithWidgets([widget, disabledWidget, widget]);
+                navigator = new NavClass(container);
+                index = navigator.indexAfter(0);
+
+                assertEquals("Next enabled widget index returned", 2, index);
+            },
+
             testPreviousIndexSkipsDisabledWidget: function (NavClass, sandbox) {
                 var navigator, container, widget, disabledWidget, index;
 
@@ -172,6 +212,22 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
 
                 navigator = new NavClass(container);
                 index = navigator.previousIndex();
+
+                assertEquals("Previous enabled widget index returned", 0, index);
+            },
+
+            testIndexBeforeSkipsDisabledWidget: function (NavClass, sandbox) {
+                var navigator, container, widget, disabledWidget, index;
+
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container, Button]);
+
+                widget = this.createFocussableWidget();
+                disabledWidget = this.createNonFocussableWidget();
+                container = this.createContainerWithWidgets([widget, disabledWidget, widget]);
+
+                navigator = new NavClass(container);
+                index = navigator.indexBefore(2);
 
                 assertEquals("Previous enabled widget index returned", 0, index);
             },
@@ -193,6 +249,22 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 assertTrue("Next index null when all following disabled", index === null);
             },
 
+            testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
+                var navigator, container, widget, disabledWidget, index;
+
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container, Button]);
+
+                widget = this.createFocussableWidget();
+                disabledWidget = this.createNonFocussableWidget();
+                container = this.createContainerWithWidgets([widget, disabledWidget, disabledWidget]);
+
+                navigator = new NavClass(container);
+                index = navigator.indexAfter(0);
+                assertEquals("Index after 0 null when all following disabled", null, index);
+                assertTrue("Index after 0 null when all following disabled", index === null);
+            },
+
             testPreviousIndexReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
                 var navigator, container, widget, disabledWidget, index;
 
@@ -208,6 +280,22 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 index = navigator.previousIndex();
 
                 assertTrue("Next index null when all preceding disabled", index === null);
+            },
+
+            testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
+                var navigator, container, widget, disabledWidget, index;
+
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container, Button]);
+
+                widget = this.createFocussableWidget();
+                disabledWidget = this.createNonFocussableWidget();
+                container = this.createContainerWithWidgets([disabledWidget, disabledWidget, widget]);
+
+                navigator = new NavClass(container);
+                index = navigator.indexBefore(2);
+                assertEquals("Index before 2 null when all preceding disabled", null, index);
+                assertTrue("Index before 2  null when all preceding disabled", index === null);
             },
 
             testSetIndexActivatesValidIndexOfActivatableWidget: function (NavClass, sandbox) {
@@ -310,6 +398,10 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 outer.appendChildWidget(inner);
                 return inner;
             }
+
+
+
+
         };
     }
 );

@@ -229,6 +229,84 @@
         );
     };
 
+    this.BookendedNavigatorTest.prototype.testIndexAfterZeroWithFocussableNextWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexAfterZeroWithFocussableNextWidget(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.BookendedNavigatorTest.prototype.testIndexBeforeOneWithFocussableIndexZero = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexBeforeOneWithFocussableIndexZero(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.BookendedNavigatorTest.prototype.testIndexAfterSkipsDisabledWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexAfterSkipsDisabledWidget(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.BookendedNavigatorTest.prototype.testIndexBeforeSkipsDisabledWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexAfterSkipsDisabledWidget(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.BookendedNavigatorTest.prototype.testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.BookendedNavigatorTest.prototype.testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
     this.BookendedNavigatorTest.prototype.testPreviousIndexFromFirstItemReturnsNull = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -275,5 +353,7 @@
             }
         );
     };
+
+
 
 }());

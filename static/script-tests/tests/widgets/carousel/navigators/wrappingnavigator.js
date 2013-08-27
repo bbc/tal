@@ -229,6 +229,84 @@
         );
     };
 
+    this.WrappingNavigatorTest.prototype.testIndexAfterZeroWithFocussableNextWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexAfterZeroWithFocussableNextWidget(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.WrappingNavigatorTest.prototype.testIndexBeforeOneWithFocussableIndexZero = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexBeforeOneWithFocussableIndexZero(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.WrappingNavigatorTest.prototype.testIndexAfterSkipsDisabledWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexAfterSkipsDisabledWidget(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.WrappingNavigatorTest.prototype.testIndexBeforeSkipsDisabledWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexBeforeSkipsDisabledWidget(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.WrappingNavigatorTest.prototype.testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
+    this.WrappingNavigatorTest.prototype.testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
     this.WrappingNavigatorTest.prototype.testPreviousIndexFromFirstPositionReturnsLastIndex = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',

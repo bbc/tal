@@ -49,12 +49,20 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.FORWARD);
             },
 
+            indexAfter: function (index) {
+                return this._getNextPotientialIndexInDirection(index, Navigator.directions.FORWARD);
+            },
+
             /**
              * @returns {Number} the index of the previous focusable widget
              */
             previousIndex: function () {
                 var currentIndex = this.currentIndex();
                 return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.BACKWARD);
+            },
+
+            indexBefore: function (index) {
+                return this._getNextPotientialIndexInDirection(index, Navigator.directions.BACKWARD);
             },
 
             /**

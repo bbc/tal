@@ -31,22 +31,30 @@ require.def('antie/widgets/carousel/navigators/wrappingnavigator',
         return Navigator.extend(
             {
                 nextIndex: function () {
+                    return this.indexAfter(this.currentIndex());
+                },
+
+                indexAfter: function (index) {
                     var potentialIndex;
-                    potentialIndex = this._super();
-                    return this._validateIndex(potentialIndex);
+                    potentialIndex = this._super(index);
+                    return this._validateIndex(index, potentialIndex);
                 },
 
                 previousIndex: function () {
-                    var potentialIndex;
-                    potentialIndex = this._super();
-                    return this._validateIndex(potentialIndex);
+                    return this.indexBefore(this.currentIndex());
                 },
 
-                _validateIndex: function (potentialIndex) {
+                indexBefore: function (index) {
+                    var potentialIndex;
+                    potentialIndex = this._super(index);
+                    return this._validateIndex(index, potentialIndex);
+                },
+
+                _validateIndex: function (currentIndex, potentialIndex) {
                     var index;
                     index = null;
                     potentialIndex = this._wrapIndex(potentialIndex);
-                    if (potentialIndex !== this.currentIndex()) {
+                    if (potentialIndex !== currentIndex) {
                         index = potentialIndex;
                     }
                     return index;

@@ -36,9 +36,21 @@ require.def('antie/widgets/carousel/navigators/bookendednavigator',
                     return this._validateIndex(potentialIndex);
                 },
 
+                indexAfter: function (index) {
+                    var potentialIndex;
+                    potentialIndex = this._super(index);
+                    return this._validateIndex(potentialIndex);
+                },
+
                 previousIndex: function () {
                     var potentialIndex;
                     potentialIndex = this._super();
+                    return this._validateIndex(potentialIndex);
+                },
+
+                indexBefore: function (index) {
+                    var potentialIndex;
+                    potentialIndex = this._super(index);
                     return this._validateIndex(potentialIndex);
                 },
 
