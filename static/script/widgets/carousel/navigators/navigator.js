@@ -46,7 +46,7 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             nextIndex: function () {
                 var currentIndex = this.currentIndex();
-                return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.FORWARD);
+                return this.indexAfter(currentIndex);
             },
 
             indexAfter: function (index) {
@@ -58,7 +58,7 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             previousIndex: function () {
                 var currentIndex = this.currentIndex();
-                return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.BACKWARD);
+                return this.indexBefore(currentIndex);
             },
 
             indexBefore: function (index) {

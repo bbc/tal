@@ -30,21 +30,10 @@ require.def('antie/widgets/carousel/navigators/bookendednavigator',
 		"use strict";
         var BookendedNavigator;
         BookendedNavigator = Navigator.extend({
-                nextIndex: function () {
-                    var potentialIndex;
-                    potentialIndex = this._super();
-                    return this._validateIndex(potentialIndex);
-                },
 
                 indexAfter: function (index) {
                     var potentialIndex;
                     potentialIndex = this._super(index);
-                    return this._validateIndex(potentialIndex);
-                },
-
-                previousIndex: function () {
-                    var potentialIndex;
-                    potentialIndex = this._super();
                     return this._validateIndex(potentialIndex);
                 },
 

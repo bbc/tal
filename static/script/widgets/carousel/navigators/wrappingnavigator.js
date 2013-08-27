@@ -30,18 +30,10 @@ require.def('antie/widgets/carousel/navigators/wrappingnavigator',
         "use strict";
         return Navigator.extend(
             {
-                nextIndex: function () {
-                    return this.indexAfter(this.currentIndex());
-                },
-
                 indexAfter: function (index) {
                     var potentialIndex;
                     potentialIndex = this._super(index);
                     return this._validateIndex(index, potentialIndex);
-                },
-
-                previousIndex: function () {
-                    return this.indexBefore(this.currentIndex());
                 },
 
                 indexBefore: function (index) {
