@@ -255,4 +255,36 @@
         );
     };
 
+    this.SpinnerTest.prototype.testOptionParamatersUsedWhenPresent = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                options = {
+                    duration: "test1",
+                    fps: "test2",
+                    easing: "test3",
+                    skipAnim: "test4"
+                };
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, options);
+
+                assertEquals("Passed in duration used", "test1", device.moveElementTo.firstCall.args[0].duration);
+                assertEquals("Passed in fps used", "test2", device.moveElementTo.firstCall.args[0].fps);
+                assertEquals("Passed in easing used", "test3", device.moveElementTo.firstCall.args[0].easing);
+                assertEquals("Passed in skipAnim used", "test4", device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
 }());
