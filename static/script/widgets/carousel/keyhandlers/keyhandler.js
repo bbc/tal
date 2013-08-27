@@ -52,12 +52,14 @@ require.def('antie/widgets/carousel/keyhandlers/keyhandler',
                     switch (ev.keyCode) {
                     case previousKey:
                         if (carousel.previousIndex() !== null) {
+                            carousel.completeAlignment();
                             carousel.alignPrevious(self._animationOptions);
                             ev.stopPropagation();
                         }
                         break;
                     case nextKey:
                         if (carousel.nextIndex() !== null) {
+                            carousel.completeAlignment();
                             carousel.alignNext(self._animationOptions);
                             ev.stopPropagation();
                         }

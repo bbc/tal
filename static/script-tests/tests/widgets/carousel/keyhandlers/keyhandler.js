@@ -246,4 +246,42 @@
             }
         );
     };
+
+    this.KeyHandlerTest.prototype.testCallsCompleteBeforeNext = function (queue) {
+        this.runTest(queue,
+            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, nextEvent, handler, options;
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                handler = new Handler();
+                handler.setAnimationOptions(options);
+                handler.attach(carousel);
+                carousel.alignNext = this.sandbox.stub();
+                carousel.completeAlignment = this.sandbox.stub();
+                nextEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(nextEvent);
+                assertTrue("completeAlignment called", carousel.completeAlignment.calledOnce);
+                assertTrue("completeAlignment called before alignNext", carousel.completeAlignment.calledBefore(carousel.alignNext));
+            }
+        );
+    };
+
+    this.KeyHandlerTest.prototype.testCallsCompleteBeforePrevious = function (queue) {
+        this.runTest(queue,
+            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, previousEvent, handler, options;
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                handler = new Handler();
+                handler.setAnimationOptions(options);
+                handler.attach(carousel);
+                carousel.alignPrevious = this.sandbox.stub();
+                carousel.completeAlignment = this.sandbox.stub();
+                previousEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
+                carousel.bubbleEvent(previousEvent);
+                assertTrue("completeAlignment called", carousel.completeAlignment.calledOnce);
+                assertTrue("completeAlignment called before alignPrevious", carousel.completeAlignment.calledBefore(carousel.alignPrevious));
+            }
+        );
+    };
 }());
