@@ -106,6 +106,10 @@ require.def('antie/widgets/carousel/carouselcore',
                 this._aligner.alignToIndex(index, options);
             },
 
+            completeAlignment: function () {
+                this._aligner.complete();
+            },
+
             setAlignPoint: function (pixelsFromEdgeToWidgetEdge) {
                 this._mask.setAlignPoint(pixelsFromEdgeToWidgetEdge);
             },

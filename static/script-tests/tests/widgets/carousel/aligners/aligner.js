@@ -163,7 +163,7 @@
                 this.sandbox.stub(BeforeAlignEvent.prototype);
 
                 mask = new Mask();
-                
+
                 aligner = new Aligner(mask);
                 aligner.alignToIndex(3);
 
@@ -954,77 +954,6 @@
         );
     };
 
-    this.AlignerTest.prototype.testQueueCompletedBeforeAlignNext = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/aligners/alignmentqueue"
-            ],
-            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
-                var aligner, mask, navigator;
-                this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AlignmentQueue.prototype);
-                mask = new Mask();
-
-                aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-                aligner.alignNext(navigator);
-                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
-
-            }
-        );
-    };
-
-    this.AlignerTest.prototype.testQueueCompletedBeforeAlignPrevious = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/aligners/alignmentqueue"
-            ],
-            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
-                var aligner, mask, navigator;
-                this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AlignmentQueue.prototype);
-                mask = new Mask();
-
-                aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-                aligner.alignPrevious(navigator);
-                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
-
-            }
-        );
-    };
-
-    this.AlignerTest.prototype.testQueueCompletedBeforeAlignToIndex = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/aligners/alignmentqueue"
-            ],
-            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
-                var aligner, mask, navigator;
-                this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AlignmentQueue.prototype);
-                mask = new Mask();
-
-                aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-                aligner.alignToIndex(2, navigator);
-                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
-            }
-        );
-    };
-
     this.AlignerTest.prototype.testOptionsPassedToMaskFromAlignNext = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -1073,6 +1002,35 @@
 
                 assertTrue("Align to index called on mask", mask.alignToIndex.called);
                 assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testCompleteCompletesAlignmentQueue = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/aligners/alignmentqueue",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, AlignmentQueue, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+                aligner = new Aligner(mask);
+
+                aligner.alignPrevious(new Navigator());
+                assertFalse("Complete called on alignment queue before called on aligner",
+                    AlignmentQueue.prototype.complete.called);
+
+                aligner.complete();
+
+                assertTrue("Complete called on alignment queue",
+                    AlignmentQueue.prototype.complete.calledOnce);
             }
         );
     };

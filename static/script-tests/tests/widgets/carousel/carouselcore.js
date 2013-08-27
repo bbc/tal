@@ -874,4 +874,31 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testCompleteAlignmentDelegatesToAligner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.alignPrevious();
+                carousel.completeAlignment();
+                assertTrue("Complete delegated to aligner", Aligner.prototype.complete.calledOnce);
+            }
+        );
+    };
+
 }());
