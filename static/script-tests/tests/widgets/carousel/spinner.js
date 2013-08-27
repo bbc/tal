@@ -204,4 +204,55 @@
         );
     };
 
+    this.SpinnerTest.prototype.testStopAnimationStopsInProgressAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, stopStub;
+
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.moveElementTo.returns("test");
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10);
+
+                assertFalse("device stopAnimation called before stopAnimation", device.stopAnimation.calledOnce);
+                spinner.stopAnimation();
+                assertTrue("device stopAnimation called on stopAnimation", device.stopAnimation.calledOnce);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testStopAnimationDoesNotCallDeviceWhenNoAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, stopStub;
+
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.moveElementTo.returns("test");
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.stopAnimation();
+                assertFalse("device stopAnimation called when no animation in progress", device.stopAnimation.calledOnce);
+            }
+        );
+    };
+
 }());

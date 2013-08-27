@@ -38,14 +38,17 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             alignNext: function (navigator) {
+                this._queue.complete();
                 this._align(navigator, Aligner.directions.FORWARD);
             },
 
             alignPrevious: function (navigator) {
+                this._queue.complete();
                 this._align(navigator, Aligner.directions.BACKWARD);
             },
 
             alignToIndex: function (index, options) {
+                this._queue.complete();
                 this._bubbleBeforeAlign(index);
                 this._moveNormally(index, options);
             },

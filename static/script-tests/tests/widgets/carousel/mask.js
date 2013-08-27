@@ -594,4 +594,26 @@
         );
     };
 
+    this.MaskTest.prototype.testStopAnimationPassesThroughToSpinner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/carousel/spinner'
+            ],
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
+                var device, mask, strip;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Spinner.prototype);
+                this.sandbox.stub(WidgetStrip.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                mask = new Mask('testMask', strip, verticalOrientation);
+                mask.stopAnimation();
+                assertTrue(Spinner.prototype.stopAnimation.calledOnce);
+            }
+        );
+    };
 }());

@@ -35,8 +35,7 @@ require.def('antie/widgets/carousel/spinner',
          * @extends antie.widgets.Class
 
          */
-        var MAX_INT, Spinner;
-        MAX_INT = Math.floor(Number.MAX_VALUE - 1);
+        var Spinner;
         Spinner = Class.extend(/** @lends antie.Class.prototype */ {
 
             /**
@@ -54,11 +53,16 @@ require.def('antie/widgets/carousel/spinner',
             moveContentsTo: function (relativePixels, animOptions) {
                 var moveElementOptions;
                 moveElementOptions = this._getOptions(animOptions, relativePixels);
-                if (this._animating && this._currentAnimation) {
-                    this._device.stopAnimation(this._currentAnimation);
-                }
+                this.stopAnimation();
                 this._animating = true;
                 this._currentAnimation = this._device.moveElementTo(moveElementOptions);
+            },
+
+            stopAnimation: function () {
+                if (this._animating) {
+                    this._device.stopAnimation(this._currentAnimation);
+                    this._clearAnimating();
+                }
             },
 
             _getOptions: function (options, relativePixels) {
@@ -68,7 +72,7 @@ require.def('antie/widgets/carousel/spinner',
                 clonedOptions = this._shallowCloneOptions(options);
                 clonedOptions.el = this._mask.getWidgetStrip().outputElement;
                 clonedOptions.to = destination;
-                clonedOptions.duration = 150;
+                clonedOptions.duration = 550;
                 clonedOptions.easing = 'linear';
                 clonedOptions.onComplete = this._getWrappedOnComplete(options);
                 return clonedOptions;

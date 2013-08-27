@@ -32,6 +32,7 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
                 this._mask = mask;
                 this._setSkip(false);
                 this._queue = [];
+                this._started = false;
             },
 
             add: function (index, options) {
@@ -71,15 +72,19 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
             },
 
             complete: function () {
-                this._setSkip(true);
-                this._mask.stopAnimation();
+                if (this._started) {
+                    this._setSkip(true);
+                    this._mask.stopAnimation();
+                }
             },
 
             _runFirstInQueue: function () {
                 if (this._queue.length > 0) {
+                    this._started = true;
                     this._queue[0]();
                 } else {
                     this._setSkip(false);
+                    this._started = false;
                 }
             },
 

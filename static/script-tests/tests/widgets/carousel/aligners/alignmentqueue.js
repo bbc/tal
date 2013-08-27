@@ -210,4 +210,28 @@
             }
         );
     };
+
+    this.AlignmentQueueTest.prototype.testCompleteOnEmptyQueueDoesNotSetSkip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Mask, AlignmentQueue) {
+                var queue, alignStub;
+                this.sandbox.stub(Mask.prototype);
+
+                alignStub = Mask.prototype.alignToIndex.yieldsTo('onComplete');
+
+                queue = new AlignmentQueue(new Mask());
+                queue.complete();
+                queue.add(3, {skipAnim: false});
+                queue.start();
+
+                assertEquals("first call has original skipAnim", false, alignStub.firstCall.args[1].skipAnim);
+
+            }
+        );
+    };
 }());

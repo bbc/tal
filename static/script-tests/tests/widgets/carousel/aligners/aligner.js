@@ -906,27 +906,74 @@
         );
     };
 
-//    this.AlignerTest.prototype.testAlignToFiresBeforeAlign = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                "antie/widgets/carousel/aligners/aligner",
-//                "antie/widgets/carousel/mask",
-//                "antie/widgets/carousel/navigators/navigator",
-//                "antie/events/beforealignevent"
-//            ],
-//            function (application, Aligner, Mask, Navigator, BeforeAlignEvent) {
-//                var aligner, mask, navigator, event;
-//                this.sandbox.stub(Mask.prototype);
-//                mask = new Mask();
-//
-//                aligner = new Aligner(mask);
-//                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-//                aligner.alignTo(3, navigator);
-//                assertTrue("Event bubbled on mask", mask.bubbleEvent.called);
-//                event = mask.bubbleEvent.firstCall.args[0];
-//                assertTrue("Event bubbled on mask of type BeforeAlignEvent", event instanceof BeforeAlignEvent);
-//            }
-//        );
-//    };
+    this.AlignerTest.prototype.testQueueCompletedBeforeAlignNext = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
+                var aligner, mask, navigator;
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+
+                aligner = new Aligner(mask);
+                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                aligner.alignNext(navigator);
+                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
+
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testQueueCompletedBeforeAlignPrevious = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
+                var aligner, mask, navigator;
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+
+                aligner = new Aligner(mask);
+                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                aligner.alignPrevious(navigator);
+                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
+
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testQueueCompletedBeforeAlignToIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Aligner, Mask, Navigator, AlignmentQueue) {
+                var aligner, mask, navigator;
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+
+                aligner = new Aligner(mask);
+                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                aligner.alignToIndex(2, navigator);
+                assertTrue(AlignmentQueue.prototype.complete.calledOnce);
+            }
+        );
+    };
 }());

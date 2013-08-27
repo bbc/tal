@@ -89,7 +89,7 @@ require.def('antie/widgets/carousel/mask',
             },
 
             stopAnimation: function () {
-
+                this._spinner.stopAnimation();
             },
 
             _visibleIndixesBefore: function (index, maskLength) {
