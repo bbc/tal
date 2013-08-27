@@ -60,7 +60,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 this._bubbleBeforeAlign(targetIndex);
                 if (targetIndex !== null) {
                     if (this._isWrap(startIndex, targetIndex, direction)) {
-                        this._wrap(startIndex, targetIndex, navigator, direction);
+                        this._wrap(startIndex, targetIndex, navigator, direction, options);
                     } else {
                         this._moveNormally(targetIndex, options);
                     }
@@ -93,11 +93,11 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
             },
 
-            _wrap: function (fromIndex, toIndex, navigator, direction) {
+            _wrap: function (fromIndex, toIndex, navigator, direction, options) {
                 if (this._fromIndexActive(fromIndex, navigator)) {
-                    this._visibleActiveItemWrap(fromIndex, toIndex, navigator, direction);
+                    this._visibleActiveItemWrap(fromIndex, toIndex, navigator, direction, options);
                 } else {
-                    this._invisibleActiveItemWrap(fromIndex, toIndex, navigator, direction);
+                    this._invisibleActiveItemWrap(fromIndex, toIndex, navigator, direction, options);
                 }
             },
 
@@ -107,10 +107,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 return fromIndex === activeIndex;
             },
 
-            _invisibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction) {
+            _invisibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction, options) {
                 var index = this._firstIndexToAlignForInvisibleActiveItemWrap(fromIndex, navigator, direction);
                 this._queue.add(index, {skipAnim: true});
-                this._queueFinalAlign(toIndex);
+                this._queueFinalAlign(toIndex, options);
                 this._queue.start();
             },
 
@@ -124,10 +124,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 }
             },
 
-            _visibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction) {
+            _visibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction, options) {
                 var firstAlignIndex;
                 firstAlignIndex = this._firstIndexToAlignForVisibleActiveItemWrap(toIndex, navigator, direction);
-                this._queue.add(firstAlignIndex, {});
+                this._queue.add(firstAlignIndex, options);
                 this._queueFinalAlign(toIndex, { skipAnim: true });
                 this._queue.start();
             },

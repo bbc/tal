@@ -631,6 +631,30 @@
         );
     };
 
+    this.AlignerTest.prototype.testWrapForwardPassesOptionsToAnimation = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask, animatedCall, navigator;
+                this.sandbox.stub(Mask.prototype);
+                mask = new Mask();
+                mask.alignToIndex.yieldsTo('onComplete');
+                navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
+                aligner = new Aligner(mask);
+                aligner.alignNext(navigator, {skipAnim: true});
+                animatedCall = mask.alignToIndex.secondCall;
+                assertTrue("Align to index called", mask.alignToIndex.called);
+                assertEquals("SkipAnim passed into align", true, animatedCall.args[1].skipAnim);
+
+            }
+        );
+    };
+
     this.AlignerTest.prototype.testWrapForwardFromInactiveIndexPastDisabledItemAlignsToCorrectClone = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -740,6 +764,30 @@
                 assertTrue("Align to index called", mask.alignToIndex.called);
                 assertEquals("Align to index length+1 for last clone", 2, wrapAlignCall.args[0]);
                 assertTrue("Align to index length+1 skips anim", wrapAlignCall.args[1].skipAnim);
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testWrapBackwardPassesOptionsToAnimation = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask, animatedCall, navigator;
+                this.sandbox.stub(Mask.prototype);
+                mask = new Mask();
+                mask.alignToIndex.yieldsTo('onComplete');
+                navigator = this.getNavigatorAtStartWithCurrentIndexInactive(Navigator);
+                aligner = new Aligner(mask);
+                aligner.alignPrevious(navigator, {skipAnim: true});
+                animatedCall = mask.alignToIndex.secondCall;
+                assertTrue("Align to index called", mask.alignToIndex.called);
+                assertEquals("SkipAnim passed into align", true, animatedCall.args[1].skipAnim);
+
             }
         );
     };
