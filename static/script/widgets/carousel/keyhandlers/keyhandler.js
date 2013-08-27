@@ -28,14 +28,23 @@ require.def('antie/widgets/carousel/keyhandlers/keyhandler',
     function (Class) {
         "use strict";
         return Class.extend({
+            init: function () {
+                this._animationOptions = {};
+            },
+
             attach: function (carousel) {
                 this._carousel = carousel;
                 this._addKeyListeners();
                 this._addAlignmentListeners();
             },
 
+            setAnimationOptions: function (options) {
+                this._animationOptions = options;
+            },
+
             _addKeyListeners: function () {
-                var previousKey, nextKey, carousel;
+                var previousKey, nextKey, carousel, self;
+                self = this;
                 carousel = this._carousel;
                 previousKey = carousel.orientation().defaultKeys().PREVIOUS;
                 nextKey = carousel.orientation().defaultKeys().NEXT;
@@ -43,13 +52,13 @@ require.def('antie/widgets/carousel/keyhandlers/keyhandler',
                     switch (ev.keyCode) {
                     case previousKey:
                         if (carousel.previousIndex() !== null) {
-                            carousel.alignPrevious();
+                            carousel.alignPrevious(self._animationOptions);
                             ev.stopPropagation();
                         }
                         break;
                     case nextKey:
                         if (carousel.nextIndex() !== null) {
-                            carousel.alignNext();
+                            carousel.alignNext(self._animationOptions);
                             ev.stopPropagation();
                         }
                         break;

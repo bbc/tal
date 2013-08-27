@@ -122,4 +122,30 @@
             }
         );
     };
+
+    this.CarouselFactoryTest.prototype.testPassedInAnimOptionsSetOnKeyHandler = function (queue) {
+        this.runTest(queue,
+            function (application, CarouselFactory, Carousel, AlignFirstHandler, WrappingNavigator, WrappingStrip) {
+                var factory, carousel, options;
+                this.sandbox.stub(AlignFirstHandler.prototype);
+                factory = new CarouselFactory();
+                options = {test: "test"};
+                carousel = factory.newVerticalVisuallyWrappedAlignFirstCarousel('test', options);
+                assertTrue(AlignFirstHandler.prototype.setAnimationOptions.calledWith(options));
+            }
+        );
+    };
+
+    this.CarouselFactoryTest.prototype.testDefaultEmptyAnimOptions = function (queue) {
+        this.runTest(queue,
+            function (application, CarouselFactory, Carousel, AlignFirstHandler, WrappingNavigator, WrappingStrip) {
+                var factory, carousel, options;
+                this.sandbox.stub(AlignFirstHandler.prototype);
+                factory = new CarouselFactory();
+                options = {};
+                carousel = factory.newVerticalVisuallyWrappedAlignFirstCarousel('test');
+                assertTrue(AlignFirstHandler.prototype.setAnimationOptions.calledWith(options));
+            }
+        );
+    };
 }());

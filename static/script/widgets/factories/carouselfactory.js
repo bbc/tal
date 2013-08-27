@@ -32,25 +32,27 @@ require.def('antie/widgets/factories/carouselfactory',
     function (Class, Carousel, AlignFirstHandler, WrappingNavigator, WrappingStrip) {
         "use strict";
         return Class.extend({
-            newVerticalBookendedAlignFirstCarousel: function (id) {
+            newVerticalBookendedAlignFirstCarousel: function (id, animOptions) {
                 return this._newCarousel({
                     id: id,
                     orientation: Carousel.orientations.VERTICAL,
                     KeyHandlerClass: AlignFirstHandler
-                });
+                },
+                animOptions || {});
             },
 
-            newVerticalVisuallyWrappedAlignFirstCarousel: function (id) {
+            newVerticalVisuallyWrappedAlignFirstCarousel: function (id, animOptions) {
                 return this._newCarousel({
                     id: id,
                     orientation: Carousel.orientations.VERTICAL,
                     NavClass: WrappingNavigator,
                     StripClass: WrappingStrip,
                     KeyHandlerClass: AlignFirstHandler
-                });
+                },
+                animOptions || {});
             },
 
-            _newCarousel: function (options) {
+            _newCarousel: function (options, animOptions) {
                 var carousel, handler;
                 carousel = new Carousel(options.id, options.orientation);
                 if (options.NavClass) {
@@ -62,6 +64,7 @@ require.def('antie/widgets/factories/carouselfactory',
                 if (options.KeyHandlerClass) {
                     handler = new options.KeyHandlerClass();
                     handler.attach(carousel);
+                    handler.setAnimationOptions(animOptions);
                 }
                 return carousel;
             }

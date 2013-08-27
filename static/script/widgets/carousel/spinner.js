@@ -72,9 +72,10 @@ require.def('antie/widgets/carousel/spinner',
                 clonedOptions = this._shallowCloneOptions(options);
                 clonedOptions.el = this._mask.getWidgetStrip().outputElement;
                 clonedOptions.to = destination;
-                clonedOptions.duration = clonedOptions.duration || 550;
+                clonedOptions.duration = clonedOptions.duration || 150;
                 clonedOptions.easing = clonedOptions.easing || 'linear';
                 clonedOptions.fps = clonedOptions.fps || '25';
+                clonedOptions.skipAnim = (clonedOptions.skipAnim === undefined) ? true : clonedOptions.skipAnim;
                 clonedOptions.onComplete = this._getWrappedOnComplete(options);
                 return clonedOptions;
             },

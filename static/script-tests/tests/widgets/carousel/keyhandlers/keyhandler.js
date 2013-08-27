@@ -216,4 +216,34 @@
             }
         );
     };
+
+    this.KeyHandlerTest.prototype.testHandlerPassesEmptyAnimationOptionsByDefault = function (queue) {
+        this.runTest(queue,
+            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, upEvent;
+                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                carousel.alignNext = this.sandbox.stub();
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(upEvent);
+                assertEquals("Animation object empty by default", {}, carousel.alignNext.firstCall.args[0]);
+            }
+        );
+    };
+
+    this.KeyHandlerTest.prototype.testHandlerPassesSpecifiedAnimationOptions = function (queue) {
+        this.runTest(queue,
+            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
+                var carousel, upEvent, handler, options;
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                handler = new Handler();
+                handler.setAnimationOptions(options);
+                handler.attach(carousel);
+                carousel.alignNext = this.sandbox.stub();
+                upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
+                carousel.bubbleEvent(upEvent);
+                assertEquals("Animation object empty by default", options, carousel.alignNext.firstCall.args[0]);
+            }
+        );
+    };
 }());

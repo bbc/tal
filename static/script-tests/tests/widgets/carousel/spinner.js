@@ -287,4 +287,48 @@
         );
     };
 
+    this.SpinnerTest.prototype.testSkipAnimTrueByDefault = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10);
+                assertEquals("Skipanim true", true, device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testSkipAnimCanBeOveridden = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, {skipAnim: false});
+                assertEquals("Skipanim overriden to false", false, device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
 }());
