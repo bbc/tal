@@ -43,7 +43,9 @@
         var navigator = this.getNavigator(Navigator);
         navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(1);
+        navigator.indexAfter.returns(1);
         navigator.previousIndex.returns(1);
+        navigator.indexBefore.returns(1);
         navigator.indexCount.returns(2);
         return navigator;
     };
@@ -52,7 +54,9 @@
         var navigator = this.getNavigator(Navigator);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(0);
+        navigator.indexAfter.returns(0);
         navigator.previousIndex.returns(0);
+        navigator.indexBefore.returns(0);
         navigator.indexCount.returns(2);
         return navigator;
     };
@@ -61,16 +65,10 @@
         var navigator, first;
         first = true;
         navigator = this.getNavigator(Navigator);
-        navigator.currentIndex.restore();
-        this.sandbox.stub(navigator, 'currentIndex', function () {
-            if (first) {
-                first = false;
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+
+        navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(0);
+        navigator.indexAfter.returns(0);
         navigator.indexCount.returns(2);
         return navigator;
     };
@@ -79,16 +77,9 @@
         var navigator, first;
         first = true;
         navigator = this.getNavigator(Navigator);
-        navigator.currentIndex.restore();
-        this.sandbox.stub(navigator, 'currentIndex', function () {
-            if (first) {
-                first = false;
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+        navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(0);
+        navigator.indexAfter.returns(0);
         navigator.indexCount.returns(3);
         return navigator;
     };
@@ -98,6 +89,7 @@
         navigator = this.getNavigator(Navigator);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(0);
+        navigator.indexAfter.returns(0);
         navigator.indexCount.returns(3);
         return navigator;
     };
@@ -107,6 +99,7 @@
         navigator = this.getNavigator(Navigator);
         navigator.currentIndex.returns(1);
         navigator.previousIndex.returns(2);
+        navigator.indexBefore.returns(2);
         navigator.indexCount.returns(4);
         return navigator;
     };
@@ -115,16 +108,9 @@
         var navigator, first;
         first = true;
         navigator = this.getNavigator(Navigator);
-        navigator.currentIndex.restore();
-        this.sandbox.stub(navigator, 'currentIndex', function () {
-            if (first) {
-                first = false;
-                return 1;
-            } else {
-                return 2;
-            }
-        });
+        navigator.currentIndex.returns(2);
         navigator.previousIndex.returns(2);
+        navigator.indexBefore.returns(2);
         navigator.indexCount.returns(3);
         return navigator;
     };
@@ -133,17 +119,11 @@
         var navigator, first;
         first = true;
         navigator = this.getNavigator(Navigator);
-        navigator.currentIndex.restore();
-        this.sandbox.stub(navigator, 'currentIndex', function () {
-            if (first) {
-                first = false;
-                return 0;
-            } else {
-                return 1;
-            }
-        });
+        navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(1);
+        navigator.indexAfter.returns(1);
         navigator.previousIndex.returns(1);
+        navigator.indexBefore.returns(1);
         navigator.indexCount.returns(2);
         return navigator;
     };
@@ -225,6 +205,7 @@
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertTrue("event fired on carousel mask", mask.bubbleEvent.called);
@@ -322,6 +303,7 @@
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
 
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertTrue("2 events fired on carousel mask", mask.bubbleEvent.calledTwice);
@@ -467,6 +449,7 @@
                 mask = new Mask();
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertTrue("alignToIndex called on mask", mask.alignToIndex.calledWith(0));
@@ -489,6 +472,7 @@
                 aligner = new Aligner(mask);
                 aligner._wrap = this.sandbox.stub();
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
 
                 assertTrue("wrapForward called", aligner._wrap.calledWith(1, 0, navigator, Aligner.directions.FORWARD));
@@ -509,6 +493,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
+                aligner.alignToIndex(0);
                 aligner._wrap = this.sandbox.stub();
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
                 aligner.alignPrevious(navigator);
@@ -532,8 +517,9 @@
                 mask = new Mask();
                 navigator = this.getNavigator(Navigator);
                 navigator.currentIndex.returns(1);
-                navigator.nextIndex.returns(null);
+                navigator.indexAfter.returns(null);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
 
                 assertFalse("Align called on mask", mask.alignToIndex.called);
@@ -555,8 +541,9 @@
                 mask = new Mask();
                 navigator = this.getNavigator(Navigator);
                 navigator.currentIndex.returns(1);
-                navigator.previousIndex.returns(null);
+                navigator.indexBefore.returns(null);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertFalse("Align called on mask", mask.alignToIndex.called);
@@ -601,6 +588,7 @@
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
                 aligner._wrapBackward = this.sandbox.stub();
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertFalse("wrapBackward called", aligner._wrapBackward.called);
@@ -622,9 +610,9 @@
                 mask = new Mask();
                 navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
                 assertEquals("Align to index -1 for last clone", -1, wrapAlignCall.args[0]);
                 assertTrue("Align to index -1 skips anim", wrapAlignCall.args[1].skipAnim);
             }
@@ -646,6 +634,7 @@
                 mask.alignToIndex.yieldsTo('onComplete');
                 navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator, {skipAnim: true});
                 animatedCall = mask.alignToIndex.secondCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -669,6 +658,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -692,6 +682,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -714,6 +705,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -737,6 +729,7 @@
                 mask = new Mask();
                 navigator = this.getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled(Navigator);
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 1;
                 aligner.alignPrevious(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -810,7 +803,7 @@
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
                 aligner = new Aligner(mask);
-
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 alignCall = mask.alignToIndex.secondCall;
@@ -865,6 +858,7 @@
                 mask = new Mask();
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertEquals("Align to destination index (2)", 2, alignCall.args[0]);
@@ -887,7 +881,9 @@
                 mask = new Mask();
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                aligner._alignedIndex = 0;
                 aligner.alignPrevious(navigator);
+
                 alignCall = mask.alignToIndex.firstCall;
                 assertEquals("Align to destination index (-1)", -1, alignCall.args[0]);
             }
@@ -912,6 +908,7 @@
                 });
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                aligner._alignedIndex = 1;
                 aligner.alignNext(navigator);
 
                 alignCall = mask.alignToIndex.firstCall;
@@ -941,6 +938,7 @@
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
                 aligner = new Aligner(mask);
+                aligner._alignedIndex = 0;
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
                 aligner.alignPrevious(navigator);
 

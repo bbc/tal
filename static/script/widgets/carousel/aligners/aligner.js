@@ -35,6 +35,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             init: function (mask) {
                 this._mask = mask;
                 this._queue = new AlignmentQueue(this._mask);
+                this._alignedIndex = null;
             },
 
             alignNext: function (navigator, options) {
@@ -56,10 +57,12 @@ require.def('antie/widgets/carousel/aligners/aligner',
 
             _align: function (navigator, direction, options) {
                 var startIndex, targetIndex;
-                startIndex = navigator.currentIndex();
+
+                startIndex = this._alignedIndex;
                 targetIndex = this._subsequentIndexInDirection(navigator, direction);
-                this._bubbleBeforeAlign(targetIndex);
+
                 if (targetIndex !== null) {
+                    this._bubbleBeforeAlign(targetIndex);
                     if (this._isWrap(startIndex, targetIndex, direction)) {
                         this._wrap(startIndex, targetIndex, navigator, direction, options);
                     } else {
@@ -69,10 +72,12 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _subsequentIndexInDirection: function (navigator, direction) {
+                var startPoint;
+                startPoint = (this._alignedIndex === null) ? 0 : this._alignedIndex;
                 if (direction === Aligner.directions.FORWARD) {
-                    return navigator.nextIndex();
+                    return navigator.indexAfter(startPoint);
                 } else {
-                    return navigator.previousIndex();
+                    return navigator.indexBefore(startPoint);
                 }
             },
 
@@ -88,9 +93,11 @@ require.def('antie/widgets/carousel/aligners/aligner',
 
             _bubbleBeforeAlign: function (index) {
                 this._mask.bubbleEvent(new BeforeAlignEvent(this._mask, index));
+                this._alignedIndex = index;
             },
 
             _bubbleAfterAlign: function (index) {
+
                 this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
             },
 
@@ -150,7 +157,15 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 var optionsWithCallback, self;
 
                 function OptionsClone() {}
-                function bubbleAfterAlign() {
+
+                function unwrappedComplete() {
+                    //self._alignedIndex = toIndex;
+                    self._bubbleAfterAlign(toIndex);
+                }
+
+                function wrappedComplete() {
+
+                    options.onComplete();
                     self._bubbleAfterAlign(toIndex);
                 }
 
@@ -158,12 +173,9 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 OptionsClone.prototype = options;
                 optionsWithCallback = new OptionsClone();
                 if (options && options.onComplete) {
-                    optionsWithCallback.onComplete = function () {
-                        options.onComplete();
-                        bubbleAfterAlign();
-                    };
+                    optionsWithCallback.onComplete = wrappedComplete;
                 } else {
-                    optionsWithCallback.onComplete = bubbleAfterAlign;
+                    optionsWithCallback.onComplete = unwrappedComplete;
                 }
 
                 this._queue.add(toIndex, optionsWithCallback);
