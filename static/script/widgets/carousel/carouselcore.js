@@ -114,6 +114,14 @@ require.def('antie/widgets/carousel/carouselcore',
                 this._mask.setAlignPoint(pixelsFromEdgeToWidgetEdge);
             },
 
+            setNormalisedAlignPoint: function (fractionOfMaskLength) {
+                this._mask.setNormalisedAlignPoint(fractionOfMaskLength);
+            },
+
+            setNormalisedWidgetAlignPoint: function (fractionOfWidgetLength) {
+                this._mask.setNormalisedWidgetAlignPoint(fractionOfWidgetLength);
+            },
+
             recalculate: function () {
                 this._widgetStrip.recalculate();
             },

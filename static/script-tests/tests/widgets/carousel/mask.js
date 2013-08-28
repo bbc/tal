@@ -105,6 +105,164 @@
         );
     };
 
+    this.MaskTest.prototype.testAlignToIndexAtNormalisedAlignPointMovesContentsByAlignPointMinusLength = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 200, height: 200});
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+
+                mask.setNormalisedAlignPoint(0.5);
+                mask.alignToIndex(1);
+
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', 50, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedAlignPointClampedToZero = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 200, height: 200});
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+
+                mask.setNormalisedAlignPoint(-0.5);
+                mask.alignToIndex(1);
+
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', -50, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedAlignPointClampedToOne = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 200, height: 200});
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+
+                mask.setNormalisedAlignPoint(2);
+                mask.alignToIndex(1);
+
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', 150, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedWidgetAlign = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask.setNormalisedWidgetAlignPoint(0.5);
+                mask.alignToIndex(1);
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', -75, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedWidgetAlignClampedToZero = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask.setNormalisedWidgetAlignPoint(-0.5);
+                mask.alignToIndex(1);
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', -50, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedWidgetAlignClampedToOne = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask.setNormalisedWidgetAlignPoint(2);
+                mask.alignToIndex(1);
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to negative of length', -100, pixelsMoved);
+            }
+        );
+    };
+
     this.MaskTest.prototype.testAlignToIndexPassesOnProvidedOnComplete = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
@@ -114,7 +272,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Mask, Spinner, verticalOrientation) {
-                var moveStub, pixelsMoved, mask;
+                var mask;
                 this.sandbox.stub(Spinner.prototype);
                 function MockWidgetStripFn() {}
                 function fakeOnComplete() {}

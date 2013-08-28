@@ -47,17 +47,29 @@ require.def('antie/widgets/carousel/mask',
                 this.addClass('carouselmask');
                 this.setWidgetStrip(widgetStrip);
                 this._alignmentPoint = 0;
+                this._normalisedWidgetAlignPoint = 0;
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
             },
 
             alignToIndex: function (index, options) {
-                var distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
+                var distanceContentsMustMoveBack;
+                distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
                 distanceContentsMustMoveBack -= this._alignmentPoint;
+                distanceContentsMustMoveBack += this._getWidgetAlignmentPoint(index);
                 this._moveContentsTo(-distanceContentsMustMoveBack, options);
             },
 
             setAlignPoint: function (pixelsFromEdge) {
                 this._alignmentPoint = pixelsFromEdge;
+            },
+
+            setNormalisedAlignPoint: function (fractionOfMaskLength) {
+                var clampedFraction = this._clampBetweenZeroAndOne(fractionOfMaskLength);
+                this._alignmentPoint = this.getLength() * clampedFraction;
+            },
+
+            setNormalisedWidgetAlignPoint: function (fractionOfWidgetLength) {
+                this._normalisedWidgetAlignPoint = this._clampBetweenZeroAndOne(fractionOfWidgetLength);
             },
 
             getWidgetStrip: function () {
@@ -90,6 +102,25 @@ require.def('antie/widgets/carousel/mask',
 
             stopAnimation: function () {
                 this._spinner.stopAnimation();
+            },
+
+            _clampBetweenZeroAndOne: function (value) {
+                var clampedValue = value;
+                clampedValue = Math.max(0, clampedValue);
+                clampedValue = Math.min(1, clampedValue);
+                return clampedValue;
+            },
+
+            _getWidgetAlignmentPoint: function (index) {
+                var widgetLength, widgetAlignmentPoint;
+                if (this._normalisedWidgetAlignPoint === 0) {
+                    widgetAlignmentPoint = 0;
+                } else {
+                    widgetLength = this._widgetStrip.lengthOfWidgetAtIndex(index);
+                    widgetAlignmentPoint = widgetLength * this._normalisedWidgetAlignPoint;
+                }
+
+                return widgetAlignmentPoint;
             },
 
             _visibleIndixesBefore: function (index, maskLength) {

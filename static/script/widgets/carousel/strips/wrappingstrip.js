@@ -75,6 +75,10 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 }
             },
 
+            lengthOfWidgetAtIndex: function (index) {
+                return this._getElementLength(this._elements[index + this._elementIndexOffset]);
+            },
+
             _refereshWidgetElements: function () {
                 var widgets, i;
                 this._widgetElements = [];
