@@ -68,7 +68,9 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
             },
 
             start: function () {
-                this._runFirstInQueue();
+                if (!this._started) {
+                    this._runFirstInQueue();
+                }
             },
 
             complete: function () {
@@ -98,4 +100,4 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
             }
         });
     }
-)
+);

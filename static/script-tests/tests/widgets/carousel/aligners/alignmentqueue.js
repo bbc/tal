@@ -234,4 +234,26 @@
             }
         );
     };
+
+    this.AlignmentQueueTest.prototype.testStartOnInProgressQueueDoesNotCauseDuplicateCall = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/aligners/alignmentqueue"
+            ],
+            function (application, Mask, AlignmentQueue) {
+                var queue;
+                this.sandbox.stub(Mask.prototype);
+
+                queue = new AlignmentQueue(new Mask());
+                queue.add(3, {skipAnim: false});
+                queue.start();
+                queue.start();
+
+                assertEquals("alignToIndex only called once", 1, Mask.prototype.alignToIndex.callCount);
+
+            }
+        );
+    };
 }());

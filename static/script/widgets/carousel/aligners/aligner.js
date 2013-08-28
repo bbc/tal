@@ -159,12 +159,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 function OptionsClone() {}
 
                 function unwrappedComplete() {
-                    //self._alignedIndex = toIndex;
                     self._bubbleAfterAlign(toIndex);
                 }
 
                 function wrappedComplete() {
-
                     options.onComplete();
                     self._bubbleAfterAlign(toIndex);
                 }
