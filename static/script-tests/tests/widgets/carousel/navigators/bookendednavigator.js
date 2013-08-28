@@ -307,6 +307,19 @@
         );
     };
 
+    this.BookendedNavigatorTest.prototype.testBeforeSelectedItemChangedEventFiredBeforeIndexSetSuccessfully = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/bookendednavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, BookendedNavigator, NavHelper) {
+                NavHelper.testBeforeSelectedItemChangedEventFiredBeforeIndexSetSuccessfully(BookendedNavigator, this.sandbox);
+            }
+        );
+    };
+
     this.BookendedNavigatorTest.prototype.testPreviousIndexFromFirstItemReturnsNull = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',

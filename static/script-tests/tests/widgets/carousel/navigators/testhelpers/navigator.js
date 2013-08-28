@@ -372,7 +372,22 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertTrue("event fired on container", container.bubbleEvent.calledOnce);
+                assertEquals("selecteditemchange event fired on container", 'selecteditemchange', container.bubbleEvent.secondCall.args[0].type);
+            },
+
+            testBeforeSelectedItemChangedEventFiredBeforeIndexSetSuccessfully: function (NavClass, sandbox) {
+                var navigator, container, widget;
+
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container, Button]);
+
+                widget = this.createFocussableWidget();
+                container = this.createContainerWithWidgets([widget, widget]);
+                container.bubbleEvent = this.sandbox.stub();
+                navigator = new NavClass(container);
+                navigator.setIndex(1);
+
+                assertEquals("beforeselecteditemchange event fired on container", 'beforeselecteditemchange', container.bubbleEvent.firstCall.args[0].type);
             },
 
             testSelectedItemChangedEventNotFiredWhenIndexNotSetSuccessfully: function (NavClass, sandbox) {

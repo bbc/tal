@@ -24,9 +24,10 @@
 require.def('antie/widgets/carousel/navigators/navigator',
     [
         'antie/class',
-        'antie/events/selecteditemchangeevent'
+        'antie/events/selecteditemchangeevent',
+        'antie/events/beforeselecteditemchangeevent'
     ],
-    function (Class, SelectedItemChangeEvent) {
+    function (Class, SelectedItemChangeEvent, BeforeSelectedItemChangeEvent) {
         "use strict";
         var Navigator;
         Navigator = Class.extend({
@@ -81,8 +82,9 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             setIndex: function (index) {
                 if (this._isValidIndex(index) && !this._indexedWidgetCantBeFocussed(index)) {
+                    this._fireItemChangeEvent(index, BeforeSelectedItemChangeEvent);
                     this._setActiveIndexOnContainer(index);
-                    this._fireSelectedItemChangeEvent(index);
+                    this._fireItemChangeEvent(index, SelectedItemChangeEvent);
                 }
             },
 
@@ -144,11 +146,11 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 return potentialActiveIndex;
             },
 
-            _fireSelectedItemChangeEvent: function (index) {
+            _fireItemChangeEvent: function (index, EventClass) {
                 var event, item, target;
                 target = this._container;
                 item = this._container.getChildWidgets()[index];
-                event = new SelectedItemChangeEvent(target, item, index);
+                event = new EventClass(target, item, index);
                 target.bubbleEvent(event);
             }
         });
