@@ -39,17 +39,28 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 this._super(id);
                 this.addClass(orientation.styleClass());
                 this._orientation = orientation;
+                this._lengths = [];
                 this.addClass('carouselwidgetstrip');
             },
-            append: function (widget) {
+            append: function (widget, length) {
+                this._lengths.push(length);
                 return this.appendChildWidget(widget);
+
             },
 
-            insert: function (index, widget) {
+            insert: function (index, widget, length) {
+                this._lengths.splice(index, 0, length);
                 return this.insertChildWidget(index, widget);
             },
 
             remove: function (widget, retainElement) {
+                var i, widgets;
+                widgets = this.widgets();
+                for (i = 0; i !== widgets.length; i += 1) {
+                    if (widgets[i] === widget) {
+                        this._lengths.splice(i, 1);
+                    }
+                }
                 return this.removeChildWidget(widget, retainElement);
             },
 
@@ -62,7 +73,18 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             getLengthToIndex: function (index) {
-                var i, widgets, elements, endIndex;
+                var suppliedLength;
+
+                suppliedLength = this._lengthToIndexUsingSuppliedValues(index);
+                if (suppliedLength !== null) {
+                    return suppliedLength;
+                } else {
+                    return this._lengthToIndexByCalculatingUsingElements(index);
+                }
+            },
+
+            _lengthToIndexByCalculatingUsingElements: function (index) {
+                var elements, widgets, endIndex, i;
                 elements = [];
                 widgets = this.getChildWidgets();
                 endIndex = this._getValidatedIndex(widgets, index + 1);
@@ -72,8 +94,29 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this._getOffsetToLastElementInArray(elements);
             },
 
+            _lengthToIndexUsingSuppliedValues: function (index) {
+                var length, missingLengths, i;
+                length = 0;
+                for (i = 0; i !== Math.max(0, index); i += 1) {
+                    if (this._lengths[i] === undefined) {
+                        missingLengths = true;
+                        break;
+                    } else {
+                        length += this._lengths[i];
+                    }
+                }
+                if (missingLengths) {
+                    return null;
+                } else {
+                    return length;
+                }
+            },
+
             lengthOfWidgetAtIndex: function (index) {
                 var widget;
+                if (this._lengths[index] !== undefined) {
+                    return this._lengths[index];
+                }
                 widget = this.getChildWidgets()[index];
                 return this._getWidgetLength(widget);
             },
