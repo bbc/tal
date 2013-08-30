@@ -505,4 +505,29 @@
             }
         );
     };
+
+    this.WidgetStripTest.prototype.testGetLengthToIndexUsesCalculateLengthAfterRemoveAll = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/horizontal',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.getElementOffset.returns({left: 40, top: 40});
+                strip = new WidgetStrip('strip', horizontalOrientation);
+                strip.getChildWidgets = this.sandbox.stub().returns(["widget1", "widget2"]);
+                strip.append(new Button(), 30);
+                strip.append(new Button(), 40);
+                strip.append(new Button(), 50);
+                strip.removeAll();
+                assertEquals(40, strip.getLengthToIndex(2));
+            }
+        );
+    };
 }());

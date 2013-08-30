@@ -65,6 +65,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             removeAll: function () {
+                this._lengths = [];
                 return this.removeChildWidgets();
             },
 
