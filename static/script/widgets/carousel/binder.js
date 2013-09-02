@@ -30,17 +30,28 @@ require.def('antie/widgets/carousel/binder',
     function (Class, Iterator, DataBoundEvent) {
         "use strict";
         /**
-         * The binder allows data binding to widgets supporting the v2 carousel interface
-         * @name antie.Binder
+         * Class for adding children to an existing widget based on a combination
+         * of a data source and formatter.
+         * @name antie.widgets.carousel.Binder
          * @class
-         * @extends antie.Class
+         * @extends andtie.widget.
          */
-        var Binder = Class.extend(/** @lends antie.Class.prototype */ {
+        var Binder = Class.extend(/** @lends antie.widgets.carousel.Binder.prototype */ {
+                /**
+                 * @constructor
+                 * @ignore
+                 */
                 init: function (formatter, dataSource) {
                     this._dataSource = dataSource;
                     this._formatter = formatter;
                 },
 
+                /**
+                 * Creates new widgets which are then appended to
+                 * the widget supplied. Continues until the end of the data returned
+                 * by the source is reached.
+                 * @param widget The parent of the widgets to be created.
+                 */
                 appendAllTo: function (widget) {
                     this._bindAll(widget, this._appendItem);
                 },

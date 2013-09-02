@@ -27,10 +27,20 @@ require.def('antie/widgets/carousel',
         'antie/widgets/carousel/carouselcore',
         'antie/widgets/container'
     ],
+    /**
+     * Ordered list of widgets that can be navigated by moving the list or the selection point
+     * Provides adapter layer to old widget methods
+     * @name antie.widgets.Carousel
+     * @class
+     * @extends antie.widgets.Container
+     * @param {string} id The id of the carousel, id_CarouselMask will be used as the id for the mask element
+     * and id_WidgetStrip will be used as the id of the widget strip element
+     * @param {Object} [orientation=antie.widgets.carousel.CarouselCore.orientations.VERTICAL] the orientation object of
+     * the carousel. Vertical by default, for horizontal pass in antie.widgets.carousel.CarouselCore.orientations.HORIZONTAL
+     */
     function (CarouselCore, Container) {
         "use strict";
-        var Carousel = CarouselCore.extend({
-
+        var Carousel = CarouselCore.extend(/** @lends antie.widgets.Carousel.prototype */ {
             /**
              * Appends a child widget to this widget.
              * @param {antie.widgets.Widget} widget The child widget to add.

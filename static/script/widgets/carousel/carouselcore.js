@@ -44,23 +44,21 @@ require.def('antie/widgets/carousel/carouselcore',
         horizontalOrientation
     ) {
 		"use strict";
-		/**
-		 * The Carousel widget extends the container widget to manage a carousel of any orientation
-		 * @name antie.widgets.CarouselCore
-		 * @class
-		 * @extends antie.widgets.Widget
-		 */
+        /**
+         * Ordered list of widgets that can be navigated by moving the list or the selection point
+         * Use antie.widgets.Carousel instead if you need old container methods.
+         * @name antie.widgets.carousel.CarouselCore
+         * @class
+         * @extends antie.widgets.Carousel
+         * @param {string} id The id of the carousel, id_CarouselMask will be used as the id for the mask element
+         * and id_WidgetStrip will be used as the id of the widget strip element
+         * @param {Object} [orientation=antie.widgets.carousel.CarouselCore.orientations.VERTICAL] the orientation object of
+         * the carousel. Vertical by default, for horizontal pass in antie.widgets.carousel.CarouselCore.orientations.HORIZONTAL
+         */
 		var Carousel = Container.extend(/** @lends antie.widgets.carousel.CarouselCore.prototype */ {
             /**
-             * Ordered list of widgets that can be navigated by moving the list or the selection point
-             * Use antie.widgets.Carousel instead if you need old container methods.
-             * @name antie.widgets.carousel.CarouselCore
-             * @class
-             * @extends antie.widgets.Widget
-             * @param {string} id The id of the carousel, id_CarouselMask will be used as the id for the mask element
-             * and id_WidgetStrip will be used as the id of the widget strip element
-             * @param {Object} [orientation=antie.widgets.carousel.CarouselCore.orientations.VERTICAL] the orientation object of
-             * the carousel. Vertical by default, for horizontal pass in antie.widgets.carousel.CarouselCore.orientations.HORIZONTAL
+             * @constructor
+             * @ignore
              */
 			init: function (id, orientation) {
 				this.id = id;
