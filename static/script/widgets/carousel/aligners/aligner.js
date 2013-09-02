@@ -30,6 +30,14 @@ require.def('antie/widgets/carousel/aligners/aligner',
     ],
     function (Class, BeforeAlignEvent, AfterAlignEvent, AlignmentQueue) {
         "use strict";
+        /**
+         * Converts simple index based alignment instructions to combinations of
+         * one or more pixel based alignments to be performed on the mask
+         * @name antie.widgets.carousel.aligners.Aligner
+         * @class
+         * @extends antie.widgets.Class
+         * @param {Object} mask The carousel's mask object
+         */
         var Aligner;
         Aligner = Class.extend({
             init: function (mask) {
@@ -38,19 +46,62 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 this._alignedIndex = null;
             },
 
+            /**
+             * Aligns the mask and widget strip to the next enabled widget after that currently aligned.
+             * If no alignment has been performed previously it will align to the next enabled widget after that at index 0
+             * If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Object} navigator The carousel's current navigator
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
             alignNext: function (navigator, options) {
                 this._align(navigator, Aligner.directions.FORWARD, options);
             },
 
+            /**
+             * Aligns the mask and widget strip to the next enabled widget before that currently aligned.
+             * If no alignment has been performed previously it will align to the next enabled widget before that at index 0
+             * If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Object} navigator The carousel's current navigator
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
             alignPrevious: function (navigator, options) {
                 this._align(navigator, Aligner.directions.BACKWARD, options);
             },
 
+            /**
+             * Aligns the mask and widget strip to the widget at the specified index
+             * Will always move forward if the index is after that currently aligned and backwards if index is before
+             * that currently aligned.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Number} index The index of the widget to align on.
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
             alignToIndex: function (index, options) {
                 this._bubbleBeforeAlign(index);
                 this._moveNormally(index, options);
             },
 
+            /**
+             * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
+             * If several alignments have been queued, all will complete in order.
+             */
             complete: function () {
                 this._queue.complete();
             },

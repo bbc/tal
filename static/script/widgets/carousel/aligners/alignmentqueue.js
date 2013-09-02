@@ -27,6 +27,12 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
     ],
     function (Class) {
         "use strict";
+        /**
+         * A class to handle queue multiple alignments for execution in sequence
+         * @class
+         * @extends antie.widgets.Class
+         * @param {Object} mask The carousel's mask object
+         */
         return Class.extend({
             init: function (mask) {
                 this._mask = mask;
@@ -35,6 +41,16 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
                 this._started = false;
             },
 
+            /**
+             * Queues an alignment operation
+             * @param {Number} index The index of the widget to align on.
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
             add: function (index, options) {
                 var self = this;
 
@@ -67,12 +83,21 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
                 this._queue.push(align);
             },
 
+            /**
+             * Begins executing the alignment operations in the queue. If the
+             * queue has already been started, but has not completed, this will
+             * do nothing.
+             */
             start: function () {
                 if (!this._started) {
                     this._runFirstInQueue();
                 }
             },
 
+            /**
+             * Completes all queued alignments in order, skipping any animation and
+             * firing any associated callbacks in sequence.
+             */
             complete: function () {
                 if (this._started) {
                     this._setSkip(true);

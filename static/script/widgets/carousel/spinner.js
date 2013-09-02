@@ -29,15 +29,16 @@ require.def('antie/widgets/carousel/spinner',
     function (Class) {
         "use strict";
         /**
-         * The Carousel widget extends the container widget to manage a carousel of any orientation
+         * Manages communication with device for carousel animations
          * @name antie.widgets.carousel.spinner
          * @class
          * @extends antie.widgets.Class
-
+         * @param {Object} device The device abstraction object
+         * @param {Object} mask A carousel mask
+         * @param {Object} The orientation object of the carousel
          */
         var Spinner;
-        Spinner = Class.extend(/** @lends antie.Class.prototype */ {
-
+        Spinner = Class.extend(/** @lends antie.widgets.carousel.Spinner.prototype */ {
             /**
              * @constructor
              * @ignore
@@ -50,6 +51,14 @@ require.def('antie/widgets/carousel/spinner',
                 this._currentAnimation = null;
             },
 
+            /**
+             * Moves the widget strip's left or top edge relative to the mask's top or left edge
+             * by the specified number of pixels via the framework's animation methods.
+             * Note that on a browser device the mask will need to have overflow set and the strip will need position: relative
+             * for this to work.
+             * @param relativePixels
+             * @param animOptions
+             */
             moveContentsTo: function (relativePixels, animOptions) {
                 var moveElementOptions;
                 moveElementOptions = this._getOptions(animOptions, relativePixels);
@@ -58,6 +67,9 @@ require.def('antie/widgets/carousel/spinner',
                 this._currentAnimation = this._device.moveElementTo(moveElementOptions);
             },
 
+            /**
+             * Completes any currently animating alignment, firing any associated callback.
+             */
             stopAnimation: function () {
                 if (this._animating) {
                     this._device.stopAnimation(this._currentAnimation);

@@ -26,16 +26,32 @@ require.def('antie/widgets/carousel/navigators/wrappingnavigator',
     [
         'antie/widgets/carousel/navigators/navigator'
     ],
+    /**
+     * Wrapping Navigator class, used for operations involving widget indices,
+     * where they should be viewed as a circular list.
+     * @name antie.widgets.carousel.navigators.WrappingNavigator
+     * @abstract
+     * @class
+     * @extends antie.widgets.carousel.navigators.navigator
+     */
     function (Navigator) {
         "use strict";
         return Navigator.extend(
             {
+                /**
+                 * @param index
+                 * @returns {Number} the first focussable index after that supplied
+                 */
                 indexAfter: function (index) {
                     var potentialIndex;
                     potentialIndex = this._super(index);
                     return this._validateIndex(index, potentialIndex);
                 },
 
+                /**
+                 * @param index
+                 * @returns {Number} the first focussable index before that supplied
+                 */
                 indexBefore: function (index) {
                     var potentialIndex;
                     potentialIndex = this._super(index);

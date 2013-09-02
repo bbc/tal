@@ -29,13 +29,17 @@ require.def('antie/widgets/carousel/mask',
     function (Container, Spinner) {
         "use strict";
         /**
-         * @name antie.widgets.carousel.mask
+         * The masking container of a carousel that the widget strip moves within.
+         * @name antie.widgets.carousel.Mask
          * @class
          * @extends antie.widgets.Container
-
+         * @param {String} id The id of the mask
+         * @param {Object} widgetStrip the strip to be masked
+         * @param {Object} orientation the orientation of the mask, one of
+         * antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
          */
         var Mask;
-        Mask = Container.extend(/** @lends antie.Container.prototype */ {
+        Mask = Container.extend(/** @lends antie.widgets.carousel.Mask.prototype */ {
             /**
              * @constructor
              * @ignore
@@ -51,6 +55,12 @@ require.def('antie/widgets/carousel/mask',
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
             },
 
+            /**
+             * Moves the masked widget strip such that the alignment point of the mask and the alignment
+             * point of the indexed widget are the same place
+             * @param index Index of the widget to be aligned
+             * @param options
+             */
             alignToIndex: function (index, options) {
                 var distanceContentsMustMoveBack;
                 distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
@@ -59,23 +69,45 @@ require.def('antie/widgets/carousel/mask',
                 this._moveContentsTo(-distanceContentsMustMoveBack, options);
             },
 
+            /**
+             * Sets the alignment point of the mask in terms of pixels from its primary edge
+             * (left for horizontal, top for vertical)
+             * @param {Number} pixelsFromEdge
+             */
             setAlignPoint: function (pixelsFromEdge) {
                 this._alignmentPoint = pixelsFromEdge;
             },
 
+            /**
+             * Sets the alignment point of the mask in terms of a value between 0 and 1,
+             * with 0 being the top or left edge and 1 being the bottom or right edge
+             * @param fractionOfMaskLength Value between 0 and 1, will be clamped to 0 or 1 if outside this range.
+             */
             setNormalisedAlignPoint: function (fractionOfMaskLength) {
                 var clampedFraction = this._clampBetweenZeroAndOne(fractionOfMaskLength);
                 this._alignmentPoint = this.getLength() * clampedFraction;
             },
 
+            /**
+             * Sets the alignment point of the widget in terms of a value between 0 and 1,
+             * with 0 being the top or left of the widget and 1 being the bottom or right.
+             * @param fractionOfWidgetLength Value between 0 and 1, will be clamped to 0 or 1 if outside this range.
+             */
             setNormalisedWidgetAlignPoint: function (fractionOfWidgetLength) {
                 this._normalisedWidgetAlignPoint = this._clampBetweenZeroAndOne(fractionOfWidgetLength);
             },
 
+            /**
+             * @returns {Object} the widget strip currently being masked
+             */
             getWidgetStrip: function () {
                 return this._widgetStrip;
             },
 
+            /**
+             * Sets the widget strip to mask and align
+             * @param widgetStrip an instance of antie.widgets.carousel.strips.WidgetStrip
+             */
             setWidgetStrip: function (widgetStrip) {
                 if (this._widgetStrip) {
                     this.removeChildWidget(this._widgetStrip);
@@ -84,6 +116,10 @@ require.def('antie/widgets/carousel/mask',
                 this.appendChildWidget(this._widgetStrip);
             },
 
+            /**
+             * @returns {Number} The length in pixels of the primary dimension of the mask
+             * (Width for horizontal, height for vertical)
+             */
             getLength: function () {
                 var device, size;
                 device = this.getCurrentApplication().getDevice();
@@ -91,6 +127,11 @@ require.def('antie/widgets/carousel/mask',
                 return size[this._getDimension()];
             },
 
+            /**
+             * @param index
+             * @returns {Array} An array of indices corresponding to the widgets visible
+             * when the specified index is aligned to the current alignment point.
+             */
             indicesVisibleWhenAlignedToIndex: function (index) {
                 var maskLength, visibleIndices;
                 maskLength = this.getLength();
@@ -100,6 +141,10 @@ require.def('antie/widgets/carousel/mask',
                 return visibleIndices;
             },
 
+            /**
+             * Completes any current alignment operation instantly, firing any associated
+             * onComplete callback
+             */
             stopAnimation: function () {
                 this._spinner.stopAnimation();
             },

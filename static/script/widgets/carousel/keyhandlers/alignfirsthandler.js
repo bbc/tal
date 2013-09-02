@@ -25,6 +25,13 @@ require.def('antie/widgets/carousel/keyhandlers/alignfirsthandler',
     [
         'antie/widgets/carousel/keyhandlers/keyhandler'
     ],
+    /**
+     * The base AlignFirstHandler class moves alignment in the same way as the base Keyhandler class
+     * After alignment is completed, the active widget is changed to the next focusable widget.
+     * @name antie.widgets.carousel.keyhandlers.AlignFirstHandler
+     * @class
+     * @extends antie.widgets.Widget
+     */
     function (KeyHandler) {
         "use strict";
         return KeyHandler.extend({

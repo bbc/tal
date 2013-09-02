@@ -27,10 +27,25 @@ require.def('antie/widgets/carousel/navigators/navigator',
         'antie/events/selecteditemchangeevent',
         'antie/events/beforeselecteditemchangeevent'
     ],
+
+    /**
+     * Abstract base Navigator class, used for operations involving widget indices,
+     * for example setting the active widget or determining which to set active.
+     * @abstract
+     * @name antie.widgets.carousel.navigators.Navigator
+     * @abstract
+     * @class
+     * @extends antie.widgets.Class
+     */
     function (Class, SelectedItemChangeEvent, BeforeSelectedItemChangeEvent) {
         "use strict";
         var Navigator;
-        Navigator = Class.extend({
+
+        Navigator = Class.extend(/** @lends antie.widgets.carousel.navigators.Navigator.prototype */{
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function (container) {
                 this.setContainer(container);
             },
@@ -50,6 +65,10 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 return this.indexAfter(currentIndex);
             },
 
+            /**
+             * @param index
+             * @returns {Number} the first focussable index after that supplied
+             */
             indexAfter: function (index) {
                 return this._getNextPotientialIndexInDirection(index, Navigator.directions.FORWARD);
             },
@@ -62,6 +81,10 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 return this.indexBefore(currentIndex);
             },
 
+            /**
+             * @param index
+             * @returns {Number} the first focussable index before that supplied
+             */
             indexBefore: function (index) {
                 return this._getNextPotientialIndexInDirection(index, Navigator.directions.BACKWARD);
             },

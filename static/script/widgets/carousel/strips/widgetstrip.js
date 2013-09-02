@@ -28,13 +28,19 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
     function (Container) {
         "use strict";
         /**
-         * The Carousel widget extends the container widget to manage a carousel of any orientation
-         * @name antie.widgets.Carousel
+         * A container for the widgets displayed within a carousel
+         * @name antie.widgets.carousel.strips.WidgetStrip
          * @class
          * @extends antie.widgets.Container
-
+         * @param {String} id The unique ID of the widget.
+         * @param {Object} orientation an object representing the strip's orientation.
+         * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
          */
-        var WidgetStrip = Container.extend(/** @lends antie.widgets.Container.prototype */ {
+        var WidgetStrip = Container.extend(/** @lends antie.widgets.carousel.strips.WidgetStrip.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function (id, orientation) {
                 this._super(id);
                 this.addClass(orientation.styleClass());
@@ -42,17 +48,39 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 this._lengths = [];
                 this.addClass('carouselwidgetstrip');
             },
+
+            /**
+             * Adds a widget to the end of the strip
+             * @param {antie.widgets.Widget} widget The widget to append to the strip
+             * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
+             * (Height for a vertical strip or width for horizontal.) If providied, this value will be used in
+             * positioning calculations rather then a calculated value (can be useful when widgets change size)
+             * Note length only currently working with non-wrapping strips.
+             */
             append: function (widget, length) {
                 this._lengths.push(length);
                 return this.appendChildWidget(widget);
 
             },
 
+            /**
+             * Inserts widget within the strip
+             * @param {Number} index A zero based index to begin insertion at, i.e. 0 prepends.
+             * @param {antie.widgets.Widget} widget The widget to append to the strip
+             * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
+             * (Height for a vertical strip or width for horizontal.) If provided, this value will be used in
+             * positioning calculations rather then a calculated value (can be useful when widgets change size)
+             * Note length only currently working with non-wrapping strips.
+             */
             insert: function (index, widget, length) {
                 this._lengths.splice(index, 0, length);
                 return this.insertChildWidget(index, widget);
             },
 
+            /**
+             * Removes a widget from the strip
+             * @param {antie.widgets.Widget} widget. Widget to remove from the strip
+             */
             remove: function (widget, retainElement) {
                 var i, widgets;
                 widgets = this.widgets();
@@ -64,15 +92,26 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this.removeChildWidget(widget, retainElement);
             },
 
+            /**
+             * Removes all widgets from the strip
+             */
             removeAll: function () {
                 this._lengths = [];
                 return this.removeChildWidgets();
             },
 
+            /**
+             * @returns {Array} The widgets currently in the strip
+             */
             widgets: function () {
                 return this.getChildWidgets();
             },
 
+            /**
+             * @param index
+             * @returns {Number} length in pixels along primary axis to primary edge of the provided index
+             * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
+             */
             getLengthToIndex: function (index) {
                 var suppliedLength;
 
@@ -84,6 +123,12 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 }
             },
 
+            /**
+             * Manually sets lengths of elements for movement calculations - useful for elements which change size while moving.
+             * @param lengths {number} | {Array} If provided with a number all lengths will be set equal to this number
+             * If provided with an array, the lengths will be set with the corresponding widgets (so the first number will be used
+             * for the first widget's length, etc..)
+             */
             setLengths: function (lengths) {
                 var widgetCount, i;
                 if (typeof lengths === 'number') {
