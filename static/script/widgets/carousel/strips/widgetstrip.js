@@ -84,6 +84,19 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 }
             },
 
+            setLengths: function (lengths) {
+                var widgetCount, i;
+                if (typeof lengths === 'number') {
+                    widgetCount = this.getChildWidgetCount();
+                    for (i = 0; i !== widgetCount; i += 1) {
+                        this._lengths[i] = lengths;
+                    }
+                } else {
+                    this._lengths = lengths;
+                }
+
+            },
+
             _lengthToIndexByCalculatingUsingElements: function (index) {
                 var elements, widgets, endIndex, i;
                 elements = [];

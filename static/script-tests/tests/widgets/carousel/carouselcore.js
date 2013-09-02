@@ -954,4 +954,30 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testSetWidgetLengthsDelegatesToStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.setWidgetLengths(50);
+                assertTrue("setLength delegated to strip", WidgetStrip.prototype.setLengths.calledOnce);
+            }
+        );
+    };
+
 }());

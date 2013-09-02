@@ -41,13 +41,13 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._autoCalculate = true;
             },
 
-            append: function (widget) {
-                this._super(widget);
+            append: function (widget, length) {
+                this._super(widget, length);
                 this._recalculateIfAuto();
             },
 
-            insert: function (index, widget) {
-                this._super(index, widget);
+            insert: function (index, widget, length) {
+                this._super(index, widget, length);
                 this._recalculateIfAuto();
             },
 
@@ -57,7 +57,13 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             },
 
             getLengthToIndex: function (index) {
-                return this._getLengthOfElementArrayUpToIndex(this.getChildElements(), index + this._elementIndexOffset);
+                var suppliedLength;
+                suppliedLength = this._lengthToIndexUsingSuppliedValues(index);
+                if (suppliedLength !== null) {
+                    return suppliedLength;
+                } else {
+                    return this._getLengthOfElementArrayUpToIndex(this.getChildElements(), index + this._elementIndexOffset);
+                }
             },
 
             getChildElements: function () {
@@ -76,7 +82,20 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             },
 
             lengthOfWidgetAtIndex: function (index) {
+                var providedLength;
+                providedLength = this._lengthOfWidgetAtIndexUsingSuppliedValues(index);
+                if (typeof providedLength === 'number') {
+                    return providedLength;
+                }
                 return this._getElementLength(this._elements[index + this._elementIndexOffset]);
+            },
+
+            _lengthToIndexUsingSuppliedValues: function (index) {
+                return null;
+            },
+
+            _lengthOfWidgetAtIndexUsingSuppliedValues: function (index) {
+                return null;
             },
 
             _refereshWidgetElements: function () {
@@ -84,7 +103,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._widgetElements = [];
                 widgets = this.getChildWidgets();
                 for (i = 0; i !== widgets.length; i += 1) {
-                    this._widgetElements.push(widgets[i].outputElement);
+                    this._widgetElements.push(widgets[i].outputElement || widgets[i].render(this._getDevice()));
                 }
             },
 
@@ -199,6 +218,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             _removeClones: function () {
                 var i, clone, device;
                 device = this.getCurrentApplication().getDevice();
+
                 for (i = 0; i !== this._clones.length; i += 1) {
                     clone = this._clones[i];
                     device.removeElement(clone);

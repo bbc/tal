@@ -530,4 +530,54 @@
             }
         );
     };
+
+    this.WidgetStripTest.prototype.testGetLengthToIndexUsesSetLengthsWithSingleDigit = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/horizontal',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.getElementOffset.returns({left: 40, top: 40});
+                strip = new WidgetStrip('strip', horizontalOrientation);
+                strip.getChildWidgets = this.sandbox.stub().returns(["widget1", "widget2"]);
+                strip.append(new Button(), 30);
+                strip.append(new Button(), 40);
+                strip.append(new Button(), 50);
+                strip.setLengths(10);
+                assertEquals(20, strip.getLengthToIndex(2));
+            }
+        );
+    };
+
+    this.WidgetStripTest.prototype.testGetLengthToIndexUsesSetLengthsWithArray = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/horizontal',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+                var strip, device;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.getElementOffset.returns({left: 40, top: 40});
+                strip = new WidgetStrip('strip', horizontalOrientation);
+                strip.getChildWidgets = this.sandbox.stub().returns(["widget1", "widget2"]);
+                strip.append(new Button(), 30);
+                strip.append(new Button(), 40);
+                strip.append(new Button(), 50);
+                strip.setLengths([20, 50, 10]);
+                assertEquals(70, strip.getLengthToIndex(2));
+            }
+        );
+    };
 }());
