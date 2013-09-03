@@ -51,7 +51,8 @@ require.def('antie/widgets/carousel/navigators/navigator',
             },
 
             /**
-             * @returns {Number} the index of the currently active widget
+             * @returns {Number} the index of the currently active widget, or null if there is no active widget
+             * (for example if there are no widgets)
              */
             currentIndex: function () {
                 return (this._getActiveIndex());
@@ -122,7 +123,11 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 var activeWidget, activeIndex;
                 activeWidget = this._container.getActiveChildWidget();
                 activeIndex = this._container.getIndexOfChildWidget(activeWidget);
-                return activeIndex;
+                if (activeIndex !== -1) {
+                    return activeIndex;
+                } else {
+                    return null;
+                }
             },
 
             _setActiveIndexOnContainer: function (activeIndex) {

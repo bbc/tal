@@ -1232,6 +1232,36 @@
         );
     };
 
+    this.WrappingStripTest.prototype.testClonesRendered = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/strips/wrappingstrip",
+                "antie/widgets/button",
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, WrappingStrip, Button, verticalOrientation) {
+                var strip, items, device, initialCallCount, finalCallCount;
+
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(WrappingStrip.prototype,
+                    '_getOffsetToLastElementInArray',
+                    function (array) {
+                        return 20 * Math.max(0, array.length - 1);
+                    }
+                );
+                device.getElementSize.returns({width: 20, height: 20});
+                strip = this.create3ItemStripFirstDisabled(WrappingStrip, Button, 10, verticalOrientation);
+                initialCallCount = device.appendChildElement.callCount;
+                strip.render(device);
+                finalCallCount = device.appendChildElement.callCount;
+                assertEquals('6 elements appended to strip (3 widgets + 3 clones)', 6, finalCallCount - initialCallCount);
+
+            }
+        );
+    };
+
 //    this.WrappingStripTest.prototype.testLengthOfWidgetAtReturnsSetLengthIfProvidedOnAppend = function (queue) {
 //        queuedApplicationInit(queue,
 //            'lib/mockapplication',
