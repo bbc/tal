@@ -54,6 +54,24 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             },
 
             /**
+             * Renders the widget and any child widgets to device-specific output.
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+             */
+            render: function (device) {
+                var i;
+                if (!this.outputElement) {
+                    this.outputElement = device.createContainer(this.id, this.getClasses());
+                } else {
+                    device.clearElement(this.outputElement);
+                }
+                for (i = 0; i !== this._elements.length; i++) {
+                    device.appendChildElement(this.outputElement, this._elements[i]);
+                }
+                return this.outputElement;
+            },
+
+            /**
              * Adds a widget to the end of the strip.
              * Note will cause clone recalculation unless autoCalculate has been set to false
              * @param {antie.widgets.Widget} widget The widget to append to the strip
