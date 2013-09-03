@@ -320,6 +320,19 @@
         );
     };
 
+    this.WrappingNavigatorTest.prototype.testGetIndexReturnsNullWithEmptyWidget = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/navigators/wrappingnavigator",
+                "tests/widgets/navigators/testhelpers/navigator"
+            ],
+            function (application, WrappingNavigator, NavHelper) {
+                NavHelper.testGetIndexReturnsNullWithEmptyWidget(WrappingNavigator, this.sandbox);
+            }
+        );
+    };
+
     this.WrappingNavigatorTest.prototype.testPreviousIndexFromFirstPositionReturnsLastIndex = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
