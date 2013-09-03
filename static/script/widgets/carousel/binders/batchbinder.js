@@ -34,6 +34,12 @@ require.def('antie/widgets/carousel/binders/batchbinder',
          * @extends antie.widgets.carousel.Binder
          */
         return Binder.extend(/** @lends antie.widgets.carousel.Binder.prototype */ {
+            /**
+             * Creates new widgets which are then appended to
+             * the widget supplied. Continues until the end of the data returned
+             * by the source is reached.
+             * @param widget The parent of the widgets to be created.
+             */
             appendAllTo: function (widget) {
                 this._bindAll(
                     widget,

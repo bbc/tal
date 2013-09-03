@@ -26,19 +26,36 @@ require.def('antie/widgets/carousel/navigators/bookendednavigator',
 	[
 		'antie/widgets/carousel/navigators/navigator'
 	],
+    /**
+     * Bookended Navigator class, used for operations involving widget indices,
+     * where they should be viewed as a bookended list.
+     * @name antie.widgets.carousel.navigators.BookendedNavigator
+     * @abstract
+     * @class
+     * @extends antie.widgets.carousel.navigators.navigator
+     */
 	function (Navigator) {
 		"use strict";
         var BookendedNavigator;
         BookendedNavigator = Navigator.extend({
-                nextIndex: function () {
+
+                /**
+                 * @param index
+                 * @returns {Number} the first focussable index after that supplied
+                 */
+                indexAfter: function (index) {
                     var potentialIndex;
-                    potentialIndex = this._super();
+                    potentialIndex = this._super(index);
                     return this._validateIndex(potentialIndex);
                 },
 
-                previousIndex: function () {
+                /**
+                 * @param index
+                 * @returns {Number} the first focussable index before that supplied
+                 */
+                indexBefore: function (index) {
                     var potentialIndex;
-                    potentialIndex = this._super();
+                    potentialIndex = this._super(index);
                     return this._validateIndex(potentialIndex);
                 },
 

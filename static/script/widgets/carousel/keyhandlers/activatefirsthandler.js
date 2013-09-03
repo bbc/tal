@@ -25,6 +25,13 @@ require.def('antie/widgets/carousel/keyhandlers/activatefirsthandler',
     [
         'antie/widgets/carousel/keyhandlers/keyhandler'
     ],
+    /**
+     * The base ActivateFirstHandler class moves alignment in the same way as the base Keyhandler class
+     * Before alignment is started, the active widget is changed to the next focusable widget.
+     * @name antie.widgets.carousel.keyhandlers.ActivateFirstHandler
+     * @class
+     * @extends antie.widgets.Widget
+     */
     function (KeyHandler) {
         "use strict";
         return KeyHandler.extend({

@@ -24,12 +24,28 @@
 require.def('antie/widgets/carousel/navigators/navigator',
     [
         'antie/class',
-        'antie/events/selecteditemchangeevent'
+        'antie/events/selecteditemchangeevent',
+        'antie/events/beforeselecteditemchangeevent'
     ],
-    function (Class, SelectedItemChangeEvent) {
+
+    /**
+     * Abstract base Navigator class, used for operations involving widget indices,
+     * for example setting the active widget or determining which to set active.
+     * @abstract
+     * @name antie.widgets.carousel.navigators.Navigator
+     * @abstract
+     * @class
+     * @extends antie.widgets.Class
+     */
+    function (Class, SelectedItemChangeEvent, BeforeSelectedItemChangeEvent) {
         "use strict";
         var Navigator;
-        Navigator = Class.extend({
+
+        Navigator = Class.extend(/** @lends antie.widgets.carousel.navigators.Navigator.prototype */{
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function (container) {
                 this.setContainer(container);
             },
@@ -46,7 +62,15 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             nextIndex: function () {
                 var currentIndex = this.currentIndex();
-                return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.FORWARD);
+                return this.indexAfter(currentIndex);
+            },
+
+            /**
+             * @param index
+             * @returns {Number} the first focussable index after that supplied
+             */
+            indexAfter: function (index) {
+                return this._getNextPotientialIndexInDirection(index, Navigator.directions.FORWARD);
             },
 
             /**
@@ -54,7 +78,15 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             previousIndex: function () {
                 var currentIndex = this.currentIndex();
-                return this._getNextPotientialIndexInDirection(currentIndex, Navigator.directions.BACKWARD);
+                return this.indexBefore(currentIndex);
+            },
+
+            /**
+             * @param index
+             * @returns {Number} the first focussable index before that supplied
+             */
+            indexBefore: function (index) {
+                return this._getNextPotientialIndexInDirection(index, Navigator.directions.BACKWARD);
             },
 
             /**
@@ -73,8 +105,9 @@ require.def('antie/widgets/carousel/navigators/navigator',
              */
             setIndex: function (index) {
                 if (this._isValidIndex(index) && !this._indexedWidgetCantBeFocussed(index)) {
+                    this._fireItemChangeEvent(index, BeforeSelectedItemChangeEvent);
                     this._setActiveIndexOnContainer(index);
-                    this._fireSelectedItemChangeEvent(index);
+                    this._fireItemChangeEvent(index, SelectedItemChangeEvent);
                 }
             },
 
@@ -136,11 +169,11 @@ require.def('antie/widgets/carousel/navigators/navigator',
                 return potentialActiveIndex;
             },
 
-            _fireSelectedItemChangeEvent: function (index) {
+            _fireItemChangeEvent: function (index, EventClass) {
                 var event, item, target;
                 target = this._container;
                 item = this._container.getChildWidgets()[index];
-                event = new SelectedItemChangeEvent(target, item, index);
+                event = new EventClass(target, item, index);
                 target.bubbleEvent(event);
             }
         });

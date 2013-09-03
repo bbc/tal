@@ -204,4 +204,131 @@
         );
     };
 
+    this.SpinnerTest.prototype.testStopAnimationStopsInProgressAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, stopStub;
+
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.moveElementTo.returns("test");
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10);
+
+                assertFalse("device stopAnimation called before stopAnimation", device.stopAnimation.calledOnce);
+                spinner.stopAnimation();
+                assertTrue("device stopAnimation called on stopAnimation", device.stopAnimation.calledOnce);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testStopAnimationDoesNotCallDeviceWhenNoAnimation = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, stopStub;
+
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                device.moveElementTo.returns("test");
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.stopAnimation();
+                assertFalse("device stopAnimation called when no animation in progress", device.stopAnimation.calledOnce);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testOptionParamatersUsedWhenPresent = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                options = {
+                    duration: "test1",
+                    fps: "test2",
+                    easing: "test3",
+                    skipAnim: "test4"
+                };
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, options);
+
+                assertEquals("Passed in duration used", "test1", device.moveElementTo.firstCall.args[0].duration);
+                assertEquals("Passed in fps used", "test2", device.moveElementTo.firstCall.args[0].fps);
+                assertEquals("Passed in easing used", "test3", device.moveElementTo.firstCall.args[0].easing);
+                assertEquals("Passed in skipAnim used", "test4", device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testSkipAnimTrueByDefault = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10);
+                assertEquals("Skipanim true", true, device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
+    this.SpinnerTest.prototype.testSkipAnimCanBeOveridden = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner, options;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, {skipAnim: false});
+                assertEquals("Skipanim overriden to false", false, device.moveElementTo.firstCall.args[0].skipAnim);
+            }
+        );
+    };
+
 }());

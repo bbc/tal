@@ -793,4 +793,191 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testAlignToIndexPassesOptionsToAligner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel, options;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                carousel.alignToIndex(3, options);
+                assertTrue("options passed to aligner", Aligner.prototype.alignToIndex.calledWith(3, options));
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testAlignNextPassesOptionsToAligner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel, options;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                carousel.alignNext(options);
+                assertEquals("options passed to aligner", options, Aligner.prototype.alignNext.firstCall.args[1]);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testAlignPreviousPassesOptionsToAligner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel, options;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                options = {test: "test"};
+                carousel = new CarouselCore('myCarousel');
+                carousel.alignPrevious(options);
+                assertEquals("options passed to aligner", options, Aligner.prototype.alignPrevious.firstCall.args[1]);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testCompleteAlignmentDelegatesToAligner = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.alignPrevious();
+                carousel.completeAlignment();
+                assertTrue("Complete delegated to aligner", Aligner.prototype.complete.calledOnce);
+            }
+        );
+    };
+
+
+    this.CarouselCoreTest.prototype.testSetNormalisedAlignPointDelegatesToMask = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.setNormalisedAlignPoint(0.8);
+                assertTrue("setNormalisedAlignPoint delegated to mask", Mask.prototype.setNormalisedAlignPoint.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testSetNormalisedWidgetAlignPointDelegatesToMask = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.setNormalisedWidgetAlignPoint(0.8);
+                assertTrue("setNormalisedWidgetAlignPoint delegated to mask", Mask.prototype.setNormalisedWidgetAlignPoint.calledOnce);
+            }
+        );
+    };
+
+    this.CarouselCoreTest.prototype.testSetWidgetLengthsDelegatesToStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.setWidgetLengths(50);
+                assertTrue("setLength delegated to strip", WidgetStrip.prototype.setLengths.calledOnce);
+            }
+        );
+    };
+
 }());

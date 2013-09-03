@@ -27,8 +27,20 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
     ],
     function (WidgetStrip) {
         "use strict";
-        return WidgetStrip.extend({
-
+        /**
+         * A container for the widgets displayed within a carousel
+         * @name antie.widgets.carousel.strips.WrappingStrip
+         * @class
+         * @extends antie.widgets.carousel.strips.WidgetStrip
+         * @param {String} id The unique ID of the widget.
+         * @param {Object} orientation an object representing the strip's orientation.
+         * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
+         */
+        return WidgetStrip.extend(/** @lends antie.widgets.carousel.strips.WrappingStrip.prototype */{
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function (id, orientation) {
                 this._super(id, orientation);
                 this._clones = [];
@@ -41,38 +53,104 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._autoCalculate = true;
             },
 
-            append: function (widget) {
-                this._super(widget);
+            /**
+             * Adds a widget to the end of the strip.
+             * Note will cause clone recalculation unless autoCalculate has been set to false
+             * @param {antie.widgets.Widget} widget The widget to append to the strip
+             * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
+             * (Height for a vertical strip or width for horizontal.) If providied, this value will be used in
+             * positioning calculations rather then a calculated value (can be useful when widgets change size)
+             * Note length only currently working with non-wrapping strips.
+             */
+            append: function (widget, length) {
+                this._super(widget, length);
                 this._recalculateIfAuto();
             },
 
-            insert: function (index, widget) {
-                this._super(index, widget);
+            /**
+             * Inserts widget within the strip
+             * Note will cause clone recalculation unless autoCalculate has been set to false
+             * @param {Number} index A zero based index to begin insertion at, i.e. 0 prepends.
+             * @param {antie.widgets.Widget} widget The widget to append to the strip
+             * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
+             * (Height for a vertical strip or width for horizontal.) If provided, this value will be used in
+             * positioning calculations rather then a calculated value (can be useful when widgets change size)
+             * Note length only currently working with non-wrapping strips.
+             */
+            insert: function (index, widget, length) {
+                this._super(index, widget, length);
                 this._recalculateIfAuto();
             },
 
+            /**
+             * Removes a widget from the strip
+             * @param {antie.widgets.Widget} widget. Widget to remove from the strip
+             */
             remove: function (widget, retainElement) {
                 this._super(widget, retainElement);
                 this._recalculateIfAuto();
             },
 
+            /**
+             * @param index
+             * @returns {Number} length in pixels along primary axis to primary edge of the provided index
+             * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
+             */
             getLengthToIndex: function (index) {
-                return this._getLengthOfElementArrayUpToIndex(this.getChildElements(), index + this._elementIndexOffset);
+                var suppliedLength;
+                suppliedLength = this._lengthToIndexUsingSuppliedValues(index);
+                if (suppliedLength !== null) {
+                    return suppliedLength;
+                } else {
+                    return this._getLengthOfElementArrayUpToIndex(this.getChildElements(), index + this._elementIndexOffset);
+                }
             },
 
+            /**
+             * @returns {Array} elements an array of all elements appended to the strip (including clones)
+             */
             getChildElements: function () {
                 return this._elements;
             },
 
+            /**
+             * Removes any existing clones and appends sufficient clones to either end to allow for visual wrapping
+             */
             recalculate: function () {
                 this._removeClones();
                 this._createClones(this._getMaskLength());
             },
 
+            /**
+             * Toggles auto calculation of clones when necessary (i.e. after an append or remove)
+             * @param {Boolean} on If on === true clones will be recalculated after append, remove or insert. If set false
+             * they will not be recalculated unless recalculate is called.
+             */
             autoCalculate: function (on) {
                 if (typeof on === 'boolean') {
                     this._autoCalculate = on;
                 }
+            },
+
+            /**
+             * @param index
+             * @returns {Number} The primary length of the widget at the specified index. (width for horizontal, height for vertical)
+             */
+            lengthOfWidgetAtIndex: function (index) {
+                var providedLength;
+                providedLength = this._lengthOfWidgetAtIndexUsingSuppliedValues(index);
+                if (typeof providedLength === 'number') {
+                    return providedLength;
+                }
+                return this._getElementLength(this._elements[index + this._elementIndexOffset]);
+            },
+
+            _lengthToIndexUsingSuppliedValues: function (index) {
+                return null;
+            },
+
+            _lengthOfWidgetAtIndexUsingSuppliedValues: function (index) {
+                return null;
             },
 
             _refereshWidgetElements: function () {
@@ -80,7 +158,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 this._widgetElements = [];
                 widgets = this.getChildWidgets();
                 for (i = 0; i !== widgets.length; i += 1) {
-                    this._widgetElements.push(widgets[i].outputElement);
+                    this._widgetElements.push(widgets[i].outputElement || widgets[i].render(this._getDevice()));
                 }
             },
 
@@ -195,6 +273,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             _removeClones: function () {
                 var i, clone, device;
                 device = this.getCurrentApplication().getDevice();
+
                 for (i = 0; i !== this._clones.length; i += 1) {
                     clone = this._clones[i];
                     device.removeElement(clone);
@@ -219,16 +298,6 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
 
             _getMaskLength: function () {
                 return this.parentWidget.getLength();
-            },
-
-            _getWidgetLength: function (widget) {
-                return this._getElementLength(widget.outputElement);
-            },
-
-            _getElementLength: function (element) {
-                var device;
-                device = this._getDevice();
-                return device.getElementSize(element)[this._getDimension()];
             }
         });
     }

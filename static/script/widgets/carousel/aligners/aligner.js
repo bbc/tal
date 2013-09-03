@@ -25,134 +25,196 @@ require.def('antie/widgets/carousel/aligners/aligner',
     [
         'antie/class',
         "antie/events/beforealignevent",
-        "antie/events/afteralignevent"
+        "antie/events/afteralignevent",
+        "antie/widgets/carousel/aligners/alignmentqueue"
     ],
-    function (Class, BeforeAlignEvent, AfterAlignEvent) {
+    function (Class, BeforeAlignEvent, AfterAlignEvent, AlignmentQueue) {
         "use strict";
-        return Class.extend({
+        /**
+         * Converts simple index based alignment instructions to combinations of
+         * one or more pixel based alignments to be performed on the mask
+         * @name antie.widgets.carousel.aligners.Aligner
+         * @class
+         * @extends antie.widgets.Class
+         * @param {Object} mask The carousel's mask object
+         */
+        var Aligner;
+        Aligner = Class.extend({
             init: function (mask) {
                 this._mask = mask;
+                this._queue = new AlignmentQueue(this._mask);
+                this._alignedIndex = null;
             },
 
-            alignNext: function (navigator) {
-                var startIndex, targetIndex;
-                startIndex = navigator.currentIndex();
-                targetIndex = navigator.nextIndex();
-                if (navigator.nextIndex() !== null) {
-                    this._bubbleBeforeAlign(targetIndex);
-
-                    if (startIndex < targetIndex) {
-                        this._moveNormally(targetIndex);
-                    } else {
-                        this._wrapForward(startIndex, targetIndex, navigator);
-                    }
-                }
+            /**
+             * Aligns the mask and widget strip to the next enabled widget after that currently aligned.
+             * If no alignment has been performed previously it will align to the next enabled widget after that at index 0
+             * If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Object} navigator The carousel's current navigator
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
+            alignNext: function (navigator, options) {
+                this._align(navigator, Aligner.directions.FORWARD, options);
             },
 
-            alignPrevious: function (navigator) {
-                var startIndex, targetIndex;
-                startIndex = navigator.currentIndex();
-                targetIndex = navigator.previousIndex();
-                if (navigator.previousIndex() !== null) {
-                    this._bubbleBeforeAlign(targetIndex);
-                    if (startIndex > targetIndex) {
-                        this._moveNormally(targetIndex);
-                    } else {
-                        this._wrapBackward(startIndex, targetIndex, navigator);
-                    }
-                }
+            /**
+             * Aligns the mask and widget strip to the next enabled widget before that currently aligned.
+             * If no alignment has been performed previously it will align to the next enabled widget before that at index 0
+             * If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Object} navigator The carousel's current navigator
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
+            alignPrevious: function (navigator, options) {
+                this._align(navigator, Aligner.directions.BACKWARD, options);
             },
 
+            /**
+             * Aligns the mask and widget strip to the widget at the specified index
+             * Will always move forward if the index is after that currently aligned and backwards if index is before
+             * that currently aligned.
+             * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+             * @param {Number} index The index of the widget to align on.
+             * @param {Object} [options] An animation options object
+             * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [options.duration] The duration of the alignment in ms
+             * @param {String} [options.easing] The alignment easing function
+             * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+             */
             alignToIndex: function (index, options) {
                 this._bubbleBeforeAlign(index);
                 this._moveNormally(index, options);
             },
 
+            /**
+             * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
+             * If several alignments have been queued, all will complete in order.
+             */
+            complete: function () {
+                this._queue.complete();
+            },
+
+            _align: function (navigator, direction, options) {
+                var startIndex, targetIndex;
+
+                startIndex = this._alignedIndex;
+                targetIndex = this._subsequentIndexInDirection(navigator, direction);
+
+                if (targetIndex !== null) {
+                    this._bubbleBeforeAlign(targetIndex);
+                    if (this._isWrap(startIndex, targetIndex, direction)) {
+                        this._wrap(startIndex, targetIndex, navigator, direction, options);
+                    } else {
+                        this._moveNormally(targetIndex, options);
+                    }
+                }
+            },
+
+            _subsequentIndexInDirection: function (navigator, direction) {
+                var startPoint;
+                startPoint = (this._alignedIndex === null) ? 0 : this._alignedIndex;
+                if (direction === Aligner.directions.FORWARD) {
+                    return navigator.indexAfter(startPoint);
+                } else {
+                    return navigator.indexBefore(startPoint);
+                }
+            },
+
+            _isWrap: function (startIndex, targetIndex, direction) {
+                if (direction === Aligner.directions.FORWARD && startIndex > targetIndex) {
+                    return true;
+                }
+                if (direction === Aligner.directions.BACKWARD && startIndex < targetIndex) {
+                    return true;
+                }
+                return false;
+            },
+
             _bubbleBeforeAlign: function (index) {
                 this._mask.bubbleEvent(new BeforeAlignEvent(this._mask, index));
+                this._alignedIndex = index;
             },
 
             _bubbleAfterAlign: function (index) {
+
                 this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
             },
 
-            _wrapForward: function (fromIndex, toIndex, navigator) {
+            _wrap: function (fromIndex, toIndex, navigator, direction, options) {
+                if (this._fromIndexActive(fromIndex, navigator)) {
+                    this._visibleActiveItemWrap(fromIndex, toIndex, navigator, direction, options);
+                } else {
+                    this._invisibleActiveItemWrap(fromIndex, toIndex, navigator, direction, options);
+                }
+            },
+
+            _fromIndexActive: function (fromIndex, navigator) {
                 var activeIndex;
                 activeIndex = navigator.currentIndex();
-                if (fromIndex === activeIndex) {
-                    this._wrapForwardWhenActiveItemVisibleAtStart(fromIndex, toIndex, navigator);
+                return fromIndex === activeIndex;
+            },
+
+            _invisibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction, options) {
+                var index = this._firstIndexToAlignForInvisibleActiveItemWrap(fromIndex, navigator, direction);
+                this._queue.add(index, {skipAnim: true});
+                this._queueFinalAlign(toIndex, options);
+                this._queue.start();
+            },
+
+            _firstIndexToAlignForInvisibleActiveItemWrap: function (fromIndex, navigator, direction) {
+                var widgetCount;
+                widgetCount = navigator.indexCount();
+                if (direction === Aligner.directions.FORWARD) {
+                    return fromIndex - navigator.indexCount();
                 } else {
-                    this._wrapForwardWhenActiveItemNotVisibleAtStart(fromIndex, toIndex, navigator);
+                    return widgetCount + fromIndex;
                 }
             },
 
-            _wrapBackward: function (fromIndex, toIndex, navigator) {
-                if (fromIndex === navigator.currentIndex()) {
-                    this._wrapBackwardWhenActiveItemVisibleAtStart(fromIndex, toIndex, navigator);
+            _visibleActiveItemWrap: function (fromIndex, toIndex, navigator, direction, options) {
+                var firstAlignIndex;
+                firstAlignIndex = this._firstIndexToAlignForVisibleActiveItemWrap(toIndex, navigator, direction);
+                this._queue.add(firstAlignIndex, options);
+                this._queueFinalAlign(toIndex, { skipAnim: true });
+                this._queue.start();
+            },
+
+            _firstIndexToAlignForVisibleActiveItemWrap: function (toIndex, navigator, direction) {
+                if (direction === Aligner.directions.FORWARD) {
+                    return navigator.indexCount() + toIndex;
                 } else {
-                    this._wrapBackwardWhenActiveItemNotVisibleAtStart(fromIndex, toIndex, navigator);
+                    return -navigator.indexCount() + toIndex;
                 }
-            },
-
-            _wrapForwardWhenActiveItemNotVisibleAtStart: function (fromIndex, toIndex, navigator) {
-                var self;
-
-                function alignAfterWrap() {
-                    self._finalAlign(toIndex);
-                }
-
-                self = this;
-
-                this._mask.alignToIndex(fromIndex - navigator.indexCount(), {
-                    skipAnim: true,
-                    onComplete: alignAfterWrap
-                });
-            },
-
-            _wrapBackwardWhenActiveItemNotVisibleAtStart: function (fromIndex, toIndex, navigator) {
-                var self, length;
-
-                function alignAfterWrap() {
-                    self._finalAlign(toIndex);
-                }
-
-                self = this;
-                length = navigator.indexCount();
-                this._mask.alignToIndex(length + fromIndex, {
-                    skipAnim: true,
-                    onComplete: alignAfterWrap
-                });
-            },
-
-            _wrapForwardWhenActiveItemVisibleAtStart: function (fromIndex, toIndex, navigator) {
-                var self;
-                function wrapAfterAlign() {
-                    self._finalAlign(toIndex, { skipAnim: true });
-                }
-                self = this;
-
-                this._mask.alignToIndex(navigator.indexCount() + toIndex, { onComplete: wrapAfterAlign });
-            },
-
-            _wrapBackwardWhenActiveItemVisibleAtStart: function (fromIndex, toIndex, navigator) {
-                var self;
-                function wrapAfterAlign() {
-                    self._finalAlign(toIndex, { skipAnim: true });
-                }
-                self = this;
-
-                this._mask.alignToIndex(-navigator.indexCount() + toIndex, { onComplete: wrapAfterAlign });
             },
 
             _moveNormally: function (toIndex, options) {
-                this._finalAlign(toIndex, options);
+                this._queueFinalAlign(toIndex, options);
+                this._queue.start();
             },
 
-            _finalAlign: function (toIndex,  options) {
+            _queueFinalAlign: function (toIndex,  options) {
                 var optionsWithCallback, self;
 
                 function OptionsClone() {}
-                function bubbleAfterAlign() {
+
+                function unwrappedComplete() {
+                    self._bubbleAfterAlign(toIndex);
+                }
+
+                function wrappedComplete() {
+                    options.onComplete();
                     self._bubbleAfterAlign(toIndex);
                 }
 
@@ -160,16 +222,17 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 OptionsClone.prototype = options;
                 optionsWithCallback = new OptionsClone();
                 if (options && options.onComplete) {
-                    optionsWithCallback.onComplete = function () {
-                        options.onComplete();
-                        bubbleAfterAlign();
-                    };
+                    optionsWithCallback.onComplete = wrappedComplete;
                 } else {
-                    optionsWithCallback.onComplete = bubbleAfterAlign;
+                    optionsWithCallback.onComplete = unwrappedComplete;
                 }
 
-                this._mask.alignToIndex(toIndex, optionsWithCallback);
+                this._queue.add(toIndex, optionsWithCallback);
             }
         });
+
+        Aligner.directions = { FORWARD: 0, BACKWARD: 1 };
+
+        return Aligner;
     }
 );
