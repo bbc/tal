@@ -148,6 +148,20 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 assertEquals('return value of getIndexOfChildWidget returned from currentIndex', 4, index);
             },
 
+            testGetIndexReturnsNullWithEmptyWidget: function (NavClass, sandbox) {
+                var container, navigator, index;
+                this.setSandbox(sandbox);
+                this.stubClassPrototypes([Container]);
+
+                container = new Container();
+                container.getIndexOfChildWidget.returns(-1);
+                navigator = new NavClass(container);
+
+                index = navigator.currentIndex();
+
+                assertTrue('currentIndex null with empty container', null === index);
+            },
+
             testSetContainerUpdatesContainer: function (NavClass) {
                 var navigator;
                 var container1, container2;
