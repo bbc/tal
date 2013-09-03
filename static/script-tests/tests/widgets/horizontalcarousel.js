@@ -84,6 +84,41 @@
 		);
 	};
 
+    this.HorizontalCarouselTest.prototype.testShowCallsShowElementWithCorrectArgs = function(queue) {
+        /*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
+        expectAsserts(2);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/horizontalcarousel", "antie/widgets/list"],
+            function(application, HorizontalCarousel, List) {
+                var widget = new HorizontalCarousel("id2");
+                widget.setRenderMode(List.RENDER_MODE_LIST);
+
+                var device = application.getDevice();
+                var el = widget.render(device);
+
+
+                var config = device.getConfig();
+                var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
+
+                var options = {
+                    el : widget._maskElement,
+                    skipAnim : animate
+                };
+
+                var deviceCreateListSpy = this.sandbox.spy(device, 'showElement');
+                widget.show({});
+
+                jstestdriver.console.log( deviceCreateListSpy.args[ 0 ][ 0 ].el );
+
+                assertEquals( "mask", widget._maskElement, deviceCreateListSpy.args[ 0 ][ 0 ].el );
+                assertEquals( "anim", !animate, deviceCreateListSpy.args[ 0 ][ 0 ].skipAnim );
+            }
+        );
+    };
+
 	this.HorizontalCarouselTest.prototype.testAnimationParametersPassedToAnimation = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(4);
