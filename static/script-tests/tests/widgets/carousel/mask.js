@@ -189,6 +189,64 @@
         );
     };
 
+    this.MaskTest.prototype.testNormalisedAlignPointWorksIfSetBeforeMaskHasSize = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 0, height: 0});
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+
+                mask.setNormalisedAlignPoint(0.5);
+                device.getElementSize.returns({width: 200, height: 200});
+                mask.alignToIndex(1);
+
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to normalised align point', 50, pixelsMoved);
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testNormalisedAlignPointOverriddenBySubsequentAlignPoint = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, verticalOrientation) {
+                var moveStub, pixelsMoved, mask, device;
+                device = application.getDevice();
+                function MockWidgetStripFn() {}
+                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                this.sandbox.stub(device);
+                device.getElementSize.returns({width: 200, height: 200});
+                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                moveStub = sinon.stub(mask, '_moveContentsTo');
+
+                mask.setNormalisedAlignPoint(0.5);
+                mask.setAlignPoint(20);
+                mask.alignToIndex(1);
+
+                pixelsMoved = moveStub.getCall(0).args[0];
+
+                assertEquals('Moved to align point', -30, pixelsMoved);
+            }
+        );
+    };
+
     this.MaskTest.prototype.testNormalisedWidgetAlign = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',

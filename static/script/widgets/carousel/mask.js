@@ -52,6 +52,7 @@ require.def('antie/widgets/carousel/mask',
                 this.setWidgetStrip(widgetStrip);
                 this._alignmentPoint = 0;
                 this._normalisedWidgetAlignPoint = 0;
+                this._normalisedAlignmentPoint = 0;
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
             },
 
@@ -64,7 +65,7 @@ require.def('antie/widgets/carousel/mask',
             alignToIndex: function (index, options) {
                 var distanceContentsMustMoveBack;
                 distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
-                distanceContentsMustMoveBack -= this._alignmentPoint;
+                distanceContentsMustMoveBack -= this._getAlignmentPoint();
                 distanceContentsMustMoveBack += this._getWidgetAlignmentPoint(index);
                 this._moveContentsTo(-distanceContentsMustMoveBack, options);
             },
@@ -76,6 +77,7 @@ require.def('antie/widgets/carousel/mask',
              */
             setAlignPoint: function (pixelsFromEdge) {
                 this._alignmentPoint = pixelsFromEdge;
+                this._normalisedAlignmentPoint = 0;
             },
 
             /**
@@ -85,7 +87,7 @@ require.def('antie/widgets/carousel/mask',
              */
             setNormalisedAlignPoint: function (fractionOfMaskLength) {
                 var clampedFraction = this._clampBetweenZeroAndOne(fractionOfMaskLength);
-                this._alignmentPoint = this.getLength() * clampedFraction;
+                this._normalisedAlignmentPoint = clampedFraction;
             },
 
             /**
@@ -166,6 +168,16 @@ require.def('antie/widgets/carousel/mask',
                 }
 
                 return widgetAlignmentPoint;
+            },
+
+            _getAlignmentPoint: function () {
+                var alignmentPoint;
+                if (this._normalisedAlignmentPoint === 0) {
+                    alignmentPoint = this._alignmentPoint;
+                } else {
+                    alignmentPoint  = this.getLength() * this._normalisedAlignmentPoint;
+                }
+                return alignmentPoint;
             },
 
             _visibleIndixesBefore: function (index, maskLength) {
