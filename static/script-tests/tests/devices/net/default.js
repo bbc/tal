@@ -277,7 +277,9 @@
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Wait for cross domain post", function(callbacks) {
 
-				device.crossDomainPost("http://example.com/test", {"goodbye":"salford", "hello":"world"}, {
+				// We're posting to an unreachable endpoint, so will need to
+				// simulate the successful POST ourselves.
+				device.crossDomainPost("http://10.1.1.255", {"goodbye":"salford", "hello":"world"}, {
 					onLoad: callbacks.add(function() { assert(true); }),
 					onError: callbacks.addErrback('post should complete succesfully'),
 					blankUrl: "/test/script-tests/fixtures/blank.html"
@@ -300,6 +302,8 @@
 						assertEquals("salford", fields[0].value);
 						assertEquals("hello", fields[1].name);
 						assertEquals("world", fields[1].value);
+						// Simulate success of POST
+						iframe.dispatchEvent(new Event('load'));
 					}, 0);
 				});
 			});
