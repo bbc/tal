@@ -76,7 +76,10 @@ require.def(
 			var changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
 
 			if ((changeLeft === 0) && (changeTop === 0)) {
-				return;
+                if (options.onComplete) {
+                    options.onComplete();
+                }
+				return null;
 			}
 
 			if (options.to.left !== undefined) {
