@@ -314,6 +314,34 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testSetChannelConstructsCorrectHbbtvChannelObject = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+            broadcastSource.setChannel('0x233A', '4169', '6009');
+            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, '0x233A', '4169', '6009'));
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testSetChannelFallsBackToDVBT = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            this.hbbtvPlugin.currentChannel.idType = undefined;
+            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+            broadcastSource.setChannel('0x233A', '4169', '6009');
+            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(12, '0x233A', '4169', '6009'));
+        }, config);
+    };
+
+
     /*  Helper functions to mock out and use HBBTV specific APIs */
 
     this.hbbtvSource.prototype.stubHBBTVSpecificApis = function() {
@@ -325,7 +353,14 @@
         hbbtvPlugin.stop = function() {
         };
         hbbtvPlugin.playState = "hbbTvObjectPlayState";
-        hbbtvPlugin.currentChannel = { name : "BBC One"};
+        hbbtvPlugin.currentChannel = {
+            name : "BBC One",
+            idType : 10 //DVB-C
+        };
+        hbbtvPlugin.createChannelObject = function() {
+        };
+        hbbtvPlugin.setChannel = function() {
+        };
 
         var target = document.getElementsByTagName('body')[0];
         target.appendChild(hbbtvPlugin);
