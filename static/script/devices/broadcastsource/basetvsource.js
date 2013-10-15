@@ -80,6 +80,15 @@ require.def('antie/devices/broadcastsource/basetvsource',
                 return PLAY_STATE_UNKNOWN;
             },
             /**
+             * Requests the device switches a tuner to the channel specified
+             * @param onid The original network ID.
+             * @param tsid DVB or ISDB transport stream ID.
+             * @param sid  DVB or ISDB service ID, which must be within the range of 1 to 65535.
+             */
+            setChannel : function(onid, tsid, sid) {
+                throw new Error("Device broadcast source does not override abstract method setChannel");
+            },
+            /**
              * Reverts the current screen settings and performs any clean up required before
              * the user exits the application back to standard broadcast.
              */

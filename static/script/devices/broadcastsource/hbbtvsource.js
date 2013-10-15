@@ -35,6 +35,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */
         var DOM_ELEMENT_ID = 'broadcastVideoObject';
+        var ID_DVB_T = 12;
         var HbbTVSource = BaseTvSource.extend(/** @lends antie.devices.broadcastsource.HbbTVSource.prototype */ {
             /**
              * @constructor
@@ -101,6 +102,26 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             destroy : function() {
                 // Not currently required for hbbtv
+            },
+            setChannel : function(onid, tsid, sid) {
+                var channelType = this._getChannelType();
+                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, onid, tsid, sid);
+                if(newChannel === null) {
+                    return false;
+                }
+                this._broadcastVideoObject.setChannel(newChannel);
+                return true;
+            },
+            /**
+             * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the
+             * HBBTV specification
+             */
+            _getChannelType : function() {
+                var channelType = this._broadcastVideoObject.currentChannel.idType;
+                if (typeof channelType === "undefined") {
+                    channelType = ID_DVB_T;
+                }
+                return channelType;
             },
             /**
              * Sets the size of the broadcast object to be the same as the required screen size identified by antie at
