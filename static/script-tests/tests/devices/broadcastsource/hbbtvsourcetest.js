@@ -322,8 +322,37 @@
             var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
-            broadcastSource.setChannel('0x233A', '4169', '6009');
-            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, '0x233A', '4169', '6009'));
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : function() {
+                },
+                onError : function() {
+                }
+            });
+            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, 0x233A, 4169, 6009));
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testSetChannelCallsHBBTVSetChannelWithCorrectArgs = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : function() {
+                },
+                onError : function() {
+                }
+            });
+            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, 0x233A, 4169, 6009));
         }, config);
     };
 
@@ -336,8 +365,65 @@
             var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
-            broadcastSource.setChannel('0x233A', '4169', '6009');
-            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(12, '0x233A', '4169', '6009'));
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : function() {
+                },
+                onError : function() {
+                }
+            });
+            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(12, 0x233A, 4169, 6009));
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testOnSuccessCallbackIsFiredWhenExpected = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+            assertTrue("OnSuccess callback function called", onSuccessSpy.called);
+            assertTrue("OnError callback function not called", onErrorSpy.notCalled);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testOnErrorCallbackIsFiredWhenCreateChannelObjectFails = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            this.hbbtvPlugin.createChannelObject = function() {
+                return null;
+            };
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+            assertTrue("OnError callback function called", onErrorSpy.called);
+            assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
         }, config);
     };
 
