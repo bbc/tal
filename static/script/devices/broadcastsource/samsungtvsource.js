@@ -127,13 +127,19 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                         params.onSuccess();
                     };
                     var tuneError = function (error) {
-                        params.onError(error);
+                        params.onError({
+                            name : "ChangeChannelError",
+                            message : "Error tuning channel"
+                        });
                     };
 
                     try {
                         webapis.tv.channel.tune(newChannelArgs, tuneSuccess, tuneError, 0);
                     } catch (e) {
-                        params.onError();
+                        params.onError({
+                            name : "ChangeChannelError",
+                            message : "Error tuning channel"
+                        })
                     }
                 };
 
@@ -150,17 +156,26 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                     }
 
                     // Channel not found in the channel list, call the onError
-                    params.onError();
+                    params.onError({
+                        name : "ChannelError",
+                        message : "Channel could not be found"
+                    });
                 };
 
                 var onFailedToRetrieveChannelList = function (error) {
-                    params.onError(error);
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    });
                 };
 
                 try {
                     webapis.tv.channel.getChannelList(onChannelListRetrieved, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, startIndex, numChannelsToFind);
                 } catch (error) {
-                    params.onError(error);
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    });
                 }
             }
         });
