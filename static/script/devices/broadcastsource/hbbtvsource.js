@@ -104,17 +104,33 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Not currently required for hbbtv
             },
             setChannel : function(params) {
+                var self = this;
                 var channelType = this._getChannelType();
                 var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
-                if(newChannel === null) {
+                if (newChannel === null) {
                     params.onError({
                         name : "Error",
                         message : "Channel could not be found"
                     });
                     return;
                 }
+
+                var successEventListener = function(channel) {
+                    self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
+                    self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
+                    params.onSuccess();
+                };
+
+                var errorEventListener = function(channel, errorState) {
+                    self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
+                    self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
+                    params.onError();
+                };
+
+                this._broadcastVideoObject.addEventListener("ChannelChangeSucceeded", successEventListener);
+                this._broadcastVideoObject.addEventListener("ChannelChangeError", errorEventListener);
+
                 this._broadcastVideoObject.setChannel(newChannel);
-                params.onSuccess();
             },
             /**
              * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the

@@ -378,7 +378,87 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testOnSuccessCallbackIsFiredWhenExpected = function(queue) {
+    this.hbbtvSource.prototype.testChannelChangeSucceededCallbackIsAdded = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            var listenSpy = this.sandbox.spy(broadcastSource._broadcastVideoObject, 'addEventListener');
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+
+            assertEquals("ChannelChangeSucceeded", listenSpy.getCall(0).args[0]);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testChannelChangeErrorCallbackIsAdded = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            var listenSpy = this.sandbox.spy(broadcastSource._broadcastVideoObject, 'addEventListener');
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+
+            assertEquals("ChannelChangeError", listenSpy.getCall(1).args[0]);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testOnSuccessCallbackIsFiredWhenChannelChangeSucceededEventIsRaised = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            broadcastSource._broadcastVideoObject.addEventListener("ChannelChangeSucceeded", function() {
+                console.log("caught channelchange event on broadasat video object");
+                onSuccessSpy();
+            });
+
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+
+            var event = new CustomEvent("ChannelChangeSucceeded", {});
+            broadcastSource._broadcastVideoObject.dispatchEvent(event);
+
+            assertTrue("OnSuccess callback function called", onSuccessSpy.called);
+            assertTrue("OnError callback function not called", onErrorSpy.notCalled);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testOnErrorCallbackIsFiredWhenChannelChangeErrorEventIsRaised = function(queue) {
         expectAsserts(2);
 
         var config = this.getGenericHBBTVConfig();
@@ -396,8 +476,15 @@
                 onSuccess : onSuccessSpy,
                 onError : onErrorSpy
             });
-            assertTrue("OnSuccess callback function called", onSuccessSpy.called);
-            assertTrue("OnError callback function not called", onErrorSpy.notCalled);
+
+
+            var e = document.createEvent('Events');
+            e.initEvent("ChannelChangeError");
+
+            broadcastSource._broadcastVideoObject.dispatchEvent(e);
+
+            assertTrue("OnError callback function called", onErrorSpy.called);
+            assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
         }, config);
     };
 
