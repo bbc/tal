@@ -109,7 +109,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
                 if (newChannel === null) {
                     params.onError({
-                        name : "Error",
+                        name : "ChannelError",
                         message : "Channel could not be found"
                     });
                     return;
@@ -118,6 +118,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Test the that the device can access the channelList, this will be required in the future
                 try {
                     var channelConfig = this._broadcastVideoObject.getChannelConfig();
+                    var channelList = channelConfig.channelList;
+                    var channelListCount = channelList.length;
                 } catch(e) {
                     params.onError({
                         name : "ChannelListError",
@@ -125,12 +127,10 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     });
                 }
 
-                var channelList = channelConfig.channelList;
-
-                if (channelList.length == 0 || !channelList) {
+                if (!channelListCount || channelListCount < 0) {
                     params.onError({
                         name : "ChannelListError",
-                        message : "Channel list is not available"
+                        message : "Channel list is empty or not available"
                     });
                     return;
                 }
@@ -144,7 +144,10 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var errorEventListener = function(channel, errorState) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
-                    params.onError();
+                    params.onError({
+                        name : "ChangeChannelError",
+                        message : "Error tuning channel"
+                    });
                 };
 
                 this._broadcastVideoObject.addEventListener("ChannelChangeSucceeded", successEventListener);

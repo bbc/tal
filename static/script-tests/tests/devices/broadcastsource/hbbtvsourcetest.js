@@ -514,6 +514,61 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testOnErrorCallbackIsFiredIfChannelListCanNotBeAccessed = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            this.hbbtvPlugin.getChannelConfig = undefined;
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            debugger;
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+            assertTrue("OnError callback function called", onErrorSpy.called);
+            assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testOnErrorCallbackIsFiredIfChannelListContainsNoChannels = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            this.hbbtvPlugin.getChannelConfig = function() {
+                return {
+                    channelList : []
+                }
+            };
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var onSuccessSpy = this.sandbox.spy();
+            var onErrorSpy = this.sandbox.spy();
+
+            broadcastSource.setChannel({
+                onid : 0x233A,
+                tsid : 4169,
+                sid  : 6009,
+                onSuccess : onSuccessSpy,
+                onError : onErrorSpy
+            });
+            assertTrue("OnError callback function called", onErrorSpy.called);
+            assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
+        }, config);
+    };
+
 
     /*  Helper functions to mock out and use HBBTV specific APIs */
 
@@ -534,6 +589,15 @@
         };
         hbbtvPlugin.setChannel = function() {
         };
+        hbbtvPlugin.getChannelConfig = function() {
+            return {
+                channelList : [
+                    {
+                        name: "BBC One"
+                    }
+                ]
+            }
+        }
 
         var target = document.getElementsByTagName('body')[0];
         target.appendChild(hbbtvPlugin);
