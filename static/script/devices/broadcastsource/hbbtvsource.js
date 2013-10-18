@@ -115,6 +115,26 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     return;
                 }
 
+                // Test the that the device can access the channelList, this will be required in the future
+                try {
+                    var channelConfig = this._broadcastVideoObject.getChannelConfig();
+                } catch(e) {
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    });
+                }
+
+                var channelList = channelConfig.channelList;
+
+                if (channelList.length == 0 || !channelList) {
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    });
+                    return;
+                }
+
                 var successEventListener = function(channel) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
@@ -136,13 +156,16 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the
              * HBBTV specification
              */
-            _getChannelType : function() {
-                var channelType = this._broadcastVideoObject.currentChannel.idType;
-                if (typeof channelType === "undefined") {
-                    channelType = ID_DVB_T;
+            _getChannelType
+                :
+                function() {
+                    var channelType = this._broadcastVideoObject.currentChannel.idType;
+                    if (typeof channelType === "undefined") {
+                        channelType = ID_DVB_T;
+                    }
+                    return channelType;
                 }
-                return channelType;
-            },
+            ,
             /**
              * Sets the size of the broadcast object to be the same as the required screen size identified by antie at
              * application start up.
@@ -151,7 +174,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             }
-        });
+        })
+            ;
 
         Device.prototype.isBroadcastSourceSupported = function() {
             return this.getHistorian().hasBroadcastOrigin();
@@ -161,4 +185,5 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             return new HbbTVSource();
         };
     }
-);
+)
+    ;
