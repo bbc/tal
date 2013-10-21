@@ -477,10 +477,7 @@
                 onError : onErrorSpy
             });
 
-
-            var e = document.createEvent('Events');
-            e.initEvent("ChannelChangeError");
-
+            var e = new CustomEvent('ChannelChangeError');
             broadcastSource._broadcastVideoObject.dispatchEvent(e);
 
             assertTrue("OnError callback function called", onErrorSpy.called);
