@@ -96,9 +96,87 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             destroy : function() {
                 this.setPosition(0, -1, 0, 0);
             },
+            setChannel : function(params) {
+                this._tuneChannelByTriplet(params);
+            },
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
+            },
+            /**
+             * @see http://img-developer.samsung.com/onlinedocs/samsung_webapi_guide/html/index.html
+             */
+            _tuneChannelByTriplet : function(params) {
+
+                // FIXME: These two parameters should be optional, allowing us to retrieve all channels, but it seems they aren't.
+                var startIndex = 0;
+                var numChannelsToFind = 1000000;
+
+                var _tuneChannel = function(newChannel) {
+                    var newChannelArgs = {
+                        sourceID: newChannel.sourceID,
+                        programNumber: newChannel.programNumber,
+                        transportStreamID: newChannel.transportStreamID,
+                        originalNetworkID: newChannel.originalNetworkID,
+                        ptc: newChannel.ptc,
+                        major: newChannel.major,
+                        minor: newChannel.minor
+                    };
+
+                    var tuneSuccess = function () {
+                        params.onSuccess();
+                    };
+                    var tuneError = function (error) {
+                        params.onError({
+                            name : "ChangeChannelError",
+                            message : "Error tuning channel"
+                        });
+                    };
+
+                    try {
+                        webapis.tv.channel.tune(newChannelArgs, tuneSuccess, tuneError, 0);
+                    } catch (e) {
+                        params.onError({
+                            name : "ChangeChannelError",
+                            message : "Error tuning channel"
+                        })
+                    }
+                };
+
+                var onChannelListRetrieved = function (channels) {
+
+                    for (var i = 0; i < channels.length; i++) {
+                        var channel = channels[i];
+
+                        // FIXME: ONID is always reported as 65535, so exclude from check
+                        if (channel.transportStreamID === params.tsid && channel.programNumber === params.sid) {
+                            _tuneChannel(channel);
+                            return;
+                        }
+                    }
+
+                    // Channel not found in the channel list, call the onError
+                    params.onError({
+                        name : "ChannelError",
+                        message : "Channel could not be found"
+                    });
+                };
+
+                var onFailedToRetrieveChannelList = function (error) {
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    });
+                };
+
+                try {
+                    webapis.tv.channel.getChannelList(onChannelListRetrieved, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, startIndex, numChannelsToFind);
+                } catch (error) {
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    });
+                }
             }
         });
 
