@@ -233,5 +233,31 @@
         }, config);
     };
 
+    this.NoAnimAnimationTest.prototype.testMoveElementToZeroFiresCallbackWhenStylePropertiesNotYetSet = function (queue) {
+        expectAsserts(1);
+        var config;
+        config = this.getConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
+            var device, options;
+            device = application.getDevice();
+
+            options = {
+                el: {
+                    style: {
+                        top: "",
+                        left: ""
+                    }
+                },
+                to: { top: 0 },
+                onComplete: this.sandbox.stub()
+            };
+
+            device.moveElementTo(options);
+            assertTrue("onComplete fired", options.onComplete.calledOnce);
+        },
+        config);
+    };
+
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/noanim'], this.NoAnimAnimationTest);
 })();
