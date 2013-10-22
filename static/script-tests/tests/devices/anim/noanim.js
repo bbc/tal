@@ -239,7 +239,7 @@
         config = this.getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
-            var device, options, spy;
+            var device, options;
             device = application.getDevice();
 
             options = {
