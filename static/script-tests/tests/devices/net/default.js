@@ -311,6 +311,40 @@
 
 	};
 	
+	this.DefaultNetworkTest.prototype.testCrossDomainPostEnsureTimeoutIsCancelledForSuccessfulSubmissions = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            queue.call("Wait for cross domain post to timeout", function(callbacks) {
+
+                // We're posting to an unreachable endpoint, so will need to
+                // simulate the successful POST ourselves.
+                device.crossDomainPost("http://10.1.1.255", {"hello":"world"}, {
+                    onLoad: callbacks.add(function() { assert(true); }),
+                    onError: callbacks.addErrback('post should not timeout'),
+                    blankUrl: "/test/script-tests/fixtures/blank.html",
+                    timeout : 1
+                });
+
+                var iframes = document.body.getElementsByTagName("iframe");
+                
+                var iframe = iframes[0];
+                iframe.addEventListener('load', function() {
+                    iframe.removeEventListener('load', arguments.callee);
+
+                    window.setTimeout(function() {                        
+                        // Simulate success of POST
+                        iframe.dispatchEvent(new Event('load'));
+                    }, 0);
+                });
+                // ensure timeout does not fire
+                this.waitFor(callbacks, 1500);                
+            });
+        });
+
+    };
+	
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": true }});

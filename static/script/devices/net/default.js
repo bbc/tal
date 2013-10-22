@@ -134,6 +134,7 @@ require.def(
 			var iframe, form;
             var postRequestHasBeenSent = false;
             var blankPageToLoad = opts.blankUrl || "blank.html";
+            var timeoutHandle;
 
 			function iframeLoadTimeoutCallback() {
 				iframe.onload = null;
@@ -164,6 +165,10 @@ require.def(
                     form.submit();
                 }
                 else {
+                    if (timeoutHandle){
+                        clearTimeout(timeoutHandle);
+                    }
+
                     iframe.onload = null;
                     try {
                         var responseData = iframe.contentWindow.name;
@@ -202,7 +207,7 @@ require.def(
 				document.body.appendChild(iframe);
 			}
 
-			setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
+			timeoutHandle = setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
 		},
 		
