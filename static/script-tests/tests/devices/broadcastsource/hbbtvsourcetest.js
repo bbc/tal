@@ -71,8 +71,6 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
             var device = application.getDevice();
 
-            var historian = device.getHistorian();
-
             this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
                 return false;
             });
@@ -88,8 +86,6 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
             var device = application.getDevice();
-
-            var historian = device.getHistorian();
 
             this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
                 return true;
@@ -196,7 +192,7 @@
 
             var hbbtvPlugin = document.getElementById('broadcastVideoObject');
             hbbtvPlugin.bindToCurrentChannel = function() {
-                throw Error("BindToCurrentChannel error");
+                throw new Error("BindToCurrentChannel error");
             };
 
             assertException("Unable to bind to current channel", function() {
@@ -524,7 +520,6 @@
             var onSuccessSpy = this.sandbox.spy();
             var onErrorSpy = this.sandbox.spy();
 
-            debugger;
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -545,7 +540,7 @@
             this.hbbtvPlugin.getChannelConfig = function() {
                 return {
                     channelList : []
-                }
+                };
             };
 
             var device = application.getDevice();
@@ -593,8 +588,8 @@
                         name: "BBC One"
                     }
                 ]
-            }
-        }
+            };
+        };
 
         var target = document.getElementsByTagName('body')[0];
         target.appendChild(hbbtvPlugin);
