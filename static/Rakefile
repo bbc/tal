@@ -44,7 +44,7 @@ COVERAGE_FILE_NAME = "jsTestDriver.conf-coverage.dat"
 
 #jstestdriver commands
 SERVER_COMMAND     = "java -jar #{JTD_JAR_PATH} --config #{CONFIG_PATH} #{$params[ :jtd_runner_mode ]} #{$params[ :jtd_port ]}"
-TEST_COMMAND       = "java -Xmx1G -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
+TEST_COMMAND       = "java -Xmx2G -jar #{JTD_JAR_PATH} --reset #{$params[ :jtd_output ]} #{$params[ :jtd_runnerMode ] } --config #{CONFIG_PATH} #{$params[ :jtd_server ]} #{$params[ :jtd_verbose ]} #{$params[ :jtd_tests ]}"
 
 $test_files		   = ''
 $jtd_config 	   = ''
@@ -362,7 +362,7 @@ serve:
 
 #plugin-block
 
-timeout: 360
+timeout: 720
 eos
 
 #the prelude file template
