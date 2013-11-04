@@ -38,34 +38,6 @@
 		this.sandbox.restore();
 	};
 	
-// 	this.KeyboardTest.prototype.testInterface = function(queue) {
-// 
-// 		assert(false);
-// 
-// 	};
-
-// 	this.KeyboardTest.prototype.testInterface = function(queue) {
-//		expectAsserts(2);
-// 
-// 		queuedApplicationInit(
-// 			queue,
-// 			"lib/mockapplication",
-// 			["antie/widgets/list","antie/widgets/container"],
-// 			function(application, List, Container) {
-// 				assertEquals('List should be a function', 'function', typeof List);
-// 				assert('List should extend from Container', new List() instanceof Container);
-// 		});
-// 	};
-	
-	//Functionality
-	
-	
-	//.focus
-	//.setFocusToActiveChildKey
-	
-	
-	// POJO Type testing
-	
 	this.KeyboardTest.prototype.testSettingAndGettingOfMultiTap = function(queue) {
 		expectAsserts(2);
 
@@ -292,8 +264,5 @@
 				assertEquals("Abc", keyboard.getText());
 		});
 	};
-	
-	
-	//activechildkey
 	
 })();
