@@ -258,7 +258,7 @@ require.def('antie/widgets/container',
 					return false;
 				}
 				if(this.hasChildWidget(widget.id) && widget.isFocusable()) {
-					if(this._activeChildWidget) {
+					if(this._activeChildWidget && this._activeChildWidget !== widget) {
 						this._activeChildWidget.removeClass('active');
 						this._setActiveChildFocussed(false);
 					}
