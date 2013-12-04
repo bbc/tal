@@ -43,7 +43,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             init: function (mask) {
                 this._mask = mask;
                 this._queue = new AlignmentQueue(this._mask);
-                this._alignedIndex = null;
+                this._lastAlignIndex = null;
             },
 
             /**
@@ -99,6 +99,13 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             /**
+             * @returns {Number} The last index the carousel was asked to align to, or null if no alignments have completed.
+             */
+            indexOfLastAlignRequest: function () {
+                return this._lastAlignIndex;
+            },
+
+            /**
              * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
              * If several alignments have been queued, all will complete in order.
              */
@@ -109,7 +116,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             _align: function (navigator, direction, options) {
                 var startIndex, targetIndex;
 
-                startIndex = this._alignedIndex;
+                startIndex = this.indexOfLastAlignRequest();
                 targetIndex = this._subsequentIndexInDirection(navigator, direction);
 
                 if (targetIndex !== null) {
@@ -123,8 +130,9 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _subsequentIndexInDirection: function (navigator, direction) {
-                var startPoint;
-                startPoint = (this._alignedIndex === null) ? 0 : this._alignedIndex;
+                var startPoint, lastAligned;
+                lastAligned = this.indexOfLastAlignRequest();
+                startPoint = (lastAligned === null) ? 0 : lastAligned;
                 if (direction === Aligner.directions.FORWARD) {
                     return navigator.indexAfter(startPoint);
                 } else {
@@ -144,11 +152,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
 
             _bubbleBeforeAlign: function (index) {
                 this._mask.bubbleEvent(new BeforeAlignEvent(this._mask, index));
-                this._alignedIndex = index;
+                this._lastAlignIndex = index;
             },
 
             _bubbleAfterAlign: function (index) {
-
                 this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
             },
 
