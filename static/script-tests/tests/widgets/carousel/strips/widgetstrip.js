@@ -580,4 +580,21 @@
             }
         );
     };
+
+    this.WidgetStripTest.prototype.testHasDetachedWidgetsIsFalse = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/button',
+                'antie/widgets/carousel/orientations/horizontal',
+                'antie/widgets/container'
+            ],
+            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+                var strip;
+                strip = new WidgetStrip('strip', horizontalOrientation);
+                assertFalse(strip.hasDetachedWidgets());
+            }
+        );
+    };
 }());

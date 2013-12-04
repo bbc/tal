@@ -141,6 +141,15 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
 
             },
 
+            /**
+             * Indicates whether any of the strip's child widgets have an output element that is not a child of the strip's output element.
+             * necessary when doing dom culling to see if there's a need to work out the visibility requirements before an alignment
+             * @returns {Boolean} true if there are any detached child widgets, false if not.
+             */
+            hasDetachedWidgets: function () {
+                return false;
+            },
+
             _lengthToIndexByCalculatingUsingElements: function (index) {
                 var elements, widgets, endIndex, i;
                 elements = [];
