@@ -24,9 +24,11 @@
 require.def('antie/widgets/carousel/mask',
     [
         'antie/widgets/container',
-        'antie/widgets/carousel/spinner'
+        'antie/widgets/carousel/spinner',
+        'antie/events/beforealignevent',
+        'antie/events/afteralignevent'
     ],
-    function (Container, Spinner) {
+    function (Container, Spinner, BeforeAlignEvent, AfterAlignEvent) {
         "use strict";
         /**
          * The masking container of a carousel that the widget strip moves within.
@@ -147,6 +149,14 @@ require.def('antie/widgets/carousel/mask',
              */
             stopAnimation: function () {
                 this._spinner.stopAnimation();
+            },
+
+            beforeAlignTo: function (index) {
+                this._widgetStrip.bubbleEvent(new BeforeAlignEvent(this._widgetStrip, index));
+            },
+
+            afterAlignTo: function (index) {
+                this._widgetStrip.bubbleEvent(new AfterAlignEvent(this._widgetStrip, index));
             },
 
             _clampBetweenZeroAndOne: function (value) {

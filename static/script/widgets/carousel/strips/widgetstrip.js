@@ -60,7 +60,6 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             append: function (widget, length) {
                 this._lengths.push(length);
                 return this.appendChildWidget(widget);
-
             },
 
             /**

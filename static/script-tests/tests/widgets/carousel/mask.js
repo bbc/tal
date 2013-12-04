@@ -774,4 +774,72 @@
             }
         );
     };
+
+    this.MaskTest.prototype.testBeforeAlignToFiresBeforeAlignEventOnStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/carousel/spinner',
+                'antie/events/beforealignevent'
+            ],
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, BeforeAlignEvent) {
+                var device, mask, strip, targetIndex;
+                targetIndex = 3;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Spinner.prototype);
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(BeforeAlignEvent.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                mask = new Mask('testMask', strip, verticalOrientation);
+                mask.beforeAlignTo(targetIndex);
+                sinon.assert.calledWith(
+                    WidgetStrip.prototype.bubbleEvent,
+                    sinon.match.instanceOf(BeforeAlignEvent)
+                );
+                sinon.assert.calledWith(
+                    BeforeAlignEvent.prototype.init,
+                    sinon.match.instanceOf(WidgetStrip),
+                    targetIndex
+                );
+            }
+        );
+    };
+
+    this.MaskTest.prototype.testAfterAlignToFiresBeforeAlignEventOnStrip = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/carousel/spinner',
+                'antie/events/afteralignevent'
+            ],
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, AfterAlignEvent) {
+                var device, mask, strip, targetIndex;
+                targetIndex = 3;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Spinner.prototype);
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(AfterAlignEvent.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                mask = new Mask('testMask', strip, verticalOrientation);
+                mask.afterAlignTo(targetIndex);
+                sinon.assert.calledWith(
+                    WidgetStrip.prototype.bubbleEvent,
+                    sinon.match.instanceOf(AfterAlignEvent)
+                );
+                sinon.assert.calledWith(
+                    AfterAlignEvent.prototype.init,
+                    sinon.match.instanceOf(WidgetStrip),
+                    targetIndex
+                );
+            }
+        );
+    };
 }());

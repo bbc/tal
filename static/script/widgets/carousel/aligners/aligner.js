@@ -94,7 +94,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
             alignToIndex: function (index, options) {
-                this._bubbleBeforeAlign(index);
+                this._informMaskBeforeAlign(index);
                 this._moveNormally(index, options);
             },
 
@@ -120,7 +120,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 targetIndex = this._subsequentIndexInDirection(navigator, direction);
 
                 if (targetIndex !== null) {
-                    this._bubbleBeforeAlign(targetIndex);
+                    this._informMaskBeforeAlign(targetIndex);
                     if (this._isWrap(startIndex, targetIndex, direction)) {
                         this._wrap(startIndex, targetIndex, navigator, direction, options);
                     } else {
@@ -150,13 +150,13 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 return false;
             },
 
-            _bubbleBeforeAlign: function (index) {
-                this._mask.bubbleEvent(new BeforeAlignEvent(this._mask, index));
+            _informMaskBeforeAlign: function (index) {
+                this._mask.beforeAlignTo(index);
                 this._lastAlignIndex = index;
             },
 
-            _bubbleAfterAlign: function (index) {
-                this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
+            _informMaskAfterAlign: function (index) {
+                this._mask.afterAlignTo(index);
             },
 
             _wrap: function (fromIndex, toIndex, navigator, direction, options) {
@@ -217,12 +217,12 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 function OptionsClone() {}
 
                 function unwrappedComplete() {
-                    self._bubbleAfterAlign(toIndex);
+                    self._informMaskAfterAlign(toIndex);
                 }
 
                 function wrappedComplete() {
                     options.onComplete();
-                    self._bubbleAfterAlign(toIndex);
+                    self._informMaskAfterAlign(toIndex);
                 }
 
                 self = this;
