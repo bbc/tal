@@ -53,7 +53,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
              * Adds a widget to the end of the strip
              * @param {antie.widgets.Widget} widget The widget to append to the strip
              * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
-             * (Height for a vertical strip or width for horizontal.) If providied, this value will be used in
+             * (Height for a vertical strip or width for horizontal.) If provided, this value will be used in
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
