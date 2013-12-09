@@ -45,10 +45,11 @@
             function (application, InitState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, InitState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 this.sandbox.stub(child, 'render');
-                state.append(parent, child);
+                state.append(context, parent, child);
 
                 sinon.assert.calledOnce(child.render);
                 sinon.assert.calledWith(
@@ -71,10 +72,11 @@
             function (application, InitState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, InitState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 this.sandbox.stub(child, 'render');
-                state.prepend(parent, child);
+                state.prepend(context, parent, child);
 
                 sinon.assert.calledOnce(child.render);
                 sinon.assert.calledWith(
@@ -97,6 +99,7 @@
             function (application, InitState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, InitState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 var childEl = "child";
@@ -106,7 +109,7 @@
                     this.outputElement = childEl;
                 });
 
-                state.append(parent, child);
+                state.append(context, parent, child);
 
                 sinon.assert.calledOnce(Device.prototype.appendChildElement);
                 sinon.assert.calledWith(
@@ -130,6 +133,7 @@
             function (application, InitState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, InitState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 var childEl = "child";
@@ -139,7 +143,7 @@
                     this.outputElement = childEl;
                 });
 
-                state.prepend(parent, child);
+                state.prepend(context, parent, child);
 
                 sinon.assert.calledOnce(Device.prototype.prependChildElement);
                 sinon.assert.calledWith(
@@ -164,10 +168,11 @@
             function (application, InitState, WidgetContext, Widget, Device, AttachedState) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, InitState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 this.sandbox.stub(child, 'render');
-                state.append(parent, child);
+                state.append(context, parent, child);
 
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
@@ -190,11 +195,12 @@
             ],
             function (application, InitState, WidgetContext, Widget, Device, AttachedState) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
+                var context = new WidgetContext();
                 var state = this.createState(WidgetContext, InitState);
                 var parent = new Widget();
                 var child = new Widget();
                 this.sandbox.stub(child, 'render');
-                state.prepend(parent, child);
+                state.prepend(context, parent, child);
 
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
@@ -237,9 +243,10 @@
             ],
             function (application, InitState, WidgetContext, Widget, Device, AttachedState) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
+                var context = new WidgetContext();
                 var state = this.createState(WidgetContext, InitState);
                 var child = new Widget();
-                state.detach(child);
+                state.detach(context, child);
                 sinon.assert.notCalled(WidgetContext.prototype.setState);
             }
         );
@@ -266,7 +273,7 @@
 
     this.InitStateTest.prototype.createState = function (Context, State) {
         this.sandbox.stub(Context.prototype);
-        return new State(new Context());
+        return new State();
     };
 
     this.InitStateTest.prototype.stubWidgetToReturnStubAppAndDevice = function (Widget, Device, application) {

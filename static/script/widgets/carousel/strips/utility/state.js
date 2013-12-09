@@ -6,19 +6,19 @@ require.def('antie/widgets/carousel/strips/utility/state',
         'use strict';
         var State;
         State = Class.extend({
-            init: function (context) {
+            init: function () {
                 // implement in child
             },
 
-            append: function (parent, widget) {
+            append: function (context, parent, widget) {
                 // implement in child
             },
 
-            prepend: function (parent, widget) {
+            prepend: function (context, parent, widget) {
                 // implement in child
             },
 
-            detach: function (widget) {
+            detach: function (context, widget) {
                 // implement in child
             },
 

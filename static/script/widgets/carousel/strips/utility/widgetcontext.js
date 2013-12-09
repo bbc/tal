@@ -17,21 +17,21 @@ require.def('antie/widgets/carousel/strips/utility/widgetcontext',
              * Renders (if necessary) and appends output element to parent if not already child
              */
             append: function () {
-                this._state.append(this._parent, this._widget);
+                this._state.append(this, this._parent, this._widget);
             },
 
             /**
              * Renders (if necessary) and prepends output element to parent if not already child
              */
             prepend: function () {
-                this._state.prepend(this._parent, this._widget);
+                this._state.prepend(this, this._parent, this._widget);
             },
 
             /**
              * Removes output element from parent if child
              */
             detach: function () {
-                this._state.detach(this._widget);
+                this._state.detach(this, this._widget);
             },
 
             /**

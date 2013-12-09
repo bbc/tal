@@ -7,33 +7,32 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
         'use strict';
         var InitState;
         InitState = State.extend({
-            init: function (context) {
-                this._context = context;
+            init: function () {
             },
 
-            append: function (parent, widget) {
-                this._attach(parent, widget, 'appendChildElement');
+            append: function (context, parent, widget) {
+                this._attach(context, parent, widget, 'appendChildElement');
             },
 
-            prepend: function (parent, widget) {
-                this._attach(parent, widget, 'prependChildElement');
+            prepend: function (context, parent, widget) {
+                this._attach(context, parent, widget, 'prependChildElement');
             },
 
-            detach: function (widget) {
+            detach: function (context, widget) {
             },
 
             attached: function () {
                 return false;
             },
 
-            _attach: function (parent, widget, attachMethodName) {
+            _attach: function (context, parent, widget, attachMethodName) {
                 var device = widget.getCurrentApplication().getDevice();
                 widget.render(device);
                 device[attachMethodName](parent.outputElement, widget.outputElement);
-                this._context.setState(AttachedState);
+                context.setState(AttachedState);
             }
         });
-        
+
         return InitState;
     }
 );

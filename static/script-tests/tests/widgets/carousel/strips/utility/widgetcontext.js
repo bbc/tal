@@ -81,6 +81,7 @@
                 context.append();
                 sinon.assert.calledWith(
                     State.prototype.append,
+                    context,
                     parent,
                     widget
 
@@ -104,6 +105,7 @@
                 context.prepend();
                 sinon.assert.calledWith(
                     State.prototype.prepend,
+                    context,
                     parent,
                     widget
                 );
@@ -126,6 +128,7 @@
                 context.detach();
                 sinon.assert.calledWith(
                     State.prototype.detach,
+                    context,
                     widget
                 );
             }
@@ -151,29 +154,7 @@
         );
     };
 
-    this.WidgetContextTest.prototype.testContextPassedToInitStateOnInit = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/initstate',
-                'antie/widgets/widget'
-            ],
-            function (application, WidgetContext, InitState, Widget) {
-                var widget = new Widget();
-                var parent = new Widget();
-                this.sandbox.stub(InitState.prototype);
-                var context = new WidgetContext(widget, parent);
-                sinon.assert.calledWith(
-                    InitState.prototype.init,
-                    context
-                );
-
-            }
-        );
-    };
-
-    this.WidgetContextTest.prototype.testContextPassedToNewStateOnStateChange = function (queue) {
+    this.WidgetContextTest.prototype.testStateInititalisedOnStateChange = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -188,9 +169,8 @@
                 var context = new WidgetContext(widget, parent);
                 State.prototype.init.reset();
                 context.setState(State);
-                sinon.assert.calledWith(
-                    State.prototype.init,
-                    context
+                sinon.assert.calledOnce(
+                    State.prototype.init
                 );
             }
         );
