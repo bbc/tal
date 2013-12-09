@@ -1,62 +1,39 @@
 require.def('antie/widgets/carousel/strips/cullingstrip',
     [
-        'antie/widgets/carousel/strips/widgetstrip'
+        'antie/widgets/carousel/strips/widgetstrip',
+        'antie/widgets/carousel/strips/utility/widgetcontext'
     ],
-    function (WidgetStrip) {
+    function (WidgetStrip, WidgetContext) {
         'use strict';
         var CullingStrip;
         CullingStrip = WidgetStrip.extend({
             init: function (id, orientation) {
                 this._super(id, orientation);
-                this._detachedWidgets = {};
                 this.setAutoRenderChildren(false);
+                this._widgetContexts = [];
             },
 
             append: function (widget, length) {
                 this._super(widget, length);
-                this._detachedWidgets[widget.id] = true;
+                this._widgetContexts.push(new WidgetContext(widget, this));
             },
 
             hasDetachedWidgets: function () {
-                var hasDetached, property;
+                var context, hasDetached, i;
                 hasDetached = false;
-                for (property in this._detachedWidgets) {
-                    if (this._detachedWidgets.hasOwnProperty(property)) {
-                        hasDetached = true;
-                    }
+                for (i = 0; i !== this._widgetContexts.length; i += 1) {
+                    context = this._widgetContexts[i];
+                    hasDetached = hasDetached || !(context.attached());
                 }
                 return hasDetached;
             },
 
             attachIndexedWidgets: function (indexArray) {
-                this._ensureIndexedWidgetsRendered(indexArray);
-                this._removeIndexedWidgetsFromDetachedSet(indexArray);
-            },
-
-            _removeIndexedWidgetsFromDetachedSet: function (indexArray) {
-                var i, widgets, widget;
-                widgets = this.widgets();
-                for (i = 0; i !== indexArray.length; i += 1) {
-                    widget = widgets[i];
-                    delete this._detachedWidgets[widget.id];
-                }
-            },
-
-            _ensureIndexedWidgetsRendered: function (indexArray) {
-                var i, itemIndex, device, widgets, widget;
-                widgets = this.widgets();
-                device = this.getCurrentApplication().getDevice();
+                var i, itemIndex;
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
-                    widget = widgets[itemIndex];
-                    if (!this._isRendered(widget)) {
-                        widget.render(device);
-                    }
+                    this._widgetContexts[itemIndex].append();
                 }
-            },
-
-            _isRendered: function (widget) {
-                return widget.outputElement !== undefined && widget.outputElement !== null;
             }
         });
         return CullingStrip;

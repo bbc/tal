@@ -85,11 +85,12 @@
             [
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/widget'
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
             ],
-            function (application, CullingStrip, vertical, Widget) {
+            function (application, CullingStrip, vertical, Widget, Device) {
                 var widgets, strip;
-
+                this.stubAppAndDevice(application, Device, Widget);
                 strip = new CullingStrip('test', vertical);
                 widgets = this.createWidgets(2, Widget);
                 this.stubRenderOn(widgets);
@@ -171,7 +172,7 @@
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/widget',
-                'antie/devices/device'
+                'antie/devices/browserdevice'
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
                 this.stubAppAndDevice(application, Device, Widget);
@@ -193,7 +194,7 @@
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/widget',
-                'antie/devices/device'
+                'antie/devices/browserdevice'
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
                 this.stubAppAndDevice(application, Device, Widget);
