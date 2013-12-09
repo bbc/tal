@@ -1,26 +1,26 @@
-require.def('antie/widgets/carousel/strips/utility/initstate',
+require.def('antie/widgets/carousel/strips/utility/renderedstate',
     [
         'antie/widgets/carousel/strips/utility/state',
         'antie/widgets/carousel/strips/utility/attachedstate'
     ],
     function (State, AttachedState) {
         'use strict';
-        var InitState;
-        InitState = State.extend({
+        var RenderedState;
+        RenderedState = State.extend({
             init: function () {
+
             },
 
             append: function (context, parent, widget) {
-                this._render(widget);
-                this._attach(context, parent, widget, 'prependChildElement');
+                this._attach(context, parent, widget, 'appendChildElement');
             },
 
             prepend: function (context, parent, widget) {
-                this._render(widget);
                 this._attach(context, parent, widget, 'prependChildElement');
             },
 
             detach: function (context, widget) {
+
             },
 
             attached: function () {
@@ -31,18 +31,12 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
                 return widget.getCurrentApplication().getDevice();
             },
 
-            _render: function (widget) {
-                var device = this._getDevice(widget);
-                widget.render(device);
-            },
-
             _attach: function (context, parent, widget, attachMethodName) {
                 var device = this._getDevice(widget);
                 device[attachMethodName](parent.outputElement, widget.outputElement);
                 context.setState(AttachedState);
             }
         });
-
-        return InitState;
+        return RenderedState;
     }
 );
