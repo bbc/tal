@@ -12,24 +12,28 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
             },
 
             append: function (parent, widget) {
-                var device = widget.getCurrentApplication().getDevice();
-                widget.render(device);
-                device.appendChildElement(parent.outputElement, widget.outputElement);
-                this._context.setState(AttachedState);
+                this._attach(parent, widget, 'appendChildElement');
             },
 
             prepend: function (parent, widget) {
-
+                this._attach(parent, widget, 'prependChildElement');
             },
 
             detach: function (widget) {
-
             },
 
             attached: function () {
+                return false;
+            },
 
+            _attach: function (parent, widget, attachMethodName) {
+                var device = widget.getCurrentApplication().getDevice();
+                widget.render(device);
+                device[attachMethodName](parent.outputElement, widget.outputElement);
+                this._context.setState(AttachedState);
             }
         });
+        
         return InitState;
     }
 );
