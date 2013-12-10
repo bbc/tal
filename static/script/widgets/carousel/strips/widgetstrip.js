@@ -142,12 +142,19 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             /**
-             * Indicates whether any of the strip's child widgets have an output element that is not a child of the strip's output element.
-             * necessary when doing dom culling to see if there's a need to work out the visibility requirements before an alignment
-             * @returns {Boolean} true if there are any detached child widgets, false if not.
+             * Indicates whether the strip needs visible indices attaching before it is aligned
+             * @returns {Boolean} true if visible indices required, false if not.
              */
             needsVisibleIndices: function () {
                 return false;
+            },
+
+            /**
+             * Strip should ensure all widgets indexed in the array are attached to the parent
+             * @param indexArray
+             */
+            attachIndexedWidgets: function (indexArray) {
+
             },
 
             _lengthToIndexByCalculatingUsingElements: function (index) {

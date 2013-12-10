@@ -151,7 +151,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _informMaskBeforeAlign: function (index) {
-                this._mask.beforeAlignTo(index);
+                this._mask.beforeAlignTo(this._lastAlignIndex, index);
                 this._lastAlignIndex = index;
             },
 

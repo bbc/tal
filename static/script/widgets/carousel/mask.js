@@ -151,8 +151,11 @@ require.def('antie/widgets/carousel/mask',
                 this._spinner.stopAnimation();
             },
 
-            beforeAlignTo: function (index) {
-                this._widgetStrip.bubbleEvent(new BeforeAlignEvent(this._widgetStrip, index));
+            beforeAlignTo: function (currentIndex, newIndex) {
+                if (this._widgetStrip.needsVisibleIndices()) {
+                    this._widgetStrip.attachIndexedWidgets(this._visibleIndicesBetween(currentIndex, newIndex));
+                }
+                this._widgetStrip.bubbleEvent(new BeforeAlignEvent(this._widgetStrip, newIndex));
             },
 
             afterAlignTo: function (index) {
@@ -207,6 +210,35 @@ require.def('antie/widgets/carousel/mask',
                     currentIndex += 1;
                 }
                 return indices;
+            },
+
+            _visibleIndicesBetween: function (start, end) {
+                var startIndices, endIndices, combinedIndices, visibleIndices, first, last, i;
+                startIndices = this.indicesVisibleWhenAlignedToIndex(start);
+                endIndices = this.indicesVisibleWhenAlignedToIndex(end);
+                combinedIndices = startIndices.concat(endIndices);
+                combinedIndices = this._deDuplicateAndSortArray(combinedIndices);
+                visibleIndices = [];
+                if (combinedIndices.length > 0) {
+                    first = combinedIndices[0];
+                    last = combinedIndices[combinedIndices.length - 1];
+                    for (i = first; i !== last + 1; i += 1) {
+                        visibleIndices.push(i);
+                    }
+                }
+                return visibleIndices;
+            },
+
+            _deDuplicateAndSortArray: function (arr) {
+                var i, deDuped;
+                arr.sort();
+                deDuped = [];
+                for (i = 0; i !== arr.length; i += 1) {
+                    if (arr[i] !== arr[i + 1]) {
+                        deDuped.push(arr[i]);
+                    }
+                }
+                return deDuped;
             },
 
             _moveContentsTo: function (relativePixels, options) {

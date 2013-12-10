@@ -147,7 +147,7 @@
                 aligner.alignToIndex(alignmentIndex);
 
                 assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.beforeAlignTo, sinon.match.any, alignmentIndex);
             }
         );
     };
@@ -161,18 +161,20 @@
                 "antie/widgets/carousel/mask"
             ],
             function (application, Aligner, Navigator, Mask) {
-                var aligner, mask, navigator, alignmentIndex;
+                var aligner, mask, navigator, initialIndex, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
 
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                initialIndex = 0;
                 alignmentIndex = 1;
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
+                aligner.alignToIndex(initialIndex);
                 aligner.alignNext(navigator);
 
                 assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
     };
@@ -186,10 +188,11 @@
                 "antie/widgets/carousel/mask"
             ],
             function (application, Aligner,  Navigator, Mask) {
-                var aligner, mask, navigator, alignmentIndex;
+                var aligner, mask, navigator, alignmentIndex, initialIndex;
                 this.sandbox.stub(Mask.prototype);
 
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                initialIndex = 1;
                 alignmentIndex = 0;
                 mask = new Mask();
                 
@@ -200,7 +203,7 @@
                 aligner.alignPrevious(navigator);
 
                 assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
     };
@@ -223,7 +226,7 @@
                 aligner.alignToIndex(alignmentIndex);
 
                 assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
     };
@@ -249,7 +252,7 @@
                 aligner.alignNext(navigator);
 
                 assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
     };
@@ -277,7 +280,7 @@
                 aligner.alignPrevious(navigator);
 
                 assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
-                sinon.assert.calledWith(mask.beforeAlignTo, alignmentIndex);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
     };
