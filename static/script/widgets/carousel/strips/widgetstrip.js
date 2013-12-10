@@ -146,7 +146,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
              * necessary when doing dom culling to see if there's a need to work out the visibility requirements before an alignment
              * @returns {Boolean} true if there are any detached child widgets, false if not.
              */
-            hasDetachedWidgets: function () {
+            needsVisibleIndices: function () {
                 return false;
             },
 

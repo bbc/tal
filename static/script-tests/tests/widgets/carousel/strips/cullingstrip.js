@@ -57,7 +57,7 @@
             ],
             function (application, CullingStrip, vertical) {
                 var strip = new CullingStrip('test', vertical);
-                assertFalse('Widgets detached on init', strip.hasDetachedWidgets());
+                assertFalse('Widgets detached on init', strip.needsVisibleIndices());
             }
         );
     };
@@ -74,12 +74,29 @@
                 this.sandbox.stub(Widget.prototype);
                 var strip = new CullingStrip('test', vertical);
                 strip.append(new Widget(), 50);
-                assertTrue('Widgets detached on append', strip.hasDetachedWidgets());
+                assertTrue('Widgets detached on append', strip.needsVisibleIndices());
             }
         );
     };
 
-    this.CullingStripTest.prototype.testHasNoDetachedWidgetsAfterAllAttached = function (queue) {
+    this.CullingStripTest.prototype.testHasDetachedWidgetsAfterInsert = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget'
+            ],
+            function (application, CullingStrip, vertical, Widget) {
+                this.sandbox.stub(Widget.prototype);
+                var strip = new CullingStrip('test', vertical);
+                strip.insert(0, new Widget(), 50);
+                assertTrue('Widgets detached on insert', strip.needsVisibleIndices());
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testHasNoDetachedWidgetsAfterLastRemoved = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -89,15 +106,34 @@
                 'antie/devices/browserdevice'
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
-                var widgets, strip;
                 this.stubAppAndDevice(application, Device, Widget);
-                strip = new CullingStrip('test', vertical);
+                var strip = new CullingStrip('test', vertical);
+                var widget = new Widget();
+                strip.append(widget, 50);
+                strip.remove(widget);
+                assertFalse('Widgets detached after last removed', strip.needsVisibleIndices());
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testHasNoDetachedWidgetsAfterAllRemoved = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                var widgets;
+                this.stubAppAndDevice(application, Device, Widget);
+                var strip = new CullingStrip('test', vertical);
                 widgets = this.createWidgets(2, Widget);
                 this.stubRenderOn(widgets);
                 this.appendAllTo(strip, widgets, 40);
-                strip.attachIndexedWidgets([0, 1]);
-
-                assertFalse('Widgets detached after attach', strip.hasDetachedWidgets());
+                strip.removeAll();
+                assertFalse('Widgets not detached after all removed', strip.needsVisibleIndices());
             }
         );
     };
@@ -293,6 +329,44 @@
                     Device.prototype.appendChildElement,
                     strip.outputElement,
                     widgets[0].outputElement
+                );
+
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testRenderCausesWidgetsToReRenderOnAttach = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {id: 'strip'};
+
+                widgets = this.createWidgets(1, Widget);
+                this.stubRenderOn(widgets);
+                this.appendAllTo(strip, widgets, 40);
+
+                strip.attachIndexedWidgets([0]);
+                this.resetRenderOn(widgets);
+                sinon.assert.notCalled(
+                    widgets[0].render
+                );
+                strip.render(new Device());
+                sinon.assert.notCalled(
+                    widgets[0].render
+                );
+                strip.attachIndexedWidgets([0]);
+                sinon.assert.calledOnce(
+                    widgets[0].render
                 );
 
             }

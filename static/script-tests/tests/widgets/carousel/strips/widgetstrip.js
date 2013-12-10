@@ -593,7 +593,7 @@
             function (application, WidgetStrip, Button, horizontalOrientation, Container) {
                 var strip;
                 strip = new WidgetStrip('strip', horizontalOrientation);
-                assertFalse(strip.hasDetachedWidgets());
+                assertFalse(strip.needsVisibleIndices());
             }
         );
     };
