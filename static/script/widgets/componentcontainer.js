@@ -45,6 +45,7 @@ require.def('antie/widgets/componentcontainer',
 			 * @ignore
 			 */
 			init: function(id) {
+                this._loadingIndex = 0;
 				this._loadingModule = null;
 				this._currentModule = null;
 				this._currentComponent = null;
@@ -90,6 +91,9 @@ require.def('antie/widgets/componentcontainer',
 			 */
 			show: function(module, args, keepHistory, state, fromBack, focus) {
 				this._loadingModule = module;
+
+                this._loadingIndex++;
+                var loadingIndex = this._loadingIndex;
 
 				var self;
 				if(_knownComponents[module]) {
@@ -163,7 +167,7 @@ require.def('antie/widgets/componentcontainer',
 					self = this;
 					require([module], function(componentClass) {
 						// Check we've not navigated elsewhere whilst requirejs has been loading the module
-						if(self._loadingModule == module) {
+                      	if(self._loadingModule === module && self._loadingIndex === loadingIndex ) {
 							self._loadComponentCallback(module, componentClass, args, keepHistory, state, fromBack, focus);
 						}
 					});

@@ -337,7 +337,9 @@ ${DYNAMICPRELUDE}
   - script-tests/api/*.js
   - script-tests/mocks/*.js
   - script-tests/fixtures/layouts/*.js
-  - script-tests/fixtures/components/*.js
+  - script-tests/fixtures/components/buttoncomponent.js
+  - script-tests/fixtures/components/emptycomponent.js
+  - script-tests/fixtures/components/eventtestcomponent.js
  # - script-tests/lib/css3transitions.css
  # - script-tests/lib/carousels.css
 #script-block
@@ -358,6 +360,7 @@ serve:
   - script-tests/fixtures/layouts/toobig.js
   - script-tests/fixtures/components/buttoncomponent.js
   - script-tests/fixtures/components/emptycomponent.js
+  - script-tests/fixtures/components/multipleshowcomponent.js
   - script-tests/fixtures/components/eventtestcomponent.js
 
 #plugin-block
