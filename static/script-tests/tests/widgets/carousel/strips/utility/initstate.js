@@ -94,7 +94,7 @@
                 'antie/widgets/carousel/strips/utility/initstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/device'
+                'antie/devices/browserdevice'
             ],
             function (application, InitState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);

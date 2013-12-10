@@ -35,7 +35,7 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
 
             append: function (context, parent, widget) {
                 this._render(widget);
-                this._attach(context, parent, widget, 'prependChildElement');
+                this._attach(context, parent, widget, 'appendChildElement');
             },
 
             prepend: function (context, parent, widget) {

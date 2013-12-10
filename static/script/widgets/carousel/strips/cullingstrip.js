@@ -29,20 +29,42 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             attachIndexedWidgets: function (indexArray) {
-                var i, itemIndex, indexSet;
+                var i, itemIndex, indexSet, firstAttachedIndex;
                 indexSet = {};
+                firstAttachedIndex = this._firstAttachedIndex();
 
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
                     indexSet[itemIndex] = true;
-                    this._widgetContexts[itemIndex].append();
+                    if (itemIndex < firstAttachedIndex) {
+                        this._widgetContexts[itemIndex].prepend();
+                    } else {
+                        this._widgetContexts[itemIndex].append();
+                    }
                 }
 
+                this._detatchWidgetsNotIndexed(indexSet);
+            },
+
+            _detatchWidgetsNotIndexed: function (indexSet) {
+                var i;
                 for (i = 0; i !== this._widgetContexts.length; i += 1) {
                     if (!indexSet.hasOwnProperty(i)) {
                         this._widgetContexts[i].detach();
                     }
                 }
+            },
+
+            _firstAttachedIndex: function () {
+                var i, attached, firstAttachedIndex;
+                i = 0;
+                attached = false;
+                while (i < this._widgetContexts.length && attached === false) {
+                    attached = this._widgetContexts[i].attached();
+                    i += 1;
+                }
+                firstAttachedIndex = i;
+                return firstAttachedIndex;
             }
         });
         return CullingStrip;

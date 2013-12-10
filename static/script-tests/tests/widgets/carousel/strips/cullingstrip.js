@@ -259,6 +259,46 @@
         );
     };
 
+    this.CullingStripTest.prototype.testWidgetsBeforeCurrentlyAttachedBlockPrepended = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {id: 'strip'};
+
+                widgets = this.createWidgets(4, Widget);
+                this.stubRenderOn(widgets);
+                this.appendAllTo(strip, widgets, 40);
+
+                strip.attachIndexedWidgets([1, 2]);
+                Device.prototype.prependChildElement.reset();
+                strip.attachIndexedWidgets([0, 3]);
+
+                sinon.assert.calledWith(
+                    Device.prototype.prependChildElement,
+                    strip.outputElement,
+                    widgets[0].outputElement
+                );
+
+                sinon.assert.neverCalledWith(
+                    Device.prototype.appendChildElement,
+                    strip.outputElement,
+                    widgets[0].outputElement
+                );
+
+            }
+        );
+    };
+
     this.CullingStripTest.prototype.stubAppAndDevice = function (application, Device, Widget) {
         this.sandbox.stub(Device.prototype);
         this.sandbox.stub(application);
