@@ -912,4 +912,42 @@
 
 	};
 
+    this.ContainerTest.prototype.testFocussingChildButtonDoesNotCauseBlurOnParentWhenParentAlreadyFocussed = function(queue) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/container","antie/widgets/button"],
+            function(application, Container, Button) {
+                var root, container1, container2, button, handlerCalled;
+
+                queue.call('setup widget tree', function () {
+                    root = new Container("root");
+                    application.setRootWidget(root);
+                    container1 = new Container("container1");
+                    root.appendChildWidget(container1);
+                    container2 = new Container("container2");
+                    container1.appendChildWidget(container2);
+                    button = new Button('button');
+                    container2.appendChildWidget(button);
+                    button.focus();
+                    container2.addEventListener('blur', function (evt) {
+                        if (evt.target === container2) {
+                            handlerCalled = true;
+                        }
+                    });
+                    handlerCalled = false;
+                });
+
+                queue.call('Try second focus', function () {
+                    button.focus();
+                });
+
+                queue.call('assert handler not called', function () {
+                    assertFalse('Blur event fired on parent', handlerCalled);
+                })
+            }
+        );
+
+    };
+
 })();
