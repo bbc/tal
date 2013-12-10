@@ -218,6 +218,47 @@
         );
     };
 
+    this.CullingStripTest.prototype.testAttachIndexedWidgetsDetachesNonIndexedAttachedWidgets = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {};
+
+                widgets = this.createWidgets(3, Widget);
+                this.stubRenderOn(widgets);
+                this.appendAllTo(strip, widgets, 40);
+
+                strip.attachIndexedWidgets([1]);
+
+                this.resetRenderOn(widgets);
+
+                strip.attachIndexedWidgets([0, 2]);
+                sinon.assert.calledWith(
+                    Device.prototype.removeElement,
+                    widgets[1].outputElement
+                );
+                sinon.assert.neverCalledWith(
+                    Device.prototype.removeElement,
+                    widgets[0].outputElement
+                );
+                sinon.assert.neverCalledWith(
+                    Device.prototype.removeElement,
+                    widgets[2].outputElement
+                );
+            }
+        );
+    };
+
     this.CullingStripTest.prototype.stubAppAndDevice = function (application, Device, Widget) {
         this.sandbox.stub(Device.prototype);
         this.sandbox.stub(application);
@@ -236,7 +277,7 @@
     this.CullingStripTest.prototype.stubRenderOn = function (renderableObjectArray) {
         var i, renderable;
         function renderStub() {
-            this.outputElement = {};
+            this.outputElement = {id: this.id};
         }
 
         for (i = 0; i !== renderableObjectArray.length; i += 1) {

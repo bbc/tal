@@ -225,7 +225,7 @@
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
                     WidgetContext.prototype.setState,
-                    sinon.match.instanceOf(RenderedState)
+                    RenderedState
                 );
             }
         );

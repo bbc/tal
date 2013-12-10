@@ -45,7 +45,7 @@ require.def('antie/widgets/carousel/strips/utility/attachedstate',
             detach: function (context, widget) {
                 var device = this._getDevice(widget);
                 device.removeElement(widget.outputElement);
-                context.setState(new RenderedState());
+                context.setState(RenderedState);
             },
 
             attached: function () {

@@ -29,10 +29,19 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             attachIndexedWidgets: function (indexArray) {
-                var i, itemIndex;
+                var i, itemIndex, indexSet;
+                indexSet = {};
+
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
+                    indexSet[itemIndex] = true;
                     this._widgetContexts[itemIndex].append();
+                }
+
+                for (i = 0; i !== this._widgetContexts.length; i += 1) {
+                    if (!indexSet.hasOwnProperty(i)) {
+                        this._widgetContexts[i].detach();
+                    }
                 }
             }
         });
