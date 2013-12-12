@@ -90,7 +90,7 @@ require.def('antie/widgets/componentcontainer',
 			 * @param {Object} [state] Additional component-specific state information
 			 */
 			show: function(module, args, keepHistory, state, fromBack, focus) {
-				this._loadingModule = module;
+			    this._loadingModule = module;
 
                 this._loadingIndex++;
                 var loadingIndex = this._loadingIndex;
@@ -167,7 +167,7 @@ require.def('antie/widgets/componentcontainer',
 					self = this;
 					require([module], function(componentClass) {
 						// Check we've not navigated elsewhere whilst requirejs has been loading the module
-                      	if(self._loadingModule === module && self._loadingIndex === loadingIndex ) {
+                        if(self._loadingModule === module && self._loadingIndex === loadingIndex ) {
 							self._loadComponentCallback(module, componentClass, args, keepHistory, state, fromBack, focus);
 						}
 					});
