@@ -21,40 +21,18 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/attachedstate',
+require.def('antie/widgets/carousel/strips/utility/states',
     [
-        'antie/widgets/carousel/strips/utility/state'
+        'antie/widgets/carousel/strips/utility/initstate',
+        'antie/widgets/carousel/strips/utility/renderedstate',
+        'antie/widgets/carousel/strips/utility/attachedstate'
     ],
-    function (State) {
+    function (InitState, RenderedState, AttachedState) {
         'use strict';
-        var AttachedState;
-        AttachedState = State.extend({
-            init: function () {
-
-            },
-
-            append: function (context, parent, widget) {
-
-            },
-
-            prepend: function (context, parent, widget) {
-
-            },
-
-            detach: function (context, widget) {
-                var device = this._getDevice(widget);
-                device.removeElement(widget.outputElement);
-                context.setState('RENDERED');
-            },
-
-            attached: function () {
-                return true;
-            },
-
-            _getDevice: function (widget) {
-                return widget.getCurrentApplication().getDevice(widget);
-            }
-        });
-        return AttachedState;
+        return {
+            INIT: InitState,
+            RENDERED: RenderedState,
+            ATTACHED: AttachedState
+        };
     }
 );

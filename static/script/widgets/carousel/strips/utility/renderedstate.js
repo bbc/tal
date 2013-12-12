@@ -23,10 +23,9 @@
  */
 require.def('antie/widgets/carousel/strips/utility/renderedstate',
     [
-        'antie/widgets/carousel/strips/utility/state',
-        'antie/widgets/carousel/strips/utility/attachedstate'
+        'antie/widgets/carousel/strips/utility/state'
     ],
-    function (State, AttachedState) {
+    function (State) {
         'use strict';
         var RenderedState;
         RenderedState = State.extend({
@@ -57,7 +56,7 @@ require.def('antie/widgets/carousel/strips/utility/renderedstate',
             _attach: function (context, parent, widget, attachMethodName) {
                 var device = this._getDevice(widget);
                 device[attachMethodName](parent.outputElement, widget.outputElement);
-                context.setState(AttachedState);
+                context.setState('ATTACHED');
             }
         });
         return RenderedState;

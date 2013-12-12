@@ -605,6 +605,36 @@
         );
     };
 
+    this.MaskTest.prototype.testVisibleIndicesSetAfterAlignIfStripNeedsThem = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/carousel/spinner'
+            ],
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
+                var device, mask, strip;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Spinner.prototype);
+                this.sandbox.stub(WidgetStrip.prototype);
+                strip = new WidgetStrip('strip', verticalOrientation);
+                mask = new Mask('testMask', strip, verticalOrientation);
+                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                device.getElementSize.returns({width: 25, height: 25});
+                strip.getChildWidgetCount.returns(5);
+                strip.needsVisibleIndices.returns(true);
+                mask.afterAlignTo(3);
+                sinon.assert.calledWith(
+                    strip.attachIndexedWidgets,
+                    [3, 4]
+                );
+            }
+        );
+    };
+
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex2WithAlignPoint0 = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',

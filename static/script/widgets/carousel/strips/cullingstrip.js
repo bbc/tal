@@ -28,8 +28,9 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 }
                 for (i = 0; i !== this._widgetContexts.length; i += 1) {
                     context = this._widgetContexts[i];
-                    context.setState(InitState);
+                    context.setState('INIT');
                 }
+                return this.outputElement;
             },
 
             insert: function (index, widget, length) {
@@ -60,22 +61,51 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             attachIndexedWidgets: function (indexArray) {
-                var i, itemIndex, indexSet, firstAttachedIndex;
+                var i, itemIndex, indexSet, firstAttachedIndex, preIndices, postIndices;
                 indexSet = {};
                 firstAttachedIndex = this._firstAttachedIndex();
-
+                preIndices = [];
+                postIndices = [];
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
                     indexSet[itemIndex] = true;
                     if (itemIndex < firstAttachedIndex) {
-                        this._widgetContexts[itemIndex].prepend();
+                        preIndices.push(itemIndex);
                     } else {
-                        this._widgetContexts[itemIndex].append();
+                        postIndices.push(itemIndex);
                     }
                 }
-
                 this._detatchWidgetsNotIndexed(indexSet);
+                preIndices.reverse();
+                for (i = 0; i !== preIndices.length; i += 1) {
+                    itemIndex = preIndices[i];
+                    this._widgetContexts[itemIndex].prepend();
+                }
+                for (i = 0; i !== postIndices.length; i += 1) {
+                    itemIndex = postIndices[i];
+                    this._widgetContexts[itemIndex].append();
+                }
             },
+
+            getLengthToIndex: function (index) {
+                var firstAttached, i, length, totalLength;
+                totalLength = 0;
+                firstAttached = this._firstAttachedIndex();
+                for (i = firstAttached; i < index; i += 1) {
+                    length = this._lengths[i];
+                    if (length === undefined) {
+                        throw new Error("You must set widget lengths before aligning culling strip");
+                    }
+                    totalLength += length;
+                }
+                return totalLength;
+            },
+
+            _resetAlignmentAfterCull: function () {
+
+            },
+
+
 
             _detatchWidgetsNotIndexed: function (indexSet) {
                 var i;
@@ -92,9 +122,9 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 attached = false;
                 while (i < this._widgetContexts.length && attached === false) {
                     attached = this._widgetContexts[i].attached();
+                    firstAttachedIndex = i;
                     i += 1;
                 }
-                firstAttachedIndex = i;
                 return firstAttachedIndex;
             }
         });
