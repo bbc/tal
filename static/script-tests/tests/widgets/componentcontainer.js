@@ -96,6 +96,34 @@
 		);
 	};
 
+    this.ComponentContainerTest.prototype.testMultipleShowsOfSameComponentDoesntCallLoadComponentMoreThanOnce = function (queue) {
+//        expectAsserts(1);
+//
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer"],
+            function (application, ComponentContainer) {
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
+
+                var loadSpy = this.sandbox.spy(container, "_loadComponentCallback");
+
+                queue.call("Show component", function (callbacks) {
+
+                    var beforeRender = callbacks.add( function(){} );
+
+                    container.addEventListener("beforerender", beforeRender);
+                    container.show("fixtures/components/multipleshowcomponent");
+                    container.show("fixtures/components/multipleshowcomponent" );
+                });
+
+                queue.call("Assert", function (callbacks) {
+                  assertTrue( loadSpy.calledOnce );
+                });
+            });
+    };
+
  	this.ComponentContainerTest.prototype.testShowWithArgs = function(queue) {
 		expectAsserts(8);
 
