@@ -337,9 +337,6 @@ ${DYNAMICPRELUDE}
   - script-tests/api/*.js
   - script-tests/mocks/*.js
   - script-tests/fixtures/layouts/*.js
-  - script-tests/fixtures/components/buttoncomponent.js
-  - script-tests/fixtures/components/emptycomponent.js
-  - script-tests/fixtures/components/eventtestcomponent.js
  # - script-tests/lib/css3transitions.css
  # - script-tests/lib/carousels.css
 #script-block
