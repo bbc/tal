@@ -187,7 +187,14 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
          * @returns {Object} Device-specific implementation of antie.widgets.broadcastsource
          */
         Device.prototype.createBroadcastSource = function() {
-            return new SamsungSource();
+            if (!this._broadcastSource) {
+                this._broadcastSource = new SamsungSource();
+            }
+
+            return this._broadcastSource;
         };
+
+        // Return for testing purposes only
+        return SamsungSource;
     }
 );

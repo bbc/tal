@@ -50,6 +50,24 @@
         }, config);
     };
 
+    this.SamsungTvSource.prototype.testCreateBroadcastSourceReturnsSingletonSamsungSourceObject = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/samsungtvsource"], function(application, SamsungTVSource) {
+            var device = application.getDevice();
+
+            var samsungConstructor = this.sandbox.spy(SamsungTVSource.prototype, "init");
+
+            device.createBroadcastSource();
+            device.createBroadcastSource();
+            device.createBroadcastSource();
+
+            assertTrue('BroadcastSource should be an object', samsungConstructor.calledOnce);
+
+        }, config);
+    };
+
     this.SamsungTvSource.prototype.testCreateBroadcastWhenSamsungBroadcastApiIsNotAvailableThrowsException = function(queue) {
         expectAsserts(1);
 
@@ -191,7 +209,7 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testDestroyResetsTheScreenSettings= function(queue) {
+    this.SamsungTvSource.prototype.testDestroyResetsTheScreenSettings = function(queue) {
         expectAsserts(5);
 
         var config = this.getGenericSamsungBroadcastConfig();
