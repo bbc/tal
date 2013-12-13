@@ -50,6 +50,25 @@
         }, config);
     };
 
+
+    this.hbbtvSource.prototype.testCreateBroadcastSourceReturnsSingletonHBBTVObject = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/hbbtvsource"], function(application, HbbTVSource) {
+            var device = application.getDevice();
+
+            var hbbtvConstructor = this.sandbox.spy(HbbTVSource.prototype, "init");
+
+            device.createBroadcastSource();
+            device.createBroadcastSource();
+            device.createBroadcastSource();
+
+            assertTrue('BroadcastSource should be an object', hbbtvConstructor.calledOnce);
+
+        }, config);
+    };
+
     this.hbbtvSource.prototype.testCreateBroadcastWhenHbbTvApiIsNotAvailableThrowsException = function(queue) {
         expectAsserts(1);
 
