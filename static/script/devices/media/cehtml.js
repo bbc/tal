@@ -88,13 +88,11 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(sources, tags) {
-
                 var currentMediaType = this._mediaElement.type;
                 var newMediaType = sources[0].getContentType();
 
                 if (currentMediaType !== undefined && currentMediaType !== newMediaType) {
                     if (this._requiresMediaTypeFix()) {
-
                         var oldDimensions = {
                             left: this._mediaElement.style.left,
                             top: this._mediaElement.style.top,
@@ -103,21 +101,14 @@ require.def(
                         };
 
                         this.destroy();
-
-                        // recreate the object
                         this._mediaElement = this._createCEHTMLObjectElement(newMediaType);
-
-                        // reset the size
                         this.setWindow(oldDimensions.left, oldDimensions.top, oldDimensions.width, oldDimensions.height);
-
-                        // set eventsBound to false
                         this._eventsBound = false;
                     }
                 }
 
                 this._mediaElement.type = sources[0].getContentType();
                 this._mediaElement.data = sources[0].getURL(tags);
-
 
                 if (!this._eventsBound) {
                     var self = this;
