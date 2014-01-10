@@ -1,6 +1,7 @@
 /**
- * @fileOverview Requirejs module containing modified HTML5 module with enabled trick to abort browser loading threads.
- * For use on certain webkit devices.
+ * @fileOverview Requirejs module containing modified CEHTML module with enabled trick to instantiate the media
+ * element if the media type of the media content to be played varies from the previous media type played.
+ * @author Ian Arundale <ian.arundale@bbc.co.uk>
  *
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
