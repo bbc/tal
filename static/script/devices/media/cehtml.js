@@ -92,17 +92,23 @@ require.def(
                 var currentMediaType = this._mediaElement.type;
                 var newMediaType = sources[0].getContentType();
 
-                if (currentMediaType !== newMediaType) {
+                if (currentMediaType !== undefined && currentMediaType !== newMediaType) {
                     if (this._requiresMediaTypeFix()) {
-                        // get the current size??
 
-                        // destroy the previous mediaElement
+                        var oldDimensions = {
+                            left: this._mediaElement.style.left,
+                            top: this._mediaElement.style.top,
+                            width: this._mediaElement.style.width,
+                            height: this._mediaElement.style.height
+                        };
+
                         this.destroy();
 
                         // recreate the object
                         this._mediaElement = this._createCEHTMLObjectElement(newMediaType);
 
                         // reset the size
+                        this.setWindow(oldDimensions.left, oldDimensions.top, oldDimensions.width, oldDimensions.height);
 
                         // set eventsBound to false
                         this._eventsBound = false;
