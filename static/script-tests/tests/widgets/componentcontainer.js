@@ -161,6 +161,40 @@
 		);
 	};
 
+	this.ComponentContainerTest.prototype.testShowIncludesComponent = function(queue) {
+		expectAsserts(4);
+
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/componentcontainer"],
+				function(application, ComponentContainer) {
+					var container = new ComponentContainer("container");
+					application.getRootWidget().appendChildWidget(container);
+
+					var loadStub = this.sandbox.stub();
+					var beforeRenderStub = this.sandbox.stub();
+					var beforeShowStub = this.sandbox.stub();
+
+					queue.call("Wait for component to be shown", function(callbacks) {
+						container.addEventListener("load", loadStub);
+						container.addEventListener("beforerender", beforeRenderStub);
+						container.addEventListener("beforeshow", beforeShowStub);
+						container.addEventListener("aftershow", callbacks.add(function(evt) {
+							var component = container.getContent();
+
+							assertEquals('Component on load event', component, loadStub.args[0][0].component);
+							assertEquals('Component on beforerender event', component, beforeRenderStub.args[0][0].component);
+							assertEquals('Component on beforeshow event', component, beforeShowStub.args[0][0].component);
+							assertEquals('Component on aftershow event', component, evt.component);
+						}));
+
+						container.show("fixtures/components/emptycomponent", {});
+					});
+				}
+		);
+	};
+
  	this.ComponentContainerTest.prototype.testShowKeepHistoryBack = function(queue) {
 		expectAsserts(1);
 
