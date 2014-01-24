@@ -70,14 +70,14 @@ require.def('antie/widgets/componentcontainer',
 
                 var newComponent = new componentClass();
 
+                // Add the component to our table of known components.
+                _knownComponents[module] = newComponent;
+
                 // set the parent widget so the next event bubbles correctly through the tree
                 newComponent.parentWidget = this;
                 newComponent.bubbleEvent(new ComponentEvent('load', this, _knownComponents[module], args));
                 // clear the parent widget again
                 newComponent.parentWidget = null;
-
-                // Add the component to our table of known components.
-                _knownComponents[module] = newComponent;
 
                 // Show the component.
                 this.show(module, args, keepHistory, state);
