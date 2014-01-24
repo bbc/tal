@@ -215,6 +215,7 @@ require.def('antie/widgets/keyboard',
 						var button = new Button(this.id + '_' + letter + "_" + col + "_" + row);
 						button.setDataItem(letter);
 						button.addClass('key'+letter);
+						button.addClass('keyboardButton');
 						button.appendChildWidget(new Label(letter));
 
 						this._letterButtons[this._keys[keyIndexId]] = button;
