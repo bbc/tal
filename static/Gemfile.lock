@@ -14,7 +14,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
-    tal-test-runner (0.0.0)
+    tal-test-runner (0.0.1.1390678128)
       json
       rake
       rubygems-update
@@ -25,4 +25,4 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  tal-test-runner
+  tal-test-runner (>= 0.0.1)
