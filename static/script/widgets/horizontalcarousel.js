@@ -428,7 +428,7 @@ require.def('antie/widgets/horizontalcarousel',
 							}
 							device.appendChildElement(this.outputElement, clone);
 							var w = device.getElementSize(w.outputElement).width;
-							if(i === 0) {
+							if(i === 0 && this._childWidgetOrder.length) {
 								requiredWidth += w;
 							}
 							copyWidth += w;
