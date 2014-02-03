@@ -26,9 +26,7 @@
 
 require.def('antie/widgets/component',
 	[
-	 	'antie/widgets/container',
-	 	'require',
-	 	'antie/application'
+	 	'antie/widgets/container'
 	],
 	function(Container) {
 		/**
