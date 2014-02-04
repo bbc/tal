@@ -6,4 +6,4 @@ before_install:
 script:
  - cd static
  - bundle
- - rake webdriverurl=firefox
+ - ttr webdriverurl=firefox
