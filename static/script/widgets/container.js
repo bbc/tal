@@ -213,7 +213,7 @@ require.def('antie/widgets/container',
 			},
 			/**
 			 * Checks to see if a specific widget is a direct child of this widget.
-			 * @param {antie.widgets.Widget} widget The widget to check to see if it is a direct child of this widget.
+			 * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
 			 */
 			hasChildWidget: function(id) {
 				return this._childWidgets[id] != null;
