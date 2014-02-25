@@ -102,7 +102,7 @@
         );
     };
 
-    this.AlignmentQueueTest.prototype.testArbiraryOptionsPassedThroughToMask = function (queue) {
+    this.AlignmentQueueTest.prototype.testOptionPropertiesPassedThroughToMask = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -110,16 +110,25 @@
                 "antie/widgets/carousel/aligners/alignmentqueue"
             ],
             function (application, Mask, AlignmentQueue) {
+                //onComplete tested elsewhere as sinon matcher struggles with it
+                var fakeOptions = {
+                    to: {},
+                    from: {},
+                    el: {},
+                    fps: 25,
+                    duration: 100,
+                    easing: 'linear',
+                    skipAnim: true
+                };
+
                 var queue, alignStub;
                 this.sandbox.stub(Mask.prototype);
                 Mask.prototype.alignToIndex.yieldsTo('onComplete');
                 alignStub = Mask.prototype.alignToIndex;
                 queue = new AlignmentQueue(new Mask());
-                queue.add(3, {foo: "bar"});
-                queue.add(4, {bar: "foo"});
+                queue.add(3, fakeOptions);
                 queue.start();
-                assertEquals("options parameter in first call", "bar", alignStub.firstCall.args[1].foo);
-                assertEquals("options parameter in second call", "foo", alignStub.secondCall.args[1].bar);
+                sinon.assert.calledWith(alignStub, sinon.match.any, sinon.match(fakeOptions));
             }
         );
     };
