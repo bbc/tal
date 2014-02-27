@@ -79,15 +79,17 @@ require.def('antie/widgets/carousel/spinner',
 
             _getOptions: function (options, relativePixels) {
                 var destination, clonedOptions;
+                options = options || {};
                 destination = {};
                 destination[this._getEdge()] = relativePixels;
-                clonedOptions = this._shallowCloneOptions(options);
+                clonedOptions = {};
                 clonedOptions.el = this._mask.getWidgetStrip().outputElement;
                 clonedOptions.to = destination;
-                clonedOptions.duration = clonedOptions.duration || 150;
-                clonedOptions.easing = clonedOptions.easing || 'linear';
-                clonedOptions.fps = clonedOptions.fps || '25';
-                clonedOptions.skipAnim = (clonedOptions.skipAnim === undefined) ? true : clonedOptions.skipAnim;
+                clonedOptions.from = options.from;
+                clonedOptions.duration = options.duration || 150;
+                clonedOptions.easing = options.easing || 'linear';
+                clonedOptions.fps = options.fps || '25';
+                clonedOptions.skipAnim = (options.skipAnim === undefined) ? true : options.skipAnim;
                 clonedOptions.onComplete = this._getWrappedOnComplete(options);
                 return clonedOptions;
             },
@@ -108,13 +110,6 @@ require.def('antie/widgets/carousel/spinner',
             _clearAnimating: function () {
                 this._animating = false;
                 this._currentAnimation = null;
-            },
-
-            _shallowCloneOptions: function (options) {
-                options = options || {};
-                function Cloner() {}
-                Cloner.prototype = options;
-                return new Cloner();
             },
 
             _getEdge: function () {
