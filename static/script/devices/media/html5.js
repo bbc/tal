@@ -221,31 +221,7 @@ require.def(
             },
             // readonly attribute double duration;
             getDuration: function() {
-//                if( isFinite( this._mediaElement.duration ) ){
-//                    return this._mediaElement.duration;
-//                }else{
-                {
-                    var seekable = this._mediaElement.seekable;
-                    var nrRanges = seekable.length;
-
-                    var start,end;
-                    try{
-                        start = seekable.start( 0 );
-                    }
-                    catch( x ){
-                        console.log( x );
-                    }
-
-
-                    try{
-                        end = seekable.end( 0 );
-                    }
-                    catch( x ){
-                        console.log( x );
-                    }
-
-                    return end - start;
-                }
+                return this._mediaElement.duration;
             },
             // readonly attribute Date startOffsetTime;
             getStartOffsetTime: function() {
