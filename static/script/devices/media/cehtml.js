@@ -32,12 +32,16 @@ require.def(
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
-        'antie/mediasource'
+        'antie/mediasource',
+        'antie/devices/media/seekstate'
     ],
-    function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
+
+    function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState ) {
+
         var CEHTMLPlayer = Media.extend({
             init: function(id, mediaType) {
                 this._super(id);
+                this._seekState = new SeekState( this );
 
                 this._updateInterval = null;
                 this._loaded = false;
@@ -88,6 +92,8 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(sources, tags) {
+                this._seekState = new SeekState( this );
+
                 var currentMediaType = this._mediaElement.type;
                 var newMediaType = sources[0].getContentType();
 
@@ -125,6 +131,7 @@ require.def(
                                 }
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_PLAYING:
+                                self._seekState.playing();
                                 if (!self._loaded) {
                                     self.bubbleEvent(new MediaEvent("loadedmetadata", self));
                                     self.bubbleEvent(new MediaEvent("canplaythrough", self));
@@ -227,6 +234,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 // to emulate HTML5 we should throw an INVALID_STATE_ERR when we can't seek to the new position
                 // understandably this call may be blocking until the seek has completed
+                this._seekState.seekTo( currentTime );
                 return this._mediaElement.seek(currentTime * 1000);
             },
             getCurrentTime: function() {
