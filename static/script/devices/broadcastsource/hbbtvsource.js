@@ -105,7 +105,16 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             setChannel : function(params) {
                 var self = this;
-                var channelType = this._getChannelType();
+                var channelType;
+
+                // TODO: Clean this up
+                // Attempt to get the channel type of the current channel
+                // If this is not available, fall back to ID_DVB_T
+                try {
+                    channelType = this._getChannelType();
+                } catch(e) {
+                    channelType = ID_DVB_T;
+                }
                 var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
                 if (newChannel === null) {
                     params.onError({
@@ -159,16 +168,13 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the
              * HBBTV specification
              */
-            _getChannelType
-                :
-                function() {
-                    var channelType = this._broadcastVideoObject.currentChannel.idType;
-                    if (typeof channelType === "undefined") {
-                        channelType = ID_DVB_T;
-                    }
-                    return channelType;
+            _getChannelType : function() {
+                var channelType = this._broadcastVideoObject.currentChannel.idType;
+                if (typeof channelType === "undefined") {
+                    channelType = ID_DVB_T;
                 }
-            ,
+                return channelType;
+            },
             /**
              * Sets the size of the broadcast object to be the same as the required screen size identified by antie at
              * application start up.
@@ -177,16 +183,26 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             }
-        })
-            ;
+        });
 
         Device.prototype.isBroadcastSourceSupported = function() {
             return this.getHistorian().hasBroadcastOrigin();
         };
 
+        /**
+         * Create a broadcastSource object on the Device to be
+         * accessed as a singleton to avoid the init being run
+         * multiple times
+         */
         Device.prototype.createBroadcastSource = function() {
-            return new HbbTVSource();
+            if (!this._broadcastSource) {
+                this._broadcastSource = new HbbTVSource();
+            }
+
+            return this._broadcastSource;
         };
+
+        // Return the HbbtvSource object for testing purposes
+        return HbbTVSource;
     }
-)
-    ;
+);

@@ -213,7 +213,7 @@ require.def('antie/widgets/container',
 			},
 			/**
 			 * Checks to see if a specific widget is a direct child of this widget.
-			 * @param {antie.widgets.Widget} widget The widget to check to see if it is a direct child of this widget.
+			 * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
 			 */
 			hasChildWidget: function(id) {
 				return this._childWidgets[id] != null;
@@ -258,7 +258,7 @@ require.def('antie/widgets/container',
 					return false;
 				}
 				if(this.hasChildWidget(widget.id) && widget.isFocusable()) {
-					if(this._activeChildWidget) {
+					if(this._activeChildWidget && this._activeChildWidget !== widget) {
 						this._activeChildWidget.removeClass('active');
 						this._setActiveChildFocussed(false);
 					}

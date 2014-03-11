@@ -199,10 +199,15 @@ require.def('antie/widgets/keyboard',
 					}
 				});
 
-				// Populate the grid (ourself) with the key Buttons
-				for(var col = 0; col < 14; col++) {
-					for(var row = 0; row < 3; row++) {
-						var letter = this._keys[(row*14)+col];
+				this._populateTheGridWithKeyButtons(id, cols, rows);
+			},
+			
+			_populateTheGridWithKeyButtons: function (id, cols, rows) {
+				for(var col = 0; col < cols; col++) {
+					for(var row = 0; row < rows; row++) {			
+						var keyIndexId = (row*cols)+col;
+						var letter = this._keys[keyIndexId];
+						
 						if(letter == " ") { letter = "SPACE" }
 						else if(letter == "-") { letter = "DEL" }
 						else if(letter == "_") { continue };
@@ -210,14 +215,16 @@ require.def('antie/widgets/keyboard',
 						var button = new Button(this.id + '_' + letter + "_" + col + "_" + row);
 						button.setDataItem(letter);
 						button.addClass('key'+letter);
+						button.addClass('keyboardButton');
 						button.appendChildWidget(new Label(letter));
 
-						this._letterButtons[this._keys[(row*14)+col]] = button;
+						this._letterButtons[this._keys[keyIndexId]] = button;
 
 						this.setWidgetAt(col, row, button);
 					}
 				}
 			},
+			
 			/**
 			 * Sets whether to support multi-tap on this keyboard. Note: the device must also support it.
 			 * @param {Boolean} multiTap Pass <code>true</code> to enable multi-tap.

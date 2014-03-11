@@ -27,6 +27,35 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
     ],
     function (Class) {
         "use strict";
+
+        function createAlignFunction(self, index, options) {
+            return function () {
+                options = options || {};
+                var oldComplete = options.onComplete;
+                var newOptions = {
+                    el: options.el,
+                    to: options.to,
+                    from: options.from,
+                    duration: options.duration,
+                    easing: options.easing,
+                    skipAnim: options.skipAnim,
+                    fps: options.fps,
+                    onComplete: function () {
+                        if (oldComplete) {
+                            oldComplete();
+                        }
+                        self._next();
+                    }
+                };
+
+                if (self._skip) {
+                    newOptions.skipAnim = true;
+                }
+
+                self._mask.alignToIndex(index, newOptions);
+            };
+        }
+
         /**
          * A class to handle queue multiple alignments for execution in sequence
          * @class
@@ -54,33 +83,9 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
             add: function (index, options) {
                 var self = this;
 
-                function cloneOptions() {
-                    function ShallowClone() {}
-                    ShallowClone.prototype = options;
-                    return new ShallowClone();
-                }
+                var alignFunction = createAlignFunction(self, index, options);
 
-                function wrappedOptions() {
-                    var options, originalOnComplete;
-                    options = cloneOptions();
-                    originalOnComplete = options.onComplete;
-                    options.onComplete = function () {
-                        if (typeof originalOnComplete === 'function') {
-                            originalOnComplete();
-                        }
-                        self._next();
-                    };
-                    if (self._skip) {
-                        options.skipAnim = true;
-                    }
-                    return options;
-                }
-
-                function align() {
-                    self._mask.alignToIndex(index, wrappedOptions());
-                }
-
-                this._queue.push(align);
+                this._queue.push(alignFunction);
             },
 
             /**
