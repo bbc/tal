@@ -331,4 +331,28 @@
         );
     };
 
+    this.SpinnerTest.prototype.testStopAfterNullMoveDoesNotCallDeviceStopWithNull = function (queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Spinner, Mask, verticalOrientation) {
+                var device, spinner;
+                device = application.getDevice();
+                this.sandbox.stub(device);
+                this.sandbox.stub(Mask.prototype);
+                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                device.moveElementTo.returns(null);
+                spinner = new Spinner(device, new Mask(), verticalOrientation);
+                spinner.moveContentsTo(10, {skipAnim: false});
+                spinner.stopAnimation();
+                sinon.assert.neverCalledWith(device.stopAnimation, null);
+            }
+        );
+    };
+
 }());
