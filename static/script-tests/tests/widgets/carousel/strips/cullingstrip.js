@@ -373,6 +373,155 @@
         );
     };
 
+    this.CullingStripTest.prototype.testRenderWithNoOutputElementCreatesContainerAndSetsAsOutput = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var strip = new CullingStrip('test', vertical);
+                var device = new Device();
+                device.createContainer.returns("test");
+                var rendered = strip.render(device);
+                assertEquals("test", strip.outputElement);
+                assertEquals(rendered, strip.outputElement);
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testRenderWithOutputDoesNotCreateNewOutputElement = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var strip = new CullingStrip('test', vertical);
+                var device = new Device();
+                device.createContainer.returns("test");
+                var el = {id: 'strip'};
+                strip.outputElement = el;
+                var rendered = strip.render(device);
+                assertEquals(el, strip.outputElement);
+                assertEquals(rendered, el);
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testRenderClearsExistingOutput = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var strip = new CullingStrip('test', vertical);
+                var device = new Device();
+                device.createContainer.returns("test");
+                var el = {id: 'strip'};
+                strip.outputElement = el;
+                var rendered = strip.render(device);
+                sinon.assert.calledWith(device.clearElement, el)
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testGetLengthToIndexErrorsIfNoLengthsSet = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var i, widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {id: 'strip'};
+
+                widgets = this.createWidgets(3, Widget);
+                this.stubRenderOn(widgets);
+                for (i = 0; i !== widgets.length; i += 1) {
+                    strip.append(widgets[i]);
+                }
+
+                strip.attachIndexedWidgets([1, 2]);
+                function getLengthToIndex() {
+                    strip.getLengthToIndex(2);
+                }
+                assertException(getLengthToIndex, 'Error');
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testGetLengthToIndexCorrectWhenAllAttached = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var i, widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {id: 'strip'};
+
+                widgets = this.createWidgets(3, Widget);
+                this.stubRenderOn(widgets);
+                this.appendAllTo(strip, widgets, 40);
+
+                strip.attachIndexedWidgets([0, 1, 2]);
+                assertEquals("Length when all attached", 80, strip.getLengthToIndex(2));
+            }
+        );
+    };
+
+    this.CullingStripTest.prototype.testGetLengthToIndexCorrectWhenSomeDetached = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/strips/cullingstrip',
+                'antie/widgets/carousel/orientations/vertical',
+                'antie/widgets/widget',
+                'antie/devices/browserdevice'
+            ],
+            function (application, CullingStrip, vertical, Widget, Device) {
+                this.stubAppAndDevice(application, Device, Widget);
+                var i, widgets;
+
+                var strip = new CullingStrip('test', vertical);
+                strip.outputElement = {id: 'strip'};
+
+                widgets = this.createWidgets(3, Widget);
+                this.stubRenderOn(widgets);
+                this.appendAllTo(strip, widgets, 40);
+
+                strip.attachIndexedWidgets([1, 2]);
+                assertEquals("Length when all attached", 40, strip.getLengthToIndex(2));
+            }
+        );
+    };
+
     this.CullingStripTest.prototype.stubAppAndDevice = function (application, Device, Widget) {
         this.sandbox.stub(Device.prototype);
         this.sandbox.stub(application);

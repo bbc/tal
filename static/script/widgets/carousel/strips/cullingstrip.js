@@ -61,15 +61,15 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             attachIndexedWidgets: function (indexArray) {
-                var i, itemIndex, indexSet, firstAttachedIndex, preIndices, postIndices;
+                var i, itemIndex, indexSet, firstIndexWithLength, preIndices, postIndices;
                 indexSet = {};
-                firstAttachedIndex = this._firstAttachedIndex();
+                firstIndexWithLength = this._firstIndexWithLength();
                 preIndices = [];
                 postIndices = [];
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
                     indexSet[itemIndex] = true;
-                    if (itemIndex < firstAttachedIndex) {
+                    if (itemIndex < firstIndexWithLength) {
                         preIndices.push(itemIndex);
                     } else {
                         postIndices.push(itemIndex);
@@ -90,7 +90,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             getLengthToIndex: function (index) {
                 var firstAttached, i, length, totalLength;
                 totalLength = 0;
-                firstAttached = this._firstAttachedIndex();
+                firstAttached = this._firstIndexWithLength();
                 for (i = firstAttached; i < index; i += 1) {
                     length = this._lengths[i];
                     if (length === undefined) {
@@ -110,7 +110,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 }
             },
 
-            _firstAttachedIndex: function () {
+            _firstIndexWithLength: function () {
                 var i, attached, firstAttachedIndex;
                 i = 0;
                 attached = false;
