@@ -71,7 +71,6 @@ require.def('antie/widgets/carousel/mask',
             _doAlign: function (index, options, alignPoint) {
                 var distanceContentsMustMoveBack;
                 distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
-                distanceContentsMustMoveBack -= alignPoint;
                 distanceContentsMustMoveBack -= this._getAlignmentPoint();
                 distanceContentsMustMoveBack += this._getWidgetAlignmentPoint(index);
                 this._moveContentsTo(-distanceContentsMustMoveBack, options);
