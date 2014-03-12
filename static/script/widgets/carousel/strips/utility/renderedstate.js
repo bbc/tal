@@ -45,7 +45,7 @@ require.def('antie/widgets/carousel/strips/utility/renderedstate',
 
             },
 
-            attached: function () {
+            hasLength: function () {
                 return false;
             },
 

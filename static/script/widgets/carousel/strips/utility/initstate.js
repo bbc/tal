@@ -45,7 +45,7 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
             detach: function (context, widget) {
             },
 
-            attached: function () {
+            hasLength: function () {
                 return false;
             },
 

@@ -101,12 +101,6 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 return totalLength;
             },
 
-            _resetAlignmentAfterCull: function () {
-
-            },
-
-
-
             _detatchWidgetsNotIndexed: function (indexSet) {
                 var i;
                 for (i = 0; i !== this._widgetContexts.length; i += 1) {
@@ -121,7 +115,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 i = 0;
                 attached = false;
                 while (i < this._widgetContexts.length && attached === false) {
-                    attached = this._widgetContexts[i].attached();
+                    attached = this._widgetContexts[i].hasLength();
                     firstAttachedIndex = i;
                     i += 1;
                 }

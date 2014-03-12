@@ -45,7 +45,7 @@ require.def('antie/widgets/carousel/strips/utility/state',
                 // implement in child
             },
 
-            attached: function () {
+            hasLength: function () {
                 // implement in child
             }
         });

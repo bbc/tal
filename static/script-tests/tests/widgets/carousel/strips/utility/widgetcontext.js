@@ -38,14 +38,13 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/initstate'
+                'antie/widgets/carousel/strips/utility/states'
             ],
-            function (application, WidgetContext, InitState) {
-
+            function (application, WidgetContext, States) {
+                this.sandbox.stub(States.INIT.prototype);
                 var context = new WidgetContext();
-                this.sandbox.stub(InitState.prototype);
                 context.append();
-                sinon.assert.calledOnce(InitState.prototype.append);
+                sinon.assert.calledOnce(States.INIT.prototype.append);
             }
         );
     };
@@ -55,13 +54,14 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
-                var context = this.createContextInState(WidgetContext, State, new Widget());
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
+                var context = this.createContextInState(WidgetContext, States, stateName, new Widget());
                 context.append();
-                sinon.assert.calledOnce(State.prototype.append);
+                sinon.assert.calledOnce(States[stateName].prototype.append);
             }
         );
     };
@@ -71,20 +71,20 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
                 var widget = new Widget();
                 var parent = new Widget();
-                var context = this.createContextInState(WidgetContext, State, widget, parent);
+                var context = this.createContextInState(WidgetContext, States, stateName, widget, parent);
                 context.append();
                 sinon.assert.calledWith(
-                    State.prototype.append,
+                    States[stateName].prototype.append,
                     context,
                     parent,
                     widget
-
                 );
             }
         );
@@ -95,16 +95,17 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
                 var widget = new Widget();
                 var parent = new Widget();
-                var context = this.createContextInState(WidgetContext, State, widget, parent);
+                var context = this.createContextInState(WidgetContext, States, stateName, widget, parent);
                 context.prepend();
                 sinon.assert.calledWith(
-                    State.prototype.prepend,
+                    States[stateName].prototype.prepend,
                     context,
                     parent,
                     widget
@@ -113,21 +114,22 @@
         );
     };
 
-    this.WidgetContextTest.prototype.testDetachePassedWidgetContextInitialisedWith = function (queue) {
+    this.WidgetContextTest.prototype.testDetatchPassedWidgetContextInitialisedWith = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
                 var widget = new Widget();
                 var parent = new Widget();
-                var context = this.createContextInState(WidgetContext, State, widget, parent);
+                var context = this.createContextInState(WidgetContext, States, stateName, widget, parent);
                 context.detach();
                 sinon.assert.calledWith(
-                    State.prototype.detach,
+                    States[stateName].prototype.detach,
                     context,
                     widget
                 );
@@ -140,16 +142,17 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
                 var widget = new Widget();
                 var parent = new Widget();
-                var context = this.createContextInState(WidgetContext, State, widget, parent);
-                State.prototype.attached.returns("boo");
-                var attached = context.attached();
-                assertEquals('value from state returned on attached', "boo", attached);
+                var context = this.createContextInState(WidgetContext, States, stateName, widget, parent);
+                States[stateName].prototype.hasLength.returns("boo");
+                var attached = context.hasLength();
+                assertEquals('value from state returned on hasLength', "boo", attached);
             }
         );
     };
@@ -159,27 +162,28 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
-                'antie/widgets/carousel/strips/utility/state',
+                'antie/widgets/carousel/strips/utility/states',
                 'antie/widgets/widget'
             ],
-            function (application, WidgetContext, State, Widget) {
+            function (application, WidgetContext, States, Widget) {
+                var stateName = 'ATTACHED';
                 var widget = new Widget();
                 var parent = new Widget();
-                this.sandbox.stub(State.prototype);
+                this.sandbox.stub(States[stateName].prototype);
                 var context = new WidgetContext(widget, parent);
-                State.prototype.init.reset();
-                context.setState(State);
+                States[stateName].prototype.init.reset();
+                context.setState(stateName);
                 sinon.assert.calledOnce(
-                    State.prototype.init
+                    States[stateName].prototype.init
                 );
             }
         );
     };
 
-    this.WidgetContextTest.prototype.createContextInState = function (Context, State, widget, parent) {
+    this.WidgetContextTest.prototype.createContextInState = function (Context, States, stateName, widget, parent) {
         var context = this.createContext(Context, widget, parent);
-        this.sandbox.stub(State.prototype);
-        context.setState(State);
+        this.sandbox.stub(States[stateName].prototype);
+        context.setState(stateName);
         return context;
     };
 

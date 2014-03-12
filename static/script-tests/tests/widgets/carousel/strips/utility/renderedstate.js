@@ -150,10 +150,9 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, RenderedState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, RenderedState);
                 var context = new WidgetContext();
@@ -165,7 +164,7 @@
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
                     WidgetContext.prototype.setState,
-                    AttachedState
+                    'ATTACHED'
                 );
             }
         );
@@ -178,10 +177,9 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, RenderedState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var context = new WidgetContext();
                 var state = this.createState(WidgetContext, RenderedState);
@@ -193,7 +191,7 @@
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
                     WidgetContext.prototype.setState,
-                    AttachedState
+                    'ATTACHED'
                 );
             }
         );
@@ -253,7 +251,7 @@
             function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, RenderedState);
-                assertFalse(state.attached());
+                assertFalse(state.hasLength());
             }
         );
     };

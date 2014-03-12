@@ -213,10 +213,9 @@
                 'antie/widgets/carousel/strips/utility/attachedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/renderedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, AttachedState, WidgetContext, Widget, Device, RenderedState) {
+            function (application, AttachedState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var context = new WidgetContext();
                 var state = this.createState(WidgetContext, AttachedState);
@@ -225,7 +224,7 @@
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
                 sinon.assert.calledWith(
                     WidgetContext.prototype.setState,
-                    RenderedState
+                    'RENDERED'
                 );
             }
         );
@@ -244,7 +243,7 @@
             function (application, AttachedState, WidgetContext, Widget, Device, AttachedState) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
                 var state = this.createState(WidgetContext, AttachedState);
-                assertTrue(state.attached());
+                assertTrue(state.hasLength());
             }
         );
     };

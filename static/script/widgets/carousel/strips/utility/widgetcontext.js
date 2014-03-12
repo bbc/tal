@@ -37,31 +37,33 @@ require.def('antie/widgets/carousel/strips/utility/widgetcontext',
             },
 
             /**
-             * Renders (if necessary) and appends output element to parent if not already child
+             * Appends output element to parent if not already child
              */
             append: function () {
                 this._state.append(this, this._parent, this._widget);
             },
 
             /**
-             * Renders (if necessary) and prepends output element to parent if not already child
+             * Prepends output element to parent if not already child
              */
             prepend: function () {
                 this._state.prepend(this, this._parent, this._widget);
             },
 
             /**
-             * Removes output element from parent if child
+             * Element no longer needs to be visible (e.g. remove from DOM)
              */
             detach: function () {
                 this._state.detach(this, this._widget);
             },
 
             /**
-             * @returns {Boolean} true if widget rendered and attached to parent, false otherwise
+             * @returns {Boolean} true if widget currently takes up space in its parent, false otherwise
+             * e.g. would return true if rendered, in the document and without display: none set
+             * would return false if not rendered, not in the DOM or with display: none set
              */
-            attached: function () {
-                return this._state.attached();
+            hasLength: function () {
+                return this._state.hasLength();
             },
 
             setState: function (stateName) {
