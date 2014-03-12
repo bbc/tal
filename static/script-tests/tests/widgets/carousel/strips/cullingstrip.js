@@ -434,7 +434,7 @@
                 var el = {id: 'strip'};
                 strip.outputElement = el;
                 var rendered = strip.render(device);
-                sinon.assert.calledWith(device.clearElement, el)
+                sinon.assert.calledWith(device.clearElement, el);
             }
         );
     };
