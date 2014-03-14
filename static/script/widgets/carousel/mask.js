@@ -56,6 +56,7 @@ require.def('antie/widgets/carousel/mask',
                 this._normalisedWidgetAlignPoint = 0;
                 this._normalisedAlignmentPoint = 0;
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
+                this._lastAlignIndex = null;
             },
 
             /**
@@ -79,7 +80,9 @@ require.def('antie/widgets/carousel/mask',
             },
 
             _resetAlignment: function () {
-                this._doAlign(this._lastAlignIndex, {skipAnim: true}, this._currentAlignPoint);
+                if (this._lastAlignIndex !== null) {
+                    this._doAlign(this._lastAlignIndex, {skipAnim: true}, this._currentAlignPoint);
+                }
             },
 
 
@@ -214,7 +217,7 @@ require.def('antie/widgets/carousel/mask',
                 var distanceToMaskStart, currentIndex, indices;
                 indices = [];
                 currentIndex = index - 1;
-                distanceToMaskStart = this._alignmentPoint;
+                distanceToMaskStart = this._getAlignmentPoint() - this._getWidgetAlignmentPoint(index);
                 while (currentIndex !== -1 && distanceToMaskStart > 0) {
                     if (distanceToMaskStart <= maskLength) {
                         indices.unshift(currentIndex);
@@ -230,7 +233,7 @@ require.def('antie/widgets/carousel/mask',
                 indices = [];
                 widgetCount = this.getWidgetStrip().getChildWidgetCount();
                 currentIndex = index;
-                distanceToMaskEnd = maskLength - this._alignmentPoint;
+                distanceToMaskEnd = maskLength - this._getAlignmentPoint() + this._getWidgetAlignmentPoint(index);
                 while (currentIndex !== widgetCount && distanceToMaskEnd > 0) {
                     if (distanceToMaskEnd <= maskLength) {
                         indices.push(currentIndex);
