@@ -23,17 +23,17 @@
  */
 require.def('antie/widgets/carousel/strips/utility/widgetcontext',
     [
-        'antie/class',
-        'antie/widgets/carousel/strips/utility/states'
+        'antie/class'
     ],
-    function (Class, States) {
+    function (Class) {
         'use strict';
         var WidgetContext;
         WidgetContext = Class.extend({
-            init: function (widget, parent) {
+            init: function (widget, parent, STATES) {
                 this._widget = widget;
                 this._parent = parent;
-                this._state = new States.INIT(this);
+                this.STATES = STATES;
+                this._state = new this.STATES.INIT(this);
             },
 
             /**
@@ -67,7 +67,7 @@ require.def('antie/widgets/carousel/strips/utility/widgetcontext',
             },
 
             setState: function (stateName) {
-                this._state = new States[stateName](this);
+                this._state = new this.STATES[stateName](this);
             }
         });
 

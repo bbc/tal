@@ -42,7 +42,7 @@
             ],
             function (application, WidgetContext, States) {
                 this.sandbox.stub(States.INIT.prototype);
-                var context = new WidgetContext();
+                var context = this.createContext(WidgetContext, {}, {}, States);
                 context.append();
                 sinon.assert.calledOnce(States.INIT.prototype.append);
             }
@@ -170,7 +170,7 @@
                 var widget = new Widget();
                 var parent = new Widget();
                 this.sandbox.stub(States[stateName].prototype);
-                var context = new WidgetContext(widget, parent);
+                var context = new WidgetContext(widget, parent, States);
                 States[stateName].prototype.init.reset();
                 context.setState(stateName);
                 sinon.assert.calledOnce(
@@ -180,16 +180,16 @@
         );
     };
 
-    this.WidgetContextTest.prototype.createContextInState = function (Context, States, stateName, widget, parent) {
-        var context = this.createContext(Context, widget, parent);
-        this.sandbox.stub(States[stateName].prototype);
+    this.WidgetContextTest.prototype.createContextInState = function (Context, STATES, stateName, widget, parent) {
+        var context = this.createContext(Context, widget, parent, STATES);
+        this.sandbox.stub(STATES[stateName].prototype);
         context.setState(stateName);
         return context;
     };
 
-    this.WidgetContextTest.prototype.createContext = function (Context, widget, parent) {
+    this.WidgetContextTest.prototype.createContext = function (Context, widget, parent, STATES) {
         this.sandbox.stub(widget);
         this.sandbox.stub(parent);
-        return new Context(widget, parent);
+        return new Context(widget, parent, STATES);
     };
 }());

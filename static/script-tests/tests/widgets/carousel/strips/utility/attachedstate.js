@@ -168,8 +168,9 @@
             ],
             function (application, AttachedState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var context = new WidgetContext();
+
                 var state = this.createState(WidgetContext, AttachedState);
+                var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 this.sandbox.stub(child, 'render');
@@ -217,8 +218,9 @@
             ],
             function (application, AttachedState, WidgetContext, Widget, Device) {
                 this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var context = new WidgetContext();
+
                 var state = this.createState(WidgetContext, AttachedState);
+                var context = new WidgetContext();
                 var child = new Widget();
                 state.detach(context, child);
                 sinon.assert.calledOnce(WidgetContext.prototype.setState);
