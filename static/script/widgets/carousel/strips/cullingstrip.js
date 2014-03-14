@@ -94,11 +94,19 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 for (i = firstAttached; i < index; i += 1) {
                     length = this._lengths[i];
                     if (length === undefined) {
-                        throw new Error("You must set widget lengths before aligning culling strip");
+                        this._throwNoLengthError();
                     }
                     totalLength += length;
                 }
                 return totalLength;
+            },
+
+            lengthOfWidgetAtIndex: function (index) {
+                if (this._lengths[index] !== undefined) {
+                    return this._lengths[index];
+                } else {
+                    this._throwNoLengthError();
+                }
             },
 
             _detatchWidgetsNotIndexed: function (indexSet) {
@@ -124,6 +132,10 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
 
             _createContext: function (widget, parent) {
                 return new WidgetContext(widget, parent, STATES);
+            },
+
+            _throwNoLengthError: function () {
+                throw new Error("You must set widget lengths before aligning culling strip");
             }
         });
         return CullingStrip;
