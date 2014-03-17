@@ -49,6 +49,10 @@ require.def('antie/widgets/carousel/strips/utility/renderedstate',
                 return false;
             },
 
+            inView: function () {
+                return false;
+            },
+
             _getDevice: function (widget) {
                 return widget.getCurrentApplication().getDevice();
             },

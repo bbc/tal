@@ -21,32 +21,32 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/initstate',
+require.def('antie/widgets/carousel/strips/utility/hiddenstate',
     [
         'antie/widgets/carousel/strips/utility/state'
     ],
     function (State) {
         'use strict';
-        var InitState;
-        InitState = State.extend({
+        var RenderedState;
+        RenderedState = State.extend({
             init: function () {
+
             },
 
             append: function (context, parent, widget) {
-                this._render(widget);
-                this._attach(context, parent, widget, 'appendChildElement');
+                this._show(context, widget);
             },
 
             prepend: function (context, parent, widget) {
-                this._render(widget);
-                this._attach(context, parent, widget, 'prependChildElement');
+                this._show(context, widget);
             },
 
             detach: function (context, widget) {
+
             },
 
             hasLength: function () {
-                return false;
+                return true;
             },
 
             inView: function () {
@@ -57,18 +57,11 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
                 return widget.getCurrentApplication().getDevice();
             },
 
-            _render: function (widget) {
-                var device = this._getDevice(widget);
-                widget.render(device);
-            },
-
-            _attach: function (context, parent, widget, attachMethodName) {
-                var device = this._getDevice(widget);
-                device[attachMethodName](parent.outputElement, widget.outputElement);
+            _show: function (context, widget) {
+                widget.getCurrentApplication().getDevice().showElement({el: widget.outputElement, skipAnim: true});
                 context.setState('ATTACHED');
             }
         });
-
-        return InitState;
+        return RenderedState;
     }
 );

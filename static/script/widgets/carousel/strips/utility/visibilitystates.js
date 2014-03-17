@@ -21,38 +21,18 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/state',
+require.def('antie/widgets/carousel/strips/utility/visibilitystates',
     [
-        'antie/class'
+        'antie/widgets/carousel/strips/utility/initstate',
+        'antie/widgets/carousel/strips/utility/hiddenstate',
+        'antie/widgets/carousel/strips/utility/visiblestate'
     ],
-    function (Class) {
+    function (InitState, HiddenState, VisibleState) {
         'use strict';
-        var State;
-        State = Class.extend({
-            init: function () {
-                // implement in child
-            },
-
-            append: function (context, parent, widget) {
-                // implement in child
-            },
-
-            prepend: function (context, parent, widget) {
-                // implement in child
-            },
-
-            detach: function (context, widget) {
-                // implement in child
-            },
-
-            hasLength: function () {
-                // implement in child
-            },
-
-            inView: function () {
-                // implement in child
-            }
-        });
-        return State;
+        return {
+            INIT: InitState,
+            HIDDEN: HiddenState,
+            ATTACHED: VisibleState
+        };
     }
 );

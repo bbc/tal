@@ -51,6 +51,10 @@ require.def('antie/widgets/carousel/strips/utility/attachedstate',
                 return true;
             },
 
+            inView: function () {
+                return true;
+            },
+
             _getDevice: function (widget) {
                 return widget.getCurrentApplication().getDevice(widget);
             }

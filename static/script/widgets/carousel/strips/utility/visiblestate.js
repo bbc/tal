@@ -21,54 +21,44 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/initstate',
+require.def('antie/widgets/carousel/strips/utility/visiblestate',
     [
         'antie/widgets/carousel/strips/utility/state'
     ],
     function (State) {
         'use strict';
-        var InitState;
-        InitState = State.extend({
+        var VisibleState;
+        VisibleState = State.extend({
             init: function () {
+
             },
 
             append: function (context, parent, widget) {
-                this._render(widget);
-                this._attach(context, parent, widget, 'appendChildElement');
+
             },
 
             prepend: function (context, parent, widget) {
-                this._render(widget);
-                this._attach(context, parent, widget, 'prependChildElement');
+
             },
 
             detach: function (context, widget) {
+                var device = this._getDevice(widget);
+                device.hideElement({el: widget.outputElement, skipAnim: true});
+                context.setState('HIDDEN');
             },
 
             hasLength: function () {
-                return false;
+                return true;
             },
 
             inView: function () {
-                return false;
+                return true;
             },
 
             _getDevice: function (widget) {
-                return widget.getCurrentApplication().getDevice();
-            },
-
-            _render: function (widget) {
-                var device = this._getDevice(widget);
-                widget.render(device);
-            },
-
-            _attach: function (context, parent, widget, attachMethodName) {
-                var device = this._getDevice(widget);
-                device[attachMethodName](parent.outputElement, widget.outputElement);
-                context.setState('ATTACHED');
+                return widget.getCurrentApplication().getDevice(widget);
             }
         });
-
-        return InitState;
+        return VisibleState;
     }
 );

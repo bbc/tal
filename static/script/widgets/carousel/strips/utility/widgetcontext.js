@@ -66,6 +66,10 @@ require.def('antie/widgets/carousel/strips/utility/widgetcontext',
                 return this._state.hasLength();
             },
 
+            inView: function () {
+                return this._state.inView();
+            },
+
             setState: function (stateName) {
                 this._state = new this.STATES[stateName](this);
             }

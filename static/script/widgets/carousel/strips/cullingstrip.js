@@ -2,7 +2,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
     [
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/strips/utility/widgetcontext',
-        'antie/widgets/carousel/strips/utility/states'
+        'antie/widgets/carousel/strips/utility/visibilitystates'
     ],
     function (WidgetStrip, WidgetContext, STATES) {
         'use strict';
@@ -61,15 +61,15 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             attachIndexedWidgets: function (indexArray) {
-                var i, itemIndex, indexSet, firstIndexWithLength, preIndices, postIndices;
+                var i, itemIndex, indexSet, firstIndexInView, preIndices, postIndices;
                 indexSet = {};
-                firstIndexWithLength = this._firstIndexWithLength();
+                firstIndexInView = this._firstIndexInView();
                 preIndices = [];
                 postIndices = [];
                 for (i = 0; i !== indexArray.length; i += 1) {
                     itemIndex = indexArray[i];
                     indexSet[itemIndex] = true;
-                    if (itemIndex < firstIndexWithLength) {
+                    if (itemIndex < firstIndexInView) {
                         preIndices.push(itemIndex);
                     } else {
                         postIndices.push(itemIndex);
@@ -128,6 +128,18 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                     i += 1;
                 }
                 return firstAttachedIndex;
+            },
+
+            _firstIndexInView: function () {
+                var i, inView, firstInView;
+                i = 0;
+                inView = false;
+                while (i < this._widgetContexts.length && inView === false) {
+                    inView = this._widgetContexts[i].inView();
+                    firstInView = i;
+                    i += 1;
+                }
+                return firstInView;
             },
 
             _createContext: function (widget, parent) {
