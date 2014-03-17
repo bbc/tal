@@ -2,7 +2,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
     [
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/strips/utility/widgetcontext',
-        'antie/widgets/carousel/strips/utility/visibilitystates'
+        'antie/widgets/carousel/strips/utility/states'
     ],
     function (WidgetStrip, WidgetContext, STATES) {
         'use strict';
@@ -16,7 +16,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
 
             append: function (widget, length) {
                 this._super(widget, length);
-                this._widgetContexts.push(this._createContext(widget, this));
+                this._widgetContexts.push(this.createContext(widget, this));
             },
 
             render: function (device) {
@@ -35,7 +35,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
 
             insert: function (index, widget, length) {
                 this._super(index, widget, length);
-                this._widgetContexts.splice(index, 0, this._createContext(widget, this));
+                this._widgetContexts.splice(index, 0, this.createContext(widget, this));
             },
 
             remove: function (widget) {
@@ -109,6 +109,10 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 }
             },
 
+            createContext: function (widget, parent) {
+                return new WidgetContext(widget, parent, STATES);
+            },
+
             _detatchWidgetsNotIndexed: function (indexSet) {
                 var i;
                 for (i = 0; i !== this._widgetContexts.length; i += 1) {
@@ -140,10 +144,6 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                     i += 1;
                 }
                 return firstInView;
-            },
-
-            _createContext: function (widget, parent) {
-                return new WidgetContext(widget, parent, STATES);
             },
 
             _throwNoLengthError: function () {
