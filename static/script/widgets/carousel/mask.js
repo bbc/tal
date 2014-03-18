@@ -24,9 +24,11 @@
 require.def('antie/widgets/carousel/mask',
     [
         'antie/widgets/container',
-        'antie/widgets/carousel/spinner'
+        'antie/widgets/carousel/spinner',
+        'antie/events/beforealignevent',
+        'antie/events/afteralignevent'
     ],
-    function (Container, Spinner) {
+    function (Container, Spinner, BeforeAlignEvent, AfterAlignEvent) {
         "use strict";
         /**
          * The masking container of a carousel that the widget strip moves within.
@@ -54,6 +56,7 @@ require.def('antie/widgets/carousel/mask',
                 this._normalisedWidgetAlignPoint = 0;
                 this._normalisedAlignmentPoint = 0;
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
+                this._lastAlignIndex = null;
             },
 
             /**
@@ -63,12 +66,25 @@ require.def('antie/widgets/carousel/mask',
              * @param options
              */
             alignToIndex: function (index, options) {
+                this._doAlign(index, options, this._alignmentPoint);
+            },
+
+            _doAlign: function (index, options, alignPoint) {
                 var distanceContentsMustMoveBack;
                 distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
                 distanceContentsMustMoveBack -= this._getAlignmentPoint();
                 distanceContentsMustMoveBack += this._getWidgetAlignmentPoint(index);
                 this._moveContentsTo(-distanceContentsMustMoveBack, options);
+                this._currentAlignPoint = alignPoint;
+
             },
+
+            _resetAlignment: function () {
+                if (this._lastAlignIndex !== null) {
+                    this._doAlign(this._lastAlignIndex, {skipAnim: true}, this._currentAlignPoint);
+                }
+            },
+
 
             /**
              * Sets the alignment point of the mask in terms of pixels from its primary edge
@@ -151,6 +167,23 @@ require.def('antie/widgets/carousel/mask',
                 this._spinner.stopAnimation();
             },
 
+            beforeAlignTo: function (currentIndex, newIndex) {
+                if (this._widgetStrip.needsVisibleIndices()) {
+                    this._widgetStrip.attachIndexedWidgets(this._visibleIndicesBetween(currentIndex, newIndex));
+                    this._resetAlignment();
+                }
+                this._widgetStrip.bubbleEvent(new BeforeAlignEvent(this._widgetStrip, newIndex));
+            },
+
+            afterAlignTo: function (index) {
+                this._lastAlignIndex = index;
+                if (this._widgetStrip.needsVisibleIndices()) {
+                    this._widgetStrip.attachIndexedWidgets(this.indicesVisibleWhenAlignedToIndex(index));
+                    this.alignToIndex(index, {skipAnim: true});
+                }
+                this._widgetStrip.bubbleEvent(new AfterAlignEvent(this._widgetStrip, index));
+            },
+
             _clampBetweenZeroAndOne: function (value) {
                 var clampedValue = value;
                 clampedValue = Math.max(0, clampedValue);
@@ -184,7 +217,7 @@ require.def('antie/widgets/carousel/mask',
                 var distanceToMaskStart, currentIndex, indices;
                 indices = [];
                 currentIndex = index - 1;
-                distanceToMaskStart = this._alignmentPoint;
+                distanceToMaskStart = this._getAlignmentPoint() - this._getWidgetAlignmentPoint(index);
                 while (currentIndex !== -1 && distanceToMaskStart > 0) {
                     if (distanceToMaskStart <= maskLength) {
                         indices.unshift(currentIndex);
@@ -200,7 +233,7 @@ require.def('antie/widgets/carousel/mask',
                 indices = [];
                 widgetCount = this.getWidgetStrip().getChildWidgetCount();
                 currentIndex = index;
-                distanceToMaskEnd = maskLength - this._alignmentPoint;
+                distanceToMaskEnd = maskLength - this._getAlignmentPoint() + this._getWidgetAlignmentPoint(index);
                 while (currentIndex !== widgetCount && distanceToMaskEnd > 0) {
                     if (distanceToMaskEnd <= maskLength) {
                         indices.push(currentIndex);
@@ -209,6 +242,40 @@ require.def('antie/widgets/carousel/mask',
                     currentIndex += 1;
                 }
                 return indices;
+            },
+
+            _visibleIndicesBetween: function (start, end) {
+                var startIndices, endIndices, combinedIndices, visibleIndices, first, last, i;
+
+                startIndices = (start === null) ? [] : this.indicesVisibleWhenAlignedToIndex(start);
+                endIndices = this.indicesVisibleWhenAlignedToIndex(end);
+                combinedIndices = startIndices.concat(endIndices);
+                combinedIndices = this._deDuplicateAndSortArray(combinedIndices);
+                visibleIndices = [];
+                if (combinedIndices.length > 0) {
+                    first = combinedIndices[0];
+                    last = combinedIndices[combinedIndices.length - 1];
+                    for (i = first; i !== last + 1; i += 1) {
+                        visibleIndices.push(i);
+                    }
+                }
+                return visibleIndices;
+            },
+
+            _deDuplicateAndSortArray: function (arr) {
+                var i, deDuped;
+                arr.sort(this._numericalSort);
+                deDuped = [];
+                for (i = 0; i !== arr.length; i += 1) {
+                    if (arr[i] !== arr[i + 1]) {
+                        deDuped.push(arr[i]);
+                    }
+                }
+                return deDuped;
+            },
+
+            _numericalSort: function (a, b) {
+                return a - b;
             },
 
             _moveContentsTo: function (relativePixels, options) {

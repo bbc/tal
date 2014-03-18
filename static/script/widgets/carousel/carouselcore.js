@@ -69,7 +69,7 @@ require.def('antie/widgets/carousel/carouselcore',
 				this._directAppend(this._mask);
                 this.setNavigator(BookendedNavigator);
                 this._aligner = new Aligner(this._mask);
-                this._setAlignEventsFromMaskToHaveCarouselAsTarget();
+                this._setAlignEventsFromStripToHaveCarouselAsTarget();
                 this._autoCalculate = true;
 			},
 
@@ -328,18 +328,19 @@ require.def('antie/widgets/carousel/carouselcore',
                 this._orientation = orientation;
             },
 
-            _setAlignEventsFromMaskToHaveCarouselAsTarget: function () {
+            _setAlignEventsFromStripToHaveCarouselAsTarget: function () {
+                this._remapWidgetStripEventToCarousel('beforealign');
+                this._remapWidgetStripEventToCarousel('afteralign');
+            },
+
+            _remapWidgetStripEventToCarousel: function (eventName) {
                 var self = this;
-                this.addEventListener('beforealign', function (ev) {
-                    if (ev.target === self._mask) {
-                        ev.target = self;
+                this._remapEvent = this._remapEvent || function (evt) {
+                    if (evt.target === self._widgetStrip) {
+                        evt.target = self;
                     }
-                });
-                this.addEventListener('afteralign', function (ev) {
-                    if (ev.target === self._mask) {
-                        ev.target = self;
-                    }
-                });
+                };
+                this.addEventListener(eventName, this._remapEvent);
             },
 
             _directAppend: function (widget) {

@@ -588,7 +588,7 @@
         );
     };
 
-    this.CarouselCoreTest.prototype.testBeforeAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testBeforeAlignEventsFromStripHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -602,8 +602,8 @@
                 this.sandbox.stub(WidgetStrip.prototype);
                 carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
-                carousel.bubbleEvent(new BeforeAlignEvent(carousel._mask, 0));
-                assertNotEquals("event target equals mask",
+                carousel.bubbleEvent(new BeforeAlignEvent(carousel._widgetStrip, 0));
+                assertNotEquals("event target equals widget strip",
                     carousel._mask, carousel.parentWidget.bubbleEvent.firstCall.args[0].target);
                 assertEquals("event target changed to carousel",
                     carousel, carousel.parentWidget.bubbleEvent.firstCall.args[0].target);
@@ -611,7 +611,7 @@
         );
     };
 
-    this.CarouselCoreTest.prototype.testBeforeAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testBeforeAlignEventsNotFromWidgetStripDontHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -633,7 +633,7 @@
         );
     };
 
-    this.CarouselCoreTest.prototype.testAfterAlignEventsFromMaskHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testAfterAlignEventsFromWidgetStripHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -647,8 +647,8 @@
                 this.sandbox.stub(WidgetStrip.prototype);
                 carousel = new CarouselCore('myCarousel', CarouselCore.orientations.HORIZONTAL);
                 carousel.parentWidget = { bubbleEvent: this.sandbox.stub() };
-                carousel.bubbleEvent(new AfterAlignEvent(carousel._mask, 0));
-                assertNotEquals("event target equals mask",
+                carousel.bubbleEvent(new AfterAlignEvent(carousel._widgetStrip, 0));
+                assertNotEquals("event target equals widget strip",
                     carousel._mask, carousel.parentWidget.bubbleEvent.firstCall.args[0].target);
                 assertEquals("event target changed to carousel",
                     carousel, carousel.parentWidget.bubbleEvent.firstCall.args[0].target);
@@ -656,7 +656,7 @@
         );
     };
 
-    this.CarouselCoreTest.prototype.testAfterAlignEventsNotFromMaskDontHaveTargetResetToCarousel = function (queue) {
+    this.CarouselCoreTest.prototype.testAfterAlignEventsNotFromWidgetStripDontHaveTargetResetToCarousel = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [

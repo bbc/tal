@@ -53,14 +53,13 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
              * Adds a widget to the end of the strip
              * @param {antie.widgets.Widget} widget The widget to append to the strip
              * @param {Number} [length] the length of the widget in pixels, measured along the primary axis.
-             * (Height for a vertical strip or width for horizontal.) If providied, this value will be used in
+             * (Height for a vertical strip or width for horizontal.) If provided, this value will be used in
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
             append: function (widget, length) {
                 this._lengths.push(length);
                 return this.appendChildWidget(widget);
-
             },
 
             /**
@@ -139,6 +138,22 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 } else {
                     this._lengths = lengths;
                 }
+
+            },
+
+            /**
+             * Indicates whether the strip needs visible indices attaching before it is aligned
+             * @returns {Boolean} true if visible indices required, false if not.
+             */
+            needsVisibleIndices: function () {
+                return false;
+            },
+
+            /**
+             * Strip should ensure all widgets indexed in the array are attached to the parent
+             * @param indexArray
+             */
+            attachIndexedWidgets: function (indexArray) {
 
             },
 
