@@ -53,7 +53,7 @@ require.def(
                 this.mediaSource = null;
 
                 var self = this;
-                window.addEventListener('unload', function () {
+                window.addEventListener('hide', function () {
                     self.playerPlugin.Stop();
                     self.tvmwPlugin.SetSource(self.originalSource);
                 }, false);
