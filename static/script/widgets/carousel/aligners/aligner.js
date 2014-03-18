@@ -43,7 +43,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             init: function (mask) {
                 this._mask = mask;
                 this._queue = new AlignmentQueue(this._mask);
-                this._alignedIndex = null;
+                this._lastAlignIndex = null;
             },
 
             /**
@@ -94,8 +94,15 @@ require.def('antie/widgets/carousel/aligners/aligner',
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
             alignToIndex: function (index, options) {
-                this._bubbleBeforeAlign(index);
+                this._informMaskBeforeAlign(index);
                 this._moveNormally(index, options);
+            },
+
+            /**
+             * @returns {Number} The last index the carousel was asked to align to, or null if no alignments have completed.
+             */
+            indexOfLastAlignRequest: function () {
+                return this._lastAlignIndex;
             },
 
             /**
@@ -109,11 +116,11 @@ require.def('antie/widgets/carousel/aligners/aligner',
             _align: function (navigator, direction, options) {
                 var startIndex, targetIndex;
 
-                startIndex = this._alignedIndex;
+                startIndex = this.indexOfLastAlignRequest();
                 targetIndex = this._subsequentIndexInDirection(navigator, direction);
 
                 if (targetIndex !== null) {
-                    this._bubbleBeforeAlign(targetIndex);
+                    this._informMaskBeforeAlign(targetIndex);
                     if (this._isWrap(startIndex, targetIndex, direction)) {
                         this._wrap(startIndex, targetIndex, navigator, direction, options);
                     } else {
@@ -123,8 +130,9 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             _subsequentIndexInDirection: function (navigator, direction) {
-                var startPoint;
-                startPoint = (this._alignedIndex === null) ? 0 : this._alignedIndex;
+                var startPoint, lastAligned;
+                lastAligned = this.indexOfLastAlignRequest();
+                startPoint = (lastAligned === null) ? 0 : lastAligned;
                 if (direction === Aligner.directions.FORWARD) {
                     return navigator.indexAfter(startPoint);
                 } else {
@@ -142,14 +150,13 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 return false;
             },
 
-            _bubbleBeforeAlign: function (index) {
-                this._mask.bubbleEvent(new BeforeAlignEvent(this._mask, index));
-                this._alignedIndex = index;
+            _informMaskBeforeAlign: function (index) {
+                this._mask.beforeAlignTo(this._lastAlignIndex, index);
+                this._lastAlignIndex = index;
             },
 
-            _bubbleAfterAlign: function (index) {
-
-                this._mask.bubbleEvent(new AfterAlignEvent(this._mask, index));
+            _informMaskAfterAlign: function (index) {
+                this._mask.afterAlignTo(index);
             },
 
             _wrap: function (fromIndex, toIndex, navigator, direction, options) {
@@ -210,12 +217,12 @@ require.def('antie/widgets/carousel/aligners/aligner',
                 function OptionsClone() {}
 
                 function unwrappedComplete() {
-                    self._bubbleAfterAlign(toIndex);
+                    self._informMaskAfterAlign(toIndex);
                 }
 
                 function wrappedComplete() {
                     options.onComplete();
-                    self._bubbleAfterAlign(toIndex);
+                    self._informMaskAfterAlign(toIndex);
                 }
 
                 self = this;

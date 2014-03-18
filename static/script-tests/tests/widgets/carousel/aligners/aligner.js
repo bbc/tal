@@ -128,60 +128,53 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.testAlignToFiresBeforeAlignEventOnMask = function (queue) {
+    this.AlignerTest.prototype.testAlignToCallsBeforeAlignToOnMask = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/beforealignevent",
                 "antie/widgets/carousel/navigators/navigator",
                 "antie/widgets/carousel/mask"
             ],
-            function (application, Aligner, BeforeAlignEvent, Navigator, Mask) {
-                var aligner, mask, firedEvent;
+            function (application, Aligner, Navigator, Mask) {
+                var aligner, mask, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(BeforeAlignEvent.prototype);
 
                 mask = new Mask();
 
                 aligner = new Aligner(mask);
-                aligner.alignToIndex(3);
+                alignmentIndex = 3;
+                aligner.alignToIndex(alignmentIndex);
 
-                assertTrue("event fired on carousel mask", mask.bubbleEvent.called);
-                firedEvent = mask.bubbleEvent.firstCall.args[0];
-                assertTrue("Fired event is a beforealignevent", firedEvent instanceof BeforeAlignEvent);
-                assertTrue("Event created with mask parent target and correct alignedIndex",
-                    firedEvent.init.calledWith(mask, 3));
+                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                sinon.assert.calledWith(mask.beforeAlignTo, sinon.match.any, alignmentIndex);
             }
         );
     };
 
-    this.AlignerTest.prototype.testBeforeAlignFiredOnMaskWhenMovedForwardBetweenZeroAndOne = function (queue) {
+    this.AlignerTest.prototype.testBeforeAlignToCalledOnMaskWhenMovedForwardBetweenZeroAndOne = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/beforealignevent",
                 "antie/widgets/carousel/navigators/navigator",
                 "antie/widgets/carousel/mask"
             ],
-            function (application, Aligner, BeforeAlignEvent, Navigator, Mask) {
-                var aligner, mask, firedEvent, navigator;
+            function (application, Aligner, Navigator, Mask) {
+                var aligner, mask, navigator, initialIndex, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(BeforeAlignEvent.prototype);
 
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-
+                initialIndex = 0;
+                alignmentIndex = 1;
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
+                aligner.alignToIndex(initialIndex);
                 aligner.alignNext(navigator);
 
-                assertTrue("event fired on carousel mask", mask.bubbleEvent.called);
-                firedEvent = mask.bubbleEvent.firstCall.args[0];
-                assertTrue("Fired event is a beforealignevent", firedEvent instanceof BeforeAlignEvent);
-                assertTrue("Event created with mask parent target and correct to & from values",
-                    firedEvent.init.calledWith(mask, 1));
+                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
     };
@@ -191,150 +184,125 @@
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/beforealignevent",
                 "antie/widgets/carousel/navigators/navigator",
                 "antie/widgets/carousel/mask"
             ],
-            function (application, Aligner, BeforeAlignEvent, Navigator, Mask) {
-                var aligner, mask, firedEvent, navigator;
+            function (application, Aligner,  Navigator, Mask) {
+                var aligner, mask, navigator, alignmentIndex, initialIndex;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(BeforeAlignEvent.prototype);
 
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
-
+                initialIndex = 1;
+                alignmentIndex = 0;
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner.alignToIndex(1);
+                mask.beforeAlignTo.reset();
+
                 aligner.alignPrevious(navigator);
 
-                assertTrue("event fired on carousel mask", mask.bubbleEvent.called);
-                firedEvent = mask.bubbleEvent.firstCall.args[0];
-                assertTrue("Fired event is a beforealignevent", firedEvent instanceof BeforeAlignEvent);
-                assertTrue("Event created with mask parent target and correct to & from values",
-                    firedEvent.init.calledWith(mask, 0));
+                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
     };
 
-    this.AlignerTest.prototype.testAfterAlignFiredOnMaskAfterAlignToIndex = function (queue) {
+    this.AlignerTest.prototype.testAfterAlignToCalledOnMaskAfterAlignToIndex = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/afteralignevent",
                 "antie/widgets/carousel/mask"
             ],
-            function (application, Aligner, AfterAlignEvent, Mask) {
-                var aligner, mask, firedEvent;
+            function (application, Aligner, Mask) {
+                var aligner, mask, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AfterAlignEvent.prototype);
-                Mask.prototype.alignToIndex.restore();
+                Mask.prototype.alignToIndex.yieldsTo('onComplete');
+
                 mask = new Mask();
-                
-                this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
-                });
-
+                alignmentIndex = 3;
                 aligner = new Aligner(mask);
-                aligner.alignToIndex(3);
+                aligner.alignToIndex(alignmentIndex);
 
-                assertTrue("2 events fired on carousel mask", mask.bubbleEvent.calledTwice);
-                firedEvent = mask.bubbleEvent.secondCall.args[0];
-                assertTrue("Second fired event is an afteralignevent", firedEvent instanceof AfterAlignEvent);
-                assertTrue("Event created with mask parent target and correct to & from values",
-                    firedEvent.init.calledWith(mask, 3));
+                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
     };
 
-    this.AlignerTest.prototype.testAfterAlignFiredOnMaskWhenMovedForwardBetweenZeroAndOne = function (queue) {
+    this.AlignerTest.prototype.testAfterAlignToCalledOnMaskWhenMovedForwardBetweenZeroAndOne = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/afteralignevent",
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/navigator"
             ],
-            function (application, Aligner, AfterAlignEvent, Mask, Navigator) {
-                var aligner, mask, firedEvent, navigator;
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask, navigator, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AfterAlignEvent.prototype);
-                Mask.prototype.alignToIndex.restore();
+                Mask.prototype.alignToIndex.yieldsTo('onComplete');
+                alignmentIndex = 1;
                 mask = new Mask();
-                
-                this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
-                });
+
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
 
                 aligner = new Aligner(mask);
                 aligner.alignNext(navigator);
 
-                assertTrue("2 events fired on carousel mask", mask.bubbleEvent.calledTwice);
-                firedEvent = mask.bubbleEvent.secondCall.args[0];
-                assertTrue("Second fired event is an afteralignevent", firedEvent instanceof AfterAlignEvent);
-                assertTrue("Event created with mask parent target and correct to & from values",
-                    firedEvent.init.calledWith(mask, 1));
+                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
     };
 
-    this.AlignerTest.prototype.testAfterAlignFiredOnMaskWhenMovedBackwardBetweenOneAndZero = function (queue) {
+    this.AlignerTest.prototype.testAfterAlignToCalledOnMaskWhenMovedBackwardBetweenOneAndZero = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/afteralignevent",
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/navigator"
             ],
-            function (application, Aligner, AfterAlignEvent, Mask, Navigator) {
-                var aligner, mask, firedEvent, navigator;
-                this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AfterAlignEvent.prototype);
-                Mask.prototype.alignToIndex.restore();
-                mask = new Mask();
-                
-                this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
-                });
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
-
-                aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
-                aligner.alignPrevious(navigator);
-
-                assertTrue("2 events fired on carousel mask", mask.bubbleEvent.calledTwice);
-                firedEvent = mask.bubbleEvent.secondCall.args[0];
-                assertTrue("Second fired event is an afteralignevent", firedEvent instanceof AfterAlignEvent);
-                assertTrue("Event created with mask parent target and correct to & from values",
-                    firedEvent.init.calledWith(mask, 0));
-            }
-        );
-    };
-
-    this.AlignerTest.prototype.testAfterAlignNotFiredBeforeAlignToIndexCallsBack = function (queue) {
-        queuedApplicationInit(queue,
-            'lib/mockapplication',
-            [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/events/afteralignevent",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
-            ],
-            function (application, Aligner, AfterAlignEvent, Mask, Navigator) {
+            function (application, Aligner, Mask, Navigator, alignmentIndex) {
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
-                this.sandbox.stub(AfterAlignEvent.prototype);
+                Mask.prototype.alignToIndex.yieldsTo('onComplete');
+
+                mask = new Mask();
+                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+
+                alignmentIndex = 0;
+                aligner = new Aligner(mask);
+                aligner.alignToIndex(1);
+                mask.afterAlignTo.reset();
+                aligner.alignPrevious(navigator);
+
+                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testAfterAlignToNotFiredBeforeAlignToIndexCallsBack = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, Mask, Navigator) {
+                var aligner, mask, navigator;
+                this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
                 aligner.alignNext(navigator);
 
-                assertFalse("2 events fired on carousel mask", mask.bubbleEvent.calledTwice);
+                assertFalse("afterAlignTo called on mask", mask.afterAlignTo.called);
             }
         );
     };
@@ -449,7 +417,7 @@
                 mask = new Mask();
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertTrue("alignToIndex called on mask", mask.alignToIndex.calledWith(0));
@@ -472,7 +440,7 @@
                 aligner = new Aligner(mask);
                 aligner._wrap = this.sandbox.stub();
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
                 assertTrue("wrapForward called", aligner._wrap.calledWith(1, 0, navigator, Aligner.directions.FORWARD));
@@ -519,7 +487,7 @@
                 navigator.currentIndex.returns(1);
                 navigator.indexAfter.returns(null);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
                 assertFalse("Align called on mask", mask.alignToIndex.called);
@@ -543,7 +511,7 @@
                 navigator.currentIndex.returns(1);
                 navigator.indexBefore.returns(null);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertFalse("Align called on mask", mask.alignToIndex.called);
@@ -588,7 +556,7 @@
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
                 aligner._wrapBackward = this.sandbox.stub();
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
                 assertFalse("wrapBackward called", aligner._wrapBackward.called);
@@ -610,7 +578,7 @@
                 mask = new Mask();
                 navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 assertEquals("Align to index -1 for last clone", -1, wrapAlignCall.args[0]);
@@ -634,7 +602,7 @@
                 mask.alignToIndex.yieldsTo('onComplete');
                 navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator, {skipAnim: true});
                 animatedCall = mask.alignToIndex.secondCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -658,7 +626,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -682,7 +650,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -705,7 +673,7 @@
                 mask = new Mask();
                 navigator = this.getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -729,7 +697,7 @@
                 mask = new Mask();
                 navigator = this.getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled(Navigator);
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertTrue("Align to index called", mask.alignToIndex.called);
@@ -803,7 +771,7 @@
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 alignCall = mask.alignToIndex.secondCall;
@@ -858,7 +826,7 @@
                 mask = new Mask();
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
                 assertEquals("Align to destination index (2)", 2, alignCall.args[0]);
@@ -881,7 +849,7 @@
                 mask = new Mask();
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
-                aligner._alignedIndex = 0;
+                aligner._lastAlignIndex = 0;
                 aligner.alignPrevious(navigator);
 
                 alignCall = mask.alignToIndex.firstCall;
@@ -908,7 +876,7 @@
                 });
                 aligner = new Aligner(mask);
                 navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
-                aligner._alignedIndex = 1;
+                aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
                 alignCall = mask.alignToIndex.firstCall;
@@ -938,7 +906,7 @@
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
                 aligner = new Aligner(mask);
-                aligner._alignedIndex = 0;
+                aligner._lastAlignIndex = 0;
                 navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
                 aligner.alignPrevious(navigator);
 
@@ -1032,4 +1000,95 @@
             }
         );
     };
+
+    this.AlignerTest.prototype.testAlignedIndexIsNullOnInit = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/aligners/alignmentqueue",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, AlignmentQueue, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+                aligner = new Aligner(mask);
+
+                assertNull(aligner.indexOfLastAlignRequest());
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testIndexOfLastAlignRequestIsChangedAfterAlignToIndex = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/aligners/alignmentqueue",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, AlignmentQueue, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                mask = new Mask();
+                aligner = new Aligner(mask);
+                aligner.alignToIndex(4);
+                assertEquals(4, aligner.indexOfLastAlignRequest());
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testIndexOfLastAlignRequestIsChangedAfterAlignPrevious = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/aligners/alignmentqueue",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, AlignmentQueue, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                Navigator.prototype.indexBefore.returns(3);
+                mask = new Mask();
+                aligner = new Aligner(mask);
+                aligner.alignPrevious(new Navigator(), {});
+                assertEquals(3, aligner.indexOfLastAlignRequest());
+            }
+        );
+    };
+
+    this.AlignerTest.prototype.testIndexOfLastAlignRequestIsChangedAfterAlignNext = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                "antie/widgets/carousel/aligners/aligner",
+                "antie/widgets/carousel/aligners/alignmentqueue",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator"
+            ],
+            function (application, Aligner, AlignmentQueue, Mask, Navigator) {
+                var aligner, mask;
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(AlignmentQueue.prototype);
+                Navigator.prototype.indexAfter.returns(5);
+                mask = new Mask();
+                aligner = new Aligner(mask);
+                aligner.alignNext(new Navigator(), {});
+                assertEquals(5, aligner.indexOfLastAlignRequest());
+            }
+        );
+    };
+
 }());
