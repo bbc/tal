@@ -23,6 +23,32 @@ And here is a view of it's structure in the DOM
 
 ![Carousel Structure]({{site.baseurl}}/img/widgets/carousel_structure.png)
 
+## Instantiating a carousel
+The Carousel takes two parameters in its constructor, an id which will be used when constructing its constituent parts, and an orientation.
+Currently carousels can be vertical or horizontal, and these orientations are provided within a property of the Carousel class.
+If you do not explicitly provide an orientation the carousel will default to a vertical layout.
+
+{% highlight javascript %}
+var carousel = new Carousel('someCarousel', Carousel.orientations.HORIZONTAL);
+{% endhighlight %}
+
+## Adding items
+Items can be added to the carousel using the standard container interface, for example
+
+{% highlight javascript %}
+var carousel = new Carousel('theCarousel');
+var widget = new Widget('someItem');
+carousel.appendChildWidget(widget);
+{% endhighlight %}
+
+In contrast to the old horizontal carousel, the new carousel does not directly support data binding via its constructor. Instead you can use a Binder, which in turn calls appendChildWidget on the Carousel with each data bound widget.
+
+{% highlight javascript %}
+var carousel = new Carousel('theCarousel');
+var binder = new Binder(someFormatter, someDataSource);
+binder.appendAllTo(carousel);
+{% endhighlight %}
+
 ## CSS
 When you create a carousel, you provide an id to the Carousel constructor. The id of the Mask and Widget Strip divs are derived from the one you provide.
 The mask has \_CarouselMask appended and the Widget Strip has \_WidgetStrip appended. In the example above 'simpleVerticalHidingV2Carousel" was provided as the id.
@@ -81,31 +107,155 @@ And some additional, more specific css for the above example
 {% endhighlight %}
 The only essential part of this specific css is the height property, as this is a vertical carousel so the mask needs to have a fixed length.
 
-## Instantiating a carousel
-The Carousel takes two parameters in its constructor, an id which will be used when constructing its constituent parts, and an orientation.
-Currently carousels can be vertical or horizontal, and these orientations are provided within a property of the Carousel class.
-If you do not explicitly provide an orientation the carousel will default to a vertical layout.
-
-{% highlight javascript %}
-var carousel = new Carousel('someCarousel', Carousel.orientations.HORIZONTAL);
-{% endhighlight %}
-
-## Adding items
-
-Items can be added to the carousel using the standard container interface, for example
-
-{% highlight javascript %}
-var carousel = new Carousel('theCarousel');
-var widget = new Widget('someItem');
-carousel.appendChildWidget(widget);
-{% endhighlight %}
-
-In contrast to the old horizontal carousel, the new carousel does not directly support data binding via its constructor. Instead you can use a Binder, which in turn calls appendChildWidget on the Carousel with each data bound widget.
-
-{% highlight javascript %}
-var carousel = new Carousel('theCarousel');
-var binder = new Binder(someFormatter, someDataSource);
-binder.appendAllTo(carousel);
-{% endhighlight %}
 
 ## Aligning
+Movement of the carousel is performed by calling its method, alignToIndex. This method takes an integer as it's first argument. This is the index within the carousel of the widget you want to move the carousel toward.
+Two points are defined:
+* The alignment point, a point along the mask element defined by a distance from the left or top of the mask (horizontal or vertical)
+* The widget alignment point, a point along the widget being aligned, defined by a distance from the left or top of the widget.
+The result of the alignment is to make the two points line up.
+
+![Carousel]({{site.baseurl}}/img/widgets/carousel.png)
+
+The alignment point along the mask can either be set in terms of pixels, or as a normalised value between 0 and 1, with 0 being the left or top edge and 1 being the right or bottom edge.
+Widget alignment points are always set using normalised 0 to 1 values.
+As an example, if you wanted to focus the widget at index 4 so that it was centred in a carousel, you would call
+
+{% highlight javascript %}
+carousel.setNormalisedAlignPoint(0.5);
+carousel.setNormalisedWidgetAlignPoint(0.5);
+carousel.alignToIndex(4);
+{% endhighlight %}
+
+If you wanted to align the right edge of the widget at index 3 to a point 300 pixels from the left edge of the mask, you would call
+
+{% highlight javascript %}
+carousel.setAlignPoint(300);
+carousel.setNormalisedWidgetAlignPoint(1);
+carousel.alignToIndex(3);
+{% endhighlight %}
+
+By default both alignment points are set to 0, i.e. the left or top edge of the widget you align will be moved to the left or top edge of the mask
+
+#### Alignment events
+
+Two events are fired:
+* beforealign fired immediately before an alignment takes place
+* afteralign fired when an alignment completes
+
+both have two properties
+
+* target - the carousel being aligned
+* alignedIndex - the index of the item being aligned
+
+#### Animation
+The second argument of alignToIndex is an animation options object, which you can use to configure how each alignment animates, for example:
+
+{% highlight javascript %}
+carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: "false" });
+{% endhighlight %}
+
+Would align to item 3 over the course of 500ms using a sine easing function. Note that by default animation is skipped, so the skipAnim property needs to be set false if you want animation.
+
+If you wish to interrupt an animation, you must call carousel.completeAlignment(). This instantly moves the carousel to the end of an inflight alignment. If you attempt an aligment while one is already in progress and do not call completeAlignment, the new alignement will be queued to execute after the current alignment is complete.
+
+If you are going to hide, destroy, or render a carousel invisible, you should first call completeAlignment. If you do not and are are using the CSS3 animation modifier, callbacks may not being cleared up resulting in a memory leak. You can call this safely if no animation is in progress, it just wont have any effect.
+
+#### Aligning to the next or previous item
+There are two additional helper methods, alignPrevious and alignNext to facilitate simple two-key navigation. They use align points in the same was as alignToIndex.
+
+Unlike alignToIndex, these methods take into account any widgets that have been disabled and will skip over them. Additionally, they will transition directly from the last to the first element (or vice versa) when using the wrapping strip (see below).
+
+In general it's easiest to use alignToIndex when initialising a carousel and alignPrevious / alignNext when navigating.
+
+#### Items which change size during an alignment
+The default widget strip measures the size of its elements when working out where to align. If elements change size during an alignment, this can result in the carousel aligning to the wrong place.
+
+To cater for this situation, the carousel has a method setWidgetLengths. setWidgetLengths takes either a single number which will be used as the length for all widgets, or an array if providing individual lengths for each item. Lengths are in pixels.
+In addition, the appendChildWidget and insertChildWidget methods take an optional length as their second parameter if it is easier to provide lengths as each item is added.
+
+In general it's a good idea to provide lengths if they're known in advance as it can improve performance (reading values from the DOM can result in unneccesary re-layouts)
+
+## Setting the active widget
+Unlike the legacy horizontal carousel, alignment and the active widget are not tied together.
+
+This can make layout easier, for example if the first item you can see is always flush with the left edge of the carousel but the active item should always be the third visible item, you can ask for this directly rather then having to calculate any offsets.
+
+The methods for setting the item are:
+
+* setActiveIndex - sets the widget at the supplied index active
+* setActiveWidget - sets the widget provided active
+
+Both will either succeed or do nothing (if the index / widget don't exist in the carousel, or are disabled)
+You can also query the next or previous valid index using
+
+* nextIndex
+* previousIndex
+
+Similarly to alignment, two events are produced during a change of active widget
+
+* beforeselecteditemchange
+* selecteditemchange
+
+## Navigating with key presses
+Other TAL widgets handle key presses internally, however this can cause problems when compositing multiple widgets into a larger structure with complex focus management.
+For this reason, the carousel does not directly consume key events, but to provide the same functionality, two simple key handler classes are provided which consume key and carousel events and provide some default interaction:
+
+* AlignFirstHandler - On a key press will perform the alignment animation before the change in active item
+* ActivateFirstHandler - On a key press will the change in active item before the alignment animation
+
+To use the key handlers, you must instantiate them and then attach them to a carousel. They automatically use the UP/DOWN or LEFT/RIGHT keys for navigation, depending on the orientation of the carousel.
+
+{% highlight javascript %}
+var handler = new ActivateFirstHandler();
+hander.attach(carousel);
+{% endhighlight %}
+
+In practice you will probably need to write your own event handling for anything other then the simplest UI.
+
+## Widget strips and navigators
+By default the carousel behaves like the cardboard strip in the intro. All the items are always drawn on the strip and when you get to one end you can't go any further.
+
+In some situations, this may not be desired. To enable varied behaviour, there are alternative WidgetStrip and Navigator classes.
+
+Broadly the widget strip represents the cardboard and the navigator is something that keeps track of what is active and what can be made active in the future.
+
+#### Wrapping carousels
+You may want a carousel which behaves as though the strip was a loop with the start and end joined, allowing infinite navigation in each direction.
+
+Creating a wrapping carousel is easy, you simply instantiate as usual then pass in the alternative navigator and widget strip classes.
+Strips are in antie/widgets/carousel/strips and navigators in antie/widgets/carousel/navigators
+
+{% highlight javascript %}
+var carousel = new Carousel('theCarousel');
+carousel.setWidgetStrip(WrappingStrip);
+carousel.setNavigator(WrappingNavigator);
+{% endhighlight %}
+
+The way the wrapping strip works is to add copies of the elements at each end of the strip so that visually, it appears to wrap.
+
+To ensure the carousel is always in a valid state, these clones are created each time an item is added or removed. On a slow device, when adding many items in a batch, this can be slow.
+
+The carousel has a method autoCalculate(false) which can be used to disable this behaviour, and a method recalculate(), which can be used to manually force clone creation.
+
+{% highlight javascript %}
+var carousel = new Carousel('theCarousel');
+carousel.setWidgetStrip(WrappingStrip);
+carousel.setNavigator(WrappingNavigator);
+carousel.autoCalculate(false);
+// append a lot of widgets
+carousel.recalculate();
+{% endhighlight %}
+
+#### Culling carousels
+
+On some devices adding a lot to the DOM up front can take a lot of time. Others do not optimise paints for elements hidden by an overflow.
+
+In these cases, rather then having all items permanently on the strip, it may be desirable to take items in and out as they come into view.
+
+There are currently two alternative widget strips that behave in this way. Both only generate and attach DOM elements when they are required by an alignment.
+
+* CullingStrip - Takes items out of the DOM when they go out of view
+* HidingStrip - Sets elements to visibility: hidden and opacity: 0 when they go out of view.
+
+If using these strips it is compulsory to set widget lengths before performing an alignment.
