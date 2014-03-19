@@ -113,6 +113,7 @@ Movement of the carousel is performed by calling its method, alignToIndex. This 
 Two points are defined:
 * The alignment point, a point along the mask element defined by a distance from the left or top of the mask (horizontal or vertical)
 * The widget alignment point, a point along the widget being aligned, defined by a distance from the left or top of the widget.
+
 The result of the alignment is to make the two points line up.
 
 ![Carousel]({{site.baseurl}}/img/widgets/carousel.png)
@@ -157,7 +158,7 @@ carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: "false
 
 Would align to item 3 over the course of 500ms using a sine easing function. Note that by default animation is skipped, so the skipAnim property needs to be set false if you want animation.
 
-If you wish to interrupt an animation, you must call carousel.completeAlignment(). This instantly moves the carousel to the end of an inflight alignment. If you attempt an aligment while one is already in progress and do not call completeAlignment, the new alignement will be queued to execute after the current alignment is complete.
+If you wish to interrupt an animation, you must call carousel.completeAlignment(). This instantly moves the carousel to the end of an inflight alignment. If you attempt an alignment while one is already in progress and do not call completeAlignment, the new alignement will be queued to execute after the current alignment is complete.
 
 If you are going to hide, destroy, or render a carousel invisible, you should first call completeAlignment. If you do not and are are using the CSS3 animation modifier, callbacks may not being cleared up resulting in a memory leak. You can call this safely if no animation is in progress, it just wont have any effect.
 
@@ -196,6 +197,9 @@ Similarly to alignment, two events are produced during a change of active widget
 
 * beforeselecteditemchange
 * selecteditemchange
+
+#### Carousels as lists
+As setting a widget active and aligning to it are no longer linked, you can use a carousel as a list by only using the activeIndex methods, never performing an alignment.
 
 ## Navigating with key presses
 Other TAL widgets handle key presses internally, however this can cause problems when compositing multiple widgets into a larger structure with complex focus management.
@@ -259,3 +263,13 @@ There are currently two alternative widget strips that behave in this way. Both 
 * HidingStrip - Sets elements to visibility: hidden and opacity: 0 when they go out of view.
 
 If using these strips it is compulsory to set widget lengths before performing an alignment.
+
+## Carousels in components
+It can be easy to make mistakes when integrating a carousel with a TAL component, especially when using data binding, as some operations (alignment, for instance) make no sense until after a carousel is built and ready.
+
+Below is a fairly complex example of a component which consists of a single carousel, configurable via arguments passed in when the component is shown.
+
+It illustrates where in the component and databinding lifecycle various operations can take place as well as a very cautious approach to tear down.
+
+In the example the carousel is created and destroyed completely each time the component is shown (to illustrate how this can be achieved), however, depending on the application you may wish to preserve some of this state between shows.
+
