@@ -68,7 +68,14 @@ require.def('antie/widgets/scrubbar',
 
 					if(this._lastBufferLeft != left) {
 						this._lastBufferLeft = left;
-						device.moveElementTo(this._buffer, left, null, true);
+						device.moveElementTo({
+							el: this._buffer,
+							to: {
+								left: left,
+								top: null
+							},
+							skipAnim: true
+						});
 					}
 					if(this._lastBufferWidth != width) {
 						this._lastBufferWidth = width;
