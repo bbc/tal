@@ -15,7 +15,7 @@ In TAL Carousels, the 'window' is a div called the 'Mask'. The strip of cardboar
 
 The above diagram shows how the various bits of the carousel fit together. The dotted area is hidden as it lies outside the mask.
 
-Carousels can have be arranged horizontally or vertically, here is a vertical carousel
+Carousels can be arranged horizontally or vertically. Here is a vertical carousel
 
 ![Vertical Carousel]({{site.baseurl}}/img/widgets/carousel_example.png)
 
@@ -110,6 +110,7 @@ The only essential part of this specific css is the height property, as this is 
 
 ## Aligning
 Movement of the carousel is performed by calling its method, alignToIndex. This method takes an integer as it's first argument. This is the index within the carousel of the widget you want to move the carousel toward.
+
 Two points are defined:
 * The alignment point, a point along the mask element defined by a distance from the left or top of the mask (horizontal or vertical)
 * The widget alignment point, a point along the widget being aligned, defined by a distance from the left or top of the widget.
@@ -163,7 +164,7 @@ If you wish to interrupt an animation, you must call carousel.completeAlignment(
 If you are going to hide, destroy, or render a carousel invisible, you should first call completeAlignment. If you do not and are are using the CSS3 animation modifier, callbacks may not being cleared up resulting in a memory leak. You can call this safely if no animation is in progress, it just wont have any effect.
 
 #### Aligning to the next or previous item
-There are two additional helper methods, alignPrevious and alignNext to facilitate simple two-key navigation. They use align points in the same was as alignToIndex.
+There are two additional helper methods, alignPrevious and alignNext to facilitate simple two-key navigation. These methods share behavior with alignToIndex. They use align points in the same way, can accept an animation options object and do not affect the active item.
 
 Unlike alignToIndex, these methods take into account any widgets that have been disabled and will skip over them. Additionally, they will transition directly from the last to the first element (or vice versa) when using the wrapping strip (see below).
 
