@@ -267,9 +267,6 @@ If using these strips it is compulsory to set widget lengths before performing a
 ## Carousels in components
 It can be easy to make mistakes when integrating a carousel with a TAL component, especially when using data binding, as some operations (alignment, for instance) make no sense until after a carousel is built and ready.
 
-Below is a fairly complex example of a component which consists of a single carousel, configurable via arguments passed in when the component is shown.
+Included in the talexample project is a fairly complex example of a carousel component - it shows how to data bind, allows for configurable widget strips and supports custom aligment points via a config object passed in at component show.
 
-It illustrates where in the component and databinding lifecycle various operations can take place as well as a very cautious approach to tear down.
-
-In the example the carousel is created and destroyed completely each time the component is shown (to illustrate how this can be achieved), however, depending on the application you may wish to preserve some of this state between shows.
-
+Take a look at static/script/appui/components/carouselcomponent.js and experiment by changing its configuration in static/script/appui/components/simple.js

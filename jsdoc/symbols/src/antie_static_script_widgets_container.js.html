@@ -220,7 +220,7 @@
 <span class='line'>213</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>214</span> </span><span class="WHIT">			</span><span class="COMM">/**
 <span class='line'>215</span> 			 * Checks to see if a specific widget is a direct child of this widget.
-<span class='line'>216</span> 			 * @param {antie.widgets.Widget} widget The widget to check to see if it is a direct child of this widget.
+<span class='line'>216</span> 			 * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
 <span class='line'>217</span> 			 */</span><span class="WHIT">
 <span class='line'>218</span> </span><span class="WHIT">			</span><span class="NAME">hasChildWidget</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>219</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._childWidgets</span><span class="PUNC">[</span><span class="NAME">id</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
@@ -265,7 +265,7 @@
 <span class='line'>258</span> </span><span class="WHIT">					</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>259</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>260</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this.hasChildWidget</span><span class="PUNC">(</span><span class="NAME">widget.id</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">widget.isFocusable</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>261</span> </span><span class="WHIT">					</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._activeChildWidget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">					</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._activeChildWidget</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">this._activeChildWidget</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">widget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>262</span> </span><span class="WHIT">						</span><span class="NAME">this._activeChildWidget.removeClass</span><span class="PUNC">(</span><span class="STRN">'active'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>263</span> </span><span class="WHIT">						</span><span class="NAME">this._setActiveChildFocussed</span><span class="PUNC">(</span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>264</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
@@ -381,7 +381,7 @@
 <span class='line'>374</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Container</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>375</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'>376</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>377</span> </span></pre>    <script type="text/javascript">
+<span class='line'>377</span> </span></pre><script type="text/javascript">
 
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-38709464-1']);
