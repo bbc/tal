@@ -35,7 +35,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
          * one or more pixel based alignments to be performed on the mask
          * @name antie.widgets.carousel.aligners.Aligner
          * @class
-         * @extends antie.widgets.Class
+         * @extends antie.Class
          * @param {Object} mask The carousel's mask object
          */
         var Aligner;

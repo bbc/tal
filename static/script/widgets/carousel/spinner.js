@@ -30,9 +30,9 @@ require.def('antie/widgets/carousel/spinner',
         "use strict";
         /**
          * Manages communication with device for carousel animations
-         * @name antie.widgets.carousel.spinner
+         * @name antie.widgets.carousel.Spinner
          * @class
-         * @extends antie.widgets.Class
+         * @extends antie.Class
          * @param {Object} device The device abstraction object
          * @param {Object} mask A carousel mask
          * @param {Object} The orientation object of the carousel

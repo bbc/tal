@@ -30,11 +30,11 @@ require.def('antie/widgets/carousel/keyhandlers/alignfirsthandler',
      * After alignment is completed, the active widget is changed to the next focusable widget.
      * @name antie.widgets.carousel.keyhandlers.AlignFirstHandler
      * @class
-     * @extends antie.widgets.Widget
+     * @extends antie.widgets.carousel.keyhandlers.KeyHandler
      */
     function (KeyHandler) {
         "use strict";
-        return KeyHandler.extend({
+        return KeyHandler.extend(/** @lends antie.widgets.carousel.keyhandlers.AlignFirstHandler.prototype */{
             _addAlignmentListeners: function () {
                 var carousel = this._carousel;
                 carousel.addEventListener('afteralign', function (ev) {

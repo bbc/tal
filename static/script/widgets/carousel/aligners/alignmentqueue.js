@@ -59,7 +59,7 @@ require.def('antie/widgets/carousel/aligners/alignmentqueue',
         /**
          * A class to handle queue multiple alignments for execution in sequence
          * @class
-         * @extends antie.widgets.Class
+         * @extends antie.Class
          * @param {Object} mask The carousel's mask object
          */
         return Class.extend({
