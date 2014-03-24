@@ -295,6 +295,10 @@ ul.inheritsList
 	
 	<li><a href="antie.widgets.carousel.Spinner.html">antie.widgets.carousel.Spinner</a></li>
 	
+	<li><a href="antie.widgets.carousel.strips.CullingStrip.html">antie.widgets.carousel.strips.CullingStrip</a></li>
+	
+	<li><a href="antie.widgets.carousel.strips.HidingStrip.html">antie.widgets.carousel.strips.HidingStrip</a></li>
+	
 	<li><a href="antie.widgets.carousel.strips.WidgetStrip.html">antie.widgets.carousel.strips.WidgetStrip</a></li>
 	
 	<li><a href="antie.widgets.carousel.strips.WrappingStrip.html">antie.widgets.carousel.strips.WrappingStrip</a></li>
@@ -389,6 +393,75 @@ one or more pixel based alignments to be performed on the mask</div>
 
 <!-- ============================== methods summary ======================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class antie.widgets.carousel.aligners.Aligner.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.aligners.Aligner.html#alignNext">alignNext</a></b>(navigator, options)
+								</div>
+								<div class="description">Aligns the mask and widget strip to the next enabled widget after that currently aligned.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.aligners.Aligner.html#alignPrevious">alignPrevious</a></b>(navigator, options)
+								</div>
+								<div class="description">Aligns the mask and widget strip to the next enabled widget before that currently aligned.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.aligners.Aligner.html#alignToIndex">alignToIndex</a></b>(index, options)
+								</div>
+								<div class="description">Aligns the mask and widget strip to the widget at the specified index
+Will always move forward if the index is after that currently aligned and backwards if index is before
+that currently aligned.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.aligners.Aligner.html#complete">complete</a></b>()
+								</div>
+								<div class="description">Instantly completes any in-flight alignment animations, firing any callbacks that were provided.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.aligners.Aligner.html#indexOfLastAlignRequest">indexOfLastAlignRequest</a></b>()
+								</div>
+								<div class="description">Get the last index the carousel was asked to align to</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				
+				</dl>
+				
+			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -417,7 +490,7 @@ one or more pixel based alignments to be performed on the mask
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								<span class="light fixedFont">{Object}</span>  <b>mask</b>
+								<span class="light fixedFont">{<a href="antie.widgets.carousel.Mask.html">antie.widgets.carousel.Mask</a>}</span>  <b>mask</b>
 								
 							</dt>
 								<dd>The carousel's mask object</dd>
@@ -439,6 +512,294 @@ one or more pixel based alignments to be performed on the mask
 
 <!-- ============================== method details ========================= -->		
 			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="alignNext"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>alignNext</b>(navigator, options)
+					
+					</div>
+					<div class="description">
+						Aligns the mask and widget strip to the next enabled widget after that currently aligned.
+If no alignment has been performed previously it will align to the next enabled widget after that at index 0
+If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
+If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="antie.widgets.carousel.navigators.Navigator.html">antie.widgets.carousel.navigators.Navigator</a>}</span> <b>navigator</b>
+									
+								</dt>
+								<dd>The carousel's current navigator</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									<i>Optional</i>
+								</dt>
+								<dd>An animation options object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.fps</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The frames per second of the alignment, if using styletopleft animation</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.duration</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The duration of the alignment in ms</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>options.easing</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The alignment easing function</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>options.skipAnim</b>
+									<i>Optional</i>
+								</dt>
+								<dd>If set true, the alignment will complete instantly then fire any provided callback</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>options.onComplete</b>
+									<i>Optional</i>
+								</dt>
+								<dd>A function which will be executed on completion of the alignment animation.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="alignPrevious"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>alignPrevious</b>(navigator, options)
+					
+					</div>
+					<div class="description">
+						Aligns the mask and widget strip to the next enabled widget before that currently aligned.
+If no alignment has been performed previously it will align to the next enabled widget before that at index 0
+If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
+If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="antie.widgets.carousel.navigators.Navigator.html">antie.widgets.carousel.navigators.Navigator</a>}</span> <b>navigator</b>
+									
+								</dt>
+								<dd>The carousel's current navigator</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									<i>Optional</i>
+								</dt>
+								<dd>An animation options object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.fps</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The frames per second of the alignment, if using styletopleft animation</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.duration</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The duration of the alignment in ms</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>options.easing</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The alignment easing function</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>options.skipAnim</b>
+									<i>Optional</i>
+								</dt>
+								<dd>If set true, the alignment will complete instantly then fire any provided callback</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>options.onComplete</b>
+									<i>Optional</i>
+								</dt>
+								<dd>A function which will be executed on completion of the alignment animation.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="alignToIndex"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>alignToIndex</b>(index, options)
+					
+					</div>
+					<div class="description">
+						Aligns the mask and widget strip to the widget at the specified index
+Will always move forward if the index is after that currently aligned and backwards if index is before
+that currently aligned.
+If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>index</b>
+									
+								</dt>
+								<dd>The index of the widget to align on.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									<i>Optional</i>
+								</dt>
+								<dd>An animation options object</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.fps</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The frames per second of the alignment, if using styletopleft animation</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>options.duration</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The duration of the alignment in ms</dd>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>options.easing</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The alignment easing function</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>options.skipAnim</b>
+									<i>Optional</i>
+								</dt>
+								<dd>If set true, the alignment will complete instantly then fire any provided callback</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Function}</span> <b>options.onComplete</b>
+									<i>Optional</i>
+								</dt>
+								<dd>A function which will be executed on completion of the alignment animation.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="complete"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>complete</b>()
+					
+					</div>
+					<div class="description">
+						Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
+If several alignments have been queued, all will complete in order.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="indexOfLastAlignRequest"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>indexOfLastAlignRequest</b>()
+					
+					</div>
+					<div class="description">
+						Get the last index the carousel was asked to align to
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> The last index the carousel was asked to align to, or null if no alignments have completed.</dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -450,7 +811,7 @@ one or more pixel based alignments to be performed on the mask
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Mar 21 2014 16:19:59 GMT-0000 (GMT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Mar 24 2014 15:40:12 GMT-0000 (GMT)
 		</div>
 	<script type="text/javascript">
 

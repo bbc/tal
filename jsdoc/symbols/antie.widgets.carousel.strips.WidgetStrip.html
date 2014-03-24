@@ -295,6 +295,10 @@ ul.inheritsList
 	
 	<li><a href="antie.widgets.carousel.Spinner.html">antie.widgets.carousel.Spinner</a></li>
 	
+	<li><a href="antie.widgets.carousel.strips.CullingStrip.html">antie.widgets.carousel.strips.CullingStrip</a></li>
+	
+	<li><a href="antie.widgets.carousel.strips.HidingStrip.html">antie.widgets.carousel.strips.HidingStrip</a></li>
+	
 	<li><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html">antie.widgets.carousel.strips.WidgetStrip</a></li>
 	
 	<li><a href="antie.widgets.carousel.strips.WrappingStrip.html">antie.widgets.carousel.strips.WrappingStrip</a></li>
@@ -421,9 +425,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#autoCalculate">autoCalculate</a></b>(on)
+								</div>
+								<div class="description">Toggles autocalculation - Calculation in this context is any strip defined processing required after an append/insert to put the carousel in a valid state.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#getLengthToIndex">getLengthToIndex</a></b>(index)
 								</div>
-								<div class="description"></div>
+								<div class="description">Get the distance in pixels to a widget at the supplied index</div>
 							</td>
 						</tr>
 					
@@ -439,9 +452,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#lengthOfWidgetAtIndex">lengthOfWidgetAtIndex</a></b>(index)
+								</div>
+								<div class="description">Gets the length in pixels of the widget at the supplied index.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#needsVisibleIndices">needsVisibleIndices</a></b>()
 								</div>
 								<div class="description">Indicates whether the strip needs visible indices attaching before it is aligned</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#recalculate">recalculate</a></b>()
+								</div>
+								<div class="description">Manually performs any processing required to put the carousel in a valid state after an append/insert</div>
 							</td>
 						</tr>
 					
@@ -477,7 +508,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.WidgetStrip.html#widgets">widgets</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Get all the widgets in the strip.</div>
 							</td>
 						</tr>
 					
@@ -616,10 +647,48 @@ Note length only currently working with non-wrapping strips.</dd>
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>indexArray</b>
+									<span class="light fixedFont">{Array}</span> <b>indexArray</b>
 									
 								</dt>
 								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="autoCalculate"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>autoCalculate</b>(on)
+					
+					</div>
+					<div class="description">
+						Toggles autocalculation - Calculation in this context is any strip defined processing required after an append/insert to put the carousel in a valid state.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>on</b>
+									
+								</dt>
+								<dd>Turns autocalculation on (when true) or off (when false)
+Calculation is any strip defined processing required after an append/insert to put the carousel in a valid state
+Autocalculation is on by default when a carousel is created.</dd>
 							
 							</dl>
 						
@@ -640,7 +709,7 @@ Note length only currently working with non-wrapping strips.</dd>
 					
 					</div>
 					<div class="description">
-						
+						Get the distance in pixels to a widget at the supplied index
 						
 						
 					</div>
@@ -652,10 +721,10 @@ Note length only currently working with non-wrapping strips.</dd>
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>index</b>
+									<span class="light fixedFont">{Number}</span> <b>index</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>An index of a widget currently in the carousel</dd>
 							
 							</dl>
 						
@@ -727,6 +796,49 @@ Note length only currently working with non-wrapping strips.</dd>
 
 					<hr />
 				
+					<a name="lengthOfWidgetAtIndex"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>lengthOfWidgetAtIndex</b>(index)
+					
+					</div>
+					<div class="description">
+						Gets the length in pixels of the widget at the supplied index.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>index</b>
+									
+								</dt>
+								<dd>The index of a widget currently appended to the carousel. Supplied index must be valid (i.e. correspond to a wiget currently in the strip)</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength, if neither are specified attempts to calculate and return the length.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="needsVisibleIndices"> </a>
 					<div class="fixedFont">
 					
@@ -759,6 +871,31 @@ Note length only currently working with non-wrapping strips.</dd>
 
 					<hr />
 				
+					<a name="recalculate"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>recalculate</b>()
+					
+					</div>
+					<div class="description">
+						Manually performs any processing required to put the carousel in a valid state after an append/insert
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="remove"> </a>
 					<div class="fixedFont">
 					
@@ -785,10 +922,10 @@ Note length only currently working with non-wrapping strips.</dd>
 								<dd>Widget to remove from the strip</dd>
 							
 								<dt>
-									<b>retainElement</b>
-									
+									<span class="light fixedFont">{Boolean}</span> <b>retainElement</b>
+									<i>Optional, Default: false</i>
 								</dt>
-								<dd></dd>
+								<dd>whether to keep the widget's output element in the DOM after removing widget</dd>
 							
 							</dl>
 						
@@ -849,7 +986,7 @@ Note length only currently working with non-wrapping strips.</dd>
 									<b>lengths</b>
 									
 								</dt>
-								<dd>{number} | {Array} If provided with a number all lengths will be set equal to this number
+								<dd>{Number} | {Array} If provided with a number all lengths will be set equal to this number
 If provided with an array, the lengths will be set with the corresponding widgets (so the first number will be used
 for the first widget's length, etc..)</dd>
 							
@@ -872,7 +1009,7 @@ for the first widget's length, etc..)</dd>
 					
 					</div>
 					<div class="description">
-						
+						Get all the widgets in the strip.
 						
 						
 					</div>
@@ -908,7 +1045,7 @@ for the first widget's length, etc..)</dd>
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Mar 21 2014 16:20:01 GMT-0000 (GMT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Mar 24 2014 15:40:13 GMT-0000 (GMT)
 		</div>
 	<script type="text/javascript">
 

@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - antie.widgets.ScrubBar</title>
+		<title>JsDoc Reference - antie.widgets.carousel.strips.CullingStrip</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -295,7 +295,7 @@ ul.inheritsList
 	
 	<li><a href="antie.widgets.carousel.Spinner.html">antie.widgets.carousel.Spinner</a></li>
 	
-	<li><a href="antie.widgets.carousel.strips.CullingStrip.html">antie.widgets.carousel.strips.CullingStrip</a></li>
+	<li><a href="../symbols/antie.widgets.carousel.strips.CullingStrip.html">antie.widgets.carousel.strips.CullingStrip</a></li>
 	
 	<li><a href="antie.widgets.carousel.strips.HidingStrip.html">antie.widgets.carousel.strips.HidingStrip</a></li>
 	
@@ -329,7 +329,7 @@ ul.inheritsList
 	
 	<li><a href="antie.widgets.Media.html">antie.widgets.Media</a></li>
 	
-	<li><a href="../symbols/antie.widgets.ScrubBar.html">antie.widgets.ScrubBar</a></li>
+	<li><a href="antie.widgets.ScrubBar.html">antie.widgets.ScrubBar</a></li>
 	
 	<li><a href="antie.widgets.TextPager.html">antie.widgets.TextPager</a></li>
 	
@@ -346,26 +346,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class antie.widgets.ScrubBar
+				Class antie.widgets.carousel.strips.CullingStrip
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
 				<br />Extends
-					<a href="antie.widgets.HorizontalSlider.html">antie.widgets.HorizontalSlider</a>.<br />
+					<a href="antie.widgets.carousel.strips.WidgetStrip.html">antie.widgets.carousel.strips.WidgetStrip</a>.<br />
 				
 			
 				
 				
 				
-					<br /><i>Defined in: </i> <a href="src/antie_static_script_widgets_scrubbar.js.html">scrubbar.js</a>.
+					<br /><i>Defined in: </i> <a href="src/antie_static_script_widgets_carousel_strips_cullingstrip.js.html">cullingstrip.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class antie.widgets.ScrubBar.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class antie.widgets.carousel.strips.CullingStrip.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -378,9 +378,10 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/antie.widgets.ScrubBar.html#constructor">antie.widgets.ScrubBar</a></b>(id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter)
+								<b><a href="../symbols/antie.widgets.carousel.strips.CullingStrip.html#constructor">antie.widgets.carousel.strips.CullingStrip</a></b>(id, orientation)
 							</div>
-							<div class="description">The ScrubBar provides a media scrub bar showing current position and portion of the stream that is currently buffered.</div>
+							<div class="description">A container for the widgets displayed within a carousel, in which widgets are only created when they
+come into view, and where widgets are removed from the DOM when they go out of view</div>
 						</td>
 					</tr>
 				</tbody>
@@ -394,7 +395,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class antie.widgets.ScrubBar.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class antie.widgets.carousel.strips.CullingStrip.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -407,9 +408,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/antie.widgets.ScrubBar.html#render">render</a></b>(device)
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.CullingStrip.html#getLengthToIndex">getLengthToIndex</a></b>(index)
 								</div>
-								<div class="description">Renders the widget and any child widgets to device-specific output.</div>
+								<div class="description">Get the distance in pixels to a widget at the supplied index</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/antie.widgets.carousel.strips.CullingStrip.html#lengthOfWidgetAtIndex">lengthOfWidgetAtIndex</a></b>(index)
+								</div>
+								<div class="description">Gets the length in pixels of the widget at the supplied index.</div>
 							</td>
 						</tr>
 					
@@ -419,7 +429,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="antie.widgets.HorizontalSlider.html">antie.widgets.HorizontalSlider</a>: </dt><dd><a href="antie.widgets.HorizontalSlider.html#getValue">getValue</a>, <a href="antie.widgets.HorizontalSlider.html#setSmallIncrement">setSmallIncrement</a>, <a href="antie.widgets.HorizontalSlider.html#setValue">setValue</a></dd><dt>Methods borrowed from class <a href="antie.widgets.Container.html">antie.widgets.Container</a>: </dt><dd><a href="antie.widgets.Container.html#appendChildWidget">appendChildWidget</a>, <a href="antie.widgets.Container.html#broadcastEvent">broadcastEvent</a>, <a href="antie.widgets.Container.html#focus">focus</a>, <a href="antie.widgets.Container.html#getActiveChildWidget">getActiveChildWidget</a>, <a href="antie.widgets.Container.html#getChildWidget">getChildWidget</a>, <a href="antie.widgets.Container.html#getChildWidgetCount">getChildWidgetCount</a>, <a href="antie.widgets.Container.html#getChildWidgets">getChildWidgets</a>, <a href="antie.widgets.Container.html#hasChildWidget">hasChildWidget</a>, <a href="antie.widgets.Container.html#insertChildWidget">insertChildWidget</a>, <a href="antie.widgets.Container.html#isFocusable">isFocusable</a>, <a href="antie.widgets.Container.html#prependWidget">prependWidget</a>, <a href="antie.widgets.Container.html#removeChildWidget">removeChildWidget</a>, <a href="antie.widgets.Container.html#removeChildWidgets">removeChildWidgets</a>, <a href="antie.widgets.Container.html#setActiveChildIndex">setActiveChildIndex</a>, <a href="antie.widgets.Container.html#setActiveChildWidget">setActiveChildWidget</a></dd><dt>Methods borrowed from class <a href="antie.widgets.Widget.html">antie.widgets.Widget</a>: </dt><dd><a href="antie.widgets.Widget.html#addClass">addClass</a>, <a href="antie.widgets.Widget.html#addEventListener">addEventListener</a>, <a href="antie.widgets.Widget.html#bubbleEvent">bubbleEvent</a>, <a href="antie.widgets.Widget.html#fireEvent">fireEvent</a>, <a href="antie.widgets.Widget.html#getClasses">getClasses</a>, <a href="antie.widgets.Widget.html#getComponent">getComponent</a>, <a href="antie.widgets.Widget.html#getCurrentApplication">getCurrentApplication</a>, <a href="antie.widgets.Widget.html#getDataItem">getDataItem</a>, <a href="antie.widgets.Widget.html#hasClass">hasClass</a>, <a href="antie.widgets.Widget.html#hide">hide</a>, <a href="antie.widgets.Widget.html#isFocussed">isFocussed</a>, <a href="antie.widgets.Widget.html#moveTo">moveTo</a>, <a href="antie.widgets.Widget.html#removeClass">removeClass</a>, <a href="antie.widgets.Widget.html#removeEventListener">removeEventListener</a>, <a href="antie.widgets.Widget.html#removeFocus">removeFocus</a>, <a href="antie.widgets.Widget.html#setDataItem">setDataItem</a>, <a href="antie.widgets.Widget.html#show">show</a></dd>
+				<dt>Methods borrowed from class <a href="antie.widgets.carousel.strips.WidgetStrip.html">antie.widgets.carousel.strips.WidgetStrip</a>: </dt><dd><a href="antie.widgets.carousel.strips.WidgetStrip.html#append">append</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#attachIndexedWidgets">attachIndexedWidgets</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#autoCalculate">autoCalculate</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#insert">insert</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#needsVisibleIndices">needsVisibleIndices</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#recalculate">recalculate</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#remove">remove</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#removeAll">removeAll</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#setLengths">setLengths</a>, <a href="antie.widgets.carousel.strips.WidgetStrip.html#widgets">widgets</a></dd><dt>Methods borrowed from class <a href="antie.widgets.Container.html">antie.widgets.Container</a>: </dt><dd><a href="antie.widgets.Container.html#appendChildWidget">appendChildWidget</a>, <a href="antie.widgets.Container.html#broadcastEvent">broadcastEvent</a>, <a href="antie.widgets.Container.html#focus">focus</a>, <a href="antie.widgets.Container.html#getActiveChildWidget">getActiveChildWidget</a>, <a href="antie.widgets.Container.html#getChildWidget">getChildWidget</a>, <a href="antie.widgets.Container.html#getChildWidgetCount">getChildWidgetCount</a>, <a href="antie.widgets.Container.html#getChildWidgets">getChildWidgets</a>, <a href="antie.widgets.Container.html#hasChildWidget">hasChildWidget</a>, <a href="antie.widgets.Container.html#insertChildWidget">insertChildWidget</a>, <a href="antie.widgets.Container.html#isFocusable">isFocusable</a>, <a href="antie.widgets.Container.html#prependWidget">prependWidget</a>, <a href="antie.widgets.Container.html#removeChildWidget">removeChildWidget</a>, <a href="antie.widgets.Container.html#removeChildWidgets">removeChildWidgets</a>, <a href="antie.widgets.Container.html#render">render</a>, <a href="antie.widgets.Container.html#setActiveChildIndex">setActiveChildIndex</a>, <a href="antie.widgets.Container.html#setActiveChildWidget">setActiveChildWidget</a></dd><dt>Methods borrowed from class <a href="antie.widgets.Widget.html">antie.widgets.Widget</a>: </dt><dd><a href="antie.widgets.Widget.html#addClass">addClass</a>, <a href="antie.widgets.Widget.html#addEventListener">addEventListener</a>, <a href="antie.widgets.Widget.html#bubbleEvent">bubbleEvent</a>, <a href="antie.widgets.Widget.html#fireEvent">fireEvent</a>, <a href="antie.widgets.Widget.html#getClasses">getClasses</a>, <a href="antie.widgets.Widget.html#getComponent">getComponent</a>, <a href="antie.widgets.Widget.html#getCurrentApplication">getCurrentApplication</a>, <a href="antie.widgets.Widget.html#getDataItem">getDataItem</a>, <a href="antie.widgets.Widget.html#hasClass">hasClass</a>, <a href="antie.widgets.Widget.html#hide">hide</a>, <a href="antie.widgets.Widget.html#isFocussed">isFocussed</a>, <a href="antie.widgets.Widget.html#moveTo">moveTo</a>, <a href="antie.widgets.Widget.html#removeClass">removeClass</a>, <a href="antie.widgets.Widget.html#removeEventListener">removeEventListener</a>, <a href="antie.widgets.Widget.html#removeFocus">removeFocus</a>, <a href="antie.widgets.Widget.html#setDataItem">setDataItem</a>, <a href="antie.widgets.Widget.html#show">show</a></dd>
 				</dl>
 				
 			
@@ -434,11 +444,12 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>antie.widgets.ScrubBar</b>(id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter)
+						<b>antie.widgets.carousel.strips.CullingStrip</b>(id, orientation)
 				</div>
 				
 				<div class="description">
-					The ScrubBar provides a media scrub bar showing current position and portion of the stream that is currently buffered.
+					A container for the widgets displayed within a carousel, in which widgets are only created when they
+come into view, and where widgets are removed from the DOM when they go out of view
 					
 				</div>
 				
@@ -451,33 +462,16 @@ ul.inheritsList
 						
 							<dt>
 								<span class="light fixedFont">{String}</span>  <b>id</b>
-								<i>Optional</i>
+								
 							</dt>
-								<dd>The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).</dd>
+								<dd>The unique ID of the widget.</dd>
 						
 							<dt>
-								<span class="light fixedFont">{double}</span>  <b>initialValue</b>
-								<i>Optional</i>
+								<span class="light fixedFont">{Object}</span>  <b>orientation</b>
+								
 							</dt>
-								<dd>Initial value for the slider.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{double}</span>  <b>smallIncrement</b>
-								<i>Optional</i>
-							</dt>
-								<dd>Amount to increase/decrease the value by when VK_LEFT or VK_RIGHT is pressed.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{double}</span>  <b>largeIncrement</b>
-								<i>Optional</i>
-							</dt>
-								<dd>Amount to increase/decrease the value by when VK_LEFT or VK_RIGHT is held down.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{double}</span>  <b>largeIncrementAfter</b>
-								<i>Optional</i>
-							</dt>
-								<dd>Number of smallIncrements to perform until switching to largeIncrement when key is held down.</dd>
+								<dd>an object representing the strip's orientation.
+One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical</dd>
 						
 						</dl>
 					
@@ -500,15 +494,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="render"> </a>
+					<a name="getLengthToIndex"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>render</b>(device)
+					<span class="light">{Number}</span>
+					<b>getLengthToIndex</b>(index)
 					
 					</div>
 					<div class="description">
-						Renders the widget and any child widgets to device-specific output.
+						Get the distance in pixels to a widget at the supplied index
 						
 						
 					</div>
@@ -520,21 +514,85 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="antie.devices.Device.html">antie.devices.Device</a>}</span> <b>device</b>
+									<span class="light fixedFont">{Number}</span> <b>index</b>
 									
 								</dt>
-								<dd>The device to render to.</dd>
+								<dd>An index of a widget currently in the carousel</dd>
 							
 							</dl>
 						
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Error}</span>  <b></b>
+								</dt>
+								<dd>if the indexed widget has not had a length set on append/insert or via setLengths</dd>
+							
+							</dl>
+						
 						
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd>A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);</dd>
+								<dd><span class="light fixedFont">{Number}</span> length in pixels along primary axis to primary edge of the provided index
+i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="lengthOfWidgetAtIndex"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>lengthOfWidgetAtIndex</b>(index)
+					
+					</div>
+					<div class="description">
+						Gets the length in pixels of the widget at the supplied index.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>index</b>
+									
+								</dt>
+								<dd>The index of a widget currently appended to the carousel. Supplied index must be valid (i.e. correspond to a widget currently in the strip with a provided length)</dd>
+							
+							</dl>
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Error}</span>  <b></b>
+								</dt>
+								<dd>if the indexed widget has not had a length set on append/insert or via setLengths</dd>
+							
+							</dl>
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength</dd>
 							
 							</dl>
 						
