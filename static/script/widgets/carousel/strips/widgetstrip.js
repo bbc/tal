@@ -79,6 +79,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             /**
              * Removes a widget from the strip
              * @param {antie.widgets.Widget} widget. Widget to remove from the strip
+             * @param {Boolean} [retainElement=false] whether to keep the widget's output element in the DOM after removing widget
              */
             remove: function (widget, retainElement) {
                 var i, widgets;
@@ -100,6 +101,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             /**
+             * Get all the widgets in the strip.
              * @returns {Array} The widgets currently in the strip
              */
             widgets: function () {
@@ -107,7 +109,8 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
             },
 
             /**
-             * @param index
+             * Get the distance in pixels to a widget at the supplied index
+             * @param {Number} index An index of a widget currently in the carousel
              * @returns {Number} length in pixels along primary axis to primary edge of the provided index
              * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
              */
@@ -124,7 +127,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
 
             /**
              * Manually sets lengths of elements for movement calculations - useful for elements which change size while moving.
-             * @param lengths {number} | {Array} If provided with a number all lengths will be set equal to this number
+             * @param lengths {Number} | {Array} If provided with a number all lengths will be set equal to this number
              * If provided with an array, the lengths will be set with the corresponding widgets (so the first number will be used
              * for the first widget's length, etc..)
              */
@@ -151,7 +154,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
 
             /**
              * Strip should ensure all widgets indexed in the array are attached to the parent
-             * @param indexArray
+             * @param {Array} indexArray
              */
             attachIndexedWidgets: function (indexArray) {
 
@@ -186,6 +189,11 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 }
             },
 
+            /**
+             * Gets the length in pixels of the widget at the supplied index.
+             * @param {Number} index The index of a widget currently appended to the carousel. Supplied index must be valid (i.e. correspond to a wiget currently in the strip)
+             * @returns {Number} the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength, if neither are specified attempts to calculate and return the length.
+             */
             lengthOfWidgetAtIndex: function (index) {
                 var widget;
                 if (this._lengths[index] !== undefined) {
@@ -195,10 +203,19 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
                 return this._getWidgetLength(widget);
             },
 
+            /**
+             * Manually performs any processing required to put the carousel in a valid state after an append/insert
+             */
             recalculate: function () {
 
             },
 
+            /**
+             * Toggles autocalculation - Calculation in this context is any strip defined processing required after an append/insert to put the carousel in a valid state.
+             * @param {Boolean} on Turns autocalculation on (when true) or off (when false)
+             * Calculation is any strip defined processing required after an append/insert to put the carousel in a valid state
+             * Autocalculation is on by default when a carousel is created.
+             */
             autoCalculate: function (on) {
 
             },

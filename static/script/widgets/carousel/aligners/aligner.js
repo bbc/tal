@@ -36,10 +36,10 @@ require.def('antie/widgets/carousel/aligners/aligner',
          * @name antie.widgets.carousel.aligners.Aligner
          * @class
          * @extends antie.Class
-         * @param {Object} mask The carousel's mask object
+         * @param {antie.widgets.carousel.Mask} mask The carousel's mask object
          */
         var Aligner;
-        Aligner = Class.extend({
+        Aligner = Class.extend(/** @lends antie.widgets.carousel.aligners.Aligner.prototype */{
             init: function (mask) {
                 this._mask = mask;
                 this._queue = new AlignmentQueue(this._mask);
@@ -51,7 +51,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
              * If no alignment has been performed previously it will align to the next enabled widget after that at index 0
              * If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
-             * @param {Object} navigator The carousel's current navigator
+             * @param {antie.widgets.carousel.navigators.Navigator} navigator The carousel's current navigator
              * @param {Object} [options] An animation options object
              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
              * @param {Number} [options.duration] The duration of the alignment in ms
@@ -68,7 +68,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
              * If no alignment has been performed previously it will align to the next enabled widget before that at index 0
              * If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
-             * @param {Object} navigator The carousel's current navigator
+             * @param {antie.widgets.carousel.navigators.Navigator} navigator The carousel's current navigator
              * @param {Object} [options] An animation options object
              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
              * @param {Number} [options.duration] The duration of the alignment in ms
@@ -99,6 +99,7 @@ require.def('antie/widgets/carousel/aligners/aligner',
             },
 
             /**
+             * Get the last index the carousel was asked to align to
              * @returns {Number} The last index the carousel was asked to align to, or null if no alignments have completed.
              */
             indexOfLastAlignRequest: function () {

@@ -33,7 +33,7 @@ require.def('antie/widgets/carousel/binders/batchbinder',
          * @class
          * @extends antie.widgets.carousel.Binder
          */
-        return Binder.extend(/** @lends antie.widgets.carousel.Binder.prototype */ {
+        return Binder.extend(/** @lends antie.widgets.carousel.BatchBinder.prototype */ {
             /**
              * Creates new widgets which are then appended to
              * the widget supplied. Continues until the end of the data returned

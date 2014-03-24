@@ -34,7 +34,7 @@ require.def('antie/widgets/carousel/binder',
          * of a data source and formatter.
          * @name antie.widgets.carousel.Binder
          * @class
-         * @extends antie.widgets.Widget
+         * @extends antie.Class
          */
         var Binder = Class.extend(/** @lends antie.widgets.carousel.Binder.prototype */ {
                 /**
