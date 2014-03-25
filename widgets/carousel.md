@@ -121,6 +121,7 @@ The result of the alignment is to make the two points line up.
 
 The alignment point along the mask can either be set in terms of pixels, or as a normalised value between 0 and 1, with 0 being the left or top edge and 1 being the right or bottom edge.
 Widget alignment points are always set using normalised 0 to 1 values.
+
 As an example, if you wanted to focus the widget at index 4 so that it was centred in a carousel, you would call
 
 {% highlight javascript %}
@@ -216,7 +217,13 @@ var handler = new ActivateFirstHandler();
 hander.attach(carousel);
 {% endhighlight %}
 
-In practice you will probably need to write your own event handling for anything other then the simplest UI.
+These Keyhandler classes listen for keypress events and call the carousel's alignement methods. They also listen for alignment events and call the carousel's activation methods.
+
+The only difference between the AlignFirstHandler and ActivateFirstHandler is which alignment event they perform the activation change on.
+
+The AlignFirstHandler listens to afteralign before calling setActiveChildIndex and the ActivateFirstHandler listens to beforealign.
+
+In practice you will need to provide your own event handling for anything other then the most basic UI, but the key handlers provide a simple example of using an external controller to facilitate interaction with a Carousel.
 
 ## Widget strips and navigators
 By default the carousel behaves like the cardboard strip in the intro. All the items are always drawn on the strip and when you get to one end you can't go any further.
@@ -224,6 +231,8 @@ By default the carousel behaves like the cardboard strip in the intro. All the i
 In some situations, this may not be desired. To enable varied behaviour, there are alternative WidgetStrip and Navigator classes.
 
 Broadly the widget strip represents the cardboard and the navigator is something that keeps track of what is active and what can be made active in the future.
+
+The Widget Strip and navigator can be changed via setWidgetStrip and setNavigator. Both methods take a constructor function, not an instance (The Carousel instantiates them for you)
 
 #### Wrapping carousels
 You may want a carousel which behaves as though the strip was a loop with the start and end joined, allowing infinite navigation in each direction.
@@ -264,6 +273,15 @@ There are currently two alternative widget strips that behave in this way. Both 
 * HidingStrip - Sets elements to visibility: hidden and opacity: 0 when they go out of view.
 
 If using these strips it is compulsory to set widget lengths before performing an alignment.
+
+As you can only have one strip at a time in any given carousel, it is not currently possible to have carousel that both wraps and culls.
+
+#### Navigators
+
+There are currently two navigators
+
+* BookenededNavigator (default) - Suitable for finite carousels where you cannot activate the index after the last or before the first
+* WrappingNavigator - Suitable for wrapping carousels where navigation should wrap from the start to the end and vice versa.
 
 ## Carousels in components
 It can be easy to make mistakes when integrating a carousel with a TAL component, especially when using data binding, as some operations (alignment, for instance) make no sense until after a carousel is built and ready.
