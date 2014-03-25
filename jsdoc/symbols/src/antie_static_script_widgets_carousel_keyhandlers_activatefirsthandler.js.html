@@ -1,0 +1,65 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * @preserve Copyright (c) 2013 British Broadcasting Corporation
+<span class='line'>  3</span>  * (http://www.bbc.co.uk) and TAL Contributors (1)
+<span class='line'>  4</span>  *
+<span class='line'>  5</span>  * (1) TAL Contributors are listed in the AUTHORS file and at
+<span class='line'>  6</span>  *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
+<span class='line'>  7</span>  *     not this notice.
+<span class='line'>  8</span>  *
+<span class='line'>  9</span>  * @license Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'> 10</span>  * you may not use this file except in compliance with the License.
+<span class='line'> 11</span>  * You may obtain a copy of the License at
+<span class='line'> 12</span>  *
+<span class='line'> 13</span>  *    http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'> 14</span>  *
+<span class='line'> 15</span>  * Unless required by applicable law or agreed to in writing, software
+<span class='line'> 16</span>  * distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 17</span>  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 18</span>  * See the License for the specific language governing permissions and
+<span class='line'> 19</span>  * limitations under the License.
+<span class='line'> 20</span>  *
+<span class='line'> 21</span>  * All rights reserved
+<span class='line'> 22</span>  * Please contact us for an alternative licence
+<span class='line'> 23</span>  */</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="NAME">require.def</span><span class="PUNC">(</span><span class="STRN">'antie/widgets/carousel/keyhandlers/activatefirsthandler'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">    </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">        </span><span class="STRN">'antie/widgets/carousel/keyhandlers/keyhandler'</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 29</span>      * The base ActivateFirstHandler class moves alignment in the same way as the base Keyhandler class
+<span class='line'> 30</span>      * Before alignment is started, the active widget is changed to the next focusable widget.
+<span class='line'> 31</span>      * @name antie.widgets.carousel.keyhandlers.ActivateFirstHandler
+<span class='line'> 32</span>      * @class
+<span class='line'> 33</span>      * @extends antie.widgets.carousel.keyhandlers.KeyHandler
+<span class='line'> 34</span>      */</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">KeyHandler</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">        </span><span class="STRN">"use strict"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">KeyHandler.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends antie.widgets.carousel.keyhandlers.AlignFirstHandler.prototype */</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">            </span><span class="NAME">_addAlignmentListeners</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">carousel</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._carousel</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">                </span><span class="NAME">carousel.addEventListener</span><span class="PUNC">(</span><span class="STRN">'beforealign'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">ev</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">                    </span><span class="NAME">carousel.setActiveIndex</span><span class="PUNC">(</span><span class="NAME">ev.alignedIndex</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="PUNC">)</span><span class="PUNC">;</span></pre><script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script></body></html>
