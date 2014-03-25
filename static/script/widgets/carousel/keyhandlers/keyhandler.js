@@ -35,7 +35,7 @@ require.def('antie/widgets/carousel/keyhandlers/keyhandler',
          * @class
          * @extends antie.widgets.Widget
          */
-        return Class.extend({
+        return Class.extend(/** @lends antie.widgets.carousel.keyhandlers.KeyHandler.prototype */{
             /**
              * @constructor
              * @ignore

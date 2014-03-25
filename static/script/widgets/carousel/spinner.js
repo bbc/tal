@@ -30,12 +30,12 @@ require.def('antie/widgets/carousel/spinner',
         "use strict";
         /**
          * Manages communication with device for carousel animations
-         * @name antie.widgets.carousel.spinner
+         * @name antie.widgets.carousel.Spinner
          * @class
-         * @extends antie.widgets.Class
-         * @param {Object} device The device abstraction object
-         * @param {Object} mask A carousel mask
-         * @param {Object} The orientation object of the carousel
+         * @extends antie.Class
+         * @param {antie.devices.Device} device The device abstraction object
+         * @param {antie.widgets.carousel.Mask} mask The carousel mask to be controlled by the spinner
+         * @param {Object} orientation The orientation object of the carousel
          */
         var Spinner;
         Spinner = Class.extend(/** @lends antie.widgets.carousel.Spinner.prototype */ {
@@ -56,8 +56,13 @@ require.def('antie/widgets/carousel/spinner',
              * by the specified number of pixels via the framework's animation methods.
              * Note that on a browser device the mask will need to have overflow set and the strip will need position: relative
              * for this to work.
-             * @param relativePixels
-             * @param animOptions
+             * @param {Number} relativePixels The target distance in pixels from the mask's primary edge to the primary edge of it's contents
+             * @param {Object} animOptions @param {Object} [options] An animation options object
+             * @param {Number} [animOptions.fps] The frames per second of the alignment, if using styletopleft animation
+             * @param {Number} [animOptions.duration] The duration of the alignment in ms
+             * @param {String} [animOptions.easing] The alignment easing function
+             * @param {Boolean} [animOptions.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+             * @param {Function} [animOptions.onComplete] A function which will be executed on completion of the alignment animation.
              */
             moveContentsTo: function (relativePixels, animOptions) {
                 var moveElementOptions;

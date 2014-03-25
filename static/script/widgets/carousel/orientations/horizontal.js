@@ -29,12 +29,12 @@ require.def('antie/widgets/carousel/orientations/horizontal',
     /**
      * Class to encapsulate any data specific to a horizontal orientation
      * @name antie.widgets.carousel.orientations.Horizontal
-     * @extends antie.class
+     * @extends antie.Class
      * @class
      */
     function (Class, KeyEvent) {
         "use strict";
-        var Horizontal = Class.extend({
+        var Horizontal = Class.extend(/** @lends antie.widgets.carousel.orientations.Horizontal.prototype */ {
             dimension: function () {
                 return 'width';
             },

@@ -32,11 +32,11 @@ require.def('antie/widgets/carousel/navigators/wrappingnavigator',
      * @name antie.widgets.carousel.navigators.WrappingNavigator
      * @abstract
      * @class
-     * @extends antie.widgets.carousel.navigators.navigator
+     * @extends antie.widgets.carousel.navigators.Navigator
      */
     function (Navigator) {
         "use strict";
-        return Navigator.extend(
+        return Navigator.extend( /** @lends antie.widgets.carousel.navigators.WrappingNavigator.prototype */
             {
                 /**
                  * @param index

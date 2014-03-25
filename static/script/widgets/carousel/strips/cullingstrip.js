@@ -1,3 +1,26 @@
+/**
+ * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * (http://www.bbc.co.uk) and TAL Contributors (1)
+ *
+ * (1) TAL Contributors are listed in the AUTHORS file and at
+ *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
+ *     not this notice.
+ *
+ * @license Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * All rights reserved
+ * Please contact us for an alternative licence
+ */
 require.def('antie/widgets/carousel/strips/cullingstrip',
     [
         'antie/widgets/carousel/strips/widgetstrip',
@@ -7,7 +30,17 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
     function (WidgetStrip, WidgetContext, STATES) {
         'use strict';
         var CullingStrip;
-        CullingStrip = WidgetStrip.extend({
+        /**
+         * A container for the widgets displayed within a carousel, in which widgets are only created when they
+         * come into view, and where widgets are removed from the DOM when they go out of view
+         * @name antie.widgets.carousel.strips.CullingStrip
+         * @class
+         * @extends antie.widgets.carousel.strips.WidgetStrip
+         * @param {String} id The unique ID of the widget.
+         * @param {Object} orientation an object representing the strip's orientation.
+         * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
+         */
+        CullingStrip = WidgetStrip.extend(/** @lends antie.widgets.carousel.strips.CullingStrip.prototype */{
             init: function (id, orientation) {
                 this._super(id, orientation);
                 this.setAutoRenderChildren(false);
@@ -87,6 +120,13 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 }
             },
 
+            /**
+             * Get the distance in pixels to a widget at the supplied index
+             * @param {Number} index An index of a widget currently in the carousel
+             * @returns {Number} length in pixels along primary axis to primary edge of the provided index
+             * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
+             * @throws {Error} if the indexed widget has not had a length set on append/insert or via setLengths
+             */
             getLengthToIndex: function (index) {
                 var firstAttached, i, length, totalLength;
                 totalLength = 0;
@@ -101,6 +141,12 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
                 return totalLength;
             },
 
+            /**
+             * Gets the length in pixels of the widget at the supplied index.
+             * @param {Number} index The index of a widget currently appended to the carousel. Supplied index must be valid (i.e. correspond to a widget currently in the strip with a provided length)
+             * @returns {Number} the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength
+             * @throws {Error} if the indexed widget has not had a length set on append/insert or via setLengths
+             */
             lengthOfWidgetAtIndex: function (index) {
                 if (this._lengths[index] !== undefined) {
                     return this._lengths[index];

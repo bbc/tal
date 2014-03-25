@@ -32,7 +32,7 @@ require.def('antie/widgets/carousel',
      * Provides adapter layer to old widget methods
      * @name antie.widgets.Carousel
      * @class
-     * @extends antie.widgets.Container
+     * @extends antie.widgets.carousel.CarouselCore
      * @param {string} id The id of the carousel, id_CarouselMask will be used as the id for the mask element
      * and id_WidgetStrip will be used as the id of the widget strip element
      * @param {Object} [orientation=antie.widgets.carousel.CarouselCore.orientations.VERTICAL] the orientation object of

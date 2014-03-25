@@ -29,12 +29,12 @@ require.def('antie/widgets/carousel/orientations/vertical',
     /**
      * Class to encapsulate any data specific to a vertical orientation
      * @name antie.widgets.carousel.orientations.Vertical
-     * @extends antie.class
+     * @extends antie.Class
      * @class
      */
     function (Class, KeyEvent) {
         "use strict";
-        var Vertical = Class.extend({
+        var Vertical = Class.extend(/** @lends antie.widgets.carousel.orientations.Vertical.prototype */{
             dimension: function () {
                 return 'height';
             },

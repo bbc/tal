@@ -35,7 +35,7 @@ require.def('antie/widgets/carousel/navigators/navigator',
      * @name antie.widgets.carousel.navigators.Navigator
      * @abstract
      * @class
-     * @extends antie.widgets.Class
+     * @extends antie.Class
      */
     function (Class, SelectedItemChangeEvent, BeforeSelectedItemChangeEvent) {
         "use strict";

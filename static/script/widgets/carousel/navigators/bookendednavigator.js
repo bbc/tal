@@ -32,12 +32,12 @@ require.def('antie/widgets/carousel/navigators/bookendednavigator',
      * @name antie.widgets.carousel.navigators.BookendedNavigator
      * @abstract
      * @class
-     * @extends antie.widgets.carousel.navigators.navigator
+     * @extends antie.widgets.carousel.navigators.Navigator
      */
 	function (Navigator) {
 		"use strict";
         var BookendedNavigator;
-        BookendedNavigator = Navigator.extend({
+        BookendedNavigator = Navigator.extend(/** @lends antie.widgets.carousel.navigators.BookendedNavigator.prototype */ {
 
                 /**
                  * @param index
