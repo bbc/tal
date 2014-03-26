@@ -4,7 +4,7 @@ title: Carousels
 ---
 # Carousels
 
-Carousels provide a handy way to navigate a list of items. They differ from Lists as the items scroll to a focus point rather then a focus point moving over the items.
+[Carousels]({{site.baseurl}}/jsdoc/symbols/antie.widgets.Carousel.html) provide a handy way to navigate a list of items. They differ from Lists as the items scroll to a focus point rather then a focus point moving over the items.
 
 Imagine a long strip of cardboard with a sequence of pictures drawn on it. If you took a piece of paper and cut a small window in it, then moved the strip of cardboard behind the paper, you would see the pictures scroll by.
 This is essentially how the Carousel works.
@@ -288,4 +288,4 @@ It can be easy to make mistakes when integrating a carousel with a TAL component
 
 Included in the talexample project is a fairly complex example of a carousel component - it shows how to data bind, allows for configurable widget strips and supports custom aligment points via a config object passed in at component show.
 
-Take a look at static/script/appui/components/carouselcomponent.js and experiment by changing its configuration in static/script/appui/components/simple.js
+Take a look at [carouselcomponent.js](https://github.com/fmtvp/talexample/blob/master/static/script/appui/components/carouselcomponent.js) and experiment by modifying `_getCarouselConfig()` in [simple.js](https://github.com/fmtvp/talexample/blob/master/static/script/appui/components/simple.js) to alter the arguments passed to the carousel component.
