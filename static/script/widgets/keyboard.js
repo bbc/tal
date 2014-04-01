@@ -134,73 +134,77 @@ require.def('antie/widgets/keyboard',
 
 				// Event listener to handle keyboard/numeric button press events.
 				this.addEventListener('keydown', function(evt) {
-					if(evt.keyChar) {
-						evt.stopPropagation();
-						// If the device supports multitap, multitap is enabled and a number is pressed...
-						if(multitap && self._multiTap && /[0-9]/.test(evt.keyChar)) {
-							if(self._multiTapTimeout) {
-								clearTimeout(self._multiTapTimeout);
-							}
-
-							var chars = multitap[evt.keyChar];
-							if((evt.keyChar == self._multiTapLastKey) && self._multiTapTimeout) {
-								self._currentText = self._currentText.substring(0, self._currentText.length - 1);
-							} else {
-								self._multiTapLastKeyIndex = -1;
-							}
-
-							// Find the next character for the pressed key that's available on this keyboard
-							do {
-								self._multiTapLastKeyIndex++;
-								if(self._multiTapLastKeyIndex >= chars.length) self._multiTapLastKeyIndex = 0;
-							} while(!self._letterButtons[chars[self._multiTapLastKeyIndex]]);
-
-							self._focussedCharacter = chars[self._multiTapLastKeyIndex];
-							self._letterButtons[chars[self._multiTapLastKeyIndex]].focus();
-							appendCharacter(chars[self._multiTapLastKeyIndex]);
-
-							self._multiTapLastKey = evt.keyChar;
-
-							self._updateClasses();
-
-							// Fire a text change event, but notify listeners that it may change due to being multitap
-							self.bubbleEvent(new TextChangeEvent(self, self._currentText, null, true));
-
-							self._multiTapTimeout = setTimeout(function() {
-								self._multiTapTimeout = null;
-								// Fire a new text change event to notify listeners that the multi-tap timeout has finished
-								self.bubbleEvent(new TextChangeEvent(self, self._currentText, null, false));
-							}, 1000);
-						} else {
-							// Select and focus the button on the keyboard for the pressed key
-							var button = self._letterButtons[evt.keyChar];
-							if(button) {
-								self._focussedCharacter = evt.keyChar;
-								button.focus();
-								button.select();
-							}
-						}
-					} else if(evt.keyCode == KeyEvent.VK_BACK_SPACE) {
-						if(self._currentText.length > 0) {
-							self._currentText = self._currentText.substring(0, self._currentText.length - 1);
-							correctTitleCase();
-
-							self._updateClasses();
-
-							self.bubbleEvent(new TextChangeEvent(self, self._currentText, null, false));
-						}
-					} else if(evt.keyCode == KeyEvent.VK_RIGHT) {
-						if(self._multiTapTimeout) {
-							self._multiTapTimeout = null;
-							// Fire a new text change event to notify listeners that the multi-tap timeout has finished
-							self.bubbleEvent(new TextChangeEvent(self, self._currentText, null, false));
-							evt.stopPropagation();
-						}
-					}
+					self._onKeyDownHandler(evt);
 				});
 
 				this._populateTheGridWithKeyButtons(id, cols, rows);
 			},
+
+            _onKeyDownHandler: function (evt) {
+                if(evt.keyChar) {
+                    evt.stopPropagation();
+                    // If the device supports multitap, multitap is enabled and a number is pressed...
+                    if(multitap && this._multiTap && /[0-9]/.test(evt.keyChar)) {
+                        if(this._multiTapTimeout) {
+                            clearTimeout(this._multiTapTimeout);
+                        }
+
+                        var chars = multitap[evt.keyChar];
+                        if((evt.keyChar == this._multiTapLastKey) && this._multiTapTimeout) {
+                            this._currentText = this._currentText.substring(0, this._currentText.length - 1);
+                        } else {
+                            this._multiTapLastKeyIndex = -1;
+                        }
+
+                        // Find the next character for the pressed key that's available on this keyboard
+                        do {
+                            this._multiTapLastKeyIndex++;
+                            if(this._multiTapLastKeyIndex >= chars.length) this._multiTapLastKeyIndex = 0;
+                        } while(!this._letterButtons[chars[this._multiTapLastKeyIndex]]);
+
+                        this._focussedCharacter = chars[this._multiTapLastKeyIndex];
+                        this._letterButtons[chars[this._multiTapLastKeyIndex]].focus();
+                        appendCharacter(chars[this._multiTapLastKeyIndex]);
+
+                        this._multiTapLastKey = evt.keyChar;
+
+                        this._updateClasses();
+
+                        // Fire a text change event, but notify listeners that it may change due to being multitap
+                        this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, true));
+
+                        this._multiTapTimeout = setTimeout(function() {
+                            this._multiTapTimeout = null;
+                            // Fire a new text change event to notify listeners that the multi-tap timeout has finished
+                            this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, false));
+                        }, 1000);
+                    } else {
+                        // Select and focus the button on the keyboard for the pressed key
+                        var button = this._letterButtons[evt.keyChar];
+                        if(button) {
+                            this._focussedCharacter = evt.keyChar;
+                            button.focus();
+                            button.select();
+                        }
+                    }
+                } else if(evt.keyCode == KeyEvent.VK_BACK_SPACE) {
+                    if(this._currentText.length > 0) {
+                        this._currentText = this._currentText.substring(0, this._currentText.length - 1);
+                        correctTitleCase();
+
+                        this._updateClasses();
+
+                        this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, false));
+                    }
+                } else if(evt.keyCode == KeyEvent.VK_RIGHT) {
+                    if(this._multiTapTimeout) {
+                        this._multiTapTimeout = null;
+                        // Fire a new text change event to notify listeners that the multi-tap timeout has finished
+                        this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, false));
+                        evt.stopPropagation();
+                    }
+                }
+            },
 			
 			_populateTheGridWithKeyButtons: function (id, cols, rows) {
 				for(var col = 0; col < cols; col++) {
