@@ -72,64 +72,9 @@ require.def('antie/widgets/keyboard',
 				this._capitalisation = Keyboard.CAPITALISATION_UPPER;
 				this._maximumLength = null;
 
-				// Private function to append a properly-capitalised character to the end of the string.
-				function appendCharacter(letter) {
-					// allow no more characters to be appended if a maximum length has been reached
-					if((self._maximumLength !== null) && (self._currentText.length >= self._maximumLength)) {
-						return false;
-					}
-
-					if(	(self._capitalisation != Keyboard.CAPITALISATION_LOWER)
-						&& (
-							(self._capitalisation == Keyboard.CAPITALISATION_UPPER)
-							|| self._currentText.length == 0
-							|| self._currentText[self._currentText.length-1] == ' '
-						)
-					) {
-						letter = letter.toUpperCase();
-					} else {
-						letter = letter.toLowerCase();
-					}
-					self._currentText += letter;
-
-					correctTitleCase();
-	
-					return true;
-				}
-				function correctTitleCase() {
-					if(self._capitalisation == Keyboard.CAPITALISATION_TITLE) {
-						self._currentText = self._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
-							match = match.substring(0, 1).toUpperCase() + match.substring(1);
-							return match.replace(Keyboard.SHORT_WORD_REGEXP, function(match) { return match.toLowerCase(); });
-						});
-						self._currentText = self._currentText.substring(0, 1).toUpperCase() + self._currentText.substring(1);
-					}
-				}
-
 				// Select event handler for buttons within the keyboard
 				this.addEventListener('select', function(evt) {
-					var letter = evt.target.getDataItem();
-					var changed = false;
-					switch(letter) {
-						case "DEL":
-							if(self._currentText.length > 0) {
-								self._currentText = self._currentText.substring(0, self._currentText.length - 1);
-								correctTitleCase();
-								changed = true;
-							}
-							break;
-						case "SPACE":
-							changed = appendCharacter(" ");
-							break;
-						default:
-							changed = appendCharacter(letter);
-							break;
-					}
-
-					if(changed) {
-						self._updateClasses();
-						self.bubbleEvent(new TextChangeEvent(self, self._currentText, evt.target, false));
-					}
+					self._onSelectHandler(evt);
 				});
 
 				// Event listener to handle keyboard/numeric button press events.
@@ -139,6 +84,66 @@ require.def('antie/widgets/keyboard',
 
 				this._populateTheGridWithKeyButtons(id, cols, rows);
 			},
+
+            // Private function to append a properly-capitalised character to the end of the string.
+            _appendCharacter: function (letter) {
+                // allow no more characters to be appended if a maximum length has been reached
+                if((this._maximumLength !== null) && (this._currentText.length >= this._maximumLength)) {
+                    return false;
+                }
+
+                if(	(this._capitalisation != Keyboard.CAPITALISATION_LOWER)
+                    && (
+                    (this._capitalisation == Keyboard.CAPITALISATION_UPPER)
+                        || this._currentText.length == 0
+                        || this._currentText[this._currentText.length-1] == ' '
+                    )
+                    ) {
+                    letter = letter.toUpperCase();
+                } else {
+                    letter = letter.toLowerCase();
+                }
+                this._currentText += letter;
+
+                this._correctTitleCase();
+
+                return true;
+            },
+
+            _correctTitleCase: function () {
+                if(this._capitalisation == Keyboard.CAPITALISATION_TITLE) {
+                    this._currentText = this._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
+                        match = match.substring(0, 1).toUpperCase() + match.substring(1);
+                        return match.replace(Keyboard.SHORT_WORD_REGEXP, function(match) { return match.toLowerCase(); });
+                    });
+                    this._currentText = this._currentText.substring(0, 1).toUpperCase() + this._currentText.substring(1);
+                }
+            },
+
+            _onSelectHandler: function (evt) {
+                var letter = evt.target.getDataItem();
+                var changed = false;
+                switch(letter) {
+                    case "DEL":
+                        if(this._currentText.length > 0) {
+                            this._currentText = this._currentText.substring(0, this._currentText.length - 1);
+                            this._correctTitleCase();
+                            changed = true;
+                        }
+                        break;
+                    case "SPACE":
+                        changed = this._appendCharacter(" ");
+                        break;
+                    default:
+                        changed = this._appendCharacter(letter);
+                        break;
+                }
+
+                if(changed) {
+                    this._updateClasses();
+                    this.bubbleEvent(new TextChangeEvent(this, this._currentText, evt.target, false));
+                }
+            },
 
             _onKeyDownHandler: function (evt) {
                 if(evt.keyChar) {
@@ -164,7 +169,7 @@ require.def('antie/widgets/keyboard',
 
                         this._focussedCharacter = chars[this._multiTapLastKeyIndex];
                         this._letterButtons[chars[this._multiTapLastKeyIndex]].focus();
-                        appendCharacter(chars[this._multiTapLastKeyIndex]);
+                        this._appendCharacter(chars[this._multiTapLastKeyIndex]);
 
                         this._multiTapLastKey = evt.keyChar;
 
@@ -190,7 +195,7 @@ require.def('antie/widgets/keyboard',
                 } else if(evt.keyCode == KeyEvent.VK_BACK_SPACE) {
                     if(this._currentText.length > 0) {
                         this._currentText = this._currentText.substring(0, this._currentText.length - 1);
-                        correctTitleCase();
+                        this._correctTitleCase();
 
                         this._updateClasses();
 
