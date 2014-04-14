@@ -580,6 +580,147 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testGetChannelListFetchesChannelsFromBroadcastVideoObject = function (queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelConfigStub = this.sandbox.spy(this.hbbtvPlugin, "getChannelConfig");
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+
+            broadcastSource.getChannelList(params);
+
+            assert(getChannelConfigStub.calledOnce);
+
+        }, config);
+    };
+
+
+    this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWithMessageWhenFetchingChannelsThrowsException = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throws({"message":"Nope"});
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+
+            broadcastSource.getChannelList(params);
+
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Nope"));
+            assert(params.onSuccess.notCalled);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWhenChannelListNotReturned = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({});
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+
+            broadcastSource.getChannelList(params);
+
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Unable to retrieve channel list"));
+            assert(params.onSuccess.notCalled);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWhenChannelListIsEmpty = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList": []});
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+
+            broadcastSource.getChannelList(params);
+
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Channel list contains no channels"));
+            assert(params.onSuccess.notCalled);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testGetChannelListCallsOnSuccessWithArrayOfChannelsContainingChannelInformation = function (queue) {
+        expectAsserts(16);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
+
+            var channels = [
+                {
+                    "name": "One",
+                    "onid": 123,
+                    "tsid": 123,
+                    "sid": 123,
+                    "channelType": 123
+                },
+                {
+                    "name": "Two",
+                    "onid": 852,
+                    "tsid": 951,
+                    "sid": 753,
+                    "channelType": 963
+                }
+            ];
+
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList": channels});
+            var channelConstructorSpy = this.sandbox.spy(Channel.prototype, "init");
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+
+            broadcastSource.getChannelList(params);
+
+            assert(params.onError.notCalled);
+            assert(params.onSuccess.calledOnce);
+
+            // This is the best way we have for checking the type of the arguments to onSuccess due to the
+            // Class.js mixing in the class during construction, rather than using the JavaScript type system.
+            var args = params.onSuccess.args[0];
+            assertEquals(1,args.length);
+            var channelObjects = args[0];
+            assert(channelConstructorSpy.calledTwice);
+            assertSame(channelConstructorSpy.thisValues[0], channelObjects[0]);
+            assertSame(channelConstructorSpy.thisValues[1], channelObjects[1]);
+
+            assertEquals("One", channelObjects[0].name);
+            assertEquals(123, channelObjects[0].onid);
+            assertEquals(123, channelObjects[0].tsid);
+            assertEquals(123, channelObjects[0].sid);
+            assertEquals(123, channelObjects[0].type);
+
+            assertEquals("Two", channelObjects[1].name);
+            assertEquals(852, channelObjects[1].onid);
+            assertEquals(951, channelObjects[1].tsid);
+            assertEquals(753, channelObjects[1].sid);
+            assertEquals(963, channelObjects[1].type);
+
+        }, config);
+    };
 
     /*  Helper functions to mock out and use HBBTV specific APIs */
 

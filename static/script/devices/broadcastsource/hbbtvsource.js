@@ -28,9 +28,10 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application'
+        'antie/application',
+        'antie/devices/broadcastsource/channel'
     ],
-    function (Device, BaseTvSource, Application) {
+    function (Device, BaseTvSource, Application, Channel) {
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */
@@ -90,6 +91,38 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 }
 
                 return channelConfig.name;
+            },
+            getChannelList : function (params) {
+                try {
+                    var channelConfig = this._broadcastVideoObject.getChannelConfig();
+
+                    if (!channelConfig.channelList) {
+                        throw {"message": "Unable to retrieve channel list"};
+                    }
+
+                    if (channelConfig.channelList.length === 0) {
+                        throw {"message": "Channel list contains no channels"};
+                    }
+
+                    var result = [];
+                    for (var i = 0; i < channelConfig.channelList.length; i++) {
+                        var channel = channelConfig.channelList[i]
+                        result.push(new Channel(
+                            {
+                                "name": channel.name,
+                                "type": channel.channelType,
+                                "onid": channel.onid,
+                                "sid": channel.sid,
+                                "tsid": channel.tsid
+                            }
+                        ));
+                    }
+
+                    params.onSuccess(result);
+
+                } catch (e) {
+                    params.onError(e.message);
+                }
             },
             setPosition : function(top, left, width, height) {
                 this._broadcastVideoObject.style.top = top + "px";
