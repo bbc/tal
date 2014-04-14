@@ -12,6 +12,9 @@
                 "script-tests/mocks/*.js",
                 "script-tests/fixtures/layouts/*.js",
                 "script/**/*.js"
+            ],
+            "exclude" : [
+                "script/devices/**/*.js"
             ]
         },
 
@@ -36,7 +39,8 @@
             "script-tests/fixtures/components/buttoncomponent.js",
             "script-tests/fixtures/components/emptycomponent.js",
             "script-tests/fixtures/components/multipleshowcomponent.js",
-            "script-tests/fixtures/components/eventtestcomponent.js"
+            "script-tests/fixtures/components/eventtestcomponent.js",
+            "script/devices/**/*.js"
         ]
     },
 
