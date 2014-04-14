@@ -124,6 +124,43 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     params.onError(e.message);
                 }
             },
+            getCurrentChannel : function () {
+                var result = false;
+
+                var currentChannel = this._broadcastVideoObject.currentChannel;
+
+                if (currentChannel) {
+                    result = new Channel({
+                        name : currentChannel.name,
+                        type: currentChannel.channelType,
+                        onid: currentChannel.onid,
+                        tsid: currentChannel.tsid,
+                        sid: currentChannel.sid
+                    });
+                }
+
+                return result;
+            },
+            setChannelByName : function(params) {
+
+                var currentChannel = this.getCurrentChannel();
+
+                if (!currentChannel) {
+                    params.onError("Unable to determine current channel name.");
+
+                } else if (params.channelName === currentChannel.name) {
+                    this.showCurrentChannel();
+                    params.onSuccess();
+
+                } else if(params.channelName === "BBC Two") {
+                    // channelList = this._broadcastVideoObject.getChannelConfig();
+
+                    this._broadcastVideoObject.createChannelObject(8,5,6,7);
+
+                } else {
+                    params.onError(params.channelName + " not found in channel list");
+                }
+            },
             setPosition : function(top, left, width, height) {
                 this._broadcastVideoObject.style.top = top + "px";
                 this._broadcastVideoObject.style.left = left + "px";
