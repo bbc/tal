@@ -94,30 +94,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             getChannelList : function (params) {
                 try {
-                    var channelConfig = this._broadcastVideoObject.getChannelConfig();
-
-                    if (!channelConfig.channelList) {
-                        throw {"message": "Unable to retrieve channel list"};
-                    }
-
-                    if (channelConfig.channelList.length === 0) {
-                        throw {"message": "Channel list contains no channels"};
-                    }
-
-                    var result = [];
-                    for (var i = 0; i < channelConfig.channelList.length; i++) {
-                        var channel = channelConfig.channelList[i]
-                        result.push(new Channel(
-                            {
-                                "name": channel.name,
-                                "type": channel.channelType,
-                                "onid": channel.onid,
-                                "sid": channel.sid,
-                                "tsid": channel.tsid
-                            }
-                        ));
-                    }
-
+                    var result = this._getChannelList();
                     params.onSuccess(result);
 
                 } catch (e) {
@@ -152,13 +129,38 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     this.showCurrentChannel();
                     params.onSuccess();
 
-                } else if(params.channelName === "BBC Two") {
-                    // channelList = this._broadcastVideoObject.getChannelConfig();
-
-                    this._broadcastVideoObject.createChannelObject(8,5,6,7);
-
                 } else {
-                    params.onError(params.channelName + " not found in channel list");
+
+                    try {
+
+                        var channelList = this._getChannelList();
+
+                        var channel = undefined;
+
+                        for (var i = 0; i < channelList.length; i++) {
+                            if (channelList[i].name === params.channelName) {
+                                channel = channelList[i];
+                                break;
+                            }
+                        }
+
+                        if (!channel) {
+                            throw {"message": params.channelName + " not found in channel list"};
+                        }
+
+                        var channelObj = this._broadcastVideoObject.createChannelObject(channel.type, channel.onid, channel.tsid, channel.sid);
+
+                        if (!channelObj) {
+                            throw {"message": "Channel could not be tuned"};
+                        }
+
+                        this._broadcastVideoObject.setChannel(channelObj);
+
+                        params.onSuccess();
+
+                    } catch(e) {
+                        params.onError(e.message);
+                    }
                 }
             },
             setPosition : function(top, left, width, height) {
@@ -252,6 +254,32 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
+            },
+            _getChannelList : function() {
+                var channelConfig = this._broadcastVideoObject.getChannelConfig();
+
+                if (!channelConfig.channelList) {
+                    throw {"message": "Unable to retrieve channel list"};
+                }
+
+                if (channelConfig.channelList.length === 0) {
+                    throw {"message": "Channel list contains no channels"};
+                }
+
+                var result = [];
+                for (var i = 0; i < channelConfig.channelList.length; i++) {
+                    var channel = channelConfig.channelList[i]
+                    result.push(new Channel(
+                        {
+                            "name": channel.name,
+                            "type": channel.channelType,
+                            "onid": channel.onid,
+                            "sid": channel.sid,
+                            "tsid": channel.tsid
+                        }
+                    ));
+                }
+                return result;
             }
         });
 
