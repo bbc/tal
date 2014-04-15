@@ -139,6 +139,103 @@
         }, config);
     };
 
+    this.hbbtvSource.prototype.testTunerUnavailableEventBroadcastWhenPlayStateChangesFromPresentingToUnrealized = function(queue) {
+
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent'], function(application, TunerUnavailableEvent) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var evt = new CustomEvent("PlayStateChange");
+
+            broadcastSource._broadcastVideoObject.playState = 2;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent')
+
+            broadcastSource._broadcastVideoObject.playState = 0;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assert(broadcastEventSpy.args[0][0] instanceof TunerUnavailableEvent);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTunerPresentingEventBroadcastWhenPlayStateChangesToPresenting = function(queue) {
+
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var evt = new CustomEvent("PlayStateChange");
+
+            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+
+            broadcastSource._broadcastVideoObject.playState = 2;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assert(broadcastEventSpy.args[0][0] instanceof TunerPresentingEvent);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTunerPresentingEventConstructedWithCurrentChannelWhenPlayStateChangesToPresenting = function(queue) {
+
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var channel = {foo: "bar"};
+
+            broadcastSource.getCurrentChannel = function() {
+                return channel;
+            };
+
+            var evt = new CustomEvent("PlayStateChange");
+
+            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+
+            broadcastSource._broadcastVideoObject.playState = 2;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assertSame(channel, broadcastEventSpy.args[0][0].channel);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTunerPresentingEventBroadcastWhenPlayStateChangesToStopped = function(queue) {
+
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent'], function(application, TunerStoppedEvent) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var evt = new CustomEvent("PlayStateChange");
+
+            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+
+            broadcastSource._broadcastVideoObject.playState = 3;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assert(broadcastEventSpy.args[0][0] instanceof TunerStoppedEvent);
+
+        }, config);
+    };
+
     this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
         expectAsserts(1);
 
@@ -149,7 +246,6 @@
             this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
                 return false;
             });
-
 
             assertFalse(device.isBroadcastSourceSupported());
         }, config);

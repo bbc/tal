@@ -29,9 +29,12 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
         'antie/application',
-        'antie/devices/broadcastsource/channel'
+        'antie/devices/broadcastsource/channel',
+        'antie/events/tunerunavailableevent',
+        'antie/events/tunerpresentingevent',
+        'antie/events/tunerstoppedevent'
     ],
-    function (Device, BaseTvSource, Application, Channel) {
+    function (Device, BaseTvSource, Application, Channel, TunerUnavailableEvent, TunerPresentingEvent, TunerStoppedEvent ) {
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */
@@ -61,7 +64,23 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
                 this.playState = this._playStates.UNREALIZED;
 
-                this._broadcastVideoObject.addEventListener("PlayStateChange", function() { self.playState = self.getPlayState();});
+                this._broadcastVideoObject.addEventListener("PlayStateChange", function() {
+
+                    if (self.playState === self._playStates.PRESENTING && self.getPlayState() === self._playStates.UNREALIZED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent);
+                    }
+
+                    if (self.getPlayState() === self._playStates.PRESENTING) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(self.getCurrentChannel()));
+                    }
+
+                    if (self.getPlayState() === self._playStates.STOPPED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerStoppedEvent);
+                    }
+
+                    self.playState = self.getPlayState();
+
+                });
             },
             showCurrentChannel: function () {
                 // Check if exception is thrown by bindToCurrentChannel?
