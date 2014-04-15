@@ -147,13 +147,13 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                         }
 
                         if (!channel) {
-                            throw {"message": params.channelName + " not found in channel list"};
+                            throw {message: params.channelName + " not found in channel list"};
                         }
 
                         var channelObj = this._broadcastVideoObject.createChannelObject(channel.type, channel.onid, channel.tsid, channel.sid);
 
                         if (!channelObj) {
-                            throw {"message": "Channel could not be tuned"};
+                            throw {message: "Channel could not be tuned"};
                         }
 
                         var setChannelError = function () {
@@ -275,11 +275,11 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var channelConfig = this._broadcastVideoObject.getChannelConfig();
 
                 if (!channelConfig.channelList) {
-                    throw {"message": "Unable to retrieve channel list"};
+                    throw {message: "Unable to retrieve channel list"};
                 }
 
                 if (channelConfig.channelList.length === 0) {
-                    throw {"message": "Channel list contains no channels"};
+                    throw {message: "Channel list contains no channels"};
                 }
 
                 var result = [];
@@ -287,11 +287,11 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     var channel = channelConfig.channelList[i]
                     result.push(new Channel(
                         {
-                            "name": channel.name,
-                            "type": channel.channelType,
-                            "onid": channel.onid,
-                            "sid": channel.sid,
-                            "tsid": channel.tsid
+                            name: channel.name,
+                            type: channel.channelType,
+                            onid: channel.onid,
+                            sid: channel.sid,
+                            tsid: channel.tsid
                         }
                     ));
                 }
