@@ -129,6 +129,9 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             setChannel : function(params) {
                 this._tuneChannelByTriplet(params);
             },
+            setChannelByName : function(params) {
+                this.showCurrentChannel();
+            },
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
@@ -210,15 +213,15 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             },
             _createChannelFromMapleChannel: function (mapleChannel) {
                 return new Channel({
-                    "name": mapleChannel.channelName,
-                    "onid": mapleChannel.originalNetworkID,
-                    "tsid": mapleChannel.transportStreamID,
-                    "sid": mapleChannel.programNumber,
-                    "channelType": undefined,
-                    "ptc": mapleChannel.ptc,
-                    "major": mapleChannel.major,
-                    "minor": mapleChannel.minor,
-                    "sourceId": mapleChannel.sourceID
+                    name: mapleChannel.channelName,
+                    onid: mapleChannel.originalNetworkID,
+                    tsid: mapleChannel.transportStreamID,
+                    sid: mapleChannel.programNumber,
+                    channelType: undefined,
+                    ptc: mapleChannel.ptc,
+                    major: mapleChannel.major,
+                    minor: mapleChannel.minor,
+                    sourceId: mapleChannel.sourceID
                 });
             }
         });
