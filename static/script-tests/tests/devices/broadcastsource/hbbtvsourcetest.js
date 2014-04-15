@@ -898,25 +898,6 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin,"getChannelConfig").returns({
-                channelList: [
-                        {
-                            "name": "BBC One",
-                            "onid": 1,
-                            "tsid": 2,
-                            "sid": 3,
-                            "channelType": 4
-                        },
-                        {
-                            "name": "BBC Two",
-                            "onid": 5,
-                            "tsid": 6,
-                            "sid": 7,
-                            "channelType": 8
-                        }
-                    ]
-                });
-
             var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
 
             var device = application.getDevice();
@@ -935,6 +916,113 @@
 
         }, config);
     };
+
+    this.hbbtvSource.prototype.testTuningToChannelInChannelListByNameCreatesChannelObjectForNewChannel = function (queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(createChannelObjectStub.calledOnce);
+            assert(createChannelObjectStub.calledWith(12,9,10,11));
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTuningToChannelByNameWhenChannelListIsEmptyCausesOnError = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList":[]});
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Channel list contains no channels"));
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTuningToChannelByNameWhenCreateChannelObjectFailsCausesOnError = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(null);
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Channel could not be tuned"));
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testTuningToChannelByNameUsesChannelObjectToSetChannel = function (queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var channelObj = { "foo": "bar" };
+
+            this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
+            var setChannelStub = this.sandbox.stub(this.hbbtvPlugin, "setChannel");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(setChannelStub.calledOnce);
+            // Use assertSame to ensure the object references are the same! setChannelStub.calledWith({}) only checks equality.
+            assertSame(channelObj, setChannelStub.args[0][0]);
+
+        }, config);
+    }
 
     /*  Helper functions to mock out and use HBBTV specific APIs */
 
@@ -963,7 +1051,25 @@
             return {
                 channelList : [
                     {
-                        name: "BBC One"
+                        "name": "BBC One",
+                        "onid": 1,
+                        "tsid": 2,
+                        "sid": 3,
+                        "channelType": 4
+                    },
+                    {
+                        "name": "BBC Two",
+                        "onid": 5,
+                        "tsid": 6,
+                        "sid": 7,
+                        "channelType": 8
+                    },
+                    {
+                        "name": "BBC Three",
+                        "onid": 9,
+                        "tsid": 10,
+                        "sid": 11,
+                        "channelType": 12
                     }
                 ]
             };
