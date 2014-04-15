@@ -1024,6 +1024,67 @@
         }, config);
     }
 
+    this.hbbtvSource.prototype.testTuningToChannelByNameWhenSetChannelFailsCausesOnError = function (queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var channelObj = { "foo": "bar" };
+
+            this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            var evt = new CustomEvent('ChannelChangeError');
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Error tuning channel"));
+            assert(params.onSuccess.notCalled);
+
+        }, config);
+    }
+
+    this.hbbtvSource.prototype.testTuningToChannelByNameWhenSetChannelSucceedsCausesOnSuccess = function (queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var channelObj = { "foo": "bar" };
+
+            this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                "channelName": "BBC Three",
+                "onSuccess": this.sandbox.stub(),
+                "onError": this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            var evt = new CustomEvent('ChannelChangeSucceeded');
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assert(params.onError.notCalled);
+            assert(params.onSuccess.calledOnce);
+
+        }, config);
+    }
+
     /*  Helper functions to mock out and use HBBTV specific APIs */
 
     this.hbbtvSource.prototype.stubHBBTVSpecificApis = function() {

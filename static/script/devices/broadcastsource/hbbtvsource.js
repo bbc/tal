@@ -133,6 +133,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
                     try {
 
+                        var self = this;
+
                         var channelList = this._getChannelList();
 
                         var channel = undefined;
@@ -154,9 +156,23 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                             throw {"message": "Channel could not be tuned"};
                         }
 
-                        this._broadcastVideoObject.setChannel(channelObj);
+                        var setChannelError = function () {
+                            self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
+                            self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
+                            params.onError("Error tuning channel");
+                        }
 
-                        params.onSuccess();
+
+                        var setChannelSuccess = function () {
+                            self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
+                            self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
+                            params.onSuccess();
+                        }
+
+                        this._broadcastVideoObject.addEventListener('ChannelChangeError', setChannelError);
+                        this._broadcastVideoObject.addEventListener('ChannelChangeSucceeded', setChannelSuccess);
+
+                        this._broadcastVideoObject.setChannel(channelObj);
 
                     } catch(e) {
                         params.onError(e.message);
