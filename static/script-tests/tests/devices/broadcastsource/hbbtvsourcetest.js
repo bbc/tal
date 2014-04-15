@@ -590,7 +590,7 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -606,11 +606,11 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throws({"message":"Nope"});
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throws({message:"Nope"});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -631,7 +631,7 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -648,11 +648,11 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList": []});
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList: []});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -671,27 +671,27 @@
 
             var channels = [
                 {
-                    "name": "One",
-                    "onid": 123,
-                    "tsid": 123,
-                    "sid": 123,
-                    "channelType": 123
+                    name: "One",
+                    onid: 123,
+                    tsid: 123,
+                    sid: 123,
+                    channelType: 123
                 },
                 {
-                    "name": "Two",
-                    "onid": 852,
-                    "tsid": 951,
-                    "sid": 753,
-                    "channelType": 963
+                    name: "Two",
+                    onid: 852,
+                    tsid: 951,
+                    sid: 753,
+                    channelType: 963
                 }
             ];
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList": channels});
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList: channels});
             var channelConstructorSpy = this.sandbox.spy(Channel.prototype, "init");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { "onSuccess": this.sandbox.stub(), "onError": this.sandbox.stub()};
+            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -770,9 +770,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "NonExistentChannel",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "NonExistentChannel",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -795,9 +795,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC One",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC One",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -826,9 +826,9 @@
             this.hbbtvPlugin.bindToCurrentChannel = this.sandbox.stub();
 
             var params = {
-                "channelName": "BBC One",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC One",
+                onSuccess this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -854,9 +854,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Two",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -878,9 +878,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Two",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -904,9 +904,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Two",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -929,9 +929,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -949,15 +949,15 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({"channelList":[]});
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList:[]});
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -981,9 +981,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -1001,7 +1001,7 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var channelObj = { "foo": "bar" };
+            var channelObj = { foo: "bar" };
 
             this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
             var setChannelStub = this.sandbox.stub(this.hbbtvPlugin, "setChannel");
@@ -1010,9 +1010,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -1030,7 +1030,7 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var channelObj = { "foo": "bar" };
+            var channelObj = { foo: "bar" };
 
             this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
 
@@ -1038,9 +1038,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -1061,7 +1061,7 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var channelObj = { "foo": "bar" };
+            var channelObj = { foo: "bar" };
 
             this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
 
@@ -1069,9 +1069,9 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "channelName": "BBC Three",
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                channelName: "BBC Three",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -1112,25 +1112,25 @@
             return {
                 channelList : [
                     {
-                        "name": "BBC One",
-                        "onid": 1,
-                        "tsid": 2,
-                        "sid": 3,
-                        "channelType": 4
+                        name: "BBC One",
+                        onid: 1,
+                        tsid: 2,
+                        sid: 3,
+                        channelType: 4
                     },
                     {
-                        "name": "BBC Two",
-                        "onid": 5,
-                        "tsid": 6,
-                        "sid": 7,
-                        "channelType": 8
+                        name: "BBC Two",
+                        onid: 5,
+                        tsid: 6,
+                        sid: 7,
+                        channelType: 8
                     },
                     {
-                        "name": "BBC Three",
-                        "onid": 9,
-                        "tsid": 10,
-                        "sid": 11,
-                        "channelType": 12
+                        name: "BBC Three",
+                        onid: 9,
+                        tsid: 10,
+                        sid: 11,
+                        channelType: 12
                     }
                 ]
             };
@@ -1148,7 +1148,7 @@
     };
 
     this.hbbtvSource.prototype.getGenericHBBTVConfig = function() {
-        return {"modules":{"base":"antie/devices/browserdevice","modifiers":[
+        return {modules:{base:"antie/devices/browserdevice",modifiers:[
             "antie/devices/anim/styletopleft",
             "antie/devices/media/html5",
             "antie/devices/net/default",
@@ -1157,9 +1157,9 @@
             "antie/devices/storage/cookie",
             "antie/devices/logging/default",
             "antie/devices/exit/closewindow"
-        ]},"input":{"map":{}},"layouts":[
-            {"width":1280,"height":720,"module":"fixtures/layouts/default","classes":["browserdevice720p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        ]},input:{map:{}},layouts:[
+            {width:1280,height:720,module:"fixtures/layouts/default",classes:["browserdevice720p"]}
+        ],deviceConfigurationKey:"devices-html5-1"};
     };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/broadcastsource/hbbtvsource'], this.hbbtvSource);
