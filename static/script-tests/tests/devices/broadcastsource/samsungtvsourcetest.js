@@ -254,14 +254,14 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
 
             var apiResult = {
-                "channelName": "Alpha",
-                "originalNetworkID": 9876,
-                "transportStreamID": 8765,
-                "programNumber": 7654,
-                "ptc": 6543,
-                "major": 5432,
-                "minor": 4321,
-                "sourceID": 3210
+                channelName: "Alpha",
+                originalNetworkID: 9876,
+                transportStreamID: 8765,
+                programNumber: 7654,
+                ptc: 6543,
+                major: 5432,
+                minor: 4321,
+                sourceID: 3210
             };
 
             this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").returns(apiResult);
@@ -300,8 +300,8 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.getChannelList(params);
@@ -325,8 +325,8 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.getChannelList(params);
@@ -351,8 +351,8 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.getChannelList(params);
@@ -376,8 +376,8 @@
             var broadcastSource = device.createBroadcastSource();
 
             var params = {
-                "onSuccess": this.sandbox.stub(),
-                "onError": this.sandbox.stub()
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
             };
 
             broadcastSource.getChannelList(params);
@@ -387,14 +387,14 @@
 
             var data = [
                 {
-                    "channelName": "Alpha",
-                    "originalNetworkID": 9876,
-                    "transportStreamID": 8765,
-                    "programNumber": 7654,
-                    "ptc": 6543,
-                    "major": 5432,
-                    "minor": 4321,
-                    "sourceID": 3210
+                    channelName: "Alpha",
+                    originalNetworkID: 9876,
+                    transportStreamID: 8765,
+                    programNumber: 7654,
+                    ptc: 6543,
+                    major: 5432,
+                    minor: 4321,
+                    sourceID: 3210
                 }
             ];
 
@@ -422,6 +422,31 @@
         }, config);
     };
 
+    this.SamsungTvSource.prototype.testSetChannelByNameShowsChannelIfChangingToCurrentChannel = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var stub = this.sandbox.stub(this.samsungPlugin, "SetSource");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC One",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(stub.calledOnce);
+            assert(stub.calledWith(0));
+
+        }, config);
+    };
+
     /**
      * Helper functions to mock out and use Samsung specific APIs
      */
@@ -442,10 +467,10 @@
         target.appendChild(samsungPlugin);
 
         webapis = {
-            "tv": {
-                "channel": {
-                    "getCurrentChannel": function () { },
-                    "getChannelList": function () { },
+            tv: {
+                channel: {
+                    getCurrentChannel: function () { },
+                    getChannelList: function () { },
                     NAVIGATOR_MODE_ALL : { }
                 }
             }
