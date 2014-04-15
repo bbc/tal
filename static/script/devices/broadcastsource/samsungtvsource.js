@@ -28,9 +28,10 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application'
+        'antie/application',
+        'antie/devices/broadcastsource/channel'
     ],
-    function (Device, BaseTvSource, Application) {
+    function (Device, BaseTvSource, Application, Channel) {
         /**
          * Contains a Samsung Maple implementation of the antie broadcast TV source.
          * @see http://www.samsungdforum.com/Guide/ref00014/PL_WINDOW_SOURCE.html
@@ -77,6 +78,35 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                     throw new Error('Channel name returned error code: ' + channelName);
                 }
                 return channelName;
+            },
+            getCurrentChannel : function() {
+                try {
+
+                    var mapleChannel = webapis.tv.channel.getCurrentChannel();
+
+                    return this._createChannelFromMapleChannel(mapleChannel);
+
+                } catch (e) {
+                    return false;
+                }
+            },
+            getChannelList: function (params) {
+
+                var self = this;
+
+                var createChannelList = function(mapleChannels) {
+                    var result = [];
+                    for (var i = 0; i < mapleChannels.length; i++) {
+                        result.push(self._createChannelFromMapleChannel(mapleChannels[i]));
+                    }
+                    params.onSuccess(result);
+                };
+
+                try {
+                    webapis.tv.channel.getChannelList(createChannelList, params.onError, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+                } catch (error) {
+                    params.onError("Unable to retrieve channel list: " + error);
+                }
             },
             /**
              * Sets the size and position of the visible broadcast source
@@ -177,6 +207,19 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                         message : "Channel list is empty or not available"
                     });
                 }
+            },
+            _createChannelFromMapleChannel: function (mapleChannel) {
+                return new Channel({
+                    "name": mapleChannel.channelName,
+                    "onid": mapleChannel.originalNetworkID,
+                    "tsid": mapleChannel.transportStreamID,
+                    "sid": mapleChannel.programNumber,
+                    "channelType": undefined,
+                    "ptc": mapleChannel.ptc,
+                    "major": mapleChannel.major,
+                    "minor": mapleChannel.minor,
+                    "sourceId": mapleChannel.sourceID
+                });
             }
         });
 
