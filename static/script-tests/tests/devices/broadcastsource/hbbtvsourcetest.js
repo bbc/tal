@@ -82,6 +82,21 @@
             });
         }, config);
     };
+//
+//    this.hbbtvSource.prototype.testCreateBroadcastSetsPlayStateToUnrealized = function(queue) {
+//        expectAsserts(1);
+//
+//        var config = this.getGenericHBBTVConfig();
+//        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+//
+//            var device = application.getDevice();
+//
+//            var broadcastSource = device.createBroadcastSource();
+//
+//            assertEquals(0, broadcastSource._playState);
+//
+//        }, config);
+//    };
 
     this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
         expectAsserts(1);
@@ -827,7 +842,7 @@
 
             var params = {
                 channelName: "BBC One",
-                onSuccess this.sandbox.stub(),
+                onSuccess: this.sandbox.stub(),
                 onError: this.sandbox.stub()
             };
 
@@ -1022,7 +1037,7 @@
             assertSame(channelObj, setChannelStub.args[0][0]);
 
         }, config);
-    }
+    };
 
     this.hbbtvSource.prototype.testTuningToChannelByNameWhenSetChannelFailsCausesOnError = function (queue) {
         expectAsserts(3);
@@ -1053,7 +1068,7 @@
             assert(params.onSuccess.notCalled);
 
         }, config);
-    }
+    };
 
     this.hbbtvSource.prototype.testTuningToChannelByNameWhenSetChannelSucceedsCausesOnSuccess = function (queue) {
         expectAsserts(2);
@@ -1083,7 +1098,7 @@
             assert(params.onSuccess.calledOnce);
 
         }, config);
-    }
+    };
 
     /*  Helper functions to mock out and use HBBTV specific APIs */
 
