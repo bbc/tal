@@ -447,6 +447,376 @@
         }, config);
     };
 
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnSuccessIfChangingToCurrentChannel = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC One",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(params.onSuccess.calledOnce);
+            assert(params.onError.notCalled);
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnErrorIfFailingToRetrieveCurrentChannelName = function(queue) {
+        expectAsserts(3);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").throws("Error!");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC One",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Unable to determine current channel"));
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameDoesNotRetrieveChannelListWhenChangingToCurrentChannel = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var stub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC One",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(stub.notCalled);
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameRetrievesChannelListWhenChangingToDifferentChannel = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var stub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(stub.calledOnce);
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnErrorWhenFailingToRetrieveChannelList = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            this.sandbox.stub(webapis.tv.channel, "getChannelList").throws("Incorrect!");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(params.onSuccess.notCalled)
+            assert(params.onError.calledOnce);
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnErrorWhenChannelNotInChannelList = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "BBC Two",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(getChannelListStub.calledOnce);
+            var getChannelListSuccessFunc = getChannelListStub.args[0][0];
+
+
+            getChannelListSuccessFunc(
+                [
+                    {
+                        channelName: "Alpha",
+                        originalNetworkID: 9876,
+                        transportStreamID: 8765,
+                        programNumber: 7654,
+                        ptc: 6543,
+                        major: 5432,
+                        minor: 4321,
+                        sourceID: 3210
+                    }
+                ]);
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("BBC Two not found in channel list"));
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameAttemptsToTuneToChannelInChannelList = function(queue) {
+        expectAsserts(6);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "Alpha",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(getChannelListStub.calledOnce);
+            var getChannelListSuccessFunc = getChannelListStub.args[0][0];
+
+
+            getChannelListSuccessFunc(
+                [
+                    {
+                        channelName: "Alpha",
+                        originalNetworkID: 9876,
+                        transportStreamID: 8765,
+                        programNumber: 7654,
+                        ptc: 6543,
+                        major: 5432,
+                        minor: 4321,
+                        sourceID: 3210
+                    }
+                ]);
+
+            assert(tuneStub.calledOnce);
+            var expectedTuneMapleChannelObj = {
+                originalNetworkID: 9876,
+                transportStreamID: 8765,
+                programNumber: 7654,
+                ptc: 6543,
+                major: 5432,
+                minor: 4321,
+                sourceID: 3210
+            };
+            assertEquals(expectedTuneMapleChannelObj, tuneStub.args[0][0]);
+            assertFunction(tuneStub.args[0][1]);
+            assertFunction(tuneStub.args[0][2]);
+            assertEquals(0,tuneStub.args[0][3]);
+
+
+        }, config);
+    };
+
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnErrorIfTuneThrowsException = function(queue) {
+        expectAsserts(5);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune").throws({message:"Nu-uh!"});
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "Alpha",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(getChannelListStub.calledOnce);
+            var getChannelListSuccessFunc = getChannelListStub.args[0][0];
+
+
+            getChannelListSuccessFunc(
+                [
+                    {
+                        channelName: "Alpha",
+                        originalNetworkID: 9876,
+                        transportStreamID: 8765,
+                        programNumber: 7654,
+                        ptc: 6543,
+                        major: 5432,
+                        minor: 4321,
+                        sourceID: 3210
+                    }
+                ]);
+
+            assert(tuneStub.calledOnce);
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Error tuning channel: Nu-uh!"));
+
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnErrorIfTuneErrors = function(queue) {
+        expectAsserts(5);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "Alpha",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(getChannelListStub.calledOnce);
+            var getChannelListSuccessFunc = getChannelListStub.args[0][0];
+
+
+            getChannelListSuccessFunc(
+                [
+                    {
+                        channelName: "Alpha",
+                        originalNetworkID: 9876,
+                        transportStreamID: 8765,
+                        programNumber: 7654,
+                        ptc: 6543,
+                        major: 5432,
+                        minor: 4321,
+                        sourceID: 3210
+                    }
+                ]);
+
+            assert(tuneStub.calledOnce);
+            var tuneErrorFunc = tuneStub.args[0][2];
+
+            tuneErrorFunc({message: "Nope!"});
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith("Error tuning channel (tuneError): Nope!"));
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testSetChannelByNameCallsOnSuccessIfTuneSucceeds = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
+            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: "Alpha",
+                onSuccess: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+
+            assert(getChannelListStub.calledOnce);
+            var getChannelListSuccessFunc = getChannelListStub.args[0][0];
+
+
+            getChannelListSuccessFunc(
+                [
+                    {
+                        channelName: "Alpha",
+                        originalNetworkID: 9876,
+                        transportStreamID: 8765,
+                        programNumber: 7654,
+                        ptc: 6543,
+                        major: 5432,
+                        minor: 4321,
+                        sourceID: 3210
+                    }
+                ]);
+
+            assert(tuneStub.calledOnce);
+            var tuneSuccessFunc = tuneStub.args[0][1];
+
+            tuneSuccessFunc();
+
+            assert(params.onSuccess.calledOnce);
+            assert(params.onError.notCalled);
+
+        }, config);
+    };
+
     /**
      * Helper functions to mock out and use Samsung specific APIs
      */
@@ -469,9 +839,10 @@
         webapis = {
             tv: {
                 channel: {
-                    getCurrentChannel: function () { },
+                    getCurrentChannel: function () { return {channelName: samsungPlugin.GetCurrentChannel_Name()}},
                     getChannelList: function () { },
-                    NAVIGATOR_MODE_ALL : { }
+                    NAVIGATOR_MODE_ALL : { },
+                    tune: function () { }
                 }
             }
         };

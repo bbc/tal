@@ -130,7 +130,56 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 this._tuneChannelByTriplet(params);
             },
             setChannelByName : function(params) {
-                this.showCurrentChannel();
+                var currentChannel = this.getCurrentChannel();
+                if (!currentChannel) {
+                    params.onError("Unable to determine current channel");
+
+                } else if (currentChannel.name === params.channelName) {
+                    this.showCurrentChannel();
+                    params.onSuccess();
+
+                } else {
+                    this.getChannelList({
+                        onError: params.onError,
+                        onSuccess: function(channels) {
+
+                            var channel = undefined;
+
+                            for (var i = 0; i < channels.length; i++) {
+                                if (channels[i].name === params.channelName) {
+                                    channel = channels[i];
+                                    break;
+                                }
+                            }
+
+                            if (channel) {
+
+                                var newChannelArgs = {
+                                    sourceID: channel.sourceId,
+                                    programNumber: channel.sid,
+                                    transportStreamID: channel.tsid,
+                                    originalNetworkID: channel.onid,
+                                    ptc: channel.ptc,
+                                    major: channel.major,
+                                    minor: channel.minor
+                                };
+
+                                try {
+
+                                    var tuneError = function (error) {
+                                      params.onError("Error tuning channel (tuneError): " + error.message);
+                                    };
+                                    webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
+                                } catch (e) {
+                                    params.onError("Error tuning channel: " + e.message)
+                                }
+
+                            } else {
+                                params.onError(params.channelName + " not found in channel list");
+                            }
+                        }
+                    });
+                }
             },
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
