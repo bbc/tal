@@ -82,21 +82,62 @@
             });
         }, config);
     };
-//
-//    this.hbbtvSource.prototype.testCreateBroadcastSetsPlayStateToUnrealized = function(queue) {
-//        expectAsserts(1);
-//
-//        var config = this.getGenericHBBTVConfig();
-//        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-//
-//            var device = application.getDevice();
-//
-//            var broadcastSource = device.createBroadcastSource();
-//
-//            assertEquals(0, broadcastSource._playState);
-//
-//        }, config);
-//    };
+
+    this.hbbtvSource.prototype.testCreateBroadcastSetsPlayStateToUnrealized = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var device = application.getDevice();
+
+            var broadcastSource = device.createBroadcastSource();
+
+            assertEquals(0, broadcastSource.playState);
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testCreateBroadcastAddsPlayStateChangeEventHandler = function(queue) {
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var addEventListenerStub = this.sandbox.stub(this.hbbtvPlugin, "addEventListener");
+            var device = application.getDevice();
+            device.createBroadcastSource();
+
+            assert(addEventListenerStub.calledWith("PlayStateChange"));
+            assert(typeof addEventListenerStub.args[0][1] === 'function');
+
+        }, config);
+    };
+
+    this.hbbtvSource.prototype.testPlayStateChangeEventChangesPlayState = function(queue) {
+
+        expectAsserts(2);
+
+        var config = this.getGenericHBBTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var evt = new CustomEvent("PlayStateChange");
+
+            broadcastSource._broadcastVideoObject.playState = 1;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assertEquals(1, broadcastSource.playState);
+
+            broadcastSource._broadcastVideoObject.playState = 2;
+            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+
+            assertEquals(2, broadcastSource.playState);
+
+        }, config);
+    };
 
     this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
         expectAsserts(1);

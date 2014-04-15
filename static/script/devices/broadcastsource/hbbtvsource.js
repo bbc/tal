@@ -43,6 +43,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              * @ignore
              */
             init: function () {
+
+                var self = this;
                 this._broadcastVideoObject = document.getElementById(DOM_ELEMENT_ID);
 
                 if (!this._broadcastVideoObject) {
@@ -56,6 +58,10 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     PRESENTING: 2,
                     STOPPED: 3
                 };
+
+                this.playState = this._playStates.UNREALIZED;
+
+                this._broadcastVideoObject.addEventListener("PlayStateChange", function() { self.playState = self.getPlayState();});
             },
             showCurrentChannel: function () {
                 // Check if exception is thrown by bindToCurrentChannel?
