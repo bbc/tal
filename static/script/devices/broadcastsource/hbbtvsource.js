@@ -231,16 +231,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             setChannel : function(params) {
                 var self = this;
-                var channelType;
-
-                // TODO: Clean this up
-                // Attempt to get the channel type of the current channel
-                // If this is not available, fall back to ID_DVB_T
-                try {
-                    channelType = this._getChannelType();
-                } catch(e) {
-                    channelType = ID_DVB_T;
-                }
+                var channelType = this._getChannelType();
                 var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
                 if (newChannel === null) {
                     params.onError({
@@ -271,14 +262,21 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.setChannel(newChannel);
             },
             /**
-             * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the
-             * HBBTV specification
+             * @returns The type of the channel, as indicated by one of the ID_* constants in the HBBTV
+             *      specification. Defaults to ID_DVB_T in the case of error
+             *  @private
              */
             _getChannelType : function() {
-                var channelType = this._broadcastVideoObject.currentChannel.idType;
-                if (typeof channelType === "undefined") {
+                var channelType = undefined;
+                try {
+                    channelType = this._broadcastVideoObject.currentChannel.idType;
+                    if (typeof channelType === "undefined") {
+                        channelType = ID_DVB_T;
+                    }
+                } catch(e) {
                     channelType = ID_DVB_T;
                 }
+
                 return channelType;
             },
             /**
