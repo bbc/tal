@@ -576,7 +576,7 @@
 
             broadcastSource.setChannelByName(params);
 
-            assert(params.onSuccess.notCalled)
+            assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
 
         }, config);
@@ -919,7 +919,7 @@
 
             assert(broadcastEventStub.calledOnce);
             assert(eventConstructorSpy.calledOnce);
-            assert(channelConstructorSpy.calledOnce)
+            assert(channelConstructorSpy.calledOnce);
             assert(broadcastEventStub.calledWith(eventConstructorSpy.thisValues[0]));
             assert(eventConstructorSpy.calledWith(channelConstructorSpy.thisValues[0]));
 
@@ -970,7 +970,7 @@
         samsungPluginWindow.GetCurrentChannel_Name = function() {
             return "BBC One";
         };
-        samsungPluginWindow.SetScreenRect = function(left, top, width, height) {
+        samsungPluginWindow.SetScreenRect = function(/* left, top, width, height */) {
         };
 
         var target = document.getElementsByTagName('body')[0];
@@ -979,7 +979,7 @@
         webapis = {
             tv: {
                 channel: {
-                    getCurrentChannel: function () { return {channelName: samsungPluginWindow.GetCurrentChannel_Name()}},
+                    getCurrentChannel: function () { return {channelName: samsungPluginWindow.GetCurrentChannel_Name()}; },
                     getChannelList: function () { },
                     NAVIGATOR_MODE_ALL : { },
                     tune: function () { }
