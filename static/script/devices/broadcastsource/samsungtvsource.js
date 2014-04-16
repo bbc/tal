@@ -115,9 +115,7 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             },
             getCurrentChannel : function() {
                 try {
-
                     var mapleChannel = webapis.tv.channel.getCurrentChannel();
-
                     return this._createChannelFromMapleChannel(mapleChannel);
 
                 } catch (e) {
@@ -137,7 +135,6 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 };
 
                 try {
-
                     var onFailedToRetrieveChannelList = function () {
                         params.onError({
                             name : "ChannelListError",
@@ -145,7 +142,9 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                         });
                     };
 
-                    webapis.tv.channel.getChannelList(createChannelList, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+                    webapis.tv.channel.getChannelList(createChannelList, onFailedToRetrieveChannelList,
+                                                        webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+
                 } catch (error) {
 
                     params.onError({
@@ -205,7 +204,9 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
 
                 this._tuneToChannelMatchingSpec({
                     spec: {
-                        // FIXME: ONID is always reported as 65535, so exclude from check
+                        // FIXME: ONID is always reported as 65535, so we exclude it from the check in order
+                        // to prevent tuning information passed in (e.g. from MHEG) from causing the match
+                        // to fail.
                         tsid: params.tsid,
                         sid: params.sid
                         },
