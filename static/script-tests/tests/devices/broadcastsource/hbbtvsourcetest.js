@@ -1107,8 +1107,8 @@
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
-                name : "ChangeChannelError",
-                message: "Channel could not be tuned"
+                name : "ChannelError",
+                message : "Channel could not be found"
             }));
 
         }, config);

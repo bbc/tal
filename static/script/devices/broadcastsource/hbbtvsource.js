@@ -182,16 +182,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                             };
                         }
 
-                        var channelObj = this._broadcastVideoObject.createChannelObject(channel.type, channel.onid, channel.tsid, channel.sid);
-
-                        if (!channelObj) {
-                            throw {
-                                name : "ChangeChannelError",
-                                message: "Channel could not be tuned"
-                            };
-                        }
-
-                        this._tuneToChannelObject(channelObj, params.onSuccess, params.onError);
+                        this._tuneToChannelByTriplet(channel.type, channel.onid, channel.tsid, channel.sid, params.onSuccess, params.onError);
 
                     } catch(e) {
                         params.onError(e);
@@ -212,14 +203,17 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             },
             setChannel : function(params) {
                 var channelType = this._getChannelType();
-                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
+                this._tuneToChannelByTriplet(channelType, params.onid, params.tsid, params.sid, params.onSuccess, params.onError);
+            },
+            _tuneToChannelByTriplet: function (channelType, onid, tsid, sid, onSuccess, onError) {
+                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, onid, tsid, sid);
                 if (newChannel === null) {
-                    params.onError({
+                    onError({
                         name : "ChannelError",
                         message : "Channel could not be found"
                     });
                 } else {
-                    this._tuneToChannelObject(newChannel, params.onSuccess, params.onError);
+                    this._tuneToChannelObject(newChannel, onSuccess, onError);
                 }
             },
             _tuneToChannelObject: function (newChannel, onSuccess, onError) {
