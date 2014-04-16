@@ -250,26 +250,6 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     return;
                 }
 
-                // Test the that the device can access the channelList, this will be required in the future
-                try {
-                    var channelConfig = this._broadcastVideoObject.getChannelConfig();
-                    var channelList = channelConfig.channelList;
-                    var channelListCount = channelList.length;
-                } catch(e) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is not available"
-                    });
-                }
-
-                if (!channelListCount || channelListCount < 0) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is empty or not available"
-                    });
-                    return;
-                }
-
                 var successEventListener = function(channel) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
