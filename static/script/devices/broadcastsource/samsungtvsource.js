@@ -221,7 +221,7 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
 
                 var onChannelListRetrieved = function (channels) {
 
-                    var channel = undefined;
+                    var channel;
 
                     channelLoop: for (var i = 0; i < channels.length; i++) {
 
