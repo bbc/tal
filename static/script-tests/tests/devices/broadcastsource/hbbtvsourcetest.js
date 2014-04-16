@@ -604,11 +604,6 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            broadcastSource._broadcastVideoObject.addEventListener("ChannelChangeSucceeded", function() {
-                console.log("caught channelchange event on broadasat video object");
-                onSuccessSpy();
-            });
-
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -620,7 +615,7 @@
             var event = new CustomEvent("ChannelChangeSucceeded", {});
             broadcastSource._broadcastVideoObject.dispatchEvent(event);
 
-            assertTrue("OnSuccess callback function called", onSuccessSpy.called);
+            assertTrue("OnSuccess callback function called", onSuccessSpy.calledOnce);
             assertTrue("OnError callback function not called", onErrorSpy.notCalled);
         }, config);
     };
@@ -1061,7 +1056,6 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
             this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList:[]});
 
             var device = application.getDevice();
