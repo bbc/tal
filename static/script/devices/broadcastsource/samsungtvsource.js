@@ -29,9 +29,12 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
         'antie/application',
-        'antie/devices/broadcastsource/channel'
+        'antie/devices/broadcastsource/channel',
+        'antie/events/tunerunavailableevent',
+        'antie/events/tunerstoppedevent',
+        'antie/events/tunerpresentingevent'
     ],
-    function (Device, BaseTvSource, Application, Channel) {
+    function (Device, BaseTvSource, Application, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
         /**
          * Contains a Samsung Maple implementation of the antie broadcast TV source.
          * @see http://www.samsungdforum.com/Guide/ref00014/PL_WINDOW_SOURCE.html
@@ -39,18 +42,49 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
         var PL_WINDOW_SOURCE_TV = 0; // The TV source
         var PL_WINDOW_SOURCE_MEDIA = 43; // The media source
 
-        var DOM_ELEMENT_ID = "pluginObjectWindow";
+        var PL_TV_EVENT_NO_SIGNAL = 101;
+        var PL_TV_EVENT_SOURCE_CHANGED = 114;
+        var PL_TV_EVENT_TUNE_SUCCESS = 103;
+
+        var WINDOW_PLUGIN_DOM_ELEMENT_ID = "pluginObjectWindow";
+        var TV_PLUGIN_DOM_ELEMENT_ID = "pluginObjectTV";
+
         var SamsungSource = BaseTvSource.extend(/** @lends antie.devices.broadcastsource.SamsungSource.prototype */ {
             /**
              * @constructor
              * @ignore
              */
             init: function () {
-                this._samsungSefWindowPlugin = document.getElementById(DOM_ELEMENT_ID);
+                this._samsungSefWindowPlugin = document.getElementById(WINDOW_PLUGIN_DOM_ELEMENT_ID);
 
                 if (!this._samsungSefWindowPlugin) {
                     throw new Error('Unable to initialise Samsung broadcast source');
                 }
+
+                var tvPlugin = document.getElementById(TV_PLUGIN_DOM_ELEMENT_ID);
+
+                var self = this;
+
+                tvPlugin.OnEvent = function(id) {
+                    switch (id) {
+                        case PL_TV_EVENT_NO_SIGNAL:
+                            var unavailableEvent = new TunerUnavailableEvent();
+                            Application.getCurrentApplication().broadcastEvent(unavailableEvent);
+                            break;
+                        case PL_TV_EVENT_SOURCE_CHANGED:
+                            var stoppedEvent = new TunerStoppedEvent();
+                            Application.getCurrentApplication().broadcastEvent(stoppedEvent);
+                            break;
+                        case PL_TV_EVENT_TUNE_SUCCESS:
+                            var presentingEvent = new TunerPresentingEvent(self.getCurrentChannel());
+                            Application.getCurrentApplication().broadcastEvent(presentingEvent);
+                            break;
+                    }
+                };
+
+                tvPlugin.SetEvent(PL_TV_EVENT_TUNE_SUCCESS);
+                tvPlugin.SetEvent(PL_TV_EVENT_NO_SIGNAL);
+                tvPlugin.SetEvent(PL_TV_EVENT_SOURCE_CHANGED);
 
                 this._setBroadcastToFullScreen();
             },
