@@ -89,4 +89,19 @@
             }
         );
     };
+
+    this.ActivateFirstHandlerTest.prototype.testHandlerRespondsOnlyToOwnCarouselEvents = function (queue) {
+        this.runTest(queue,
+            function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
+                var carousel, beforeAlignEvent, targetIndex;
+                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                targetIndex = 1;
+                this.sandbox.spy(carousel, 'setActiveIndex');
+
+                beforeAlignEvent = new BeforeAlignEvent(null, targetIndex);
+                carousel.bubbleEvent(beforeAlignEvent);
+                assert(carousel.setActiveIndex.notCalled);
+            }
+        );
+    };
 }());
