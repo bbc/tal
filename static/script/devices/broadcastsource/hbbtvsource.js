@@ -66,19 +66,20 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
                 this._broadcastVideoObject.addEventListener("PlayStateChange", function() {
 
-                    if (self.playState === self._playStates.PRESENTING && self.getPlayState() === self._playStates.UNREALIZED) {
-                        Application.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent);
-                    }
+                    var oldPlayState = self.playState;
+                    var newPlayState = self.getPlayState();
 
-                    if (self.getPlayState() === self._playStates.PRESENTING) {
+                    if (oldPlayState === self._playStates.PRESENTING && newPlayState === self._playStates.UNREALIZED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent());
+
+                    } else if (newPlayState === self._playStates.PRESENTING) {
                         Application.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(self.getCurrentChannel()));
+
+                    } else if (newPlayState === self._playStates.STOPPED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
                     }
 
-                    if (self.getPlayState() === self._playStates.STOPPED) {
-                        Application.getCurrentApplication().broadcastEvent(new TunerStoppedEvent);
-                    }
-
-                    self.playState = self.getPlayState();
+                    self.playState = newPlayState;
 
                 });
             },
