@@ -149,7 +149,10 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 var currentChannel = this.getCurrentChannel();
 
                 if (!currentChannel) {
-                    params.onError("Unable to determine current channel name.");
+                    params.onError({
+                        name : "ChannelError",
+                        message: "Unable to determine current channel name"
+                    });
 
                 } else if (params.channelName === currentChannel.name) {
                     this.showCurrentChannel();

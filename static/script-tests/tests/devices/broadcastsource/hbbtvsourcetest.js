@@ -1050,7 +1050,10 @@
             broadcastSource.setChannelByName(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Unable to determine current channel name."));
+            assert(params.onError.calledWith({
+                name : "ChannelError",
+                message: "Unable to determine current channel name"
+            }));
             assert(params.onSuccess.notCalled);
 
         }, config);
