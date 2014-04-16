@@ -103,9 +103,21 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 };
 
                 try {
-                    webapis.tv.channel.getChannelList(createChannelList, params.onError, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+
+                    var onFailedToRetrieveChannelList = function () {
+                        params.onError({
+                            name : "ChannelListError",
+                            message : "Channel list is not available"
+                        });
+                    };
+
+                    webapis.tv.channel.getChannelList(createChannelList, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
                 } catch (error) {
-                    params.onError("Unable to retrieve channel list: " + error);
+
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    });
                 }
             },
             /**
@@ -139,46 +151,13 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                     params.onSuccess();
 
                 } else {
-                    this.getChannelList({
-                        onError: params.onError,
-                        onSuccess: function(channels) {
 
-                            var channel = undefined;
-
-                            for (var i = 0; i < channels.length; i++) {
-                                if (channels[i].name === params.channelName) {
-                                    channel = channels[i];
-                                    break;
-                                }
-                            }
-
-                            if (channel) {
-
-                                var newChannelArgs = {
-                                    sourceID: channel.sourceId,
-                                    programNumber: channel.sid,
-                                    transportStreamID: channel.tsid,
-                                    originalNetworkID: channel.onid,
-                                    ptc: channel.ptc,
-                                    major: channel.major,
-                                    minor: channel.minor
-                                };
-
-                                try {
-
-                                    var tuneError = function (error) {
-                                      params.onError("Error tuning channel (tuneError): " + error.message);
-                                    };
-                                    webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
-                                } catch (e) {
-                                    params.onError("Error tuning channel: " + e.message)
-                                }
-
-                            } else {
-                                params.onError(params.channelName + " not found in channel list");
-                            }
+                    this._tuneToChannelMatchingSpec({
+                            spec: { name: params.channelName },
+                            onError: params.onError,
+                            onSuccess: params.onSuccess
                         }
-                    });
+                    );
                 }
             },
             _setBroadcastToFullScreen : function() {
@@ -190,75 +169,99 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
              */
             _tuneChannelByTriplet : function(params) {
 
-                // FIXME: These two parameters should be optional, allowing us to retrieve all channels, but it seems they aren't.
-                var startIndex = 0;
-                var numChannelsToFind = 1000000;
+                this._tuneToChannelMatchingSpec({
+                    spec: {
+                        // FIXME: ONID is always reported as 65535, so exclude from check
+                        tsid: params.tsid,
+                        sid: params.sid
+                        },
+                    onError: params.onError,
+                    onSuccess: params.onSuccess
+                });
 
-                var _tuneChannel = function(newChannel) {
-                    var newChannelArgs = {
-                        sourceID: newChannel.sourceID,
-                        programNumber: newChannel.programNumber,
-                        transportStreamID: newChannel.transportStreamID,
-                        originalNetworkID: newChannel.originalNetworkID,
-                        ptc: newChannel.ptc,
-                        major: newChannel.major,
-                        minor: newChannel.minor
-                    };
+            },
+            _tuneToChannelMatchingSpec : function (params) {
 
-                    var tuneSuccess = function () {
-                        params.onSuccess();
-                    };
-                    var tuneError = function (error) {
+                var self = this;
+
+                var onChannelListRetrieved = function (channels) {
+
+                    var channel = undefined;
+
+                    channelLoop: for (var i = 0; i < channels.length; i++) {
+
+                        specLoop: for (var prop in params.spec) {
+                            if (!params.spec.hasOwnProperty(prop)) {
+                                // Don't match on inherited properties
+                                continue specLoop;
+                            }
+                            if (channels[i][prop] !== params.spec[prop]) {
+                                // Spec not matched
+                                continue channelLoop;
+                            }
+                        }
+                        // All spec's own properties found and match.
+                        channel = channels[i];
+                        break channelLoop;
+                    }
+
+                    if (channel) {
+                        self._tuneToChannel({
+                            channel: channel,
+                            onError: params.onError,
+                            onSuccess: params.onSuccess
+                        });
+
+                    } else {
+                        params.onError({
+                            name : "ChannelError",
+                            message : "Channel could not be found"
+                        });
+                    }
+                };
+
+                this.getChannelList({
+                    onError: params.onError,
+                    onSuccess: onChannelListRetrieved
+                });
+            },
+            /**
+             * @param params.channel Channel object
+             * @param params.onError Function to call with a string message on error.
+             * @param params.onSuccess Function to call on success.
+             * @private
+             */
+            _tuneToChannel: function(params) {
+
+                var channel = params.channel;
+
+                var newChannelArgs = {
+                    sourceID: channel.sourceId,
+                    programNumber: channel.sid,
+                    transportStreamID: channel.tsid,
+                    originalNetworkID: channel.onid,
+                    ptc: channel.ptc,
+                    major: channel.major,
+                    minor: channel.minor
+                };
+
+                try {
+                    var tuneError = function () {
                         params.onError({
                             name : "ChangeChannelError",
                             message : "Error tuning channel"
                         });
                     };
 
-                    try {
-                        webapis.tv.channel.tune(newChannelArgs, tuneSuccess, tuneError, 0);
-                    } catch (e) {
-                        params.onError({
-                            name : "ChangeChannelError",
-                            message : "Error tuning channel"
-                        })
-                    }
-                };
+                    webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
 
-                var onChannelListRetrieved = function (channels) {
-
-                    for (var i = 0; i < channels.length; i++) {
-                        var channel = channels[i];
-
-                        // FIXME: ONID is always reported as 65535, so exclude from check
-                        if (channel.transportStreamID === params.tsid && channel.programNumber === params.sid) {
-                            _tuneChannel(channel);
-                            return;
-                        }
-                    }
-
-                    // Channel not found in the channel list, call the onError
+                } catch (e) {
                     params.onError({
-                        name : "ChannelError",
-                        message : "Channel could not be found"
-                    });
-                };
-
-                var onFailedToRetrieveChannelList = function (error) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is not available"
-                    });
-                };
-
-                try {
-                    webapis.tv.channel.getChannelList(onChannelListRetrieved, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, startIndex, numChannelsToFind);
-                } catch (error) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is empty or not available"
+                        name : "ChangeChannelError",
+                        message : "Error tuning channel"
                     });
                 }
+
             },
             _createChannelFromMapleChannel: function (mapleChannel) {
                 return new Channel({

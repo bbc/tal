@@ -308,7 +308,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Unable to retrieve channel list: Not gonna happen!"));
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is empty or not available"
+            }));
 
         }, config);
     };
@@ -339,8 +342,8 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testGetChannelListPassesOnErrorToWebAPI = function(queue) {
-        expectAsserts(2);
+    this.SamsungTvSource.prototype.testGetChannelListCallsOnErrorWhenWebAPIErrors = function(queue) {
+        expectAsserts(5);
 
         var config = this.getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -358,8 +361,18 @@
             broadcastSource.getChannelList(params);
 
             assert(stub.calledOnce);
-            assertSame(params.onError, stub.args[0][1]);
 
+            var errorFunc = stub.args[0][1];
+            assertFunction(errorFunc);
+
+            errorFunc();
+
+            assert(params.onSuccess.notCalled);
+            assert(params.onError.calledOnce);
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is not available"
+            }));
         }, config);
     };
 
@@ -608,7 +621,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("BBC Two not found in channel list"));
+            assert(params.onError.calledWith({
+                name : "ChannelError",
+                message : "Channel could not be found"
+            }));
 
         }, config);
     };
@@ -712,7 +728,10 @@
             assert(tuneStub.calledOnce);
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Error tuning channel: Nu-uh!"));
+            assert(params.onError.calledWith({
+                name : "ChangeChannelError",
+                message : "Error tuning channel"
+            }));
 
 
         }, config);
@@ -763,7 +782,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Error tuning channel (tuneError): Nope!"));
+            assert(params.onError.calledWith({
+                name : "ChangeChannelError",
+                message : "Error tuning channel"
+            }));
 
         }, config);
     };
