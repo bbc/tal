@@ -159,13 +159,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     params.onSuccess();
 
                 } else {
-
                     try {
-
-                        var self = this;
-
                         var channelList = this._getChannelList();
-
                         var channel = undefined;
 
                         for (var i = 0; i < channelList.length; i++) {
