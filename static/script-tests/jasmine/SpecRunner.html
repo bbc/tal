@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+    
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        
+        <title>Jasmine Spec Runner</title>
+
+        <script type="text/javascript" src="jasmine-1.3.1/jasmine.js"></script>
+        <script type="text/javascript" src="jasmine-1.3.1/jasmine-html.js"></script>
+
+        <script type="text/javascript" src="../lib/sinon.js"></script>
+
+        <script type="text/javascript" src="jstestdriver-adapter.js"></script>
+
+        <!-- TESTS -->
+
+        <script type="text/javascript">
+            var require = {
+                paths: {
+                    "antie": "http://static.sandbox.dev.bbc.co.uk/tvpjsframework/1.4.8/antie/script",
+                    "redbuttonhtml": "../../script",
+                    "fixtures": "../fixtures",
+                    "tvpjsframework": "http://static.sandbox.dev.bbc.co.uk/tvpjsframework/1.4.8/script"
+                }
+            };
+
+            window.antie = {
+                framework: {
+                    deviceConfiguration: {"modules":{"base":"antie\/devices\/browserdevice","modifiers":["antie\/devices\/anim\/styletopleft","antie\/devices\/media\/html5","antie\/devices\/data\/json2","antie\/devices\/net\/default"]},"mediasets":{"tv":"stb-all-h264","radio":"stb-aac"},"streaming":{"video":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["h264"],"maximumBitRate":2800,"maximumVideoLines":1080}]},"audio":{"mediaSelectorAPI":"jsfunc","mediaSelectorURI":"https:\/\/ipsecure.stage.bbc.co.uk\/mediaselector\/4\/jsfunc\/stream\/%vpid%\/%callback%","mediaURIFormat":"%href%","supported":[{"protocols":["http"],"encodings":["aac"]}]}},"input":{"map":{"13":"ENTER","37":"LEFT","38":"UP","39":"RIGHT","40":"DOWN","83":"SUBTITLE","73":"INFO"}},"accessibility":{"captions":{"supported":["application\/ttaf+xml"]}},"layouts":[{"width":999999,"height":999999,"module":"fixtures\/layouts\/toobig","classes":["toobig"]},{"width":960,"height":540,"module":"fixtures\/layouts\/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","widgets":{"horizontalprogress":{"animate":false},"componentcontainer":{"fade":false},"horizontalcarousel":{"fade":true,"bindDelay":10}},"components":[]}
+                }
+            };
+
+
+        </script>
+
+        <script type="text/javascript" src="../lib/require.js"></script>
+        <script type="text/javascript" src="../lib/mockapplication.js"></script>
+
+        <script type="text/javascript">
+
+                require(
+                        [
+							"../tests/widgets/button",
+                            "../tests/datasource"
+                        ],
+                        function(){
+
+                            registerTestsWithJasmine();
+
+                            var jasmineEnv = jasmine.getEnv();
+                            jasmineEnv.updateInterval = 1000;
+
+                            var htmlReporter = new jasmine.HtmlReporter();
+
+                            jasmineEnv.addReporter(htmlReporter);
+
+                            jasmineEnv.specFilter = function(spec) {
+                                return htmlReporter.specFilter(spec);
+                            };
+
+                            var currentWindowOnload = window.onload;
+
+                            window.onload = function() {
+                                if (currentWindowOnload) {
+                                    currentWindowOnload();
+                                }
+                                execJasmine();
+                            };
+
+                            function execJasmine() {
+                                jasmineEnv.execute();
+                            }
+
+                        }
+                );
+
+        </script>
+        
+        <link rel="stylesheet" type="text/css" href="jasmine-1.3.1/jasmine.css">
+        <link rel="shortcut icon" type="image/png" href="jasmine-1.3.1/jasmine_favicon.png">
+    </head>
+    <body></body>
+</html>
