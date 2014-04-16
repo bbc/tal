@@ -191,26 +191,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                             };
                         }
 
-                        var setChannelError = function () {
-                            self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
-                            self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
-                            params.onError({
-                                name : "ChangeChannelError",
-                                message: "Channel could not be tuned"
-                            });
-                        };
-
-
-                        var setChannelSuccess = function () {
-                            self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
-                            self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
-                            params.onSuccess();
-                        };
-
-                        this._broadcastVideoObject.addEventListener('ChannelChangeError', setChannelError);
-                        this._broadcastVideoObject.addEventListener('ChannelChangeSucceeded', setChannelSuccess);
-
-                        this._broadcastVideoObject.setChannel(channelObj);
+                        this._tuneToChannelObject(channelObj, params.onSuccess, params.onError);
 
                     } catch(e) {
                         params.onError(e);
@@ -230,7 +211,6 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Not currently required for hbbtv
             },
             setChannel : function(params) {
-                var self = this;
                 var channelType = this._getChannelType();
                 var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
                 if (newChannel === null) {
@@ -238,19 +218,22 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                         name : "ChannelError",
                         message : "Channel could not be found"
                     });
-                    return;
+                } else {
+                    this._tuneToChannelObject(newChannel, params.onSuccess, params.onError);
                 }
-
+            },
+            _tuneToChannelObject: function (newChannel, onSuccess, onError) {
+                var self = this;
                 var successEventListener = function(channel) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
-                    params.onSuccess();
+                    onSuccess();
                 };
 
                 var errorEventListener = function(channel, errorState) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
-                    params.onError({
+                    onError({
                         name : "ChangeChannelError",
                         message : "Error tuning channel"
                     });

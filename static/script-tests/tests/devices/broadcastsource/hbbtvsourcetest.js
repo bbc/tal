@@ -1170,7 +1170,7 @@
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
                 name : "ChangeChannelError",
-                message: "Channel could not be tuned"
+                message : "Error tuning channel"
             }));
             assert(params.onSuccess.notCalled);
 
