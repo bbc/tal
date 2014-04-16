@@ -767,7 +767,10 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Nope"));
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is not available"
+            }));
             assert(params.onSuccess.notCalled);
 
         }, config);
@@ -788,7 +791,10 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Unable to retrieve channel list"));
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is empty or not available"
+            }));
             assert(params.onSuccess.notCalled);
 
         }, config);
@@ -809,7 +815,10 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Channel list contains no channels"));
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is empty or not available"
+            }));
             assert(params.onSuccess.notCalled);
 
         }, config);
@@ -931,7 +940,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("NonExistentChannel not found in channel list"));
+            assert(params.onError.calledWith({
+                name : "ChannelError",
+                message: "NonExistentChannel not found in channel list"
+            }));
 
 
         }, config);
@@ -1116,7 +1128,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Channel list contains no channels"));
+            assert(params.onError.calledWith({
+                name : "ChannelListError",
+                message : "Channel list is empty or not available"
+            }));
 
         }, config);
     };
@@ -1142,7 +1157,10 @@
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Channel could not be tuned"));
+            assert(params.onError.calledWith({
+                name : "ChangeChannelError",
+                message: "Channel could not be tuned"
+            }));
 
         }, config);
     };
@@ -1201,7 +1219,10 @@
             broadcastSource._broadcastVideoObject.dispatchEvent(evt);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith("Error tuning channel"));
+            assert(params.onError.calledWith({
+                name : "ChangeChannelError",
+                message: "Channel could not be tuned"
+            }));
             assert(params.onSuccess.notCalled);
 
         }, config);

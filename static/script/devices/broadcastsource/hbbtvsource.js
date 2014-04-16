@@ -123,7 +123,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     params.onSuccess(result);
 
                 } catch (e) {
-                    params.onError(e.message);
+                    params.onError(e);
                 }
             },
             getCurrentChannel : function () {
@@ -172,27 +172,36 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                         }
 
                         if (!channel) {
-                            throw {message: params.channelName + " not found in channel list"};
+                            throw {
+                                name : "ChannelError",
+                                message: params.channelName + " not found in channel list"
+                            };
                         }
 
                         var channelObj = this._broadcastVideoObject.createChannelObject(channel.type, channel.onid, channel.tsid, channel.sid);
 
                         if (!channelObj) {
-                            throw {message: "Channel could not be tuned"};
+                            throw {
+                                name : "ChangeChannelError",
+                                message: "Channel could not be tuned"
+                            };
                         }
 
                         var setChannelError = function () {
                             self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
                             self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
-                            params.onError("Error tuning channel");
-                        }
+                            params.onError({
+                                name : "ChangeChannelError",
+                                message: "Channel could not be tuned"
+                            });
+                        };
 
 
                         var setChannelSuccess = function () {
                             self._broadcastVideoObject.removeEventListener('ChannelChangeError', setChannelError);
                             self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', setChannelSuccess);
                             params.onSuccess();
-                        }
+                        };
 
                         this._broadcastVideoObject.addEventListener('ChannelChangeError', setChannelError);
                         this._broadcastVideoObject.addEventListener('ChannelChangeSucceeded', setChannelSuccess);
@@ -200,7 +209,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                         this._broadcastVideoObject.setChannel(channelObj);
 
                     } catch(e) {
-                        params.onError(e.message);
+                        params.onError(e);
                     }
                 }
             },
@@ -297,14 +306,22 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
             _getChannelList : function() {
-                var channelConfig = this._broadcastVideoObject.getChannelConfig();
+                var channelConfig = undefined;
 
-                if (!channelConfig.channelList) {
-                    throw {message: "Unable to retrieve channel list"};
+                try {
+                    channelConfig = this._broadcastVideoObject.getChannelConfig();
+                } catch (e) {
+                    throw {
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    };
                 }
 
-                if (channelConfig.channelList.length === 0) {
-                    throw {message: "Channel list contains no channels"};
+                if (!channelConfig || !channelConfig.channelList || channelConfig.channelList.length === 0) {
+                    throw {
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    };
                 }
 
                 var result = [];
