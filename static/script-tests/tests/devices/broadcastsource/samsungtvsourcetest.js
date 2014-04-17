@@ -887,7 +887,7 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerStoppedEventsAreBroadcastToApplication = function(queue) {
+    this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplication = function(queue) {
         expectAsserts(15);
 
         var config = this.getGenericSamsungBroadcastConfig();
@@ -957,6 +957,123 @@
         }, config);
     };
 
+    this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerUnavailableEventsAreBroadcastToApplicationWithStringID = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent'], function(application, TunerUnavailableEvent) {
+
+
+            var eventConstructorSpy = this.sandbox.spy(TunerUnavailableEvent.prototype,"init");
+            var broadcastEventStub = this.sandbox.stub(application, 'broadcastEvent');
+
+            var device = application.getDevice();
+            device.createBroadcastSource();
+
+            assertFunction(this.samsungPluginTV.OnEvent);
+
+            this.samsungPluginTV.OnEvent("101");
+
+            assert(broadcastEventStub.calledOnce);
+            assert(eventConstructorSpy.calledOnce);
+            assert(broadcastEventStub.calledWith(eventConstructorSpy.thisValues[0]));
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerStoppedEventsAreBroadcastToApplicationWithStringID = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent'], function(application, TunerStoppedEvent) {
+
+
+            var eventConstructorSpy = this.sandbox.spy(TunerStoppedEvent.prototype,"init");
+            var broadcastEventStub = this.sandbox.stub(application, 'broadcastEvent');
+
+            var device = application.getDevice();
+            device.createBroadcastSource();
+
+            assertFunction(this.samsungPluginTV.OnEvent);
+
+            this.samsungPluginTV.OnEvent("114");
+
+            assert(broadcastEventStub.calledOnce);
+            assert(eventConstructorSpy.calledOnce);
+            assert(broadcastEventStub.calledWith(eventConstructorSpy.thisValues[0]));
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplicationWithStringID = function(queue) {
+        expectAsserts(15);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
+
+
+            var apiResult = {
+                channelName: "Alpha",
+                originalNetworkID: 9876,
+                transportStreamID: 8765,
+                programNumber: 7654,
+                ptc: 6543,
+                major: 5432,
+                minor: 4321,
+                sourceID: 3210
+            };
+
+            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").returns(apiResult);
+            var channelConstructorSpy = this.sandbox.spy(Channel.prototype, "init");
+            var eventConstructorSpy = this.sandbox.spy(TunerPresentingEvent.prototype,"init");
+            var broadcastEventStub = this.sandbox.stub(application, 'broadcastEvent');
+
+            var device = application.getDevice();
+            device.createBroadcastSource();
+
+            assertFunction(this.samsungPluginTV.OnEvent);
+
+            this.samsungPluginTV.OnEvent("103");
+
+            assert(broadcastEventStub.calledOnce);
+            assert(eventConstructorSpy.calledOnce);
+            assert(channelConstructorSpy.calledOnce);
+            assert(broadcastEventStub.calledWith(eventConstructorSpy.thisValues[0]));
+            assert(eventConstructorSpy.calledWith(channelConstructorSpy.thisValues[0]));
+
+            var channel = eventConstructorSpy.args[0][0];
+
+            assertEquals("Alpha", channel.name);
+            assertEquals(9876, channel.onid);
+            assertUndefined(channel.type);
+            assertEquals(8765, channel.tsid);
+            assertEquals(7654, channel.sid);
+            assertEquals(6543, channel.ptc);
+            assertEquals(5432, channel.major);
+            assertEquals(4321, channel.minor);
+            assertEquals(3210, channel.sourceId);
+
+        }, config);
+    };
+
+    this.SamsungTvSource.prototype.testBroadcastEventsAreRequestedDuringConstructionOfBroadcastSource = function(queue) {
+        expectAsserts(4);
+
+        var config = this.getGenericSamsungBroadcastConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+
+
+            var setEventStub = this.sandbox.stub(this.samsungPluginTV,"SetEvent");
+
+            var device = application.getDevice();
+            device.createBroadcastSource();
+
+            assert(setEventStub.calledThrice);
+            assert(setEventStub.calledWith(101));
+            assert(setEventStub.calledWith(103));
+            assert(setEventStub.calledWith(114));
+        }, config);
+    };
     /**
      * Helper functions to mock out and use Samsung specific APIs
      */

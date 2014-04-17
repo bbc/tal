@@ -66,7 +66,7 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 var self = this;
 
                 tvPlugin.OnEvent = function(id) {
-                    switch (id) {
+                    switch (parseInt(id)) {
                         case PL_TV_EVENT_NO_SIGNAL:
                             var unavailableEvent = new TunerUnavailableEvent();
                             Application.getCurrentApplication().broadcastEvent(unavailableEvent);
