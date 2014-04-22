@@ -27,10 +27,17 @@
 require.def('antie/events/tunerpresentingevent',
     ['antie/events/event'],
     function (Event) {
+
+        /**
+         * Indicates broadcast has started playing.
+         * @class
+         * @name antie.events.TunerPresentingEvent
+         * @extends antie.events.Event
+         */
         return Event.extend(/** @lends antie.events.Event.prototype */ {
             /**
              * @constructor
-             * @ignore
+             * @param {antie.devices.broadcastsource.Channel} channel The channel which is now playing.
              */
             init: function(channel) {
                 this.channel = channel;

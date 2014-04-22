@@ -30,25 +30,26 @@ require.def('antie/devices/broadcastsource/channel',
     ],
     function (Class) {
 
+        /**
+         * Class representing information about a channel.
+         * @class
+         * @extends antie.Class
+         */
         return Class.extend(/** @lends antie.class.prototype */{
             /**
              * @constructor
-             * @param props.name channel name
-             * @param props.onid original network ID
-             * @param props.tsid transport stream ID
-             * @param props.sid program number
-             * @param props.type channel type
-             * @param props.ptc
-             * @param props.major
-             * @param props.minor
-             * @param props.sourceId
+             * @param props.name Channel name (as appears in the broacast stream / EPG)
+             * @param props.onid Original Network ID
+             * @param props.tsid Transport Stream ID
+             * @param props.sid Service ID (program number)
              */
             init : function(props) {
                 this.name = props.name;
-                this.type = props.type;
                 this.onid = props.onid || undefined;
                 this.tsid = props.tsid || undefined;
                 this.sid = props.sid || undefined;
+                // Device specific:
+                this.type = props.type;
                 this.ptc = props.ptc || undefined;
                 this.major = props.major || undefined;
                 this.minor = props.minor || undefined;

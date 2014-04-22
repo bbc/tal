@@ -27,6 +27,14 @@
 require.def('antie/events/tunerunavailableevent',
     ['antie/events/event'],
     function (Event) {
+
+        /**
+         * Indicates broadcast has been interrupted, for example because the broadcast signal has stopped. (e.g. the
+         * antenna has been removed from the device.)
+         * @class
+         * @name antie.events.TunerUnavailableEvent
+         * @extends antie.events.Event
+         */
         return Event.extend(/** @lends antie.events.Event.prototype */ {
             /**
              * @constructor

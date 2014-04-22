@@ -27,6 +27,13 @@
 require.def('antie/events/tunerstoppedevent',
     ['antie/events/event'],
     function (Event) {
+
+        /**
+         * Indicates broadcast has stopped playing.
+         * @class
+         * @name antie.events.TunerStoppedEvent
+         * @extends antie.events.Event
+         */
         return Event.extend(/** @lends antie.events.Event.prototype */ {
             /**
              * @constructor
