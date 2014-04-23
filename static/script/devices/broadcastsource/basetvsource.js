@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.devices.broadcastsource.basetvsource class.
  *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -67,6 +67,21 @@ require.def('antie/devices/broadcastsource/basetvsource',
                 throw new Error("Device broadcast source does not override abstract method getCurrentChannelName");
             },
             /**
+             * Get the current channel information
+             * @returns A Channel object representing the current channel.
+             */
+            getCurrentChannel : function () {
+                throw new Error("Device broadcast source does not override abstract method getCurrentChannel");
+            },
+            /**
+             * Get the list of currently available channels.
+             * @param params.onSuccess function called if the channel list is retrieved, passed a single argument which is a list of Channel objects.
+             * @param params.onError function called if retrieving the channel list fails.
+             */
+            getChannelList : function (params) {
+                throw new Error("Device broadcast source does not override abstract method getChannelList");
+            },
+            /**
              * Sets the size and position of the visible broadcast source
              * @param top
              * @param left
@@ -89,6 +104,15 @@ require.def('antie/devices/broadcastsource/basetvsource',
              */
             setChannel : function(params) {
                 throw new Error("Device broadcast source does not override abstract method setChannel");
+            },
+            /**
+             * Requests the device switches a tuner to the channel specified by the channel name.
+             * @param params.channelName String representation of the channel name as it appears in the EPG.
+             * @param params.onSuccess function to be called if the tuner was retuned successfully
+             * @param params.onError function to be called if the provided channel was unable to be tuned
+             */
+            setChannelByName : function(params) {
+                throw new Error("Device broadcast source does not override abstract method setChannelByName");
             },
             /**
              * Reverts the current screen settings and performs any clean up required before

@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.hbbtvsource class.
  *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -28,9 +28,13 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application'
+        'antie/application',
+        'antie/devices/broadcastsource/channel',
+        'antie/events/tunerunavailableevent',
+        'antie/events/tunerpresentingevent',
+        'antie/events/tunerstoppedevent'
     ],
-    function (Device, BaseTvSource, Application) {
+    function (Device, BaseTvSource, Application, Channel, TunerUnavailableEvent, TunerPresentingEvent, TunerStoppedEvent ) {
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */
@@ -42,6 +46,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              * @ignore
              */
             init: function () {
+
+                var self = this;
                 this._broadcastVideoObject = document.getElementById(DOM_ELEMENT_ID);
 
                 if (!this._broadcastVideoObject) {
@@ -55,6 +61,27 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     PRESENTING: 2,
                     STOPPED: 3
                 };
+
+                this.playState = this._playStates.UNREALIZED;
+
+                this._broadcastVideoObject.addEventListener("PlayStateChange", function() {
+
+                    var oldPlayState = self.playState;
+                    var newPlayState = self.getPlayState();
+
+                    if (oldPlayState === self._playStates.PRESENTING && newPlayState === self._playStates.UNREALIZED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent());
+
+                    } else if (newPlayState === self._playStates.PRESENTING) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(self.getCurrentChannel()));
+
+                    } else if (newPlayState === self._playStates.STOPPED) {
+                        Application.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
+                    }
+
+                    self.playState = newPlayState;
+
+                });
             },
             showCurrentChannel: function () {
                 // Check if exception is thrown by bindToCurrentChannel?
@@ -68,7 +95,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                         this._broadcastVideoObject.bindToCurrentChannel();
                     }
                 } catch(e) {
-                    throw Error("Unable to bind to current channel");
+                    throw new Error("Unable to bind to current channel");
                 }
 
                 this._broadcastVideoObject.stop();
@@ -91,6 +118,72 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
                 return channelConfig.name;
             },
+            getChannelList : function (params) {
+                try {
+                    var result = this._getChannelList();
+                    params.onSuccess(result);
+
+                } catch (e) {
+                    params.onError(e);
+                }
+            },
+            getCurrentChannel : function () {
+                var result = false;
+
+                var currentChannel = this._broadcastVideoObject.currentChannel;
+
+                if (currentChannel) {
+                    result = new Channel({
+                        name : currentChannel.name,
+                        type: currentChannel.channelType,
+                        onid: currentChannel.onid,
+                        tsid: currentChannel.tsid,
+                        sid: currentChannel.sid
+                    });
+                }
+
+                return result;
+            },
+            setChannelByName : function(params) {
+
+                var currentChannel = this.getCurrentChannel();
+
+                if (!currentChannel) {
+                    params.onError({
+                        name : "ChannelError",
+                        message: "Unable to determine current channel name"
+                    });
+
+                } else if (params.channelName === currentChannel.name) {
+                    this.showCurrentChannel();
+                    params.onSuccess();
+
+                } else {
+                    try {
+                        var channelList = this._getChannelList();
+                        var channel;
+
+                        for (var i = 0; i < channelList.length; i++) {
+                            if (channelList[i].name === params.channelName) {
+                                channel = channelList[i];
+                                break;
+                            }
+                        }
+
+                        if (!channel) {
+                            throw {
+                                name : "ChannelError",
+                                message: params.channelName + " not found in channel list"
+                            };
+                        }
+
+                        this._tuneToChannelByTriplet(channel.type, channel.onid, channel.tsid, channel.sid, params.onSuccess, params.onError);
+
+                    } catch(e) {
+                        params.onError(e);
+                    }
+                }
+            },
             setPosition : function(top, left, width, height) {
                 this._broadcastVideoObject.style.top = top + "px";
                 this._broadcastVideoObject.style.left = left + "px";
@@ -104,56 +197,32 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Not currently required for hbbtv
             },
             setChannel : function(params) {
-                var self = this;
-                var channelType;
-
-                // TODO: Clean this up
-                // Attempt to get the channel type of the current channel
-                // If this is not available, fall back to ID_DVB_T
-                try {
-                    channelType = this._getChannelType();
-                } catch(e) {
-                    channelType = ID_DVB_T;
-                }
-                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, params.onid, params.tsid, params.sid);
+                var channelType = this._getChannelType();
+                this._tuneToChannelByTriplet(channelType, params.onid, params.tsid, params.sid, params.onSuccess, params.onError);
+            },
+            _tuneToChannelByTriplet: function (channelType, onid, tsid, sid, onSuccess, onError) {
+                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, onid, tsid, sid);
                 if (newChannel === null) {
-                    params.onError({
+                    onError({
                         name : "ChannelError",
                         message : "Channel could not be found"
                     });
-                    return;
+                } else {
+                    this._tuneToChannelObject(newChannel, onSuccess, onError);
                 }
-
-                // Test the that the device can access the channelList, this will be required in the future
-                try {
-                    var channelConfig = this._broadcastVideoObject.getChannelConfig();
-                    var channelList = channelConfig.channelList;
-                    var channelListCount = channelList.length;
-                } catch(e) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is not available"
-                    });
-                }
-
-                if (!channelListCount || channelListCount < 0) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is empty or not available"
-                    });
-                    return;
-                }
-
-                var successEventListener = function(channel) {
+            },
+            _tuneToChannelObject: function (newChannel, onSuccess, onError) {
+                var self = this;
+                var successEventListener = function(/* channel */) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
-                    params.onSuccess();
+                    onSuccess();
                 };
 
-                var errorEventListener = function(channel, errorState) {
+                var errorEventListener = function(/* channel, errorState */) {
                     self._broadcastVideoObject.removeEventListener("ChannelChangeSucceeded", successEventListener);
                     self._broadcastVideoObject.removeEventListener("ChannelChangeError", errorEventListener);
-                    params.onError({
+                    onError({
                         name : "ChangeChannelError",
                         message : "Error tuning channel"
                     });
@@ -165,14 +234,21 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.setChannel(newChannel);
             },
             /**
-             * @Returns The type of identification for the channel, as indicated by one of the ID_* constants in the
-             * HBBTV specification
+             * @returns The type of the channel, as indicated by one of the ID_* constants in the HBBTV
+             *      specification. Defaults to ID_DVB_T in the case of error
+             *  @private
              */
             _getChannelType : function() {
-                var channelType = this._broadcastVideoObject.currentChannel.idType;
-                if (typeof channelType === "undefined") {
+                var channelType;
+                try {
+                    channelType = this._broadcastVideoObject.currentChannel.idType;
+                    if (typeof channelType === "undefined") {
+                        channelType = ID_DVB_T;
+                    }
+                } catch(e) {
                     channelType = ID_DVB_T;
                 }
+
                 return channelType;
             },
             /**
@@ -182,6 +258,40 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
             _setBroadcastToFullScreen : function() {
                 var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
+            },
+            _getChannelList : function() {
+                var channelConfig;
+
+                try {
+                    channelConfig = this._broadcastVideoObject.getChannelConfig();
+                } catch (e) {
+                    throw {
+                        name : "ChannelListError",
+                        message : "Channel list is not available"
+                    };
+                }
+
+                if (!channelConfig || !channelConfig.channelList || channelConfig.channelList.length === 0) {
+                    throw {
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    };
+                }
+
+                var result = [];
+                for (var i = 0; i < channelConfig.channelList.length; i++) {
+                    var channel = channelConfig.channelList[i];
+                    result.push(new Channel(
+                        {
+                            name: channel.name,
+                            type: channel.channelType,
+                            onid: channel.onid,
+                            sid: channel.sid,
+                            tsid: channel.tsid
+                        }
+                    ));
+                }
+                return result;
             }
         });
 
