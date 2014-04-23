@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.devices.broadcastsource.samsungtvsource class.
  *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -177,7 +177,10 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             setChannelByName : function(params) {
                 var currentChannel = this.getCurrentChannel();
                 if (!currentChannel) {
-                    params.onError("Unable to determine current channel");
+                    params.onError({
+                        name : "ChannelError",
+                        message: "Unable to determine current channel name"
+                    });
 
                 } else if (currentChannel.name === params.channelName) {
                     this.showCurrentChannel();
@@ -223,21 +226,11 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
 
                     var channel;
 
-                    channelLoop: for (var i = 0; i < channels.length; i++) {
-
-                        specLoop: for (var prop in params.spec) {
-                            if (!params.spec.hasOwnProperty(prop)) {
-                                // Don't match on inherited properties
-                                continue specLoop;
-                            }
-                            if (channels[i][prop] !== params.spec[prop]) {
-                                // Spec not matched
-                                continue channelLoop;
-                            }
+                    for (var i = 0; i < channels.length; i++) {
+                        if (self._channelMatchesSpec(channels[i], params.spec)) {
+                            channel = channels[i];
+                            break;
                         }
-                        // All spec's own properties found and match.
-                        channel = channels[i];
-                        break channelLoop;
                     }
 
                     if (channel) {
@@ -259,6 +252,21 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                     onError: params.onError,
                     onSuccess: onChannelListRetrieved
                 });
+            },
+            _channelMatchesSpec: function(channel, spec) {
+                var result = true;
+                for (var prop in spec) {
+                    if (!spec.hasOwnProperty(prop)) {
+                        // Don't match on inherited properties (e.g. length)
+                        continue;
+                    }
+                    if (channel[prop] !== spec[prop]) {
+                        // Spec not matched
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
             },
             /**
              * @param params.channel Channel object
@@ -288,6 +296,8 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                         });
                     };
 
+                    // Last argument is the Window ID.
+                    // See http://www.samsungdforum.com/Guide/ref00008/tvchannel/dtv_tvchannel_module.html
                     webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
 
                 } catch (e) {

@@ -1,5 +1,5 @@
 /**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -126,13 +126,13 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            broadcastSource._broadcastVideoObject.playState = 1;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 1;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assertEquals(1, broadcastSource.playState);
 
-            broadcastSource._broadcastVideoObject.playState = 2;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 2;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assertEquals(2, broadcastSource.playState);
 
@@ -151,13 +151,13 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            broadcastSource._broadcastVideoObject.playState = 2;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 2;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent')
 
-            broadcastSource._broadcastVideoObject.playState = 0;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 0;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerUnavailableEvent);
 
@@ -178,8 +178,8 @@
 
             var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
 
-            broadcastSource._broadcastVideoObject.playState = 2;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 2;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerPresentingEvent);
 
@@ -188,28 +188,31 @@
 
     this.hbbtvSource.prototype.testTunerPresentingEventConstructedWithCurrentChannelWhenPlayStateChangesToPresenting = function(queue) {
 
-        expectAsserts(1);
+        expectAsserts(7);
 
         var config = this.getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
-
-            var channel = {foo: "bar"};
-
-            broadcastSource.getCurrentChannel = function() {
-                return channel;
-            };
 
             var evt = new CustomEvent("PlayStateChange");
 
             var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
 
-            broadcastSource._broadcastVideoObject.playState = 2;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 2;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
-            assertSame(channel, broadcastEventSpy.args[0][0].channel);
+            assert(broadcastEventSpy.calledOnce);
+            var channel = broadcastEventSpy.args[0][0].channel;
+
+            assertInstanceOf(Channel, channel);
+
+            assertEquals("BBC One", channel.name);
+            assertEquals(123, channel.type);
+            assertEquals(321, channel.onid);
+            assertEquals(456, channel.tsid);
+            assertEquals(654, channel.sid);
 
         }, config);
     };
@@ -228,8 +231,8 @@
 
             var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
 
-            broadcastSource._broadcastVideoObject.playState = 3;
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.playState = 3;
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerStoppedEvent);
 
@@ -556,7 +559,7 @@
             var onSuccessSpy = this.sandbox.spy();
             var onErrorSpy = this.sandbox.spy();
 
-            var listenSpy = this.sandbox.spy(broadcastSource._broadcastVideoObject, 'addEventListener');
+            var listenSpy = this.sandbox.spy(this.hbbtvPlugin, 'addEventListener');
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -580,7 +583,7 @@
             var onSuccessSpy = this.sandbox.spy();
             var onErrorSpy = this.sandbox.spy();
 
-            var listenSpy = this.sandbox.spy(broadcastSource._broadcastVideoObject, 'addEventListener');
+            var listenSpy = this.sandbox.spy(this.hbbtvPlugin, 'addEventListener');
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -613,7 +616,7 @@
             });
 
             var event = new CustomEvent("ChannelChangeSucceeded", {});
-            broadcastSource._broadcastVideoObject.dispatchEvent(event);
+            this.hbbtvPlugin.dispatchEvent(event);
 
             assertTrue("OnSuccess callback function called", onSuccessSpy.calledOnce);
             assertTrue("OnError callback function not called", onErrorSpy.notCalled);
@@ -640,7 +643,7 @@
             });
 
             var e = new CustomEvent('ChannelChangeError');
-            broadcastSource._broadcastVideoObject.dispatchEvent(e);
+            this.hbbtvPlugin.dispatchEvent(e);
 
             assertTrue("OnError callback function called", onErrorSpy.called);
             assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
@@ -789,7 +792,6 @@
             ];
 
             this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList: channels});
-            var channelConstructorSpy = this.sandbox.spy(Channel.prototype, "init");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -800,14 +802,13 @@
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
 
-            // This is the best way we have for checking the type of the arguments to onSuccess due to the
-            // Class.js mixing in the class during construction, rather than using the JavaScript type system.
             var args = params.onSuccess.args[0];
             assertEquals(1,args.length);
             var channelObjects = args[0];
-            assert(channelConstructorSpy.calledTwice);
-            assertSame(channelConstructorSpy.thisValues[0], channelObjects[0]);
-            assertSame(channelConstructorSpy.thisValues[1], channelObjects[1]);
+
+            assertEquals(2, channelObjects.length);
+            assertInstanceOf(Channel, channelObjects[0]);
+            assertInstanceOf(Channel, channelObjects[1]);
 
             assertEquals("One", channelObjects[0].name);
             assertEquals(123, channelObjects[0].onid);
@@ -825,18 +826,16 @@
     };
 
     this.hbbtvSource.prototype.testGetCurrentChannelReturnsChannelObjectContainingCurrentChannelInformation = function (queue) {
-        expectAsserts(7);
+        expectAsserts(6);
 
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
 
-            var channelConstructorSpy = this.sandbox.spy(Channel.prototype, "init");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             var channel = broadcastSource.getCurrentChannel();
 
-            assert(channelConstructorSpy.calledOnce);
-            assertSame(channelConstructorSpy.thisValues[0], channel);
+            assertInstanceOf(Channel, channel);
 
             assertEquals("BBC One", channel.name);
             assertEquals(123, channel.type);
@@ -847,7 +846,7 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testGetCurrentChannelReturnsCorrectIfCurrentChannelIsUndefined = function (queue) {
+    this.hbbtvSource.prototype.testGetCurrentChannelReturnsFalseIfCurrentChannelIsUndefined = function (queue) {
         expectAsserts(1);
 
         var config = this.getGenericHBBTVConfig();
@@ -1159,7 +1158,7 @@
             broadcastSource.setChannelByName(params);
 
             var evt = new CustomEvent('ChannelChangeError');
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -1193,7 +1192,7 @@
             broadcastSource.setChannelByName(params);
 
             var evt = new CustomEvent('ChannelChangeSucceeded');
-            broadcastSource._broadcastVideoObject.dispatchEvent(evt);
+            this.hbbtvPlugin.dispatchEvent(evt);
 
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
