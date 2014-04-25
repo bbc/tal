@@ -67,6 +67,9 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.addEventListener("PlayStateChange", function() {
 
                     var oldPlayState = self.playState;
+                    // Note! The play state may change during the execution of this method; capture it so we
+                    // have a consistent value for the duration of the event listener.
+                    // See OPIF DAE specification section 7.14.90
                     var newPlayState = self.getPlayState();
 
                     if (oldPlayState === self._playStates.PRESENTING && newPlayState === self._playStates.UNREALIZED) {
