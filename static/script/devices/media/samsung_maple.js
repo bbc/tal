@@ -50,8 +50,6 @@ require.def(
                 this.tvmwPlugin = document.getElementById('pluginObjectTVMW');
                 this.originalSource = this.tvmwPlugin.GetSource();
 
-                this._autoPlay = false;
-
                 this.mediaSource = null;
 
                 var self = this;
@@ -244,8 +242,11 @@ require.def(
                 this.videoPlayerState.ended = false;
                 this.videoPlayerState.playing = false;
 
-                if (this._autoPlay) {
-                    this._startPlaying();
+                if (this.videoPlayerState.currentTime > 0) {
+                    this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
+                }
+                else {
+                    this.playerPlugin.Play(this._getSamsungFormattedUrl);
                 }
             },
             // DOMString canPlayType(in DOMString type);
@@ -343,10 +344,11 @@ require.def(
             },
             // attribute boolean autoplay;
             getAutoPlay: function() {
-                return this._autoPlay;
+                // TODO: Samsung implementation
+                return false;
             },
             setAutoPlay: function(autoplay) {
-                this._autoPlay = autoplay;
+                // TODO: Samsung implementation
             },
             // attribute boolean loop;
             getLoop: function() {
@@ -363,8 +365,6 @@ require.def(
                     this.videoPlayerState.paused = false;
                     this.bubbleEvent(new MediaEvent("play", this));
                     this.bubbleEvent(new MediaEvent("playing", this));
-                } else if (!this._autoPlay) {
-                    this._startPlaying();
                 }
             },
             stop: function() {
@@ -395,14 +395,6 @@ require.def(
                 if (this._mediaType === "video") {
                     var dimensions = this.getCurrentApplication().getDevice().getScreenSize();
                     this.setWindow(0, 0, dimensions.width, dimensions.height);
-                }
-            },
-            _startPlaying: function() {
-                if (this.videoPlayerState.currentTime > 0) {
-                    this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
-                }
-                else {
-                    this.playerPlugin.Play(this._getSamsungFormattedUrl);
                 }
             }
         });
