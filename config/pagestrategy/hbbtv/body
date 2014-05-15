@@ -4,8 +4,7 @@
 	var appMgr = document.getElementById('appmgr');
 	var app = appMgr.getOwnerApplication(window.document);
 	app.show();
-	app.privateData.keyset.setValue(0x33F);
-	app.privateData.keyset.value = 0x330;
+	app.privateData.keyset.setValue(0x3FF);
 //]]>
 </script>
 
