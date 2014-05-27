@@ -5,5 +5,5 @@ before_install:
  - sh -e /etc/init.d/xvfb start
 script:
  - cd static
- - bundle
- - ttr webdriverurl=firefox
+ - bundle install --deployment
+ - bundle exec ttr webdriverurl=firefox
