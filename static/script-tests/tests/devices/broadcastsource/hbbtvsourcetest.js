@@ -702,7 +702,7 @@
         var config = this.getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throws({message:"Nope"});
+            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throwsException({message:"Nope"});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 

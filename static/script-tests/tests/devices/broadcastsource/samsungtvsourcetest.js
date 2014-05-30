@@ -245,7 +245,7 @@
         var config = this.getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").throws("Error!");
+            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").throwsException("Error!");
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -300,7 +300,7 @@
         var config = this.getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(webapis.tv.channel, "getChannelList").throws("Not gonna happen!");
+            this.sandbox.stub(webapis.tv.channel, "getChannelList").throwsException("Not gonna happen!");
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -493,7 +493,7 @@
         var config = this.getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").throws("Error!");
+            this.sandbox.stub(webapis.tv.channel, "getCurrentChannel").throwsException("Error!");
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -570,7 +570,7 @@
         var config = this.getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(webapis.tv.channel, "getChannelList").throws("Incorrect!");
+            this.sandbox.stub(webapis.tv.channel, "getChannelList").throwsException("Incorrect!");
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -700,7 +700,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var getChannelListStub = this.sandbox.stub(webapis.tv.channel, "getChannelList");
-            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune").throws({message:"Nu-uh!"});
+            var tuneStub = this.sandbox.stub(webapis.tv.channel, "tune").throwsException({message:"Nu-uh!"});
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
