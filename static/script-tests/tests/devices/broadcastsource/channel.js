@@ -212,10 +212,10 @@
 
         queuedRequire(queue, ["antie/devices/broadcastsource/channel"], function(Channel) {
 
-            assertEquals(1234, new Channel({"type" : 1234}).type);
-            assertEquals(0, new Channel({"type" : 0}).type);
-            assertUndefined(new Channel({"type" : undefined}).type);
-            assertUndefined(new Channel({ }).type);
+            assertEquals(1234, new Channel({"idType" : 1234}).idType);
+            assertEquals(0, new Channel({"idType" : 0}).idType);
+            assertUndefined(new Channel({"idType" : undefined}).idType);
+            assertUndefined(new Channel({ }).idType);
         });
     };
 

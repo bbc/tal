@@ -138,7 +138,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 if (currentChannel) {
                     result = new Channel({
                         name : currentChannel.name,
-                        type: currentChannel.channelType,
+                        idType: currentChannel.idType,
                         onid: currentChannel.onid,
                         tsid: currentChannel.tsid,
                         sid: currentChannel.sid
@@ -200,11 +200,11 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Not currently required for hbbtv
             },
             setChannel : function(params) {
-                var channelType = this._getChannelType();
-                this._tuneToChannelByTriplet(channelType, params.onid, params.tsid, params.sid, params.onSuccess, params.onError);
+                var idType = this._getChannelIdType();
+                this._tuneToChannelByTriplet(idType, params.onid, params.tsid, params.sid, params.onSuccess, params.onError);
             },
-            _tuneToChannelByTriplet: function (channelType, onid, tsid, sid, onSuccess, onError) {
-                var newChannel = this._broadcastVideoObject.createChannelObject(channelType, onid, tsid, sid);
+            _tuneToChannelByTriplet: function (idType, onid, tsid, sid, onSuccess, onError) {
+                var newChannel = this._broadcastVideoObject.createChannelObject(idType, onid, tsid, sid);
                 if (newChannel === null) {
                     onError({
                         name : "ChannelError",
@@ -241,18 +241,18 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              *      specification. Defaults to ID_DVB_T in the case of error
              *  @private
              */
-            _getChannelType : function() {
-                var channelType;
+            _getChannelIdType : function() {
+                var idType;
                 try {
-                    channelType = this._broadcastVideoObject.currentChannel.idType;
-                    if (typeof channelType === "undefined") {
-                        channelType = ID_DVB_T;
+                    idType = this._broadcastVideoObject.currentChannel.idType;
+                    if (typeof idType === "undefined") {
+                        idType = ID_DVB_T;
                     }
                 } catch(e) {
-                    channelType = ID_DVB_T;
+                    idType = ID_DVB_T;
                 }
 
-                return channelType;
+                return idType;
             },
             /**
              * Sets the size of the broadcast object to be the same as the required screen size identified by antie at
@@ -287,7 +287,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     result.push(new Channel(
                         {
                             name: channel.name,
-                            type: channel.channelType,
+                            idType: channel.idType,
                             onid: channel.onid,
                             sid: channel.sid,
                             tsid: channel.tsid
