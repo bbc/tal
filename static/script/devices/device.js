@@ -325,9 +325,10 @@ require.def('antie/devices/device',
              * @param {String} [id] The id of the element to create.
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @param {String} src The source URL of the image.
+             * @param {Size} [size] The size of the image.
              * @returns An image within the device's user-agent.
              */
-            createImage: function(id, classNames, src) {
+            createImage: function(id, classNames, src, size, onLoad, onError) {
             },
             /**
              * Appends an element as a child of another.
