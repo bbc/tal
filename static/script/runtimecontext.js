@@ -92,7 +92,7 @@ require.def('antie/runtimecontext',
 		 * @function
 		 */
 		RuntimeContext.getDevice = function() {
-			return applicationObject.getDevice();
+			return RuntimeContext.getCurrentApplication().getDevice();
 		};
 
 		return RuntimeContext;
