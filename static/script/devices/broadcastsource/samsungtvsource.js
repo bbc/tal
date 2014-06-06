@@ -28,13 +28,13 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application',
+        'antie/runtimecontext',
         'antie/devices/broadcastsource/channel',
         'antie/events/tunerunavailableevent',
         'antie/events/tunerstoppedevent',
         'antie/events/tunerpresentingevent'
     ],
-    function (Device, BaseTvSource, Application, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
+    function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
         /**
          * Contains a Samsung Maple implementation of the antie broadcast TV source.
          * @see http://www.samsungdforum.com/Guide/ref00014/PL_WINDOW_SOURCE.html
@@ -69,15 +69,15 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                     switch (parseInt(id)) {
                         case PL_TV_EVENT_NO_SIGNAL:
                             var unavailableEvent = new TunerUnavailableEvent();
-                            Application.getCurrentApplication().broadcastEvent(unavailableEvent);
+                            RuntimeContext.getCurrentApplication().broadcastEvent(unavailableEvent);
                             break;
                         case PL_TV_EVENT_SOURCE_CHANGED:
                             var stoppedEvent = new TunerStoppedEvent();
-                            Application.getCurrentApplication().broadcastEvent(stoppedEvent);
+                            RuntimeContext.getCurrentApplication().broadcastEvent(stoppedEvent);
                             break;
                         case PL_TV_EVENT_TUNE_SUCCESS:
                             var presentingEvent = new TunerPresentingEvent(self.getCurrentChannel());
-                            Application.getCurrentApplication().broadcastEvent(presentingEvent);
+                            RuntimeContext.getCurrentApplication().broadcastEvent(presentingEvent);
                             break;
                     }
                 };
@@ -197,7 +197,7 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 }
             },
             _setBroadcastToFullScreen : function() {
-                var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
+                var currentLayout = RuntimeContext.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
             /**

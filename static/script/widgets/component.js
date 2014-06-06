@@ -26,15 +26,16 @@
 
 require.def('antie/widgets/component',
 	[
-	 	'antie/widgets/container'
+	 	'antie/widgets/container',
+	 	'antie/runtimecontext'
 	],
-	function(Container) {
+	function(Container, RuntimeContext) {
 		/**
 		 * The Component widget class represents sections of UI that may be dynamically loaded.
 		 * @name antie.widgets.Component
 		 * @class
 		 * @extends antie.widgets.Container
-		 * @requires antie.Application
+		 * @requires antie.RuntimeContext
 		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
 		 */
 		return Container.extend(/** @lends antie.widgets.Component.prototype */ {
@@ -72,7 +73,7 @@ require.def('antie/widgets/component',
 			},
 
             getConfig: function() {
-                return this.getCurrentApplication().getDevice().getConfig();
+                return RuntimeContext.getDevice().getConfig();
             }
 		});
 	}

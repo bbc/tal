@@ -34,9 +34,9 @@ require.def('antie/widgets/widget',
     [
         'antie/class',
         'require',
-        'antie/application'
+        'antie/runtimecontext'
     ],
-    function(Class, require, Application) {
+    function(Class, require, RuntimeContext) {
         /**
          * Keep a count of generated IDs so we can ensure they're always unique
          * @private
@@ -215,12 +215,11 @@ require.def('antie/widgets/widget',
             },
             /**
              * Gets a reference to the application responsible for creating the widget.
-             * @see antie.Application
+             * @see antie.RuntimeContext
              */
             getCurrentApplication: function() {
                 try {
-                    if (!Application) Application = require('antie/application');
-                    return Application.getCurrentApplication();
+                    return RuntimeContext.getCurrentApplication();
                 } catch (ex) {
                     return null;
                 }

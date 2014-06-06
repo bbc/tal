@@ -27,10 +27,10 @@
 require.def('antie/mediasource',
         [
 			'antie/class',
-			'antie/application',
+			'antie/runtimecontext',
 			'antie/urlbuilder'
 		],
-        function(Class, Application, URLBuilder) {
+        function(Class, RuntimeContext, URLBuilder) {
 			/**
 			 * Base MediaSource (of unknown type). Provides storage of source and type information about a media source.
 			 * @name antie.MediaSource
@@ -72,7 +72,7 @@ require.def('antie/mediasource',
 						getURL: function(tags) {
 							tags = tags || {};
 
-							var config = Application.getCurrentApplication().getDevice().getConfig();
+							var config = RuntimeContext.getCurrentApplication().getDevice().getConfig();
 							var streamingConfig = this.getMediaType() == MediaSource.MEDIA_TYPE_AUDIO ?
 									config.streaming.audio : config.streaming.video;
 
