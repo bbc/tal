@@ -209,7 +209,7 @@
             assertInstanceOf(Channel, channel);
 
             assertEquals("BBC One", channel.name);
-            assertEquals(123, channel.type);
+            assertEquals(10, channel.idType);
             assertEquals(321, channel.onid);
             assertEquals(456, channel.tsid);
             assertEquals(654, channel.sid);
@@ -780,14 +780,14 @@
                     onid: 123,
                     tsid: 123,
                     sid: 123,
-                    channelType: 123
+                    idType: 123
                 },
                 {
                     name: "Two",
                     onid: 852,
                     tsid: 951,
                     sid: 753,
-                    channelType: 963
+                    idType: 963
                 }
             ];
 
@@ -814,13 +814,13 @@
             assertEquals(123, channelObjects[0].onid);
             assertEquals(123, channelObjects[0].tsid);
             assertEquals(123, channelObjects[0].sid);
-            assertEquals(123, channelObjects[0].type);
+            assertEquals(123, channelObjects[0].idType);
 
             assertEquals("Two", channelObjects[1].name);
             assertEquals(852, channelObjects[1].onid);
             assertEquals(951, channelObjects[1].tsid);
             assertEquals(753, channelObjects[1].sid);
-            assertEquals(963, channelObjects[1].type);
+            assertEquals(963, channelObjects[1].idType);
 
         }, config);
     };
@@ -838,7 +838,7 @@
             assertInstanceOf(Channel, channel);
 
             assertEquals("BBC One", channel.name);
-            assertEquals(123, channel.type);
+            assertEquals(10, channel.idType);
             assertEquals(321, channel.onid);
             assertEquals(456, channel.tsid);
             assertEquals(654, channel.sid);
@@ -1231,21 +1231,21 @@
                         onid: 1,
                         tsid: 2,
                         sid: 3,
-                        channelType: 4
+                        idType: 4
                     },
                     {
                         name: "BBC Two",
                         onid: 5,
                         tsid: 6,
                         sid: 7,
-                        channelType: 8
+                        idType: 8
                     },
                     {
                         name: "BBC Three",
                         onid: 9,
                         tsid: 10,
                         sid: 11,
-                        channelType: 12
+                        idType: 12
                     }
                 ]
             };

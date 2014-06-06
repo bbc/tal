@@ -282,7 +282,7 @@
             assertInstanceOf(Channel, result);
             assertEquals("Alpha", result.name);
             assertEquals(9876, result.onid);
-            assertUndefined(result.type);
+            assertUndefined(result.idType);
             assertEquals(8765, result.tsid);
             assertEquals(7654, result.sid);
             assertEquals(6543, result.ptc);
@@ -428,7 +428,7 @@
 
             assertEquals("Alpha", channelList[0].name);
             assertEquals(9876, channelList[0].onid);
-            assertUndefined(channelList[0].type);
+            assertUndefined(channelList[0].idType);
             assertEquals(8765, channelList[0].tsid);
             assertEquals(7654, channelList[0].sid);
             assertEquals(6543, channelList[0].ptc);
@@ -923,7 +923,7 @@
 
             assertEquals("Alpha", event.channel.name);
             assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.type);
+            assertUndefined(event.channel.idType);
             assertEquals(8765, event.channel.tsid);
             assertEquals(7654, event.channel.sid);
             assertEquals(6543, event.channel.ptc);
@@ -1030,7 +1030,7 @@
 
             assertEquals("Alpha", event.channel.name);
             assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.type);
+            assertUndefined(event.channel.idType);
             assertEquals(8765, event.channel.tsid);
             assertEquals(7654, event.channel.sid);
             assertEquals(6543, event.channel.ptc);

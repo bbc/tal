@@ -49,7 +49,7 @@ require.def('antie/devices/broadcastsource/channel',
                 this.tsid = props.tsid || undefined;
                 this.sid = props.sid || undefined;
                 // Device specific:
-                this.type = props.type;
+                this.idType = props.idType;
                 this.ptc = props.ptc || undefined;
                 this.major = props.major || undefined;
                 this.minor = props.minor || undefined;
