@@ -56,7 +56,7 @@ require.def(
 			if(logItems.length > 10) {
 				logItems.shift();
 			}
-			div.innerHTML = logItems.join("<hr noshade />");
+			div.innerHTML = logItems.join("<hr class='__onScreenLoggingBreak' />");
 		}
 		var loggingMethods = {
 			/**
