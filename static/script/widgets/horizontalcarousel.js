@@ -42,6 +42,7 @@ require.def('antie/widgets/horizontalcarousel',
 		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
 		 * @param {antie.Formatter} [itemFormatter] A formatter class used on each data item to generate the list item child widgets.
 		 * @param {antie.DataSource|Array} [dataSource] An array of data to be used to generate the list items, or an asynchronous data source.
+         * @deprecated This class is deprecated in favour of of antie.widgets.carousel
 		 */
 		var HorizontalCarousel = HorizontalList.extend(/** @lends antie.widgets.HorizontalCarousel.prototype */ {
 			/**
