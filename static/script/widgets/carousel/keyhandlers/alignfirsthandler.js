@@ -38,7 +38,9 @@ require.def('antie/widgets/carousel/keyhandlers/alignfirsthandler',
             _addAlignmentListeners: function () {
                 var carousel = this._carousel;
                 carousel.addEventListener('afteralign', function (ev) {
-                    carousel.setActiveIndex(ev.alignedIndex);
+                    if (ev.target === carousel) {
+                        carousel.setActiveIndex(ev.alignedIndex);
+                    }
                 });
             }
         });
