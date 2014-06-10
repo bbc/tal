@@ -43,7 +43,18 @@ require.def('antie/widgets/image',
 			 * @constructor
 			 * @ignore
 			 */
-			init: function(id, src, size) {
+			init: function(id, src, size, onLoad, onError) {
+				var self = this;
+				if (onLoad) {
+					this._onLoad = function () {
+						onLoad.call(self);
+					};
+				}
+				if (onError) {
+					this._onError = function () {
+						onError.call(self);
+					};
+				}
 				this._super(id);
 				this._src = src;
 				this._size = size;
@@ -57,8 +68,8 @@ require.def('antie/widgets/image',
 			 * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
 			 */
 			render: function(device) {
-				this._imageElement = device.createImage(this.id + "_img", null, this._src, this._size);
-				if(this._renderMode == Image.RENDER_MODE_CONTAINER) {
+				this._imageElement = device.createImage(this.id + "_img", null, this._src, this._size, this._onLoad, this._onError);
+				if(this._renderMode === Image.RENDER_MODE_CONTAINER) {
 					this.outputElement = this._super(device);
 					if(this._size) {
 						device.setElementSize(this.outputElement, this._size);
