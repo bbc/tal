@@ -27,18 +27,14 @@
 require.def('antie/application',
 	[
 	 	'antie/class',
+	 	'antie/runtimecontext',
 	 	'antie/widgets/componentcontainer',
 		'antie/widgets/button',
 		'antie/widgets/list',
 		'antie/devices/device'
 	],
-	function(Class, ComponentContainer, Button, List, Device) {
-		/**
-		 * Contains a reference to the single instance of the antie.Application class.
-		 * @private
-		 */
-		var applicationObject;
-
+	function(Class, RuntimeContext, ComponentContainer, Button, List, Device) {
+		
 		/**
 		 * Abstract base class for Bigscreen applications.
 		 * @name antie.Application
@@ -59,15 +55,12 @@ require.def('antie/application',
 			 * @ignore
 			 */
 			init: function(rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride) {
-				if(applicationObject) {
-					throw new Error("Application::init called for a second time. You can only have one application instance running at any time.");
-				}
+				RuntimeContext.setCurrentApplication(this);
+
 				this._rootElement = rootElement;
 				this._rootWidget = null;
 				this._focussedWidget = null;
 				this._onReadyHandler = onReadyHandler;
-
-				applicationObject = this;
 
 				var self = this;
 
@@ -492,7 +485,7 @@ require.def('antie/application',
 			 * unit or BDD tests.
 			 */
 			destroy: function () {
-				applicationObject = undefined;
+				RuntimeContext.clearCurrentApplication();
 				ComponentContainer.destroy();
 			},
 			
@@ -539,7 +532,7 @@ require.def('antie/application',
 		 * @function
 		 */
 		Application.getCurrentApplication = function() {
-			return applicationObject;
+			return RuntimeContext.getCurrentApplication();
 		};
 
 		return Application;

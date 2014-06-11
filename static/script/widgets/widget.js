@@ -33,10 +33,9 @@
 require.def('antie/widgets/widget',
     [
         'antie/class',
-        'require',
-        'antie/application'
+        'antie/runtimecontext'
     ],
-    function(Class, require, Application) {
+    function(Class, RuntimeContext) {
         /**
          * Keep a count of generated IDs so we can ensure they're always unique
          * @private
@@ -62,14 +61,12 @@ require.def('antie/widgets/widget',
                 this.parentWidget = null;
                 this.outputElement = null;
                 this._eventListeners = {};
-                this._dataItem = null; 	// Any data item bound to this widget
+                this._dataItem = null; // Any data item bound to this widget
                 this._isFocussed = false;
 
                 function createUniqueID() {
                     return "#" + (new Date() * 1) + "_" + (widgetUniqueIDIndex++);
                 }
-
-                ;
 
                 // ensure all widgets have an ID
                 this.id = id ? id : createUniqueID();
@@ -184,7 +181,7 @@ require.def('antie/widgets/widget',
             bubbleEvent: function(ev) {
                 this.fireEvent(ev);
                 if (!ev.isPropagationStopped()) {
-                    if (this.parentWidget != null) {
+                    if (this.parentWidget) {
                         this.parentWidget.bubbleEvent(ev);
                     } else {
                         ev.stopPropagation();
@@ -215,12 +212,11 @@ require.def('antie/widgets/widget',
             },
             /**
              * Gets a reference to the application responsible for creating the widget.
-             * @see antie.Application
+             * @see antie.RuntimeContext
              */
             getCurrentApplication: function() {
                 try {
-                    if (!Application) Application = require('antie/application');
-                    return Application.getCurrentApplication();
+                    return RuntimeContext.getCurrentApplication();
                 } catch (ex) {
                     return null;
                 }
@@ -242,9 +238,8 @@ require.def('antie/widgets/widget',
              * Returns the component this widget is a descendant of
              */
             getComponent: function() {
-                var Component = require('antie/widgets/component');
                 var widget = this;
-                while (widget && !(widget instanceof Component)) {
+                while (widget && !(widget.isComponent())) {
                     widget = widget.parentWidget;
                 }
                 return widget;
@@ -262,6 +257,13 @@ require.def('antie/widgets/widget',
              */
             isFocussed: function() {
                 return this._isFocussed;
+            },
+            /**
+             * Returns whether the widget is a Component.
+             * @returns {Boolean} True if the widget is a Component.
+             */
+            isComponent: function() {
+                return false;
             },
             /**
              * Shows a widget. If animation is enabled the widget will be faded in.

@@ -28,13 +28,13 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application',
+        'antie/runtimecontext',
         'antie/devices/broadcastsource/channel',
         'antie/events/tunerunavailableevent',
         'antie/events/tunerpresentingevent',
         'antie/events/tunerstoppedevent'
     ],
-    function (Device, BaseTvSource, Application, Channel, TunerUnavailableEvent, TunerPresentingEvent, TunerStoppedEvent ) {
+    function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerPresentingEvent, TunerStoppedEvent ) {
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */
@@ -73,13 +73,13 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                     var newPlayState = self.getPlayState();
 
                     if (oldPlayState === self._playStates.PRESENTING && newPlayState === self._playStates.UNREALIZED) {
-                        Application.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent());
+                        RuntimeContext.getCurrentApplication().broadcastEvent(new TunerUnavailableEvent());
 
                     } else if (newPlayState === self._playStates.PRESENTING) {
-                        Application.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(self.getCurrentChannel()));
+                        RuntimeContext.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(self.getCurrentChannel()));
 
                     } else if (newPlayState === self._playStates.STOPPED) {
-                        Application.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
+                        RuntimeContext.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
                     }
 
                     self.playState = newPlayState;
@@ -259,7 +259,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
              * application start up.
              */
             _setBroadcastToFullScreen : function() {
-                var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
+                var currentLayout = RuntimeContext.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
             _getChannelList : function() {
