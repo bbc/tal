@@ -197,12 +197,18 @@ require.def(
                 // SamsungMaple.pluginAPI.setOffScreenSaver(); // @see http://www.samsungdforum.com/Board/FAQView?BoardID=28797
                 this.tvmwPlugin.SetMediaSource();
 
-                this._getSamsungFormattedUrl = this.mediaSource.getURL(tags);
-                if (this.mediaSource.isLiveStream()) {
-                    this._getSamsungFormattedUrl += "|COMPONENT=HLS";
-                }
-
-                this._resetVideoSize();
+				this._getSamsungFormattedUrl = this.mediaSource.getURL(tags);
+				if (this.mediaSource.isHLS()) {
+					this._getSamsungFormattedUrl += "|COMPONENT=HLS";
+				};
+				
+				if (this.mediaSource.isSmoothStreaming()) {
+					this._getSamsungFormattedUrl += "|COMPONENT=WMDRM";
+				};
+				if (this.mediaSource.isMpegDash()) {
+					this._getSamsungFormattedUrl += "|COMPONENT=HAS";
+				};
+				//this._resetVideoSize();
             },
             getSources: function() {
                 return [this.mediaSource];

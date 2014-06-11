@@ -230,7 +230,7 @@
 		   assertFalse(MediaSource.isLiveStream(MEDIA_TYPE1));
 		   assertTrue(MediaSource.isLiveStream(MEDIA_TYPE2));
 	   });
-   };
+	};
 
  	this.MediaSourceTest.prototype.testIsLiveStream = function(queue) {
 		expectAsserts(2);
@@ -248,4 +248,94 @@
 			assertTrue(mediaSource2.isLiveStream());
 		});
 	};
+
+    this.MediaSourceTest.prototype.testIsHLSStatic = function(queue) {
+	   expectAsserts(2);
+
+	   queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+		   var MEDIA_TYPE1 = 'video/mp4';
+		   var MEDIA_TYPE2 = 'application/vnd.apple.mpegurl';
+
+		   assertFalse(MediaSource.isHLS(MEDIA_TYPE1));
+		   assertTrue(MediaSource.isHLS(MEDIA_TYPE2));
+	   });
+	};
+
+    this.MediaSourceTest.prototype.testIsHLS = function(queue) {
+		expectAsserts(2);
+
+		queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+			var MEDIA_URL1 = 'http://endpoint.invalid/video_1.mp4';
+			var MEDIA_URL2 = 'http://endpoint.invalid/video_2.mp4';
+			var MEDIA_TYPE1 = 'video/mp4';
+			var MEDIA_TYPE2 = 'application/vnd.apple.mpegurl';
+
+			var mediaSource1 = new MediaSource(MEDIA_URL1, MEDIA_TYPE1);
+			var mediaSource2 = new MediaSource(MEDIA_URL2, MEDIA_TYPE2);
+
+			assertFalse(mediaSource1.isHLS());
+			assertTrue(mediaSource2.isHLS());
+		});
+	};
+
+    this.MediaSourceTest.prototype.testIsSmoothStreamingStatic = function(queue) {
+	   expectAsserts(2);
+
+	   queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+		   var MEDIA_TYPE1 = 'video/mp4';
+		   var MEDIA_TYPE2 = 'application/vnd.ms-sstr+xml';
+
+		   assertFalse(MediaSource.isSmoothStreaming(MEDIA_TYPE1));
+		   assertTrue(MediaSource.isSmoothStreaming(MEDIA_TYPE2));
+	   });
+	};
+
+    this.MediaSourceTest.prototype.testIsSmoothStreaming = function(queue) {
+		expectAsserts(2);
+
+		queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+			var MEDIA_URL1 = 'http://endpoint.invalid/video_1.mp4';
+			var MEDIA_URL2 = 'http://endpoint.invalid/video_2.mp4';
+			var MEDIA_TYPE1 = 'video/mp4';
+			var MEDIA_TYPE2 = 'application/vnd.ms-sstr+xml';
+
+			var mediaSource1 = new MediaSource(MEDIA_URL1, MEDIA_TYPE1);
+			var mediaSource2 = new MediaSource(MEDIA_URL2, MEDIA_TYPE2);
+
+			assertFalse(mediaSource1.isSmoothStreaming());
+			assertTrue(mediaSource2.isSmoothStreaming());
+		});
+	};
+
+
+    this.MediaSourceTest.prototype.testIsMpegDashStatic = function(queue) {
+	   expectAsserts(2);
+
+	   queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+		   var MEDIA_TYPE1 = 'video/mp4';
+		   var MEDIA_TYPE2 = 'application/dash+xml';
+
+		   assertFalse(MediaSource.isMpegDash(MEDIA_TYPE1));
+		   assertTrue(MediaSource.isMpegDash(MEDIA_TYPE2));
+	   });
+    };
+
+    this.MediaSourceTest.prototype.testIsMpegDash = function(queue) {
+		expectAsserts(2);
+
+		queuedRequire(queue, ["antie/mediasource"], function(MediaSource) {
+			var MEDIA_URL1 = 'http://endpoint.invalid/video_1.mp4';
+			var MEDIA_URL2 = 'http://endpoint.invalid/video_2.mp4';
+			var MEDIA_TYPE1 = 'video/mp4';
+			var MEDIA_TYPE2 = 'application/dash+xml';
+
+			var mediaSource1 = new MediaSource(MEDIA_URL1, MEDIA_TYPE1);
+			var mediaSource2 = new MediaSource(MEDIA_URL2, MEDIA_TYPE2);
+
+			assertFalse(mediaSource1.isMpegDash());
+			assertTrue(mediaSource2.isMpegDash());
+		});
+	};
+
+
 })();
