@@ -1,4 +1,4 @@
-<object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px; display: none;"></object>
+<object id="appmgr" type="application/oipfApplicationManager" style="width: 0px; height: 0px; visibility:hidden;"></object>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 	var appMgr = document.getElementById('appmgr');
@@ -8,4 +8,4 @@
 //]]>
 </script>
 
-<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute; display: none;"></object>
+<object id="broadcastVideoObject" type="video/broadcast" style="position: absolute; width: 0px; height: 0px; visibility:hidden;"></object>
