@@ -82,6 +82,19 @@
 				}
 		);
 	};
+    this.ComponentTest.prototype.testIsComponentReturnsTrue = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/component"],
+            function(application, Component) {
+                var widget = new Component("id");
+                assertTrue(widget.isComponent());
+            }
+        );
+    };
  	this.ComponentTest.prototype.testGetConfig = function(queue) {
 		expectAsserts(1);
 

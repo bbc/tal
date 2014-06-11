@@ -74,6 +74,14 @@ require.def('antie/widgets/component',
 
             getConfig: function() {
                 return RuntimeContext.getDevice().getConfig();
+            },
+
+            /**
+             * Returns whether the widget is a Component.
+             * @returns {Boolean} True if the widget is a Component.
+             */
+            isComponent: function() {
+                return true;
             }
 		});
 	}
