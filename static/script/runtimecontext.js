@@ -36,13 +36,8 @@ require.def('antie/runtimecontext',
 		var applicationObject;
 
 		/**
-		 * Singleton class for accessing the current running application
+		 * Static class for accessing the current running application
 		 * @name antie.RuntimeContext
-		 * @param {DOMElement} rootElement DOMElement into which to render the application.
-		 * @param {String} styleBaseURL URL pointing to path stylesheets are relative to.
-		 * @param {String} imageBaseURL URL pointing to path images are relative to.
-		 * @param {function(Event)} onReadyHandler Function called when application is ready.
-		 * @param {Object} [configOverride] Optional config to override default.
 		 * @class
 		 */
 		var RuntimeContext = {};
