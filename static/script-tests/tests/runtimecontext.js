@@ -81,5 +81,5 @@
 			RuntimeContext.clearCurrentApplication(); // Start from scratch each time
 			test(RuntimeContext); // Run the actual test code
 		});
-	};
+	}
 })();

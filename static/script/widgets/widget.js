@@ -61,14 +61,12 @@ require.def('antie/widgets/widget',
                 this.parentWidget = null;
                 this.outputElement = null;
                 this._eventListeners = {};
-                this._dataItem = null; 	// Any data item bound to this widget
+                this._dataItem = null; // Any data item bound to this widget
                 this._isFocussed = false;
 
                 function createUniqueID() {
                     return "#" + (new Date() * 1) + "_" + (widgetUniqueIDIndex++);
                 }
-
-                ;
 
                 // ensure all widgets have an ID
                 this.id = id ? id : createUniqueID();
@@ -183,7 +181,7 @@ require.def('antie/widgets/widget',
             bubbleEvent: function(ev) {
                 this.fireEvent(ev);
                 if (!ev.isPropagationStopped()) {
-                    if (this.parentWidget != null) {
+                    if (this.parentWidget) {
                         this.parentWidget.bubbleEvent(ev);
                     } else {
                         ev.stopPropagation();
