@@ -90,7 +90,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 // Check if exception is thrown by bindToCurrentChannel?
                 this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.bindToCurrentChannel();
-                this._broadcastVideoObject.style.display = "block";
+                this._broadcastVideoObject.style.visibility = "visible";
             },
             stopCurrentChannel: function () {
                 try {
@@ -102,7 +102,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 }
 
                 this._broadcastVideoObject.stop();
-                this._broadcastVideoObject.style.display = "none";
+                this._broadcastVideoObject.style.visibility = "hidden";
+                this.setPosition(0, 0, 0, 0);
             },
             getCurrentChannelName: function () {
                 var channelConfig = this._broadcastVideoObject.currentChannel;
@@ -263,6 +264,14 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
             _getChannelList : function() {
+                function getChannelFromChannelList (channelList, index) {
+                    if (typeof channelList.item === "function") {
+                        return channelList.item(index);
+                    } else {
+                        return channelList[index];
+                    }
+                }
+
                 var channelConfig;
 
                 try {
@@ -283,7 +292,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
                 var result = [];
                 for (var i = 0; i < channelConfig.channelList.length; i++) {
-                    var channel = channelConfig.channelList[i];
+                    var channel = getChannelFromChannelList(channelConfig.channelList, i);
                     result.push(new Channel(
                         {
                             name: channel.name,
