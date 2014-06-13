@@ -28,73 +28,54 @@ require.def('antie/runtimecontext',
 	[
 		'antie/class',
 	],
+	/**
+	 * Static class for accessing the current running application
+	 * @name antie.RuntimeContext
+	 * @class
+	 * @static
+	 * @private
+	 */
 	function(Class) {
-		/**
-		 * Contains a reference to the current running application
-		 * @private
-		 */
 		var applicationObject;
 
-		/**
-		 * Singleton class for accessing the current running application
-		 * @name antie.RuntimeContext
-		 * @param {DOMElement} rootElement DOMElement into which to render the application.
-		 * @param {String} styleBaseURL URL pointing to path stylesheets are relative to.
-		 * @param {String} imageBaseURL URL pointing to path images are relative to.
-		 * @param {function(Event)} onReadyHandler Function called when application is ready.
-		 * @param {Object} [configOverride] Optional config to override default.
-		 * @class
-		 */
-		var RuntimeContext = {};
+		var RuntimeContext = Class.extend(/** @lends antie.RuntimeContext.prototype */ {
+			/**
+			 * Clears the currently executing application.
+			 * @private
+			 */
+			clearCurrentApplication: function() {
+				applicationObject = undefined;
+			},
 
-		/**
-		 * Clears the currently executing application.
-		 * @name clearCurrentApplication
-		 * @memberOf antie.RuntimeContext
-		 * @static
-		 * @function
-		 */
-		RuntimeContext.clearCurrentApplication = function() {
-			applicationObject = undefined;
-		};
+			/**
+			 * Sets the currently executing application.
+			 * @private
+			 */
+			setCurrentApplication: function(app) {
+				if (applicationObject) {
+					throw new Error("RuntimeContext.setCurrentApplication called for a second time. You can only have one application instance running at any time.");
+				} else {
+					applicationObject = app;
+				}
+			},
 
-		/**
-		 * Sets the currently executing application.
-		 * @name setCurrentApplication
-		 * @memberOf antie.RuntimeContext
-		 * @static
-		 * @function
-		 */
-		RuntimeContext.setCurrentApplication = function(app) {
-			if (applicationObject) {
-				throw new Error("RuntimeContext.setCurrentApplication called for a second time. You can only have one application instance running at any time.");
-			} else {
-				applicationObject = app;
+			/**
+			 * Returns the currently executing application.
+			 * @private
+			 */
+			getCurrentApplication: function() {
+				return applicationObject;
+			},
+
+			/**
+			 * Returns the current device
+			 * @private
+			 */
+			getDevice: function() {
+				return this.getCurrentApplication().getDevice();
 			}
-		};
+		});
 
-		/**
-		 * Returns the currently executing application.
-		 * @name getCurrentApplication
-		 * @memberOf antie.RuntimeContext
-		 * @static
-		 * @function
-		 */
-		RuntimeContext.getCurrentApplication = function() {
-			return applicationObject;
-		};
-
-		/**
-		 * Returns the current device
-		 * @name getDevice
-		 * @memberOf antie.RuntimeContext
-		 * @static
-		 * @function
-		 */
-		RuntimeContext.getDevice = function() {
-			return RuntimeContext.getCurrentApplication().getDevice();
-		};
-
-		return RuntimeContext;
+		return new RuntimeContext();
 	}
 );

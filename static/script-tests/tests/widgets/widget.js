@@ -223,6 +223,20 @@
         );
     };
 
+    this.WidgetTest.prototype.testIsComponentReturnsFalse = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/widget"],
+            function(application, Widget) {
+                var widget = new Widget();
+                assertFalse(widget.isComponent());
+            }
+        );
+    };
+
     this.WidgetTest.prototype.testGetCurrentApplication = function(queue) {
         expectAsserts(1);
 
