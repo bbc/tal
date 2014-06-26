@@ -346,8 +346,8 @@ require.def(
         CEHTMLPlayer.PLAY_STATE_FINISHED = 5;
         CEHTMLPlayer.PLAY_STATE_ERROR = 6;
 
-        Device.prototype.createPlayer = function(id, mediaType) {
-            return new CEHTMLPlayer(id, mediaType);
+        Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
+            return new CEHTMLPlayer(id, mediaType, eventCallback);
         };
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
             return Media.EMBED_MODE_BACKGROUND;
