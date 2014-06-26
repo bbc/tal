@@ -524,13 +524,13 @@ require.def('antie/devices/device',
                 return this._keyMap;
             },
             /**
-             * Creates a player element.
-             * @see antie.devices.media
-             * @param {String} id The ID of the player element.
-             * @param {String} mediaType "video" or "radio".
-             * @returns A player element.
+             * Creates the interface that Media widgets use to communicate
+             *  with the device.
+             * @param id ID to be used when creating DOM elements.
+             * @param mediaType Type of media. "audio" or "video"
+             * @param eventCallback Function that is called to processes media events.
              */
-            createPlayer: function(id, mediaType) {
+            createMediaInterface: function(id, mediaType, eventCallback) {
             },
             /**
              * Gets the player embed mode for the current device
