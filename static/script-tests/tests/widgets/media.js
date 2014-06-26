@@ -63,5 +63,15 @@
         });
     };
 
+    this.MediaTest.prototype.testReadyStateConstantsMatchMediaInterfaceConstants = function (queue) {
+        expectAsserts(5);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface", "antie/widgets/media"], function(application, MediaInterface, Media) {
+            assertEquals(MediaInterface.HAVE_NOTHING, Media.HAVE_NOTHING);
+            assertEquals(MediaInterface.HAVE_METADATA, Media.HAVE_METADATA);
+            assertEquals(MediaInterface.HAVE_CURRENT_DATA, Media.HAVE_CURRENT_DATA);
+            assertEquals(MediaInterface.HAVE_FUTURE_DATA, Media.HAVE_FUTURE_DATA);
+            assertEquals(MediaInterface.HAVE_ENOUGH_DATA, Media.HAVE_ENOUGH_DATA);
+        });
+    };
 
 })();

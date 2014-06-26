@@ -215,6 +215,12 @@ require.def(
         MediaInterface.MEDIA_ERR_DECODE = 3;
         MediaInterface.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
 
+        MediaInterface.HAVE_NOTHING = 0;
+        MediaInterface.HAVE_METADATA = 1;
+        MediaInterface.HAVE_CURRENT_DATA = 2;
+        MediaInterface.HAVE_FUTURE_DATA = 3;
+        MediaInterface.HAVE_ENOUGH_DATA = 4;
+
         return MediaInterface;
     }
 );

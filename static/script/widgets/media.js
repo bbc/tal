@@ -199,6 +199,12 @@ require.def('antie/widgets/media',
         Media.MEDIA_ERR_DECODE = MediaInterface.MEDIA_ERR_DECODE;
         Media.MEDIA_ERR_SRC_NOT_SUPPORTED = MediaInterface.MEDIA_ERR_SRC_NOT_SUPPORTED;
 
-		return Media;
+        Media.HAVE_NOTHING = MediaInterface.HAVE_NOTHING;
+        Media.HAVE_METADATA = MediaInterface.HAVE_METADATA;
+        Media.HAVE_CURRENT_DATA = MediaInterface.HAVE_CURRENT_DATA;
+        Media.HAVE_FUTURE_DATA = MediaInterface.HAVE_FUTURE_DATA;
+        Media.HAVE_ENOUGH_DATA = MediaInterface.HAVE_ENOUGH_DATA;
+
+        return Media;
 	}
 );
