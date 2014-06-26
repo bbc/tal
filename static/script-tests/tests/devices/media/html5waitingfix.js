@@ -39,6 +39,8 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
 			var MockTimeUpdateEventSource = Class.extend({
@@ -64,7 +66,7 @@
 				}
 			});
 
-			var player = application.getDevice().createPlayer("player", "video");
+            var player = application.getDevice().createMediaInterface("player", "video", self.sandbox.stub());
 			var eventSource = new MockTimeUpdateEventSource(player);
 			var hadWaitingEvent = false;
 
@@ -98,6 +100,8 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
 			var MockTimeUpdateEventSource = Class.extend({
@@ -123,7 +127,7 @@
 				}
 			});
 
-			var player = application.getDevice().createPlayer("player", "video");
+            var player = application.getDevice().createMediaInterface("player", "video", self.sandbox.stub());
 			var eventSource = new MockTimeUpdateEventSource(player);
 			var hadWaitingEvent = false;
 
@@ -157,6 +161,8 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
 			var MockTimeUpdateEventSource = Class.extend({
@@ -182,7 +188,7 @@
 				}
 			});
 
-			var player = application.getDevice().createPlayer("player", "video");
+            var player = application.getDevice().createMediaInterface("player", "video", self.sandbox.stub());
 			var eventSource = new MockTimeUpdateEventSource(player);
 			var hadWaitingEvent = false;
 

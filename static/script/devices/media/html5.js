@@ -330,8 +330,8 @@ require.def(
             }
         });
 
-        Device.prototype.createPlayer = function(id, mediaType) {
-            currentPlayer = new HTML5Player(id, mediaType);
+        Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
+            currentPlayer = new HTML5Player(id, mediaType, eventCallback);
             return currentPlayer;
         };
         Device.prototype.getPlayerEmbedMode = function(mediaType) {

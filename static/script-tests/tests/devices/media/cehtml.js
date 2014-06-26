@@ -26,6 +26,9 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
 
 (function() {
+
+    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
     this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier");
 
     this.CEHTMLTest.prototype.setUp = function() {
@@ -38,18 +41,18 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
     this.CEHTMLTest.prototype.testCreateMediaInterfaceReturnsCEHTMLPlayerWhenCEHTMLDeviceModifierUsed = function (queue) {
         expectAsserts(1);
+
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
             function(application, CEHTMLPlayer) {
 
-                var spy = self.sandbox.spy(CEHTMLPlayer.prototype, "init");
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
                 var result = device.createMediaInterface("id", "video", callbackStub);
 
                 assertInstanceOf(CEHTMLPlayer, result);
-            });
+            }, config);
     };
 
     this.CEHTMLTest.prototype.testCreateMediaInterfacePassesArgumentsThroughToCEHTMLPlayerConstructorWhenCEHTMLDeviceModifierUsed = function (queue) {
@@ -66,7 +69,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 assertTrue(spy.calledOnce);
                 assertTrue(spy.calledWith("id", "video", callbackStub));
-            });
+            }, config);
     };
 
 })();
