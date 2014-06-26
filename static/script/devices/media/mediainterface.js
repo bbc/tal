@@ -30,7 +30,7 @@ require.def(
         'antie/class'
     ],
     function(Class) {
-        return Class.extend({
+        var MediaInterface = Class.extend({
 
             /**
              * @param id ID to use in media DOM elements.
@@ -199,5 +199,22 @@ require.def(
 
             }
         });
+
+        MediaInterface.EMBED_MODE_EXTERNAL = 0;
+        MediaInterface.EMBED_MODE_BACKGROUND = 1;
+        MediaInterface.EMBED_MODE_EMBEDDED = 2;
+
+        MediaInterface.NETWORK_EMPTY = 0;
+        MediaInterface.NETWORK_IDLE = 1;
+        MediaInterface.NETWORK_LOADING = 2;
+        MediaInterface.NETWORK_NO_SOURCE = 3;
+
+        MediaInterface.MEDIA_ERR_UNKNOWN = 0;
+        MediaInterface.MEDIA_ERR_ABORTED = 1;
+        MediaInterface.MEDIA_ERR_NETWORK = 2;
+        MediaInterface.MEDIA_ERR_DECODE = 3;
+        MediaInterface.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+
+        return MediaInterface;
     }
 );

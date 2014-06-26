@@ -27,13 +27,14 @@
 require.def('antie/widgets/media',
 	[
 		'antie/widgets/widget',
+        'antie/devices/media/mediainterface',
 
 		// Include these so they're packaged with this file
 		// All subclasses (which will be dynamically loaded) should use these
 		'antie/events/mediaerrorevent',
 		'antie/events/mediasourceerrorevent'
 	],
-	function(Widget) {
+	function(Widget, MediaInterface) {
 		/**
 		 * The Media widget is responsible for playing video and audio within an application.
 		 * It must be subclassed to provide support for different playback APIs.
@@ -183,26 +184,20 @@ require.def('antie/widgets/media',
 			}
 		});
 
-		Media.EMBED_MODE_EXTERNAL = 0;
-		Media.EMBED_MODE_BACKGROUND = 1;
-		Media.EMBED_MODE_EMBEDDED = 2;
+        Media.EMBED_MODE_EXTERNAL = MediaInterface.EMBED_MODE_EXTERNAL;
+        Media.EMBED_MODE_BACKGROUND = MediaInterface.EMBED_MODE_BACKGROUND;
+        Media.EMBED_MODE_EMBEDDED = MediaInterface.EMBED_MODE_EMBEDDED;
 
-		Media.NETWORK_EMPTY = 0;
-		Media.NETWORK_IDLE = 1;
-		Media.NETWORK_LOADING = 2;
-		Media.NETWORK_NO_SOURCE = 3;
+        Media.NETWORK_EMPTY = MediaInterface.NETWORK_EMPTY;
+        Media.NETWORK_IDLE = MediaInterface.NETWORK_IDLE;
+        Media.NETWORK_LOADING = MediaInterface.NETWORK_LOADING;
+        Media.NETWORK_NO_SOURCE = MediaInterface.NETWORK_NO_SOURCE;
 
-		Media.HAVE_NOTHING = 0;
-		Media.HAVE_METADATA = 1;
-		Media.HAVE_CURRENT_DATA = 2;
-		Media.HAVE_FUTURE_DATA = 3;
-		Media.HAVE_ENOUGH_DATA = 4;
-
-		Media.MEDIA_ERR_UNKNOWN = 0;
-		Media.MEDIA_ERR_ABORTED = 1;
-		Media.MEDIA_ERR_NETWORK = 2;
-		Media.MEDIA_ERR_DECODE = 3;
-		Media.MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+        Media.MEDIA_ERR_UNKNOWN = MediaInterface.MEDIA_ERR_UNKNOWN;
+        Media.MEDIA_ERR_ABORTED = MediaInterface.MEDIA_ERR_ABORTED;
+        Media.MEDIA_ERR_NETWORK = MediaInterface.MEDIA_ERR_NETWORK;
+        Media.MEDIA_ERR_DECODE = MediaInterface.MEDIA_ERR_DECODE;
+        Media.MEDIA_ERR_SRC_NOT_SUPPORTED = MediaInterface.MEDIA_ERR_SRC_NOT_SUPPORTED;
 
 		return Media;
 	}
