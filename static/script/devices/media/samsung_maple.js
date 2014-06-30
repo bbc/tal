@@ -399,9 +399,10 @@ require.def(
             }
         });
 
-        Device.prototype.createPlayer = function(id, mediaType) {
-            return new SamsungPlayer(id, mediaType);
+        Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
+            return new SamsungPlayer(id, mediaType, eventCallback);
         };
+
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
             return Media.EMBED_MODE_BACKGROUND;
         };
@@ -461,5 +462,7 @@ require.def(
             var audio = document.getElementById('audioPlugin');
             audio.SetSystemMute(muted);
         };
+
+        return SamsungPlayer;
     }
 );
