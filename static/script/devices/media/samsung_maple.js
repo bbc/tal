@@ -28,20 +28,20 @@ require.def(
     'antie/devices/media/samsung_maple',
     [
         'antie/devices/device',
-        'antie/widgets/media',
+        'antie/devices/media/mediainterface',
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
         'antie/mediasource'
     ],
-    function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
         function audioLevelCorrection(t) {
             return t * 40.0;
         }
         function invertAudioLevelCorrection(x) {
             return x / 40.0;
         }
-        var SamsungPlayer = Media.extend({
+        var SamsungPlayer = MediaInterface.extend({
             init: function(id, mediaType) {
                 this._super(id);
 

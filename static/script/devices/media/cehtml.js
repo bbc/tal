@@ -28,7 +28,7 @@ require.def(
     'antie/devices/media/cehtml',
     [
         'antie/devices/device',
-        'antie/widgets/media',
+        'antie/devices/media/mediainterface',
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
@@ -36,9 +36,9 @@ require.def(
         'antie/devices/media/seekstate'
     ],
 
-    function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState ) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState ) {
 
-        var CEHTMLPlayer = Media.extend({
+        var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType) {
                 this._super(id);
                 this._seekState = new SeekState( this );

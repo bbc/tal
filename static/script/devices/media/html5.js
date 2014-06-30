@@ -28,18 +28,18 @@ require.def(
     'antie/devices/media/html5',
     [
         'antie/devices/device',
-        'antie/widgets/media',
+        'antie/devices/media/mediainterface',
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
         'antie/mediasource'
     ],
-    function(Device, Media, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
         var currentPlayer = null;
         var isMuted = null;
         var currentVolume = -1;
 
-        var HTML5Player = Media.extend({
+        var HTML5Player = MediaInterface.extend({
             init: function(id, mediaType) {
                 this._super(id);
 
