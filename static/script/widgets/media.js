@@ -52,137 +52,142 @@ require.def('antie/widgets/media',
 			 * @constructor
 			 * @ignore
 			 */
-			init: function(id) {
+			init: function(id, mediaType) {
 				this._super(id);
+
+                var self = this;
+
+                var eventCallback = function (event) {
+
+                    // Claim the event as our own before propagating it; event listeners will be added to this
+                    // (media) widget, not to something hidden away within the MediaInterface.
+                    event.target = self;
+
+                    self.bubbleEvent(event);
+                };
+
+                this._mediaInterface = this.getCurrentApplication().getDevice().createMediaInterface(id, mediaType, eventCallback);
 
 				this.addClass('media');
 			},
-			// (not part of HTML5 media)
-			setWindow: function(left, top, width, height) {
-			},
-			getVideoWidth: function() {
-			},
-			getVideoHeight: function() {
-			},
-			// readonly attribute MediaError error;
-			getError: function() {
-			},
-			// Similar to src attribute or 'source' child elements:
-			// attribute DOMString src;
-			setSources: function(sources, tags) {
-			},
-			getSources: function() {
-			},
-			// readonly attribute DOMString currentSrc;
-			getCurrentSource: function() {
-			},
-			/*
-			const unsigned short NETWORK_EMPTY = 0;
-			const unsigned short NETWORK_IDLE = 1;
-			const unsigned short NETWORK_LOADING = 2;
-			const unsigned short NETWORK_NO_SOURCE = 3;
-			readonly attribute unsigned short networkState;
-			*/
-			getNetworkState: function() {
-			},
-			// attribute DOMString preload;
-			getPreload: function() {
-			},
-			setPreload: function(preload) {
-			},
-			// readonly attribute TimeRanges buffered;
-			getBuffered: function() {
-			},
-			// void load();
-			load: function() {
-			},
-			// DOMString canPlayType(in DOMString type);
-			canPlayType: function(type) {
-			},
-			/*
-			const unsigned short HAVE_NOTHING = 0;
-			const unsigned short HAVE_METADATA = 1;
-			const unsigned short HAVE_CURRENT_DATA = 2;
-			const unsigned short HAVE_FUTURE_DATA = 3;
-			const unsigned short HAVE_ENOUGH_DATA = 4;
-			readonly attribute unsigned short readyState;
-			*/
-			getReadyState: function() {
-			},
-			// readonly attribute boolean seeking;
-			getSeeking: function() {
-			},
-			// attribute double currentTime;
-			setCurrentTime: function(currentTime) {
-			},
-			getCurrentTime: function() {
-			},
-			// readonly attribute double initialTime;
-			getInitialTime: function() {
-			},
-			// readonly attribute double duration;
-			getDuration: function() {
-			},
-			// readonly attribute Date startOffsetTime;
-			getStartOffsetTime: function() {
-			},
-			// readonly attribute boolean paused;
-			getPaused: function() {
-			},
-			// attribute double defaultPlaybackRate;
-			getDefaultPlaybackRate: function() {
-			},
-			// attribute double playbackRate;
-			getPlaybackRate: function() {
-			},
-			setPlaybackRate: function(playbackRate) {
-			},
-			// readonly attribute TimeRanges played;
-			getPlayed: function() {
-			},
-			// readonly attribute TimeRanges seekable;
-			getSeekable: function() {
-			},
-			// readonly attribute boolean ended;
-			getEnded: function() {
-			},
-			// attribute boolean autoplay;
-			getAutoPlay: function() {
-			},
-			setAutoPlay: function(autoplay) {
-			},
-			// attribute boolean loop;
-			getLoop: function() {
-			},
-			setLoop: function(loop) {
-			},
-			// void play();
-			play: function() {
-			},
-			// NOT IN HTML5 but needed by many devices
-			stop: function() {
-			},
-			// void pause();
-			pause: function() {
-			},
-			// attribute boolean controls;
-			setNativeControls: function(controls) {
-			},
-			getNativeControls: function() {
-			},
-			// attribute double volume;
-			setVolume: function(volume) {
-			},
-			getVolume: function() {
-			},
-			// attribute boolean muted;
-			setMuted: function(muted) {
-			},
-			getMuted: function() {
-			},
-			destroy: function() {
-			}
-		});
+            setWindow: function(left, top, width, height) {
+                this._mediaInterface.setWindow(left, top, width, height);
+            },
+            getError: function() {
+                this._mediaInterface.getError();
+            },
+            setSources: function(sources, tags) {
+                this._mediaInterface.setSources(sources, tags);
+            },
+            getSources: function() {
+                this._mediaInterface.getSources();
+            },
+            getCurrentSource: function() {
+                this._mediaInterface.getCurrentSource();
+            },
+            getNetworkState: function() {
+                this._mediaInterface.getNetworkState();
+            },
+            getPreload: function() {
+                this._mediaInterface.getPreload();
+            },
+            setPreload: function(preload) {
+                this._mediaInterface.setPreload(preload);
+            },
+            getBuffered: function() {
+                this._mediaInterface.getBuffered();
+            },
+            load: function() {
+                this._mediaInterface.load();
+            },
+            canPlayType: function(type) {
+                this._mediaInterface.canPlayType(type);
+            },
+            getReadyState: function() {
+                this._mediaInterface.getReadyState();
+            },
+            getSeeking: function() {
+                this._mediaInterface.getSeeking();
+            },
+            setCurrentTime: function(currentTime) {
+                this._mediaInterface.setCurrentTime(currentTime);
+            },
+            getCurrentTime: function() {
+                this._mediaInterface.getCurrentTime();
+            },
+            getInitialTime: function() {
+                this._mediaInterface.getInitialTime();
+            },
+            getDuration: function() {
+                this._mediaInterface.getDuration();
+            },
+            getStartOffsetTime: function() {
+                this._mediaInterface.getStartOffsetTime();
+            },
+            getPaused: function() {
+                this._mediaInterface.getPaused();
+            },
+            getDefaultPlaybackRate: function() {
+                this._mediaInterface.getDefaultPlaybackRate();
+            },
+            getPlaybackRate: function() {
+                this._mediaInterface.getPlaybackRate();
+            },
+            setPlaybackRate: function(playbackRate) {
+                this._mediaInterface.setPlaybackRate(playbackRate);
+            },
+            getPlayed: function() {
+                this._mediaInterface.getPlayed();
+            },
+            getSeekable: function() {
+                this._mediaInterface.getSeekable();
+            },
+            getEnded: function() {
+                this._mediaInterface.getEnded();
+            },
+            getAutoPlay: function() {
+                this._mediaInterface.getAutoPlay();
+            },
+            setAutoPlay: function(autoplay) {
+                this._mediaInterface.setAutoPlay(autoplay);
+            },
+            getLoop: function() {
+                this._mediaInterface.getLoop();
+            },
+            setLoop: function(loop) {
+                this._mediaInterface.setLoop(loop);
+            },
+            play: function() {
+                this._mediaInterface.play();
+            },
+            stop: function() {
+                this._mediaInterface.stop();
+            },
+            pause: function() {
+                this._mediaInterface.pause();
+            },
+            setNativeControls: function(controls) {
+                this._mediaInterface.setNativeControls(controls);
+            },
+            getNativeControls: function() {
+                this._mediaInterface.getNativeControls();
+            },
+            setVolume: function(volume) {
+                this._mediaInterface.setVolume(volume);
+            },
+            getVolume: function() {
+                this._mediaInterface.getVolume();
+            },
+            setMuted: function(muted) {
+                this._mediaInterface.setMuted(muted);
+            },
+            getMuted: function() {
+                this._mediaInterface.getMuted();
+            },
+            destroy: function() {
+                this._mediaInterface.destroy();
+            }
+        });
 
         Media.EMBED_MODE_EXTERNAL = MediaInterface.EMBED_MODE_EXTERNAL;
         Media.EMBED_MODE_BACKGROUND = MediaInterface.EMBED_MODE_BACKGROUND;

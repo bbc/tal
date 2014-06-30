@@ -195,6 +195,24 @@ require.def(
             getNativeControls: function(){
                 throw new Error("GetNativeControls method has not been implemented.");
             },
+            getVolume: function(){
+                throw new Error("GetVolume method has not been implemented.");
+            },
+            /**
+             * @param volume Number indicating the volume.
+             */
+            setVolume: function(volume){
+                throw new Error("SetVolume method has not been implemented.");
+            },
+            getMuted: function(){
+                throw new Error("GetMuted method has not been implemented");
+            },
+            /**
+             * @param muted Boolean
+             */
+            setMuted: function(muted){
+                throw new Error("SetMuted method has not been implemented");
+            },
             destroy: function(){
 
             }

@@ -429,6 +429,46 @@
         });
     };
 
+    this.MediaInterfaceTest.prototype.testMediaInterfaceGetVolumeThrowsExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
+            var mediaInterface = new MediaInterface('id', 'video', function(evt){});
+            assertException(function() {
+                mediaInterface.getVolume();
+            }, "Error");
+        });
+    };
+
+    this.MediaInterfaceTest.prototype.testMediaInterfaceSetVolumeThrowsExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
+            var mediaInterface = new MediaInterface('id', 'video', function(evt){});
+            assertException(function() {
+                mediaInterface.setVolume(10.0);
+            }, "Error");
+        });
+    };
+
+    this.MediaInterfaceTest.prototype.testMediaInterfaceGetMutedThrowsExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
+            var mediaInterface = new MediaInterface('id', 'video', function(evt){});
+            assertException(function() {
+                mediaInterface.getMuted();
+            }, "Error");
+        });
+    };
+
+    this.MediaInterfaceTest.prototype.testMediaInterfaceSetMutedThrowsExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
+            var mediaInterface = new MediaInterface('id', 'video', function(evt){});
+            assertException(function() {
+                mediaInterface.setMuted(false);
+            }, "Error");
+        });
+    };
+
     this.MediaInterfaceTest.prototype.testMediaInterfaceDestroyDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
@@ -438,5 +478,7 @@
             });
         });
     };
+
+
 
 })();
