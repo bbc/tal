@@ -32,9 +32,10 @@ require.def(
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
-        'antie/mediasource'
+        'antie/mediasource',
+        'antie/application'
     ],
-    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, Application) {
         function audioLevelCorrection(t) {
             return t * 40.0;
         }
@@ -393,7 +394,7 @@ require.def(
             _resetVideoSize: function() {
                 // Workaround for the Samsung 2010 device: video playback starts in a small window by default.
                 if (this._mediaType === "video") {
-                    var dimensions = this.getCurrentApplication().getDevice().getScreenSize();
+                    var dimensions = Application.getCurrentApplication().getDevice().getScreenSize();
                     this.setWindow(0, 0, dimensions.width, dimensions.height);
                 }
             }
@@ -404,7 +405,7 @@ require.def(
         };
 
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
-            return Media.EMBED_MODE_BACKGROUND;
+            return MediaInterface.EMBED_MODE_BACKGROUND;
         };
         /**
          * Check to see if volume control is supported on this device.

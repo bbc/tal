@@ -33,10 +33,11 @@ require.def(
         'antie/events/mediaerrorevent',
         'antie/events/mediasourceerrorevent',
         'antie/mediasource',
-        'antie/devices/media/seekstate'
+        'antie/devices/media/seekstate',
+        'antie/application'
     ],
 
-    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState ) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, Application ) {
 
         var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType) {
@@ -62,8 +63,8 @@ require.def(
                 }
             },
             _createCEHTMLObjectElement: function(contentType) {
-                var device = this.getCurrentApplication().getDevice();
-                var obj = device._createElement("object", this.id, this.getClasses());
+                var device = Application.getCurrentApplication().getDevice();
+                var obj = device._createElement("object", this.id);
                 obj.setAttribute("type", contentType);
                 var div = device.createContainer();
                 div.innerHTML = '<object type="' + contentType + '" id="' + this.id + '" class="' + obj.className + '" ' + 'style="width: 100%; height: 100%; position: absolute; z-index: -1"' + ' />';
@@ -81,7 +82,7 @@ require.def(
                 if (this._mediaType == "audio") {
                     throw new Error('Unable to set window size for CE-HTML audio.');
                 }
-                var device = this.getCurrentApplication().getDevice();
+                var device = Application.getCurrentApplication().getDevice();
                 device.setElementSize(this._mediaElement, {width:width, height:height});
                 device.setElementPosition(this._mediaElement, {left:left, top:top});
             },
@@ -329,7 +330,7 @@ require.def(
             destroy: function() {
                 this.stop();
 
-                var device = this.getCurrentApplication().getDevice();
+                var device = Application.getCurrentApplication().getDevice();
                 device.removeElement(this._mediaElement);
             },
             _requiresMediaTypeFix : function() {
@@ -350,7 +351,7 @@ require.def(
             return new CEHTMLPlayer(id, mediaType, eventCallback);
         };
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
-            return Media.EMBED_MODE_BACKGROUND;
+            return MediaInterface.EMBED_MODE_BACKGROUND;
         };
 
         return CEHTMLPlayer;
