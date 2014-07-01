@@ -81,11 +81,11 @@ require.def(
                     // the UI widgets
                     var self = this;
                     this._eventWrapper = function(evt) {
-                        self._eventHandlingCallback(new MediaEvent(evt.type, self));
+                        self.bubbleEvent(new MediaEvent(evt.type, self));
                     };
                     this._errorEventWrapper = function(evt) {
                         var errCode = self._mediaElement.error ? self._mediaElement.error.code : MediaInterface.MEDIA_ERR_UNKNOWN;
-                        self.bubbleEvent(new MediaErrorEvent(self, errCode));
+                        self._eventHandlingCallback(new MediaErrorEvent(self, errCode));
                     };
                     for (var i = 0; i < MediaEvent.TYPES.length; i++) {
                         this._mediaElement.addEventListener(MediaEvent.TYPES[i], this._eventWrapper, true);

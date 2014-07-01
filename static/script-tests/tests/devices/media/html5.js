@@ -70,4 +70,106 @@ jstestdriver.console.warn("devices/media/html5.js is poorly tested!");
             }, config);
     };
 
+
+    this.HTML5Test.prototype.testRenderCausesErrorEventToBeAdded = function (queue) {
+        expectAsserts(2);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
+            function(application, HTML5Player) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("div");
+                var addEventListenerCounts = { };
+                mediaElement.addEventListener = function (type, callback) {
+                    if (!addEventListenerCounts[type]) {
+                        addEventListenerCounts[type] = 1;
+                    } else {
+                        addEventListenerCounts[type] += 1;
+                    }
+                };
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                assertUndefined(addEventListenerCounts.error);
+
+                mediaInterface.render(device);
+
+                assertEquals(1, addEventListenerCounts.error);
+            }, config);
+    };
+
+    this.HTML5Test.prototype.testRenderCausesErrorEventListenerCallsbackWithAnErrorEventWithAvailableErrorCode = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent"],
+            function(application, HTML5Player, MediaErrorEvent) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("div");
+                var eventListeners = { };
+                mediaElement.addEventListener = function (type, callback) {
+                    eventListeners[type] = callback;
+                };
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.render(device);
+
+                assertFunction(eventListeners.error);
+
+                var errorCode = { };
+                mediaElement.error = { code: errorCode };
+
+                eventListeners.error("error");
+
+                assertTrue(callbackStub.calledOnce);
+                assertInstanceOf(MediaErrorEvent, callbackStub.args[0][0]);
+                assertSame(errorCode, callbackStub.args[0][0].code);
+
+            }, config);
+    };
+
+    this.HTML5Test.prototype.testRenderCausesErrorEventListenerCallsbackWithAnErrorEventWithoutErrorCodeIfUnavailable = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
+            function(application, HTML5Player, MediaErrorEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("div");
+                var eventListeners = { };
+                mediaElement.addEventListener = function (type, callback) {
+                    eventListeners[type] = callback;
+                };
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.render(device);
+
+                assertFunction(eventListeners.error);
+
+                eventListeners.error("error");
+
+                assertTrue(callbackStub.calledOnce);
+                assertInstanceOf(MediaErrorEvent, callbackStub.args[0][0]);
+                assertSame(MediaInterface.MEDIA_ERR_UNKNOWN, callbackStub.args[0][0].code);
+
+            }, config);
+    };
+
 })();
