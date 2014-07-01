@@ -173,16 +173,16 @@ require.def('antie/widgets/media',
                 this._mediaInterface.getNativeControls();
             },
             setVolume: function(volume) {
-                this._mediaInterface.setVolume(volume);
+                this.getCurrentApplication().getDevice().setVolume(volume);
             },
             getVolume: function() {
-                this._mediaInterface.getVolume();
+                this.getCurrentApplication().getDevice().getVolume();
             },
             setMuted: function(muted) {
-                this._mediaInterface.setMuted(muted);
+                this.getCurrentApplication().getDevice().setMuted(muted);
             },
             getMuted: function() {
-                this._mediaInterface.getMuted();
+                this.getCurrentApplication().getDevice().getMuted();
             },
             destroy: function() {
                 this._mediaInterface.destroy();

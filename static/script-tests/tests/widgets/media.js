@@ -722,58 +722,64 @@
 
         });
     };
-    this.MediaTest.prototype.testSetVolumeDefersToMediaInterface = function (queue) {
+    this.MediaTest.prototype.testSetVolumeDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
             this.sandbox.stub(Device.prototype, "createMediaInterface");
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            this.sandbox.stub(Device.prototype, "setVolume");
 
             var media = new Media("id", "audio");
 
             media.setVolume(0);
 
-            assertTrue(stubMediaInterface.setVolume.calledOnce);
-            assertTrue(stubMediaInterface.setVolume.calledWith(0));
+            assertTrue(Device.prototype.setVolume.calledOnce);
+            assertTrue(Device.prototype.setVolume.calledWith(0));
 
         });
     };
-    this.MediaTest.prototype.testGetVolumeDefersToMediaInterface = function (queue) {
+    this.MediaTest.prototype.testGetVolumeDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
             this.sandbox.stub(Device.prototype, "createMediaInterface");
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            this.sandbox.stub(Device.prototype, "getVolume");
 
             var media = new Media("id", "audio");
 
             media.getVolume();
 
-            assertTrue(stubMediaInterface.getVolume.calledOnce);
-            assertTrue(stubMediaInterface.getVolume.calledWith());
+            assertTrue(Device.prototype.getVolume.calledOnce);
+            assertTrue(Device.prototype.getVolume.calledWith());
 
         });
     };
-    this.MediaTest.prototype.testSetMutedDefersToMediaInterface = function (queue) {
+    this.MediaTest.prototype.testSetMutedDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
             this.sandbox.stub(Device.prototype, "createMediaInterface");
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            this.sandbox.stub(Device.prototype, "setMuted");
 
             var media = new Media("id", "audio");
 
             media.setMuted(false);
 
-            assertTrue(stubMediaInterface.setMuted.calledOnce);
-            assertTrue(stubMediaInterface.setMuted.calledWith(false));
+            assertTrue(Device.prototype.setMuted.calledOnce);
+            assertTrue(Device.prototype.setMuted.calledWith(false));
 
         });
     };
-    this.MediaTest.prototype.testGetMutedDefersToMediaInterface = function (queue) {
+    this.MediaTest.prototype.testGetMutedDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
 
@@ -781,12 +787,14 @@
             this.sandbox.stub(Device.prototype, "createMediaInterface");
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
+            this.sandbox.stub(Device.prototype, "getMuted");
+
             var media = new Media("id", "audio");
 
             media.getMuted();
 
-            assertTrue(stubMediaInterface.getMuted.calledOnce);
-            assertTrue(stubMediaInterface.getMuted.calledWith());
+            assertTrue(Device.prototype.getMuted.calledOnce);
+            assertTrue(Device.prototype.getMuted.calledWith());
 
         });
     };
