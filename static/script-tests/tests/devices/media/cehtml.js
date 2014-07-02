@@ -102,8 +102,8 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
     this.CEHTMLTest.prototype.testSetSourcesAddsOnPlayStateChangeFunctionToMediaElement = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaErrorEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
+            function(application, CEHTMLPlayer) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -131,9 +131,8 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
             }, config);
     };
 
-
-    this.CEHTMLTest.prototype.testMediaElementHasCorrectStyleSet = function (queue) {
-        expectAsserts(4);
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesErrorsToEventHandlingCallback = function (queue) {
+        expectAsserts(5);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
             function(application, CEHTMLPlayer, MediaErrorEvent, MediaInterface) {
@@ -147,6 +146,44 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                 this.sandbox.stub(device, "_createElement").returns(mediaElement);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 6;
+                mediaElement.onPlayStateChange();
+
+                assertTrue(callbackStub.calledTwice);
+                assertInstanceOf(MediaErrorEvent, callbackStub.args[1][0]);
+                assertEquals(0, callbackStub.args[1][0].code);
+
+            }, config);
+    };
+
+
+    this.CEHTMLTest.prototype.testMediaElementHasCorrectStyleSet = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
+            function(application, CEHTMLPlayer) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                device.createMediaInterface("id", "video", callbackStub);
 
                 assertEquals("100%", mediaElement.style.width);
                 assertEquals("100%", mediaElement.style.height);

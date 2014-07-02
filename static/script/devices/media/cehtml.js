@@ -162,7 +162,7 @@ require.def(
                                 self.bubbleEvent(new MediaEvent("ended", self));
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_ERROR:
-                                self.bubbleEvent(new MediaErrorEvent(self, 0));
+                                self._eventHandlingCallback(new MediaErrorEvent(self, 0));
                                 break;
                             default:
                                 // do nothing
