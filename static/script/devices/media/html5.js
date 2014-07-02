@@ -74,8 +74,8 @@ require.def(
                 this._errorEventWrapper = null;
             },
             render: function(device) {
-                if (this.outputElement !== this._mediaElement) {
-                    this.outputElement = this._mediaElement;
+                if (!this._renderCalled) {
+                    this._renderCalled = true;
 
                     // Convert all media events into our internal representation and bubble them through
                     // the UI widgets
