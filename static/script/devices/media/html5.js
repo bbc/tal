@@ -81,7 +81,7 @@ require.def(
                     // the UI widgets
                     var self = this;
                     this._eventWrapper = function(evt) {
-                        self.bubbleEvent(new MediaEvent(evt.type, self));
+                        self._eventHandlingCallback(new MediaEvent(evt.type, self));
                     };
                     this._errorEventWrapper = function(evt) {
                         var errCode = self._mediaElement.error ? self._mediaElement.error.code : MediaInterface.MEDIA_ERR_UNKNOWN;

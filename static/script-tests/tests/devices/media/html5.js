@@ -172,4 +172,39 @@ jstestdriver.console.warn("devices/media/html5.js is poorly tested!");
             }, config);
     };
 
+
+    this.HTML5Test.prototype.testRenderCausesPlayEventListenerCallbackWithAPlayMediaEvent = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, HTML5Player, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("div");
+                var eventListeners = { };
+                mediaElement.addEventListener = function (type, callback) {
+                    eventListeners[type] = callback;
+                };
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.render(device);
+
+                assertFunction(eventListeners.play);
+
+                eventListeners.play({ type: "play" });
+
+                assertTrue(callbackStub.calledOnce);
+                assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
+                assertEquals("play", callbackStub.args[0][0].type);
+
+            }, config);
+    };
+
+
 })();
