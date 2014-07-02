@@ -206,8 +206,40 @@ jstestdriver.console.warn("devices/media/html5.js is poorly tested!");
             }, config);
     };
 
+    this.HTML5Test.prototype.testRenderOnlyAddsEventListenersTheFirstTimeItIsCalled = function (queue) {
+        expectAsserts(3);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
+            function(application, HTML5Player, MediaErrorEvent, MediaInterface) {
 
+                var callbackStub = self.sandbox.stub();
 
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("div");
+                var eventListenerCount = 0;
+                mediaElement.addEventListener = function (type, callback) {
+                    eventListenerCount++;
+                };
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                assertEquals(0, eventListenerCount);
+
+                mediaInterface.render(device);
+
+                assertTrue(eventListenerCount > 0);
+
+                var count = eventListenerCount;
+
+                mediaInterface.render(device);
+
+                assertEquals(count, eventListenerCount);
+
+            }, config);
+    };
 
     this.HTML5Test.prototype.testSetSourcesErrorEventListenerOnSourceObjectsCallsBackWithMediaSourceErrorEvent = function (queue) {
         expectAsserts(5);
