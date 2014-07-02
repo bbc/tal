@@ -150,16 +150,16 @@ require.def(
                                 }
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_PAUSED:
-                                self.bubbleEvent(new MediaEvent("pause", self));
+                                self._eventHandlingCallback(new MediaEvent("pause", self));
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_CONNECTING:
-                                self.bubbleEvent(new MediaEvent("loadstart", self));
+                                self._eventHandlingCallback(new MediaEvent("loadstart", self));
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_BUFFERING:
-                                self.bubbleEvent(new MediaEvent("waiting", self));
+                                self._eventHandlingCallback(new MediaEvent("waiting", self));
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_FINISHED:
-                                self.bubbleEvent(new MediaEvent("ended", self));
+                                self._eventHandlingCallback(new MediaEvent("ended", self));
                                 break;
                             case CEHTMLPlayer.PLAY_STATE_ERROR:
                                 self._eventHandlingCallback(new MediaErrorEvent(self, 0));

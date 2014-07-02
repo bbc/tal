@@ -168,6 +168,153 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
             }, config);
     };
 
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesEndedMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(5);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 5;
+                mediaElement.onPlayStateChange();
+
+                assertTrue(callbackStub.calledTwice);
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('ended', callbackStub.args[1][0].type);
+
+            }, config);
+    };
+
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(5);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 4;
+                mediaElement.onPlayStateChange();
+
+                assertTrue(callbackStub.calledTwice);
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('waiting', callbackStub.args[1][0].type);
+
+            }, config);
+    };
+
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesLoadStartMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(5);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 3;
+                mediaElement.onPlayStateChange();
+
+                assertTrue(callbackStub.calledTwice);
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('loadstart', callbackStub.args[1][0].type);
+
+            }, config);
+    };
+
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesPauseMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(5);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 2;
+                mediaElement.onPlayStateChange();
+
+                assertTrue(callbackStub.calledTwice);
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('pause', callbackStub.args[1][0].type);
+
+            }, config);
+    };
 
     this.CEHTMLTest.prototype.testMediaElementHasCorrectStyleSet = function (queue) {
         expectAsserts(4);
