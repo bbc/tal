@@ -26,7 +26,7 @@
 
 require.def('antie/runtimecontext',
 	[
-		'antie/class',
+		'antie/class'
 	],
 	/**
 	 * Static class for accessing the current running application
