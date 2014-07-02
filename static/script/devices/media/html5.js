@@ -137,7 +137,7 @@ require.def(
                     (function(source) {
                         source._errorEventListener = function(evt) {
                             var errCode = self._mediaElement.error ? self._mediaElement.error.code : MediaInterface.MEDIA_ERR_UNKNOWN;
-                            self.bubbleEvent(new MediaSourceErrorEvent(
+                            self._eventHandlingCallback(new MediaSourceErrorEvent(
                                 self,
                                 errCode,
                                 source.src,

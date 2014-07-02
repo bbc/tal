@@ -207,4 +207,61 @@ jstestdriver.console.warn("devices/media/html5.js is poorly tested!");
     };
 
 
+
+
+    this.HTML5Test.prototype.testSetSourcesErrorEventListenerOnSourceObjectsCallsBackWithMediaSourceErrorEvent = function (queue) {
+        expectAsserts(5);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent", "antie/devices/media/mediainterface", "antie/events/mediasourceerrorevent"],
+            function(application, HTML5Player, MediaEvent, MediaInterface, MediaSourceErrorEvent) {
+
+                var errorHandlingCallbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var originalCreateElement = document.createElement;
+
+                var sourceAddEventListenerStub = undefined;
+                var sourceElementCount = 0;
+
+                this.sandbox.stub(document, "createElement", function(type) {
+                    if (type === "source") {
+                        var element = originalCreateElement.call(document, type);
+                        sourceAddEventListenerStub = self.sandbox.stub(element, "addEventListener");
+                        sourceElementCount++;
+                        return element;
+                    } else {
+                       return originalCreateElement.call(document, type);
+                    }
+                });
+
+
+                var mediaInterface = device.createMediaInterface("id", "video", errorHandlingCallbackStub);
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertEquals(1, sourceElementCount);
+
+                var listener = sourceAddEventListenerStub.args[0][1];
+
+                assertFunction(listener);
+
+                assertTrue(errorHandlingCallbackStub.notCalled);
+
+                // Simulate error event
+                var event = { stopPropagation: this.sandbox.stub()};
+                listener(event);
+
+                assertTrue(errorHandlingCallbackStub.calledOnce);
+                assertInstanceOf(MediaSourceErrorEvent, errorHandlingCallbackStub.args[0][0]);
+
+            }, config);
+    };
+
+
 })();
