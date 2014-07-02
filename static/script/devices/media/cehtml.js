@@ -40,8 +40,9 @@ require.def(
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, Application ) {
 
         var CEHTMLPlayer = MediaInterface.extend({
-            init: function(id, mediaType) {
+            init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
+                this._eventHandlingCallback = eventHandlingCallback;
                 this._seekState = new SeekState( this );
 
                 this._updateInterval = null;
@@ -66,9 +67,11 @@ require.def(
                 var device = Application.getCurrentApplication().getDevice();
                 var obj = device._createElement("object", this.id);
                 obj.setAttribute("type", contentType);
-                var div = device.createContainer();
-                div.innerHTML = '<object type="' + contentType + '" id="' + this.id + '" class="' + obj.className + '" ' + 'style="width: 100%; height: 100%; position: absolute; z-index: -1"' + ' />';
-                return div.childNodes[0];
+                obj.style.width = "100%";
+                obj.style.height = "100%";
+                obj.style.position = "absolute";
+                obj.style.zIndex = "-1";
+                return obj;
             },
             render: function(device) {
                 if (this.outputElement !== this._mediaElement) {
@@ -169,7 +172,7 @@ require.def(
 
                     this._eventsBound = true;
                 }
-                this.bubbleEvent(new MediaEvent("canplay", this));
+                this._eventHandlingCallback(new MediaEvent("canplay", this));
             },
             getSources: function() {
                 return [new MediaSource(this._mediaElement.data, this._mediaElement.type)];
