@@ -123,16 +123,16 @@ require.def(
                 window.SamsungMapleOnRenderingComplete = function () {
                     self.videoPlayerState.ended = true;
                     window.SamsungMapleOnTimeUpdate(self.videoPlayerState.durationSeconds);
-                    self.bubbleEvent(new MediaEvent("ended", self));
+                    self._eventHandlingCallback(new MediaEvent("ended", self));
                 };
                 this.playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
 
                 window.SamsungMapleOnStreamInfoReady = function () {
                     self.videoPlayerState.durationSeconds = self.playerPlugin.GetDuration() / 1000;
-                    self.bubbleEvent(new MediaEvent("loadedmetadata", self));
-                    self.bubbleEvent(new MediaEvent("durationchange", self));
-                    self.bubbleEvent(new MediaEvent("canplay", self));
-                    self.bubbleEvent(new MediaEvent("canplaythrough", self));
+                    self._eventHandlingCallback(new MediaEvent("loadedmetadata", self));
+                    self._eventHandlingCallback(new MediaEvent("durationchange", self));
+                    self._eventHandlingCallback(new MediaEvent("canplay", self));
+                    self._eventHandlingCallback(new MediaEvent("canplaythrough", self));
 
                 };
                 this.playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
@@ -160,7 +160,7 @@ require.def(
                 this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
 
                 window.SamsungMapleOnTimeUpdate = function(seconds) {
-                    self.bubbleEvent(new MediaEvent("timeupdate", self));
+                    self._eventHandlingCallback(new MediaEvent("timeupdate", self));
                 };
             },
 

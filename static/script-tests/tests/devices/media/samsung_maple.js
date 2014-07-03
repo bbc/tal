@@ -56,6 +56,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.playerPlugin.id = 'playerPlugin';
             document.body.appendChild(this.playerPlugin);
             this.createdPlayerPlugin = true;
+
+            this.playerPlugin.GetDuration = this.sandbox.stub();
         }
     };
 
@@ -119,7 +121,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingStartFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingStartPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
@@ -136,7 +138,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingCompleteFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingCompletePassesPlayingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
@@ -153,7 +155,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnConnectionFailedFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnConnectionFailedPassesConnectionFailedMediaErrorEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
@@ -170,7 +172,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnNetworkDisconnectedFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnNetworkDisconnectedPassesNetworkDisconnectedMediaErrorEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
@@ -187,7 +189,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnRenderErrorFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnRenderErrorPassesRenderErrorMediaErrorEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
@@ -204,7 +206,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
-    this.SamsungMapleTest.prototype.testSamsungMapleOnStreamNotFoundFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
+    this.SamsungMapleTest.prototype.testSamsungMapleOnStreamNotFoundPassesStreamNotFoundMediaErrorEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
@@ -221,5 +223,69 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             }, config);
     };
 
+    this.SamsungMapleTest.prototype.testSamsungMapleOnRenderingCompletePassesEndedMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(2);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                window.SamsungMapleOnRenderingComplete();
+
+                // SamsungMapleOnRenderingComplete calls SamsungMapleOnTimeUpdate first so will be the second call.
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('ended', callbackStub.args[1][0].type);
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testSamsungMapleOnTimeUpdatePassesTimeUpdateMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(2);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                window.SamsungMapleOnTimeUpdate();
+
+                assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
+                assertEquals('timeupdate', callbackStub.args[0][0].type);
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testSamsungMapleOnStreamInfoReadyPassesFourMediaEventsToEventHandlingCallback = function (queue) {
+        expectAsserts(8);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                window.SamsungMapleOnStreamInfoReady();
+
+                // loadedmetadata
+                assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
+                assertEquals('loadedmetadata', callbackStub.args[0][0].type);
+
+                // durationchange
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('durationchange', callbackStub.args[1][0].type);
+
+                // canplay
+                assertInstanceOf(MediaEvent, callbackStub.args[2][0]);
+                assertEquals('canplay', callbackStub.args[2][0].type);
+
+                // canplaythrough
+                assertInstanceOf(MediaEvent, callbackStub.args[3][0]);
+                assertEquals('canplaythrough', callbackStub.args[3][0].type);
+
+            }, config);
+    };
 
 })();
