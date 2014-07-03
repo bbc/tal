@@ -26,7 +26,7 @@
 
 require.def( 'antie/devices/media/seekstate', [ 'antie/events/mediaevent' ], function( MediaEvent ){
 
-    var SeekState = function( mediaWidget ){
+    var SeekState = function( eventHandlingCallback ){
 
         var State = {
             None        : 0,
@@ -37,20 +37,20 @@ require.def( 'antie/devices/media/seekstate', [ 'antie/events/mediaevent' ], fun
         this._currentTime   = 0;
         this._state         = State.None;
 
-        this.seekTo = function( time ){
-            if( time === this._currentTime ){
+        this.seekTo = function(time) {
+            if (time === this._currentTime) {
                 return;
             }
 
             this._state         = State.Seeking;
             this._currentTime   = time;
 
-            mediaWidget.bubbleEvent( new MediaEvent( "seeking", mediaWidget ) );
+            eventHandlingCallback(new MediaEvent("seeking"));
         };
 
-        this.playing = function(){
-            if( this._state === State.Seeking ){
-                mediaWidget.bubbleEvent( new MediaEvent( "seeked", mediaWidget ) );
+        this.playing = function() {
+            if (this._state === State.Seeking) {
+                eventHandlingCallback(new MediaEvent("seeked"));
             }
 
             this._state = State.Playing;

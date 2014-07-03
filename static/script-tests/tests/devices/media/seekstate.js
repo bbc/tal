@@ -34,71 +34,48 @@
     };
 
     this.SeekStateTest.prototype.testSeekToGeneratesSeeking = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function( SeekState ) {
-            var bubbleEventStub = sinon.stub();
+        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
 
-            var mediaWidget = {};
+            var eventHandlingCallback = this.sandbox.stub();
 
-            queue.call("SeekTo", function (callbacks) {
-                mediaWidget.bubbleEvent = callbacks.add( bubbleEventStub );
+            var seekState = new SeekState(eventHandlingCallback);
+            seekState.seekTo( 10 );
 
-                var seekState = new SeekState( mediaWidget );
-                seekState.seekTo( 10 );
-            });
+            assertTrue(eventHandlingCallback.calledOnce);
 
-            queue.call("Assert", function (callbacks) {
-                var event = bubbleEventStub.args[0][0];
-                assertEquals( "seeking", event.type );
-            });
+            var event = eventHandlingCallback.args[0][0];
+
+            assertEquals("seeking", event.type);
         });
     };
 
     this.SeekStateTest.prototype.testSeekToSamePointDoesNotGeneratesSeeking = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function( SeekState ) {
-            var bubbleEventStub = sinon.stub();
+        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
 
-            var mediaWidget = {};
-            var seekState;
+            var eventHandlingCallback = this.sandbox.stub();
 
-            queue.call("SeekTo1", function (callbacks) {
-                mediaWidget.bubbleEvent = callbacks.add( bubbleEventStub );
+            var seekState = new SeekState(eventHandlingCallback);
+            seekState.seekTo(10);
+            seekState.seekTo(10);
 
-                seekState = new SeekState( mediaWidget );
-                seekState.seekTo( 10 );
-                mediaWidget.bubbleEvent = bubbleEventStub;
-                seekState.seekTo( 10 );
-            });
-
-            queue.call("Assert", function (callbacks) {
-                var event = bubbleEventStub.args[0][0];
-                assertEquals( "seeking", event.type );
-                assertEquals( 1, bubbleEventStub.callCount );
-            });
+            assertTrue(eventHandlingCallback.calledOnce);
         });
     };
 
     this.SeekStateTest.prototype.testSeekThenPlayingGeneratesSeeked = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function( SeekState ) {
-            var bubbleEventStub = sinon.stub();
+        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
 
-            var mediaWidget = {};
-            var seekState;
+            var eventHandlingCallback = this.sandbox.stub();
 
-            queue.call("SeekTo1", function (callbacks) {
-                mediaWidget.bubbleEvent = bubbleEventStub;
+            var seekState = new SeekState(eventHandlingCallback);
+            seekState.seekTo(10);
+            seekState.playing();
 
-                seekState = new SeekState( mediaWidget );
-                seekState.seekTo( 10 );
-                mediaWidget.bubbleEvent = callbacks.add( bubbleEventStub );
-                seekState.playing();
+            assertTrue(eventHandlingCallback.calledTwice);
 
-            });
+            var event = eventHandlingCallback.args[1][0];
 
-            queue.call("Assert", function (callbacks) {
-                var event = bubbleEventStub.args[1][0];
-                assertEquals( "seeked", event.type );
-                assertEquals( 2, bubbleEventStub.callCount );
-            });
+            assertEquals("seeked", event.type);
         });
     };
 
