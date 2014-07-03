@@ -73,6 +73,18 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             document.body.removeChild(this.playerPlugin);
             this.playerPlugin = null;
         }
+
+        // Get rid of event handling that Samsung litters the window with.
+        window.SamsungMapleOnBufferingStart = undefined;
+        window.SamsungMapleOnBufferingComplete = undefined;
+        window.SamsungMapleOnConnectionFailed = undefined;
+        window.SamsungMapleOnNetworkDisconnected = undefined;
+        window.SamsungMapleOnRenderError = undefined;
+        window.SamsungMapleOnStreamNotFound = undefined;
+        window.SamsungMapleOnRenderingComplete = undefined;
+        window.SamsungMapleOnStreamInfoReady = undefined;
+        window.SamsungMapleOnCurrentPlayTime = undefined;
+        window.SamsungMapleOnTimeUpdate = undefined;
     };
 
     this.SamsungMapleTest.prototype.testCreateMediaInterfaceReturnsSamsungMaplePlayerWhenSamsungMapleDeviceModifierUsed = function (queue) {
@@ -94,9 +106,9 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple"],
-            function(application, SamsungMaplePlayer) {
+            function(application, SamsungPlayer) {
 
-                var spy = self.sandbox.spy(SamsungMaplePlayer.prototype, "init");
+                var spy = self.sandbox.spy(SamsungPlayer.prototype, "init");
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
@@ -110,8 +122,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingStartFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaevent"],
-            function(application, MediaEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer,  MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
@@ -127,8 +139,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnBufferingCompleteFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaevent"],
-            function(application, MediaEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer,  MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
@@ -144,8 +156,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnConnectionFailedFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaerrorevent"],
-            function(application, MediaErrorEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
+            function(application, SamsungPlayer,  MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
@@ -161,8 +173,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnNetworkDisconnectedFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaerrorevent"],
-            function(application, MediaErrorEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
+            function(application, SamsungPlayer,  MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
@@ -178,8 +190,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnRenderErrorFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaerrorevent"],
-            function(application, MediaErrorEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
+            function(application, SamsungPlayer, MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
@@ -195,8 +207,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
     this.SamsungMapleTest.prototype.testSamsungMapleOnStreamNotFoundFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/mediaerrorevent"],
-            function(application, MediaErrorEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaerrorevent"],
+            function(application, SamsungPlayer, MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
                 application.getDevice().createMediaInterface("id", "video", callbackStub);
