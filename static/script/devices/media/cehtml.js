@@ -137,15 +137,15 @@ require.def(
                             case CEHTMLPlayer.PLAY_STATE_PLAYING:
                                 self._seekState.playing();
                                 if (!self._loaded) {
-                                    self.bubbleEvent(new MediaEvent("loadedmetadata", self));
-                                    self.bubbleEvent(new MediaEvent("canplaythrough", self));
+                                    self._eventHandlingCallback(new MediaEvent("loadedmetadata", self));
+                                    self._eventHandlingCallback(new MediaEvent("canplaythrough", self));
                                     self._loaded = true;
                                 }
-                                self.bubbleEvent(new MediaEvent("play", self));
-                                self.bubbleEvent(new MediaEvent("playing", self));
+                                self._eventHandlingCallback(new MediaEvent("play", self));
+                                self._eventHandlingCallback(new MediaEvent("playing", self));
                                 if (!self._updateInterval) {
                                     self._updateInterval = window.setInterval(function() {
-                                        self.bubbleEvent(new MediaEvent("timeupdate", self));
+                                        self._eventHandlingCallback(new MediaEvent("timeupdate", self));
                                     }, 900);
                                 }
                                 break;

@@ -316,6 +316,114 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
             }, config);
     };
 
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesPlayLifecycleMediaEventsToEventHandlingCallback = function (queue) {
+        expectAsserts(11);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+                mediaElement.stop = this.sandbox.stub();
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+                assertTrue(callbackStub.calledOnce); // "canplay" from setSources
+
+                mediaElement.playState = 1;
+                mediaElement.onPlayStateChange();
+
+                assertEquals(5, callbackStub.callCount);
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('loadedmetadata', callbackStub.args[1][0].type);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[2][0]);
+                assertEquals('canplaythrough', callbackStub.args[2][0].type);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[3][0]);
+                assertEquals('play', callbackStub.args[3][0].type);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[4][0]);
+                assertEquals('playing', callbackStub.args[4][0].type);
+
+                // Clean up to stop launched timer...
+                mediaInterface.stop();
+
+            }, config);
+    };
+
+    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesTimeUpdateMediaEventsToEventHandlingCallbackEvery900MillisecondsAfterPlayEvent = function (queue) {
+        expectAsserts(6);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+                var callbackStub = self.sandbox.stub();
+
+                var device = application.getDevice();
+
+                var mediaElement = document.createElement("object");
+                mediaElement.stop = this.sandbox.stub();
+
+                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+
+                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+                mediaInterface.setSources(
+                    [
+                        {
+                            getURL : function() { return "url"; },
+                            getContentType : function() { return "video/mp4"; }
+                        }
+                    ], { });
+
+                assertFunction(mediaElement.onPlayStateChange);
+
+                var clock = sinon.useFakeTimers();
+                // t = 0
+
+                mediaElement.playState = 1;
+                mediaElement.onPlayStateChange();
+
+                assertEquals(5, callbackStub.callCount);
+
+                clock.tick(899);
+                // t = 899;
+
+                assertEquals(5, callbackStub.callCount);
+
+                clock.tick(2);
+                // t = 901;
+
+                assertEquals(6, callbackStub.callCount);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[5][0]);
+                assertEquals('timeupdate', callbackStub.args[5][0].type);
+
+                clock.restore();
+
+                // Clean up to stop launched timer...
+                mediaInterface.stop();
+
+
+            }, config);
+    };
+
+
     this.CEHTMLTest.prototype.testMediaElementHasCorrectStyleSet = function (queue) {
         expectAsserts(4);
         var self = this;
