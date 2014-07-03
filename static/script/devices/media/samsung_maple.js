@@ -43,8 +43,10 @@ require.def(
             return x / 40.0;
         }
         var SamsungPlayer = MediaInterface.extend({
-            init: function(id, mediaType) {
+            init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
+
+                this._eventHandlingCallback = eventHandlingCallback;
 
                 this.playerPlugin = document.getElementById('playerPlugin');
                 this.audioPlugin = document.getElementById('audioPlugin');
@@ -89,32 +91,32 @@ require.def(
                 var self = this;
 
                 window.SamsungMapleOnBufferingStart = function() {
-                    self.bubbleEvent(new MediaEvent("waiting", self));
+                    self._eventHandlingCallback(new MediaEvent("waiting", self));
                 };
                 this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
 
                 window.SamsungMapleOnBufferingComplete = function() {
-                    self.bubbleEvent(new MediaEvent("playing", self));
+                    self._eventHandlingCallback(new MediaEvent("playing", self));
                 };
                 this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
 
                 window.SamsungMapleOnConnectionFailed = function() {
-                    self.bubbleEvent(new MediaErrorEvent(self, "Connection failed"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, "Connection failed"));
                 };
                 this.playerPlugin.OnConnectionFailed = 'SamsungMapleOnConnectionFailed';
 
                 window.SamsungMapleOnNetworkDisconnected = function() {
-                    self.bubbleEvent(new MediaErrorEvent(self, "Network disconnected"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, "Network disconnected"));
                 };
                 this.playerPlugin.OnNetworkDisconnected = 'SamsungMapleOnNetworkDisconnected';
 
                 window.SamsungMapleOnRenderError = function() {
-                    self.bubbleEvent(new MediaErrorEvent(self, "Render error"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, "Render error"));
                 };
                 this.playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
 
                 window.SamsungMapleOnStreamNotFound = function() {
-                    self.bubbleEvent(new MediaErrorEvent(self, "Stream not found"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, "Stream not found"));
                 };
                 this.playerPlugin.OnStreamNotFound = 'SamsungMapleOnStreamNotFound';
 

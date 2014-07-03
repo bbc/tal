@@ -43,7 +43,7 @@ require.def(
             init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
                 this._eventHandlingCallback = eventHandlingCallback;
-                this._seekState = new SeekState( this );
+                this._seekState = new SeekState(this._eventHandlingCallback);
 
                 this._updateInterval = null;
                 this._loaded = false;
@@ -92,7 +92,7 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(sources, tags) {
-                this._seekState = new SeekState( this );
+                this._seekState = new SeekState(this._eventHandlingCallback);
 
                 var currentMediaType = this._mediaElement.type;
                 var newMediaType = sources[0].getContentType();

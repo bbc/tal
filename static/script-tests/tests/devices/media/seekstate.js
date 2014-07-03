@@ -33,6 +33,17 @@
         this.sandbox.restore();
     };
 
+    this.SeekStateTest.prototype.testSeekStateExtendsClass = function (queue) {
+        queuedRequire(queue, ["antie/devices/media/seekstate", "antie/class"], function(SeekState, Class) {
+
+            var eventHandlingCallback = this.sandbox.stub();
+            var seekState = new SeekState(eventHandlingCallback);
+
+            assertInstanceOf(Class, seekState);
+
+        });
+    }
+
     this.SeekStateTest.prototype.testSeekToGeneratesSeeking = function (queue) {
         queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
 

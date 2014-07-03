@@ -446,4 +446,45 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                 assertEquals("-1", mediaElement.style.zIndex);
             }, config);
     };
+
+    this.CEHTMLTest.prototype.testSeekStateIsCalledWithEventHandlingCallbackWhenCreateMediaInterfaceIsCalled = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/seekstate"],
+            function(application, SeekState) {
+
+                var eventHandlingCallbackStub = self.sandbox.stub();
+                var seekStateSpy = self.sandbox.spy(SeekState.prototype, "init");
+
+                application.getDevice().createMediaInterface("id", "video", eventHandlingCallbackStub);
+
+                assertTrue(seekStateSpy.calledOnce);
+                assertSame(eventHandlingCallbackStub, seekStateSpy.args[0][0]);
+
+            }, config);
+    };
+
+    this.CEHTMLTest.prototype.testSeekStateIsCalledWithEventHandlingCallbackWhenSetSourcesIsCalled = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/seekstate"],
+            function(application, SeekState) {
+
+                var eventHandlingCallbackStub = self.sandbox.stub();
+                var seekStateSpy = self.sandbox.spy(SeekState.prototype, "init");
+
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", eventHandlingCallbackStub);
+                mediaInterface.setSources([
+                    {
+                        getURL : function() { return "url"; },
+                        getContentType : function() { return "video/mp4"; }
+                    }
+                ], { });
+
+                assertTrue(seekStateSpy.calledTwice);
+                assertSame(eventHandlingCallbackStub, seekStateSpy.args[1][0]);
+
+            }, config);
+    };
+
 })();

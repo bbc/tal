@@ -70,6 +70,18 @@ require.def('antie/widgets/media',
 
 				this.addClass('media');
 			},
+            render: function(device) {
+                this._mediaInterface.render(device);
+            },
+            show: function(options) {
+                this._mediaInterface.show(options);
+            },
+            hide: function(options) {
+                this._mediaInterface.hide(options);
+            },
+            moveTo: function(options) {
+                this._mediaInterface.moveTo(options);
+            },
             setWindow: function(left, top, width, height) {
                 this._mediaInterface.setWindow(left, top, width, height);
             },
