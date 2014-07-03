@@ -74,10 +74,6 @@ require.def(
                 return obj;
             },
             render: function(device) {
-                if (this.outputElement !== this._mediaElement) {
-                    this.outputElement = this._mediaElement;
-                }
-
                 return this._mediaElement;
             },
             // (not part of HTML5 media)
