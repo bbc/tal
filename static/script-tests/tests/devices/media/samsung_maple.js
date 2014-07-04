@@ -60,6 +60,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
 
             this.playerPlugin.GetDuration = this.sandbox.stub();
             this.playerPlugin.Stop = this.sandbox.stub();
+            this.playerPlugin.Pause = this.sandbox.stub();
             this.playerPlugin.SetDisplayArea = this.sandbox.stub();
             this.playerPlugin.JumpForward = this.sandbox.stub();
         }
@@ -396,6 +397,31 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
                 assertInstanceOf(MediaEvent, callbackStub.args[7][0]);
                 assertEquals('seeked', callbackStub.args[7][0].type);
 
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testPausingPassesPauseMediaEventToEventHandlingCallback = function (queue) {
+        expectAsserts(3);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                var clock = sinon.useFakeTimers();
+
+                mediaInterface.pause();
+
+                // For some reason the event is emmitted in a setTimeout(...,0) block - we need to tick so it is called.
+                clock.tick(1);
+
+                assertTrue(callbackStub.calledOnce);
+                assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
+                assertEquals('pause', callbackStub.args[0][0].type);
+
+                clock.restore();
 
             }, config);
     };

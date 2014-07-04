@@ -379,7 +379,7 @@ require.def(
                 self.playerPlugin.Pause();
                 self.videoPlayerState.paused = true;
                 window.setTimeout(function() {
-                    self.bubbleEvent(new MediaEvent("pause", self))
+                    self._eventHandlingCallback(new MediaEvent("pause", self))
                 }, 0);
             },
             // attribute boolean controls;
