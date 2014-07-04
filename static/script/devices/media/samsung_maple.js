@@ -144,11 +144,11 @@ require.def(
                         self.videoPlayerState.currentTime = seconds;
                         if (self.videoPlayerState.seeking) {
                             self.videoPlayerState.seeking = false;
-                            self.bubbleEvent(new MediaEvent('seeked', self));
+                            self._eventHandlingCallback(new MediaEvent('seeked', self));
                         }
                         if (self.videoPlayerState.playing === false) {
-                            self.bubbleEvent(new MediaEvent('play', self));
-                            self.bubbleEvent(new MediaEvent('playing', self));
+                            self._eventHandlingCallback(new MediaEvent('play', self));
+                            self._eventHandlingCallback(new MediaEvent('playing', self));
                             self.videoPlayerState.playing = true;
                         }
                         else {
@@ -291,7 +291,7 @@ require.def(
                     this.playerPlugin.JumpBackward(Math.abs(offsetInSeconds));
                 }
                 this.videoPlayerState.seeking = true;
-                this.bubbleEvent(new MediaEvent('seeking', this));
+                this._eventHandlingCallback(new MediaEvent('seeking', this));
                 this.videoPlayerState.currentTime = timeToSeekTo;
             },
             getCurrentTime: function() {

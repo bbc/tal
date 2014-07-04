@@ -43,6 +43,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.createdTVMPlugin = true;
 
             this.tvmwPlugin.GetSource = this.sandbox.stub();
+            this.tvmwPlugin.SetMediaSource = this.sandbox.stub();
 
         } else {
             this.sandbox.stub(this.tvmwPlugin, "GetSource");
@@ -58,6 +59,9 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.createdPlayerPlugin = true;
 
             this.playerPlugin.GetDuration = this.sandbox.stub();
+            this.playerPlugin.Stop = this.sandbox.stub();
+            this.playerPlugin.SetDisplayArea = this.sandbox.stub();
+            this.playerPlugin.JumpForward = this.sandbox.stub();
         }
     };
 
@@ -284,6 +288,114 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
                 // canplaythrough
                 assertInstanceOf(MediaEvent, callbackStub.args[3][0]);
                 assertEquals('canplaythrough', callbackStub.args[3][0].type);
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testSamsungMapleOnCurrentPlayTimePassesPlayAndPlayingMediaEventsToEventHandlingCallbackWhenNotAlreadyPlaying = function (queue) {
+        expectAsserts(6);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                var source = {
+                    getURL: function() { return "url"; },
+                    isLiveStream: function() { return false; }
+                };
+
+                mediaInterface.setSources([ source ], { });
+
+                self.playerPlugin.GetDuration.returns(10000);
+                window.SamsungMapleOnStreamInfoReady();
+
+                // Set-up complete. Confirm state before proceeding.
+                assertEquals(4, callbackStub.callCount);
+
+                window.SamsungMapleOnCurrentPlayTime(1000);
+
+                assertEquals(6, callbackStub.callCount);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[4][0]);
+                assertEquals('play', callbackStub.args[4][0].type);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[5][0]);
+                assertEquals('playing', callbackStub.args[5][0].type);
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testSetCurrentTimePassesSeekingMediaEventsToEventHandlingCallbackWhenSettingCurrentTime = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                var source = {
+                    getURL: function() { return "url"; },
+                    isLiveStream: function() { return false; }
+                };
+
+                mediaInterface.setSources([ source ], { });
+
+                self.playerPlugin.GetDuration.returns(10000);
+                window.SamsungMapleOnStreamInfoReady();
+
+                window.SamsungMapleOnCurrentPlayTime(1000);
+
+                // Set-up complete. Confirm state before proceeding.
+                assertEquals(6, callbackStub.callCount);
+
+                mediaInterface.setCurrentTime(2000);
+
+                assertEquals(7, callbackStub.callCount);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[6][0]);
+                assertEquals('seeking', callbackStub.args[6][0].type);
+
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testSamsungMapleOnCurrentPlayTimePassesSeekedMediaEventsToEventHandlingCallbackWhenSeeking = function (queue) {
+        expectAsserts(4);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                var source = {
+                    getURL: function() { return "url"; },
+                    isLiveStream: function() { return false; }
+                };
+
+                mediaInterface.setSources([ source ], { });
+
+                self.playerPlugin.GetDuration.returns(10000);
+                window.SamsungMapleOnStreamInfoReady();
+
+                window.SamsungMapleOnCurrentPlayTime(1000);
+
+                mediaInterface.setCurrentTime(2000);
+
+                // Set-up complete. Confirm state before proceeding.
+                assertEquals(7, callbackStub.callCount);
+
+                window.SamsungMapleOnCurrentPlayTime(2000);
+
+                // 9, rather than 8, as we'll also get a time update event.
+                assertEquals(9, callbackStub.callCount);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[7][0]);
+                assertEquals('seeked', callbackStub.args[7][0].type);
+
 
             }, config);
     };
