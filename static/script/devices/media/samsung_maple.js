@@ -366,8 +366,8 @@ require.def(
                 if (this.videoPlayerState.paused) {
                     this.playerPlugin.Resume();
                     this.videoPlayerState.paused = false;
-                    this.bubbleEvent(new MediaEvent("play", this));
-                    this.bubbleEvent(new MediaEvent("playing", this));
+                    this._eventHandlingCallback(new MediaEvent("play", this));
+                    this._eventHandlingCallback(new MediaEvent("playing", this));
                 }
             },
             stop: function() {

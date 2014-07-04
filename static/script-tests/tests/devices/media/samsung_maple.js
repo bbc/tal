@@ -61,6 +61,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.playerPlugin.GetDuration = this.sandbox.stub();
             this.playerPlugin.Stop = this.sandbox.stub();
             this.playerPlugin.Pause = this.sandbox.stub();
+            this.playerPlugin.Resume = this.sandbox.stub();
             this.playerPlugin.SetDisplayArea = this.sandbox.stub();
             this.playerPlugin.JumpForward = this.sandbox.stub();
         }
@@ -420,6 +421,40 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
                 assertTrue(callbackStub.calledOnce);
                 assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
                 assertEquals('pause', callbackStub.args[0][0].type);
+
+                clock.restore();
+
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testPlayingWhenPausedPassesMediaEventsToEventHandlingCallback = function (queue) {
+        expectAsserts(6);
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer, MediaEvent) {
+
+                var callbackStub = self.sandbox.stub();
+                var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+                var clock = sinon.useFakeTimers();
+
+                mediaInterface.pause();
+
+                // For some reason the paused event is emmitted in a setTimeout(...,0) block - we need to tick so it is called.
+                clock.tick(1);
+
+                // Ensure state before we start our test.
+                assertTrue(callbackStub.calledOnce);
+
+                mediaInterface.play();
+
+                assertTrue(callbackStub.calledThrice);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
+                assertEquals('play', callbackStub.args[1][0].type);
+
+                assertInstanceOf(MediaEvent, callbackStub.args[2][0]);
+                assertEquals('playing', callbackStub.args[2][0].type);
 
                 clock.restore();
 
