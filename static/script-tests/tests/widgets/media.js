@@ -268,6 +268,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetErrorReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getError.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getError();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testSetSourcesDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -305,6 +327,27 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetSourcesReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getSources.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getSources();
+
+            assertSame(object, result);
+
+        });
+    };
     this.MediaTest.prototype.testGetCurrentSourceDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -319,6 +362,27 @@
 
             assertTrue(stubMediaInterface.getCurrentSource.calledOnce);
             assertTrue(stubMediaInterface.getCurrentSource.calledWith());
+
+        });
+    };
+
+    this.MediaTest.prototype.testGetCurrentSourceReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getCurrentSource.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getCurrentSource();
+
+            assertSame(object, result);
 
         });
     };
@@ -339,6 +403,27 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetNetworkStateReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getNetworkState.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getNetworkState();
+
+            assertSame(object, result);
+
+        });
+    };
     this.MediaTest.prototype.testGetPreloadDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -353,6 +438,27 @@
 
             assertTrue(stubMediaInterface.getPreload.calledOnce);
             assertTrue(stubMediaInterface.getPreload.calledWith());
+
+        });
+    };
+
+    this.MediaTest.prototype.testGetPreloadReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getPreload.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getPreload();
+
+            assertSame(object, result);
 
         });
     };
@@ -390,6 +496,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetBufferedReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getBuffered.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getBuffered();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testLoadDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -424,6 +552,27 @@
 
         });
     };
+
+    this.MediaTest.prototype.testCanPlayTypeReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.canPlayType.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.canPlayType("video/mp4");
+
+            assertSame(object, result);
+
+        });
+    };
     this.MediaTest.prototype.testGetReadyStateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -438,6 +587,27 @@
 
             assertTrue(stubMediaInterface.getReadyState.calledOnce);
             assertTrue(stubMediaInterface.getReadyState.calledWith());
+
+        });
+    };
+
+    this.MediaTest.prototype.testGetReadyStateReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getReadyState.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getReadyState();
+
+            assertSame(object, result);
 
         });
     };
@@ -458,6 +628,27 @@
 
         });
     };
+    this.MediaTest.prototype.testGetSeekingReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getSeeking.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getSeeking();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testSetCurrentTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -509,6 +700,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetInitialTimeReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getInitialTime.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getInitialTime();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetDurationDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -526,6 +739,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetDurationReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getDuration.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getDuration();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetStartOffsetTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -543,6 +778,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetStartOffsetTimeReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getStartOffsetTime.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getStartOffsetTime();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetPausedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -560,6 +817,27 @@
 
         });
     };
+    this.MediaTest.prototype.testGetPausedReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getPaused.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getPaused();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetDefaultPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -577,6 +855,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetSDefaultPlaybackRateReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getDefaultPlaybackRate.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getDefaultPlaybackRate();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -594,6 +894,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetPlaybackRateReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getPlaybackRate.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getPlaybackRate();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testSetPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -628,6 +950,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetPlayedReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getPlayed.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getPlayed();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetSeekableDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -645,6 +989,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetSeekableReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getSeekable.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getSeekable();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testGetEndedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -659,6 +1025,26 @@
 
             assertTrue(stubMediaInterface.getEnded.calledOnce);
             assertTrue(stubMediaInterface.getEnded.calledWith());
+
+        });
+    };
+    this.MediaTest.prototype.testGetEndedReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getEnded.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getEnded();
+
+            assertSame(object, result);
 
         });
     };
@@ -679,6 +1065,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testGetAutoPlayReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getAutoPlay.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getAutoPlay();
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testSetAutoPlayDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -710,6 +1118,26 @@
 
             assertTrue(stubMediaInterface.getLoop.calledOnce);
             assertTrue(stubMediaInterface.getLoop.calledWith());
+
+        });
+    };
+    this.MediaTest.prototype.testGetLoopReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getLoop.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getLoop();
+
+            assertSame(object, result);
 
         });
     };
@@ -815,6 +1243,26 @@
 
         });
     };
+    this.MediaTest.prototype.testGetNavitveControlsReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.getNativeControls.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getNativeControls();
+
+            assertSame(object, result);
+
+        });
+    };
     this.MediaTest.prototype.testSetVolumeDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -853,6 +1301,26 @@
 
         });
     };
+    this.MediaTest.prototype.testGetVolumeReturnsResultFromDevice = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            this.sandbox.stub(Device.prototype, "getVolume").returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getVolume();
+
+            assertSame(object, result);
+
+        });
+    };
     this.MediaTest.prototype.testSetMutedDefersToDevice = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
@@ -888,6 +1356,26 @@
 
             assertTrue(Device.prototype.getMuted.calledOnce);
             assertTrue(Device.prototype.getMuted.calledWith());
+
+        });
+    };
+    this.MediaTest.prototype.testGetMutedReturnsResultFromDevice = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            this.sandbox.stub(Device.prototype, "getMuted").returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.getMuted();
+
+            assertSame(object, result);
 
         });
     };

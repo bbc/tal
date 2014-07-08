@@ -86,85 +86,85 @@ require.def('antie/widgets/media',
                 this._mediaInterface.setWindow(left, top, width, height);
             },
             getError: function() {
-                this._mediaInterface.getError();
+                return this._mediaInterface.getError();
             },
             setSources: function(sources, tags) {
                 this._mediaInterface.setSources(sources, tags);
             },
             getSources: function() {
-                this._mediaInterface.getSources();
+                return this._mediaInterface.getSources();
             },
             getCurrentSource: function() {
-                this._mediaInterface.getCurrentSource();
+                return this._mediaInterface.getCurrentSource();
             },
             getNetworkState: function() {
-                this._mediaInterface.getNetworkState();
+                return this._mediaInterface.getNetworkState();
             },
             getPreload: function() {
-                this._mediaInterface.getPreload();
+                return this._mediaInterface.getPreload();
             },
             setPreload: function(preload) {
                 this._mediaInterface.setPreload(preload);
             },
             getBuffered: function() {
-                this._mediaInterface.getBuffered();
+                return this._mediaInterface.getBuffered();
             },
             load: function() {
                 this._mediaInterface.load();
             },
             canPlayType: function(type) {
-                this._mediaInterface.canPlayType(type);
+                return this._mediaInterface.canPlayType(type);
             },
             getReadyState: function() {
-                this._mediaInterface.getReadyState();
+                return this._mediaInterface.getReadyState();
             },
             getSeeking: function() {
-                this._mediaInterface.getSeeking();
+                return this._mediaInterface.getSeeking();
             },
             setCurrentTime: function(currentTime) {
                 this._mediaInterface.setCurrentTime(currentTime);
             },
             getCurrentTime: function() {
-                this._mediaInterface.getCurrentTime();
+                return this._mediaInterface.getCurrentTime();
             },
             getInitialTime: function() {
-                this._mediaInterface.getInitialTime();
+                return this._mediaInterface.getInitialTime();
             },
             getDuration: function() {
-                this._mediaInterface.getDuration();
+                return this._mediaInterface.getDuration();
             },
             getStartOffsetTime: function() {
-                this._mediaInterface.getStartOffsetTime();
+                return this._mediaInterface.getStartOffsetTime();
             },
             getPaused: function() {
-                this._mediaInterface.getPaused();
+                return this._mediaInterface.getPaused();
             },
             getDefaultPlaybackRate: function() {
-                this._mediaInterface.getDefaultPlaybackRate();
+                return this._mediaInterface.getDefaultPlaybackRate();
             },
             getPlaybackRate: function() {
-                this._mediaInterface.getPlaybackRate();
+                return this._mediaInterface.getPlaybackRate();
             },
             setPlaybackRate: function(playbackRate) {
                 this._mediaInterface.setPlaybackRate(playbackRate);
             },
             getPlayed: function() {
-                this._mediaInterface.getPlayed();
+                return this._mediaInterface.getPlayed();
             },
             getSeekable: function() {
-                this._mediaInterface.getSeekable();
+                return this._mediaInterface.getSeekable();
             },
             getEnded: function() {
-                this._mediaInterface.getEnded();
+                return this._mediaInterface.getEnded();
             },
             getAutoPlay: function() {
-                this._mediaInterface.getAutoPlay();
+                return this._mediaInterface.getAutoPlay();
             },
             setAutoPlay: function(autoplay) {
                 this._mediaInterface.setAutoPlay(autoplay);
             },
             getLoop: function() {
-                this._mediaInterface.getLoop();
+                return this._mediaInterface.getLoop();
             },
             setLoop: function(loop) {
                 this._mediaInterface.setLoop(loop);
@@ -182,19 +182,19 @@ require.def('antie/widgets/media',
                 this._mediaInterface.setNativeControls(controls);
             },
             getNativeControls: function() {
-                this._mediaInterface.getNativeControls();
+                return this._mediaInterface.getNativeControls();
             },
             setVolume: function(volume) {
                 this.getCurrentApplication().getDevice().setVolume(volume);
             },
             getVolume: function() {
-                this.getCurrentApplication().getDevice().getVolume();
+                return this.getCurrentApplication().getDevice().getVolume();
             },
             setMuted: function(muted) {
                 this.getCurrentApplication().getDevice().setMuted(muted);
             },
             getMuted: function() {
-                this.getCurrentApplication().getDevice().getMuted();
+                return this.getCurrentApplication().getDevice().getMuted();
             },
             destroy: function() {
                 this._mediaInterface.destroy();
