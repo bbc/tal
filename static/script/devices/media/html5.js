@@ -57,7 +57,7 @@ require.def(
                 // Create the DOM element now so the wrapped functions can modify attributes
                 // before it is placed in the Document during rendering.
                 var device = Application.getCurrentApplication().getDevice();
-                this._mediaElement = device._createElement(this._mediaType, this.id);
+                this._mediaElement = device._createElement(this._mediaType, id);
 
                 if (currentVolume != -1) {
                     this._mediaElement.volume = currentVolume;
