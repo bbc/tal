@@ -42,6 +42,7 @@ require.def(
         var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
+                this.id = id;
                 this._eventHandlingCallback = eventHandlingCallback;
                 this._seekState = new SeekState(this._eventHandlingCallback);
 
