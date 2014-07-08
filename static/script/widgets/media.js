@@ -71,7 +71,7 @@ require.def('antie/widgets/media',
 				this.addClass('media');
 			},
             render: function(device) {
-                this._mediaInterface.render(device);
+                return this._mediaInterface.render(device);
             },
             show: function(options) {
                 this._mediaInterface.show(options);

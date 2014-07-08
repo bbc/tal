@@ -156,6 +156,28 @@
 
         });
     };
+
+    this.MediaTest.prototype.testRenderReturnsResultFromMediaInterface = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+
+
+            var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
+            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            Device.prototype.createMediaInterface.returns(stubMediaInterface);
+
+            var object = { };
+            stubMediaInterface.render.returns(object);
+
+            var media = new Media("id", "audio");
+
+            var result = media.render(Device);
+
+            assertSame(object, result);
+
+        });
+    };
+
     this.MediaTest.prototype.testShowDefersToMediaInterface = function (queue) {
         expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
