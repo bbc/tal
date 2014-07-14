@@ -52,6 +52,7 @@ require.def("antie/devices/browserdevice",
             init: function(config) {
                 this._super(config);
                 this._textSizeCache = {};
+                this._addedToVisibleDomCallbackEls = [];
 
                 this.addClassToElement(this.getTopLevelElement(), "notanimating");
             },
@@ -234,7 +235,31 @@ require.def("antie/devices/browserdevice",
              * @param {Element} el The new child element.
              */
             appendChildElement: function(to, el) {
+
+                // TODO: this could probably be done a lot nicer. Maybe with an extra event like WidgetAddedToVisibleDomEvent ?
+                if (typeof el.onAddedToVisibleDom == "function" && !el.onAddedToVisibleDomRegistered) {
+                    this._addedToVisibleDomCallbackEls.push(el);
+                    el.onAddedToVisibleDomRegistered = true;
+                }
+
                 to.appendChild(el);
+
+                // if this element is being appended to the visible dom, then go throgh and call call all the callbacks for this and anything below it which is now also on the visible dom.
+                if (document.contains(el)) {
+                    var toDelete = [];
+                    for(var i=0; i<this._addedToVisibleDomCallbackEls.length; i++) {
+                        if (document.contains(this._addedToVisibleDomCallbackEls[i])) {
+                            (function(callback) {
+                                setTimeout(callback, 0);
+                            })(this._addedToVisibleDomCallbackEls[i].onAddedToVisibleDom);
+                            toDelete.push(i);
+                        }
+                    }
+                    toDelete = toDelete.reverse();
+                    for(var i=0; i<toDelete.length; i++) {
+                        this._addedToVisibleDomCallbackEls.splice(toDelete[i], 1);
+                    }
+                }
             },
             /**
              * Prepends an element as a child of another.

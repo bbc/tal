@@ -52,7 +52,6 @@ require.def('antie/widgets/label',
 				}
 				this._truncationMode = Label.TRUNCATION_MODE_NONE;
 				this._maxLines = 0;
-				this._width = 0;
 				this.addClass('label');
 			},
 			/**
@@ -61,46 +60,185 @@ require.def('antie/widgets/label',
 			 * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
 			 */
 			render: function(device) {
-				// TODO: is there a more efficient way of doing this?
-				var s;
-				if(this._width && this._maxLines && this._text && (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
-					var h = device.getTextHeight("fW", this._width, this.getClasses());
-					var allowedHeight = h * this._maxLines;
-					var currentHeight = device.getTextHeight(this._text, this._width, this.getClasses());
-				
-					var len = this._text.length;
-					while(currentHeight > allowedHeight && len > 1) {
-						len = Math.floor((len * allowedHeight) / currentHeight);
-						currentHeight = device.getTextHeight(this._text.substring(0, len) + "...", this._width, this.getClasses());
-					}
-					while(currentHeight <= allowedHeight && len <= this._text.length) {
-						len++;
-						currentHeight = device.getTextHeight(this._text.substring(0, len) + "...", this._width, this.getClasses());
-					}
-					len--;
-				
-					if(len < this._text.length) {
-						// truncate at word boundary
-						var boundaryLen = len;
-						while(boundaryLen && !/\w\W$/.test(this._text.substring(0, boundaryLen+1))) {
-							boundaryLen--;
-						}
-						if(boundaryLen > 0) {
-							s = this._text.substring(0, boundaryLen) + "...";
-						} else {
-							s = this._text.substring(0, len) + "...";
-						}
-					} else {
-						s = this._text;
-					}
-				} else {
-					s = this._text;
-				}
 
-				if(!this.outputElement) {
-					this.outputElement = device.createLabel(this.id, this.getClasses(), s);
+                if (!this.outputElement) {
+                    this.outputElement = device.createLabel(this.id, this.getClasses(), "");
+                }
+
+				if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
+
+                    var self = this;
+
+                    this.outputElement.onAddedToVisibleDom = function() {
+                        var el = self.outputElement;
+                        var noLines = self._maxLines;
+                        var txt = self._text;
+            //            txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur suscipit nibh sodales diam tempor, eget mattis dui semper. Donec egestas lectus at quam placerat tincidunt. Aenean vehicula magna condimentum massa dapibus ornare. Nulla a dui lacus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis augue velit, congue nec volutpat porta, pretium id mauris. Phasellus eget ligula dui.";
+                        // if set to false then the text may be cut off midway through a word.
+                        var cutOffWord = true;
+
+                        // put the text node that we will be working on inside a container in the target el.
+                        // the container will be set to fill the main element
+                        // this means we can set the visibility to hidden and overflow to hidden on this container to make sure any temporary work isn't visible and doesn't effect anything else on the page.
+                        // the text node must be created under the el in the dom hireachy so that it inherits all the correct css styles.
+                        var container = document.createElement("div");
+                        container.style.display = "block";
+                        container.style.margin = "0";
+                        container.style.padding = "0";
+                        container.style.width = "auto";
+                        container.style.height = "100%";
+                        container.style.overflow = "hidden";
+                        container.style.visibility = "hidden";
+                        el.appendChild(container);
+
+                        // the text node that will contain text as it is worked on. Starts off empty
+                        var txtTruncationElNode = document.createTextNode("");
+                        container.appendChild(txtTruncationElNode);
+
+                        // the width and height of the box that the text should be truncated to fit into.
+                        var w = el.clientWidth;
+                        var h = el.clientHeight;
+
+                        // save copies of the current css values for the properties that will be changed
+                        var cssWhiteSpace = el.style.whiteSpace;
+                        var cssWidth = el.style.width;
+                        var cssHeight = el.style.height;
+                        var cssDisplay = el.style.display;
+                        // the height should be set to auto so that we can use el.clientHeight to determine the height of the contents
+                        el.style.height = "auto";
+                        if (noLines !== 0) {
+                            // we will be measuring the width that is taken up as text is added so set the width to auto and make sure no wrapping occurs.
+                            el.style.whiteSpace = "nowrap";
+                            el.style.width = "auto";
+                            // must be inline-block. if it's just inline clientWidth seems to always return 0
+                            el.style.display = "inline-block";
+                        }
+                        else {
+                            el.style.whiteSpace = "normal";
+                        }
+
+                        // to contain the final text
+                        var finalTxt = "";
+                        // text to be appended at end of visible text
+                        var txtEnd = "...";
+                        // left at true at the end of the loop if part way through a word
+                        var partThroughWord = false;
+                        // true at the end of the loop if truncation has happened.
+                        // truncation may not be needed if text fits in container already
+                        var truncationHappened = false;
+
+                        var startIndex = 0;
+
+                        // returns true if the text is now overflowing the container
+                        var isOver = function () {
+                            if (noLines !== 0) {
+                                return el.clientWidth > w;
+                            }
+                            else {
+                                return el.clientHeight > h;
+                            }
+                        };
+
+                        var tmp = noLines === 0 ? 1 : noLines;
+                        for (var currentLine = 0; currentLine < tmp; currentLine++) {
+
+                            // this will contain the number of characters that should be added/removed on each loop iteration. It halves on each iteration.
+                            var pointer = 1;
+                            while (pointer < txt.length - startIndex) {
+                                pointer = pointer << 1;
+                            }
+                            var position = pointer;
+                            var currentLineTxt = txt.slice(startIndex, txt.length);
+                            txtTruncationElNode.nodeValue = currentLineTxt;
+                            truncationHappened = false;
+
+                            // perform a binary chop until found maximum amount of text that will fit on self line
+                            // it is possible for the position to be increased by 1 (when the pointer is 1) which then results in the text not fitting again.
+                            // in this case the isOver() call in the for loop condition causes the loop to execute again and reduce by one again.
+                            for (; pointer > 0 || (isOver() && position > 0); pointer = pointer >> 1) {
+                                if (isOver()) {
+                                    position -= pointer > 0 ? pointer : 1;
+                                }
+                                else if (currentLineTxt.length === txt.length - startIndex) {
+                                    // going to expand to allow for more text but we already have the whole txt so done.
+                                    partThroughWord = false;
+                                    break;
+                                }
+                                else if (pointer === 0 && !isOver()) {
+                                    // text now fits container but don't continue because pointer is now 0
+                                    break;
+                                }
+                                else {
+                                    position += pointer;
+                                }
+                                currentLineTxt = txt.slice(startIndex, startIndex + position);
+                                partThroughWord = currentLineTxt[currentLineTxt.length - 1] !== " ";
+                                if (noLines === 0 || currentLine === noLines - 1) {
+                                    // txtEnd should only be added on last line.
+                                    txtTruncationElNode.nodeValue = currentLineTxt + txtEnd;
+                                }
+                                else {
+                                    txtTruncationElNode.nodeValue = currentLineTxt;
+                                }
+                                truncationHappened = true;
+                            }
+
+                            if (noLines !== 0 && truncationHappened && currentLine < noLines - 1) {
+                                // moving onto next line
+                                // update startIndex to the index that the next line will start on.
+                                // will be after the last space on line
+                                var lastSpaceIndex = currentLineTxt.lastIndexOf(" ");
+                                if (lastSpaceIndex !== -1) {
+                                    startIndex = startIndex + (lastSpaceIndex + 1);
+                                    // slice currentLineTxt so that it matches the text that will be on the line
+                                    currentLineTxt = currentLineTxt.slice(0, lastSpaceIndex + 1);
+                                }
+                                else {
+                                    startIndex = position;
+                                }
+                            }
+                            finalTxt += currentLineTxt;
+
+                            if (!truncationHappened) {
+                                break;
+                            }
+                        }
+
+                        if (cutOffWord && partThroughWord) {
+                            // remove text after last space
+                            var lastSpaceIndex = finalTxt.lastIndexOf(" ");
+                            if (lastSpaceIndex !== -1) {
+                                finalTxt = finalTxt.slice(0, lastSpaceIndex);
+                            }
+                        }
+
+                        // trim trailing spaces
+                        var lastSpaceIndex = -1;
+                        var character;
+                        while (finalTxt.length > 0 && finalTxt[finalTxt.length - 1] === "") {
+                            finalTxt = finalTxt.slice(0, finalTxt.length - 1);
+                        }
+
+                        if (truncationHappened) {
+                            // add txtEnd
+                            finalTxt += txtEnd;
+                        }
+
+                        // remove the text node and container. This text node is only their temporarily to get the text that will fit. The final text will be set with setElementContent
+                        container.removeChild(txtTruncationElNode); // TODO: might not be needed
+                        el.removeChild(container);
+
+                        // set css properties that have been modified back to their original values
+                        el.style.whiteSpace = cssWhiteSpace;
+                        el.style.width = cssWidth;
+                        el.style.height = cssHeight;
+                        el.style.display = cssDisplay;
+
+                        device.setElementContent(self.outputElement, finalTxt);
+                    };
+
 				} else {
-					device.setElementContent(this.outputElement, s);
+                    device.setElementContent(this.outputElement, this._text);
 				}
 
 				return this.outputElement;
@@ -124,8 +262,7 @@ require.def('antie/widgets/label',
 			},
 			/**
 			 * Sets the truncation mode (currently {@link antie.widgets.Label.TRUNCATION_MODE_NONE} or {@link antie.widgets.Label.TRUNCATION_MODE_RIGHT_ELLIPSIS}).
-			 * 
-			 * @deprecated TRUNCATION_MODE_RIGHT_ELLIPSIS relies on browserdevice.getTextHeight(), which can be inaccurate.
+			 *
 			 * @param {String} mode The new truncation mode.
 			 */
 			setTruncationMode: function(mode) {
@@ -133,17 +270,11 @@ require.def('antie/widgets/label',
 			},
 			/**
 			 * Sets the maximum lines displayed when a truncation mode is set.
+             * This is optional and if not specified the text will just be truncated when it no longer fits the box.
 			 * @param {String} lines The maximum number of lines to display.
 			 */
 			setMaximumLines: function(lines) {
 				this._maxLines = lines;
-			},
-			/**
-			 * Sets the width of this label for use with truncation only.
-			 * @param {Integer} width The width of this label in pixels
-			 */
-			setWidth: function(width) {
-				this._width = width;
 			}
 		});
 
