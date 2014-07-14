@@ -77,6 +77,9 @@ require.def('antie/widgets/label',
                         // if set to false then the text may be cut off midway through a word.
                         var cutOffWord = true;
 
+                        // clear any text that's currently there
+                        outputElement.innerHTML = "";
+
                         // put the text node that we will be working on inside a container in the target el.
                         // the container will be set to fill the main element
                         // this means we can set the visibility to hidden and overflow to hidden on this container to make sure any temporary work isn't visible and doesn't effect anything else on the page.
