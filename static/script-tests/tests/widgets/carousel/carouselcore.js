@@ -1002,6 +1002,7 @@
                 carousel = new CarouselCore('myCarousel');
                 carousel.setMaskLength(27);
                 assertTrue("setMaskLength delegated to mask", Mask.prototype.setLength.calledOnce);
+                assertEquals("setMaskLength passes value through", 27, Mask.prototype.setLength.getCall(0).args[0]);
             }
         );
     };
