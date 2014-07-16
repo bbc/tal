@@ -123,6 +123,16 @@ require.def('antie/widgets/carousel/carouselcore',
             },
 
             /**
+             * Manually sets length of te Mask. Normally this is measured from the DOM, but if the first alignment happens before
+             * the DOM is ready, then culling strips may not get populated. In this case, call this first with the size in pixels of
+             * the mask.
+             * @param length {number} The length in pixels to use in Mask calculations.
+             */
+            setMaskLength: function (length) {
+                this._mask.setLength(length);
+            },
+
+            /**
              * Removes a widget from the carousel
              * @param {antie.widgets.Widget} widget. Widget to remove from the DOM
              */
