@@ -272,7 +272,7 @@ There are currently two alternative widget strips that behave in this way. Both 
 * CullingStrip - Takes items out of the DOM when they go out of view
 * HidingStrip - Sets elements to visibility: hidden and opacity: 0 when they go out of view.
 
-If using these strips it is compulsory to set widget lengths before performing an alignment. It may also be necessary to set the 'Mask length' (the size of the mask opening); normally this length is measured, but if the DOM is not ready when the first alignment is called, no items will be displayed unless the mask length has been set.
+If using these strips it is compulsory to set widget lengths before performing an alignment. It may also be necessary to set the 'Mask length' (the size of the mask opening). Normally this length is measured from the DOM, but if the DOM is not ready when the first carousel alignment is made, then no items will be displayed unless the mask length has been explicitly set beforehand.
 
 As you can only have one strip at a time in any given carousel, it is not currently possible to have carousel that both wraps and culls.
 
