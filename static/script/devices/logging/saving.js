@@ -33,34 +33,38 @@ require.def(
 	function( Module, Device, Application)
 	{
 
-		window.antie.logItems = [];
+		var logItems = [];
 
 		var saveData = function (type, data) {
-			var joinedData = Array.prototype.join.call(data, ' -|- ');
-			window.antie.logItems.push({ 'level': type, 'message': joinedData })
+			var cleanedData = [];
+			for (var i = 0; i < data.length; ++i) {
+				cleanedData.push(data[i] + '');
+			}
+
+			logItems.push({ 'level': type, 'message': cleanedData })
 		};
 
 		Application.prototype.getLogItems = function () {
-			var data = window.antie.logItems;
-			window.antie.logItems = [];
+			var data = logItems.slice(0);
+			logItems = [];
 			return data;
 		}
 
 		var loggingMethods = {
 			log: function() {
-					saveData.call(this, "LOG", arguments);
+				saveData("LOG", arguments);
 			},
 			debug: function() {
-				saveData.call(this, "DEBUG", arguments);
+				saveData("DEBUG", arguments);
 			},
 			info: function() {
-				saveData.call(this, "INFO", arguments);
+				saveData("INFO", arguments);
 			},
 			warn: function() {
-				saveData.call(this, "WARN", arguments);
+				saveData("WARN", arguments);
 			},
 			error: function() {
-				saveData.call(this, "ERROR", arguments);
+				saveData("ERROR", arguments);
 			}
 		};
 
