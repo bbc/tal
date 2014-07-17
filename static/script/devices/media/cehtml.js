@@ -124,10 +124,10 @@ require.def(
                     // Handle CE-HTML playstate change events
                     // Note: this has to be bound after setting player.data
                     this._mediaElement.onPlayStateChange = function() {
-	                    if (self._updateInterval) {
-		                    window.clearInterval(self._updateInterval);
-		                    self._updateInterval = false;
-	                    }
+	                if (self._updateInterval) {
+		            window.clearInterval(self._updateInterval);
+		            self._updateInterval = false;
+	                }
                         switch (self._mediaElement.playState) {
                             case CEHTMLPlayer.PLAY_STATE_STOPPED:
                                 break;
