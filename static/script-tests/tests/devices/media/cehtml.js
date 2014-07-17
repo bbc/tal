@@ -366,7 +366,51 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
             }, config);
     };
 
-    this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesTimeUpdateMediaEventsToEventHandlingCallbackEvery900MillisecondsAfterPlayEvent = function (queue) {
+	this.CEHTMLTest.prototype.testDoesNotSendTimeupdateWhenVideoIsNotPlaying = function (queue) {
+		expectAsserts(3);
+		var self = this;
+		queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+			function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+
+				var callbackStub = self.sandbox.stub();
+
+				var device = application.getDevice();
+
+				var mediaElement = document.createElement("object");
+				mediaElement.stop = this.sandbox.stub();
+
+				this.sandbox.stub(device, "_createElement").returns(mediaElement);
+				var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+
+				mediaInterface.setSources(
+					[
+						{
+							getURL : function() { return "url"; },
+							getContentType : function() { return "video/mp4"; }
+						}
+					], { });
+
+								var clock = sinon.useFakeTimers();
+
+				mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
+				mediaElement.onPlayStateChange();
+				clock.tick(901);
+				assertEquals(6, callbackStub.callCount);
+
+				mediaElement.playState = CEHTMLPlayer.PLAY_STATE_BUFFERING; // anything other than playing
+				mediaElement.onPlayStateChange();
+				assertEquals(7, callbackStub.callCount);
+				clock.tick(900001);
+				assertEquals(7, callbackStub.callCount);
+
+				clock.restore();
+
+				mediaInterface.stop();
+			}, config);
+	};
+
+
+	this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesTimeUpdateMediaEventsToEventHandlingCallbackEvery900MillisecondsAfterPlayEvent = function (queue) {
         expectAsserts(6);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
