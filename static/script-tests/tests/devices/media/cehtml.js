@@ -390,7 +390,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 						}
 					], { });
 
-								var clock = sinon.useFakeTimers();
+				var clock = sinon.useFakeTimers();
 
 				mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
 				mediaElement.onPlayStateChange();
