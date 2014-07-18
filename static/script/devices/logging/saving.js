@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
 * @fileOverview Requirejs module containing base antie.devices.logging.onscreen class.
 *
 * @preserve Copyright (c) 2013 British Broadcasting Corporation
