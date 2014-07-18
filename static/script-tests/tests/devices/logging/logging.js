@@ -406,7 +406,6 @@
 		application.getDevice().getLogger().warn( "Log Message" );
 
 		var logMessages = require('antie/devices/logging/saving').getLogItems();
-
 		assertEquals( 'WARN', logMessages[0].level );
 
 		}, config );
@@ -424,8 +423,8 @@
 
 		application.getDevice().getLogger().warn( "Log Message" );
 
-		var logMessages = require('antie/devices/logging/saving').getLogItems();
 
+		var logMessages = require('antie/devices/logging/saving').getLogItems();
 		assertEquals( 'Log Message', logMessages[0].message );
 
 		}, config );
@@ -445,8 +444,8 @@
 		application.getDevice().getLogger().error( "Log Message" );
 		application.getDevice().getLogger().info( "Log Message" );
 
-		var logMessages = require('antie/devices/logging/saving').getLogItems();
 
+		var logMessages = require('antie/devices/logging/saving').getLogItems();
 		assertEquals( 3, logMessages.length );
 
 		}, config );
