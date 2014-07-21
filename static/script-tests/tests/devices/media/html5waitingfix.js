@@ -34,61 +34,42 @@
 		this.sandbox.restore();
 	};
 
-	this.HTML5WaitingEventFix.prototype.testWaitingEventIsFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsPlaying = function(queue) {
-		expectAsserts(1);
+	this.HTML5WaitingEventFix.prototype.testWaitingEventIsFiredWhenNoTimeUpdateFiredWithinHalfASecondAndVideoIsPlaying = function(queue) {
+		expectAsserts(4);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+            var clock = sinon.useFakeTimers();
+            var mediaElement = document.createElement("div");
+            var eventHandlers = { };
+            mediaElement.addEventListener = function (type, callback) {
+                eventHandlers[type] = callback;
+            };
 
-			var MockTimeUpdateEventSource = Class.extend({
-				init: function(player) {
-					this.player = player;
-				},
-				start: function() {
-					var self = this;
-					this.timeupdateInterval = window.setInterval(function() {
-						self.player.fireEvent(new MediaEvent("timeupdate"));
-					}, 100);
-				},
-				stall: function() {
-					window.clearInterval(this.timeupdateInterval);
-				},
-				pause: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("pause"));
-				},
-				end: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("ended"));
-				}
-			});
+            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
-			var player = application.getDevice().createPlayer("player", "video");
-			var eventSource = new MockTimeUpdateEventSource(player);
-			var hadWaitingEvent = false;
+            var eventHandlingCallback = self.sandbox.stub();
+            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
-			player.addEventListener('waiting', function() {
-				hadWaitingEvent = true;
-			});
+            // t = 0
+            eventHandlers.timeupdate("timeupdate");
 
-			eventSource.start();
+            clock.tick(499);
+            // t = 499
 
-			queue.call('Play for 1 second', function(callbacks) {
-				window.setTimeout(callbacks.add(function() {
+            assertTrue(eventHandlingCallback.notCalled);
 
-					eventSource.stall();
+            clock.tick(2);
+            // t = 501
 
-					queue.call('Wait for another second', function(callbacks) {
-						var callback = callbacks.add(function() {
-							assert('Waiting event has been fired', hadWaitingEvent);
-						});
-						setTimeout(callback, 1000);
-					});
+            assertTrue(eventHandlingCallback.calledOnce);
+            assertInstanceOf(MediaEvent, eventHandlingCallback.args[0][0]);
+            assertEquals("waiting", eventHandlingCallback.args[0][0].type);
 
-				}), 1000);
-
-			});
+            clock.restore();
 
 		}, config);
 	};
@@ -98,56 +79,30 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
-			var MockTimeUpdateEventSource = Class.extend({
-				init: function(player) {
-					this.player = player;
-				},
-				start: function() {
-					var self = this;
-					this.timeupdateInterval = window.setInterval(function() {
-						self.player.fireEvent(new MediaEvent("timeupdate"));
-					}, 100);
-				},
-				stall: function() {
-					window.clearInterval(this.timeupdateInterval);
-				},
-				pause: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("pause"));
-				},
-				end: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("ended"));
-				}
-			});
+            var clock = sinon.useFakeTimers();
+            var mediaElement = document.createElement("div");
+            var eventHandlers = { };
+            mediaElement.addEventListener = function (type, callback) {
+                eventHandlers[type] = callback;
+            };
 
-			var player = application.getDevice().createPlayer("player", "video");
-			var eventSource = new MockTimeUpdateEventSource(player);
-			var hadWaitingEvent = false;
+            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
-			player.addEventListener('waiting', function() {
-				hadWaitingEvent = true;
-			});
+            var eventHandlingCallback = self.sandbox.stub();
+            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
-			eventSource.start();
+            eventHandlers.timeupdate("timeupdate");
+            eventHandlers.pause("pause");
 
-			queue.call('Play for 1 second', function(callbacks) {
-				window.setTimeout(callbacks.add(function() {
+            clock.tick(501);
 
-					eventSource.pause();
+            assertTrue(eventHandlingCallback.notCalled);
 
-					queue.call('Wait for another second', function(callbacks) {
-						var callback = callbacks.add(function() {
-							assertFalse('Waiting event has not been fired', hadWaitingEvent);
-						});
-						setTimeout(callback, 1000);
-					});
-
-				}), 1000);
-
-			});
+            clock.restore();
 
 		}, config);
 	};
@@ -157,56 +112,30 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
 
-			var MockTimeUpdateEventSource = Class.extend({
-				init: function(player) {
-					this.player = player;
-				},
-				start: function() {
-					var self = this;
-					this.timeupdateInterval = window.setInterval(function() {
-						self.player.fireEvent(new MediaEvent("timeupdate"));
-					}, 100);
-				},
-				stall: function() {
-					window.clearInterval(this.timeupdateInterval);
-				},
-				pause: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("pause"));
-				},
-				end: function() {
-					window.clearInterval(this.timeupdateInterval);
-					this.player.fireEvent(new MediaEvent("ended"));
-				}
-			});
+            var clock = sinon.useFakeTimers();
+            var mediaElement = document.createElement("div");
+            var eventHandlers = { };
+            mediaElement.addEventListener = function (type, callback) {
+                eventHandlers[type] = callback;
+            };
 
-			var player = application.getDevice().createPlayer("player", "video");
-			var eventSource = new MockTimeUpdateEventSource(player);
-			var hadWaitingEvent = false;
+            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
-			player.addEventListener('waiting', function() {
-				hadWaitingEvent = true;
-			});
+            var eventHandlingCallback = self.sandbox.stub();
+            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
-			eventSource.start();
+            eventHandlers.timeupdate("timeupdate");
+            eventHandlers.ended("ended");
 
-			queue.call('Play for 1 second', function(callbacks) {
-				window.setTimeout(callbacks.add(function() {
+            clock.tick(501);
 
-					eventSource.end();
+            assertTrue(eventHandlingCallback.notCalled);
 
-					queue.call('Wait for another second', function(callbacks) {
-						var callback = callbacks.add(function() {
-							assertFalse('Waiting event has not been fired', hadWaitingEvent);
-						});
-						setTimeout(callback, 1000);
-					});
-
-				}), 1000);
-
-			});
+            clock.restore();
 
 		}, config);
 	};

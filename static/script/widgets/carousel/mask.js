@@ -57,6 +57,7 @@ require.def('antie/widgets/carousel/mask',
                 this._normalisedAlignmentPoint = 0;
                 this._spinner = new Spinner(this.getCurrentApplication().getDevice(), this, orientation);
                 this._lastAlignIndex = null;
+                this._length = undefined;
             },
 
             /**
@@ -134,15 +135,23 @@ require.def('antie/widgets/carousel/mask',
                 this.appendChildWidget(this._widgetStrip);
             },
 
+            setLength: function (length) {
+                this._length = length;
+            },
+
             /**
              * @returns {Number} The length in pixels of the primary dimension of the mask
              * (Width for horizontal, height for vertical)
              */
             getLength: function () {
                 var device, size;
-                device = this.getCurrentApplication().getDevice();
-                size = device.getElementSize(this.outputElement || this.render(device));
-                return size[this._getDimension()];
+                if (this._length) {
+                    return this._length;
+                } else {
+                    device = this.getCurrentApplication().getDevice();
+                    size = device.getElementSize(this.outputElement || this.render(device));
+                    return size[this._getDimension()];
+                }
             },
 
             /**

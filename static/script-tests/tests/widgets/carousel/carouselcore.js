@@ -980,4 +980,31 @@
         );
     };
 
+    this.CarouselCoreTest.prototype.testSetWidgetLengthsDelegatesToMask = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/carouselcore',
+                "antie/widgets/carousel/strips/widgetstrip",
+                "antie/widgets/carousel/mask",
+                "antie/widgets/carousel/navigators/navigator",
+                "antie/widgets/button",
+                "antie/widgets/carousel/aligners/aligner"
+
+            ],
+            function (application, CarouselCore, WidgetStrip, Mask, Navigator, Button, Aligner) {
+                var carousel;
+                this.sandbox.stub(WidgetStrip.prototype);
+                this.sandbox.stub(Mask.prototype);
+                this.sandbox.stub(Button.prototype);
+                this.sandbox.stub(Navigator.prototype);
+                this.sandbox.stub(Aligner.prototype);
+                carousel = new CarouselCore('myCarousel');
+                carousel.setMaskLength(27);
+                assertTrue("setMaskLength delegated to mask", Mask.prototype.setLength.calledOnce);
+                assertEquals("setMaskLength passes value through", 27, Mask.prototype.setLength.getCall(0).args[0]);
+            }
+        );
+    };
+
 }());

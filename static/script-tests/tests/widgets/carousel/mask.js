@@ -488,6 +488,27 @@
         );
     };
 
+    this.MaskTest.prototype.testGetLengthPrefersSetLengthOverMeasuredLength = function (queue) {
+        queuedApplicationInit(queue,
+            'lib/mockapplication',
+            [
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/carousel/orientations/vertical'
+            ],
+            function (application, Mask, WidgetStrip, verticalOrientation) {
+                var mask, strip1, device;
+                device = application.getDevice();
+                strip1 = new WidgetStrip('strip1', verticalOrientation);
+                mask = new Mask('testMask', strip1, verticalOrientation);
+                mask.setLength(27);
+                device.getElementSize = sinon.stub();
+                assertEquals("getLength length returns set length of mask element", 27, mask.getLength());
+                assertEquals("device.getElementSize is never called", 0, device.getElementSize.callCount);
+            }
+        );
+    };
+
     this.MaskTest.prototype.testMaskClassSet = function (queue) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
