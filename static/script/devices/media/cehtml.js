@@ -34,10 +34,10 @@ require.def(
         'antie/events/mediasourceerrorevent',
         'antie/mediasource',
         'antie/devices/media/seekstate',
-        'antie/application'
+        'antie/runtimecontext'
     ],
 
-    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, Application ) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, RunTimeContext ) {
 
         var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
@@ -50,7 +50,7 @@ require.def(
                 this._loaded = false;
                 this._eventsBound = false;
 
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 this._outputElement = device._createElement("div");
 
                 // Create the DOM element now so the wrapped functions can modify attributes
@@ -68,7 +68,7 @@ require.def(
                 }
             },
             _createCEHTMLObjectElement: function(contentType) {
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 var obj = device._createElement("object", this.id);
                 obj.setAttribute("type", contentType);
                 obj.style.width = "100%";
@@ -86,7 +86,7 @@ require.def(
                 if (this._mediaType == "audio") {
                     throw new Error('Unable to set window size for CE-HTML audio.');
                 }
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 device.setElementSize(this._mediaElement, {width:width, height:height});
                 device.setElementPosition(this._mediaElement, {left:left, top:top});
             },
@@ -334,7 +334,7 @@ require.def(
             destroy: function() {
                 this.stop();
 
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 device.removeElement(this._mediaElement);
                 this._mediaElement = null;
             },
