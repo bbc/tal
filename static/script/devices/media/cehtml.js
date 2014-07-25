@@ -34,10 +34,10 @@ require.def(
         'antie/events/mediasourceerrorevent',
         'antie/mediasource',
         'antie/devices/media/seekstate',
-        'antie/application'
+        'antie/runtimecontext'
     ],
 
-    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, Application ) {
+    function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, RunTimeContext ) {
 
         var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
@@ -50,9 +50,12 @@ require.def(
                 this._loaded = false;
                 this._eventsBound = false;
 
+                var device = RunTimeContext.getDevice();
+                this._outputElement = device._createElement("div");
+
                 // Create the DOM element now so the wrapped functions can modify attributes
                 // before it is placed in the Document during rendering.
-                this._mediaElement = this._createCEHTMLObjectElement((mediaType == "audio") ? "audio/mp4" : "video/mp4");
+                this._createCEHTMLObjectElement((mediaType == "audio") ? "audio/mp4" : "video/mp4");
                 this._mediaElement.width = 1280;
                 this._mediaElement.height = 720;
 
@@ -65,24 +68,25 @@ require.def(
                 }
             },
             _createCEHTMLObjectElement: function(contentType) {
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 var obj = device._createElement("object", this.id);
                 obj.setAttribute("type", contentType);
                 obj.style.width = "100%";
                 obj.style.height = "100%";
                 obj.style.position = "absolute";
                 obj.style.zIndex = "-1";
-                return obj;
+                this._mediaElement = obj;
+                this._outputElement.appendChild(this._mediaElement);
             },
             render: function(device) {
-                return this._mediaElement;
+                return this._outputElement;
             },
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
                 if (this._mediaType == "audio") {
                     throw new Error('Unable to set window size for CE-HTML audio.');
                 }
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 device.setElementSize(this._mediaElement, {width:width, height:height});
                 device.setElementPosition(this._mediaElement, {left:left, top:top});
             },
@@ -108,7 +112,7 @@ require.def(
                         };
 
                         this.destroy();
-                        this._mediaElement = this._createCEHTMLObjectElement(newMediaType);
+                        this._createCEHTMLObjectElement(newMediaType);
                         this.setWindow(oldDimensions.left, oldDimensions.top, oldDimensions.width, oldDimensions.height);
                         this._eventsBound = false;
                     }
@@ -330,8 +334,9 @@ require.def(
             destroy: function() {
                 this.stop();
 
-                var device = Application.getCurrentApplication().getDevice();
+                var device = RunTimeContext.getDevice();
                 device.removeElement(this._mediaElement);
+                this._mediaElement = null;
             },
             _requiresMediaTypeFix : function() {
                 return false;
