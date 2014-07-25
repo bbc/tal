@@ -98,7 +98,7 @@ require.def(
 			xhr.onreadystatechange = function() {
 				if (this.readyState == 4) {
 					this.onreadystatechange = null;
-					if (this.status == 200) {
+					if (this.status >= 200 && this.status < 300) {
 						if (opts.onLoad) {
 							opts.onLoad(this.responseText);
 						}
