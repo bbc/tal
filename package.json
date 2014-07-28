@@ -1,0 +1,28 @@
+{
+  "name": "tal-components",
+  "version": "2.0.1",
+  "description": "BBC TV Application Layer.",
+  "main": "static/script/application.js",
+  "scripts": {
+    "test": "bundle exec ttr webdriverurl=firefox"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fmtvp/tal.git"
+  },
+  "keywords": [
+    "bbc",
+    "tv",
+    "television",
+    "framework",
+    "components",
+    "ui",
+    "iplayer"
+  ],
+  "author": "BBC Future Media TV Platforms",
+  "license": "Apache-2",
+  "bugs": {
+    "url": "https://github.com/fmtvp/tal/issues"
+  },
+  "homepage": "https://github.com/fmtvp/tal"
+}
