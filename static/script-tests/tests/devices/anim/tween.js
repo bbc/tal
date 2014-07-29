@@ -25,7 +25,19 @@
 				var onComplete = callbacks.add(function() {
 					assertEquals(100, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
 				});
-				device._tween(div, div.style, {top:"0px"}, {top:"100px"}, null, onComplete, onStart);
+				device._tween({
+					el: div,
+					style: div.style,
+					from: {
+						top:"0px"
+					},
+					to: {
+						top:"100px"
+					},
+					className: null,
+					onComplete: onComplete,
+					onStart: onStart
+				});
 			});
 		}, config);
 	};
@@ -46,7 +58,19 @@
 				var onComplete = callbacks.add(function() {
 					assertClassName("nottesting", div);
 				});
-				device._tween(div, div.style, {top:"0px"}, {top:"100px"}, "testing", onComplete, onStart);
+				device._tween({
+					el: div,
+					style: div.style,
+					from: {
+						top:"0px"
+					},
+					to: {
+						top:"100px"
+					},
+					className: "testing",
+					onComplete: onComplete,
+					onStart: onStart
+				});
 			});
 		}, config);
 	};

@@ -44,7 +44,7 @@ require.def(
 				var obj = device._createElement("object", this.id, this.getClasses());
 				obj.setAttribute("type", contentType);
 				var div = device.createContainer();
-				div.innerHTML = '<object type="' + contentType + '" id="' + this.id + '" class="' + obj.className + '" />';
+				div.innerHTML = '<object type="' + contentType + '" id="' + this.id + '" class="' + obj.className + '" ' + 'style="width: 100%; height: 100%; position: absolute; z-index: -1"' + ' />';
 				return div.childNodes[0];
 			},
 			render: function(device) {
@@ -303,7 +303,7 @@ require.def(
 			return new CEHTMLPlayer(id, mediaType);
 		};
 		Device.prototype.getPlayerEmbedMode = function(mediaType) {
-			return Media.EMBED_MODE_EMBEDDED;
+			return Media.EMBED_MODE_BACKGROUND;
 		};
 	}
 );

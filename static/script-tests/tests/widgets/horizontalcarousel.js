@@ -56,6 +56,31 @@
 				}
 		);
 	};
+
+	this.HorizontalCarouselTest.prototype.testAnimationParametersPassedToAnimation = function(queue) {
+		expectAsserts(4);
+
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/horizontalcarousel", "antie/widgets/list"],
+				function(application, HorizontalCarousel, List) {
+					var widget = new HorizontalCarousel("id3");
+					widget.setRenderMode(List.RENDER_MODE_LIST);
+					widget._activeWidgetAnimationFPS = 10;
+					widget._activeWidgetAnimationDuration = 300;
+					widget._activeWidgetAnimationEasing = 'easeOutBounce';
+					var device = application.getDevice();
+					var deviceCreateListSpy = this.sandbox.spy(device, 'createList');
+					var el = widget.render(device);
+					assert(deviceCreateListSpy.called);
+					assertEquals(widget._activeWidgetAnimationFPS, 10);
+					assertEquals(widget._activeWidgetAnimationDuration, 300);
+					assertEquals(widget._activeWidgetAnimationEasing, 'easeOutBounce');
+				}
+		);
+	};
+
 	this.HorizontalCarouselTest.prototype.testRenderInnerElements = function(queue) {
 	   expectAsserts(8);
 
@@ -215,7 +240,7 @@
 
 					assert(deviceScrollElementSpy.called);
 
-					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					var pos = deviceScrollElementSpy.getCall(0).args[0].to.left;
 					assertEquals(75, pos);
 				}
 		);
@@ -257,7 +282,7 @@
 
 					assert(deviceScrollElementSpy.called);
 
-					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					var pos = deviceScrollElementSpy.getCall(0).args[0].to.left;
 					assertEquals(100, pos);
 				}
 		);
@@ -299,7 +324,7 @@
 
 					assert(deviceScrollElementSpy.called);
 
-					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					var pos = deviceScrollElementSpy.getCall(0).args[0].to.left;
 					assertEquals(50, pos);
 				}
 		);

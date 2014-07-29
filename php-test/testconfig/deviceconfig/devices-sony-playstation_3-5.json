@@ -1,4 +1,5 @@
 {
+  "pageStrategy" : "playstation3",
   "modules": {
     "base": "antie/devices/ps3",
     "modifiers": [

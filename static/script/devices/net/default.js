@@ -21,7 +21,10 @@ require.def(
 			var self = this;
 			var script = null;
 			var funcName = "_antie_callback_" + (callbackSuffix || ((new Date() * 1) + "_" + Math.floor(Math.random() * 10000000)));
-
+			
+			if (window[funcName])
+				throw "A request with the name " + funcName + " is already in flight";
+			
 			var timeoutHandle = window.setTimeout(function() {
 				if (window[funcName]) {
 					if (script) {
@@ -51,6 +54,7 @@ require.def(
 			head.appendChild(script);
 			return script;
 		},
+		
 		/**
 		 * Loads a resource from a URL protected by device authentication.
 		 * @param {String} url The URL to load.

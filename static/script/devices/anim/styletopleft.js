@@ -22,49 +22,69 @@ require.def(
 		 * @param {Function} [onComplete] Callback function to be called when the scroll has been completed.
 		 * @returns A handle to any animation started by this movement. {@see #stopAnimation}
 		 */
-		Device.prototype.scrollElementTo = function(el, left, top, skipAnim, onComplete) {
-			if(new RegExp("_mask$").test(el.id)) {
-				if(el.childNodes.length == 0) return null;
-				el.style.position = 'relative';
-				el = el.childNodes[0];
-				el.style.position = 'relative';
+		Device.prototype.scrollElementTo = function(options) {
+			if (new RegExp("_mask$").test(options.el.id)) {
+				if (options.el.childNodes.length === 0) {
+					return null;
+				}
+				options.el.style.position = 'relative';
+				options.el = options.el.childNodes[0];
+				options.el.style.position = 'relative';
 			} else {
 				return null;
 			}
 
-			var startLeft = el.style.left.replace(/px/, '') | 0;
-			var changeLeft = (left !== null) ? (left - Math.abs(startLeft)) : 0;
-			var startTop = el.style.top.replace(/px/, '') | 0;
-			var changeTop = (top !== null) ? (top - Math.abs(startTop)) : 0;
+			var startLeft = options.el.style.left.replace(/px/, '') || 0;
+			var changeLeft = (options.to.left !== undefined) ? (options.to.left - Math.abs(startLeft)) : 0;
+			var startTop = options.el.style.top.replace(/px/, '') || 0;
+			var changeTop = (options.to.top !== undefined) ? (options.to.top - Math.abs(startTop)) : 0;
 
-			if((changeLeft == 0) && (changeTop == 0)) {
-				if(onComplete) onComplete();
+			if ((changeLeft === 0) && (changeTop === 0)) {
+				if (options.onComplete) {
+					options.onComplete();
+				}
 				return null;
 			}
 
-			if(skipAnim) {
-				if(left !== null) el.style.left = 0 - left + "px";
-				if(top !== null) el.style.top = 0 - top + "px";
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				if (options.to.left !== undefined) {
+					options.el.style.left = 0 - options.to.left + "px";
+				}
+				if (options.to.top !== undefined) {
+					options.el.style.top = 0 - options.to.top + "px";
+				}
 
-				if(onComplete) onComplete();
+				if (options.onComplete) {
+					options.onComplete();
+				}
 			} else {
 				var from = {};
-				if(top !== null) {
+				if (startTop !== undefined) {
 					from.top = startTop + "px";
 				};
-				if(left !== null) {
+				if (startLeft !== undefined) {
 					from.left = startLeft + "px";
 				};
 
 				var to = {};
-				if(top !== null) {
-					to.top = (0 - top) + "px";
+				if (options.to.top !== undefined) {
+					to.top = (0 - options.to.top) + "px";
 				};
-				if(left !== null) {
-					to.left = (0 - left) + "px";
+				if (options.to.left !== undefined) {
+					to.left = (0 - options.to.left) + "px";
 				};
 
-				return this._tween(el, el.style, from, to, 'scrolling', onComplete);
+				return this._tween({
+					el: options.el,
+					style: options.el.style,
+					from: from,
+					to: to,
+					offset: options.offset || 0,
+					easing: options.easing,
+					fps: options.fps,
+					duration: options.duration,
+					onComplete: options.onComplete
+				});
 			}
 		};
 
@@ -78,41 +98,59 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the movement will be animated, pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the move has been completed.
 		 */
-		Device.prototype.moveElementTo = function(el, left, top, skipAnim, onComplete) {
+		Device.prototype.moveElementTo = function(options) {
 			// Performance consideration: if left or top is null they are ignored to prevent the additional
 			// work animating them.
 
-			var startLeft = parseInt(el.style.left.replace(/px|em|pt/,"")) | 0;
-			var changeLeft = (left !== null) ? (left - startLeft) : 0;
-			var startTop = parseInt(el.style.top.replace(/px|em|pt/,"")) | 0;
-			var changeTop = (top !== null) ? (top - startTop) : 0;
+			var startLeft = parseInt(options.el.style.left.replace(/px|em|pt/,"")) || 0;
+			var changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
+			var startTop = parseInt(options.el.style.top.replace(/px|em|pt/,"")) || 0;
+			var changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
 
 			//this.getLogger().debug("Moving " + el.id + " from " + startLeft + "," + startTop + " to " + left + "," + top + "...");
 
-			if((changeLeft == 0) && (changeTop == 0)) return;
+			if ((changeLeft === 0) && (changeTop === 0)) {
+				return;
+			}
 
-			if(skipAnim) {
-				if(left !== null) {el.style.left = left + "px";}
-				if(top !== null) {el.style.top = top + "px";}
-				if(onComplete) onComplete();
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				if (options.to.left !== undefined) {
+					options.el.style.left = options.to.left + "px";
+				}
+				if (options.to.top !== undefined) {
+					options.el.style.top = options.to.top + "px";
+				}
+				if (options.onComplete) {
+					options.onComplete();
+				}
 			} else {
 				var from = {};
-				if(top !== null) {
+				if(startTop !== undefined) {
 					from.top = startTop + "px";
 				};
-				if(left !== null) {
+				if(startLeft !== undefined) {
 					from.left = startLeft + "px";
 				};
 
 				var to = {};
-				if(top !== null) {
-					to.top = top + "px";
+				if(options.to.top !== undefined) {
+					to.top = options.to.top + "px";
 				};
-				if(left !== null) {
-					to.left = left + "px";
+				if(options.to.left !== undefined) {
+					to.left = options.to.left + "px";
 				};
 
-				return this._tween(el, el.style, from, to, 'moving', onComplete);
+				return this._tween({
+					el: options.el,
+					style: options.el.style,
+					from: from,
+					to: to,
+					offset: options.offset || 0,
+					easing: options.easing,
+					fps: options.fps,
+					duration: options.duration,
+					onComplete: options.onComplete
+				});
 			}
 		};
 
@@ -122,15 +160,31 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the hiding of the element will be animated (faded-out). Pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the element has been hidden.
 		 */
-		Device.prototype.hideElement = function(el, skipAnim, onComplete) {
-			if (skipAnim) {
-				el.style.visibility = "hidden";
-				el.style.opacity = 0;
-				if (typeof onComplete == "function") {
-					onComplete();
+		Device.prototype.hideElement = function(options) {
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style.visibility = "hidden";
+				options.el.style.opacity = 0;
+				if (typeof options.onComplete == "function") {
+					options.onComplete();
 				}
 			} else {
-				return this._tween(el, el.style, {opacity:el.style.opacity}, {opacity:0}, 'fading', function() { el.style.visibility = 'hidden'; if(onComplete) onComplete(); });
+				return this._tween({
+					el: options.el,
+					style: options.el.style,
+					from: {
+						opacity: options.el.style.opacity
+					},
+					to: {
+						opacity: 0
+					},
+					easing: 'fading',
+					onComplete: function() {
+						options.el.style.visibility = 'hidden';
+						if (options.onComplete) {
+							options.onComplete();
+						}
+					}
+				});
 			}
 		};
 
@@ -140,15 +194,29 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the revealing of the element will be animated (faded-in). Pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the element has been shown.
 		 */
-		Device.prototype.showElement = function(el, skipAnim, onComplete) {
-			if (skipAnim) {
-				el.style.visibility = "visible";
-				el.style.opacity = 1;
-				if (typeof onComplete == "function") {
-					onComplete();
+		Device.prototype.showElement = function(options) {
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style.visibility = "visible";
+				options.el.style.opacity = 1;
+				if (typeof options.onComplete == "function") {
+					options.onComplete();
 				}
 			} else {
-				return this._tween(el, el.style, {opacity:el.style.opacity}, {opacity:1}, 'fading', onComplete, function() { el.style.visibility = 'visible'; });
+				return this._tween({
+					el: options.el,
+					style: options.el.style,
+					from: {
+						opacity: options.el.style.opacity
+					},
+					to: {
+						opacity: 1
+					},
+					easing: 'fading',
+					onComplete: options.onComplete,
+					onStart: function () {
+						options.el.style.visibility = 'visible';
+					}
+				});
 			}
 		};
 
@@ -161,12 +229,12 @@ require.def(
 		Device.prototype.stopAnimation = function(anim) {
 			anim.stop(true);
 		};
-		
-        /**
-         * Describes if the device supports animation or not
-         */
-        Device.prototype.isAnimationDisabled = function(){
-            return false;
-        };
+
+		/**
+		 * Describes if the device supports animation or not
+		 */
+		Device.prototype.isAnimationDisabled = function(){
+			return false;
+		};
 	}
 );

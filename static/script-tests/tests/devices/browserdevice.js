@@ -118,6 +118,16 @@
 		});
 	};
 
+	this.BrowserDeviceTest.prototype.testCreateImageAltText = function(queue) {
+		expectAsserts(1);
+
+		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			var el = device.createImage(null, null, "about:blank");
+			assertEquals("", el.alt);
+		});
+	};
+
 	this.BrowserDeviceTest.prototype.testCreateImageOnLoad = function(queue) {
 		expectAsserts(1);
 
@@ -164,8 +174,9 @@
 					document.body.removeChild(d2);
 				});
 
-				device.loadStyleSheet("/test/fixtures/dynamicstylesheet.css");
-				window.setTimeout(timeout, 2000);
+				device.loadStyleSheet("/test/fixtures/dynamicstylesheet.css", function(){
+					timeout();
+				});
 			});
 		});
 	};

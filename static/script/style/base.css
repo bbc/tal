@@ -1,0 +1,155 @@
+/* BBC CATAL BASE STYLES */
+
+/* Core */
+@font-face {
+	font-family: "Helvetica Neue";
+	src: url('../font/HelveticaNeueOTS.ttf');
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	overflow: hidden;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: "Helvetica Neue", "Helvetica Light", "Helvetica", sans-serif;
+	font-weight: lighter;
+	color: #d4d4d4;
+	background-color: #1d1d1d;
+}
+
+/* Maple needs initial element background in base stylesheet... not in dynamically loaded styles! */
+.samsung.layout540p #app {
+	width: 960px;
+	height: 540px;
+	background-image: url(../img/bbc_background_540.png);
+	background-repeat: no-repeat;
+}
+
+.samsung.layout720p #app {
+	width: 1280px;
+	height: 720px;
+	background-image: url(../img/bbc_background_720.png);
+	background-repeat: no-repeat;
+}
+
+.samsung.layout1080p #app {
+	width: 1920px;
+	height: 1080px;
+	background-image: url(../img/bbc_background_1080.png);
+	background-repeat: no-repeat;
+}
+
+/* Menu */
+#title {
+	font-size: 150%;
+	line-height: 120%;
+	display: block;
+	text-align: center;
+	margin: 2% auto 0 auto;
+}
+
+#testmenu .button {
+	display: block;
+	text-align: center;
+	max-width: 600px;
+	padding: 10px;
+	margin: 20px auto 0 auto;
+	color: #000000;
+}
+
+/* Simple Video Player */
+#simplevideoplayer,
+#testPlayer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#playerButtons {
+	width: 800px;
+	position: absolute;
+	bottom: 100px;
+	left: 50%;
+	margin-left: -400px;
+}
+
+#playerButtons .button {
+	width: 100px;
+	padding: 10px;
+	text-align: center;
+	margin: 5px;
+	color: #1d1d1d;
+}
+
+#playerSrc {
+    font-weight: bold;
+    font-size: 150%;
+    background-color: black;
+    position: absolute;
+    top: 75px;
+    left: 50%;
+    margin-left: -400px;
+}
+
+/* Text */
+#playerSrc.small {
+	background-color: transparent;
+  	font-size: x-small;
+}
+
+/* Buttons */
+.button {
+	background-color: #FFFFFF;
+}
+
+.button.mandatory {
+	background-color: #ff0000;
+}
+
+.buttonFocussed {
+	background-color: #FFFF00;
+}
+
+.buttonFocussed.mandatory {
+	background-color: #ff0000;
+	border: 1px solid white 
+}
+
+/* Lists */
+.horizontallist, .verticallist {
+	position: relative;
+}
+
+.horizontallist .listitem {
+	display: inline-block;
+}
+
+.verticallist .listitem {
+	display: block;
+	position: relative;
+}
+
+.ps3 .horizontallist .listitem {
+	display: inline-block; /* NetFront inline-block hack */
+	float: left;
+}
+
+
+
+/* Display & Visibility Helpers */
+.display-none {
+	display: none !important;
+}
+
+.visibility-hidden {
+	visibility: hidden !important;
+}
+
+.background-none {
+	background-image: none !important;
+	background-color: transparent !important;
+}

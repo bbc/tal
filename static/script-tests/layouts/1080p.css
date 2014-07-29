@@ -1,0 +1,23 @@
+
+@import url("../allstyles-1080p.css");
+
+#app {
+	width: 1920px;
+	height: 1080px;
+	margin: -540px auto 0 auto;
+}
+
+body {
+	font-size: 30px;
+}
+
+#carouselcontainer {
+	left: 510px; /* (1920/2)-(900/2) */
+	/*top: 408px;*/ /* (1080/2)-(265/2) */
+}
+
+#logo {
+	width: 480px;
+	height: 69px;
+	background-image: url('../images/tvp_framework-480x69.png');
+}

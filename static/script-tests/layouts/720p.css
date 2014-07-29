@@ -1,0 +1,23 @@
+
+@import url("../allstyles-720p.css");
+
+#app {
+	width: 1280px;
+	height: 720px;
+	margin: -360px auto 0 auto;
+}
+
+body {
+	font-size: 20px;
+}
+
+#carouselcontainer {
+	left: 190px;
+	/*top: 228px;*/
+}
+
+#logo {
+	width: 320px;
+	height: 46px;
+	background-image: url('../images/tvp_framework-320x46.png');
+}

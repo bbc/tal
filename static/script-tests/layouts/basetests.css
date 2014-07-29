@@ -1,0 +1,81 @@
+body {
+	font-size: 62.5%;
+}
+
+#position1 {
+	position: absolute;
+	top: 120px;
+	left: 120px;
+}
+
+#basetests {
+	font-size: 10px;
+}
+
+#basetests #num2 {
+	font-size: 30px;
+}
+
+#basetests .num2 {
+	font-size: 20px;
+}
+
+#basetests .num2.inner {
+	font-size: 20px;
+}
+
+#basetests .sec1 {
+	font-size: 12px;
+}
+
+#basetests .sec2 {
+	font-size: 14px;
+}
+
+#basetests .sec3 {
+	font-size: 16px;
+}
+
+#basetests div div {
+	font-size: 22px;
+}
+
+#basetests div > div {
+	font-size: 24px;
+}
+
+#cssattributes {
+	background-color: #f00;
+	background-image: url('http://static.bbc.co.uk/frameworks/barlesque/1.10.0/desktop/2.7/img/blocks.png');
+	background-position: right;
+	background-repeat: repeat-y;
+	border-top: 8px double #f00;
+	border-bottom: 4px groove #f00;
+	bottom: 10px;
+	clear: both;
+	color: #f00;
+	display: list-item;
+	float: right;
+	font-family: Arial, Helvetica;
+	font-style: italic;
+	font-weight: bolder;
+	font-size: 120%;
+	height: 200px;
+	left: 50px;
+	line-height: 1.5em;
+	list-style: url('http://static.bbc.co.uk/frameworks/barlesque/1.10.0/desktop/2.7/img/blocks.png') outside square;
+	margin-left: 20px;
+	margin-right: 30px;
+	overflow: scroll;
+	padding-top: 10px;
+	padding-right: 15px;
+	position: fixed;
+	right: 40px;
+	text-align: justify;
+	text-transform: uppercase;
+	top: 15px;
+	vertical-align: text-top;
+	visibility: hidden;
+	width: 400px;
+	z-index: 100;
+}

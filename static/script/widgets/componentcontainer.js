@@ -96,7 +96,10 @@ require.def('antie/widgets/componentcontainer',
 					// and clear it again
 					this._currentComponent.parentWidget = null;
 
-					device.hideElement(this._currentComponent.outputElement, true);
+					device.hideElement({
+						el: this._currentComponent.outputElement,
+						skipAnim: true
+					});
 
 					this.appendChildWidget(this._currentComponent);
 
@@ -111,7 +114,10 @@ require.def('antie/widgets/componentcontainer',
 					if(!evt.isDefaultPrevented()) {
 						var config = device.getConfig();
 						var animate = !config.widgets || !config.widgets.componentcontainer || (config.widgets.componentcontainer.fade !== false);
-						device.showElement(this._currentComponent.outputElement, !animate);
+						device.showElement({
+							el: this._currentComponent.outputElement,
+							skipAnim: !animate
+						});
 					}
 
 					self._currentComponent.bubbleEvent(new ComponentEvent('aftershow', self, self._currentComponent, args, state, fromBack));

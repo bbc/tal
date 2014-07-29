@@ -9,17 +9,29 @@ require.def(
 	['antie/devices/browserdevice'],
 	function(Device) {
 		// Browser specific transition values
-		var _css3Prefix =	/WebKit/.test(navigator.userAgent) ? "webkit" : (
-					/Gecko/.test(navigator.userAgent) ? "moz" : (
-					/Opera/.test(navigator.userAgent) ? "o" : 
-					""));
+		var _css3Prefix = /WebKit/.test(navigator.userAgent) 
+								? "webkit" 
+								: /Gecko/.test(navigator.userAgent) 
+										? "moz" 
+										: /Opera/.test(navigator.userAgent) 
+												? "o" 
+												: "";
 
-		var _transitionEndEvent = (_css3Prefix.length && _css3Prefix !== "moz") ? (_css3Prefix + "TransitionEnd") : "transitionend";
+		var _transitionEndEvent = (_css3Prefix.length && _css3Prefix !== "moz") 
+										? (_css3Prefix + "TransitionEnd") 
+										: "transitionend";
 
-		if(_css3Prefix === "o") _css3Prefix = "O";
-		else if(_css3Prefix === "moz") _css3Prefix = "Moz";
-		var _transitionProperty = _css3Prefix.length ? (_css3Prefix + "Transition") : "transition";
-		var _transformProperty = _css3Prefix.length ? (_css3Prefix + "Transform") : "transform";
+		if (_css3Prefix === "o") {
+			_css3Prefix = "O";
+		} else if (_css3Prefix === "moz") {
+			_css3Prefix = "Moz";
+		}
+		var _transitionProperty = _css3Prefix.length 
+										? (_css3Prefix + "Transition") 
+										: "transition";
+		var _transformProperty = _css3Prefix.length 
+										? (_css3Prefix + "Transform") 
+										: "transform";
 
 		function testMediaQuery(mq) {
 			var	st = document.createElement('style'),
@@ -30,9 +42,7 @@ require.def(
 			(document.head || document.getElementsByTagName('head')[0]).appendChild(st);
 			div.id = 'mediaQueryElement';
 			document.documentElement.appendChild(div);
-
 			ret = div.offsetHeight === 3;
-
 			st.parentNode.removeChild(st);
 			div.parentNode.removeChild(div);
 
@@ -45,8 +55,8 @@ require.def(
 		var _supports3D = false;
 		var _mediaQuery = "@media (transform-3d),(-o-transform-3d),(-moz-transform-3d),(-webkit-transform-3d),(mediaQueryElement)";
 
-		for(var p in ['perspectiveProperty', 'WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective']) {
-			if((cssDetect.style[p] !== undefined) && testMediaQuery(_mediaQuery)) {
+		for (var p in ['perspectiveProperty', 'WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective']) {
+			if ((cssDetect.style[p] !== undefined) && testMediaQuery(_mediaQuery)) {
 				_translate = "translate3d";
 				_supports3D = true;
 				break;
@@ -72,62 +82,57 @@ require.def(
 		 * @param {Function} [onComplete] Callback function to be called when the scroll has been completed.
 		 * @returns A handle to any animation started by this movement. {@see #stopAnimation}
 		 */
-		Device.prototype.scrollElementTo = function(el, left, top, skipAnim, onComplete) {
+		Device.prototype.scrollElementTo = function(options) {
 			// Performance consideration: if left or top is null they are ignored to prevent the additional
 			// work animating them.
 
-			if(new RegExp("_mask$").test(el.id)) {
-				if(el.childNodes.length == 0) return null;
-				el.style.position = 'absolute';
-				el = el.childNodes[0];
-				el.style.position = 'absolute';
-			} else {
-				return null;
-			}
-
-			var currentTranslation = getCurrentTranslation(el);
-			left = ((left !== null && left !== undefined) ? (0 - left) : currentTranslation.left) || 0;
-			top = ((top !== null && top !== undefined) ? (0 - top) : currentTranslation.top) || 0;
+			var currentTranslation = getCurrentTranslation(options.el);
+			var left = ((options.to.left !== undefined) ? (0 - options.to.left) : currentTranslation.left) || 0;
+			var top = ((options.to.top !== undefined) ? (0 - options.to.top) : currentTranslation.top) || 0;
 
 			var newTranslation = _translate + "(" + left + "px, " + top + "px" + (_supports3D ? ", 0" : "") + ")";
-			if(el.lastAntieCSS3Scroll === newTranslation) {
-				skipAnim = true;
+			if (options.el.lastAntieCSS3Scroll === newTranslation) {
+				options.skipAnim = true;
 			} else {
-				el.lastAntieCSS3Scroll = newTranslation;
+				options.el.lastAntieCSS3Scroll = newTranslation;
 			}
 
-			//this.getLogger().debug('Scrolling ' + el.id + ' to ' + left + ',' + top + '... ' + newTranslation);
-			if(skipAnim) {
-				el.style[_transformProperty] = newTranslation;
-				if(onComplete) onComplete();
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style[_transformProperty] = newTranslation;
+				if (options.onComplete) {
+					options.onComplete();
+				}
 			} else {
-				this.removeClassFromElement(el.parentNode, "notscrolling");	
-				this.addClassToElement(el.parentNode, "scrolling");	
+				this.addClassToElement(options.el, "transition");	
+				this.removeClassFromElement(options.el.parentNode, "notscrolling");	
+				this.addClassToElement(options.el.parentNode, "scrolling");	
 				this.removeClassFromElement(this.getTopLevelElement(), "notanimating");
 				this.addClassToElement(this.getTopLevelElement(), "animating");
 
 				var self = this;
-				el.addEventListener(_transitionEndEvent, function(evt) {
-					if(evt.target === el) {
-						el.removeEventListener(_transitionEndEvent, arguments.callee, true);
-
-						self.removeClassFromElement(el.parentNode, "scrolling");	
-						self.addClassToElement(el.parentNode, "notscrolling");	
+				options.el.addEventListener(_transitionEndEvent, function(evt) {
+					if (evt.target === options.el) {
+						options.el.removeEventListener(_transitionEndEvent, arguments.callee, true);
+						self.removeClassFromElement(options.el.parentNode, "scrolling");	
+						self.addClassToElement(options.el.parentNode, "notscrolling");	
 						self.removeClassFromElement(self.getTopLevelElement(), "animating");
 						self.addClassToElement(self.getTopLevelElement(), "notanimating");
-						self.removeClassFromElement(el, "transition");	
-	
-						if(onComplete) onComplete();
+						self.removeClassFromElement(options.el, "transition");	
+						if (options.onComplete) {
+							options.onComplete();
+						}
 					}
 				}, true);
-				this.addClassToElement(el, "transition");	
 
 				// the above className change does not happen instantly
 				setTimeout(function() {
-					el.style[_transformProperty] = newTranslation;
+					options.el.style[_transformProperty] = newTranslation;
+					if (options.onComplete) {
+						options.onComplete();
+					}
 				}, 10);
 
-				return onComplete || true;
+				return true;
 			}
 		}
 
@@ -141,49 +146,49 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the movement will be animated, pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the move has been completed.
 		 */
-		Device.prototype.moveElementTo = function(el, left, top, skipAnim, onComplete) {
+		Device.prototype.moveElementTo = function(options) {
 			// Performance consideration: if left or top is null they are ignored to prevent the additional
 			// work animating them.
 
-			var currentTranslation = getCurrentTranslation(el);
-			left = ((left !== null && left !== undefined) ? left : currentTranslation.left) || 0;
-			top = ((top !== null && top !== undefined) ? top : currentTranslation.top) || 0;
+			var currentTranslation = getCurrentTranslation(options.el);
+			var left = ((options.to.left !== null && options.to.left !== undefined) ? options.to.left : currentTranslation.left) || 0;
+			var top = ((options.to.top !== null && options.to.top !== undefined) ? options.to.top : currentTranslation.top) || 0;
 
 			var newTranslation = _translate + "(" + left + "px, " + top + "px" + (_supports3D ? ", 0" : "") + ")";
-	
-			//this.getLogger().debug("Moving " + el.id + " to " + left + "," + top + "... " + newTranslation + " skipAnim: " + skipAnim);
-			
-			if(skipAnim) {
-				el.style[_transformProperty] = newTranslation;
-				if(onComplete) onComplete();
+
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style[_transformProperty] = newTranslation;
+				if (options.onComplete) {
+					options.onComplete();
+				}
 			} else {
-				this.removeClassFromElement(el, "notmoving");	
-				this.addClassToElement(el, "moving");	
+				this.removeClassFromElement(options.el, "notmoving");	
+				this.addClassToElement(options.el, "moving");	
 				this.removeClassFromElement(this.getTopLevelElement(), "notanimating");
 				this.addClassToElement(this.getTopLevelElement(), "animating");
 
 				var self = this;
-				el.addEventListener(_transitionEndEvent, function(evt) {
-					if(evt.target === el) {
-						el.removeEventListener(_transitionEndEvent, arguments.callee, true);
-
-						self.removeClassFromElement(el, "moving");	
-						self.addClassToElement(el, "notmoving");	
+				options.el.addEventListener(_transitionEndEvent, function(evt) {
+					if (evt.target === options.el) {
+						options.el.removeEventListener(_transitionEndEvent, arguments.callee, true);
+						self.removeClassFromElement(options.el, "moving");	
+						self.addClassToElement(options.el, "notmoving");	
 						self.removeClassFromElement(self.getTopLevelElement(), "animating");
 						self.addClassToElement(self.getTopLevelElement(), "notanimating");
-						self.removeClassFromElement(el, "transition");	
-	
-						if(onComplete) onComplete();
+						self.removeClassFromElement(options.el, "transition");	
+						if (options.onComplete) {
+							options.onComplete();
+						}
 					}
 				}, true);
-				this.addClassToElement(el, "transition");	
+				this.addClassToElement(options.el, "transition");	
 
 				// the above className change does not happen instantly
 				setTimeout(function() {
-					el.style[_transformProperty] = newTranslation;
+					options.el.style[_transformProperty] = newTranslation;
 				}, 10);
 
-				return onComplete || true;
+				return options.onComplete || true;
 			}
 		}
 
@@ -195,7 +200,7 @@ require.def(
 		 */
 		Device.prototype.stopAnimation = function(anim) {
 			// TODO: is there any way to do this when animating via CSS3?
-			if(typeof(anim) === "function") {
+			if (typeof(anim) === "function") {
 				anim();
 			}
 		};
@@ -208,31 +213,33 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the hiding of the element will be animated (faded-out). Pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the element has been hidden.
 		 */
-		Device.prototype.hideElement = function(el, skipAnim, onComplete) {
-			if (skipAnim) {
-				el.style[_transitionProperty] = "";
-				el.style.visibility = "hidden";
-				el.style.opacity = 0;
-				if (typeof onComplete == "function") {
-					onComplete();
+		Device.prototype.hideElement = function(options) {
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style[_transitionProperty] = "";
+				options.el.style.visibility = "hidden";
+				options.el.style.opacity = 0;
+				if (typeof options.onComplete == "function") {
+					options.onComplete();
 				}
 			} else {
 				var self = this;
-				el.addEventListener(_transitionEndEvent, function(evt) {
-					if(evt.target === el) {
-						el.removeEventListener(_transitionEndEvent, arguments.callee, true);
-						el.style[_transitionProperty] = "";
-						el.style.visibility = "hidden";
-						if(onComplete) onComplete();
+				options.el.addEventListener(_transitionEndEvent, function(evt) {
+					if (evt.target === options.el) {
+						options.el.removeEventListener(_transitionEndEvent, arguments.callee, true);
+						options.el.style[_transitionProperty] = "";
+						options.el.style.visibility = "hidden";
+						if (options.onComplete) {
+							options.onComplete();
+						}
 					}
 				}, true);
 
-				el.style[_transitionProperty] = "opacity 1s linear";
+				options.el.style[_transitionProperty] = "opacity 1s linear";
 				setTimeout(function() {
-					el.style.opacity = 0;
+					options.el.style.opacity = 0;
 				}, 100);
 
-				return onComplete || true;
+				return options.onComplete || true;
 			}
 		};
 
@@ -244,33 +251,34 @@ require.def(
 		 * @param {Boolean} [skipAnim] By default the revealing of the element will be animated (faded-in). Pass <code>true</code> here to prevent animation.
 		 * @param {Function} [onComplete] Callback function to be called when the element has been shown.
 		 */
-		Device.prototype.showElement = function(el, skipAnim, onComplete) {
-			if (skipAnim) {
-				el.style[_transitionProperty]= "";
-				el.style.visibility = "visible";
-				el.style.opacity = 1;
-				if (typeof onComplete == "function") {
-					onComplete();
+		Device.prototype.showElement = function(options) {
+			if (antie.framework.deviceConfiguration.animationDisabled || options.skipAnim) {
+				options.el.style[_transitionProperty]= "";
+				options.el.style.visibility = "visible";
+				options.el.style.opacity = 1;
+				if (typeof options.onComplete == "function") {
+					options.onComplete();
 				}
 			} else {
-				el.style.opacity = 0;
-				el.style.visibility = "visible";
-
+				options.el.style.opacity = 0;
+				options.el.style.visibility = "visible";
 				var self = this;
-				el.addEventListener(_transitionEndEvent, function(evt) {
-					if(evt.target === el) {
-						el.removeEventListener(_transitionEndEvent, arguments.callee, true);
-						el.style[_transitionProperty] = "";
-						if(onComplete) onComplete();
+				options.el.addEventListener(_transitionEndEvent, function(evt) {
+					if (evt.target === options.el) {
+						options.el.removeEventListener(_transitionEndEvent, arguments.callee, true);
+						options.el.style[_transitionProperty] = "";
+						if (options.onComplete) {
+							options.onComplete();
+						}
 					}
 				}, true);
 
-				el.style[_transitionProperty] = "opacity 1s linear";
+				options.el.style[_transitionProperty] = "opacity 1s linear";
 				setTimeout(function() {
-					el.style.opacity = 1;
+					options.el.style.opacity = 1;
 				}, 100);
 
-				return onComplete || true;
+				return options.onComplete || true;
 			}
 		};
 		

@@ -1,4 +1,5 @@
 {
+  "pageStrategy" : "samsungmaple",
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [

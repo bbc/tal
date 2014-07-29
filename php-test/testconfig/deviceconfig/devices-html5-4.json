@@ -1,4 +1,5 @@
 {
+  "pageStrategy" : "html5",
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [

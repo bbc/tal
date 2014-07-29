@@ -48,7 +48,10 @@ require.def("frameworkdemo/carouselapplication",
 						var device = this.getDevice();
 						var screenHeight = device.getElementSize(this.getRootWidget().outputElement).height;
 						device.moveElementTo(this._carouselContainer.outputElement, null, screenHeight - 65);
-						device.showElement(this._carouselContainer.outputElement, true);
+						device.showElement({
+							el: this._carouselContainer.outputElement,
+							skipAnim: true
+						});
 						this._navHidden = true;
 					}
 				},

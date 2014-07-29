@@ -39,11 +39,12 @@ require.def('antie/widgets/horizontalcarousel',
 				this._multiWidthItems = false;
 				this._overrideAnimation = overrideAnimation;
 				this._activeWidgetAlignment = activeWidgetAlignment || HorizontalCarousel.ALIGNMENT_CENTER;
-
+				this._activeWidgetAnimationFPS = 25;
+				this._activeWidgetAnimationDuration = 840;
+				this._activeWidgetAnimationEasing = 'easeFromTo';
 				this._nodeOffset = 0;
 				this._childWidgetsInDocument = [];
 				this._paddingItemsCreated = false;
-
 				this._super(id, itemFormatter, dataSource);
 				this.addClass('horizontalcarousel');
 
@@ -96,7 +97,10 @@ require.def('antie/widgets/horizontalcarousel',
 
 				// Don't hide if we're never going to databind (or it'll never be shown);
 				if(this._dataSource) {
-					device.hideElement(this._maskElement, true);
+					device.hideElement({
+						el: this._maskElement,
+						skipAnim: true
+					});
 				} else {
 					var self = this;
 					var config = device.getConfig();
@@ -265,8 +269,12 @@ require.def('antie/widgets/horizontalcarousel',
 
 				var self = this;
 				var func = this._super;
-				device.hideElement(this._maskElement, !animate, function() {
-					func.call(self);
+				device.hideElement({
+					el: this._maskElement,
+					skipAnim: !animate,
+					onComplete: function() {
+						func.call(self);
+					}
 				});
 			},
 			/**
@@ -442,7 +450,10 @@ require.def('antie/widgets/horizontalcarousel',
 				if(!this._keepHidden) {
 					var config = device.getConfig();
 					var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
-					device.showElement(this._maskElement, !animate);
+					device.showElement({
+						el: this._maskElement,
+						skipAnim: !animate
+					});
 				}
 			},
 			/**
@@ -489,7 +500,7 @@ require.def('antie/widgets/horizontalcarousel',
 			 *							   <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or 
 			 *							   <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
 			 */
-			setAlignment: function(align) {
+			setAlignment: function (align) {
 				this._activeWidgetAlignment = align;  
 			},
 			/**
@@ -498,8 +509,101 @@ require.def('antie/widgets/horizontalcarousel',
 			 *							   <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or 
 			 *							   <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
 			 */			
-			getAlignment: function() {
+			getAlignment: function () {
 				return this._activeWidgetAlignment;	
+			},
+			/**
+			 * Set the alignment offsetof the active item.
+			 * @param {Integer} offset
+			 */
+			setAlignmentOffset: function (offset) {
+				this._activeWidgetAlignmentOffset = offset;  
+			},
+			/**
+			 * Get the current alignment offest of the active item.
+			 * @returns {Integer}
+			 */			
+			getAlignmentOffset: function () {
+				return this._activeWidgetAlignmentOffset;	
+			},
+			/**
+			 * Set the frames per second of the active widget selection animation.
+			 * @param {Integer} fps
+			 */
+			setWidgetAnimationFPS: function (fps) {
+				this._activeWidgetAnimationFPS = fps;  
+			},
+			/**
+			 * Get the frames per second of the active widget selection animation.
+			 * @returns {Integer}
+			 */			
+			getWidgetAnimationFPS: function () {
+				return this._activeWidgetAnimationFPS;	
+			},
+			/**
+			 * Set the duration of the active widget selection animation.
+			 * @param {Integer} duration
+			 */
+			setWidgetAnimationDuration: function (duration) {
+				this._activeWidgetAnimationDuration = duration;  
+			},
+			/**
+			 * Get the duration of the active widget selection animation.
+			 * @returns {Integer} 
+			 */			
+			getWidgetAnimationDuration: function () {
+				return this._activeWidgetAnimationDuration;	
+			},
+			/**
+			 * Set the easing style of the active widget selection animation.
+			 * @param {String} easing 
+			 *		Acceptable values are: 
+			 *			bounce
+			 *			bouncePast
+			 *			easeFrom
+			 *			easeTo
+			 *			easeFromTo
+			 *			easeInCirc
+			 *			easeOutCirc
+			 *			easeInOutCirc
+			 *			easeInCubic
+			 *			easeOutCubic
+			 *			easeInOutCubic
+			 *			easeInQuad
+			 *			easeOutQuad
+			 *			easeInOutQuad
+			 *			easeInQuart
+			 *			easeOutQuart
+			 *			easeInOutQuart
+			 *			easeInQuint
+			 *			easeOutQuint
+			 *			easeInOutQuint
+			 *			easeInSine
+			 *			easeOutSine
+			 *			easeInOutSine
+			 *			easeInExpo
+			 *			easeOutExpo
+			 *			easeInOutExpo
+			 *			easeOutBounce
+			 *			easeInBack
+			 *			easeOutBack
+			 *			easeInOutBack
+			 *			elastic
+			 *			swingFrom
+			 *			swingTo
+			 *			swingFromTo
+			 *			
+			 */
+			setWidgetAnimationEasing: function (easing) {
+				this._activeWidgetAnimationEasing = easing;  
+			},
+			/**
+			 * Get the current alignment of the active item.
+			 * @returns {String}
+			 * 
+			 */			
+			getWidgetAnimationEasing: function () {
+				return this._activeWidgetAnimationEasing;	
 			},
 			/**
 			 * Set whether the carousel contains items of differing widths. When all items are the
@@ -601,28 +705,13 @@ require.def('antie/widgets/horizontalcarousel',
 							self.setActiveChildWidget(_newSelectedWidget);
 							self._selectedIndex = _newIndex;
 						}
-
 						self.refreshViewport();
-
-						if (self._viewportMode != HorizontalCarousel.VIEWPORT_MODE_DOM) {
-							var elpos = device.getElementOffset(self._activeChildWidget.outputElement);
-							var elsize = device.getElementSize(self._activeChildWidget.outputElement);
-	
-							/*if (_nodeIndex <= self._prefixClones) {
-								device.scrollElementToCenter(self._maskElement, elpos.left + (elsize.width / 2), null, true);
-							} else if(_nodeIndex >= self._childWidgetOrder.length) {
-								device.scrollElementToCenter(self._maskElement, elpos.left + (elsize.width / 2), null, true);
-							}*/
-							self._alignToElement(self._activeChildWidget.outputElement, true);
-						}
-
 						self._scrollHandle = null;
 					}
-					// TODO: would be quicker to keep a list of these internally
-					var nodeList = device.getChildElementsByTagName(this.outputElement, (this._renderMode == List.RENDER_MODE_LIST) ? 'li' : 'div');
-					var centerElement = nodeList[_nodeIndex - this._nodeOffset];
-					var elpos = device.getElementOffset(nodeList[_nodeIndex - this._nodeOffset]);
-					var elsize = device.getElementSize(nodeList[_nodeIndex - this._nodeOffset]);
+
+					var centerElement = _newSelectedWidget.outputElement;
+					var elpos = device.getElementOffset(centerElement);
+					var elsize = device.getElementSize(centerElement);
 
 					if(this._activateThenScroll) {
 						this.setActiveChildWidget(_newSelectedWidget);
@@ -634,6 +723,7 @@ require.def('antie/widgets/horizontalcarousel',
 					if(elpos.left == 0) {
 						elpos.left = 1;
 					}
+
 
 					var config = device.getConfig();
 					var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.animate !== false);
@@ -655,21 +745,32 @@ require.def('antie/widgets/horizontalcarousel',
 				var widgetpos = device.getElementOffset(el);
 				var widgetsize = device.getElementSize(el);
 				var masksize = device.getElementSize(this._maskElement);
+				var offset = this._activeWidgetAlignmentOffset || 0;
 
 				var newLeftPosition;
 				switch(this._activeWidgetAlignment) {
 					case HorizontalCarousel.ALIGNMENT_CENTER:
-						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width)/2;
+						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width)/2 + offset;
 						break;
 					case HorizontalCarousel.ALIGNMENT_LEFT:
-						newLeftPosition = widgetpos.left;
+						newLeftPosition = widgetpos.left + offset;
 						break;
 					case HorizontalCarousel.ALIGNMENT_RIGHT:
-						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width);
+						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width) - offset;
 						break;
 				}
 
-				return device.scrollElementTo(this._maskElement, newLeftPosition, null, skipAnimation, onAnimationCompleteHandler);
+				return device.scrollElementTo({
+					el: this._maskElement, 
+					to: {
+						left: newLeftPosition 
+					},
+					fps : this.getWidgetAnimationFPS(),
+					duration: this.getWidgetAnimationDuration(),
+					easing: this.getWidgetAnimationEasing(),
+					skipAnim: skipAnimation, 
+					onComplete: onAnimationCompleteHandler
+				});
 			}
 		});
 

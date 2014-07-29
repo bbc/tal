@@ -9,28 +9,178 @@
 		this.sandbox.restore();
 	};
 
-	this.DefaultNetworkTest.prototype.testLoadScript = function(queue) {
+	// make sure test hangs in there until after timeouts and responses have all completed
+	this.DefaultNetworkTest.prototype.waitFor = function(callbacks, timeInMillis) {
+		var notify = callbacks.add(function() { });
+		setTimeout(notify, timeInMillis);
+	}
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptWithTimedOutResponse = function(queue) {
 		expectAsserts(1);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Waiting for script to load", function(callbacks) {
 
-				// Using a statically named function as the callback because using JSTestDriver
-				// can't dynamically generate javascript which calls a dynamically generated
-				// callback function name.
-				// TODO: revisit this when we've got a test server that can generate such files
-				// dynamically.
-				antie.framework.__test_dynamicScriptLoaded = callbacks.add(function() {
-					delete antie.framework.__test_dynamicScriptLoaded;
-					assert(true);
-				});
-
-				device.loadScript("/test/fixtures/dynamicscript.js?callback=%callback%", /%callback%/);
+				var opts = {
+					onError: callbacks.add(function() {
+						assert("Expected on error to be called as timeout expired", true);
+					}),
+					onSuccess: function(data) {
+						assert("Expected on success not to be called", false);
+					}
+				};
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 10, "test");
+				this.waitFor(callbacks, 1000);
 			});
 		});
 	};
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptWithDefaultFiveSecondTimedOutResponse = function(queue) {
+		expectAsserts(1);
 
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Waiting for script to load", function(callbacks) {
+
+				var opts = {
+					onError: callbacks.add(function() {
+						assert("Expected on error to be called as timeout expired", true);
+					}),
+					onSuccess: function(data) {
+						assert("Expected on success not to be called", false);
+					}
+				};
+				device.loadScript("/test/fixtures/timedoutdynamicscript.js?callback=%callback%", /%callback%/, opts, undefined, "test");
+				this.waitFor(callbacks, 6000);
+			});
+		});
+	};
+		
+	this.DefaultNetworkTest.prototype.testLoadScriptWithSuccessResponse = function(queue) {
+		expectAsserts(1);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Waiting for script to load", function(callbacks) {
+
+				var opts = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get on load response", "test1", data);
+					}),
+					onError: function() {
+						assert("Timed out response should not occur", false);
+					}
+				};
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+				this.waitFor(callbacks, 1500);
+			});
+		});
+	};
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptMultipleRequestsWithDifferentSuffixes = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Waiting for script to load", function(callbacks) {
+
+				var opts1 = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get success response for test1", "test1", data);
+					})
+				};
+				var opts2 = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get success response for test2", "test2", data);
+					})
+				};
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts1, 1000, "test1");
+				device.loadScript("/test/fixtures/dynamicscript2.js?callback=%callback%", /%callback%/, opts2, 1000, "test2");
+				this.waitFor(callbacks, 1500);
+			});
+		});
+	};
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptMultipleRequestsWithSameSuffixThrowsError = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Waiting for script to load", function(callbacks) {
+
+				var opts = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get expected success response from overridding call", "test1", data);
+					})
+				};
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+				try {
+					device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, {}, 1, "test1");
+				} catch (e){
+					assert(true);
+				}
+				this.waitFor(callbacks, 1000);
+			});
+		});
+	};
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptSequentialRequestsWithSameSuffixAreAllowed = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Load first script", function(callbacks) {
+				var opts = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get expected success response from overridding call", "test1", data);
+					})
+				};
+				
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+				this.waitFor(callbacks, 1000);
+			});
+			queue.call("Load next script", function(callbacks) {
+				var opts = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get expected success response from overridding call", "test1", data);
+					})
+				};
+					
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+				this.waitFor(callbacks, 1000);
+			});
+		});
+	};
+	
+	this.DefaultNetworkTest.prototype.testLoadScriptSubsequentRequestWithSameSuffixIsAllowedAfterTimeout = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			queue.call("Load first script", function(callbacks) {
+				var opts = {
+					onError: callbacks.add(function(data) {
+						assert("Timeout should have triggered", true);
+					})
+				};
+				
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 10, "test1");
+				this.waitFor(callbacks, 20);
+			});
+			queue.call("Load next script after timeout", function(callbacks) {
+				var opts = {
+					onSuccess: callbacks.add(function(data) {
+						assertEquals("Did not get expected success response from overridding call", "test1", data);
+					})
+				};
+					
+				device.loadScript("/test/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+				this.waitFor(callbacks, 1000);
+			});
+		});
+	};
+	
 	this.DefaultNetworkTest.prototype.testLoadAuthenticatedURL = function(queue) {
 		expectAsserts(1);
 

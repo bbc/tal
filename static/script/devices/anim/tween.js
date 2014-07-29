@@ -10,55 +10,51 @@ require.def(
 		'antie/lib/shifty'
 	],
 	function(Device, Tweenable) {
-		Device.prototype._tween = function(el, propsOf, from, to, className, onComplete, onStart) {
-			var anim = new Tweenable();
+		Device.prototype._tween = function (options) {
+			var anim = new Tweenable(options);
 			var self = this;
+
 			var opts = {
-				from: {},
-				to: {},
-				duration: 500,
-				easing: 'easeFromTo',
-				start: function() {
-					if(className) {
-						self.removeClassFromElement(el, "not" + className);
-						self.addClassToElement(el,  className);
-					}
-					self.removeClassFromElement(self.getTopLevelElement(), "notanimating");
-					self.addClassToElement(self.getTopLevelElement(), "animating");
-					if(onStart) {
-						onStart();
-					}
-				},
-				step: function() {
-					for(var p in to) {
-						if(this[p] != null) {
-							propsOf[p] = this[p];
+					initialState: options.from || {},
+					from: options.from || {},
+					to: options.to || {},
+					duration: options.duration || 840,
+					easing: options.easing || 'easeFromTo',
+					fps: options.fps || 25,
+					start: function() {
+						if (options.className) {
+							self.removeClassFromElement(options.el, "not" + options.className);
+							self.addClassToElement(options.el,  options.className);
+						}
+						self.removeClassFromElement(self.getTopLevelElement(), "notanimating");
+						self.addClassToElement(self.getTopLevelElement(), "animating");
+						if (options.onStart) {
+							options.onStart();
+						}
+					},
+					step: function () {
+						for (var p in options.to) {
+							if (this[p] != null) {
+								if (/scroll/.test(p)) {
+									options.el[p] = this[p];
+								} else {
+									options.el.style[p] = this[p];
+								}
+							}
+						}
+					},
+					callback: function () {
+						if(options.className) {
+							self.removeClassFromElement(options.el, options.className);
+							self.addClassToElement(options.el, "not" + options.className);
+						}
+						self.removeClassFromElement(self.getTopLevelElement(), "animating");
+						self.addClassToElement(self.getTopLevelElement(), "notanimating");
+						if (options.onComplete) {
+							options.onComplete();
 						}
 					}
-				},
-				callback: function() {
-					if(className) {
-						self.removeClassFromElement(el, className);
-						self.addClassToElement(el, "not" + className);
-					}
-					self.removeClassFromElement(self.getTopLevelElement(), "animating");
-					self.addClassToElement(self.getTopLevelElement(), "notanimating");
-					if(onComplete) {
-						onComplete();
-					}
-				}
-			};
-
-			for(var p in from) {
-				if(from[p] != null) {
-					opts.from[p] = from[p];
-				}
-			}
-			for(var p in to) {
-				if(to[p] != null) {
-					opts.to[p] = to[p];
-				}
-			}
+				};
 
 			anim.tween(opts);
 

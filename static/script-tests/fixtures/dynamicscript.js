@@ -1,1 +1,0 @@
-antie.framework.__test_dynamicScriptLoaded();

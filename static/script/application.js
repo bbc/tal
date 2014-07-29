@@ -141,7 +141,7 @@ require.def('antie/application',
 			/**
 			 * Sets the current layout used by the application.
 			 * @param {Object} layout An application-specific object literal describing layout-specific properties
-			 * @param {String} stlyeBaseUrl Base URL of stylesheets for the application.
+			 * @param {String} styleBaseUrl Base URL of stylesheets for the application.
 			 * @param {String} imageBaseUrl Base URL of images for the application.
 			 * @param {Array} [additionalCSS] Additional stylesheet URLs to load.
 			 * @param {Array} [additionalClasses] Additional classes to add to the document element.
@@ -184,6 +184,7 @@ require.def('antie/application',
 					}
 					cssLoadedCallback();
 				} else {
+					console.log('no callback');
 					for(var i in css) {
 						this._device.loadStyleSheet(styleBaseUrl + css[i]);
 					}

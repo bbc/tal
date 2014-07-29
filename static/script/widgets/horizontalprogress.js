@@ -77,7 +77,13 @@ require.def('antie/widgets/horizontalprogress',
 	
 					var config = device.getConfig();
 					var animate = !config.widgets || !config.widgets.horizontalprogress || (config.widgets.horizontalprogress.animate !== false);
-					this._moveHandle = device.moveElementTo(this._innerElement, left, null, !animate);
+					this._moveHandle = device.moveElementTo({
+						el: this._innerElement, 
+						to: {
+							left: left 
+						},
+						skipAnim: !animate
+					});
 				}
 			},
 			/**

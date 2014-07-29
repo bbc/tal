@@ -130,6 +130,7 @@ require.def("antie/devices/browserdevice",
 			createImage: function(id, classNames, src, size, onLoad, onError) {
 				var el = this._createElement("img", id, classNames);
 				el.src = src;
+				el.alt = "";
 				if(size) {
 					this.setElementSize(el, size);
 				}
@@ -421,8 +422,13 @@ require.def("antie/devices/browserdevice",
 			},
 			/**
 			 * Get the height (in pixels) of a given block of text (of a provided set of class names) when constrained to a fixed width.
+			 * 
+			 * @deprecated This function does not always give accurate results. When measuring size, it only takes into account 
+			 * the classes on the text element being measured. It doesn't consider any CSS styles that may have been passed down 
+			 * through the DOM. See TVPJSFRMWK-360.
+			 * 
 			 * @param {String} text The text to measure.
-			 * @param {Boolean} maxWidth The width the text is constrained to.
+			 * @param {Integer} maxWidth The width the text is constrained to.
 			 * @param {Array} classNames An array of class names which define the style of the text.
 			 * @returns The height (in pixels) that is required to display this block of text.
 			 */

@@ -98,7 +98,13 @@ require.def('antie/widgets/horizontalslider',
 							this.removeClass('start');
 							this.removeClass('end');
 						}
-						device.moveElementTo(this._button, left, null, true);
+						device.moveElementTo({
+							el: this._button, 
+							to: {
+								left: left
+							},
+							skipAnim: true
+						});
 						device.setElementSize(this._left, {width: left});
 					}
 				}

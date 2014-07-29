@@ -339,7 +339,7 @@ require.def('antie/devices/device',
 			 * @param {Boolean} [skipAnim] By default the revealing of the element will be animated (faded-in). Pass <code>true</code> here to prevent animation.
 			 * @param {Function} [onComplete] Callback function to be called when the element has been shown.
 			 */
-			showElement: function(el, skipAnim, onComplete) {
+			showElement: function(options) {
 			},
 			/**
 			 * Stops the specified animation. The any completeHandler for the animation will be executed.

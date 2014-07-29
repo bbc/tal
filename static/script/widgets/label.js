@@ -102,6 +102,8 @@ require.def('antie/widgets/label',
 			},
 			/**
 			 * Sets the truncation mode (currently {@link antie.widgets.Label.TRUNCATION_MODE_NONE} or {@link tvpjsframework.widgets.Label.TRUNCATION_MODE_RIGHT_ELLIPSIS}).
+			 * 
+			 * @deprecated TRUNCATION_MODE_RIGHT_ELLIPSIS relies on browserdevice.getTextHeight(), which can be inaccurate. For a truncation workaround using maximum characters, see https://repo.dev.bbc.co.uk/pal/bbc-tvp-sport-iptv-js/trunk/webapp/static-versioned/script/appui/components/sportlabel.js
 			 * @param {String} mode The new truncation mode.
 			 */
 			setTruncationMode: function(mode) {

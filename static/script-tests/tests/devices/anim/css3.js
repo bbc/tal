@@ -15,6 +15,7 @@
 
  	this.CSS3AnimationTest.prototype.createScrollableDiv = function(device) {
 		this.div = device.createContainer("id_mask");
+		this.divOutputElement = this.div.outputElement;
 		document.body.appendChild(this.div);
 		this.div.style.overflow = "hidden";
 		this.div.style.width = "10px";
@@ -34,10 +35,11 @@
 	this.CSS3AnimationTest.prototype.getTranslation = function(el) {
 		var regexp = /-?transform:\s*translate(3d)?\(([-0-9]+)[^,]*,\s*([-0-9]+)/;
 		var match = regexp.exec(el.style.cssText);
-		if(match) {
+		if (match) {
 			return {left:parseInt(match[2]), top:parseInt(match[3])};
+		} else {
+			return {left:0, top:0};
 		}
-		return {left:0, top:0};
 	}
 
 	this.CSS3AnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
@@ -48,7 +50,7 @@
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
 			var inner = this.createScrollableDiv(device);
-
+			var self = this;
 			queue.call("Wait for tween", function(callbacks) {
 				var addClassSpy = this.sandbox.spy(device, 'addClassToElement');
 
@@ -58,7 +60,80 @@
 					assertEquals(-200, translation.top);
 				});
 
-				device.scrollElementTo(this.div, 100, 200, false, onComplete);
+				device.scrollElementTo({
+					el: inner,
+					to: {
+						left: 100,
+						top: 200
+					},
+					skipAnim: false,
+					className: 'temp',
+					onComplete: onComplete
+				});
+				assert(addClassSpy.called);
+			});
+		}, config);
+	};
+
+	this.CSS3AnimationTest.prototype.testScrollElementToWithNeLeftValue = function(queue) {
+		expectAsserts(3);
+
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+			var device = application.getDevice();
+			var inner = this.createScrollableDiv(device);
+			var self = this;
+			queue.call("Wait for tween", function(callbacks) {
+				var addClassSpy = this.sandbox.spy(device, 'addClassToElement');
+
+				var onComplete = callbacks.add(function() {
+					var translation = this.getTranslation(inner);
+					assertEquals(0, translation.left);
+					assertEquals(-200, translation.top);
+				});
+
+				device.scrollElementTo({
+					el: inner,
+					to: {
+						top: 200
+					},
+					skipAnim: false,
+					className: 'temp',
+					onComplete: onComplete
+				});
+				assert(addClassSpy.called);
+			});
+		}, config);
+	};
+
+	this.CSS3AnimationTest.prototype.testScrollElementToWithNoTopValue = function(queue) {
+		expectAsserts(3);
+
+		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/anim/css3']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+			var device = application.getDevice();
+			var inner = this.createScrollableDiv(device);
+			var self = this;
+			queue.call("Wait for tween", function(callbacks) {
+				var addClassSpy = this.sandbox.spy(device, 'addClassToElement');
+
+				var onComplete = callbacks.add(function() {
+					var translation = this.getTranslation(inner);
+					assertEquals(-100, translation.left);
+					assertEquals(0, translation.top);
+				});
+
+				device.scrollElementTo({
+					el: inner,
+					to: {
+						left: 100
+					},
+					skipAnim: false,
+					className: 'temp',
+					onComplete: onComplete
+				});
 				assert(addClassSpy.called);
 			});
 		}, config);
@@ -81,7 +156,15 @@
 					assertEquals(-100, translation.left);
 					assertEquals(-200, translation.top);
 				});
-				device.scrollElementTo(this.div, 100, 200, true, onComplete);
+				device.scrollElementTo({
+					el: inner,
+					to: {
+						left: 100,
+						top: 200
+					},
+					skipAnim: true,
+					onComplete: onComplete
+				});
 				assertFalse(addClassSpy.called);
 			});
 		}, config);
@@ -94,17 +177,25 @@
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
-			this.createScrollableDiv(device);
+			var div = this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var addClassSpy = this.sandbox.spy(device, 'addClassToElement');
 
 				var onComplete = callbacks.add(function() {
-					var translation = this.getTranslation(this.div);
+					var translation = this.getTranslation(div);
 					assertEquals(100, translation.left);
 					assertEquals(200, translation.top);
 				});
-				device.moveElementTo(this.div, 100, 200, false, onComplete);
+				device.moveElementTo({
+					el: div,
+					to: {
+						left: 100,
+						top: 200
+					},
+					skipAnim: false,
+					onComplete: onComplete
+				});
 				assert(addClassSpy.called);
 			});
 		}, config);
@@ -117,17 +208,25 @@
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 			var device = application.getDevice();
-			this.createScrollableDiv(device);
+			var div = this.createScrollableDiv(device);
 
 			queue.call("Wait for tween", function(callbacks) {
 				var addClassSpy = this.sandbox.spy(device, 'addClassToElement');
 
 				var onComplete = callbacks.add(function() {
-					var translation = this.getTranslation(this.div);
+					var translation = this.getTranslation(div);
 					assertEquals(100, translation.left);
 					assertEquals(200, translation.top);
 				});
-				device.moveElementTo(this.div, 100, 200, true, onComplete);
+				device.moveElementTo({
+					el: div,
+					to: {
+						left: 100,
+						top: 200
+					},
+					skipAnim: true,
+					onComplete: onComplete
+				});
 				assertFalse(addClassSpy.called);
 			});
 		}, config);
@@ -147,7 +246,11 @@
 					assertEquals("hidden", this.div.style.visibility);
 					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
 				});
-				device.hideElement(this.div, false, onComplete);
+				device.hideElement({
+					el: this.div,
+					skipAnim: false,
+					onComplete: onComplete
+				});
 			});
 		}, config);
 	};
@@ -165,7 +268,11 @@
 					assertEquals("hidden", this.div.style.visibility);
 					assertEquals(0, Math.round(parseFloat(this.div.style.opacity)));
 				});
-				device.hideElement(this.div, true, onComplete);
+				device.hideElement({
+					el: this.div,
+					skipAnim: true,
+					onComplete: onComplete
+				});
 			});
 		}, config);
 	};
@@ -184,7 +291,11 @@
 					assertEquals("visible", this.div.style.visibility);
 					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
 				});
-				device.showElement(this.div, false, onComplete);
+				device.showElement({
+					el: this.div,
+					skipAnim: false,
+					onComplete: onComplete
+				});
 			});
 		}, config);
 	};
@@ -202,7 +313,11 @@
 					assertEquals("visible", this.div.style.visibility);
 					assertEquals(1, Math.round(parseFloat(this.div.style.opacity)));
 				});
-				device.showElement(this.div, true, onComplete);
+				device.showElement({
+					el: this.div,
+					skipAnim: true,
+					onComplete: onComplete
+				});
 			});
 		}, config);
 	};
