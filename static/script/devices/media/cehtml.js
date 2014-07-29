@@ -83,13 +83,13 @@ require.def(
 					// Note: this has to be bound after setting player.data
 					this._mediaElement.onPlayStateChange = function() {
 						switch (self._mediaElement.playState) {
-						case 0: // stopped
+						case CEHTMLPlayer.PLAY_STATE_STOPPED:
 							if(self._updateInterval) {
 								window.clearInterval(self._updateInterval);
 								self._updateInterval = false;
 							}
 							break;
-						case 1: // playing
+						case CEHTMLPlayer.PLAY_STATE_PLAYING:
 							if(!self._loaded) {
 								self.bubbleEvent(new MediaEvent("loadedmetadata", self));
 								self.bubbleEvent(new MediaEvent("canplaythrough", self));
@@ -103,19 +103,19 @@ require.def(
 								}, 900);
 							}
 							break;
-						case 2: // paused
+						case CEHTMLPlayer.PLAY_STATE_PAUSED:
 							self.bubbleEvent(new MediaEvent("pause", self));
 							break;
-						case 3: // connecting
+						case CEHTMLPlayer.PLAY_STATE_CONNECTING:
 							self.bubbleEvent(new MediaEvent("loadstart", self));
 							break;
-						case 4: // buffering
+						case CEHTMLPlayer.PLAY_STATE_BUFFERING:
 							self.bubbleEvent(new MediaEvent("waiting", self));
 							break;
-						case 5: // finished
+						case CEHTMLPlayer.PLAY_STATE_FINISHED:
 							self.bubbleEvent(new MediaEvent("ended", self));
 							break;
-						case 6: // error
+						case CEHTMLPlayer.PLAY_STATE_ERROR:
 							self.bubbleEvent(new MediaErrorEvent(self, 0));
 							break;
 						default:
@@ -143,8 +143,8 @@ require.def(
 			readonly attribute unsigned short networkState;
 			*/
 			getNetworkState: function() {
-                // Consider using NotifSocket object if we can consider having a persistent connection to the server
-                // or error code from playState == error (6) return true when the error code == 1 (network connection lost)
+				// Consider using NotifSocket object if we can consider having a persistent connection to the server
+				// or error code from playState == error (6) return true when the error code == 1 (network connection lost)
 				// TODO: CE-HTML implementation
 			},
 			// attribute DOMString preload;
@@ -190,9 +190,9 @@ require.def(
 			// attribute double currentTime;
 			setCurrentTime: function(currentTime) {
 				// TODO: CE-HTML implementation
-                // to emulate HTML5 we should throw an INVALID_STATE_ERR when we can't seek to the new position
-                // understandably this call may be blocking until the seek has completed
-                return this._mediaElement.seek(currentTime * 1000);
+				// to emulate HTML5 we should throw an INVALID_STATE_ERR when we can't seek to the new position
+				// understandably this call may be blocking until the seek has completed
+				return this._mediaElement.seek(currentTime * 1000);
 			},
 			getCurrentTime: function() {
 				return this._mediaElement.playPosition / 1000;
@@ -214,8 +214,7 @@ require.def(
 			},
 			// readonly attribute boolean paused;
 			getPaused: function() {
-				// TODO: CE-HTML implementation
-				return false;
+				return this._mediaElement.playState === CEHTMLPlayer.PLAY_STATE_PAUSED;
 			},
 			// attribute double defaultPlaybackRate;
 			getDefaultPlaybackRate: function() {
@@ -242,8 +241,7 @@ require.def(
 			},
 			// readonly attribute boolean ended;
 			getEnded: function() {
-				// TODO: CE-HTML implementation
-				return false;
+				return this._mediaElement.playState === CEHTMLPlayer.PLAY_STATE_FINISHED;
 			},
 			// attribute boolean autoplay;
 			getAutoPlay: function() {
@@ -292,6 +290,14 @@ require.def(
 				device.removeElement(this._mediaElement);
 			}
 		});
+
+		CEHTMLPlayer.PLAY_STATE_STOPPED = 0;
+		CEHTMLPlayer.PLAY_STATE_PLAYING = 1;
+		CEHTMLPlayer.PLAY_STATE_PAUSED = 2;
+		CEHTMLPlayer.PLAY_STATE_CONNECTING = 3;
+		CEHTMLPlayer.PLAY_STATE_BUFFERING = 4;
+		CEHTMLPlayer.PLAY_STATE_FINISHED = 5;
+		CEHTMLPlayer.PLAY_STATE_ERROR = 6;
 
 		Device.prototype.createPlayer = function(id, mediaType) {
 			return new CEHTMLPlayer(id, mediaType);

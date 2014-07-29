@@ -19,6 +19,6 @@ var GuiApi = {
 			return false;
 		}
 		var style = element.style;
-		return style.display !== 'none' && style.visibility !== 'hidden';
+		return style && style.display !== 'none' && style.visibility !== 'hidden';
 	}
 };

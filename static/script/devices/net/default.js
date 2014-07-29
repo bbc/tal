@@ -18,15 +18,16 @@ require.def(
 		 * @returns The script element that will load the script.
 		 */
 		Device.prototype.loadScript = function(url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) {
+			var self = this;
 			var script = null;
 			var funcName = "_antie_callback_" + (callbackSuffix || ((new Date() * 1) + "_" + Math.floor(Math.random() * 10000000)));
 
 			var timeoutHandle = window.setTimeout(function() {
 				if (window[funcName]) {
-					delete window[funcName];
 					if (script) {
-						this.removeElement(script);
+						self.removeElement(script);
 					}
+					delete window[funcName];
 					if (callbacks && callbacks.onError) {
 						callbacks.onError('timeout');
 					}
@@ -37,17 +38,18 @@ require.def(
 				if (timeout) {
 					window.clearTimeout(timeoutHandle);
 				}
-				delete window[funcName];
 				if (callbacks && callbacks.onSuccess) {
 					callbacks.onSuccess(obj);
 				}
+				self.removeElement(script);
+				delete window[funcName];
 			};
 
-			var el = this._createElement("script");
-			el.src = url.replace(callbackFunctionRegExp, funcName);
+			script = this._createElement("script");
+			script.src = url.replace(callbackFunctionRegExp, funcName);
 			var head = document.getElementsByTagName("head")[0];
-			head.appendChild(el);
-			return el;
+			head.appendChild(script);
+			return script;
 		},
 		/**
 		 * Loads a resource from a URL protected by device authentication.
@@ -67,7 +69,7 @@ require.def(
 		 */
 		Device.prototype.loadURL = function(url, opts) {
 			var xhr = new XMLHttpRequest();
-			xhr.open('GET', url, true);
+			xhr.open(opts.method || 'GET', url, true);
 			xhr.onreadystatechange = function() {
 				if (this.readyState == 4) {
 					this.onreadystatechange = null;
@@ -77,7 +79,7 @@ require.def(
 						}
 					} else {
 						if (opts.onError) {
-							opts.onError(this.responseText);
+							opts.onError(this.responseText, this.status);
 						}
 					}
 				}
@@ -89,7 +91,7 @@ require.def(
 			}
 
 			try {
-				xhr.send(null);
+				xhr.send(opts.data || null);
 			} catch(ex) {
 				if (opts.onError) {
 					opts.onError(ex);
@@ -104,50 +106,51 @@ require.def(
 		 * @param {Object} opts Object containing onLoad and onError callback functions.
 		 */
 		Device.prototype.crossDomainPost = function(url, data, opts) {
-			var iframe, form, timeoutHandle;
-			var blank = opts.blankUrl || "blank.html";
-			var blank1 = blank + "#1";
-			var blank2 = blank + "#2";
+			var iframe, form;
+            var postRequestHasBeenSent = false;
+            var blankPageToLoad = opts.blankUrl || "blank.html";
 
-			function timeout() {
+			function iframeLoadTimeoutCallback() {
 				iframe.onload = null;
-				if (opts.onError) opts.onError("timeout");
+				if(opts.onError) opts.onError("timeout");
 			}
 
-			function callback() {
-				var href, err;
+			function iframeLoadedCallback() {
+				var urlLoadedIntoInvisibleIFrame, errorGettingIFrameLocation;
 				try {
-					href = iframe.contentWindow.location.href;
-				} catch (ex) {
-					err = ex;
+					urlLoadedIntoInvisibleIFrame = iframe.contentWindow.location.href;
+				} catch (exception) {
+                    errorGettingIFrameLocation = exception;
 				}
 
-				if (new RegExp(blank1).test(href)) {
-					createForm();
-					for (var name in data) {
-						createField(name, data[name]);
-					}
-					form.submit();
-				} else if (new RegExp(blank2).test(href)) {
-					if (timeoutHandle) {
-						window.clearTimeout(timeoutHandle);
-						timeoutHandle = null;
-					}
-					iframe.onload = null;
-					try {
-						var responseData = iframe.contentWindow.name;
-						iframe.parentNode.removeChild(iframe);
-						if (opts.onLoad) opts.onLoad(responseData);
-					} catch (ex) {
-						if (opts.onError) opts.onError(ex);
-					}
-				} else if (err || !href) {
-					setTimeout(function() {
-						iframe.src = blank2;
-					}, 500);
+				if(errorGettingIFrameLocation || !urlLoadedIntoInvisibleIFrame) {
+					// we didn't load the page - give the browser a second chance to load the iframe
+                    setTimeout(function() { iframe.src = blankPageToLoad+"#2"; }, 500);
+                    return;
 				}
 
-			}
+                if (postRequestHasBeenSent === false) {
+                    postRequestHasBeenSent = true;
+
+                    createForm();
+                    for(var name in data) {
+                        createField(name, data[name]);
+                    }
+                    form.submit();
+                }
+                else {
+                    iframe.onload = null;
+                    try {
+                        var responseData = iframe.contentWindow.name;
+                        iframe.parentNode.removeChild(iframe);
+                        if (opts.onLoad) {
+                            opts.onLoad(responseData);
+                        }
+                    } catch (exception) {
+                        if(opts.onError) opts.onError(exception);
+                    }
+                }
+            }
 
 			function createForm() {
 				var doc = iframe.contentWindow.document;
@@ -158,8 +161,7 @@ require.def(
 			}
 
 			function createField(name, value) {
-				var doc = iframe.contentWindow.document;
-				var input = doc.createElement('input');
+				var input = document.createElement('input');
 				input.type = "hidden";
 				input.name = name;
 				input.value = value;
@@ -170,13 +172,12 @@ require.def(
 				iframe = document.createElement('iframe');
 				iframe.style.width = "0";
 				iframe.style.height = "0";
-				iframe.src = blank1;
-				iframe.onload = callback;
+				iframe.src = blankPageToLoad+"#1";
+				iframe.onload = iframeLoadedCallback;
 				document.body.appendChild(iframe);
 			}
 
-			setTimeout(timeout, (opts.timeout || 10) * 1000);
-			/* 10 second default */
+			setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
 		};
 	}

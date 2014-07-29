@@ -86,10 +86,15 @@ require.def(
 			}
 
 			var currentTranslation = getCurrentTranslation(el);
-			left = (left ? (0 - left) : currentTranslation.left) || 0;
-			top = (top ? (0 - top) : currentTranslation.top) || 0;
+			left = ((left !== null && left !== undefined) ? (0 - left) : currentTranslation.left) || 0;
+			top = ((top !== null && top !== undefined) ? (0 - top) : currentTranslation.top) || 0;
 
 			var newTranslation = _translate + "(" + left + "px, " + top + "px" + (_supports3D ? ", 0" : "") + ")";
+			if(el.lastAntieCSS3Scroll === newTranslation) {
+				skipAnim = true;
+			} else {
+				el.lastAntieCSS3Scroll = newTranslation;
+			}
 
 			//this.getLogger().debug('Scrolling ' + el.id + ' to ' + left + ',' + top + '... ' + newTranslation);
 			if(skipAnim) {
@@ -141,8 +146,8 @@ require.def(
 			// work animating them.
 
 			var currentTranslation = getCurrentTranslation(el);
-			left = ((left != null) ? left : currentTranslation.left) || 0;
-			top = ((top != null) ? top : currentTranslation.top) || 0;
+			left = ((left !== null && left !== undefined) ? left : currentTranslation.left) || 0;
+			top = ((top !== null && top !== undefined) ? top : currentTranslation.top) || 0;
 
 			var newTranslation = _translate + "(" + left + "px, " + top + "px" + (_supports3D ? ", 0" : "") + ")";
 	
@@ -270,11 +275,11 @@ require.def(
 		};
 		
 
-        /**
-        * Describes if the device supports animation or not.
-        */
-        Device.prototype.isAnimationDisabled = function(){
-            return false;
-        };
+		/**
+		* Describes if the device supports animation or not.
+		*/
+		Device.prototype.isAnimationDisabled = function(){
+			return false;
+		};
 	}
 );

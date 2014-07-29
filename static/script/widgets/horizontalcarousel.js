@@ -8,9 +8,10 @@ require.def('antie/widgets/horizontalcarousel',
 	[
 	 	'antie/widgets/horizontallist',
 	 	'antie/widgets/list',
-	 	'antie/events/keyevent'
+	 	'antie/events/keyevent',
+		'antie/events/beforeselecteditemchangeevent'
 	],
-	function(HorizontalList, List, KeyEvent) {
+	function(HorizontalList, List, KeyEvent, BeforeSelectedItemChangeEvent) {
 		/**
 		 * The HorizontalCarousel widget extends the HorizontalList widget to modify the animation behaviour to render a carousel rather than a list.
 		 * @name antie.widgets.HorizontalCarousel
@@ -27,7 +28,7 @@ require.def('antie/widgets/horizontalcarousel',
 			 * @constructor
 			 * @ignore
 			 */
-			init: function(id, itemFormatter, dataSource, overrideAnimation) {
+			init: function(id, itemFormatter, dataSource, overrideAnimation, activeWidgetAlignment, BeforeSelectedItemChangeEvent) {
 				this._prefixClones = 0;
 				this._wrapMode = HorizontalCarousel.WRAP_MODE_VISUAL;
 				this._viewportMode = HorizontalCarousel.VIEWPORT_MODE_NONE;
@@ -37,15 +38,21 @@ require.def('antie/widgets/horizontalcarousel',
 				this._keepHidden = false;
 				this._multiWidthItems = false;
 				this._overrideAnimation = overrideAnimation;
+				this._activeWidgetAlignment = activeWidgetAlignment || HorizontalCarousel.ALIGNMENT_CENTER;
 
 				this._nodeOffset = 0;
 				this._childWidgetsInDocument = [];
+				this._paddingItemsCreated = false;
 
 				this._super(id, itemFormatter, dataSource);
 				this.addClass('horizontalcarousel');
 
 				var self = this;
 				this.addEventListener('databound', function(evt) {
+					if(evt.target !== self) {
+						return;
+					}
+
 					// Delaying this because our mask might not have a size yet. Shouldn't be a problem for dynamic data
 					// source, only for static carousels (such as the menu). It's been found to need to differ on
 					// devices.
@@ -150,7 +157,8 @@ require.def('antie/widgets/horizontalcarousel',
 					// reposition the carousel over the active item
 					var elpos = device.getElementOffset(_centerWidget.outputElement);
 					var elsize = device.getElementSize(_centerWidget.outputElement);
-					device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
+					this._alignToElement(_centerWidget.outputElement, true);
+					//device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
 
 					this.setAutoRenderChildren(false);
 				} else if((this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_CLASSES) && this.outputElement && _centerWidget.outputElement) {
@@ -225,7 +233,9 @@ require.def('antie/widgets/horizontalcarousel',
 						var device = this.getCurrentApplication().getDevice();
 						var elpos = device.getElementOffset(this._activeChildWidget.outputElement);
 						var elsize = device.getElementSize(this._activeChildWidget.outputElement);
-						device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
+						this._alignToElement(this._activeChildWidget.outputElement, true);
+
+						//device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
 					}
 					this.refreshViewport();
 				}
@@ -345,19 +355,22 @@ require.def('antie/widgets/horizontalcarousel',
 					}
 
 					if(this._wrapMode != HorizontalCarousel.WRAP_MODE_VISUAL) {
-						var paddingFunction = (this._renderMode == List.RENDER_MODE_LIST)
-												? device.createListItem
-												: device.createContainer;
+						if(this._paddingItemsCreated) {
+							var paddingFunction = (this._renderMode == List.RENDER_MODE_LIST)
+													? device.createListItem
+													: device.createContainer;
 
-						var leftPadding = paddingFunction.call(device, this.id + 'PaddingLeft', ['viewportPadding', 'viewportPaddingLeft']);
-						device.setElementSize(leftPadding, {width: maskSize.width});
-						device.prependChildElement(this.outputElement, leftPadding);
+							var leftPadding = paddingFunction.call(device, this.id + 'PaddingLeft', ['viewportPadding', 'viewportPaddingLeft']);
+							device.setElementSize(leftPadding, {width: maskSize.width});
+							device.prependChildElement(this.outputElement, leftPadding);
 
-						var rightPadding = paddingFunction.call(device, this.id + 'PaddingRight', ['viewportPadding', 'viewportPaddingRight']);
-						device.setElementSize(rightPadding, {width: maskSize.width});
-						device.appendChildElement(this.outputElement, rightPadding);
+							var rightPadding = paddingFunction.call(device, this.id + 'PaddingRight', ['viewportPadding', 'viewportPaddingRight']);
+							device.setElementSize(rightPadding, {width: maskSize.width});
+							device.appendChildElement(this.outputElement, rightPadding);
 
-						prefixClones = 1;
+							prefixClones = 1;
+						}
+						this._paddingItemsCreated = true;
 					} else {
 						// TODO: there's an optimisation we could do here, but it may not work with all carousels
 						// TODO: especially those that have different sized elements.
@@ -418,7 +431,8 @@ require.def('antie/widgets/horizontalcarousel',
 					if(this._activeChildWidget && (this._viewportMode != HorizontalCarousel.VIEWPORT_MODE_DOM)) {
 						var elpos = device.getElementOffset(this._activeChildWidget.outputElement);
 						var elsize = device.getElementSize(this._activeChildWidget.outputElement);
-						device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
+						this._alignToElement(this._activeChildWidget.outputElement, true);
+						//device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
 					}
 
 					this.refreshViewport();
@@ -445,6 +459,13 @@ require.def('antie/widgets/horizontalcarousel',
 				}
 				this._wrapMode = wrapMode;
 			},
+			/**
+			 * Set method used to control which carousel items are in this rendered DOM
+			 * @param {Integer} viewportMode One of <code>HorizontalCarousel.VIEWPORT_MODE_NONE</code>,
+			 *							   <code>HorizontalCarousel.VIEWPORT_MODE_DOM</code> or 
+			 *							   <code>HorizontalCarousel.VIEWPORT_MODE_CLASSES</code>.
+			 * @param {Integer} size		 Number of items in the viewport.
+			 */
 			setViewportMode: function(viewportMode, size) {
 				if(this._wrapMode == HorizontalCarousel.WRAP_MODE_VISUAL) {
 					if(viewportMode == HorizontalCarousel.VIEWPORT_MODE_DOM) {
@@ -461,6 +482,24 @@ require.def('antie/widgets/horizontalcarousel',
 				}
 				this._viewportMode = viewportMode;
 				this._viewportSize = size;
+			},
+			/**
+			 * Set the alignment of the active item.
+			 * @param {Integer} align		One of <code>HorizontalCarousel.ALIGNMENT_CENTER</code> (default),
+			 *							   <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or 
+			 *							   <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
+			 */
+			setAlignment: function(align) {
+				this._activeWidgetAlignment = align;  
+			},
+			/**
+			 * Get the current alignment of the active item.
+			 * @returns {Integer} One of <code>HorizontalCarousel.ALIGNMENT_CENTER</code>,
+			 *							   <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or 
+			 *							   <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
+			 */			
+			getAlignment: function() {
+				return this._activeWidgetAlignment;	
 			},
 			/**
 			 * Set whether the carousel contains items of differing widths. When all items are the
@@ -555,6 +594,8 @@ require.def('antie/widgets/horizontalcarousel',
 				if (_newSelectedWidget) {
 					var self = this;
 
+					this.bubbleEvent(new BeforeSelectedItemChangeEvent(this, _newSelectedWidget, _newIndex));
+
 					function scrollDone() {
 						if (!self._activateThenScroll) {
 							self.setActiveChildWidget(_newSelectedWidget);
@@ -567,17 +608,19 @@ require.def('antie/widgets/horizontalcarousel',
 							var elpos = device.getElementOffset(self._activeChildWidget.outputElement);
 							var elsize = device.getElementSize(self._activeChildWidget.outputElement);
 	
-							if (_nodeIndex <= self._prefixClones) {
+							/*if (_nodeIndex <= self._prefixClones) {
 								device.scrollElementToCenter(self._maskElement, elpos.left + (elsize.width / 2), null, true);
 							} else if(_nodeIndex >= self._childWidgetOrder.length) {
 								device.scrollElementToCenter(self._maskElement, elpos.left + (elsize.width / 2), null, true);
-							}
+							}*/
+							self._alignToElement(self._activeChildWidget.outputElement, true);
 						}
 
 						self._scrollHandle = null;
 					}
 					// TODO: would be quicker to keep a list of these internally
 					var nodeList = device.getChildElementsByTagName(this.outputElement, (this._renderMode == List.RENDER_MODE_LIST) ? 'li' : 'div');
+					var centerElement = nodeList[_nodeIndex - this._nodeOffset];
 					var elpos = device.getElementOffset(nodeList[_nodeIndex - this._nodeOffset]);
 					var elsize = device.getElementSize(nodeList[_nodeIndex - this._nodeOffset]);
 
@@ -594,8 +637,9 @@ require.def('antie/widgets/horizontalcarousel',
 
 					var config = device.getConfig();
 					var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.animate !== false);
-					this._scrollHandle = device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, this._isAnimationOverridden(animate), scrollDone);
-					
+					//this._scrollHandle = device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, this._isAnimationOverridden(animate), scrollDone);
+					this._scrollHandle = this._alignToElement(centerElement, this._isAnimationOverridden(animate), scrollDone);
+
 					return true;
 				} else {
 					return false;
@@ -604,8 +648,34 @@ require.def('antie/widgets/horizontalcarousel',
 
 			_isAnimationOverridden : function(animate) {
 				return this._overrideAnimation || !animate; 
+			},
+
+			_alignToElement: function(el, skipAnimation, onAnimationCompleteHandler) {
+				var device = this.getCurrentApplication().getDevice();
+				var widgetpos = device.getElementOffset(el);
+				var widgetsize = device.getElementSize(el);
+				var masksize = device.getElementSize(this._maskElement);
+
+				var newLeftPosition;
+				switch(this._activeWidgetAlignment) {
+					case HorizontalCarousel.ALIGNMENT_CENTER:
+						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width)/2;
+						break;
+					case HorizontalCarousel.ALIGNMENT_LEFT:
+						newLeftPosition = widgetpos.left;
+						break;
+					case HorizontalCarousel.ALIGNMENT_RIGHT:
+						newLeftPosition = widgetpos.left - (masksize.width - widgetsize.width);
+						break;
+				}
+
+				return device.scrollElementTo(this._maskElement, newLeftPosition, null, skipAnimation, onAnimationCompleteHandler);
 			}
 		});
+
+		HorizontalCarousel.ALIGNMENT_CENTER = 0;
+		HorizontalCarousel.ALIGNMENT_LEFT = 1;
+		HorizontalCarousel.ALIGNMENT_RIGHT = 2;
 
 		HorizontalCarousel.SELECTION_DIRECTION_RIGHT = 'right';
 		HorizontalCarousel.SELECTION_DIRECTION_LEFT = 'left';

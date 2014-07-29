@@ -56,7 +56,6 @@
 				}
 		);
 	};
-
 	this.HorizontalCarouselTest.prototype.testRenderInnerElements = function(queue) {
 	   expectAsserts(8);
 
@@ -88,7 +87,6 @@
 			   }
 	   );
    };
-
  	this.HorizontalCarouselTest.prototype.testRenderTwice = function(queue) {
 		expectAsserts(1);
 
@@ -175,6 +173,134 @@
 					var device = application.getDevice();
 					var el = widget.render(device);
 					assertMatch(/_mask$/, el.id);
+				}
+		);
+	};
+ 	this.HorizontalCarouselTest.prototype.testAlignmentCenter = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/horizontalcarousel", "antie/widgets/list", "antie/widgets/button"],
+				function(application, HorizontalCarousel, List, Button) {
+					var device = application.getDevice();
+
+					var widget = new HorizontalCarousel("id");
+					widget.setAlignment(HorizontalCarousel.ALIGNMENT_CENTER);
+					var el = widget.render(device);
+					el.style.width = "150px";
+					el.style.height = "100px";
+					el.style.outline = "1px solid red";
+
+					application.getRootWidget().appendChildWidget(widget);
+
+					var b1 = new Button();
+					var b2 = new Button();
+					widget.appendChildWidget(b1);
+					widget.appendChildWidget(b2);
+
+					b1.outputElement.style.position = "relative";
+					b1.outputElement.style.width = "100px";
+					b1.outputElement.style.height = "100px";
+					b1.outputElement.style.outline = "1px solid blue";
+					b2.outputElement.style.position = "relative";
+					b2.outputElement.style.width = "100px";
+					b2.outputElement.style.height = "100px";
+					b2.outputElement.style.outline = "1px solid green";
+
+					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+
+					widget.setActiveChildIndex(1, true);
+
+					assert(deviceScrollElementSpy.called);
+
+					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					assertEquals(75, pos);
+				}
+		);
+	};
+ 	this.HorizontalCarouselTest.prototype.testAlignmentLeft = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/horizontalcarousel", "antie/widgets/list", "antie/widgets/button"],
+				function(application, HorizontalCarousel, List, Button) {
+					var device = application.getDevice();
+
+					var widget = new HorizontalCarousel("id");
+					widget.setAlignment(HorizontalCarousel.ALIGNMENT_LEFT);
+					var el = widget.render(device);
+					el.style.width = "150px";
+
+					application.getRootWidget().appendChildWidget(widget);
+
+					var b1 = new Button();
+					var b2 = new Button();
+					widget.appendChildWidget(b1);
+					widget.appendChildWidget(b2);
+
+					b1.outputElement.style.position = "relative";
+					b1.outputElement.style.width = "100px";
+					b1.outputElement.style.height = "100px";
+					b1.outputElement.style.outline = "1px solid blue";
+					b2.outputElement.style.position = "relative";
+					b2.outputElement.style.width = "100px";
+					b2.outputElement.style.height = "100px";
+					b2.outputElement.style.outline = "1px solid green";
+
+					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+
+					widget.setActiveChildIndex(1, true);
+
+					assert(deviceScrollElementSpy.called);
+
+					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					assertEquals(100, pos);
+				}
+		);
+	};
+ 	this.HorizontalCarouselTest.prototype.testAlignmentRight = function(queue) {
+		expectAsserts(2);
+
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/horizontalcarousel", "antie/widgets/list", "antie/widgets/button"],
+				function(application, HorizontalCarousel, List, Button) {
+					var device = application.getDevice();
+
+					var widget = new HorizontalCarousel("id");
+					widget.setAlignment(HorizontalCarousel.ALIGNMENT_RIGHT);
+					var el = widget.render(device);
+					el.style.width = "150px";
+
+					application.getRootWidget().appendChildWidget(widget);
+
+					var b1 = new Button();
+					var b2 = new Button();
+					widget.appendChildWidget(b1);
+					widget.appendChildWidget(b2);
+
+					b1.outputElement.style.position = "relative";
+					b1.outputElement.style.width = "100px";
+					b1.outputElement.style.height = "100px";
+					b1.outputElement.style.outline = "1px solid blue";
+					b2.outputElement.style.position = "relative";
+					b2.outputElement.style.width = "100px";
+					b2.outputElement.style.height = "100px";
+					b2.outputElement.style.outline = "1px solid green";
+
+					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+
+					widget.setActiveChildIndex(1, true);
+
+					assert(deviceScrollElementSpy.called);
+
+					var pos = deviceScrollElementSpy.getCall(0).args[1];
+					assertEquals(50, pos);
 				}
 		);
 	};

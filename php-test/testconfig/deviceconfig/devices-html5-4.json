@@ -1,25 +1,21 @@
 {
   "modules": {
-    "base": "tvpjsframework/devices/browserdevice",
+    "base": "antie/devices/browserdevice",
     "modifiers": [
-      "tvpjsframework/devices/anim/css3",
-      "tvpjsframework/devices/media/html5",
-      "tvpjsframework/devices/net/default",
-      "tvpjsframework/devices/data/json2",
-      "tvpjsframework/devices/logging/default"
+      "antie/devices/anim/css3",
+      "antie/devices/media/html5",
+      "antie/devices/net/default",
+      "antie/devices/data/json2",
+      "antie/devices/logging/default",
+      "antie/devices/storage/cookie"
     ]
   },
   "logging": {
-  	"level": "all"
-  },
-  "mediasets": {
-    "tv": "stb-all-h264",
-    "radio": "stb-aac"
+  	"level": "none"
   },
   "streaming": {
     "video": {
       "mediaSelectorAPI": "jsfunc",
-      "mediaSelectorURI": "https://ipsecure.stage.bbc.co.uk/mediaselector/4/jsfunc/stream/%vpid%/%callback%",
       "mediaURIFormat": "%href%",
       "supported": [
         {
@@ -36,7 +32,6 @@
     },
     "audio": {
       "mediaSelectorAPI": "jsfunc",
-      "mediaSelectorURI": "https://ipsecure.stage.bbc.co.uk/mediaselector/4/jsfunc/stream/%vpid%/%callback%",
       "mediaURIFormat": "%href%",
       "supported": [
         {
@@ -72,7 +67,7 @@
     {
       "width": 960,
       "height": 540,
-      "module": "frameworkdemo/appui/layouts/540p",
+      "module": "%application%/appui/layouts/540p",
       "classes": [
         "browserdevice540p"
       ]
@@ -80,7 +75,7 @@
     {
       "width": 1280,
       "height": 720,
-      "module": "frameworkdemo/appui/layouts/720p",
+      "module": "%application%/appui/layouts/720p",
       "classes": [
         "browserdevice720p"
       ]
@@ -88,7 +83,7 @@
     {
       "width": 1920,
       "height": 1080,
-      "module": "frameworkdemo/appui/layouts/1080p",
+      "module": "%application%/appui/layouts/1080p",
       "classes": [
         "browserdevice1080p"
       ]

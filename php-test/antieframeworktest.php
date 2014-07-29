@@ -26,28 +26,38 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase{
 	}
 
 	function testDefaultDeviceHasNoHeaders() {
-		$this->assertEquals('', $this->framework->getDeviceHeaders('default_brand', 'default_model'));
+		$this->assertEquals('', $this->framework->getDeviceHeaders('default_brand', 'default_model', $this->getHtml5DeviceConfig()));
 	}
 
-	function testSamsungHasSpecialDeviceHeaders() {
-		$headers = $this->framework->getDeviceHeaders('Samsung', '');
-		$file = AntieFrameworkTest::$frameworkDir.'/devicefragments/header/samsung/generic';
-		$this->assertStringEqualsFile($file, $headers);		
+	function testSamsung2012HasNoDeviceHeaders() {
+		$headers = $this->framework->getDeviceHeaders('Samsung', '', $this->getSamsung2012DeviceConfig());
+		$this->assertNull($headers);		
 	}
 	
-	function testSamsungDeviceBody() {
-		$body = $this->framework->getDeviceBody('Samsung', '');
+	function testSamsung2012HasNoDeviceBody() {
+		$body = $this->framework->getDeviceBody('Samsung', '', $this->getSamsung2012DeviceConfig());
+		$this->assertNull($body);
+	}
+		
+	function testSamsungMapleHasSpecialDeviceHeaders() {
+		$headers = $this->framework->getDeviceHeaders('Samsung', '', $this->getSamsungMapleDeviceConfig());
+		$file = AntieFrameworkTest::$frameworkDir.'/devicefragments/header/samsung/generic';
+		$this->assertStringEqualsFile($file, $headers);
+	}
+	
+	function testSamsungMapleHasSpecialDeviceBody() {
+		$body = $this->framework->getDeviceBody('Samsung', '', $this->getSamsungMapleDeviceConfig());
 		$file = AntieFrameworkTest::$frameworkDir.'/devicefragments/body/samsung/generic';
 		$this->assertStringEqualsFile($file, $body);
 	}
 	
 	function testSonyDeviceBody() {
-		$body = $this->framework->getDeviceBody('Sony', '');
+		$body = $this->framework->getDeviceBody('Sony', '', $this->getPS3DeviceConfig());
 		$this->assertEquals('', $body);
 	}
 	
 	function testSonyPlaystation3DeviceBody() {
-		$body = $this->framework->getDeviceBody('Sony', 'Playstation 3');
+		$body = $this->framework->getDeviceBody('Sony', 'Playstation 3', $this->getPS3DeviceConfig());
 		$file = AntieFrameworkTest::$frameworkDir.'/devicefragments/body/sony/playstation3';
 		$this->assertStringEqualsFile($file, $body);
 	}
@@ -61,20 +71,35 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	function testGetDeviceConfig() {
-		$deviceConfigJSON = json_decode($this->framework->getConfigurationFromFilesystem('devices-sony-playstation_3-1','deviceconfig'));
-		$this->assertEquals('tvpjsframework/devices/ps3', $deviceConfigJSON->modules->base);
+		$deviceConfigJSON = $this->getPS3DeviceConfig();
+		$this->assertEquals('antie/devices/ps3', $deviceConfigJSON->modules->base);
 	}
 	
 	function testGetAppConfig() {
 		$appConfigJSON = json_decode($this->framework->getConfigurationFromFilesystem('sony-playstation_3','applicationconfig'));
-		$this->assertEquals('devices-sony-playstation_3-1', $appConfigJSON->deviceConfigurationKey);
+		$this->assertEquals('devices-sony-playstation_3-5', $appConfigJSON->deviceConfigurationKey);
 	}	
 	
 	function testAppConfigOverridesDeviceConfigWhenMerged() {
-		$deviceConfigJSON = json_decode($this->framework->getConfigurationFromFilesystem('devices-html5-1','deviceconfig'));
+		$deviceConfigJSON = $this->getHtml5DeviceConfig();
 		$appConfigJSON = json_decode($this->framework->getConfigurationFromFilesystem('chrome-1_0','applicationconfig'));
 		$mergedConfig = AntieFramework::mergeConfigurations($deviceConfigJSON, $appConfigJSON);
 		$this->assertEquals('overridetest', $mergedConfig->mediasets->tv);	
 	}
 
+	function getSamsung2012DeviceConfig() {
+		return json_decode($this->framework->getConfigurationFromFilesystem('devices-samsung-tv_2012-1','deviceconfig'));
+	}
+
+	function getSamsungMapleDeviceConfig() {
+		return json_decode($this->framework->getConfigurationFromFilesystem('devices-samsung-4','deviceconfig'));
+	}
+	
+	function getPS3DeviceConfig() {
+		return json_decode($this->framework->getConfigurationFromFilesystem('devices-sony-playstation_3-5','deviceconfig'));
+	}
+	
+	function getHtml5DeviceConfig() {
+		return json_decode($this->framework->getConfigurationFromFilesystem('devices-html5-4','deviceconfig'));
+	}
 }

@@ -41,6 +41,7 @@ require.def('antie/widgets/list',
 				this._dataBound = false;
 				this._totalDataItems = 0;
 				this._renderMode = List.RENDER_MODE_CONTAINER;
+				this._dataBindingOrder = List.DATA_BIND_FORWARD;
 
 				this._super(id);
 				this.addClass('list');
@@ -133,7 +134,14 @@ require.def('antie/widgets/list',
 					var iterator = (data instanceof Iterator) ? data : new Iterator(data);
 					while (iterator.hasNext()) {
 						var i = iterator._currentIndex;
-						self.appendChildWidget(self._itemFormatter.format(iterator))._listIndex = i;
+
+						var w = self._itemFormatter.format(iterator);
+						w._listIndex = i;
+						if(self._dataBindingOrder === List.DATA_BIND_FORWARD) {
+							self.appendChildWidget(w)
+						} else if(self._dataBindingOrder === List.DATA_BIND_REVERSE){
+							self.insertChildWidget(0, w);
+						}
 					}
 					self._totalDataItems = iterator._currentIndex;
 
@@ -298,6 +306,14 @@ require.def('antie/widgets/list',
 
 				this._totalDataItems = 0;
 				return this._super();
+			},
+
+			setDataBindingOrder: function(order) {
+				this._dataBindingOrder = order;
+			},
+
+			getDataBindingOrder: function() {
+				return this._dataBindingOrder;
 			}
 		});
 
@@ -317,6 +333,9 @@ require.def('antie/widgets/list',
 		 * @static
 		 */
 		List.RENDER_MODE_LIST = 2;
+
+		List.DATA_BIND_FORWARD = 0;
+		List.DATA_BIND_REVERSE = 1;
 
 		return List;
 	}

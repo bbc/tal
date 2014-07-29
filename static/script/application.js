@@ -48,7 +48,7 @@ require.def('antie/application',
 				if(applicationObject) {
 					throw new Error("Application::init called for a second time. You can only have one application instance running at any time.");
 				}
-				this._device = null;
+				//this._device = null;
 				this._rootElement = rootElement;
 				this._rootWidget = null;
 				this._focussedWidget = null;
@@ -57,34 +57,40 @@ require.def('antie/application',
 				applicationObject = this;
 
 				var self = this;
+
 				var _configuration = configOverride || antie.framework.deviceConfiguration;
-				Device.load(_configuration, {
-					onSuccess: function(device) {
-						self._device = device;
-						device.setApplication(self);
-						device.addKeyEventListener();
-						var _layout = self.getBestFitLayout();
-						_layout.css = _layout.css || [];
-						if (_configuration.css){
-							for (var i = 0; i < _configuration.css.length; i++){
-								if  (  _configuration.css[i].width == _layout.width
-									&& _configuration.css[i].height == _layout.height){
-									_layout.css = _layout.css.concat(_configuration.css[i].files);
-								}
+				if(!this._device) {
+					Device.load(_configuration, {
+						onSuccess: deviceLoaded,
+						onError: function(err) {
+							console.error("Unable to load device", err);
+						}
+					});
+				} else {
+					deviceLoaded(this._device);
+				}
+				function deviceLoaded(device) {
+					self._device = device;
+					device.setApplication(self);
+					device.addKeyEventListener();
+					var _layout = self.getBestFitLayout();
+					_layout.css = _layout.css || [];
+					if (_configuration.css){
+						for (var i = 0; i < _configuration.css.length; i++){
+							if  (  _configuration.css[i].width == _layout.width
+								&& _configuration.css[i].height == _layout.height){
+								_layout.css = _layout.css.concat(_configuration.css[i].files);
 							}
 						}
-						
-						require([_layout.module], function(layout) {
-							self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function() {
-								self.run();
-								self.route(device.getCurrentRoute());
-							});
-						});
-					},
-					onError: function(err) {
-						console.error("Unable to load device", err);
 					}
-				});
+					
+					require([_layout.module], function(layout) {
+						self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function() {
+							self.run();
+							self.route(device.getCurrentRoute());
+						});
+					});
+				}
 			},
 			/**
 			 * Called once application startup is ready (i.e. config has been loaded).

@@ -13,17 +13,27 @@ class AntieFramework {
 	public function getDocType($brand, $model) {
 		return "<!DOCTYPE html>";
 	}
+
+	protected function isSamsungMapleBrowser($brand, $deviceConfig) {
+		return $brand == 'Samsung' && !$this->isHtml5Browser($deviceConfig);
+	}
 	
-	public function getDeviceHeaders($brand, $model) {
-		if($brand == "Samsung") {
+	protected function isHtml5Browser($deviceConfig) {
+		return in_array("antie/devices/media/html5", $deviceConfig->modules->modifiers);
+	}	
+	
+	public function getDeviceHeaders($brand, $model, $deviceConfig) {
+		if($this->isSamsungMapleBrowser($brand, $deviceConfig)) {
 			return $this->getDeviceFragment($this->_configPath.'devicefragments/header/samsung/generic', 'Samsung', 'Header');
 		}
 	}
-	
-	public function getDeviceBody($brand, $model) {
+
+	public function getDeviceBody($brand, $model, $deviceConfig) {
 		switch($brand) {
 			case 'Samsung':
-				return $this->getDeviceFragment($this->_configPath.'devicefragments/body/samsung/generic', 'Samsung', 'Body');
+         if($this->isSamsungMapleBrowser($brand, $deviceConfig)) {
+				    return $this->getDeviceFragment($this->_configPath.'devicefragments/body/samsung/generic', 'Samsung', 'Body');
+         }
 			break;
 			case 'Sony':
 				if ($model == 'Playstation 3') {
