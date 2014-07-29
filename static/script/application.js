@@ -1,40 +1,30 @@
 /**
  * @fileOverview Requirejs module containing the antie.Application class.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @author Chris Warren <chris.warren@bbc.co.uk>
+ * @version 1.0.0
+ */
+
+/**
+ * The top-level antie namespace.
+ * @name antie
+ * @namespace
  */
 
 require.def('antie/application',
 	[
 	 	'antie/class',
-	 	'antie/runtimecontext',
 	 	'antie/widgets/componentcontainer',
 		'antie/widgets/button',
 		'antie/widgets/list',
 		'antie/devices/device'
 	],
-	function(Class, RuntimeContext, ComponentContainer, Button, List, Device) {
-		
+	function(Class, ComponentContainer, Button, List, Device) {
+		/**
+		 * Contains a reference to the single instance of the antie.Application class.
+		 * @private
+		 */
+		var applicationObject;
+
 		/**
 		 * Abstract base class for Bigscreen applications.
 		 * @name antie.Application
@@ -55,49 +45,46 @@ require.def('antie/application',
 			 * @ignore
 			 */
 			init: function(rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride) {
-				RuntimeContext.setCurrentApplication(this);
-
+				if(applicationObject) {
+					throw new Error("Application::init called for a second time. You can only have one application instance running at any time.");
+				}
+				this._device = null;
 				this._rootElement = rootElement;
 				this._rootWidget = null;
 				this._focussedWidget = null;
 				this._onReadyHandler = onReadyHandler;
 
-				var self = this;
+				applicationObject = this;
 
+				var self = this;
 				var _configuration = configOverride || antie.framework.deviceConfiguration;
-				if(!this._device) {
-					Device.load(_configuration, {
-						onSuccess: deviceLoaded,
-						onError: function(err) {
-							console.error("Unable to load device", err);
-						}
-					});
-				} else {
-					deviceLoaded(this._device);
-				}
-				function deviceLoaded(device) {
-				    var i;
-					self._device = device;
-					device.setApplication(self);
-					device.addKeyEventListener();
-					var _layout = self.getBestFitLayout();
-					_layout.css = _layout.css || [];
-					if (_configuration.css){
-						for ( i = 0; i < _configuration.css.length; i++){
-							if  (  _configuration.css[i].width == _layout.width
-								&& _configuration.css[i].height == _layout.height){
-								_layout.css = _layout.css.concat(_configuration.css[i].files);
+				Device.load(_configuration, {
+					onSuccess: function(device) {
+						self._device = device;
+						device.setApplication(self);
+						device.addKeyEventListener();
+						var _layout = self.getBestFitLayout();
+						_layout.css = _layout.css || [];
+						if (_configuration.css){
+							for (var i = 0; i < _configuration.css.length; i++){
+								if  (  _configuration.css[i].width == _layout.width
+									&& _configuration.css[i].height == _layout.height){
+									_layout.css = _layout.css.concat(_configuration.css[i].files);
+								}
 							}
 						}
-					}
-					
-					require([_layout.module], function(layout) {
-						self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function() {
-							self.run();
-							self.route(device.getCurrentRoute());
+						
+						require([_layout.module], function(layout) {
+							self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function() {
+								self.run();
+								self.route(device.getCurrentRoute());
+							});
 						});
-					});
-				}
+					},
+					onError: function(err) {
+						console.error("Unable to load device", err);
+					}
+				});
 			},
 			/**
 			 * Called once application startup is ready (i.e. config has been loaded).
@@ -122,7 +109,6 @@ require.def('antie/application',
 			 * @returns An object literal describing which layout module to load.
 			 */
 			getBestFitLayout: function() {
-			    var i;
 				var _screenSize = this._device.getScreenSize();
 				var _layouts = this._device.getConfig().layouts;
 
@@ -135,7 +121,7 @@ require.def('antie/application',
 					else return -1;
 				});
 				var _module;
-				for(i in _layouts) {
+				for(var i in _layouts) {
 					if((_screenSize.height >= _layouts[i].height) && (_screenSize.width >= _layouts[i].width)) {
 						return _layouts[i];
 					}
@@ -149,7 +135,7 @@ require.def('antie/application',
 			/**
 			 * Sets the current layout used by the application.
 			 * @param {Object} layout An application-specific object literal describing layout-specific properties
-			 * @param {String} styleBaseUrl Base URL of stylesheets for the application.
+			 * @param {String} stlyeBaseUrl Base URL of stylesheets for the application.
 			 * @param {String} imageBaseUrl Base URL of images for the application.
 			 * @param {Array} [additionalCSS] Additional stylesheet URLs to load.
 			 * @param {Array} [additionalClasses] Additional classes to add to the document element.
@@ -157,15 +143,14 @@ require.def('antie/application',
 			 * @param {function()} [callback] Callback function to call when layout has been fully loaded.
 			 */
 			setLayout: function(layout, styleBaseUrl, imageBaseUrl, additionalCSS, additionalClasses, additionalPreloadImages, callback) {
-			    var i;
 				this._layout = layout;
 				var tle = this._device.getTopLevelElement();
-                
+
 				var classes = layout.classes || [];
 				if(additionalClasses) {
 					classes = classes.concat(additionalClasses);
 				}
-				for(i = 0; i !== classes.length; i += 1) {
+				for(var i in classes) {
 					this._device.addClassToElement(tle, classes[i]);
 				}
 
@@ -173,7 +158,7 @@ require.def('antie/application',
 				if(additionalPreloadImages) {
 					preloadImages = preloadImages.concat(additionalPreloadImages);
 				}
-				for(i = 0; i !== preloadImages.length; i += 1) {
+				for(var i in preloadImages) {
 					this._device.preloadImage(imageBaseUrl + preloadImages[i]);
 				}
 
@@ -193,7 +178,7 @@ require.def('antie/application',
 					}
 					cssLoadedCallback();
 				} else {
-					for(i = 0; i !== css.length; i += 1) {
+					for(var i in css) {
 						this._device.loadStyleSheet(styleBaseUrl + css[i]);
 					}
 				}
@@ -249,6 +234,12 @@ require.def('antie/application',
 				}
 
 				return container;
+			},
+			/**
+			 * @deprecated Please use {@see #addComponentContainer}.
+			 */
+			addComponent: function(id, module, args) {
+				return this.addComponentContainer(id, module, args);
 			},
 			/**
 			 * Show a component in a component container. This resets any history for the container.
@@ -390,137 +381,13 @@ require.def('antie/application',
 			route: function(route) {
 				// intentionally left blank
 			},
-            /**
-             * Launch a new application at the specified URL, passing in query string data and
-             * a route.
-             * @param {String}  url         The URL to launch (include protocol, host and port)
-             * @param {Object}  [data]      Parameters to pass in the query string. Property names are keys. Values are sent as strings. Use {undefined} as a value to send a valueless key.
-             * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
-             * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
-             */
-            launchAppFromURL: function(url, data, route, overwrite) {
-                var query = '';
-                var hash = '';
-                var key;
-                var completeUrl = '';
-
-                // Get existing query data, or start a brand new object if applicable.
-                var mergedData = overwrite ? {} : this.getCurrentAppURLParameters();
-
-                // Merge in the query data passed to this function, which takes precedence over anything existing.
-                if (data) {
-                    for (key in data) {
-                        if (data.hasOwnProperty(key)) {
-                            mergedData[key] = data[key]; // No need to escape here...
-                        }
-                    }
-                }
-                // Construct a query string out of the merged data.
-                for (key in mergedData) {
-                    if (mergedData.hasOwnProperty(key)) {
-                        // Keys with values get 'key=value' syntax, valueless keys just get 'key'
-                        if (mergedData[key] === undefined || mergedData[key] === null) {
-                            query += window.encodeURIComponent(key) + '&';
-                        }
-                        else {
-                            query += window.encodeURIComponent(key) + '=' + window.encodeURIComponent(mergedData[key]) + '&'; 
-                        }
-                    }
-                }
-                // Trim the last & off, add a leading ?
-                if (query.length > 0) {
-                    query = '?' + query.slice(0, -1);
-                }
-
-                // Construct the route string.
-                if (route && route.length > 0) {
-                    hash = '#' + route.join('/');
-                }
-                
-                completeUrl = this.getDevice().getHistorian().forward(url + query + hash);
-                
-                // Send the browser to the final URL
-                this.getDevice().setWindowLocationUrl(completeUrl);
-            },
-            /**
-             * Return the URL of the current application, with no route or query string information -
-             * @see getCurrentRoute(), @see getCurrentAppURLParameters().
-             * @returns {String} URL of the current application, including protocol, host and port.
-             */
-            getCurrentAppURL: function() {
-                var location = this.getDevice().getWindowLocation();
-                return location.protocol + '//' + location.host + location.pathname;
-            },
-            /**
-             * Returns the query string of the current application as an object containing properties with
-             * string values.
-             * Keys without values are represented by properties with the value 'undefined'. Empty string values are
-             * represented in the object as a property with an empty string value.
-             * @returns {Object} Object containing properties held in the query string.
-             */
-            getCurrentAppURLParameters: function() {
-                var location = this.getDevice().getWindowLocation();
-                if (!location.search) {
-                    return {};
-                }
-
-                // Split query string to array by & character
-                var queryKeyValuePairs = location.search.replace(/^\?/, '').split('&');
-                var queryKeyValuePair, value;
-                var queryData = {};
-                for (var i = 0; i < queryKeyValuePairs.length; i++) {
-                    // Assign each key/value to a property in queryData. undefined is set as the value if there is no value.
-                    queryKeyValuePair = queryKeyValuePairs[i].split('='); 
-                    value = queryKeyValuePair[1];
-                    if (queryKeyValuePair[1]) {
-                        value = window.decodeURIComponent(value);
-                    }
-                    queryData[window.decodeURIComponent(queryKeyValuePair[0])] = value;
-                }
-
-                return queryData;
-            },
 			/**
 			 * Destroys the application, allowing you to run another. This is mainly for use when building
 			 * unit or BDD tests.
 			 */
 			destroy: function () {
-				RuntimeContext.clearCurrentApplication();
+				applicationObject = undefined;
 				ComponentContainer.destroy();
-			},
-			
-			/**
-			 * Navigates back to whatever launched the application (a parent TAL application, broadcast, or exit).
-			 */
-			back: function() {
-			    var historian = this.getDevice().getHistorian();
-			    if (historian.hasHistory()) {
-			        this.getDevice().setWindowLocationUrl(historian.back());
-			    }
-			    else {
-			        this.exit();
-			    }
-			},
-
-            /**
-             * Returns a Boolean value to indicate whether the application can go back to a parent TAL application.
-             * @returns {Boolean} True if the application can return to a parent TAL application.
-             */
-            hasHistory: function() {
-                return this.getDevice().getHistorian().hasHistory();
-            },
-
-			/**
-			 * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
-			 * application in the history stack. Will exit to broadcast if the first TAL application was launched from
-			 * broadcast and a broadcast exit modifier is loaded.
-			 */
-			exit: function() {
-                if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
-                    this.getDevice().exitToBroadcast();
-                } else {
-                    this.getDevice().exit();
-                }
 			}
 		});
 
@@ -532,7 +399,7 @@ require.def('antie/application',
 		 * @function
 		 */
 		Application.getCurrentApplication = function() {
-			return RuntimeContext.getCurrentApplication();
+			return applicationObject;
 		};
 
 		return Application;

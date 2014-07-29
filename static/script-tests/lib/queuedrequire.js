@@ -1,44 +1,4 @@
-/**
- * @fileOverview Allows requirejs modules to be loaded and tested.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
- */
-
-function call__qr(){
-	if( require.ready == undefined ) {
-		//require.ready not found - delaying queud require
-		setTimeout( call__qr, 2000 );
-	}
-	else{
-		__qr();
-	}
-}
-
 (function(){
-	call__qr();
-})();
-
-function __qr(){
 	var requireModules = {};
 
 	require.ready(function() {
@@ -59,6 +19,7 @@ function __qr(){
 		require.load = function(moduleName, contextName) {
 			var module = requireModules[moduleName];
 			if(module) {
+				//console.log('require.load - resetting');
 				require.s.contexts["_"].specified[moduleName] = true;
 				require.s.contexts["_"].loaded[moduleName] = false;
 				setTimeout(function() {
@@ -124,8 +85,7 @@ function __qr(){
 	 * @param {Object} [configOverride] Optional device/application onfiguration.
 	 */
 	this.queuedApplicationInit = function(queue, applicationModuleName, otherDeps, callback, configOverride) {
-
-        var application;
+		var application;
 		var testCase = queue.q_.testCase_;
 		var originalTearDown = testCase.tearDown;
 		var div = document.createElement("div");
@@ -146,7 +106,7 @@ function __qr(){
 			var ApplicationClass = requireCallbackArguments.shift();
 			queue.call("Wait for application to be ready", function(callbacks) {
 				var onReady = callbacks.add(function() {
-                        callback.apply(testCase, [application].concat(requireCallbackArguments));
+					callback.apply(testCase, [application].concat(requireCallbackArguments));
 				});
 				application = new ApplicationClass(div, null, null, onReady, configOverride);
 			});
@@ -176,4 +136,4 @@ function __qr(){
 		});
 	};
 	
-};
+})();

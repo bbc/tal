@@ -1,27 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.List class.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
+ * @author Chris Warren <chris.warren@bbc.co.uk>
+ * @version 1.0.0
  */
 
 require.def('antie/widgets/list',
@@ -61,7 +41,6 @@ require.def('antie/widgets/list',
 				this._dataBound = false;
 				this._totalDataItems = 0;
 				this._renderMode = List.RENDER_MODE_CONTAINER;
-				this._dataBindingOrder = List.DATA_BIND_FORWARD;
 
 				this._super(id);
 				this.addClass('list');
@@ -96,12 +75,10 @@ require.def('antie/widgets/list',
 					w.setDataItem(widget.getDataItem());
 					this._super(index, w);
 				} else {
-				    widget.addClass('listitem');
 					this._super(index, widget);
 					w = widget;
 				}
-				if (index <= this._selectedIndex && 
-						(( this._selectedIndex + 1 ) < this.getChildWidgetCount()) ) {
+				if (index <= this._selectedIndex) {
 					this._selectedIndex++;
 				}
 				return widget;
@@ -156,14 +133,7 @@ require.def('antie/widgets/list',
 					var iterator = (data instanceof Iterator) ? data : new Iterator(data);
 					while (iterator.hasNext()) {
 						var i = iterator._currentIndex;
-
-						var w = self._itemFormatter.format(iterator);
-						w._listIndex = i;
-						if(self._dataBindingOrder === List.DATA_BIND_FORWARD) {
-							self.appendChildWidget(w)
-						} else if(self._dataBindingOrder === List.DATA_BIND_REVERSE){
-							self.insertChildWidget(0, w);
-						}
+						self.appendChildWidget(self._itemFormatter.format(iterator))._listIndex = i;
 					}
 					self._totalDataItems = iterator._currentIndex;
 
@@ -328,14 +298,6 @@ require.def('antie/widgets/list',
 
 				this._totalDataItems = 0;
 				return this._super();
-			},
-
-			setDataBindingOrder: function(order) {
-				this._dataBindingOrder = order;
-			},
-
-			getDataBindingOrder: function() {
-				return this._dataBindingOrder;
 			}
 		});
 
@@ -355,9 +317,6 @@ require.def('antie/widgets/list',
 		 * @static
 		 */
 		List.RENDER_MODE_LIST = 2;
-
-		List.DATA_BIND_FORWARD = 0;
-		List.DATA_BIND_REVERSE = 1;
 
 		return List;
 	}

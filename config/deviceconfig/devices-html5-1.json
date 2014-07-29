@@ -1,0 +1,97 @@
+{
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/css3",
+      "antie/devices/media/html5",
+      "antie/devices/net/default",
+      "antie/devices/data/json2",
+      "antie/devices/logging/default"
+    ]
+  },
+  "logging": {
+  	"level": "all"
+  },
+  "mediasets": {
+    "tv": "stb-all-h264",
+    "radio": "stb-aac"
+  },
+  "streaming": {
+    "video": {
+      "mediaSelectorAPI": "jsfunc",
+      "mediaSelectorURI": "https://ipsecure.stage.bbc.co.uk/mediaselector/4/jsfunc/stream/%vpid%/%callback%",
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "maximumBitRate": 2800,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaSelectorAPI": "jsfunc",
+      "mediaSelectorURI": "https://ipsecure.stage.bbc.co.uk/mediaselector/4/jsfunc/stream/%vpid%/%callback%",
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ]
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "13": "ENTER",
+      "37": "LEFT",
+      "38": "UP",
+      "39": "RIGHT",
+      "40": "DOWN",
+      "83": "SUBTITLE",
+      "73": "INFO"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "frameworkdemo/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "frameworkdemo/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "module": "frameworkdemo/appui/layouts/1080p",
+      "classes": [
+        "browserdevice1080p"
+      ]
+    }
+  ]
+}

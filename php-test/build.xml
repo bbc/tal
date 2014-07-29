@@ -19,7 +19,8 @@
 	<target name="coverage" depends="dir_setup" >
 		<coverage-setup database="${reports.dir}/database">
 			<fileset dir="${app.dir}">
-				<include name="*.php" />
+				<include name="antie/**/*.php" />
+				<exclude name="antie/frameworkdemo/**/*.php" />
 			</fileset>		
 		</coverage-setup>	
 		<phpunit codecoverage="true">

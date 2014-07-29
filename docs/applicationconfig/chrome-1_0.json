@@ -1,0 +1,25 @@
+{
+  "deviceConfigurationKey": "devices-html5-1",
+  "mediasets": {
+    "tv": "stb-all-h264",
+    "radio": "stb-aac"
+  },
+  "widgets": {
+    "horizontalprogress": {
+      "animate": false
+    },
+    "componentcontainer": {
+      "fade": false
+    },
+    "horizontalcarousel": {
+      "fade": false,
+      "bindDelay": 1000
+    }
+  },
+  "components": {
+    "player": {
+      "slide": false,
+      "fade": false
+    }
+  }
+}

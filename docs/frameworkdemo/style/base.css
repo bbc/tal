@@ -1,0 +1,134 @@
+@font-face{
+    font-family: "Helvetica Neue";
+    src:url('../font/HelveticaNeueOTS.ttf');
+}
+body {
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	margin:  0;
+    overflow: hidden;
+	background-color: #000000;
+}
+
+.ps3 body.playing,
+.samsung body.playing {
+	background-color: transparent !important;
+}
+.buttonFocussed {
+	background-color: #FFFF00;
+}
+
+.button {
+	display : inline-block;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+}
+
+.image {
+	line-height: 0;
+}
+.list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+}
+
+object {
+    position : absolute;
+}
+
+.horizontallistmask {
+        overflow: hidden;
+        position: relative;
+		width: 900px;
+}
+
+.horizontallist {
+        width: 9999999px;
+}
+
+.verticallist > div {
+    display : block;
+}
+
+.horizontallist .horizontallist {
+    width : 664px;
+}
+
+.horizontallist li {
+        display: inline;
+}
+
+.horizontalcarousel ul {
+        display: block;
+}
+.horizontalcarousel li {
+        display: block;
+        float: left;
+}
+.horizontalcarousel .viewportPadding {
+        height: 30px;
+}
+.horizontalcarousel.transition {
+	-moz-transition: left 0.5s ease-in-out, -moz-transform 0.5s ease-in-out;
+	-webkit-transition: left 0.5s ease-in-out, -webkit-transform 0.5s ease-in-out;
+	-o-transition: left 0.5s ease-in-out, -o-transform 0.5s ease-in-out;
+	transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+html, body {
+	height: 100%;
+}
+#app {
+	position: relative;
+	top: 50%;
+	overflow: hidden;
+}
+.samsung #app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 960px;
+    height: 540px;
+}
+.rootwidget {
+	height: 100%;
+	width: 100%;
+}
+.componentcontainer {
+	position: absolute;
+}
+#carouselcontainer {
+	width: 900px;
+	height: 565px;
+	overflow: hidden;
+}
+#carouselcontainer.transition {
+	-webkit-transition: top 0.2s linear, -webkit-transform 0.2s linear;
+	-o-transition: top 0.2s linear, -o-transform 0.2s linear;
+	-moz-transition: top 0.2s linear, -moz-transform 0.2s linear;
+	transition: top 0.2s linear, transform 0.2s linear;
+}
+#videocarouselcomponent {
+	width: 900px;
+	height: 200px;
+	padding-top: 65px;
+	background-repeat: no-repeat;
+	background-image: url(../img/banner.png);
+	background-color: #d4d4d4;
+}
+#videocarousel_mask {
+	margin-top: 10px;
+	width: 900px;
+	height: 300px;
+}
+#videocarousel_mask .button {
+	overflow: hidden;
+	width: 126px;
+	padding: 10px;
+	margin: 0 10px 0 10px;
+}
+#videocarousel_mask .image {
+	margin-top: 10px;
+}

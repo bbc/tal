@@ -2,7 +2,6 @@ require.def('antie/lib/date.format', function() {
 
 // Simulates PHP's date function
 // From: http://jacwright.com/projects/javascript/date_format
-// MIT Licensed!
 
 Date.prototype.format = function(format) {
 	var returnStr = '';
@@ -66,11 +65,12 @@ Date.replaceChars = {
 	I: function() { return "Not Yet Supported"; },
 	O: function() { return (-this.getTimezoneOffset() < 0 ? '-' : '+') + (Math.abs(this.getTimezoneOffset() / 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() / 60)) + '00'; },
 	P: function() { return (-this.getTimezoneOffset() < 0 ? '-' : '+') + (Math.abs(this.getTimezoneOffset() / 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() / 60)) + ':00'; }, // Fixed now
+//	Q: function() { return (-this.getTimezoneOffset() < 0 ? '-' : '+') + (Math.abs(this.getTimezoneOffset() / 60) < 10 ? '0' : '') + (Math.abs(this.getTimezoneOffset() / 60)) + '00'; }, // BBC ION Time zones
 	T: function() { var m = this.getMonth(); this.setMonth(0); var result = this.toTimeString().replace(/^.+ \(?([^\)]+)\)?$/, '$1'); this.setMonth(m); return result;},
 	Z: function() { return -this.getTimezoneOffset() * 60; },
 	// Full Date/Time
 	c: function() { return this.format("Y-m-d\\TH:i:sP"); }, // Fixed now
-	B: function() { return this.format("Y-m-d\\TH:i:sO"); }, // e.g. "2010-10-15T01:30:27+0000" (Antie addition)
+	B: function() { return this.format("Y-m-d\\TH:i:sO"); }, // BBC ION : "2010-10-15T01:30:27+0000"
 	r: function() { return this.toString(); },
 	U: function() { return this.getTime() / 1000; }
 };

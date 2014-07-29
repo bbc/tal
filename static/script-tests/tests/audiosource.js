@@ -1,27 +1,3 @@
-/**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
- */
-
 (function() {
 	this.AudioSourceTest = AsyncTestCase("AudioSource");
 
@@ -45,8 +21,8 @@
 		expectAsserts(2);
 
 		queuedRequire(queue, ["antie/mediasource", "antie/audiosource"], function(MediaSource, AudioSource) {
-			var MEDIA_URL1 = 'http://endpoint.invalid/video.mp4';
-			var MEDIA_URL2 = 'http://endpoint.invalid/audio.mp4';
+			var MEDIA_URL1 = 'http://downloads.bbc.co.uk/iplayer/idcp/BR_HD_Barker_H264_TV1500_high32_2passVBR_1.mp4';
+			var MEDIA_URL2 = 'http://downloads.bbc.co.uk/iplayer/idcp/BR_HD_Barker_H264_TV1500_high32_2passVBR_2.mp4';
 			var MEDIA_TYPE1 = 'video/mp4';
 			var MEDIA_TYPE2 = 'audio/mp4';
 
@@ -63,7 +39,7 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"streaming":{"video":{"mediaURIFormat":"VIDEOURL"}, "audio":{"mediaURIFormat":"AUDIOURL"}}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, 'lib/mockapplication', ["antie/audiosource"], function(application, AudioSource) {
-			var MEDIA_URL1 = 'http://endpoint.invalid/video.mp4';
+			var MEDIA_URL1 = 'http://downloads.bbc.co.uk/iplayer/idcp/BR_HD_Barker_H264_TV1500_high32_2passVBR_1.mp4';
 			var MEDIA_TYPE1 = 'video/mp4';
 
 			var mediaSource1 = new AudioSource(MEDIA_URL1, MEDIA_TYPE1);
@@ -74,7 +50,4 @@
 			assertEquals("AUDIOURL", url);
 		}, config);
 	};
-
-    onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(["antie/mediasource", "antie/audiosource"], this.AudioSourceTest);
-
 })();

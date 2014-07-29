@@ -1,7 +1,8 @@
 /*
  * @fileOverview Requirejs modifier to use J Crockford's JSON2 implementation.
+ * @author Chris Warren <chris.warren@bbc.co.uk>
+ * @version 1.0.0
  */
-
 require.def(
 	"antie/devices/data/json2",
 	['antie/devices/browserdevice'],

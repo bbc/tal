@@ -1,0 +1,21 @@
+{
+  "deviceConfigurationKey": "devices-sony-playstation_3-1",
+  "widgets": {
+    "horizontalprogress": {
+      "animate": false
+    },
+    "componentcontainer": {
+      "fade": false
+    },
+    "horizontalcarousel": {
+      "fade": false,
+      "bindDelay": 1000
+    }
+  },
+  "components": {
+    "player": {
+      "slide": false,
+      "fade": false
+    }
+  }
+}

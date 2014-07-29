@@ -1,34 +1,14 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.Container abstract class.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
+ * @author Chris Warren <chris.warren@bbc.co.uk>
+ * @version 1.0.0
  */
 
 require.def('antie/widgets/container',
 	[
-        'antie/widgets/widget',
-        'antie/events/focusevent',
-        'antie/events/blurevent'
+	 	'antie/widgets/widget',
+	 	'antie/events/focusevent',
+	 	'antie/events/blurevent'
 	],
 	function(Widget, FocusEvent, BlurEvent) {
 		/**
@@ -41,17 +21,16 @@ require.def('antie/widgets/container',
 		 * @requires antie.events.BlurEvent
 		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
 		 */
-		var Container;
-		Container = Widget.extend(/** @lends antie.widgets.Container.prototype */ {
+		return Widget.extend(/** @lends antie.widgets.Container.prototype */ {
 			/**
 			 * @constructor
 			 * @ignore
 			 */
 			init: function(id) {
 				/*
-                * Performance consideration - do we need to store 2 references to each child widget? 
-                * One keyed by ID, one in an array to maintain order?
-                */
+			 	* Performance consideration - do we need to store 2 references to each child widget? 
+			 	* One keyed by ID, one in an array to maintain order?
+			 	*/
 				this._childWidgets = {};
 				this._childWidgetOrder = [];
 				this._activeChildWidget = null;
@@ -67,13 +46,12 @@ require.def('antie/widgets/container',
 			 * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
 			 */
 			render: function(device) {
-			    var i;
 				if(!this.outputElement) {
 					this.outputElement = device.createContainer(this.id, this.getClasses());
 				} else {
 					device.clearElement(this.outputElement);
 				}
-				for(i=0; i<this._childWidgetOrder.length; i++) {
+				for(var i=0; i<this._childWidgetOrder.length; i++) {
 					device.appendChildElement(this.outputElement, this._childWidgetOrder[i].render(device));
 				}
 				return this.outputElement;
@@ -110,19 +88,17 @@ require.def('antie/widgets/container',
 			 */
 			prependWidget: function(widget) {
 				// Find the current widget's order.
-                if(this.parentWidget instanceof Container) {
-                    var widgetOrder, insertionIndex;
-                    widgetOrder = this.parentWidget._childWidgetOrder;
-                    
-                    for (insertionIndex = 0; insertionIndex !== widgetOrder.length; insertionIndex +=1) {
-                    if (widgetOrder[insertionIndex] === this) {
-                        break;
-                        }
-                    }
-                
-                    // Insert the new widget in the current one's position.
-                    this.parentWidget.insertChildWidget(insertionIndex, widget);
-                }
+				var widgetOrder = this.parentWidget._childWidgetOrder;
+				var index;
+				for (index in widgetOrder) {
+					if (widgetOrder[index] == widget) {
+						break;
+					}
+				}
+
+				// Insert the new widget in the current one's position.
+				this.parentWidget.insertChildWidget(index, widget);
+
 				return widget;
 			},
 			/**
@@ -213,7 +189,7 @@ require.def('antie/widgets/container',
 			},
 			/**
 			 * Checks to see if a specific widget is a direct child of this widget.
-			 * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
+			 * @param {antie.widgets.Widget} widget The widget to check to see if it is a direct child of this widget.
 			 */
 			hasChildWidget: function(id) {
 				return this._childWidgets[id] != null;
@@ -243,7 +219,7 @@ require.def('antie/widgets/container',
 			 * Note: You can only set focus to a focusable widget. A focusable widget is one that
 			 * contains an enabled antie.widgets.Button as either a direct or indirect child.
 			 *
-			 * Note: Widgets have 2 independent states: active and focussed. A focussed widget is
+			 * Note: Widgets have 2 independant states: active and focussed. A focussed widget is
 			 * either the Button with focus, or any parent of that Button. An active widget is
 			 * one which is the active child of its parent Container. When the parent widget
 			 * receives focus, focus will be placed on the active child.
@@ -258,7 +234,7 @@ require.def('antie/widgets/container',
 					return false;
 				}
 				if(this.hasChildWidget(widget.id) && widget.isFocusable()) {
-					if(this._activeChildWidget && this._activeChildWidget !== widget) {
+					if(this._activeChildWidget) {
 						this._activeChildWidget.removeClass('active');
 						this._setActiveChildFocussed(false);
 					}
@@ -371,6 +347,5 @@ require.def('antie/widgets/container',
 				return false;
 			}
 		});
-		return Container;
 	}
 );

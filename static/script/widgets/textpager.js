@@ -1,27 +1,11 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.TextPager class.
+ * @author David Dorward <david.dorward@bbc.co.uk>
+ * @version 1.0.0
  *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
+ * TODO: Note (CW) - this widget accesses DOM properties directly - this needs to be changed. It breaks the
+ * TODO: architectural antie pattern. It also extends Label, but most of the functionality of the Label
+ * TODO: does not apply (e.g. truncation mode).
  */
 
 require.def('antie/widgets/textpager',
@@ -59,6 +43,7 @@ require.def('antie/widgets/textpager',
 				if(!this.outputElement) {
 					this.outputElement = device.createContainer(this.id, this.getClasses());
 					this.innerElement = device.createContainer(this.id + "_inner");
+					//device.setElementContent(this.outputElement, this.innerElement);
 					this.outputElement.appendChild(this.innerElement);
 				}
 				device.setElementContent(this.innerElement, s);
@@ -69,10 +54,12 @@ require.def('antie/widgets/textpager',
 				if (!this._paddingFudge) {
 					var el = this.outputElement;
 					this._paddingFudge = true;
-					this.textHeight = this.innerElement.clientHeight;
+					this.textHeight = this.innerElement.clientHeight; //this.getCurrentApplication().getDevice().getTextHeight(this.getText(), 'auto', this.getClasses())
 					this.boxHeight = this.outputElement.clientHeight;
 					
-					this.lineHeight = this.getCurrentApplication().getLayout().textPager.lineHeight;
+					//console.log({innerElement: this.innerElement, text: this.textHeight, box: this.boxHeight});
+					
+					this.lineHeight = this.getCurrentApplication().getLayout().textPager.lineHeight; 
 					
 					this.lines_in_box = Math.floor(this.boxHeight / this.lineHeight);
 					this.lines_in_text = Math.floor(this.textHeight / this.lineHeight);

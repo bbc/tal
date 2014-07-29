@@ -1,27 +1,3 @@
-/**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
- */
-
 (function() {
 	this.ContainerTest = AsyncTestCase("Container");
 
@@ -193,36 +169,14 @@
 					var inner3 = new Container("inner3");
 					var inner4 = new Container("inner4");
 					assertEquals(0, widget.getChildWidgetCount());
-					widget.appendChildWidget(inner2); //0
-					widget.appendChildWidget(inner3); //1
-					widget.appendChildWidget(inner4); //2
+					widget.appendChildWidget(inner2);
+					widget.appendChildWidget(inner3);
+					widget.appendChildWidget(inner4);
 					inner4.prependWidget(inner);
 					assertEquals([inner2, inner3, inner, inner4], widget.getChildWidgets());
 				}
 		);
 	};
-	this.ContainerTest.prototype.testPrependChildWidgetOrderWhenNotExpectingPenultimateInsertion = function(queue) {
-        expectAsserts(2);
-
-        queuedApplicationInit(
-                queue,
-                "lib/mockapplication",
-                ["antie/widgets/container"],
-                function(application, Container) {
-                    var widget = new Container("id");
-                    var inner = new Container("inner");
-                    var inner2 = new Container("inner2");
-                    var inner3 = new Container("inner3");
-                    var inner4 = new Container("inner4");
-                    assertEquals(0, widget.getChildWidgetCount());
-                    widget.appendChildWidget(inner2); //0
-                    widget.appendChildWidget(inner3); //1
-                    widget.appendChildWidget(inner4); //2
-                    inner3.prependWidget(inner);
-                    assertEquals([inner2, inner, inner3, inner4], widget.getChildWidgets());
-                }
-        );
-    };
  	this.ContainerTest.prototype.testInsertChildWidgetAtStart = function(queue) {
 		expectAsserts(2);
 
@@ -911,43 +865,5 @@
 		);
 
 	};
-
-    this.ContainerTest.prototype.testFocussingChildButtonDoesNotCauseBlurOnParentWhenParentAlreadyFocussed = function(queue) {
-        queuedApplicationInit(
-            queue,
-            "lib/mockapplication",
-            ["antie/widgets/container","antie/widgets/button"],
-            function(application, Container, Button) {
-                var root, container1, container2, button, handlerCalled;
-
-                queue.call('setup widget tree', function () {
-                    root = new Container("root");
-                    application.setRootWidget(root);
-                    container1 = new Container("container1");
-                    root.appendChildWidget(container1);
-                    container2 = new Container("container2");
-                    container1.appendChildWidget(container2);
-                    button = new Button('button');
-                    container2.appendChildWidget(button);
-                    button.focus();
-                    container2.addEventListener('blur', function (evt) {
-                        if (evt.target === container2) {
-                            handlerCalled = true;
-                        }
-                    });
-                    handlerCalled = false;
-                });
-
-                queue.call('Try second focus', function () {
-                    button.focus();
-                });
-
-                queue.call('assert handler not called', function () {
-                    assertFalse('Blur event fired on parent', handlerCalled);
-                })
-            }
-        );
-
-    };
 
 })();

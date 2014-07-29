@@ -1,0 +1,4 @@
+  <object id='playerPlugin' border='0' classid='clsid:SAMSUNG-INFOLINK-PLAYER'></object>
+  <object id='audioPlugin' border='0' classid='clsid:SAMSUNG-INFOLINK-AUDIO'></object>
+  <object id='pluginObjectTVMW' border='0' classid='clsid:SAMSUNG-INFOLINK-TVMW'></object>
+  <object id='pluginObjectNNavi' border='0' classid='clsid:SAMSUNG-INFOLINK-NNAVI'></object>

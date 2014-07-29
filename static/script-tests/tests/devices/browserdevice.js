@@ -1,29 +1,4 @@
-/**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
- */
-
 (function() {
-    /* jshint newcap: false, onevar: false */
 	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice");
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
@@ -143,30 +118,17 @@
 		});
 	};
 
-	this.BrowserDeviceTest.prototype.testCreateImageAltText = function(queue) {
-		expectAsserts(1);
-
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			var el = device.createImage(null, null, "about:blank");
-			assertEquals("", el.alt);
-		});
-	};
-
 	this.BrowserDeviceTest.prototype.testCreateImageOnLoad = function(queue) {
 		expectAsserts(1);
 
 		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 			queue.call("Waiting for image to load", function(callbacks) {
-				// Not possible to serve an image from fixtures - JsTestDriver gives wrong MIME type
-				// Generate an image via canvas and load it
-				var imgSrc = document.createElement('canvas').toDataURL();
 				var onLoad = callbacks.add(function() {
 					assert(true);
 				});
 				var onError = callbacks.addErrback(function() {});
-				device.createImage(null, null, imgSrc, null, onLoad, onError);
+				device.createImage(null, null, "http://static.bbc.co.uk/frameworks/barlesque/1.10.0/desktop/2.7/img/blocks.png", null, onLoad, onError);
 			});
 		});
 	};
@@ -185,24 +147,6 @@
 			});
 		});
 	};
-
-    /**
-     * TODO: This test is a bit fragile, because the jsTestDriver.conf always preloads 2 css files before running the
-     * tests this means that there are always two stylesheets in the DOM, possibly more depending if prior
-     * js-test-driver tests have loaded any stylesheets
-     * @param queue
-     */
-    this.BrowserDeviceTest.prototype.testGetStylesheetElements = function(queue) {
-    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
-    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/css3transitions.css">*/
-        expectAsserts(1);
-
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            assertEquals(2, device.getStylesheetElements().length);
-        });
-    };
-
 	this.BrowserDeviceTest.prototype.testLoadStyleSheet = function(queue) {
 		expectAsserts(2);
 
@@ -220,9 +164,8 @@
 					document.body.removeChild(d2);
 				});
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", function(){
-					timeout();
-				});
+				device.loadStyleSheet("/test/fixtures/dynamicstylesheet.css");
+				window.setTimeout(timeout, 2000);
 			});
 		});
 	};
@@ -236,7 +179,7 @@
 					assert(true);
 				});
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+				device.loadStyleSheet("/test/fixtures/dynamicstylesheet.css", callback);
 			});
 		});
 	};
@@ -758,7 +701,6 @@
 			assertEquals("html", tle.tagName.toLowerCase());
 		});
 	};
-
 	this.BrowserDeviceTest.prototype.testGetScreenSize = function(queue) {
 		expectAsserts(2);
 
@@ -779,83 +721,6 @@
 		});
 
 	};
-	this.BrowserDeviceTest.prototype.testGetCurrentRouteIgnoresHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&*history=http://www.sometest.com/test";
-            assertEquals(["test1","test2","test3"], device.getCurrentRoute());
-        });
-
-    };
-    
-    this.BrowserDeviceTest.prototype.testSetCurrentRoutePreservesHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&*history=http://www.sometest.com/test";
-            device.setCurrentRoute(["test4", "test5", "test6"]);
-            assertEquals("&*history=http://www.sometest.com/test", device.getHistorian().toString());
-        });
-
-    };
-    
-    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3";
-            device.setCurrentRoute(["test4", "test5", "test6"]);
-            assertEquals("#test4/test5/test6", window.location.hash);
-        });
-
-    };
-    
-    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteButHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3&*history=http://www.test.com";
-            device.setCurrentRoute([]);
-            assertEquals("#&*history=http://www.test.com", window.location.hash);
-        });
-    };
-    
-    this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteOrHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            window.location.hash = "#test1/test2/test3";
-            device.setCurrentRoute([]);
-            assertEquals("", window.location.hash);
-        });
-    };
-    
-    this.BrowserDeviceTest.prototype.testGetHistory = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, 
-            [   
-                "antie/devices/browserdevice",
-                "antie/historian"
-            ], 
-            function(BrowserDevice, Historian) {
-                var historySpy;
-                historySpy = this.sandbox.spy(Historian.prototype, 'init');
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                device._windowLocation = {
-                    href: "http://www.test0.com/blah/#test1/test2/test3&*history=http://www.test.com&*history=http://www.test2.com"
-                };
-                device.getHistorian();
-                assert(historySpy.calledWith("http://www.test0.com/blah/#test1/test2/test3&*history=http://www.test.com&*history=http://www.test2.com"));
-            });
-        };
-    
 	this.BrowserDeviceTest.prototype.testSetCurrentRoute = function(queue) {
 		expectAsserts(1);
 
@@ -895,477 +760,38 @@
 				img = {};
 				return img;
 			});
-			device.preloadImage("http://endpoint.invalid/image");
+			device.preloadImage("http://static.bbc.co.uk/frameworks/barlesque/1.10.0/desktop/2.7/img/blocks.png");
 			assertNotNull(img);
-			assertEquals("http://endpoint.invalid/image", img.src)
+			assertEquals("http://static.bbc.co.uk/frameworks/barlesque/1.10.0/desktop/2.7/img/blocks.png", img.src)
 		});
 
 	};
+	this.BrowserDeviceTest.prototype.testScrollElementToCenter = function(queue) {
+		expectAsserts(1);
 
-	function stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, sandbox) {
-	    "use strict";
-	    var talKey, stubs;
-	    stubs = {};      
-        // stub out event bubbling so we can detect but it does nothing
-        device._application = {};
-        stubs.eventStub = sandbox.stub();
-        device._application.bubbleEvent = stubs.eventStub;
-        // spy on KeyEvent init so we can test which events generated
-        talKey = sandbox.spy(KeyEvent.prototype, 'init');
-        stubs.talDown = talKey.withArgs('keydown', KeyEvent.VK_LEFT);
-        stubs.talUp = talKey.withArgs('keyup', KeyEvent.VK_LEFT);
-        stubs.talPress = talKey.withArgs('keypress', KeyEvent.VK_LEFT);
-        // stub out event key map
-        sandbox.stub(device, 'getKeyMap').returns( { "37": KeyEvent.VK_LEFT } );
-        // register TAL events to DOM events
-        device.addKeyEventListener();
-        
-        return stubs;
-	}
+		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
-    function stubDeviceAndGetEventSpiesForNextKey(BrowserDevice, KeyEvent, device, sandbox) {
-        "use strict";
-        var talKey, stubs;
-        stubs = {};
-        // stub out event bubbling so we can detect but it does nothing
-        device._application = {};
-        stubs.eventStub = sandbox.stub();
-        device._application.bubbleEvent = stubs.eventStub;
-        // spy on KeyEvent init so we can test which events generated
-        talKey = sandbox.spy(KeyEvent.prototype, 'init');
-        stubs.talDown = talKey.withArgs('keydown', KeyEvent.VK_NEXT);
-        stubs.talUp = talKey.withArgs('keyup', KeyEvent.VK_NEXT);
-        stubs.talPress = talKey.withArgs('keypress', KeyEvent.VK_NEXT);
-        // stub out event key map
-        sandbox.stub(device, 'getKeyMap').returns( { "425": KeyEvent.VK_NEXT } );
-        // register TAL events to DOM events
-        device.addKeyEventListener();
+			this.div = device.createContainer("id_mask");
+			document.body.appendChild(this.div);
+			this.div.style.overflow = "hidden";
+			this.div.style.width = "10px";
+			this.div.style.height = "10px";
+			this.div.style.position = "absolute";
+			var inner = device.createContainer("id");
+			inner.style.position = "absolute";
+			inner.style.top = 0;
+			inner.style.left = 0;
+			inner.style.width = "1000px";
+			inner.style.height = "1000px";
+			device.appendChildElement(this.div, inner);
 
-        return stubs;
-    }
+			var scrollElementToSpy = this.sandbox.spy(device, 'scrollElementTo');
+			device.scrollElementToCenter(this.div, 100, 100);
+			assert(scrollElementToSpy.calledWith(this.div, 95, 95));
+			this.div.parentNode.removeChild(this.div);
+			this.div = null;
+		});
 
-    function stubDeviceAndGetEventSpiesForPrevKey(BrowserDevice, KeyEvent, device, sandbox) {
-        "use strict";
-        var talKey, stubs;
-        stubs = {};
-        // stub out event bubbling so we can detect but it does nothing
-        device._application = {};
-        stubs.eventStub = sandbox.stub();
-        device._application.bubbleEvent = stubs.eventStub;
-        // spy on KeyEvent init so we can test which events generated
-        talKey = sandbox.spy(KeyEvent.prototype, 'init');
-        stubs.talDown = talKey.withArgs('keydown', KeyEvent.VK_PREV);
-        stubs.talUp = talKey.withArgs('keyup', KeyEvent.VK_PREV);
-        stubs.talPress = talKey.withArgs('keypress', KeyEvent.VK_PREV);
-        // stub out event key map
-        sandbox.stub(device, 'getKeyMap').returns( { "424": KeyEvent.VK_PREV } );
-        // register TAL events to DOM events
-        device.addKeyEventListener();
-
-        return stubs;
-    }
-	
-	function assertCorrectTalKeyTapBehaviour(stubs) {
-	    // Key tap = quick press and release of key.
-	    assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
-        assert("TAL keypress event fired once: ", stubs.talPress.calledOnce);
-        assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
-	    assert("Exactly three events should bubble: ", stubs.eventStub.calledThrice);
-        sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
-	}
-	
-	function getMockDomLeftKeyEvent() {
-	    return {
-            keyCode: 37, // left keycode
-            preventDefault: function(){}
-        };
-	}
-
-    function getMockDomNextKeyEvent() {
-        return {
-            keyCode: 425, // Skip forward keycode
-            preventDefault: function(){}
-        };
-    }
-
-    function getMockDomPrevKeyEvent() {
-        return {
-            keyCode: 424, // Skip Backward keycode
-            preventDefault: function(){}
-        };
-    }
-	
-	this.BrowserDeviceTest.prototype.testFirefox3OSXStyleLeftKeyTapBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var device, stubs, mockEvent;
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                // fire mock firefox 3 style events
-                document.onkeydown(mockEvent);
-                document.onkeypress(mockEvent);
-                document.onkeyup(mockEvent);
-
-                // check correct TAL behaviour
-                assertCorrectTalKeyTapBehaviour(stubs);
-            }
-        );
-    };
-
-    this.BrowserDeviceTest.prototype.testPrevKey = function(queue) {
-        queuedRequire(queue,
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ],
-            function(BrowserDevice, KeyEvent) {
-                var device, stubs, mockEvent;
-
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForPrevKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomPrevKeyEvent();
-
-                // fire mock firefox 3 style events
-                document.onkeydown(mockEvent);
-                document.onkeypress(mockEvent);
-                document.onkeyup(mockEvent);
-
-                // check correct TAL behaviour
-                assertCorrectTalKeyTapBehaviour(stubs);
-            }
-        );
-    };
-
-    this.BrowserDeviceTest.prototype.testNextKey = function(queue) {
-        queuedRequire(queue,
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ],
-            function(BrowserDevice, KeyEvent) {
-                var device, stubs, mockEvent;
-
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForNextKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomNextKeyEvent();
-
-                // fire mock firefox 3 style events
-                document.onkeydown(mockEvent);
-                document.onkeypress(mockEvent);
-                document.onkeyup(mockEvent);
-
-                // check correct TAL behaviour
-                assertCorrectTalKeyTapBehaviour(stubs);
-            }
-        );
-    };
-    
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583
-    /*
-    this.BrowserDeviceTest.prototype.testChromeOSXStyleLeftKeyTapBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var device, stubs, mockEvent;
-
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                // fire mock chrome style events
-                document.onkeydown(mockEvent);
-                document.onkeyup(mockEvent);
-                
-                // check correct TAL behaviour
-                assertCorrectTalKeyTapBehaviour(stubs);
-            }
-        );
-    }; 
-    */
-    
-    function queueKeyRepeatsThenAssertCorrectTALEvents(keyDownFn, keyHoldFn, stubs, queue) {
-        var repeats, repeatDelay, mockElement;
-         function repeatAndEnd() {
-            var i;
-            for(i = 0; i !== repeats; i += 1) {
-                keyHoldFn();
-            }
-            document.onkeyup(mockElement);
-        }
-        
-        function assertCorrectTALKeyHoldEvents() {
-            assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
-            assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
-            assertEquals("TAL keypress event fired repeats (" + repeats + ") + 1 times: ", repeats + 1, stubs.talPress.callCount);
-            sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
-        }
-        
-        repeats = 3; // Fairly arbitrary
-        repeatDelay = 200; // 200ms (unlikely to be less then this)
-        mockElement = getMockDomLeftKeyEvent();
-        
-        keyDownFn(); // press the key down
-        queue.call(repeatAndEnd, repeatDelay); // hold it down then let go.
-        queue.call(assertCorrectTALKeyHoldEvents, repeatDelay + 100); // ensure TAL events have fired
-    }
-    
-    this.BrowserDeviceTest.prototype.testFirefox3OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function ff3KeyDown() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                function ff3KeyRepeat() {
-                    document.onkeypress(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(ff3KeyDown, ff3KeyRepeat, stubs, queue);
-            }
-        );
-    };
-
-    /**
-     * Test that device.getWindowLocation() returns values from underlying window.location.
-     */
-    this.BrowserDeviceTest.prototype.testGetWindowLocation = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ], 
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                
-                // Stub out window.location used by BrowserDevice
-                var windowLocation = {
-                    protocol: 'https:',
-                    host: 'test.invalid:12345',
-                    pathname: '/testurl/',
-                    hash: '#route',
-                    search: '?a=x%3Dy&b=&z',
-                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z#route'
-                };
-                device._windowLocation = windowLocation; 
-
-                var getWindowLocation = device.getWindowLocation();
-                assertEquals('Correct protocol returned', windowLocation.protocol, getWindowLocation.protocol);
-                assertEquals('Correct host returned', windowLocation.host, getWindowLocation.host);
-                assertEquals('Correct pathname returned', windowLocation.pathname, getWindowLocation.pathname);
-                assertEquals('Correct hash returned', windowLocation.hash, getWindowLocation.hash);
-                assertEquals('Correct search returned', windowLocation.search, getWindowLocation.search);
-                assertEquals('Correct href returned', windowLocation.href, getWindowLocation.href);
-            }
-        );
-    };
-
-    /**
-     * Test that device.getWindowLocation() returns the full URL for location.href, even when the underlying DOM API doesn't give the right value. The scamp.
-     */
-    this.BrowserDeviceTest.prototype.testGetWindowLocationHrefCorrection = function(queue) {
-        queuedRequire(queue,
-            [
-                "antie/devices/browserdevice"
-            ],
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
-                // The 'href' value here is dodgy - it doesn't include the hash on the end
-                var windowLocation = {
-                    protocol: 'https:',
-                    host: 'test.invalid:12345',
-                    pathname: '/testurl/',
-                    hash: '#route',
-                    search: '?a=x%3Dy&b=&z',
-                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z'
-                };
-                device._windowLocation = windowLocation;
-
-                var getWindowLocation = device.getWindowLocation();
-                assertEquals('Correct href returned', 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z#route', getWindowLocation.href);
-            }
-        );
-    };
-
-    /**
-     * Test that device.getWindowLocation() returns the full URL for location.href when there is no route to append
-     */
-    this.BrowserDeviceTest.prototype.testGetWindowLocationHrefCorrectionNotOverzealous = function(queue) {
-        queuedRequire(queue,
-            [
-                "antie/devices/browserdevice"
-            ],
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
-                // Href doesn't have a hash because there is no hash
-                var windowLocation = {
-                    protocol: 'https:',
-                    host: 'test.invalid:12345',
-                    pathname: '/testurl/',
-                    hash: '#',
-                    search: '?a=x%3Dy&b=&z',
-                    href: 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z'
-                };
-                device._windowLocation = windowLocation;
-
-                var getWindowLocation = device.getWindowLocation();
-                assertEquals('Correct href returned', 'https://test.invalid:12345/testurl/?a=x%3Dy&b=&z', getWindowLocation.href);
-            }
-        );
-    };
-    
-    /**
-     * Test that device.setWindowLocationUrl() calls functionality on underlying window.location.
-     */
-    this.BrowserDeviceTest.prototype.testSetWindowLocationUrl = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice"
-            ],
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
-
-                // Stub out window.location.assign
-                var windowLocation = {
-                    assign: this.sandbox.stub()
-                };
-
-                device._windowLocation = windowLocation;
-                device.setWindowLocationUrl(targetUrl);
-
-                assertEquals('window.location.assign call count', 1, windowLocation.assign.callCount);
-                assertEquals('Correct URL passed through', targetUrl, windowLocation.assign.getCall(0).args[0]);
-            }
-        );
-    };
-
-    /**
-     * Test that device.setWindowLocationUrl() uses the alternative navigation approach when window.location.assign() is unavailable.
-     */
-    this.BrowserDeviceTest.prototype.testSetWindowLocationUrlAlternative = function(queue) {
-        queuedRequire(queue,
-            [
-                "antie/devices/browserdevice"
-            ],
-            function(BrowserDevice) {
-                var device = new BrowserDevice(antie.framework.deviceConfiguration);
-                var targetUrl = 'http://example.com:55555/path/to/test.html?device=sample&config=precert&a=x%3Dy&b=&z';
-
-                // window.location.assign() does not exist
-                var windowLocation = {};
-
-                device._windowLocation = windowLocation;
-                device.setWindowLocationUrl(targetUrl);
-
-                assertEquals('location.href property set', targetUrl, windowLocation.href);
-            }
-        );
-    };
-
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    /*
-    this.BrowserDeviceTest.prototype.testFirefox19OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function ff19KeyDown() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                function ff19KeyRepeat() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(ff19KeyDown, ff19KeyRepeat, stubs, queue);
-            }
-        );
-    };
-    */
-    
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    /*
-    this.BrowserDeviceTest.prototype.testChromeOSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function chromeKeyDown() {
-                    document.onkeydown(mockEvent);
-                }
-                function chromeKeyRepeat() {
-                    document.onkeydown(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(chromeKeyDown, chromeKeyRepeat, stubs, queue);
-            }
-        );
-    };
-    */
-    
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    // This is a case special for some linux's using gecko taken from http://unixpapa.com/js/key.html
-    /*
-    this.BrowserDeviceTest.prototype.testOldGeckoLinuxStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function linuxGeckoKeyDown() {
-                    document.onkeydown(mockEvent);
-                }
-                
-                function linuxGeckoRepeat() {
-                    document.onkeyup(mockEvent);
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(linuxGeckoKeyDown, linuxGeckoRepeat, stubs, queue);
-            }
-        );
-    };
-    */
-}());
+	};
+})();

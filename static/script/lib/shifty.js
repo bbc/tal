@@ -79,7 +79,7 @@ require.def('antie/lib/shifty', function() {
 	 */
 	function tweenProps(currentPosition, params, state) {
 		var prop,
-			normalizedPosition;
+				normalizedPosition;
 
 		normalizedPosition = (currentPosition - params.timestamp) / params.duration;
 
@@ -191,9 +191,9 @@ require.def('antie/lib/shifty', function() {
 		this._hook = {};
 
 		this._tweenParams = {
-			'owner': this,
-			'hook': this._hook,
-			'data': {} // holds arbitrary data
+			'owner': this
+			,'hook': this._hook
+			,'data': {} // holds arbitrary data
 		};
 
 		this._state = {};
@@ -241,9 +241,9 @@ require.def('antie/lib/shifty', function() {
 	 */
 	Tweenable.prototype.tween = function tween(from, to, duration, callback, easing) {
 
-		var self,
-			params,
-			state;
+		var self
+				,params
+				,state;
 
 		if (this._state.isAnimating) {
 			return;
@@ -274,9 +274,8 @@ require.def('antie/lib/shifty', function() {
 			};
 			params.to = from.to || from.target || {};
 			params.duration = from.duration || this.duration;
-            params.easing = from.easing || this.easing;
-            params.fps = from.fps || this.fps;
-            state.current = from.from || {};
+			params.easing = from.easing || this.easing;
+			state.current = from.from || {};
 		}
 
 		params.timestamp = now();

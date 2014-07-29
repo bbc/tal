@@ -1,0 +1,9 @@
+#app {
+	width: 960px;
+	height: 540px;
+	margin: -270px auto 0 auto;
+}
+#carouselcontainer {
+	left: 30px; /* (960/2)-(900/2) */
+	/*top: 128px;*/ /* (540/2)-(265/2) */
+}

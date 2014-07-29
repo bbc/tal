@@ -1,27 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.HorizontalList class.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
+ * @author Chris Warren <chris.warren@bbc.co.uk>
+ * @version 1.0.0
  */
 
 require.def('antie/widgets/horizontallist',
@@ -40,7 +20,7 @@ require.def('antie/widgets/horizontallist',
 		 * @param {antie.Formatter} [itemFormatter] A formatter class used on each data item to generate the list item child widgets.
 		 * @param {antie.DataSource|Array} [dataSource] An array of data to be used to generate the list items, or an aysnchronous data source.
 		 */
-		var HorizontalList = List.extend(/** @lends antie.widgets.HorizontalList.prototype */ {
+		return List.extend(/** @lends antie.widgets.HorizontalList.prototype */ {
 			/**
 			 * @constructor
 			 * @ignore
@@ -55,16 +35,6 @@ require.def('antie/widgets/horizontallist',
 				var self = this;
 				this.addEventListener('keydown', function(e) { self._onKeyDown(e); });
 			},
-			
-			/**
-			 * Set whether to support wrapping within the list.
-			 * @param {Integer} wrapMode 	Pass <code>HorizontalList.WRAP_MODE_NONE</code> for no wrapping.
-			 * 								Pass <code>HorizontalList.WRAP_MODE_NONE</code> to allow navigation to wrap.
-			 */
-			setWrapMode: function(wrapMode) {
-				this._wrapMode = wrapMode;
-			},
-			
 			/**
 			 * Key handler for horizontal lists. Processes KeyEvent.VK_LEFT and KeyEvent.VK_RIGHT keys and stops propagation
 			 * if the keypress is handled. Otherwise allows the event to be bubbled up to the parent widget to allow
@@ -84,14 +54,7 @@ require.def('antie/widgets/horizontallist',
 					} else if(evt.keyCode == KeyEvent.VK_RIGHT) {
 						_newSelectedIndex++;
 					}
-					
-					//force the index to wrap correctly
-					if(this._wrapMode == HorizontalList.WRAP_MODE_WRAP ) {
-						_newSelectedIndex = ( _newSelectedIndex + this._childWidgetOrder.length ) % this._childWidgetOrder.length;
-					}
-					else
 					if(_newSelectedIndex < 0 || _newSelectedIndex >= this._childWidgetOrder.length) {
-						
 						break;
 					}
 					var _widget = this._childWidgetOrder[_newSelectedIndex];
@@ -109,10 +72,5 @@ require.def('antie/widgets/horizontallist',
 				return (_newSelectedWidget != null);
 			}
 		});
-		
-		HorizontalList.WRAP_MODE_NONE = 0;
-		HorizontalList.WRAP_MODE_WRAP = 1;
-		
-		return HorizontalList;
 	}
 );

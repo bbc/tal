@@ -1,27 +1,3 @@
-/**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * All rights reserved
- * Please contact us for an alternative licence
- */
-
 (function() {
 	this.ComponentContainerTest = AsyncTestCase("ComponentContainer");
 
@@ -96,34 +72,6 @@
 		);
 	};
 
-    this.ComponentContainerTest.prototype.testMultipleShowsOfSameComponentDoesntCallLoadComponentMoreThanOnce = function (queue) {
-//        expectAsserts(1);
-//
-        queuedApplicationInit(
-            queue,
-            "lib/mockapplication",
-            ["antie/widgets/componentcontainer"],
-            function (application, ComponentContainer) {
-                var container = new ComponentContainer("container");
-                application.getRootWidget().appendChildWidget(container);
-
-                var loadSpy = this.sandbox.spy(container, "_loadComponentCallback");
-
-                queue.call("Show component", function (callbacks) {
-
-                    var beforeRender = callbacks.add( function(){} );
-
-                    container.addEventListener("beforerender", beforeRender);
-                    container.show("fixtures/components/multipleshowcomponent");
-                    container.show("fixtures/components/multipleshowcomponent" );
-                });
-
-                queue.call("Assert", function (callbacks) {
-                  assertTrue( loadSpy.calledOnce );
-                });
-            });
-    };
-
  	this.ComponentContainerTest.prototype.testShowWithArgs = function(queue) {
 		expectAsserts(8);
 
@@ -156,40 +104,6 @@
 						}));
 
 						container.show("fixtures/components/emptycomponent", args);
-					});
-				}
-		);
-	};
-
-	this.ComponentContainerTest.prototype.testShowIncludesComponent = function(queue) {
-		expectAsserts(4);
-
-		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer"],
-				function(application, ComponentContainer) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
-
-					var loadStub = this.sandbox.stub();
-					var beforeRenderStub = this.sandbox.stub();
-					var beforeShowStub = this.sandbox.stub();
-
-					queue.call("Wait for component to be shown", function(callbacks) {
-						container.addEventListener("load", loadStub);
-						container.addEventListener("beforerender", beforeRenderStub);
-						container.addEventListener("beforeshow", beforeShowStub);
-						container.addEventListener("aftershow", callbacks.add(function(evt) {
-							var component = container.getContent();
-
-							assertEquals('Component on load event', component, loadStub.args[0][0].component);
-							assertEquals('Component on beforerender event', component, beforeRenderStub.args[0][0].component);
-							assertEquals('Component on beforeshow event', component, beforeShowStub.args[0][0].component);
-							assertEquals('Component on aftershow event', component, evt.component);
-						}));
-
-						container.show("fixtures/components/emptycomponent", {});
 					});
 				}
 		);
