@@ -42,10 +42,10 @@ require.def(
 			var self = this;
 			var script = null;
 			var funcName = "_antie_callback_" + (callbackSuffix || ((new Date() * 1) + "_" + Math.floor(Math.random() * 10000000)));
-			
+
 			if (window[funcName])
 				throw "A request with the name " + funcName + " is already in flight";
-			
+
 			var timeoutHandle = window.setTimeout(function() {
 				if (window[funcName]) {
 					if (script) {
@@ -75,7 +75,7 @@ require.def(
 			head.appendChild(script);
 			return script;
 		},
-		
+
 		/**
 		 * Loads a resource from a URL protected by device authentication.
 		 * @param {String} url The URL to load.
@@ -96,11 +96,11 @@ require.def(
 			var xhr = new XMLHttpRequest();
 			xhr.open(opts.method || 'GET', url, true);
 			xhr.onreadystatechange = function() {
-				if (this.readyState == 4) {
+				if (this.readyState === 4) {
 					this.onreadystatechange = null;
 					if (this.status >= 200 && this.status < 300) {
 						if (opts.onLoad) {
-							opts.onLoad(this.responseText);
+							opts.onLoad(this.responseText, this.status);
 						}
 					} else {
 						if (opts.onError) {
@@ -210,7 +210,7 @@ require.def(
 			timeoutHandle = setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
 		},
-		
+
         /**
          * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
          * the device, falling back to a JSON-P call otherwise.
