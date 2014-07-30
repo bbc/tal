@@ -2,9 +2,10 @@
 (function() {
     this.tests = AsyncTestCase("Truncation Helpers");
 
+    var TEST_STR = "This is a test string.";
+
     this.tests.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
-        this.sourceStr = "This is a test string.";
     };
 
     this.tests.prototype.tearDown = function () {
@@ -34,9 +35,9 @@
         expectAsserts(3);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/helpers"], function(Helpers) {
-            assertEquals(true, Helpers.isAtWordBoundary(this.sourceStr, 4));
-            assertEquals(true, Helpers.isAtWordBoundary(this.sourceStr, 7));
-            assertEquals(true, Helpers.isAtWordBoundary(this.sourceStr, 22));
+            assertEquals(true, Helpers.isAtWordBoundary(TEST_STR, 4));
+            assertEquals(true, Helpers.isAtWordBoundary(TEST_STR, 7));
+            assertEquals(true, Helpers.isAtWordBoundary(TEST_STR, 22));
         });
     };
 
@@ -44,8 +45,8 @@
         expectAsserts(2);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/helpers"], function(Helpers) {
-            assertEquals(false, Helpers.isAtWordBoundary(this.sourceStr, 5));
-            assertEquals(false, Helpers.isAtWordBoundary(this.sourceStr, 6));
+            assertEquals(false, Helpers.isAtWordBoundary(TEST_STR, 5));
+            assertEquals(false, Helpers.isAtWordBoundary(TEST_STR, 6));
         });
     };
 
@@ -53,7 +54,7 @@
         expectAsserts(1);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/helpers"], function(Helpers) {
-            assertEquals(14, Helpers.getLastWordBoundaryIndex(this.sourceStr));
+            assertEquals(14, Helpers.getLastWordBoundaryIndex(TEST_STR));
         });
     };
 
