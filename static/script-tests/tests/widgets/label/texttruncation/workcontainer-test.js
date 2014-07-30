@@ -23,18 +23,18 @@
     };
 
     function setupParentContainer() {
-        var container = document.createElement("div");
+        var parentContainer = document.createElement("div");
         // try and set the css to that this will render the same in all browsers
-        container.style.display = "block";
-        container.style.margin = "0";
-        container.style.padding = "0";
-        container.style.borderStyle = "none";
-        container.style.fontFamily = "Courier, monospace";
-        container.style.fontStyle = "normal";
-        container.style.fontSize = "20px";
-        container.style.fontWeight = "normal";
-        document.body.appendChild(container);
-        return container;
+        parentContainer.style.display = "block";
+        parentContainer.style.margin = "0";
+        parentContainer.style.padding = "0";
+        parentContainer.style.borderStyle = "none";
+        parentContainer.style.fontFamily = "Courier, monospace";
+        parentContainer.style.fontStyle = "normal";
+        parentContainer.style.fontSize = "20px";
+        parentContainer.style.fontWeight = "normal";
+        document.body.appendChild(parentContainer);
+        return parentContainer;
     }
 
     function destroyParentContainer(parentContainer) {

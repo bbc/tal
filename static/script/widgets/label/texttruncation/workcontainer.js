@@ -1,6 +1,9 @@
 require.def('antie/widgets/label/texttruncation/workcontainer',
-    ['antie/widgets/label/texttruncation/cssmanager'],
-    function (CssManager) {
+    [
+        'antie/widgets/label/texttruncation/cssmanager',
+        'antie/widgets/label/texttruncation/positiongenerator'
+    ],
+    function (CssManager, PositionGenerator) {
         "use strict";
 
         /**
@@ -64,6 +67,24 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
             }
             return this._measuringHorizontally ? this._container.clientWidth > this._w : this._container.clientHeight > this._h;
         };
+
+        /**
+         * Perform a binary chop to calculate the number of characters that fit into this WorkContainer.
+         * @param {String} txt The source string to work on.
+         * @param {String} txtEnd The text that would be added after the truncated text. E.g "...".
+         *                        The length of this is not included in the returned value.
+         * @returns The number of characters that fit in this WorkContainer.
+         */
+        WorkContainer.prototype.getNumCharactersThatFit = function(txt, txtEnd) {
+            var positionGenerator = new PositionGenerator(txt.length);
+            var position = txt.length;
+            var txtWorkingOn = txt;
+            while(positionGenerator.hasNext(this.isOver(txtWorkingOn))) {
+                position = positionGenerator.next(this.isOver(txtWorkingOn));
+                txtWorkingOn = txt.slice(0, position) + txtEnd;
+            }
+            return position;
+        }
         return WorkContainer;
     }
 );

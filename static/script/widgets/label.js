@@ -104,7 +104,7 @@ require.def('antie/widgets/label',
                         for (var currentLine = 0; currentLine < numLoopIterations; currentLine++) {
 
                             var remainingTxt = txt.slice(currentLineStartIndex, txt.length);
-                            var numCharsThatFit = TruncationHelpers.getNumCharactersThatFit(workContainer, remainingTxt, noLines === 0 || currentLine === noLines - 1 ? txtEnd : "", noLines !== 0);
+                            var numCharsThatFit = workContainer.getNumCharactersThatFit(remainingTxt, noLines === 0 || currentLine === noLines - 1 ? txtEnd : "", noLines !== 0);
                             truncationHappened = numCharsThatFit !== remainingTxt.length;
                             remainingTxt = remainingTxt.slice(0, numCharsThatFit);
 
