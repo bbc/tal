@@ -28,10 +28,9 @@ require.def('antie/widgets/label',
 	[
         'antie/widgets/widget',
         'antie/widgets/label/texttruncation/workcontainer',
-        'antie/widgets/label/texttruncation/cssmanager',
         'antie/widgets/label/texttruncation/helpers'
     ],
-	function(Widget, WorkContainer, CssManager, TruncationHelpers) {
+	function(Widget, WorkContainer, TruncationHelpers) {
 		/**
 		 * The Label widget displays text. It supports auto-truncation (with ellipsis) of text to fit.
 		 * @name antie.widgets.Label
@@ -91,7 +90,6 @@ require.def('antie/widgets/label',
                         el.innerHTML = "";
 
                         var workContainer = new WorkContainer(el, noLines !== 0);
-                        var cssManager = new CssManager(el, noLines !== 0);
 
                         // to contain the final text
                         var finalTxt = "";
@@ -143,8 +141,6 @@ require.def('antie/widgets/label',
                         }
 
                         workContainer.destroy();
-                        // set css properties that have been modified back to their original values
-                        cssManager.restore();
                         device.setElementContent(self.outputElement, finalTxt);
                     };
 

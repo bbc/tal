@@ -1,7 +1,6 @@
 require.def('antie/widgets/label/texttruncation/workcontainer',
-    [
-    ],
-    function () {
+    ['antie/widgets/label/texttruncation/cssmanager'],
+    function (CssManager) {
         "use strict";
 
         /**
@@ -27,6 +26,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
             // clientWidth and clientHeight includes padding (but not border or margin), but we know that container will have padding of 0 and will sit within parents padding :)
             this._w = this._container.clientWidth;
             this._h = this._container.clientHeight;
+            this._cssManager = new CssManager(this._parentEl, measuringHorizontally);
         }
 
         WorkContainer.prototype._create = function() {
@@ -48,6 +48,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
          */
         WorkContainer.prototype.destroy = function() {
             this._parentEl.removeChild(this._container);
+            this._cssManager.restore();
         };
 
         /**
