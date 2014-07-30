@@ -57,6 +57,8 @@ require.def('antie/widgets/label',
 				}
 				this._truncationMode = Label.TRUNCATION_MODE_NONE;
 				this._maxLines = 0;
+                this._truncationEndText = "...";
+                this._allowTruncationPartThroughWord = false;
 				this.addClass('label');
 			},
 			/**
@@ -79,9 +81,9 @@ require.def('antie/widgets/label',
                         var noLines = self._maxLines;
                         var txt = self._text;
                         // if set to false then the text may be cut off midway through a word.
-                        var cutOffWord = true;
+                        var cutOffWord = !self._allowTruncationPartThroughWord;
                         // text to be appended at end of visible text
-                        var txtEnd = "...";
+                        var txtEnd = self._truncationEndText;
 
                         // clear any text that's currently there
                         el.innerHTML = "";
@@ -182,7 +184,21 @@ require.def('antie/widgets/label',
 			 */
 			setMaximumLines: function(lines) {
 				this._maxLines = lines;
-			}
+			},
+            /**
+             * Sets the text to append at the end of the truncated text. Default to "..."
+             * @param {String} lines The text to append.
+             */
+            setTruncationEndTxt: function(endTxt) {
+                this._truncationEndText = endTxt;
+            },
+            /**
+             * Allow the text to be truncated part way through a word. Defaults to false.
+             * @param {Boolean} Whether to allow truncating text part way through a word or not.
+             */
+            setAllowTruncationPartThroughWord: function(val) {
+                this._allowTruncationPartThroughWord = val;
+            }
 		});
 
 		/**
