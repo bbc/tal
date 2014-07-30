@@ -46,7 +46,6 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
          * Destroy the container and the text node contained in it.
          */
         WorkContainer.prototype.destroy = function() {
-            this._container.removeChild(this._txtTruncationElNode); //TODO: check this is necessary
             this._parentEl.removeChild(this._container);
         };
 

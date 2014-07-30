@@ -20,14 +20,14 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                 height: null,
                 display: null
             };
-            this.save();
+            this._save();
             this.configureForAlgorithm();
         };
 
         /**
          * Saves the current css values on the element which can later be restored with "restore".
          */
-        CssManager.prototype.save = function() {
+        CssManager.prototype._save = function() {
             for (var prop in this._properties) {
                 this._properties[prop] = this._el.style[prop];
             }
