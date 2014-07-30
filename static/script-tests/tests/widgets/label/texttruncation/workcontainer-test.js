@@ -77,7 +77,7 @@
         });
     };
 
-    this.tests.prototype.testDestroyRemovesChildContainerFromParent = function (queue) {
+    this.tests.prototype.testCheckDestroyRemovesChildContainerFromParent = function (queue) {
         expectAsserts(3);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
@@ -86,6 +86,26 @@
             assertEquals(1, container.childNodes.length);
             workContainer.destroy();
             assertEquals(0, container.childNodes.length);
+        });
+    };
+
+    this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringVertically = function (queue) {
+        expectAsserts(2);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
+            var workContainer = new WorkContainer(container, false);
+            assertEquals(30, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
+            assertEquals(33, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
+        });
+    };
+
+    this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringHorizontally = function (queue) {
+        expectAsserts(2);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
+            var workContainer = new WorkContainer(container, true);
+            assertEquals(5, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
+            assertEquals(8, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
         });
     };
 
