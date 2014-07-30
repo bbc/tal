@@ -76,7 +76,9 @@ require.def('antie/widgets/label',
 
                     var self = this;
 
+                    // TODO: Check if this is a TAL supported mechanism for checking when the element has been added to the DOM
                     this.outputElement.onAddedToVisibleDom = function() {
+                        // TODO? Extract this to a truncator(?) class that is instantiated when required
                         var el = self.outputElement;
                         var noLines = self._maxLines;
                         var txt = self._text;
