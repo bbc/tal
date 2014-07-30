@@ -20,6 +20,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
             this._measuringHorizontally = measuringHorizontally;
             this._container = null;
             this._txtTruncationElNode = null;
+            this._currentTxtNodeTxt = "";
             this._create();
             // the width and height of the box that the text should be truncated to fit into.
             // use the container (which has width auto and height 100%) clientWidth and clientHeight to get this value, not the parent el, because this takes into consideration any padding on the parent el
@@ -50,18 +51,16 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
         };
 
         /**
-         * Set the text on the text node in the container.
-         * @param {String} [txt] The text to place in the text node.
-         */
-        WorkContainer.prototype.setTxt = function(txt) {
-            this._txtTruncationElNode.nodeValue = txt;
-        };
-
-        /**
-         * Determine if the current text in the text node either overflows the width if measuring horizontally, or height otherwise.
+         * Determine if some text overflows the width if measuring horizontally, or height otherwise.
+         * @param {String} [txt] The text to measure.
          * @returns True if the text is overflowing the container.
          */
-        WorkContainer.prototype.isOver = function() {
+        WorkContainer.prototype.isOver = function(txt) {
+            // make sure only update the dom if necessary
+            if (this._currentTxtNodeTxt !== txt) {
+                this._currentTxtNodeTxt = txt;
+                this._txtTruncationElNode.nodeValue = txt;
+            }
             return this._measuringHorizontally ? this._container.clientWidth > this._w : this._container.clientHeight > this._h;
         };
         return WorkContainer;

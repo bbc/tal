@@ -59,12 +59,10 @@ require.def('antie/widgets/label/texttruncation/helpers',
             getNumCharactersThatFit: function(workContainer, txt, txtEnd) {
                 var positionGenerator = new PositionGenerator(txt.length);
                 var position = txt.length;
-                workContainer.setTxt(txt);
-                while(positionGenerator.hasNext(workContainer.isOver())) {
-                    position = positionGenerator.next(workContainer.isOver());
-                    var txtWorkingOn = txt.slice(0, position);
-                    // txtEnd should only be added on last line.
-                    workContainer.setTxt(txtWorkingOn + txtEnd);
+                var txtWorkingOn = txt;
+                while(positionGenerator.hasNext(workContainer.isOver(txtWorkingOn))) {
+                    position = positionGenerator.next(workContainer.isOver(txtWorkingOn));
+                    txtWorkingOn = txt.slice(0, position) + txtEnd;
                 }
                 return position;
             }
