@@ -96,7 +96,6 @@ require.def('antie/widgets/label',
                         // the index of the text where the current line starts
                         var currentLineStartIndex = 0;
 
-
                         // the loop will run for each line. If this is run with noLines as 0 this means fit the height of the label.
                         // in this case the loop should only run once as it's the height that's being measured.
                         var numLoopIterations = noLines === 0 ? 1 : noLines;
