@@ -33,7 +33,7 @@ require.def('antie/widgets/label/texttruncation/helpers',
                 if (lastSpaceIndex !== -1) {
                     return str.slice(0, lastSpaceIndex);
                 }
-                return str;
+                return "";
             },
 
             /**

@@ -24,8 +24,8 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
             // the width and height of the box that the text should be truncated to fit into.
             // use the container (which has width auto and height 100%) clientWidth and clientHeight to get this value, not the parent el, because this takes into consideration any padding on the parent el
             // clientWidth and clientHeight includes padding (but not border or margin), but we know that container will have padding of 0 and will sit within parents padding :)
-            this.w = this._container.clientWidth;
-            this.h = this._container.clientHeight;
+            this._w = this._container.clientWidth;
+            this._h = this._container.clientHeight;
         }
 
         WorkContainer.prototype._create = function() {
@@ -62,7 +62,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
          * @returns True if the text is overflowing the container.
          */
         WorkContainer.prototype.isOver = function() {
-            return this._measuringHorizontally ? this._container.clientWidth > this.w : this._container.clientHeight > this.h;
+            return this._measuringHorizontally ? this._container.clientWidth > this._w : this._container.clientHeight > this._h;
         };
         return WorkContainer;
     }

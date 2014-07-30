@@ -7,10 +7,10 @@ require.def('antie/widgets/label/texttruncation/positiongenerator',
         /**
          * Generates the index in the string that the algorithm should look up to (but not include) to determine the
          * amount of text that will fit.
-         * Starts with a value of 2^n which is just over or equal to the text length. This value is then halved on each
-         * request and either added or subtracted from the current position that is being looked at in the string depending
-         * on whether the amount of text is over or under the amount that will fit. A negative value converted to 0 and a
-         * value higher than the text length is converted to the text length.
+         * Starts with a value of 2^n which is just over or equal to the text length. Then halves this value. This value
+         * is then halved on each request and either added or subtracted from the current position that is being looked
+         * at in the string depending on whether the amount of text is over or under the amount that will fit. A negative
+         * value converted to 0.
          * @name antie.widgets.label.texttruncation.positiongenerator
          * @class
          * @param {String} [txtLength] The length of the source string.
@@ -22,6 +22,7 @@ require.def('antie/widgets/label/texttruncation/positiongenerator',
             while (this._pointer < this._txtLength) {
                 this._pointer = this._pointer << 1;
             }
+            this._pointer = this._pointer >> 1;
         }
 
         /**
@@ -37,9 +38,6 @@ require.def('antie/widgets/label/texttruncation/positiongenerator',
 
             if (nextPos < 0) {
                 nextPos = 0;
-            }
-            else if (nextPos > this._txtLength) {
-                nextPos = this._txtLength;
             }
             return nextPos;
         };
