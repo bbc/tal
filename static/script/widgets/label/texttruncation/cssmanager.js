@@ -4,7 +4,7 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
     ],
     /**
      * Saves the elements css and applies changes necessary for text truncation calculations. Then can restore back the original styles.
-     * @name antie.widgets.label.texttruncation.cssmanager
+     * @name antie.widgets.label.texttruncation.CssManager
      * @class
      * @param {DOMElement} el The DOMElement to make the changes on.
      * @param {Boolean} configureForMeasuringWidth Configures the css for measuring the width instead of height.

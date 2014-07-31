@@ -28,15 +28,16 @@ require.def('antie/widgets/label/texttruncation/truncator',
         'antie/widgets/label/texttruncation/workcontainer',
         'antie/widgets/label/texttruncation/helpers'
     ],
-    /**
-     * The Truncator manages truncating text.
-     * @name antie.widgets.label.texttruncation.Truncator
-     * @class
-     * @param {antie.devices.Device} [device] The antie.devices.Device object currently running this application.
-     * @extends antie.Class
-     */
     function (Class, WorkContainer, TruncationHelpers) {
         "use strict";
+
+        /**
+         * The Truncator manages truncating text.
+         * @name antie.widgets.label.texttruncation.Truncator
+         * @class
+         * @param {antie.devices.Device} [device] The antie.devices.Device object currently running this application.
+         * @extends antie.Class
+         */
         var Truncator = Class.extend(/** @lends antie.widgets.label.texttruncation.truncator.prototype */ {
 
             /**
