@@ -27,10 +27,9 @@
 require.def('antie/widgets/label',
 	[
         'antie/widgets/widget',
-        'antie/widgets/label/texttruncation/workcontainer',
-        'antie/widgets/label/texttruncation/helpers'
+        'antie/widgets/label/texttruncation/truncator'
     ],
-	function(Widget, WorkContainer, TruncationHelpers) {
+	function(Widget, Truncator) {
 		/**
 		 * The Label widget displays text. It supports auto-truncation (with ellipsis) of text to fit.
 		 * @name antie.widgets.Label
@@ -55,9 +54,9 @@ require.def('antie/widgets/label',
 					this._super(id);
 				}
 				this._truncationMode = Label.TRUNCATION_MODE_NONE;
-				this._maxLines = 0;
-                this._truncationEndText = "...";
-                this._allowTruncationPartThroughWord = false;
+				this._maxLines = null;
+                this._ellipsisText = "null";
+                this._splitAtWordBoundary = false;
 				this.addClass('label');
 			},
 			/**
@@ -72,84 +71,22 @@ require.def('antie/widgets/label',
                 }
 
 				if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
-
                     var self = this;
-
-                    // TODO: Check if this is a TAL supported mechanism for checking when the element has been added to the DOM
-                    this.outputElement.onAddedToVisibleDom = function() {
-                        // TODO? Extract this to a truncator(?) class that is instantiated when required
-                        var el = self.outputElement;
-                        var noLines = self._maxLines;
-                        var txt = self._text;
-                        // if set to false then the text may be cut off midway through a word.
-                        var cutOffWord = !self._allowTruncationPartThroughWord;
-                        // text to be appended at end of visible text
-                        var txtEnd = self._truncationEndText;
-
-                        // clear any text that's currently there
-                        el.innerHTML = "";
-
-                        var workContainer = new WorkContainer(el, noLines !== 0);
-
-                        // to contain the final text
-                        var finalTxt = "";
-                        // flag that's set to true if truncation was needed
-                        var truncationHappened = false;
-                        // the index of the text where the current line starts
-                        var currentLineStartIndex = 0;
-
-                        // the loop will run for each line. If this is run with noLines as 0 this means fit the height of the label.
-                        // in this case the loop should only run once as it's the height that's being measured.
-                        var numLoopIterations = noLines === 0 ? 1 : noLines;
-                        for (var currentLine = 0; currentLine < numLoopIterations; currentLine++) {
-
-                            var remainingTxt = txt.slice(currentLineStartIndex, txt.length);
-                            var numCharsThatFit = workContainer.getNumCharactersThatFit(remainingTxt, noLines === 0 || currentLine === noLines - 1 ? txtEnd : "", noLines !== 0);
-                            truncationHappened = numCharsThatFit !== remainingTxt.length;
-                            remainingTxt = remainingTxt.slice(0, numCharsThatFit);
-
-                            if (noLines !== 0 && truncationHappened && currentLine < noLines - 1) {
-                                // moving onto next line
-                                // update startIndex to the index that the next line will start on.
-                                // will be after the last space on line
-                                var lastWordBoundary = TruncationHelpers.getLastWordBoundaryIndex(remainingTxt);
-                                if (lastWordBoundary !== -1) {
-                                    currentLineStartIndex = currentLineStartIndex + (lastWordBoundary + 1);
-                                    // slice currentLineTxt so that it matches the text that will be on the line
-                                    remainingTxt = remainingTxt.slice(0, lastWordBoundary + 1);
-                                }
-                                else {
-                                    currentLineStartIndex = numCharsThatFit;
-                                }
-                            }
-                            finalTxt += remainingTxt;
-
-                            if (!truncationHappened) {
-                                // no point carrying on if not had to truncate on this line as this will be the same for the rest
-                                break;
-                            }
-                        }
-
-                        if (truncationHappened) {
-                            if (cutOffWord && !TruncationHelpers.isAtWordBoundary(txt, finalTxt.length)) {
-                                finalTxt = TruncationHelpers.trimToWord(finalTxt);
-                            }
-                            // trim trailing spaces
-                            finalTxt = TruncationHelpers.trimTrailingWhitespace(finalTxt);
-                            // add txtEnd
-                            finalTxt += txtEnd;
-                        }
-
-                        workContainer.destroy();
-                        device.setElementContent(self.outputElement, finalTxt);
-                    };
-
+                    setTimeout(function() {
+                        device.setElementContent(self.outputElement, self._truncateText());
+                    }, 0);
 				} else {
                     device.setElementContent(this.outputElement, this._text);
 				}
 
 				return this.outputElement;
 			},
+            _truncateText: function() {
+                var truncator = new Truncator();
+                truncator.setSplitAtWordBoundary(this._splitAtWordBoundary);
+                truncator.setEllipsisText(this._ellipsisText);
+                return truncator.truncateText(this.outputElement, this._text, this._maxLines);
+            },
 			/**
 			 * Sets the text displayed by this label.
 			 * @param {String} text The new text to be displayed.
@@ -180,22 +117,22 @@ require.def('antie/widgets/label',
              * This is optional and if not specified the text will just be truncated when it no longer fits the box.
 			 * @param {String} lines The maximum number of lines to display.
 			 */
-			setMaximumLines: function(lines) {
-				this._maxLines = lines;
+			setMaximumLines: function(numberLines) {
+				this._maxLines = numberLines;
 			},
             /**
-             * Sets the text to append at the end of the truncated text. Default to "..."
+             * Sets the text to append at the end of the truncated text. Defaults to "..."
              * @param {String} lines The text to append.
              */
-            setTruncationEndTxt: function(endTxt) {
-                this._truncationEndText = endTxt;
+            setEllipsisText: function(ellipsisText) {
+                this._ellipsisText = ellipsisText;
             },
             /**
-             * Allow the text to be truncated part way through a word. Defaults to false.
+             * TODO
              * @param {Boolean} Whether to allow truncating text part way through a word or not.
              */
-            setAllowTruncationPartThroughWord: function(val) {
-                this._allowTruncationPartThroughWord = val;
+            setSplitAtWordBoundary: function(splitAtWordBoundary) {
+                this._splitAtWordBoundary = splitAtWordBoundary;
             },
             /**
              * @Deprecated

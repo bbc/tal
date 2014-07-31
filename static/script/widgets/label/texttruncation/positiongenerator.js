@@ -25,14 +25,12 @@ require.def('antie/widgets/label/texttruncation/positiongenerator',
             this._pointer = this._pointer >> 1;
         }
 
-        /**
-         * Returns the position that the source text should be sliced up to next.
-         * @param {Boolean} [isOver] True if the source string currently takes up more space than the container when
-         *                           sliced to the last position retrieved from 'next'.
-         * @returns The position that the source text should be sliced up to next.
-         */
-        PositionGenerator.prototype.calculateNext = function(isOver) {
+        PositionGenerator.prototype._calculateNext = function(isOver) {
             var nextPos;
+
+            function someDescriptiveName() {
+
+            }
             var amount = this._pointer === 0 && isOver ? 1 : this._pointer;
             nextPos = isOver ? this._position - amount : this._position + amount;
 
@@ -50,7 +48,7 @@ require.def('antie/widgets/label/texttruncation/positiongenerator',
          * @returns The position that the source text should be sliced up to next.
          */
         PositionGenerator.prototype.next = function(isOver) {
-            this._position = this.calculateNext(isOver);
+            this._position = this._calculateNext(isOver);
             this._pointer = this._pointer >> 1;
             return this._position;
         };

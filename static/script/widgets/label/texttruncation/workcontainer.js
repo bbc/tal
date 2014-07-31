@@ -33,6 +33,8 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
         }
 
         WorkContainer.prototype._create = function() {
+
+            // TODO: try and use framework
             this._container = document.createElement("div");
             this._container.style.display = "block";
             this._container.style.margin = "0";
@@ -84,7 +86,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 txtWorkingOn = txt.slice(0, position) + txtEnd;
             }
             return position;
-        }
+        };
         return WorkContainer;
     }
 );

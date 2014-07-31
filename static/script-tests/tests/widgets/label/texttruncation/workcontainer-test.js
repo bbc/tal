@@ -11,6 +11,8 @@
         this.sandbox = sinon.sandbox.create();
         this.parentContainer = setupParentContainer();
 
+
+
         container = document.createElement("div");
         this.parentContainer.appendChild(container);
         container.style.width = "100px";
@@ -94,6 +96,8 @@
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
             var workContainer = new WorkContainer(container, false);
+            //TODO
+            this.sandbox.stub(workContainer, "_create").returns({});
             assertEquals(30, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
             assertEquals(33, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
         });
