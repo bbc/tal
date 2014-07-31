@@ -12,14 +12,14 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
          * The container will be set to fill the parent element and the visibility will be set to hidden and overflow to
          * hidden on this container to make sure any temporary work isn't visible and doesn't effect anything else on the page.
          * Because the text node is being created under the parent element in the dom hireachy so that it inherits all of the correct css styles.
-         * @name antie.widgets.label.texttruncation.workcontainer
+         * @name antie.widgets.label.texttruncation.WorkContainer
          * @class
          * @param {antie.devices.Device} [device] The antie.devices.Device object currently running this application.
          * @param {DOMElement} [parentEl] The DOMElement that should contain this.
          * @param {Boolean} [measuringHorizontally] True if this container is being used to compare the width of the text to the width of the container.
          *                                          False if the container is being used to compare the height of the text to the height of the container.
          */
-        var WorkContainer = Class.extend(/** @lends antie.widgets.label.texttruncation.workcontainer.prototype */ {
+         var WorkContainer = Class.extend(/** @lends antie.widgets.label.texttruncation.workcontainer.prototype */ {
 
             /**
              * @constructor
