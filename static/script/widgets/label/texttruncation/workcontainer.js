@@ -29,10 +29,10 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 this._device = device;
                 this._parentEl = parentEl;
                 this._measuringHorizontally = measuringHorizontally;
-                this._container = null;
-                this._txtTruncationElNode = null;
-                this._currentTxtNodeTxt = "";
-                this._create();
+                this._container = this._createContainer();
+                this._txtTruncationElNode = this._createTxtTruncationElNode();
+                this._container.appendChild(this._txtTruncationElNode);
+                this._parentEl.appendChild(this._container);
                 // the width and height of the box that the text should be truncated to fit into.
                 // use the container (which has width auto and height 100%) to get these values, not the parent el, because this takes into consideration any padding on the parent el
                 // clientWidth and clientHeight includes padding (but not border or margin), but we know that container will have padding of 0 and will sit within parents padding :)
@@ -42,18 +42,20 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 this._cssManager = new CssManager(this._parentEl, this._measuringHorizontally);
             },
 
-            _create: function() {
-                this._container = document.createElement("div");
-                this._container.style.display = "block";
-                this._container.style.margin = "0";
-                this._container.style.padding = "0";
-                this._container.style.width = "auto";
-                this._container.style.height = "100%";
-                this._container.style.overflow = "hidden";
-                this._container.style.visibility = "hidden";
-                this._txtTruncationElNode = document.createTextNode("");
-                this._container.appendChild(this._txtTruncationElNode);
-                this._parentEl.appendChild(this._container);
+            _createContainer: function() {
+                var container = document.createElement("div");
+                container.style.display = "block";
+                container.style.margin = "0";
+                container.style.padding = "0";
+                container.style.width = "auto";
+                container.style.height = "100%";
+                container.style.overflow = "hidden";
+                container.style.visibility = "hidden";
+                return container;
+            },
+
+            _createTxtTruncationElNode: function() {
+                return document.createTextNode("");
             },
 
             /**
