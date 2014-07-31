@@ -196,6 +196,15 @@ require.def('antie/widgets/label',
              */
             setAllowTruncationPartThroughWord: function(val) {
                 this._allowTruncationPartThroughWord = val;
+            },
+            /**
+             * @Deprecated
+             * Sets the width of this label for use with truncation only.
+             * No longer needed for current method of truncation.
+             * @param {Integer} width The width of this label in pixels
+             */
+            setWidth: function(width) {
+                // TODO: throw deprecated msg
             }
 		});
 
