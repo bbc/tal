@@ -55,8 +55,8 @@ require.def('antie/widgets/label',
 				}
 				this._truncationMode = Label.TRUNCATION_MODE_NONE;
 				this._maxLines = null;
-                this._ellipsisText = "null";
-                this._splitAtWordBoundary = false;
+                this._ellipsisText = "...";
+                this._splitAtWordBoundary = true;
 				this.addClass('label');
 			},
 			/**
@@ -133,8 +133,9 @@ require.def('antie/widgets/label',
                 this._ellipsisText = ellipsisText;
             },
             /**
-             * TODO
-             * @param {Boolean} Whether to allow truncating text part way through a word or not.
+             * Set whether or not to allow truncating text part way through a word.
+             * @param {Boolean} True means the truncated text will always end on a complete word. False means it may
+             *                  occur after any character.
              */
             setSplitAtWordBoundary: function(splitAtWordBoundary) {
                 this._splitAtWordBoundary = splitAtWordBoundary;
@@ -146,7 +147,7 @@ require.def('antie/widgets/label',
              * @param {Integer} width The width of this label in pixels
              */
             setWidth: function(width) {
-                // TODO: throw deprecated msg
+                throw "setWidth() called on Label but this method is now deprecated and has no effect.";
             }
 		});
 
