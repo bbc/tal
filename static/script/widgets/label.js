@@ -66,19 +66,24 @@ require.def('antie/widgets/label',
 			 */
 			render: function(device) {
 
+                var alreadyAddedToDom = this.outputElement;
                 if (!this.outputElement) {
                     this.outputElement = device.createLabel(this.id, this.getClasses(), "");
                 }
 
 				if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
                     var self = this;
-                    setTimeout(function() {
+                    var doTruncation = function() {
                         device.setElementContent(self.outputElement, self._truncateText());
-                    }, 0);
-				} else {
+                    };
+                    // the element needs to already be on the dom for the truncation to work and this happens after the
+                    // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
+                    // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
+                    alreadyAddedToDom ? doTruncation() : setTimeout(doTruncation, 0);
+				}
+                else {
                     device.setElementContent(this.outputElement, this._text);
 				}
-
 				return this.outputElement;
 			},
             _truncateText: function() {

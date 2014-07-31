@@ -7,7 +7,7 @@ require.def('antie/widgets/label/texttruncation/helpers',
             /**
              * Determine whether the result of str sliced to slicePoint would end at a word boundary.
              * @param {String} str The string that will be sliced.
-             * @param {String} slicePoint The point that this string would be sliced at. (Second param of slice)
+             * @param {Number} slicePoint The point that this string would be sliced at. (Second param of slice)
              * @returns true or false
              */
             isAtWordBoundary: function(str, slicePoint) {

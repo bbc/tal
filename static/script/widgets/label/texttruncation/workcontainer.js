@@ -15,9 +15,9 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
          * @name antie.widgets.label.texttruncation.WorkContainer
          * @class
          * @param {antie.devices.Device} [device] The antie.devices.Device object currently running this application.
-         * @param {DOMElement} [parentEl] The DOMElement that should contain this.
-         * @param {Boolean} [measuringHorizontally] True if this container is being used to compare the width of the text to the width of the container.
-         *                                          False if the container is being used to compare the height of the text to the height of the container.
+         * @param {DOMElement} parentEl The DOMElement that should contain this.
+         * @param {Boolean} measuringHorizontally True if this container is being used to compare the width of the text to the width of the container.
+         *                                        False if the container is being used to compare the height of the text to the height of the container.
          */
          var WorkContainer = Class.extend(/** @lends antie.widgets.label.texttruncation.workcontainer.prototype */ {
 
@@ -67,7 +67,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
 
             /**
              * Determine if some text overflows the width if measuring horizontally, or height otherwise.
-             * @param {String} [txt] The text to measure.
+             * @param {String} txt The text to measure.
              * @returns True if the text is overflowing the container.
              */
             isOver: function(txt) {
