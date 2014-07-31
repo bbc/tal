@@ -77,7 +77,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                     this._txtTruncationElNode.nodeValue = txt;
                 }
                 var size = this._device.getElementSize(this._container);
-                return this._measuringHorizontally ? size.width > this._w : size.height > this._h;
+                return this._measuringHorizontally ? size.width >= this._w : size.height >= this._h;
             },
 
             /**
