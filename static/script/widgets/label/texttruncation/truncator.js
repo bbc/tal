@@ -29,24 +29,51 @@ require.def('antie/widgets/label/texttruncation/truncator',
         'antie/widgets/label/texttruncation/helpers'
     ],
     /**
-     * TODO: this
-     *
+     * The Truncator manages truncating text.
+     * @name antie.widgets.label.texttruncation.Truncator
+     * @class
+     * @param {antie.devices.Device} [device] The antie.devices.Device object currently running this application.
+     * @extends antie.Class
      */
     function (Class, WorkContainer, TruncationHelpers) {
         "use strict";
         var Truncator = Class.extend(/** @lends antie.widgets.label.texttruncation.truncator.prototype */ {
 
-            // TODO: doc
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(device) {
+                this._device = device;
+            },
+
+            /**
+             * Set whether or not the text should truncate at a word boundary or any character.
+             * @param {Boolean} splitAtWordBoundary True if you want the text to truncate at a word boundary.
+             */
             setSplitAtWordBoundary: function(splitAtWordBoundary) {
                 this._splitAtWordBoundary = splitAtWordBoundary;
             },
 
-            // TODO: doc
+            /**
+             * Set the text that you want to be appended after the truncated text. This will not be appended if no
+             * truncation occurs.
+             * @param {String} ellipsisText The text to use. E.g. "...".
+             */
             setEllipsisText: function(ellipsisText) {
                 this._ellipsisText = ellipsisText;
             },
 
-            // TODO: doc
+            /**
+             * Truncates text.
+             * @param {DOMElement} element The DOMElement that the text will be placed into. The dimensions of this
+             *                             DOMElement are used to determine where the text will truncate.
+             * @param {String} text The source text.
+             * // TODO: mark this as optional
+             * @param {Number} numberOfLinesRequired The number of lines the text should be truncated to. A value of 0
+             *                                       (or omitting this parameter) means the text should be truncated to
+             *                                       fit the container.
+             */
             truncateText: function (element, text, numberOfLinesRequired) {
 
                 numberOfLinesRequired = numberOfLinesRequired || 0;
@@ -55,7 +82,7 @@ require.def('antie/widgets/label/texttruncation/truncator',
                 element.innerHTML = "";
 
                 var measuringHorizontally = numberOfLinesRequired !== 0;
-                var workContainer = new WorkContainer(element, measuringHorizontally);
+                var workContainer = new WorkContainer(this._device, element, measuringHorizontally);
                 var finalTxt = this._doTruncation(text, workContainer, numberOfLinesRequired);
                 var truncationHappened = finalTxt.length !== text.length;
 

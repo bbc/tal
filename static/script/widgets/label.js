@@ -82,7 +82,7 @@ require.def('antie/widgets/label',
 				return this.outputElement;
 			},
             _truncateText: function() {
-                var truncator = new Truncator();
+                var truncator = new Truncator(this.getCurrentApplication().getDevice());
                 truncator.setSplitAtWordBoundary(this._splitAtWordBoundary);
                 truncator.setEllipsisText(this._ellipsisText);
                 return truncator.truncateText(this.outputElement, this._text, this._maxLines);
