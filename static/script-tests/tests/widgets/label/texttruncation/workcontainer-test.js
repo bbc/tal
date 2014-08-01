@@ -28,17 +28,15 @@
     }
 
     function stubPositionGenerator(sandbox, PositionGenerator) {
-        (function() {
-            var positionGeneratorResults = [8, 4, 6];
-            sandbox.stub(PositionGenerator.prototype, "init", function () {
-            });
-            sandbox.stub(PositionGenerator.prototype, "hasNext", function () {
-                return positionGeneratorResults.length > 0;
-            });
-            sandbox.stub(PositionGenerator.prototype, "next", function () {
-                return positionGeneratorResults.shift();
-            });
-        })();
+        var positionGeneratorResults = [8, 4, 6];
+        sandbox.stub(PositionGenerator.prototype, "init", function () {
+        });
+        sandbox.stub(PositionGenerator.prototype, "hasNext", function () {
+            return positionGeneratorResults.length > 0;
+        });
+        sandbox.stub(PositionGenerator.prototype, "next", function () {
+            return positionGeneratorResults.shift();
+        });
     }
 
     function getMockDomContainer(w, h) {
