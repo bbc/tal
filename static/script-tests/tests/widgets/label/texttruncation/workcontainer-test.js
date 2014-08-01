@@ -2,43 +2,61 @@
 (function() {
     this.tests = AsyncTestCase("Work Container");
 
-    var LOREM_IPSUM = "Donec dignissim lacus eu quam fringilla, vitae hendrerit tellus egestas. Aenean ultricies blandit tellus, ac vestibulum libero sagittis in. Integer purus tortor, placerat quis velit ac, pulvinar sodales augue. Maecenas sodales, arcu id aliquet consectetur, enim purus lacinia urna, nec sagittis sem elit a nunc. Nam sagittis molestie varius. Aliquam vehicula, nisi ut porta venenatis, diam ipsum sodales nisi, nec rhoncus lorem quam sit amet neque. Cras euismod porttitor felis, at pulvinar diam iaculis vel. Nullam tincidunt turpis sit amet nunc lacinia, a fermentum purus tincidunt. Curabitur ac elit a quam posuere fermentum in sit amet ante. Vivamus semper ligula non metus mattis, id feugiat mauris ultrices. Aliquam ullamcorper molestie metus eget laoreet. Sed gravida mi et mauris venenatis, nec ultricies lacus suscipit. Nullam placerat elit id euismod interdum. Proin et dui eget sem sodales bibendum. Nam pulvinar, libero id elementum sagittis, purus augue molestie dui, vel dapibus lorem nibh ac odio. In eu adipiscing sapien.";
-    var SHORT_TEXT = "Two words.";
-
-    var container;
-
     this.tests.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
-        this.parentContainer = setupParentContainer();
-        container = document.createElement("div");
-        this.parentContainer.appendChild(container);
-        container.style.width = "100px";
-        container.style.height = "100px";
     };
 
     this.tests.prototype.tearDown = function () {
         this.sandbox.restore();
-        destroyParentContainer(this.parentContainer);
     };
 
-    function setupParentContainer() {
-        var parentContainer = document.createElement("div");
-        // try and set the css to that this will render the same in all browsers
-        parentContainer.style.display = "block";
-        parentContainer.style.margin = "0";
-        parentContainer.style.padding = "0";
-        parentContainer.style.borderStyle = "none";
-        parentContainer.style.fontFamily = "Courier, monospace";
-        parentContainer.style.fontStyle = "normal";
-        parentContainer.style.fontSize = "20px";
-        parentContainer.style.fontWeight = "normal";
-        document.body.appendChild(parentContainer);
-        return parentContainer;
+    var LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sagittis lacus ac urna tempus molestie. Etiam dignissim at arcu eu tincidunt. Cras molestie sed lacus eget ultrices. Donec fringilla auctor lacus non sagittis. Vivamus egestas eros massa, a bibendum augue ullamcorper a. Praesent ut lacus pulvinar, ullamcorper felis vel, volutpat leo. Nullam luctus vel justo eu commodo. Maecenas elementum felis elit, a aliquet dui lacinia elementum. Aenean non dolor scelerisque leo malesuada laoreet nec ac turpis. Nunc dapibus at risus id malesuada. Donec eu nisi vitae lorem elementum lobortis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec ultricies congue quam quis condimentum. Aliquam commodo iaculis eros, ut tincidunt neque gravida quis. Maecenas a augue a ipsum luctus fermentum. Cras sit amet purus at nisi vestibulum pulvinar.";
+
+    function stubCssManager(sandbox, CssManager) {
+        sandbox.stub(CssManager.prototype, "init", function() {});
+        sandbox.stub(CssManager.prototype, "restore", function() {});
     }
 
-    function destroyParentContainer(parentContainer) {
-        document.body.removeChild(parentContainer);
+    function stubWorkContainer(sandbox, WorkContainer, sourceContainer) {
+        sandbox.stub(WorkContainer.prototype, "_createContainer", function() {
+            return sourceContainer;
+        });
+
+        sandbox.stub(WorkContainer.prototype, "_createTxtTruncationElNode", function() {
+            return getMockDomTextNode("");
+        });
     }
+
+    function stubPositionGenerator(sandbox, PositionGenerator) {
+        (function() {
+            var positionGeneratorResults = [8, 4, 6];
+            sandbox.stub(PositionGenerator.prototype, "init", function () {
+            });
+            sandbox.stub(PositionGenerator.prototype, "hasNext", function () {
+                return positionGeneratorResults.length > 0;
+            });
+            sandbox.stub(PositionGenerator.prototype, "next", function () {
+                return positionGeneratorResults.shift();
+            });
+        })();
+    }
+
+    function getMockDomContainer(w, h) {
+        return {
+            clientWidth: w,
+            clientHeight: h,
+            offsetWidth: w,
+            offsetHeight: h,
+            appendChild: function() {}
+        };
+    }
+
+    function getMockDomTextNode(txt) {
+        return {
+            nodeValue: txt
+        };
+    }
+
 
     this.tests.prototype.testCheckTextThatIsMoreThanContainersVerticalHeightWhenMeasuringVerticallyIsReportedAsOver = function (queue) {
         expectAsserts(1);
@@ -46,10 +64,19 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, false);
-            assertEquals(true, workContainer.isOver(LOREM_IPSUM));
+            ["antie/widgets/label/texttruncation/workcontainer",
+             "antie/widgets/label/texttruncation/cssmanager"],
+        function(application, WorkContainer, CssManager) {
+
+            var mockContainer = getMockDomContainer(100, 100);
+
+            stubCssManager(this.sandbox, CssManager);
+            stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+
+            var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
+            mockContainer.clientHeight = mockContainer.offsetHeight = 150;
+
+            assertEquals(true, workContainer.isOver(""));
         });
     };
 
@@ -59,10 +86,19 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, false);
-            assertEquals(false, workContainer.isOver(SHORT_TEXT));
+            ["antie/widgets/label/texttruncation/workcontainer",
+                "antie/widgets/label/texttruncation/cssmanager"],
+        function(application, WorkContainer, CssManager) {
+
+            var mockContainer = getMockDomContainer(100, 100);
+
+            stubCssManager(this.sandbox, CssManager);
+            stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+
+            var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
+            mockContainer.clientHeight = mockContainer.offsetHeight = 50;
+
+            assertEquals(false, workContainer.isOver(""));
         });
     };
 
@@ -72,10 +108,19 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, true);
-            assertEquals(true, workContainer.isOver(LOREM_IPSUM));
+            ["antie/widgets/label/texttruncation/workcontainer",
+                "antie/widgets/label/texttruncation/cssmanager"],
+        function(application, WorkContainer, CssManager) {
+
+            var mockContainer = getMockDomContainer(100, 100);
+
+            stubCssManager(this.sandbox, CssManager);
+            stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+
+            var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
+            mockContainer.clientWidth = mockContainer.offsetWidth = 150;
+
+            assertEquals(true, workContainer.isOver(""));
         });
     };
 
@@ -85,54 +130,42 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, true);
-            assertEquals(true, workContainer.isOver(SHORT_TEXT));
+            ["antie/widgets/label/texttruncation/workcontainer",
+                "antie/widgets/label/texttruncation/cssmanager"],
+        function(application, WorkContainer, CssManager) {
+
+            var mockContainer = getMockDomContainer(100, 100);
+
+            stubCssManager(this.sandbox, CssManager);
+            stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+
+            var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
+            mockContainer.clientWidth = mockContainer.offsetWidth = 50;
+
+            assertEquals(false, workContainer.isOver(""));
         });
     };
 
-    this.tests.prototype.testCheckDestroyRemovesChildContainerFromParent = function (queue) {
-        expectAsserts(3);
+
+    this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValue = function (queue) {
+        expectAsserts(1);
 
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            assertEquals(0, container.childNodes.length);
-            var workContainer = new WorkContainer(application.getDevice(), container, true);
-            assertEquals(1, container.childNodes.length);
-            workContainer.destroy();
-            assertEquals(0, container.childNodes.length);
-        });
-    };
+            ["antie/widgets/label/texttruncation/workcontainer",
+             "antie/widgets/label/texttruncation/cssmanager",
+             "antie/widgets/label/texttruncation/positiongenerator"],
+        function(application, WorkContainer, CssManager, PositionGenerator) {
 
-    this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringVertically = function (queue) {
-        expectAsserts(2);
+            var mockContainer = getMockDomContainer(100, 100);
+            stubCssManager(this.sandbox, CssManager);
+            stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+            stubPositionGenerator(this.sandbox, PositionGenerator);
 
-        queuedApplicationInit(
-            queue,
-            "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, false);
-            assertEquals(30, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
-            assertEquals(33, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
-        });
-    };
+            var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
+            assertEquals(6, workContainer.getNumCharactersThatFit(LOREM_IPSUM));
 
-    this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringHorizontally = function (queue) {
-        expectAsserts(2);
-
-        queuedApplicationInit(
-            queue,
-            "lib/mockapplication",
-            ["antie/widgets/label/texttruncation/workcontainer"],
-        function(application, WorkContainer) {
-            var workContainer = new WorkContainer(application.getDevice(), container, true);
-            assertEquals(5, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
-            assertEquals(8, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
         });
     };
 
