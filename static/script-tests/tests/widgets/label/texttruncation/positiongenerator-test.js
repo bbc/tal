@@ -38,7 +38,7 @@
             assertEquals(true, positionGenerator.hasNext(true));
             assertEquals(1, positionGenerator.next(true));
         });
-    }
+    };
 
     this.tests.prototype.testCheckThatPositionGeneratorReturnsCorrectPositionAfterIsOverIsReportedFalseAndThenTrueAgainAndThenArrivesAtResult = function (queue) {
         expectAsserts(5);

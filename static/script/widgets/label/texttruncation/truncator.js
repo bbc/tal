@@ -46,6 +46,8 @@ require.def('antie/widgets/label/texttruncation/truncator',
              */
             init: function(device) {
                 this._device = device;
+                this._splitAtWordBoundary = true;
+                this._ellipsisText = "...";
             },
 
             /**
@@ -78,9 +80,6 @@ require.def('antie/widgets/label/texttruncation/truncator',
 
                 numberOfLinesRequired = numberOfLinesRequired || 0;
 
-                // clear any text that's currently there
-                element.innerHTML = "";
-
                 var measuringHorizontally = numberOfLinesRequired !== 0;
                 var workContainer = new WorkContainer(this._device, element, measuringHorizontally);
                 var finalTxt = this._doTruncation(text, workContainer, numberOfLinesRequired);
@@ -102,10 +101,14 @@ require.def('antie/widgets/label/texttruncation/truncator',
 
             _doTruncation: function(text, workContainer, numberOfLinesRequired) {
 
+                // determine if the text actually needs to be truncated
+                if (workContainer.getNumCharactersThatFit(text, "") === text.length) {
+                    // text does not need truncating
+                    return text;
+                }
+
                 // to contain the final text
                 var finalTxt = "";
-                // whether or not truncation actually happened/was necessary
-                var truncationHappened = false;
                 // the index of the text where the current line starts
                 var currentLineStartIndex = 0;
                 var numLoopIterations = numberOfLinesRequired === 0 ? 1 : numberOfLinesRequired;
@@ -115,7 +118,8 @@ require.def('antie/widgets/label/texttruncation/truncator',
                 for (var currentLineNumber = 0; currentLineNumber < numLoopIterations; currentLineNumber++) {
                     var remainingTxt = text.slice(currentLineStartIndex, text.length);
                     var numCharsThatFit = workContainer.getNumCharactersThatFit(remainingTxt, this._getEllipsisIfNecessary(numberOfLinesRequired, currentLineNumber));
-                    truncationHappened = numCharsThatFit !== remainingTxt.length;
+                    // whether or not truncation actually happened/was necessary on this line
+                    var truncationHappened = numCharsThatFit !== remainingTxt.length;
                     var currentLineTxt = remainingTxt.slice(0, numCharsThatFit);
 
                     if (numberOfLinesRequired !== 0 && truncationHappened && currentLineNumber < numberOfLinesRequired - 1) {

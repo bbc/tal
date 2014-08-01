@@ -98,40 +98,8 @@
                     assertEquals(text, widget1.getText());
 
                     var device = application.getDevice();
-                    document.body.appendChild(application.getRootWidget().render(device));
-                    var el = widget1.render(device);
-                    el.style.display = "block";
-                    var size = device.getElementSize(el);
 
-                    widget1.setTruncationMode(Label.TRUNCATION_MODE_NONE);
-                    widget1.setText(text);
-                    assertEquals(size, device.getElementSize(el));
-
-                    widget1.setMaximumLines(1);
-                    widget1.setText(text);
-                    assertEquals(size, device.getElementSize(el));
-
-                    widget1.setWidth(100);
-                    widget1.setText(text);
-                    assertEquals(size, device.getElementSize(el));
-
-                    el.style.width = "100px";
-                    widget1.setText(text);
-                    assertNotEquals(size, device.getElementSize(el));
-
-                    widget1.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
-                    widget1.setText(text);
-
-                    var newSize = device.getElementSize(el);
-                    assert(newSize.width <= 100);
-                    assertEquals(size.height, newSize.height);
-
-                    widget1.setMaximumLines(2);
-                    widget1.setText(text);
-
-                    var newSize2 = device.getElementSize(el);
-                    assert(newSize.width <= 100);
-                    assertNotEquals(newSize.height, newSize2.height);
+                    // TODO
 				}
 		);
 	};

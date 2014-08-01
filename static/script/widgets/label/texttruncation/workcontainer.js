@@ -31,6 +31,8 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 this._measuringHorizontally = measuringHorizontally;
                 this._container = this._createContainer();
                 this._txtTruncationElNode = this._createTxtTruncationElNode();
+                // clear any text that's currently there
+                this._parentEl.innerHTML = "";
                 this._container.appendChild(this._txtTruncationElNode);
                 this._parentEl.appendChild(this._container);
                 // the width and height of the box that the text should be truncated to fit into.
