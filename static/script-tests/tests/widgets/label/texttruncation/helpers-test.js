@@ -35,25 +35,6 @@
         this.sandbox.restore();
     };
 
-    function setupParentContainer() {
-        var parentContainer = document.createElement("div");
-        // try and set the css to that this will render the same in all browsers
-        parentContainer.style.display = "block";
-        parentContainer.style.margin = "0";
-        parentContainer.style.padding = "0";
-        parentContainer.style.borderStyle = "none";
-        parentContainer.style.fontFamily = "Courier, monospace";
-        parentContainer.style.fontStyle = "normal";
-        parentContainer.style.fontSize = "20px";
-        parentContainer.style.fontWeight = "normal";
-        document.body.appendChild(parentContainer);
-        return parentContainer;
-    }
-
-    function destroyParentContainer(parentContainer) {
-        document.body.removeChild(parentContainer);
-    }
-
     this.tests.prototype.testCheckIsAtWordBoundaryReturnsTrueWhenExpected = function (queue) {
         expectAsserts(3);
 

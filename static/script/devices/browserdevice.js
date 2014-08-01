@@ -479,7 +479,7 @@ require.def("antie/devices/browserdevice",
              * @returns The height (in pixels) that is required to display this block of text.
              */
             getTextHeight: function(text, maxWidth, classNames) {
-                /// TODO: is there a more efficient way of doing this?
+                /// TODO: Revert this back to the original!
                 var cacheKey = maxWidth + ":" + classNames.join(" ") + ":" + text;
                 var height;
                 if (!(height = this._textSizeCache[cacheKey])) {

@@ -34,28 +34,40 @@
     };
 
     var SAMPLE_TEXT = "This is some sample text.";
-    var numberOfCharactersToReturnFromWorkContainer;
 
     function stubWorkContainer(sandbox, WorkContainer) {
-        sandbox.stub(WorkContainer.prototype, "init", function() {});
-        sandbox.stub(WorkContainer.prototype, "destroy", function() {});
-        sandbox.stub(WorkContainer.prototype, "getNumCharactersThatFit", function(txt) {
-            // pretend that it's always numberToReturn characters that fit or the entire string
-            return txt.length < numberOfCharactersToReturnFromWorkContainer ? txt.length : numberOfCharactersToReturnFromWorkContainer;
-        });
+        sandbox.stub(WorkContainer.prototype, "init");
+        sandbox.stub(WorkContainer.prototype, "destroy");
+        sandbox.stub(WorkContainer.prototype, "getNumCharactersThatFit");
     }
 
-    this.tests.prototype.testCheckGetEllipsisIfNecessaryReturnsCorrectValues = function (queue) {
-        expectAsserts(3);
+    this.tests.prototype.testCheckGetEllipsisIfNecessaryReturnsCorrectValueWhenNotOnLastLine = function (queue) {
+        expectAsserts(1);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/truncator"], function(Truncator) {
-
             var truncator = new Truncator();
             assertEquals("", truncator._getEllipsisIfNecessary(3, 1));
+        });
+    };
+
+    this.tests.prototype.testCheckGetEllipsisIfNecessaryReturnsCorrectValueWhenOnLastLine = function (queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/truncator"], function(Truncator) {
+            var truncator = new Truncator();
             assertEquals("...", truncator._getEllipsisIfNecessary(3, 2));
+        });
+    };
+
+    this.tests.prototype.testCheckGetEllipsisIfNecessaryReturnsCorrectValueWhenFillingContainer = function (queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/truncator"], function(Truncator) {
+            var truncator = new Truncator();
             assertEquals("...", truncator._getEllipsisIfNecessary(0, 0));
         });
     };
+
 
     this.tests.prototype.testCheckTextIsTruncatedToCorrectAmountWhenSplittingAtWordBoundaryAndUsingEllipsisText = function (queue) {
         expectAsserts(3);
@@ -70,13 +82,14 @@
             truncator.setEllipsisText("...");
             truncator.setSplitAtWordBoundary(true);
 
-            numberOfCharactersToReturnFromWorkContainer = 10;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(10);
+
             assertEquals("This is...", truncator.truncateText(null, SAMPLE_TEXT, 0));
 
-            numberOfCharactersToReturnFromWorkContainer = SAMPLE_TEXT.length;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(SAMPLE_TEXT.length);
             assertEquals(SAMPLE_TEXT, truncator.truncateText(null, SAMPLE_TEXT, 0));
 
-            numberOfCharactersToReturnFromWorkContainer = SAMPLE_TEXT.length-1;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(SAMPLE_TEXT.length-1);
             assertEquals("This is some sample...", truncator.truncateText(null, SAMPLE_TEXT, 0));
         });
     };
@@ -94,10 +107,31 @@
             truncator.setEllipsisText("...");
             truncator.setSplitAtWordBoundary(false);
 
-            numberOfCharactersToReturnFromWorkContainer = 10;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(10);
             assertEquals("This is so...", truncator.truncateText(null, SAMPLE_TEXT, 0));
 
-            numberOfCharactersToReturnFromWorkContainer = SAMPLE_TEXT.length;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(SAMPLE_TEXT.length);
+            assertEquals(SAMPLE_TEXT, truncator.truncateText(null, SAMPLE_TEXT, 0));
+        });
+    };
+
+    this.tests.prototype.testCheckTextIsTruncatedToCorrectAmountWhenSplittingAtWordBoundaryAndNotUsingEllipsisText = function (queue) {
+        expectAsserts(2);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/truncator",
+                "antie/widgets/label/texttruncation/workcontainer"],
+        function(Truncator, WorkContainer) {
+            stubWorkContainer(this.sandbox, WorkContainer);
+
+            var truncator = new Truncator();
+
+            truncator.setEllipsisText("");
+            truncator.setSplitAtWordBoundary(true);
+
+            WorkContainer.prototype.getNumCharactersThatFit.returns(10);
+            assertEquals("This is", truncator.truncateText(null, SAMPLE_TEXT, 0));
+
+            WorkContainer.prototype.getNumCharactersThatFit.returns(SAMPLE_TEXT.length);
             assertEquals(SAMPLE_TEXT, truncator.truncateText(null, SAMPLE_TEXT, 0));
         });
     };
@@ -115,10 +149,10 @@
             truncator.setEllipsisText("");
             truncator.setSplitAtWordBoundary(false);
 
-            numberOfCharactersToReturnFromWorkContainer = 10;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(10);
             assertEquals("This is so", truncator.truncateText(null, SAMPLE_TEXT, 0));
 
-            numberOfCharactersToReturnFromWorkContainer = SAMPLE_TEXT.length;
+            WorkContainer.prototype.getNumCharactersThatFit.returns(SAMPLE_TEXT.length);
             assertEquals(SAMPLE_TEXT, truncator.truncateText(null, SAMPLE_TEXT, 0));
         });
     };

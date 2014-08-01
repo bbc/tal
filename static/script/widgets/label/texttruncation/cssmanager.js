@@ -59,7 +59,9 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
              */
             _save: function() {
                 for (var prop in this._properties) {
-                    this._properties[prop] = this._el.style[prop];
+                    if (this._properties.hasOwnProperty(prop)) {
+                        this._properties[prop] = this._el.style[prop];
+                    }
                 }
             },
 
@@ -68,7 +70,9 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
              */
             restore: function() {
                 for (var prop in this._properties) {
-                    this._el.style[prop] = this._properties[prop];
+                    if (this._properties.hasOwnProperty(prop)) {
+                        this._el.style[prop] = this._properties[prop];
+                    }
                 }
             },
 

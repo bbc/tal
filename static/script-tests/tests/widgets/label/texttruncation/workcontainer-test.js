@@ -36,24 +36,18 @@
     var LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sagittis lacus ac urna tempus molestie. Etiam dignissim at arcu eu tincidunt. Cras molestie sed lacus eget ultrices. Donec fringilla auctor lacus non sagittis. Vivamus egestas eros massa, a bibendum augue ullamcorper a. Praesent ut lacus pulvinar, ullamcorper felis vel, volutpat leo. Nullam luctus vel justo eu commodo. Maecenas elementum felis elit, a aliquet dui lacinia elementum. Aenean non dolor scelerisque leo malesuada laoreet nec ac turpis. Nunc dapibus at risus id malesuada. Donec eu nisi vitae lorem elementum lobortis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec ultricies congue quam quis condimentum. Aliquam commodo iaculis eros, ut tincidunt neque gravida quis. Maecenas a augue a ipsum luctus fermentum. Cras sit amet purus at nisi vestibulum pulvinar.";
 
     function stubCssManager(sandbox, CssManager) {
-        sandbox.stub(CssManager.prototype, "init", function() {});
-        sandbox.stub(CssManager.prototype, "restore", function() {});
+        sandbox.stub(CssManager.prototype, "init");
+        sandbox.stub(CssManager.prototype, "restore");
     }
 
     function stubWorkContainer(sandbox, WorkContainer, sourceContainer) {
-        sandbox.stub(WorkContainer.prototype, "_createContainer", function() {
-            return sourceContainer;
-        });
-
-        sandbox.stub(WorkContainer.prototype, "_createTxtTruncationElNode", function() {
-            return getMockDomTextNode("");
-        });
+        sandbox.stub(WorkContainer.prototype, "_createContainer").returns(sourceContainer);
+        sandbox.stub(WorkContainer.prototype, "_createTxtTruncationElNode").returns(getMockDomTextNode(""));
     }
 
     function stubPositionGenerator(sandbox, PositionGenerator) {
         var positionGeneratorResults = [8, 4, 6];
-        sandbox.stub(PositionGenerator.prototype, "init", function () {
-        });
+        sandbox.stub(PositionGenerator.prototype, "init");
         sandbox.stub(PositionGenerator.prototype, "hasNext", function () {
             return positionGeneratorResults.length > 0;
         });
@@ -78,6 +72,10 @@
         };
     }
 
+    function fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, w, h) {
+        mockContainer.clientWidth = mockContainer.offsetWidth = w;
+        mockContainer.clientHeight = mockContainer.offsetHeight = h;
+    }
 
     this.tests.prototype.testCheckTextThatIsMoreThanContainersVerticalHeightWhenMeasuringVerticallyIsReportedAsOver = function (queue) {
         expectAsserts(1);
@@ -95,7 +93,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
-            mockContainer.clientHeight = mockContainer.offsetHeight = 150;
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 101);
 
             assertEquals(true, workContainer.isOver(""));
         });
@@ -117,7 +115,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
-            mockContainer.clientHeight = mockContainer.offsetHeight = 50;
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
 
             assertEquals(false, workContainer.isOver(""));
         });
@@ -139,7 +137,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
-            mockContainer.clientWidth = mockContainer.offsetWidth = 150;
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 101, 100);
 
             assertEquals(true, workContainer.isOver(""));
         });
@@ -161,7 +159,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
-            mockContainer.clientWidth = mockContainer.offsetWidth = 50;
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
 
             assertEquals(false, workContainer.isOver(""));
         });

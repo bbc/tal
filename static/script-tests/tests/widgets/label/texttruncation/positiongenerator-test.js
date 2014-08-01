@@ -63,21 +63,28 @@
         });
     };
 
-    this.tests.prototype.testCheckThatPositionGeneratorReturnsCorrectPositionAfterIsOverIsReportedFalseAndThenTrueAgainAndThenArrivesAtResult = function (queue) {
-        expectAsserts(5);
+    this.tests.prototype.testCheckThatPositionGeneratorReturnsCorrectPositionAfterIsOverIsReportedFalse = function (queue) {
+        expectAsserts(2);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/positiongenerator"], function (PositionGenerator) {
-            positionGenerator = new PositionGenerator(8);
-            positionGenerator.next(true);
+            positionGenerator = new PositionGenerator(4);
             positionGenerator.next(true);
             assertEquals(true, positionGenerator.hasNext(false));
             assertEquals(3, positionGenerator.next(false));
-            assertEquals(true, positionGenerator.hasNext(true));
-            assertEquals(2, positionGenerator.next(true));
-            assertEquals(false, positionGenerator.hasNext(false));
         });
     };
 
+    this.tests.prototype.testCheckThatPositionGeneratorReturnsDecreasingValueAfterPointerHasReachedZero = function (queue) {
+        expectAsserts(2);
+
+        queuedRequire(queue, ["antie/widgets/label/texttruncation/positiongenerator"], function (PositionGenerator) {
+            positionGenerator = new PositionGenerator(4);
+            positionGenerator.next(true);
+            positionGenerator.next(false);
+            assertEquals(true, positionGenerator.hasNext(true));
+            assertEquals(2, positionGenerator.next(true));
+        });
+    };
 
     this.tests.prototype.testCheckThatPositionGeneratorReturnsFalseFromHasNextWhenIsOverAndCheckingStringOfLengthZero = function (queue) {
         expectAsserts(1);

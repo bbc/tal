@@ -104,6 +104,7 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                     this._txtTruncationElNode.nodeValue = txt;
                 }
                 var size = this._device.getElementSize(this._container);
+                // TODO: this is failing the test. Should be > that this works because of rounding inconsistencies.
                 return this._measuringHorizontally ? size.width >= this._w : size.height >= this._h;
             },
 
