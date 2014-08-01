@@ -93,11 +93,6 @@ require.def(
 			}
 		};
 
-        /* documented in antie.devices.Device */
-		Device.prototype.stopAnimation = function(anim) {
-			// Do nothing - there was no animation in the first place
-		};
-
 		/* documented in antie.devices.device */
 		Device.prototype.hideElement = function(options) {
 			options.el.style.visibility = "hidden";
