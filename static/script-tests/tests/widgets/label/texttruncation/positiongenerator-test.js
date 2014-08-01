@@ -34,12 +34,9 @@
         expectAsserts(2);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/positiongenerator"], function (PositionGenerator) {
-
-
             positionGenerator = new PositionGenerator(9);
             assertEquals(true, positionGenerator.hasNext(true));
             assertEquals(1, positionGenerator.next(true));
-
         });
     }
 

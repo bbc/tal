@@ -10,9 +10,6 @@
     this.tests.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
         this.parentContainer = setupParentContainer();
-
-
-
         container = document.createElement("div");
         this.parentContainer.appendChild(container);
         container.style.width = "100px";
@@ -46,8 +43,12 @@
     this.tests.prototype.testCheckTextThatIsMoreThanContainersVerticalHeightWhenMeasuringVerticallyIsReportedAsOver = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, false);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, false);
             assertEquals(true, workContainer.isOver(LOREM_IPSUM));
         });
     };
@@ -55,8 +56,12 @@
     this.tests.prototype.testCheckTextThatIsLessThanContainersHeightWhenMeasuringVerticallyIsNotReportedAsOver = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, false);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, false);
             assertEquals(false, workContainer.isOver(SHORT_TEXT));
         });
     };
@@ -64,8 +69,12 @@
     this.tests.prototype.testCheckTextThatIsMoreThanContainersWidthWhenMeasuringHorizontallyIsReportedAsOver = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, true);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, true);
             assertEquals(true, workContainer.isOver(LOREM_IPSUM));
         });
     };
@@ -73,8 +82,12 @@
     this.tests.prototype.testCheckTextThatIsLessThanContainersWidthWhenMeasuringHorizontallyIsNotReportedAsOver = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, true);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, true);
             assertEquals(true, workContainer.isOver(SHORT_TEXT));
         });
     };
@@ -82,9 +95,13 @@
     this.tests.prototype.testCheckDestroyRemovesChildContainerFromParent = function (queue) {
         expectAsserts(3);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
             assertEquals(0, container.childNodes.length);
-            var workContainer = new WorkContainer(container, true);
+            var workContainer = new WorkContainer(application.getDevice(), container, true);
             assertEquals(1, container.childNodes.length);
             workContainer.destroy();
             assertEquals(0, container.childNodes.length);
@@ -94,10 +111,12 @@
     this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringVertically = function (queue) {
         expectAsserts(2);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, false);
-            //TODO
-            this.sandbox.stub(workContainer, "_create").returns({});
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, false);
             assertEquals(30, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
             assertEquals(33, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
         });
@@ -106,8 +125,12 @@
     this.tests.prototype.testCheckGetNumCharactersThatFitReturnsCorrectValuesWhenMeasuringHorizontally = function (queue) {
         expectAsserts(2);
 
-        queuedRequire(queue, ["antie/widgets/label/texttruncation/workcontainer"], function(WorkContainer) {
-            var workContainer = new WorkContainer(container, true);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer"],
+        function(application, WorkContainer) {
+            var workContainer = new WorkContainer(application.getDevice(), container, true);
             assertEquals(5, workContainer.getNumCharactersThatFit(LOREM_IPSUM, "..."));
             assertEquals(8, workContainer.getNumCharactersThatFit(LOREM_IPSUM, ""));
         });
