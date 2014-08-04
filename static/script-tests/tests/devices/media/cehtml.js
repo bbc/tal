@@ -355,16 +355,15 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 		expectAsserts(3);
 		var self = this;
 		queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-			function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+			function(application, CEHTMLPlayer) {
 
 				var callbackStub = self.sandbox.stub();
 
 				var device = application.getDevice();
 
-				var mediaElement = document.createElement("object");
-				mediaElement.stop = this.sandbox.stub();
+				this.stubCreateElement(device);
+				this.mediaElement.stop = this.sandbox.stub();
 
-				this.sandbox.stub(device, "_createElement").returns(mediaElement);
 				var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
 				mediaInterface.setSources(
@@ -377,13 +376,13 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
 				var clock = sinon.useFakeTimers();
 
-				mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
-				mediaElement.onPlayStateChange();
+				this.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
+				this.mediaElement.onPlayStateChange();
 				clock.tick(901);
 				assertEquals(6, callbackStub.callCount);
 
-				mediaElement.playState = CEHTMLPlayer.PLAY_STATE_BUFFERING; // anything other than playing
-				mediaElement.onPlayStateChange();
+				this.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_BUFFERING; // anything other than playing
+				this.mediaElement.onPlayStateChange();
 				assertEquals(7, callbackStub.callCount);
 				clock.tick(900001);
 				assertEquals(7, callbackStub.callCount);
