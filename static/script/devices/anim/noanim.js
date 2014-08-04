@@ -132,7 +132,7 @@ require.def(
 
             for (i = 0; i !== properties.length; i += 1){
                 prop = properties[i];
-                elStyle.setProperty(prop, transEndPoints.getPropertyDestination(prop), '');
+                elStyle[prop] =  transEndPoints.getPropertyDestination(prop);
             }
             if (typeof options.onComplete === "function") {
                 options.onComplete();
