@@ -60,13 +60,12 @@ require.def(
                 throw new Error("play method has not been implemented");
             },
 
-
             /**
             * Request that the media start playing from Time.
             * A media source must have been set with setSource before calling this.
-            * If the Media is paused, call this to resume from a given point.
             * This can be used to resume media after changing source.
             * This may transition to the buffering state if enough media data is not yet available to play.
+            * If the media is buffering, call this to resume playback in a playing state once buffering ends.
             */
             playFrom: function (time) {
                 throw new Error("playFrom method has not been implemented");
@@ -74,9 +73,8 @@ require.def(
 
             /**
             * Request that the media be paused.
-            * A media source must have been set with setSource before calling this.
             * If the Media is playing, call this to pause it.
-            * The video continues to buffer whilst in this state.
+            * If the media is buffering, call this to resume playback in a paused state once buffering ends.
             */
             pause: function () {
                 throw new Error("pause method has not been implemented");
@@ -84,8 +82,9 @@ require.def(
 
             /**
             * Request that the media be stopped.
-            * A media source must have been set with setSource before calling this.
-            * If the Media is playing, call this to stop/unload the media and source.
+            * If the Media is playing, call this to stop the media.
+            * Note that the source is still set after calling stop. 
+            * Call reset after stop to unset the source.
             */
             stop: function () {
                 throw new Error("stop method has not been implemented");
