@@ -52,7 +52,7 @@
                 }, "Error");
             });
         };
-    }
+    };
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
         mediaPlayerInterface.setSource('url', 'mime');

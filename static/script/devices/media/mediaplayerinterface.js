@@ -91,9 +91,16 @@ require.def(
             }
         });
 
-//        MediaPlayerInterface.STATE_ = 0;
-
-//        MediaPlayerInterface.ERROR_ = 0;
+        /**
+        * Media Player State Machine
+        */ 
+        MediaPlayerInterface.STATE_EMPTY     = 0; // No source set
+        MediaPlayerInterface.STATE_STOPPED   = 1; // Source set but no playback
+        MediaPlayerInterface.STATE_BUFFERING = 2; // Not enough data to play, waiting to download more
+        MediaPlayerInterface.STATE_PLAYING   = 3; // Media is playing
+        MediaPlayerInterface.STATE_PAUSED    = 4; // Media is paused
+        MediaPlayerInterface.STATE_COMPLETE  = 5; // Media has reached its end point
+        MediaPlayerInterface.STATE_ERROR     = 6; // An error occurred
 
         return MediaPlayerInterface;
     }
