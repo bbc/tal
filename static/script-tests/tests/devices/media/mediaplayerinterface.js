@@ -74,4 +74,28 @@
         mediaPlayerInterface.stop();
     });
 
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceResetThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.reset();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceGetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.getSource();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceGetMimeTypeThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.getMimeType();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceGetCurrentTimeThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.getCurrentTime();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceGetRangeThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.getRange();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceGetStateThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.getState();
+    });
+
 })();
