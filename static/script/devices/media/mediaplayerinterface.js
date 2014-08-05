@@ -25,19 +25,40 @@
  */
 
 require.def(
-    'antie/devices/media/mediaplayerinterface',
+    "antie/devices/media/mediaplayerinterface",
     [
-        'antie/class'
+        "antie/class"
     ],
     function(Class) {
+        "use strict";
+
         var MediaPlayerInterface = Class.extend({
 
             /**
              * @param mediaType "audio" or "video"
              * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
              */
-            init: function(mediaType, eventCallback){
+            init: function(mediaType, eventCallback) {
             },
+
+            /**
+            * Set the media resource to be played
+            * @param url location of the media resource to play
+            * @param mimeType type of media resource
+            */
+            setSource: function (url, mimeType) {
+                throw new Error("setSource method has not been implemented");
+            },
+
+            /**
+            * Request that the media start playing.
+            * A media source must have been set with setSource before calling this.
+            * If the Media is paused, call this to unpause it.
+            * This may transition to the buffering state if enough media data is not yet available to play.
+            */
+            play : function () {
+                throw new Error("play method has not been implemented");
+            }
         });
 
 //        MediaPlayerInterface.STATE_ = 0;

@@ -35,10 +35,30 @@
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceInitDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediaplayerinterface"], function(application, MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
             assertNoException(function() {
                 new MediaPlayerInterface('video', function(evt){});
             });
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+            assertException(function() {
+                mediaPlayerInterface.setSource('url', 'mime');
+            }, "Error");
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePlayThrowsAnExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+            assertException(function() {
+                mediaPlayerInterface.play();
+            }, "Error");
         });
     };
 
