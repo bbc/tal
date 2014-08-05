@@ -62,4 +62,34 @@
         });
     };
 
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePlayFromThrowsAnExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+            assertException(function() {
+                mediaPlayerInterface.playFrom("jumbo");
+            }, "Error");
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePauseThrowsAnExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+            assertException(function() {
+                mediaPlayerInterface.pause();
+            }, "Error");
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceStopThrowsAnExceptionWhenNotOverridden = function (queue) {
+        expectAsserts(1);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+            assertException(function() {
+                mediaPlayerInterface.stop();
+            }, "Error");
+        });
+    };
+
 })();
