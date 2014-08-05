@@ -42,54 +42,36 @@
         });
     };
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
-            assertException(function() {
-                mediaPlayerInterface.setSource('url', 'mime');
-            }, "Error");
-        });
-    };
+    var testThatInterfaceFunctionThrowsError = function (action) {
+        return function (queue) {
+            expectAsserts(1);
+            queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+                var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+                assertException(function() {
+                    action(mediaPlayerInterface);
+                }, "Error");
+            });
+        };
+    }
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePlayThrowsAnExceptionWhenNotOverridden = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
-            assertException(function() {
-                mediaPlayerInterface.play();
-            }, "Error");
-        });
-    };
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.setSource('url', 'mime');
+    });
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePlayFromThrowsAnExceptionWhenNotOverridden = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
-            assertException(function() {
-                mediaPlayerInterface.playFrom("jumbo");
-            }, "Error");
-        });
-    };
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacepPlayThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.play();
+    });
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePauseThrowsAnExceptionWhenNotOverridden = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
-            assertException(function() {
-                mediaPlayerInterface.pause();
-            }, "Error");
-        });
-    };
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePlayFromThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.playFrom("jumbo");
+    });
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceStopThrowsAnExceptionWhenNotOverridden = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-            var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
-            assertException(function() {
-                mediaPlayerInterface.stop();
-            }, "Error");
-        });
-    };
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfacePauseThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.pause();
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceStopThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.stop();
+    });
 
 })();
