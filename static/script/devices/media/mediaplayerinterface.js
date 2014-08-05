@@ -61,16 +61,16 @@ require.def(
             },
 
 
-						/**
+            /**
             * Request that the media start playing from Time.
             * A media source must have been set with setSource before calling this.
             * If the Media is paused, call this to resume from a given point.
-						* This can be used to resume media after changing source.
+            * This can be used to resume media after changing source.
             * This may transition to the buffering state if enough media data is not yet available to play.
             */
-						playFrom: function (time) {
-								throw new Error("playFrom method has not been implemented");
-						},
+            playFrom: function (time) {
+                throw new Error("playFrom method has not been implemented");
+            },
 
             /**
             * Request that the media be paused.
@@ -78,18 +78,18 @@ require.def(
             * If the Media is playing, call this to pause it.
             * The video continues to buffer whilst in this state.
             */
-						pause: function () {
-								throw new Error("pause method has not been implemented");
-						},
+            pause: function () {
+                throw new Error("pause method has not been implemented");
+            },
 
             /**
             * Request that the media be stopped.
             * A media source must have been set with setSource before calling this.
             * If the Media is playing, call this to stop/unload the media and source.
             */
-						stop: function () {
-								throw new Error("stop method has not been implemented");
-						}
+            stop: function () {
+                throw new Error("stop method has not been implemented");
+            }
         });
 
 //        MediaPlayerInterface.STATE_ = 0;
