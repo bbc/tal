@@ -177,8 +177,16 @@ require.def(
             PAUSED: "paused",       // Event fired when media playback pauses
             COMPLETE: "complete",   // Event fired when media playback has reached the end of the media
             ERROR: "error",         // Event fired when an error condition occurs
-            STATUS: "status",       // Event fired regularly during play
-        }
+            STATUS: "status"       // Event fired regularly during play
+        };
+
+        /**
+        * Media Types
+        */
+        MediaPlayerInterface.TYPE = {
+            VIDEO: 0,
+            AUDIO: 1
+        };
 
         return MediaPlayerInterface;
     }
