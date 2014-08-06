@@ -25,6 +25,8 @@
 (function() {
     this.HTML5MediaPlayer = AsyncTestCase("HTML5MediaPlayer");
 
+    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
     this.HTML5MediaPlayer.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
     };
@@ -35,9 +37,6 @@
 
     this.HTML5MediaPlayer.prototype.testGettingMediaPlayerGivesHTML5VersionWhenModifierProvider = function (queue) {
         expectAsserts(1);
-
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5"],
             function(application, HTML5MediaInterface) {
 
@@ -48,5 +47,18 @@
             }, config);
     };
 
+    this.HTML5MediaPlayer.prototype.testGettingMediaPlayerRepeatedlyReturnsSameObject = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5"],
+            function(application, HTML5MediaInterface) {
+
+                var device = application.getDevice();
+                var instance = device.getMediaPlayer();
+                var instance2 = device.getMediaPlayer();
+
+                assertSame(instance, instance2);
+
+            }, config);
+    };
 
 })();

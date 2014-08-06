@@ -130,8 +130,10 @@ require.def(
 //            }
         });
 
+        var instance = new Player();
+
         Device.prototype.getMediaPlayer = function() {
-            return new Player();
+            return instance;
         };
 
         return Player;
