@@ -27,9 +27,8 @@
 require.def('antie/widgets/label',
 	[
         'antie/widgets/widget',
-        'antie/widgets/label/texttruncation/truncator'
     ],
-	function(Widget, Truncator) {
+	function(Widget) {
 		/**
 		 * The Label widget displays text. It supports auto-truncation (with ellipsis) of text to fit.
 		 * @name antie.widgets.Label
@@ -86,23 +85,7 @@ require.def('antie/widgets/label',
              * @param {boolean} alreadyAddedToDom Whether or not the output element is already on the dom
              */
             doTruncation: function(device, alreadyAddedToDom) {
-                var self = this;
-                var callback = function() {
-                    var truncator = new Truncator(self.getCurrentApplication().getDevice());
-                    truncator.setSplitAtWordBoundary(self._splitAtWordBoundary);
-                    truncator.setEllipsisText(self._ellipsisText);
-                    var truncatedText = truncator.truncateText(self.outputElement, self._text, self._maxLines);
-                    device.setElementContent(self.outputElement, truncatedText);
-                };
-                // the element needs to already be on the dom for the truncation to work and this happens after the
-                // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
-                // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
-                if (alreadyAddedToDom) {
-                    callback()
-                }
-                else {
-                    setTimeout(callback, 0);
-                }
+                throw "doTruncation() was called on Label but has not been overridden by a modifier.";
             },
 			/**
 			 * Sets the text displayed by this label.
