@@ -52,7 +52,6 @@ require.def("antie/devices/browserdevice",
             init: function(config) {
                 this._super(config);
                 this._textSizeCache = {};
-                this._addedToVisibleDomCallbackEls = [];
 
                 this.addClassToElement(this.getTopLevelElement(), "notanimating");
             },
@@ -235,31 +234,7 @@ require.def("antie/devices/browserdevice",
              * @param {Element} el The new child element.
              */
             appendChildElement: function(to, el) {
-
-                // TODO: this could probably be done a lot nicer. Maybe with an extra event like WidgetAddedToVisibleDomEvent ?
-                if (typeof el.onAddedToVisibleDom == "function" && !el.onAddedToVisibleDomRegistered) {
-                    this._addedToVisibleDomCallbackEls.push(el);
-                    el.onAddedToVisibleDomRegistered = true;
-                }
-
                 to.appendChild(el);
-
-                // if this element is being appended to the visible dom, then go throgh and call call all the callbacks for this and anything below it which is now also on the visible dom.
-                if (document.contains(el)) {
-                    var toDelete = [];
-                    for(var i=0; i<this._addedToVisibleDomCallbackEls.length; i++) {
-                        if (document.contains(this._addedToVisibleDomCallbackEls[i])) {
-                            (function(callback) {
-                                setTimeout(callback, 0);
-                            })(this._addedToVisibleDomCallbackEls[i].onAddedToVisibleDom);
-                            toDelete.push(i);
-                        }
-                    }
-                    toDelete = toDelete.reverse();
-                    for(var i=0; i<toDelete.length; i++) {
-                        this._addedToVisibleDomCallbackEls.splice(toDelete[i], 1);
-                    }
-                }
             },
             /**
              * Prepends an element as a child of another.
@@ -479,7 +454,7 @@ require.def("antie/devices/browserdevice",
              * @returns The height (in pixels) that is required to display this block of text.
              */
             getTextHeight: function(text, maxWidth, classNames) {
-                /// TODO: Revert this back to the original!
+                /// TODO: is there a more efficient way of doing this?
                 var cacheKey = maxWidth + ":" + classNames.join(" ") + ":" + text;
                 var height;
                 if (!(height = this._textSizeCache[cacheKey])) {
@@ -511,7 +486,7 @@ require.def("antie/devices/browserdevice",
                 for (var i = 0; i < el.childNodes.length; i++) {
                     if(el.childNodes[i].tagName){
                         if (el.childNodes[i].tagName.toLowerCase() == tagName) {
-                        children.push(el.childNodes[i]);
+                            children.push(el.childNodes[i]);
                         }
                     }
                 }
@@ -560,10 +535,10 @@ require.def("antie/devices/browserdevice",
 //                        left: rect.left - parentRect.left
 //                    };
 //                } else {
-                    offsets = {
-                        top: el.offsetTop,
-                        left: el.offsetLeft
-                    };
+                offsets = {
+                    top: el.offsetTop,
+                    left: el.offsetLeft
+                };
 //                }
                 return offsets;
             },
@@ -592,7 +567,7 @@ require.def("antie/devices/browserdevice",
              */
             setCurrentRoute: function(route) {
                 var history = this.getHistorian().toString();
-                
+
                 if (route.length > 0) {
                     window.location.hash = "#" + route.join("/") + history;
                 } else {
@@ -607,7 +582,7 @@ require.def("antie/devices/browserdevice",
                 var unescaped = unescape(window.location.hash).split(Historian.HISTORY_TOKEN, 1)[0];
                 return (unescaped.replace(/^#/, '').split('/'));
             },
-            
+
             /**
              * gets historian for current location
              * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
@@ -615,7 +590,7 @@ require.def("antie/devices/browserdevice",
             getHistorian: function() {
                 return new Historian(decodeURI(this.getWindowLocation().href));
             },
-            
+
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:
