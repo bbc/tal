@@ -51,7 +51,6 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                     display: null
                 };
                 this._save();
-                this.configureForAlgorithm();
             },
 
             /**
@@ -74,6 +73,13 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                         this._el.style[prop] = this._properties[prop];
                     }
                 }
+            },
+
+            /**
+             * Set the display mode to block. This means we get the actual width the element could take up even if it's set to 'inline'.
+             */
+            configureForMeasuring: function() {
+                this._el.style.display = "block";
             },
 
             /**

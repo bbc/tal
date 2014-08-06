@@ -62,10 +62,12 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 // the width and height of the box that the text should be truncated to fit into.
                 // use the container (which has width auto and height 100%) to get these values, not the parent el, because this takes into consideration any padding on the parent el
                 // clientWidth and clientHeight includes padding (but not border or margin), but we know that container will have padding of 0 and will sit within parents padding :)
+                this._cssManager = new CssManager(this._parentEl, this._measuringHorizontally);
+                this._cssManager.configureForMeasuring();
                 var size = this._device.getElementSize(this._container);
                 this._w = size.width;
                 this._h = size.height;
-                this._cssManager = new CssManager(this._parentEl, this._measuringHorizontally);
+                this._cssManager.configureForAlgorithm();
             },
 
             _createContainer: function() {
