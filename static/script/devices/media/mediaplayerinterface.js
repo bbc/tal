@@ -38,12 +38,29 @@ require.def(
             },
 
             /**
-            * Set the event callback to receive all media player events from now on.
-            * Completely replaces the old callback.
+            * Add an event callback to receive all media player events from now on.
+            *
+            * Note that failing to remove callbacks when you are finished with them can stop garbage collection
+            * of objects/closures containing those callbacks and so create memory leaks in your application.
             * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
             */
-            setEventCallback: function(eventCallback) {
-                throw new Error("setSource method has not been implemented");
+            addEventCallback: function(eventCallback) {
+                throw new Error("addEventCallback method has not been implemented");
+            },
+
+            /**
+            * Stop receiving events with the specified callback.
+            * @param eventCallback Function to which events are no longer to be passed
+            */
+            removeEventCallback: function(eventCallback) {
+                throw new Error("removeEventCallback method has not been implemented");
+            },
+
+            /**
+            * Stop receiving events to any callbacks.
+            */
+            removeAllEventCallbacks: function() {
+                throw new Error("removeAllEventCallbacks method has not been implemented");
             },
 
             /**

@@ -54,8 +54,16 @@
         };
     };
 
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
-        mediaPlayerInterface.setEventCallback(function(evt){});
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceAddEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.addEventCallback(function(evt){});
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceRemoveEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.removeEventCallback(function(evt){});
+    });
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceRemoveAllEventCallbacksThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.removeAllEventCallbacks();
     });
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
