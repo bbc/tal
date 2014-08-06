@@ -106,5 +106,8 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "css": {
+    "supportsTextTruncation": true
   }
 }

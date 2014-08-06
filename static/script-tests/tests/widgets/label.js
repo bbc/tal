@@ -179,6 +179,32 @@
         );
     };
 
+    this.LabelTest.prototype.testSetTruncationAlgorithmIsUsedWhenRequestingCssButDeviceDoesNotSupportIt = function(queue) {
+        expectAsserts(2);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, false);
+
+                var clock = this.sandbox.useFakeTimers();
+
+                var label = new Label("hello");
+                var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.useCssForTruncationIfAvailable(true);
+                label.setMaximumLines(2);
+                label.render(device);
+                assert(!truncateTextSpy.called)
+                clock.tick(0);
+                assert(truncateTextSpy.called);
+            }
+        );
+    };
+
     this.LabelTest.prototype.testExceptionThrownWhenTryingToUseCssWithoutSpecifyingNumberOfLines = function(queue) {
         expectAsserts(1);
 
