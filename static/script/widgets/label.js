@@ -72,30 +72,37 @@ require.def('antie/widgets/label',
                 }
 
 				if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
-                    var self = this;
-                    var doTruncation = function() {
-                        device.setElementContent(self.outputElement, self._truncateText());
-                    };
-                    // the element needs to already be on the dom for the truncation to work and this happens after the
-                    // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
-                    // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
-                    if (alreadyAddedToDom) {
-                        doTruncation()
-                    }
-                    else {
-                        setTimeout(doTruncation, 0);
-                    }
+                    this.doTruncation(device, alreadyAddedToDom);
 				}
                 else {
                     device.setElementContent(this.outputElement, this._text);
 				}
 				return this.outputElement;
 			},
-            _truncateText: function() {
-                var truncator = new Truncator(this.getCurrentApplication().getDevice());
-                truncator.setSplitAtWordBoundary(this._splitAtWordBoundary);
-                truncator.setEllipsisText(this._ellipsisText);
-                return truncator.truncateText(this.outputElement, this._text, this._maxLines);
+            /**
+             * Performs text truncation on the output element.
+             * This is set with a modifier.
+             * @param {antie.devices.Device} device The device that's being rendered to.
+             * @param {boolean} alreadyAddedToDom Whether or not the output element is already on the dom
+             */
+            doTruncation: function(device, alreadyAddedToDom) {
+                var self = this;
+                var callback = function() {
+                    var truncator = new Truncator(self.getCurrentApplication().getDevice());
+                    truncator.setSplitAtWordBoundary(self._splitAtWordBoundary);
+                    truncator.setEllipsisText(self._ellipsisText);
+                    var truncatedText = truncator.truncateText(self.outputElement, self._text, self._maxLines);
+                    device.setElementContent(self.outputElement, truncatedText);
+                };
+                // the element needs to already be on the dom for the truncation to work and this happens after the
+                // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
+                // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
+                if (alreadyAddedToDom) {
+                    callback()
+                }
+                else {
+                    setTimeout(callback, 0);
+                }
             },
 			/**
 			 * Sets the text displayed by this label.
