@@ -198,7 +198,7 @@
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
-                assert(!truncateTextSpy.called)
+                assert(!truncateTextSpy.called);
                 clock.tick(0);
                 assert(truncateTextSpy.called);
             }
