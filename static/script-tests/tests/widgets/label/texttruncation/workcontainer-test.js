@@ -38,6 +38,8 @@
     function stubCssManager(sandbox, CssManager) {
         sandbox.stub(CssManager.prototype, "init");
         sandbox.stub(CssManager.prototype, "restore");
+        sandbox.stub(CssManager.prototype, "configureForMeasuring");
+        sandbox.stub(CssManager.prototype, "configureForAlgorithm");
     }
 
     function stubWorkContainer(sandbox, WorkContainer, sourceContainer) {

@@ -46,7 +46,7 @@
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
-            new CSSManager(this.mockEl, false);
+            new CSSManager(this.mockEl, false).configureForAlgorithm();
             assertEquals("normal", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
@@ -59,7 +59,7 @@
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
-            new CSSManager(this.mockEl, true);
+            new CSSManager(this.mockEl, true).configureForAlgorithm();
             assertEquals("nowrap", this.mockEl.style.whiteSpace);
             assertEquals("auto", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
@@ -73,6 +73,7 @@
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             var instance = new CSSManager(this.mockEl, false);
+            instance.configureForAlgorithm();
             instance.restore();
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
@@ -87,6 +88,7 @@
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             var instance = new CSSManager(this.mockEl, true);
+            instance.configureForAlgorithm();
             instance.restore();
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
