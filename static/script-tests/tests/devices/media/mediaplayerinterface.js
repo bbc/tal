@@ -42,6 +42,81 @@
         });
     };
 
+    var createSubClass = function(MediaPlayerInterface) {
+        return MediaPlayerInterface.extend({
+            doEvent: function(type) {
+                this._emitEvent(type);
+            },
+            getSource: function () { return "url"; },
+            getMimeType: function () { return "mime/type"; },
+            getCurrentTime: function () { return 0; },
+            getRange: function () { return { start: 0, end: 100 }; },
+            getState: function () { return MediaPlayerInterface.STATE.PLAYING; }
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassGoToAddedCallbackWithAllMetadata = function (queue) {
+        expectAsserts(2);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+
+            var SubClass = createSubClass(MediaPlayerInterface);
+            var instance = new SubClass();
+            var callback = this.sandbox.stub();
+
+            instance.addEventCallback(null, callback);
+            instance.doEvent(MediaPlayerInterface.EVENT.STATUS);
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith({
+                type: MediaPlayerInterface.EVENT.STATUS,
+                currentTime: 0,
+                range: { start: 0, end: 100 },
+                url: "url",
+                mimeType: "mime/type",
+                state: MediaPlayerInterface.STATE.PLAYING
+            }));
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassDoNotGoToSpecificallyRemovedCallback = function (queue) {
+        expectAsserts(2);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+
+            var SubClass = createSubClass(MediaPlayerInterface);
+            var instance = new SubClass();
+            var callback = this.sandbox.stub();
+            var callback2 = this.sandbox.stub();
+
+            instance.addEventCallback(null, callback);
+            instance.addEventCallback(null, callback2);
+            instance.removeEventCallback(null, callback);
+            instance.doEvent(MediaPlayerInterface.EVENT.STATUS);
+
+            assert(callback.notCalled);
+            assert(callback2.calledOnce);
+        });
+    };
+
+    this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassDoNotGoToAnyRemovedCallback = function (queue) {
+        expectAsserts(2);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+
+            var SubClass = createSubClass(MediaPlayerInterface);
+            var instance = new SubClass();
+            var callback = this.sandbox.stub();
+            var callback2 = this.sandbox.stub();
+
+            instance.addEventCallback(null, callback);
+            instance.addEventCallback(null, callback2);
+            instance.removeAllEventCallbacks();
+            instance.doEvent(MediaPlayerInterface.EVENT.STATUS);
+
+            assert(callback.notCalled);
+            assert(callback2.notCalled);
+        });
+    };
+
+
     var testThatInterfaceFunctionThrowsError = function (action) {
         return function (queue) {
             expectAsserts(1);
@@ -53,18 +128,6 @@
             });
         };
     };
-
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceAddEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
-        mediaPlayerInterface.addEventCallback(function(evt){});
-    });
-
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceRemoveEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
-        mediaPlayerInterface.removeEventCallback(function(evt){});
-    });
-
-    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceRemoveAllEventCallbacksThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
-        mediaPlayerInterface.removeAllEventCallbacks();
-    });
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
         mediaPlayerInterface.setSource('url', 'mime');

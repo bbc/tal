@@ -27,14 +27,17 @@
 require.def(
     "antie/devices/media/mediaplayerinterface",
     [
-        "antie/class"
+        "antie/class",
+        "antie/callbackmanager"
+
     ],
-    function(Class) {
+    function(Class, CallbackManager) {
         "use strict";
 
         var MediaPlayerInterface = Class.extend({
 
             init: function() {
+                this._callbackManager = new CallbackManager();
             },
 
             /**
@@ -42,25 +45,47 @@ require.def(
             *
             * Note that failing to remove callbacks when you are finished with them can stop garbage collection
             * of objects/closures containing those callbacks and so create memory leaks in your application.
-            * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
+            * @param thisArg The object to use as "this" when calling the callback.
+            * @param callback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
             */
-            addEventCallback: function(eventCallback) {
-                throw new Error("addEventCallback method has not been implemented");
+            addEventCallback: function(thisArg, callback) {
+                this._callbackManager.addCallback(thisArg, callback);
             },
 
             /**
             * Stop receiving events with the specified callback.
+            * @param thisArg The object specified to use as "this" when adding the callback.
             * @param eventCallback Function to which events are no longer to be passed
             */
-            removeEventCallback: function(eventCallback) {
-                throw new Error("removeEventCallback method has not been implemented");
+            removeEventCallback: function(thisArg, callback) {
+                this._callbackManager.removeCallback(thisArg, callback);
             },
 
             /**
             * Stop receiving events to any callbacks.
             */
             removeAllEventCallbacks: function() {
-                throw new Error("removeAllEventCallbacks method has not been implemented");
+                this._callbackManager.removeAllCallbacks();
+            },
+
+            /**
+             * Protected method, for use by subclasses to emit events of any specified type, adding in the standard
+             * payload used by all events.
+             * @param event The type of the event to be emitted.
+             * @protected
+             */
+            _emitEvent: function(eventType) {
+
+                var event = {
+                    type: eventType,
+                    currentTime: this.getCurrentTime(),
+                    range: this.getRange(),
+                    url: this.getSource(),
+                    mimeType: this.getMimeType(),
+                    state: this.getState()
+                };
+
+                this._callbackManager.callAll(event);
             },
 
             /**
