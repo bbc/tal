@@ -69,8 +69,8 @@ require.def(
             },
 
             /**
-             * Protected method, for use by subclasses to emit events of any specified type, adding in the standard
-             * payload used by all events.
+             * Protected method, for use by subclasses to emit events of any specified type, adding in the
+             * standard payload used by all events.
              * @param event The type of the event to be emitted.
              * @protected
              */

@@ -78,6 +78,39 @@
         });
     };
 
+    this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassHaveMetaDataCollectedFromAccessors = function (queue) {
+        expectAsserts(2);
+        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+
+            var SubClass = MediaPlayerInterface.extend({
+                doEvent: function(type) {
+                    this._emitEvent(type);
+                },
+                getSource: function () { return "url2"; },
+                getMimeType: function () { return "mime/type2"; },
+                getCurrentTime: function () { return 2; },
+                getRange: function () { return { start: 22, end: 200 }; },
+                getState: function () { return MediaPlayerInterface.STATE.BUFFERING; }
+            });
+
+            var instance = new SubClass();
+            var callback = this.sandbox.stub();
+
+            instance.addEventCallback(null, callback);
+            instance.doEvent(MediaPlayerInterface.EVENT.BUFFERING);
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith({
+                type: MediaPlayerInterface.EVENT.BUFFERING,
+                currentTime: 2,
+                range: { start: 22, end: 200 },
+                url: "url2",
+                mimeType: "mime/type2",
+                state: MediaPlayerInterface.STATE.BUFFERING
+            }));
+        });
+    };
+
     this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassDoNotGoToSpecificallyRemovedCallback = function (queue) {
         expectAsserts(2);
         queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
