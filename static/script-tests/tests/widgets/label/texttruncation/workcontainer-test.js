@@ -115,7 +115,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
-            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 99);
 
             assertEquals(false, workContainer.isOver(""));
         });
@@ -159,10 +159,32 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
-            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 99, 100);
 
             assertEquals(false, workContainer.isOver(""));
         });
+    };
+
+    this.tests.prototype.testCheckThatIsOverReturnsTrueWhenBothValuesTheSame = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label/texttruncation/workcontainer",
+                "antie/widgets/label/texttruncation/cssmanager"],
+            function(application, WorkContainer, CssManager) {
+
+                var mockContainer = getMockDomContainer(100, 100);
+
+                stubCssManager(this.sandbox, CssManager);
+                stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
+
+                var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), true);
+                fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
+
+                assertEquals(true, workContainer.isOver(""));
+            });
     };
 
 
