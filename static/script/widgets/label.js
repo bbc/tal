@@ -111,9 +111,8 @@ require.def('antie/widgets/label',
                 if (!this._useCssForTruncationIfAvailable) {
                     return false;
                 }
-                if (this._maxLines === 0) {
-                    this.getCurrentApplication().getDevice().getLogger().error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
-                    return false;
+                if (this._maxLines === null) {
+                    throw "You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.";
                 }
                 return device.getConfig().css.supportsTextTruncation;
             },
@@ -156,6 +155,9 @@ require.def('antie/widgets/label',
              * @param {number} lines The maximum number of lines to display.
              */
             setMaximumLines: function(numberLines) {
+                if (numberLines !== null && numberLines <= 0) {
+                    throw "The number of lines must be 1 or more, or null.";
+                }
                 this._maxLines = numberLines;
             },
             /**

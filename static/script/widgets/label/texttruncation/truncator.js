@@ -72,7 +72,7 @@ require.def('antie/widgets/label/texttruncation/truncator',
              * @param {DOMElement} element The DOMElement that the text will be placed into. The dimensions of this
              *                             DOMElement are used to determine where the text will truncate.
              * @param {String} text The source text.
-             * @param {Number} [numberOfLinesRequired] The number of lines the text should be truncated to. A value of 0
+             * @param {Number} [numberOfLinesRequired] The number of lines the text should be truncated to. A value of null
              *                                         (or omitting this parameter) means the text should be truncated to
              *                                         fit the container.
              */
