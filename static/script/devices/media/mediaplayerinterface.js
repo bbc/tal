@@ -167,6 +167,19 @@ require.def(
             ERROR:      6  // An error occurred
         };
 
+        /**
+        * Media Player event names
+        */
+        MediaPlayerInterface.EVENT = {
+            STOPPED: "stopped",     // Event fired when playback is stopped
+            BUFFERING: "buffering", // Event fired when playback has to suspend due to buffering
+            PLAYING: "playing",     // Event fired when starting (or resuming) playing of the media
+            PAUSED: "paused",       // Event fired when media playback pauses
+            COMPLETE: "complete",   // Event fired when media playback has reached the end of the media
+            ERROR: "error",         // Event fired when an error condition occurs
+            STATUS: "status",       // Event fired regularly during play
+        }
+
         return MediaPlayerInterface;
     }
 );
