@@ -85,51 +85,51 @@
 		);
 	};
 
-// 	this.LabelTest.prototype.testTruncateTextCalledAfterTimeoutOfZeroWhenTruncationIsEnabledOnFirstRender = function(queue) {
-//		expectAsserts(2);
-//
-//		queuedApplicationInit(
-//				queue,
-//				"lib/mockapplication",
-//				["antie/widgets/label"],
-//				function(application, Label) {
-//
-//                    var device = application.getDevice();
-//
-//                    var clock = this.sandbox.useFakeTimers();
-//
-//                    var label = new Label("hello");
-//                    var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
-//                    label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
-//                    label.render(device);
-//                    assert(!truncateTextSpy.called)
-//                    clock.tick(0);
-//                    assert(truncateTextSpy.called);
-//				}
-//		);
-//	};
+	this.LabelTest.prototype.testTruncateTextCalledAfterTimeoutOfZeroWhenTruncationIsEnabledOnFirstRender = function(queue) {
+		expectAsserts(2);
 
-//    this.LabelTest.prototype.testTruncateTextCalledImmediatelyWhenTruncationIsEnabledOnFutureRenders = function(queue) {
-//        expectAsserts(1);
-//
-//        queuedApplicationInit(
-//            queue,
-//            "lib/mockapplication",
-//            ["antie/widgets/label"],
-//            function(application, Label) {
-//
-//                var device = application.getDevice();
-//
-//                var clock = this.sandbox.useFakeTimers();
-//
-//                var label = new Label("hello");
-//                var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
-//                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
-//                label.render(device);
-//                clock.tick(0);
-//                label.setText("Something else");
-//                assert(truncateTextSpy.called);
-//            }
-//        );
-//    };
+		queuedApplicationInit(
+				queue,
+				"lib/mockapplication",
+				["antie/widgets/label"],
+				function(application, Label) {
+
+                    var device = application.getDevice();
+
+                    var clock = this.sandbox.useFakeTimers();
+
+                    var label = new Label("hello");
+                    var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
+                    label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                    label.render(device);
+                    assert(!truncateTextSpy.called)
+                    clock.tick(0);
+                    assert(truncateTextSpy.called);
+				}
+		);
+	};
+
+    this.LabelTest.prototype.testTruncateTextCalledImmediatelyWhenTruncationIsEnabledOnFutureRenders = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+
+                var device = application.getDevice();
+
+                var clock = this.sandbox.useFakeTimers();
+
+                var label = new Label("hello");
+                var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.render(device);
+                clock.tick(0);
+                label.setText("Something else");
+                assert(truncateTextSpy.called);
+            }
+        );
+    };
 })();
