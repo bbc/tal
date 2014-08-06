@@ -721,19 +721,6 @@
 			assertEquals("innerID", clone.childNodes[0].id);
 		});
 	};
-	this.BrowserDeviceTest.prototype.testGetTextHeight = function(queue) {
-		expectAsserts(3);
-
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			assertEquals(0, device.getTextHeight("", 100, []));
-			assertNotEquals(0, device.getTextHeight("HELLO", 100, []));
-
-			var oneLine = device.getTextHeight("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO", 1000, []);
-			var multipleLines = device.getTextHeight("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO", 50, []);
-			assert(multipleLines > oneLine);
-		});
-	};
 	this.BrowserDeviceTest.prototype.testGetChildElementsByTagName = function(queue) {
 		expectAsserts(2);
 
