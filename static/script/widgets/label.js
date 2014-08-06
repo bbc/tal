@@ -57,10 +57,7 @@ require.def('antie/widgets/label',
                 this._maxLines = null;
                 this._ellipsisText = "...";
                 this._splitAtWordBoundary = true;
-                // TODO: set to false
-                this._useCssForTruncationIfAvailable = true;
-                var config = this.getCurrentApplication().getDevice().getConfig();
-                this._deviceSupportsCssTruncation = config.css.supportsTextTruncation;
+                this._useCssForTruncationIfAvailable = false;
                 this.addClass('label');
             },
             /**
@@ -78,7 +75,7 @@ require.def('antie/widgets/label',
                 if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
                     var self = this;
 
-                    if (this._shouldUseCssForTruncation()) {
+                    if (this._shouldUseCssForTruncation(device)) {
                         this._setCssForTruncation();
                         device.setElementContent(this.outputElement, this._text);
                     }
@@ -110,7 +107,7 @@ require.def('antie/widgets/label',
             },
             // returns true if the current truncation settings are achievable with css and the user has asked for this.
             // throws an exception if the current truncation settings are not achievable with css and the user asked for css to be used.
-            _shouldUseCssForTruncation: function() {
+            _shouldUseCssForTruncation: function(device) {
                 if (!this._useCssForTruncationIfAvailable) {
                     return false;
                 }
@@ -118,7 +115,7 @@ require.def('antie/widgets/label',
                     this.getCurrentApplication().getDevice().getLogger().error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
                     return false;
                 }
-                return this._deviceSupportsCssTruncation;
+                return device.getConfig().css.supportsTextTruncation;
             },
             _setCssForTruncation: function() {
                 this.outputElement.style.overflow = "hidden";

@@ -32,13 +32,28 @@
 	this.LabelTest.prototype.tearDown = function() {
 		this.sandbox.restore();
 	};
+
+    function stubDeviceConfig(sandbox, device, deviceSupportsTruncation) {
+        sandbox.stub(device.prototype, "getConfig", function() {
+            return {
+                css: {
+                    supportsTextTruncation: deviceSupportsTruncation
+                }
+            };
+        });
+    }
+
+
 	this.LabelTest.prototype.testInterface = function(queue) {
 		expectAsserts(2);
 
 		queuedApplicationInit(
 			queue,
 			"lib/mockapplication",
-			["antie/widgets/label","antie/widgets/widget"],
+            [
+                "antie/widgets/label",
+                "antie/widgets/widget"
+            ],
 			function(application, Label, Widget) {
 				assertEquals('Label should be a function', 'function', typeof Label);
 				assert('Label should extend from Widget', new Label() instanceof Widget);
@@ -50,7 +65,7 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/label"],
+               ["antie/widgets/label"],
 				function(application, Label) {
 					var widget = new Label("hello", "world");
 
@@ -71,8 +86,10 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/label"],
+                ["antie/widgets/label"],
 				function(application, Label) {
+                    stubDeviceConfig(this.sandbox, Label, null, false);
+
 					var widget1 = new Label("hello");
 					assertEquals("hello", widget1.getText());
 
@@ -93,13 +110,13 @@
 				"lib/mockapplication",
 				["antie/widgets/label"],
 				function(application, Label) {
-
                     var device = application.getDevice();
+                    stubDeviceConfig(this.sandbox, device, false);
 
                     var clock = this.sandbox.useFakeTimers();
 
                     var label = new Label("hello");
-                    var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
+                    var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
                     label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                     label.render(device);
                     assert(!truncateTextSpy.called)
@@ -117,13 +134,13 @@
             "lib/mockapplication",
             ["antie/widgets/label"],
             function(application, Label) {
-
                 var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, false);
 
                 var clock = this.sandbox.useFakeTimers();
 
                 var label = new Label("hello");
-                var truncateTextSpy = this.sandbox.spy(label, '_truncateText');
+                var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                 label.render(device);
                 clock.tick(0);
