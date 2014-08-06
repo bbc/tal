@@ -25,7 +25,7 @@
  */
 
 require.def(
-    "antie/devices/media/mediaplayerinterface",
+    "antie/devices/mediaplayer/mediaplayerinterface",
     [
         "antie/class",
         "antie/callbackmanager"

@@ -35,7 +35,7 @@
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceInitDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
             assertNoException(function() {
                 new MediaPlayerInterface();
             });
@@ -57,7 +57,7 @@
 
     this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassGoToAddedCallbackWithAllMetadata = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
 
             var SubClass = createSubClass(MediaPlayerInterface);
             var instance = new SubClass();
@@ -80,7 +80,7 @@
 
     this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassHaveMetaDataCollectedFromAccessors = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
 
             var SubClass = MediaPlayerInterface.extend({
                 doEvent: function(type) {
@@ -113,7 +113,7 @@
 
     this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassDoNotGoToSpecificallyRemovedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
 
             var SubClass = createSubClass(MediaPlayerInterface);
             var instance = new SubClass();
@@ -132,7 +132,7 @@
 
     this.MediaPlayerInterfaceTest.prototype.testEventsEmittedBySubclassDoNotGoToAnyRemovedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
 
             var SubClass = createSubClass(MediaPlayerInterface);
             var instance = new SubClass();
@@ -153,7 +153,7 @@
     var testThatInterfaceFunctionThrowsError = function (action) {
         return function (queue) {
             expectAsserts(1);
-            queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
+            queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayerinterface"], function(MediaPlayerInterface) {
                 var mediaPlayerInterface = new MediaPlayerInterface();
                 assertException(function() {
                     action(mediaPlayerInterface);
