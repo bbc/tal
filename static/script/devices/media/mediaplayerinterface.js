@@ -34,20 +34,26 @@ require.def(
 
         var MediaPlayerInterface = Class.extend({
 
+            init: function() {
+            },
+
             /**
-             * @param mediaType "audio" or "video"
-             * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
-             */
-            init: function(mediaType, eventCallback) {
+            * Set the event callback to receive all media player events from now on.
+            * Completely replaces the old callback.
+            * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
+            */
+            setEventCallback: function(eventCallback) {
+                throw new Error("setSource method has not been implemented");
             },
 
             /**
             * Set the media resource to be played.
             * Calling this in any state other than EMPTY is an error.
+            * @param mediaType Value from the MediaPlayerInterface.TYPE enum; audio or video.
             * @param url location of the media resource to play
             * @param mimeType type of media resource
             */
-            setSource: function (url, mimeType) {
+            setSource: function (mediaType, url, mimeType) {
                 throw new Error("setSource method has not been implemented");
             },
 

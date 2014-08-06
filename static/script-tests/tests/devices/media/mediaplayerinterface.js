@@ -37,7 +37,7 @@
         expectAsserts(1);
         queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
             assertNoException(function() {
-                new MediaPlayerInterface('video', function(evt){});
+                new MediaPlayerInterface();
             });
         });
     };
@@ -46,13 +46,17 @@
         return function (queue) {
             expectAsserts(1);
             queuedRequire(queue, ["antie/devices/media/mediaplayerinterface"], function(MediaPlayerInterface) {
-                var mediaPlayerInterface = new MediaPlayerInterface('video', function(evt){});
+                var mediaPlayerInterface = new MediaPlayerInterface();
                 assertException(function() {
                     action(mediaPlayerInterface);
                 }, "Error");
             });
         };
     };
+
+    this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetEventCallbackThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
+        mediaPlayerInterface.setEventCallback(function(evt){});
+    });
 
     this.MediaPlayerInterfaceTest.prototype.testMediaPlayerInterfaceSetSourceThrowsAnExceptionWhenNotOverridden = testThatInterfaceFunctionThrowsError(function(mediaPlayerInterface) {
         mediaPlayerInterface.setSource('url', 'mime');
