@@ -57,6 +57,10 @@ require.def('antie/widgets/label',
                 this._maxLines = null;
                 this._ellipsisText = "...";
                 this._splitAtWordBoundary = true;
+                // TODO: set to false
+                this._useCssForTruncationIfAvailable = true;
+                var config = this.getCurrentApplication().getDevice().getConfig();
+                this._deviceSupportsCssTruncation = config.css.supportsTextTruncation;
                 this.addClass('label');
             },
             /**
@@ -73,17 +77,24 @@ require.def('antie/widgets/label',
 
                 if (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS) {
                     var self = this;
-                    var doTruncation = function() {
-                        device.setElementContent(self.outputElement, self._truncateText());
-                    };
-                    // the element needs to already be on the dom for the truncation to work and this happens after the
-                    // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
-                    // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
-                    if (alreadyAddedToDom) {
-                        doTruncation()
+
+                    if (this._shouldUseCssForTruncation()) {
+                        this._setCssForTruncation();
+                        device.setElementContent(this.outputElement, this._text);
                     }
                     else {
-                        setTimeout(doTruncation, 0);
+                        var doTruncation = function () {
+                            device.setElementContent(self.outputElement, self._truncateText());
+                        };
+                        // the element needs to already be on the dom for the truncation to work and this happens after the
+                        // first render. So if this is the first render, ie this label is not in the dom yet, wait until this
+                        // has happened by using a setTimeout with delay of 0. Otherwise do the truncation immediately.
+                        if (alreadyAddedToDom) {
+                            doTruncation()
+                        }
+                        else {
+                            setTimeout(doTruncation, 0);
+                        }
                     }
                 }
                 else {
@@ -96,6 +107,26 @@ require.def('antie/widgets/label',
                 truncator.setSplitAtWordBoundary(this._splitAtWordBoundary);
                 truncator.setEllipsisText(this._ellipsisText);
                 return truncator.truncateText(this.outputElement, this._text, this._maxLines);
+            },
+            // returns true if the current truncation settings are achievable with css and the user has asked for this.
+            // throws an exception if the current truncation settings are not achievable with css and the user asked for css to be used.
+            _shouldUseCssForTruncation: function() {
+                if (!this._useCssForTruncationIfAvailable) {
+                    return false;
+                }
+                if (this._maxLines === 0) {
+                    this.getCurrentApplication().getDevice().getLogger().error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
+                    return false;
+                }
+                return this._deviceSupportsCssTruncation;
+            },
+            _setCssForTruncation: function() {
+                this.outputElement.style.overflow = "hidden";
+                this.outputElement.style.display = "-webkit-box";
+                this.outputElement.style.webkitBoxOrient = "vertical";
+                this.outputElement.style.whiteSpace = "normal";
+                this.outputElement.style.textOverflow = this._ellipsisText;
+                this.outputElement.style.webkitLineClamp = this._maxLines;
             },
             /**
              * Sets the text displayed by this label.
@@ -117,7 +148,7 @@ require.def('antie/widgets/label',
             /**
              * Sets the truncation mode (currently {@link antie.widgets.Label.TRUNCATION_MODE_NONE} or {@link antie.widgets.Label.TRUNCATION_MODE_RIGHT_ELLIPSIS}).
              *
-             * @param {String} mode The new truncation mode.
+             * @param {number} mode The new truncation mode.
              */
             setTruncationMode: function(mode) {
                 this._truncationMode = mode;
@@ -125,7 +156,7 @@ require.def('antie/widgets/label',
             /**
              * Sets the maximum lines displayed when a truncation mode is set.
              * This is optional and if not specified the text will just be truncated when it no longer fits the box.
-             * @param {String} lines The maximum number of lines to display.
+             * @param {number} lines The maximum number of lines to display.
              */
             setMaximumLines: function(numberLines) {
                 this._maxLines = numberLines;
@@ -139,11 +170,22 @@ require.def('antie/widgets/label',
             },
             /**
              * Set whether or not to allow truncating text part way through a word.
-             * @param {Boolean} True means the truncated text will always end on a complete word. False means it may
-             *                  occur after any character.
+             * @param {Boolean} splitAtWordBoundary True means the truncated text will always end on a complete word. False means it may
+             *                                      occur after any character.
              */
             setSplitAtWordBoundary: function(splitAtWordBoundary) {
                 this._splitAtWordBoundary = splitAtWordBoundary;
+            },
+            /**
+             * Set whether or not css should be used for truncation if is is supported on the device.
+             * If this is enabled the number of lines to truncate at must be set with "setMaximumLines". Css requires a number of lines.
+             * Also if you are using this then then the label itself must not have a height set, or the height should be
+             * the exact height of the number of lines you want.
+             * @param {Boolean} useCss True means the truncated text will always end on a complete word. False means it may
+             *                         occur after any character.
+             */
+            useCssForTruncationIfAvailable: function(useCss) {
+                this._useCssForTruncationIfAvailable = useCss;
             },
             /**
              * @Deprecated
