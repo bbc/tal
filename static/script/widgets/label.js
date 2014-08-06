@@ -66,7 +66,7 @@ require.def('antie/widgets/label',
 			 */
 			render: function(device) {
 
-                var alreadyAddedToDom = this.outputElement;
+                var alreadyAddedToDom = !!this.outputElement;
                 if (!this.outputElement) {
                     this.outputElement = device.createLabel(this.id, this.getClasses(), "");
                 }
