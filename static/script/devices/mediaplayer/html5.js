@@ -132,6 +132,7 @@ require.def(
 
         var instance = new Player();
 
+        // Mixin this MediaPlayer implementation, so that device.getMediaPlayer() returns the correct implementation for the device
         Device.prototype.getMediaPlayer = function() {
             return instance;
         };
