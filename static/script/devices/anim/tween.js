@@ -190,7 +190,7 @@ require.def(
                         }
                         // If the user supplied a Widget the call the render function
                         if (widget) {
-                            Widget.render();
+                            widget.render();
                         }
                         // Fire client callback if it exists
                         if (typeof options.onComplete === 'function') {
