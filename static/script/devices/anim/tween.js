@@ -28,9 +28,10 @@ require.def(
     'antie/devices/anim/tween',
     [
      'antie/devices/browserdevice',
-     'antie/lib/shifty'
+     'antie/lib/shifty',
+     'antie/widgets/widget'
      ],
-     function(Device, Tweenable) {
+     function(Device, Tweenable, Widget) {
         // A set of queues of DOM updates to perform. Each animation framerate gets its own queue
         // so they are in sync between themselves.
         var animQueues = {};
@@ -145,6 +146,14 @@ require.def(
             var anim = new Tweenable(options);
             var self = this;
 
+            // reference to the widget being animated (if widget supplied)
+            var widget = null;
+
+            if (options.el instanceof Widget) {
+                widget = options.el;
+                options.el = options.el.outputElement;
+            }
+
             var opts = {
                     el: options.el,
                     initialState: options.from || {},
@@ -178,6 +187,10 @@ require.def(
                         drainTweensFromQueue(opts);
                         if (this) {
                             step(opts, this);
+                        }
+                        // If the user supplied a Widget the call the render function
+                        if (widget) {
+                            Widget.render();
                         }
                         // Fire client callback if it exists
                         if (typeof options.onComplete === 'function') {
