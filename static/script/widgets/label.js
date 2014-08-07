@@ -112,7 +112,7 @@ require.def('antie/widgets/label',
                     return false;
                 }
                 if (this._maxLines === null) {
-                    throw "You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.";
+                    throw new Error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
                 }
                 return device.getConfig().css.supportsTextTruncation;
             },
@@ -156,7 +156,7 @@ require.def('antie/widgets/label',
              */
             setMaximumLines: function(numberLines) {
                 if (numberLines !== null && numberLines <= 0) {
-                    throw "The number of lines must be 1 or more, or null.";
+                    throw new Error("The number of lines must be 1 or more, or null.");
                 }
                 this._maxLines = numberLines;
             },
@@ -193,7 +193,7 @@ require.def('antie/widgets/label',
              * @param {Integer} width The width of this label in pixels
              */
             setWidth: function(width) {
-                throw "setWidth() called on Label but this method is now deprecated and has no effect.";
+                throw new Error("setWidth() called on Label but this method is now deprecated and has no effect.");
             }
         });
 

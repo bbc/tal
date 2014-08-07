@@ -227,7 +227,7 @@
                 catch(e) {
                     // intentional
                 }
-                assert(shouldUseCssForTruncationSpy.threw());
+                assert(shouldUseCssForTruncationSpy.threw("Error"));
             }
         );
     };
