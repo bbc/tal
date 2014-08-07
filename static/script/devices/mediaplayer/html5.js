@@ -49,43 +49,42 @@ require.def(
                 this._type = mediaType;
                 this._source = url;
                 this._mimeType = mimeType;
-                this._state = MediaPlayer.STATE.STOPPED;
-                this._emitEvent(MediaPlayer.EVENT.STOPPED);
+                this._toStopped();
             },
 
             /**
             * @inheritDoc
             */
             play : function () {
-                this._error();
+                this._toError();
             },
 
             /**
             * @inheritDoc
             */
             playFrom: function (time) {
-                this._error();
+                this._toError();
             },
 
             /**
             * @inheritDoc
             */
             pause: function () {
-                this._error();
+                this._toError();
             },
 
             /**
             * @inheritDoc
             */
             stop: function () {
-                this._error();
+                this._toError();
             },
 
             /**
             * @inheritDoc
             */
             reset: function () {
-                this._error();
+                this._toError();
             },
 
             /**
@@ -129,7 +128,12 @@ require.def(
                 this._mimeType = undefined;
             },
 
-            _error: function () {
+            _toStopped: function () {
+                this._state = MediaPlayer.STATE.STOPPED;
+                this._emitEvent(MediaPlayer.EVENT.STOPPED);
+            },
+
+            _toError: function () {
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);

@@ -145,4 +145,10 @@
         });
     };
 
+    // Stopped state tests
+
+    // Helper to get to the STOPPED state
+    // Then similar tests to above...
+    // Include test for reset() to go back to empty state...
+
 })();
