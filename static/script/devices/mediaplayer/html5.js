@@ -27,14 +27,13 @@
 require.def(
     "antie/devices/mediaplayer/html5",
     [
-        'antie/devices/device',
-        "antie/devices/mediaplayer/mediaplayerinterface"
-
+        "antie/devices/device",
+        "antie/devices/mediaplayer/mediaplayer"
     ],
-    function(Device, MediaPlayerInterface) {
+    function(Device, MediaPlayer) {
         "use strict";
 
-        var Player = MediaPlayerInterface.extend({
+        var Player = MediaPlayer.extend({
 
             init: function() {
                 this._super();

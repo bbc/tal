@@ -25,7 +25,7 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/mediaplayerinterface",
+    "antie/devices/mediaplayer/mediaplayer",
     [
         "antie/class",
         "antie/callbackmanager"
@@ -34,7 +34,7 @@ require.def(
     function(Class, CallbackManager) {
         "use strict";
 
-        var MediaPlayerInterface = Class.extend({
+        var MediaPlayer = Class.extend({
 
             init: function() {
                 this._callbackManager = new CallbackManager();
@@ -91,7 +91,7 @@ require.def(
             /**
             * Set the media resource to be played.
             * Calling this in any state other than EMPTY is an error.
-            * @param mediaType Value from the MediaPlayerInterface.TYPE enum; audio or video.
+            * @param mediaType Value from the MediaPlayer.TYPE enum; audio or video.
             * @param url location of the media resource to play
             * @param mimeType type of media resource
             */
@@ -195,7 +195,7 @@ require.def(
 
             /**
             * Get the current state of the Media PLayer state machine.
-            * @return {MediaPlayerInterface.STATE} The current state of the Media Player state machine.
+            * @return {MediaPlayer.STATE} The current state of the Media Player state machine.
             */
             getState: function () {
                 throw new Error("getState method has not been implemented");
@@ -205,7 +205,7 @@ require.def(
         /**
         * Media Player State Machine
         */
-        MediaPlayerInterface.STATE = {
+        MediaPlayer.STATE = {
             EMPTY:      0, // No source set
             STOPPED:    1, // Source set but no playback
             BUFFERING:  2, // Not enough data to play, waiting to download more
@@ -218,7 +218,7 @@ require.def(
         /**
         * Media Player event names
         */
-        MediaPlayerInterface.EVENT = {
+        MediaPlayer.EVENT = {
             STOPPED: "stopped",     // Event fired when playback is stopped
             BUFFERING: "buffering", // Event fired when playback has to suspend due to buffering
             PLAYING: "playing",     // Event fired when starting (or resuming) playing of the media
@@ -231,11 +231,11 @@ require.def(
         /**
         * Media Types
         */
-        MediaPlayerInterface.TYPE = {
+        MediaPlayer.TYPE = {
             VIDEO: 0,
             AUDIO: 1
         };
 
-        return MediaPlayerInterface;
+        return MediaPlayer;
     }
 );
