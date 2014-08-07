@@ -37,96 +37,103 @@ require.def(
 
             init: function() {
                 this._super();
+                this._state = MediaPlayer.STATE.EMPTY;
+                this._wipe();
+            },
+
+
+            /**
+            * @inheritDoc
+            */
+            setSource: function (mediaType, url, mimeType) {
+                this._type = mediaType;
+                this._source = url;
+                this._mimeType = mimeType;
+                this._state = MediaPlayer.STATE.STOPPED;
+                this._emitEvent(MediaPlayer.EVENT.STOPPED);
+            },
+
+            /**
+            * @inheritDoc
+            */
+            play : function () {
+                this._error();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            playFrom: function (time) {
+                this._error();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            pause: function () {
+                this._error();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            stop: function () {
+                this._error();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            reset: function () {
+                this._error();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            getSource: function () {
+                return this._source;
+            },
+
+            /**
+            * @inheritDoc
+            */
+            getMimeType: function () {
+                return this._mimeType;
+            },
+
+            /**
+            * @inheritDoc
+            */
+            getCurrentTime: function () {
+                return undefined;
+            },
+
+            /**
+            * @inheritDoc
+            */
+            getRange: function () {
+                return undefined;
+            },
+
+            /**
+            * @inheritDoc
+            */
+            getState: function () {
+                return this._state;
+            },
+
+            _wipe: function () {
+                this._type = undefined;
+                this._source = undefined;
+                this._mimeType = undefined;
+            },
+
+            _error: function () {
+                this._wipe();
+                this._state = MediaPlayer.STATE.ERROR;
+                this._emitEvent(MediaPlayer.EVENT.ERROR);
             }
-
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            setSource: function (mediaType, url, mimeType) {
-//                throw new Error("setSource method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            play : function () {
-//                throw new Error("play method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            playFrom: function (time) {
-//                throw new Error("playFrom method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            pause: function () {
-//                throw new Error("pause method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            stop: function () {
-//                throw new Error("stop method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            reset: function () {
-//                throw new Error("reset method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            getSource: function () {
-//                throw new Error("getSource method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            getMimeType: function () {
-//                throw new Error("getMimeType method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            getCurrentTime: function () {
-//                throw new Error("getCurrentTime method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            getRange: function () {
-//                throw new Error("getRange method has not been implemented");
-//            },
-
-// TODO:
-//            /**
-//             * @inheritDoc
-//             */
-//            getState: function () {
-//                throw new Error("getState method has not been implemented");
-//            }
         });
 
         var instance = new Player();

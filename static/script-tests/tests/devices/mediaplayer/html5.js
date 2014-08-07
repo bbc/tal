@@ -23,34 +23,34 @@
  */
 
 (function() {
-    this.HTML5MediaPlayer = AsyncTestCase("HTML5MediaPlayer");
+    this.HTML5MediaPlayerTests = AsyncTestCase("HTML5MediaPlayer");
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    this.HTML5MediaPlayer.prototype.setUp = function() {
+    this.HTML5MediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
     };
 
-    this.HTML5MediaPlayer.prototype.tearDown = function() {
+    this.HTML5MediaPlayerTests.prototype.tearDown = function() {
         this.sandbox.restore();
     };
 
-    this.HTML5MediaPlayer.prototype.testGettingMediaPlayerGivesHTML5VersionWhenModifierProvider = function (queue) {
+    this.HTML5MediaPlayerTests.prototype.testGettingMediaPlayerGivesHTML5VersionWhenModifierProvider = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5"],
-            function(application, HTML5MediaInterface) {
+            function(application, HTML5MediaPlayer) {
 
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
 
-                assertInstanceOf(HTML5MediaInterface, instance);
+                assertInstanceOf(HTML5MediaPlayer, instance);
             }, config);
     };
 
-    this.HTML5MediaPlayer.prototype.testGettingMediaPlayerRepeatedlyReturnsSameObject = function (queue) {
+    this.HTML5MediaPlayerTests.prototype.testGettingMediaPlayerRepeatedlyReturnsSameObject = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5"],
-            function(application, HTML5MediaInterface) {
+            function(application, HTML5MediaPlayer) {
 
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
@@ -59,6 +59,90 @@
                 assertSame(instance, instance2);
 
             }, config);
+    };
+
+
+    // Helpers for standard MediaPlayer tests : These helpers and most of the tests will be shareable with the other implementations...
+
+    this.HTML5MediaPlayerTests.prototype.doTest = function (queue, test) {
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/mediaplayer/html5"],
+            function(application, MediaPlayer, HTML5MediaPlayer) {
+
+                var device = application.getDevice();
+                self.mediaPlayer = device.getMediaPlayer();
+
+                self.eventCallback = self.sandbox.stub();
+                self.mediaPlayer.addEventCallback(null, self.eventCallback);
+
+                test.call(self, MediaPlayer);
+            }, config);
+    };
+
+    this.HTML5MediaPlayerTests.prototype.assertMediaPlayerError = function (MediaPlayer) {
+        assertEquals(MediaPlayer.STATE.ERROR, this.mediaPlayer.getState());
+        assertEquals(1, this.eventCallback.callCount);
+        assertEquals({
+            state: MediaPlayer.STATE.ERROR,
+            currentTime: undefined,
+            range: undefined,
+            url: undefined,
+            mimeType: undefined,
+            type: MediaPlayer.EVENT.ERROR
+        }, this.eventCallback.getCall(0).args[0]);
+    };
+
+    var makeGetUndefinedTest = function (apiCall) {
+        var test = function (queue) {
+            expectAsserts(1);
+            this.doTest(queue, function (MediaPlayer) {
+                assertEquals(undefined, this.mediaPlayer[apiCall]());
+            });
+        };
+        test.bind(HTML5MediaPlayerTests);
+        return test;
+    };
+
+    var makeErrorCallTest = function (apiCall) {
+        var test = function (queue) {
+            expectAsserts(3);
+            this.doTest(queue, function (MediaPlayer) {
+                this.mediaPlayer[apiCall]();
+                this.assertMediaPlayerError(MediaPlayer);
+            });
+        };
+        test.bind(HTML5MediaPlayerTests);
+        return test;
+    };
+
+    // Empty state tests
+
+    this.HTML5MediaPlayerTests.prototype.testMediaPlayerStartsInEmptyState = function (queue) {
+        expectAsserts(1); 
+        this.doTest(queue, function (MediaPlayer) {
+            assertEquals(MediaPlayer.STATE.EMPTY, this.mediaPlayer.getState());
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testGetSourceReturnsUndefinedInEmptyState = makeGetUndefinedTest("getSource");
+    this.HTML5MediaPlayerTests.prototype.testGetMimeTypeReturnsUndefinedInEmptyState = makeGetUndefinedTest("getMimeType");
+    this.HTML5MediaPlayerTests.prototype.testGetCurrentTimeReturnsUndefinedInEmptyState = makeGetUndefinedTest("getCurrentTime");
+    this.HTML5MediaPlayerTests.prototype.testGetRangeReturnsUndefinedInEmptyState = makeGetUndefinedTest("getRange");
+
+    this.HTML5MediaPlayerTests.prototype.testCallingPlayInEmptyStateIsAnError = makeErrorCallTest("play");
+    this.HTML5MediaPlayerTests.prototype.testCallingPlayFromInEmptyStateIsAnError = makeErrorCallTest("playFrom");
+    this.HTML5MediaPlayerTests.prototype.testCallingPauseInEmptyStateIsAnError = makeErrorCallTest("pause");
+    this.HTML5MediaPlayerTests.prototype.testCallingStopInEmptyStateIsAnError = makeErrorCallTest("stop");
+    this.HTML5MediaPlayerTests.prototype.testCallingResetInEmptyStateIsAnError = makeErrorCallTest("reset");
+
+    this.HTML5MediaPlayerTests.prototype.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
+        expectAsserts(3); 
+        this.doTest(queue, function (MediaPlayer) {
+            this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType")
+            assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
+            assertEquals("testUrl", this.mediaPlayer.getSource());
+            assertEquals("testMimeType", this.mediaPlayer.getMimeType());
+        });
     };
 
 })();
