@@ -114,7 +114,8 @@ require.def('antie/widgets/label',
                 if (this._maxLines === null) {
                     throw new Error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
                 }
-                return device.getConfig().css.supportsTextTruncation;
+                var config = device.getConfig();
+                return config.hasOwnProperty("css") && config.css.hasOwnProperty("supportsTextTruncation") && config.css.supportsTextTruncation;
             },
             _setCssForTruncation: function() {
                 this.outputElement.style.overflow = "hidden";

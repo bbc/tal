@@ -118,7 +118,7 @@
                     var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
                     label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                     label.render(device);
-                    assert(!truncateTextSpy.called)
+                    assert(!truncateTextSpy.called);
                     clock.tick(0);
                     assert(truncateTextSpy.called);
 				}
@@ -157,7 +157,7 @@
     };
 
     this.LabelTest.prototype.testSetCssForTruncationIsCalledWhenUsingCss = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
 
         queuedApplicationInit(
             queue,
@@ -173,14 +173,13 @@
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
-                assert(!setCssForTruncationSpy.threw());
                 assert(setCssForTruncationSpy.called);
             }
         );
     };
 
     this.LabelTest.prototype.testSetTruncationAlgorithmIsUsedWhenRequestingCssButDeviceDoesNotSupportIt = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
 
         queuedApplicationInit(
             queue,
@@ -198,7 +197,6 @@
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
-                assert(!truncateTextSpy.called);
                 clock.tick(0);
                 assert(truncateTextSpy.called);
             }
@@ -217,17 +215,12 @@
                 stubDeviceConfig(this.sandbox, device, true);
 
                 var label = new Label("hello");
-                this.sandbox.stub(label, '_setCssForTruncation');
-                var shouldUseCssForTruncationSpy = this.sandbox.spy(label, '_shouldUseCssForTruncation');
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                 label.useCssForTruncationIfAvailable(true);
-                try {
+
+                assertException(function() {
                     label.render(device);
-                }
-                catch(e) {
-                    // intentional
-                }
-                assert(shouldUseCssForTruncationSpy.threw("Error"));
+                }, "Error");
             }
         );
     };
