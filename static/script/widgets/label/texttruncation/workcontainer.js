@@ -107,7 +107,9 @@ require.def('antie/widgets/label/texttruncation/workcontainer',
                 }
                 var size = this._device.getElementSize(this._container);
                 // getElementSize() returns a measurement rounded to an integer so >= instead of > compensates for this
-                return this._measuringHorizontally ? size.width >= this._w : size.height >= this._h;
+                // don't need to worry about this for height, because the effect of it being a pixel over for height doesn't have a major effect on anything.
+                // if the width was out by a pixel, this could result in the algorithm detecting where a line would wrap later than it would, which could result in an extra line.
+                return this._measuringHorizontally ? size.width >= this._w : size.height > this._h;
             },
 
             /**

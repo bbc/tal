@@ -117,7 +117,7 @@
             stubWorkContainer(this.sandbox, WorkContainer, mockContainer);
 
             var workContainer = new WorkContainer(application.getDevice(), getMockDomContainer(), false);
-            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 99);
+            fakeSizeOfContainerThatIsCollapsingAroundContent(mockContainer, 100, 100);
 
             assertEquals(false, workContainer.isOver(""));
         });
