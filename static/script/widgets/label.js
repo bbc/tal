@@ -81,7 +81,6 @@ require.def('antie/widgets/label',
                     }
                     else {
                         var doTruncation = function () {
-                            console.log("TRUNCATING");
                             device.setElementContent(self.outputElement, self._truncateText());
                         };
                         // the element needs to already be on the dom for the truncation to work and this happens after the
