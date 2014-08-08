@@ -114,6 +114,9 @@ require.def('antie/widgets/label',
                 if (this._maxLines === null) {
                     throw new Error("You chose to use css for truncation but this is not possible without specifying the number of lines you would like. If you want the text to fill the container you cannot use the css method.");
                 }
+                if (this._splitAtWordBoundary) {
+                    throw new Error("You chose to use css for truncation but also truncate at a word boundary. This is not possible with the css method.");
+                }
                 var config = device.getConfig();
                 return config.hasOwnProperty("css") && config.css.hasOwnProperty("supportsTextTruncation") && config.css.supportsTextTruncation;
             },
@@ -169,7 +172,8 @@ require.def('antie/widgets/label',
                 this._ellipsisText = ellipsisText;
             },
             /**
-             * Set whether or not to allow truncating text part way through a word.
+             * Set whether or not to allow truncating text part way through a word. Defaults to true.
+             * This must be false when using the css method as css doesn't support truncating at a word boundary.
              * @param {Boolean} splitAtWordBoundary True means the truncated text will always end on a complete word. False means it may
              *                                      occur after any character.
              */

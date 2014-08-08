@@ -171,6 +171,7 @@
                 var label = new Label("hello");
                 var setCssForTruncationSpy = this.sandbox.stub(label, '_setCssForTruncation');
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.setSplitAtWordBoundary(false);
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
@@ -195,6 +196,7 @@
                 var label = new Label("hello");
                 var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.setSplitAtWordBoundary(false);
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
@@ -218,6 +220,31 @@
                 var label = new Label("hello");
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                 label.useCssForTruncationIfAvailable(true);
+                label.setSplitAtWordBoundary(false);
+
+                assertException(function() {
+                    label.render(device);
+                }, "Error");
+            }
+        );
+    };
+
+    this.LabelTest.prototype.testExceptionThrownWhenTryingToUseCssWithTheTruncateAtWordBoundarySet = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, true);
+
+                var label = new Label("hello");
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.useCssForTruncationIfAvailable(true);
+                label.setSplitAtWordBoundary(true);
+                label.setMaximumLines(2);
 
                 assertException(function() {
                     label.render(device);
