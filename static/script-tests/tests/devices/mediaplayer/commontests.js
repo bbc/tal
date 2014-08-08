@@ -240,21 +240,91 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     // ********* BUFFERING state tests ***********
     // *******************************************
 
+    // getToBufferingState (assert state is correct in here)
+
+    // getSource()
+    // getMimeType()
+    // getCurrentTime()
+    // getRange()
+
+    // setSource(url, mimeType)
+    // play()
+    // playFrom(time)
+    // pause()
+    // stop()
+    // reset()
+
     // *******************************************
     // ********* PLAYING state tests *************
     // *******************************************
+
+    // getToPlayingState (assert state is correct in here)
+
+    // getSource()
+    // getMimeType()
+    // getCurrentTime()
+    // getRange()
+
+    // setSource(url, mimeType)
+    // play()
+    // playFrom(time)
+    // pause()
+    // stop()
+    // reset()
 
     // *******************************************
     // ********* PAUSED state tests **************
     // *******************************************
 
+    // getToPausedState (assert state is correct in here)
+
+    // getSource()
+    // getMimeType()
+    // getCurrentTime()
+    // getRange()
+
+    // setSource(url, mimeType)
+    // play()
+    // playFrom(time)
+    // pause()
+    // stop()
+    // reset()
+
     // *******************************************
     // ********* COMPLETE state tests ************
     // *******************************************
 
+    // getToCompleteState (assert state is correct in here)
+
+    // getSource()
+    // getMimeType()
+    // getCurrentTime()
+    // getRange()
+
+    // setSource(url, mimeType)
+    // play()
+    // playFrom(time)
+    // pause()
+    // stop()
+    // reset()
+
     // *******************************************
     // ********* ERROR state tests ***************
     // *******************************************
+
+    // getToErrorState (assert state is correct in here)
+
+    // getSource()
+    // getMimeType()
+    // getCurrentTime()
+    // getRange()
+
+    // setSource(url, mimeType)
+    // play()
+    // playFrom(time)
+    // pause()
+    // stop()
+    // reset()
 
 
 
