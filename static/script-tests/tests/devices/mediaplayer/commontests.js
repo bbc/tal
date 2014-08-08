@@ -78,14 +78,14 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             }, config);
     };
 
-    mixins.assertEvent = function (eventData) {
-        assertEquals(1, this.eventCallback.callCount);
-        assertEquals(eventData, this.eventCallback.getCall(0).args[0]);
+    mixins.assertLatestEvent = function (eventData) {
+        assert(this.eventCallback.called);
+        assertEquals(eventData, this.eventCallback.lastCall.args[0]);
     };
 
     mixins.assertMediaPlayerError = function (MediaPlayer) {
         assertEquals(MediaPlayer.STATE.ERROR, this.mediaPlayer.getState());
-        this.assertEvent({
+        this.assertLatestEvent({
             state: MediaPlayer.STATE.ERROR,
             currentTime: undefined,
             range: undefined,
@@ -107,10 +107,11 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         return test;
     };
 
-    var makeErrorCallTest = function (apiCall) {
+    var makeErrorCallTest = function (setup, apiCall) {
         var test = function (queue) {
-            expectAsserts(3);
+            expectAsserts(4);
             this.doTest(queue, function (MediaPlayer) {
+                setup.call(this, MediaPlayer);
                 this.mediaPlayer[apiCall]();
                 this.assertMediaPlayerError(MediaPlayer);
             });
@@ -140,11 +141,11 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetCurrentTimeReturnsUndefinedInEmptyState = makeGetUndefinedTest(getToEmptyState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInEmptyState = makeGetUndefinedTest(getToEmptyState, "getRange");
 
-    mixins.testCallingPlayInEmptyStateIsAnError = makeErrorCallTest("play");
-    mixins.testCallingPlayFromInEmptyStateIsAnError = makeErrorCallTest("playFrom");
-    mixins.testCallingPauseInEmptyStateIsAnError = makeErrorCallTest("pause");
-    mixins.testCallingStopInEmptyStateIsAnError = makeErrorCallTest("stop");
-    mixins.testCallingResetInEmptyStateIsAnError = makeErrorCallTest("reset");
+    mixins.testCallingPlayInEmptyStateIsAnError = makeErrorCallTest(getToEmptyState, "play");
+    mixins.testCallingPlayFromInEmptyStateIsAnError = makeErrorCallTest(getToEmptyState, "playFrom");
+    mixins.testCallingPauseInEmptyStateIsAnError = makeErrorCallTest(getToEmptyState, "pause");
+    mixins.testCallingStopInEmptyStateIsAnError = makeErrorCallTest(getToEmptyState, "stop");
+    mixins.testCallingResetInEmptyStateIsAnError = makeErrorCallTest(getToEmptyState, "reset");
 
     mixins.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
         expectAsserts(5); 
@@ -153,7 +154,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
             assertEquals("testUrl", this.mediaPlayer.getSource());
             assertEquals("testMimeType", this.mediaPlayer.getMimeType());
-            this.assertEvent({
+            this.assertLatestEvent({
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
                 range: undefined,
@@ -177,13 +178,33 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetCurrentTimeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getRange");
 
-//    mixins.testCallingSetSourceInEmptyStateIsAnError = makeErrorCallTest("setSource");
-//    mixins.testCallingStopInEmptyStateIsAnError = makeErrorCallTest("stop");
-//    mixins.testCallingStopInEmptyStateIsAnError = makeErrorCallTest("stop");
+    mixins.testCallingSetSourceInStoppedStateIsAnError = makeErrorCallTest(getToStoppedState, "setSource");
+    mixins.testCallingPauseInStoppedStateIsAnError = makeErrorCallTest(getToStoppedState, "pause");
+    mixins.testCallingStopInStoppedStateIsAnError = makeErrorCallTest(getToStoppedState, "stop");
 
     // Then similar tests to above...
     // Helper to get to the STOPPED state
     // Include test for reset() to go back to empty state...
+
+    // *******************************************
+    // ********* BUFFERING state tests ***********
+    // *******************************************
+
+    // *******************************************
+    // ********* PLAYING state tests *************
+    // *******************************************
+
+    // *******************************************
+    // ********* PAUSED state tests **************
+    // *******************************************
+
+    // *******************************************
+    // ********* COMPLETE state tests ************
+    // *******************************************
+
+    // *******************************************
+    // ********* ERROR state tests ***************
+    // *******************************************
 
 
 

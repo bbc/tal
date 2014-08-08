@@ -46,10 +46,14 @@ require.def(
             * @inheritDoc
             */
             setSource: function (mediaType, url, mimeType) {
-                this._type = mediaType;
-                this._source = url;
-                this._mimeType = mimeType;
-                this._toStopped();
+                if (this.getState() == MediaPlayer.STATE.EMPTY) {
+                    this._type = mediaType;
+                    this._source = url;
+                    this._mimeType = mimeType;
+                    this._toStopped();
+                } else {
+                    this._toError();
+                }
             },
 
             /**
