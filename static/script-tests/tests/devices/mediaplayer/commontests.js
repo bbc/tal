@@ -34,19 +34,19 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGettingMediaPlayerGivesDeviceVersionWhenModifierProvider = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', [mediaPlayerDeviceModifierRequireName],
-            function(application, HTML5MediaPlayer) {
+            function(application, MediaPlayerImpl) {
 
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
 
-                assertInstanceOf(HTML5MediaPlayer, instance);
+                assertInstanceOf(MediaPlayerImpl, instance);
             }, config);
     };
 
     mixins.testGettingMediaPlayerRepeatedlyReturnsSameObject = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', [mediaPlayerDeviceModifierRequireName],
-            function(application, HTML5MediaPlayer) {
+            function(application, MediaPlayerImpl) {
 
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
@@ -65,8 +65,8 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
     mixins.doTest = function (queue, test) {
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/mediaplayer/html5"],
-            function(application, MediaPlayer, HTML5MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", mediaPlayerDeviceModifierRequireName],
+            function(application, MediaPlayer, MediaPlayerImpl) {
 
                 var device = application.getDevice();
                 self.mediaPlayer = device.getMediaPlayer();
@@ -97,13 +97,13 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
     var makeGetUndefinedTest = function (setup, apiCall) {
         var test = function (queue) {
-            expectAsserts(1);
+            expectAsserts(2);
             this.doTest(queue, function (MediaPlayer) {
-                setup();
+                setup.call(this, MediaPlayer);
                 assertEquals(undefined, this.mediaPlayer[apiCall]());
             });
         };
-        test.bind(HTML5MediaPlayerTests);
+        test.bind(testCase);
         return test;
     };
 
@@ -115,7 +115,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
                 this.assertMediaPlayerError(MediaPlayer);
             });
         };
-        test.bind(HTML5MediaPlayerTests);
+        test.bind(testCase);
         return test;
     };
 
@@ -124,7 +124,9 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     // ********* EMPTY state tests ***************
     // *******************************************
 
-    var getToEmptyState = function () {};
+    var getToEmptyState = function (MediaPlayer) {
+        assertEquals(MediaPlayer.STATE.EMPTY, this.mediaPlayer.getState());
+    };
 
     mixins.testMediaPlayerStartsInEmptyState = function (queue) {
         expectAsserts(1); 
@@ -167,12 +169,13 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     // ********* STOPPED state tests *************
     // *******************************************
 
-//    var getToStoppedState = function () {
-//        this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType")
-//    };
+    var getToStoppedState = function (MediaPlayer) {
+        this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType")
+        assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
+    };
 
-//    mixins.testGetCurrentTimeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getCurrentTime");
-//    mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getRange");
+    mixins.testGetCurrentTimeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getCurrentTime");
+    mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetUndefinedTest(getToStoppedState, "getRange");
 
 //    mixins.testCallingSetSourceInEmptyStateIsAnError = makeErrorCallTest("setSource");
 //    mixins.testCallingStopInEmptyStateIsAnError = makeErrorCallTest("stop");
