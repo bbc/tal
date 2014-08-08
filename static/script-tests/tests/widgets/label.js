@@ -120,7 +120,7 @@
                     label.render(device);
                     assert(!truncateTextSpy.called);
                     clock.tick(0);
-                    assert(truncateTextSpy.called);
+                    assert(truncateTextSpy.calledOnce);
 				}
 		);
 	};
@@ -146,12 +146,13 @@
                         }
                     };
                 });
+                this.sandbox.stub(document, "contains").returns(true);
                 var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
                 label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
                 label.render(device);
                 clock.tick(0);
                 label.setText("Something else");
-                assert(truncateTextSpy.called);
+                assert(truncateTextSpy.calledTwice);
             }
         );
     };
@@ -173,7 +174,7 @@
                 label.useCssForTruncationIfAvailable(true);
                 label.setMaximumLines(2);
                 label.render(device);
-                assert(setCssForTruncationSpy.called);
+                assert(setCssForTruncationSpy.calledOnce);
             }
         );
     };
@@ -198,7 +199,7 @@
                 label.setMaximumLines(2);
                 label.render(device);
                 clock.tick(0);
-                assert(truncateTextSpy.called);
+                assert(truncateTextSpy.calledOnce);
             }
         );
     };
