@@ -78,9 +78,14 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             }, config);
     };
 
-    mixins.assertLatestEvent = function (eventData) {
+    mixins.assertLatestEvent = function (expectedEventData) {
         assert(this.eventCallback.called);
-        assertEquals(eventData, this.eventCallback.lastCall.args[0]);
+        var actualEventData = this.eventCallback.lastCall.args[0];
+        for (name in expectedEventData) {
+            if (expectedEventData.hasOwnProperty(name)) {
+                assertEquals(expectedEventData[name], actualEventData[name]);
+            }
+        }
     };
 
     mixins.assertMediaPlayerError = function (MediaPlayer) {
@@ -109,7 +114,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
     var makeApiCallCausesErrorTest = function (setup, apiCall) {
         var test = function (queue) {
-            expectAsserts(4);
+            expectAsserts(9);
             this.doTest(queue, function (MediaPlayer) {
                 setup.call(this, MediaPlayer);
                 this.mediaPlayer[apiCall]();
@@ -148,9 +153,10 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingResetInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "reset");
 
     mixins.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
-        expectAsserts(5); 
+        expectAsserts(11); 
         this.doTest(queue, function (MediaPlayer) {
-            this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType")
+            getToEmptyState.call(this, MediaPlayer);
+            this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
             assertEquals("testUrl", this.mediaPlayer.getSource());
             assertEquals("testMimeType", this.mediaPlayer.getMimeType());
@@ -182,9 +188,48 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingPauseInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "pause");
     mixins.testCallingStopInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "stop");
 
-    // Then similar tests to above...
-    // Helper to get to the STOPPED state
-    // Include test for reset() to go back to empty state...
+    mixins.testCallingResetInStoppedStateGoesToEmptyState = function (queue) {
+        expectAsserts(4); 
+        this.doTest(queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            this.mediaPlayer.reset();
+            assertEquals(MediaPlayer.STATE.EMPTY, this.mediaPlayer.getState());
+            assertEquals(undefined, this.mediaPlayer.getSource());
+            assertEquals(undefined, this.mediaPlayer.getMimeType());
+        });
+    };
+
+    mixins.testCallingPlayInStoppedStateGoesToBufferingState = function (queue) {
+        expectAsserts(7); 
+        this.doTest(queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            this.mediaPlayer.play();
+            assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.BUFFERING,
+                // Availability of range/currentTime at this point is device-specific.
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.BUFFERING
+            });
+        });
+    };
+
+    mixins.testCallingPlayFromInStoppedStateGoesToBufferingState = function (queue) {
+        expectAsserts(7); 
+        this.doTest(queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            this.mediaPlayer.playFrom(0);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.BUFFERING,
+                // Availability of range/currentTime at this point is device-specific.
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.BUFFERING
+            });
+        });
+    };
 
     // *******************************************
     // ********* BUFFERING state tests ***********

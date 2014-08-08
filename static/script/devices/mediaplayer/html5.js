@@ -60,14 +60,22 @@ require.def(
             * @inheritDoc
             */
             play : function () {
-                this._toError();
+                if (this.getState() == MediaPlayer.STATE.STOPPED) {
+                    this._toBuffering();
+                } else {
+                    this._toError();
+                }
             },
 
             /**
             * @inheritDoc
             */
             playFrom: function (time) {
-                this._toError();
+                if (this.getState() == MediaPlayer.STATE.STOPPED) {
+                    this._toBuffering();
+                } else {
+                    this._toError();
+                }
             },
 
             /**
@@ -88,7 +96,11 @@ require.def(
             * @inheritDoc
             */
             reset: function () {
-                this._toError();
+                if (this.getState() == MediaPlayer.STATE.STOPPED) {
+                    this._toEmpty();
+                } else {
+                    this._toError();
+                }
             },
 
             /**
@@ -135,6 +147,16 @@ require.def(
             _toStopped: function () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
+            },
+
+            _toBuffering: function () {
+                this._state = MediaPlayer.STATE.BUFFERING;
+                this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+            },
+
+            _toEmpty: function () {
+                this._wipe();
+                this._state = MediaPlayer.STATE.EMPTY;
             },
 
             _toError: function () {
