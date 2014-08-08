@@ -29,6 +29,7 @@
         this.sandbox = sinon.sandbox.create();
         this.mockEl = {
             style: {
+                position: "invalidPosition",
                 whiteSpace: "invalidWhiteSpace",
                 width: "invalidWidth",
                 height: "invalidHeight",
@@ -41,12 +42,13 @@
         this.sandbox.restore();
     };
 
-    this.tests.prototype.testCheckConstructorWhenMeasuringVertically = function (queue) {
-        expectAsserts(4);
+    this.tests.prototype.testCheckConfigureForAlgorithmWhenMeasuringVertically = function (queue) {
+        expectAsserts(5);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             new CSSManager(this.mockEl, false).configureForAlgorithm();
+            assertEquals("static", this.mockEl.style.position);
             assertEquals("normal", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
@@ -54,12 +56,13 @@
         });
     };
 
-    this.tests.prototype.testCheckConstructorWhenMeasuringHorizontally = function (queue) {
-        expectAsserts(4);
+    this.tests.prototype.testCheckConfigureForAlgorithmWhenMeasuringHorizontally = function (queue) {
+        expectAsserts(5);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             new CSSManager(this.mockEl, true).configureForAlgorithm();
+            assertEquals("static", this.mockEl.style.position);
             assertEquals("nowrap", this.mockEl.style.whiteSpace);
             assertEquals("auto", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
@@ -68,13 +71,14 @@
     };
 
     this.tests.prototype.testCheckThatRestoreRestoresCorrectCSSWhenMeasuringVertically = function (queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             var instance = new CSSManager(this.mockEl, false);
             instance.configureForAlgorithm();
             instance.restore();
+            assertEquals("invalidPosition", this.mockEl.style.position);
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("invalidHeight", this.mockEl.style.height);
@@ -83,13 +87,14 @@
     };
 
     this.tests.prototype.testCheckThatRestoreRestoresCorrectCSSWhenMeasuringHorizontally = function (queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
             var instance = new CSSManager(this.mockEl, true);
             instance.configureForAlgorithm();
             instance.restore();
+            assertEquals("invalidPosition", this.mockEl.style.position);
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("invalidHeight", this.mockEl.style.height);

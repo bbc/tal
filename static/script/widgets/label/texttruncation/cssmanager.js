@@ -45,6 +45,7 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                 this._el = el;
                 this._configureForMeasuringWidth = configureForMeasuringWidth;
                 this._properties = {
+                    position: null,
                     whiteSpace: null,
                     width: null,
                     height: null,
@@ -79,6 +80,7 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
              * Set the display mode to block. This means we get the actual width the element could take up even if it's set to 'inline'.
              */
             configureForMeasuring: function() {
+                this._el.style.position = "static";
                 this._el.style.display = "block";
             },
 
@@ -89,6 +91,7 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                 // the height should be set to auto so that we can use el.clientHeight to determine the height of the contents
                 this._el.style.height = "auto";
                 this._el.style.display = "inline-block";
+                this._el.style.position = "static";
                 if (this._configureForMeasuringWidth) {
                     // we will be measuring the width that is taken up as text is added so set the width to auto and make sure no wrapping occurs.
                     this._el.style.whiteSpace = "nowrap";
