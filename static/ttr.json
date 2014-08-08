@@ -1,7 +1,7 @@
 {
     "scriptblock" :
         {
-            "include" : [
+            "include" : [            
                 "script-tests/prelude.js",
                 "script-tests/lib/require.js",
                 "script-tests/lib/queuedrequire.js",
@@ -10,6 +10,7 @@
                 "script-tests/lib/ondevicetestconfigvalidate.js",
                 "script-tests/api/*.js",
                 "script-tests/mocks/*.js",
+                "script-tests/tests/devices/mediaplayer/commontests.js",
                 "script-tests/fixtures/layouts/*.js",
                 "script/**/*.js"
             ],
@@ -21,7 +22,11 @@
     "testblock" :
         {
             "include" : [ "script-tests/tests/**/*.js" ],
-            "exclude" : [ "script-tests/tests/interactivehtml/*.js", "script-tests/tests/queuedrequire.js" ]
+            "exclude" : [
+                "script-tests/tests/interactivehtml/*.js",
+                "script-tests/tests/queuedrequire.js",
+                "script-tests/tests/devices/mediaplayer/commontests.js"
+            ]
         },
 
     "serveblock" :
