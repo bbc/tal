@@ -101,11 +101,15 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     };
 
     var makeGetMethodReturnsUndefinedTest = function (setup, apiCall) {
+        return makeGetMethodReturnsExpectedValueTest(setup, apiCall, undefined);
+    };
+
+    var makeGetMethodReturnsExpectedValueTest = function (setup, apiCall, expected) {
         var test = function (queue) {
             expectAsserts(2);
             this.doTest(queue, function (MediaPlayer) {
                 setup.call(this, MediaPlayer);
-                assertEquals(undefined, this.mediaPlayer[apiCall]());
+                assertEquals(expected, this.mediaPlayer[apiCall]());
             });
         };
         test.bind(testCase);
@@ -153,13 +157,11 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingResetInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "reset");
 
     mixins.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
-        expectAsserts(11); 
+        expectAsserts(9);
         this.doTest(queue, function (MediaPlayer) {
             getToEmptyState.call(this, MediaPlayer);
             this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
-            assertEquals("testUrl", this.mediaPlayer.getSource());
-            assertEquals("testMimeType", this.mediaPlayer.getMimeType());
             this.assertLatestEvent({
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
@@ -180,6 +182,9 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType")
         assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
     };
+
+    mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetMethodReturnsExpectedValueTest(getToStoppedState, "getSource", "testUrl");
+    mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetMethodReturnsExpectedValueTest(getToStoppedState, "getMimeType", "testMimeType");
 
     mixins.testGetCurrentTimeReturnsUndefinedInStoppedState = makeGetMethodReturnsUndefinedTest(getToStoppedState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInStoppedState = makeGetMethodReturnsUndefinedTest(getToStoppedState, "getRange");
