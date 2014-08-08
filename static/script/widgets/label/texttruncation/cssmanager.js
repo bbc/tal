@@ -48,7 +48,11 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                     position: null,
                     whiteSpace: null,
                     width: null,
+                    minWidth: null,
+                    maxWidth: null,
                     height: null,
+                    minHeight: null,
+                    maxHeight: null,
                     display: null
                 };
                 this._save();
@@ -88,6 +92,8 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
              * Applies the css properties to the element that are necessary for the text truncation algorithm.
              */
             configureForAlgorithm: function() {
+                this._el.style.maxHeight = null;
+                this._el.style.minHeight = null;
                 // the height should be set to auto so that we can use el.clientHeight to determine the height of the contents
                 this._el.style.height = "auto";
                 this._el.style.display = "inline-block";
@@ -96,6 +102,8 @@ require.def('antie/widgets/label/texttruncation/cssmanager',
                     // we will be measuring the width that is taken up as text is added so set the width to auto and make sure no wrapping occurs.
                     this._el.style.whiteSpace = "nowrap";
                     this._el.style.width = "auto";
+                    this._el.style.maxWidth = null;
+                    this._el.style.minWidth = null;
                 }
                 else {
                     this._el.style.whiteSpace = "normal";

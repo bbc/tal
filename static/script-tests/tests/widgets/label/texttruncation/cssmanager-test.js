@@ -32,7 +32,11 @@
                 position: "invalidPosition",
                 whiteSpace: "invalidWhiteSpace",
                 width: "invalidWidth",
+                minWidth: "invalidMinWidth",
+                maxWidth: "invalidMaxWidth",
                 height: "invalidHeight",
+                minHeight: "invalidMinHeight",
+                maxHeight: "invalidMaxHeight",
                 display: "invalidDisplay"
             }
         };
@@ -43,7 +47,7 @@
     };
 
     this.tests.prototype.testCheckConfigureForAlgorithmWhenMeasuringVertically = function (queue) {
-        expectAsserts(5);
+        expectAsserts(9);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
@@ -52,12 +56,16 @@
             assertEquals("normal", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
+            assertEquals("invalidMaxWidth", this.mockEl.style.maxWidth);
+            assertEquals("invalidMinWidth", this.mockEl.style.minWidth);
+            assertEquals(null, this.mockEl.style.maxHeight);
+            assertEquals(null, this.mockEl.style.minHeight);
             assertEquals("inline-block", this.mockEl.style.display);
         });
     };
 
     this.tests.prototype.testCheckConfigureForAlgorithmWhenMeasuringHorizontally = function (queue) {
-        expectAsserts(5);
+        expectAsserts(9);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
@@ -66,12 +74,16 @@
             assertEquals("nowrap", this.mockEl.style.whiteSpace);
             assertEquals("auto", this.mockEl.style.width);
             assertEquals("auto", this.mockEl.style.height);
+            assertEquals(null, this.mockEl.style.maxWidth);
+            assertEquals(null, this.mockEl.style.minWidth);
+            assertEquals(null, this.mockEl.style.maxHeight);
+            assertEquals(null, this.mockEl.style.minHeight);
             assertEquals("inline-block", this.mockEl.style.display);
         });
     };
 
     this.tests.prototype.testCheckThatRestoreRestoresCorrectCSSWhenMeasuringVertically = function (queue) {
-        expectAsserts(5);
+        expectAsserts(9);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
@@ -82,12 +94,16 @@
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("invalidHeight", this.mockEl.style.height);
+            assertEquals("invalidMaxWidth", this.mockEl.style.maxWidth);
+            assertEquals("invalidMinWidth", this.mockEl.style.minWidth);
+            assertEquals("invalidMaxHeight", this.mockEl.style.maxHeight);
+            assertEquals("invalidMinHeight", this.mockEl.style.minHeight);
             assertEquals("invalidDisplay", this.mockEl.style.display);
         });
     };
 
     this.tests.prototype.testCheckThatRestoreRestoresCorrectCSSWhenMeasuringHorizontally = function (queue) {
-        expectAsserts(5);
+        expectAsserts(9);
 
         queuedRequire(queue, ["antie/widgets/label/texttruncation/cssmanager"], function(CSSManager) {
 
@@ -98,6 +114,10 @@
             assertEquals("invalidWhiteSpace", this.mockEl.style.whiteSpace);
             assertEquals("invalidWidth", this.mockEl.style.width);
             assertEquals("invalidHeight", this.mockEl.style.height);
+            assertEquals("invalidMaxWidth", this.mockEl.style.maxWidth);
+            assertEquals("invalidMinWidth", this.mockEl.style.minWidth);
+            assertEquals("invalidMaxHeight", this.mockEl.style.maxHeight);
+            assertEquals("invalidMinHeight", this.mockEl.style.minHeight);
             assertEquals("invalidDisplay", this.mockEl.style.display);
         });
     };
