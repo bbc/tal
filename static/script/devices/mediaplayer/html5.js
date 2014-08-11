@@ -60,10 +60,12 @@ require.def(
             * @inheritDoc
             */
             play : function () {
-                if (this.getState() === MediaPlayer.STATE.STOPPED) {
+                if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    return;
+                } else if (this.getState() === MediaPlayer.STATE.STOPPED) {
                     this._toBuffering();
                 } else if (this.getState() === MediaPlayer.STATE.BUFFERING) {
-                        this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 } else {
                     this._toError();
                 }
@@ -158,6 +160,8 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
+                this._currentTime = undefined; // FIXME
+                this._range = undefined; // FIXME
             },
 
 

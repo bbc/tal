@@ -321,7 +321,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             this.assertLatestEvent({
                 state: MediaPlayer.STATE.PLAYING,
-                currentTime: 5.0,
+                currentTime: 50,
                 range: { start: 0, end: 100 },
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -351,19 +351,42 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     // ********* PLAYING state tests *************
     // *******************************************
 
-    // getToPlayingState (assert state is correct in here)
+    var getToPlayingState = function (MediaPlayer) {
+        this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+        this.mediaPlayer.play();
+        deviceMockingHooks.finishBuffering(this.mediaPlayer, 0, { start: 0, end: 100 });
+        assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
+    };
 
-    // getSource()
-    // getMimeType()
-    // getCurrentTime()
-    // getRange()
+    mixins.testGetSourceReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getSource", "testUrl");
+    mixins.testGetMimeTypeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getMimeType", "testMimeType");
+    mixins.testGetCurrentTimeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getCurrentTime", 0);
+    mixins.testGetRangeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getRange", { start: 0, end: 100 });
 
-    // setSource(url, mimeType)
-    // play()
+    mixins.testCallingSetSourceInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "setSource");
+    mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
+
+    mixins.testWhenCallPlayWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
+        expectAsserts(2);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            this.mediaPlayer.play();
+            assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
+        });
+    };
+
     // playFrom(time)
+//Call playFrom(time) : seek to time (clamped to the available range) and transition to BUFFERING
+
     // pause()
+//Call pause() : pause playback and transition to PAUSED
+
     // stop()
-    // reset()
+//Call stop() : transition to STOPPED
+
+    // Playback error
+
+    // Regular status event
 
     // *******************************************
     // ********* PAUSED state tests **************
