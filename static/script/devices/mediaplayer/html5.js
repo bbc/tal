@@ -166,6 +166,10 @@ require.def(
                 }
             },
 
+            _onDeviceError: function() {
+                this._toError();
+            },
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;

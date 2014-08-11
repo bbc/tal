@@ -425,17 +425,25 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
-
-    // Playback error
-
-
-    // Regular status event
-
+    mixins.testWhenPlaybackErrorOccursWhilePlayingThenGoesToErrorState = function (queue) {
+        expectAsserts(9);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            deviceMockingHooks.emitPlaybackError(this.mediaPlayer);
+            this.assertMediaPlayerError(MediaPlayer);
+        });
+    };
 
     // On media completion: transition to COMPLETE
 
 
     //If buffering starts, transition to BUFFERING
+
+
+
+    // Regular status event
+
+
 
     // *******************************************
     // ********* PAUSED state tests **************
