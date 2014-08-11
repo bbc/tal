@@ -158,7 +158,7 @@
     };
 
     this.MediaTest.prototype.testRenderReturnsResultFromMediaInterface = function (queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
 
 
@@ -173,6 +173,7 @@
 
             var result = media.render(Device);
 
+	        assertSame(media.outputElement, result);
             assertSame(object, result);
 
         });
