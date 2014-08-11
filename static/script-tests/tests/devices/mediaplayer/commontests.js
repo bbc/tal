@@ -472,19 +472,26 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     // ********* PAUSED state tests **************
     // *******************************************
 
-    // getToPausedState (assert state is correct in here)
+    var getToPausedState = function (MediaPlayer) {
+        this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+        this.mediaPlayer.play();
+        this.mediaPlayer.pause();
+        deviceMockingHooks.finishBuffering(this.mediaPlayer, 0, { start: 0, end: 100 });
+        assertEquals(MediaPlayer.STATE.PAUSED, this.mediaPlayer.getState());
+    };
 
-    // getSource()
-    // getMimeType()
-    // getCurrentTime()
-    // getRange()
+    mixins.testGetSourceReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getSource", "testUrl");
+    mixins.testGetMimeTypeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getMimeType", "testMimeType");
+    mixins.testGetCurrentTimeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getCurrentTime", 0);
+    mixins.testGetRangeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getRange", { start: 0, end: 100 });
 
-    // setSource(url, mimeType)
-    // play()
-    // playFrom(time)
-    // pause()
-    // stop()
-    // reset()
+    mixins.testCallingSetSourceInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "setSource");
+    mixins.testCallingResetInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "reset");
+
+    // play() : resume playback from current time and transition to PLAYING
+    // playFrom(time) : seek to time (clamped to the available range) and transition to BUFFERING
+    // pause() : do nothing
+    // stop() : transition to STOPPED
 
     // If we finish buffering when paused then make sure we're still paused.
 
