@@ -46,7 +46,7 @@ require.def(
             * @inheritDoc
             */
             setSource: function (mediaType, url, mimeType) {
-                if (this.getState() == MediaPlayer.STATE.EMPTY) {
+                if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
@@ -60,8 +60,10 @@ require.def(
             * @inheritDoc
             */
             play : function () {
-                if (this.getState() == MediaPlayer.STATE.STOPPED) {
+                if (this.getState() === MediaPlayer.STATE.STOPPED) {
                     this._toBuffering();
+                } else if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                        this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 } else {
                     this._toError();
                 }
@@ -71,8 +73,15 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (time) {
-                if (this.getState() == MediaPlayer.STATE.STOPPED) {
-                    this._toBuffering();
+                this.play();
+            },
+
+            /**
+            * @inheritDoc
+            */
+            pause: function () {
+                if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 } else {
                     this._toError();
                 }
@@ -81,22 +90,19 @@ require.def(
             /**
             * @inheritDoc
             */
-            pause: function () {
-                this._toError();
-            },
-
-            /**
-            * @inheritDoc
-            */
             stop: function () {
-                this._toError();
+                if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._toStopped();
+                } else {
+                    this._toError();
+                }
             },
 
             /**
             * @inheritDoc
             */
             reset: function () {
-                if (this.getState() == MediaPlayer.STATE.STOPPED) {
+                if (this.getState() === MediaPlayer.STATE.STOPPED) {
                     this._toEmpty();
                 } else {
                     this._toError();
@@ -121,14 +127,14 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                return undefined;
+                return this._currentTime; // FIXME
             },
 
             /**
             * @inheritDoc
             */
             getRange: function () {
-                return undefined;
+                return this._range; // FIXME
             },
 
             /**
@@ -138,11 +144,22 @@ require.def(
                 return this._state;
             },
 
+            _onFinishedBuffering: function() {
+                if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
+                    return;
+                } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                    this._toPaused();
+                } else {
+                    this._toPlaying();
+                }
+            },
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
             },
+
 
             _toStopped: function () {
                 this._state = MediaPlayer.STATE.STOPPED;
@@ -152,6 +169,16 @@ require.def(
             _toBuffering: function () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+            },
+
+            _toPlaying: function () {
+                this._state = MediaPlayer.STATE.PLAYING;
+                this._emitEvent(MediaPlayer.EVENT.PLAYING);
+            },
+
+            _toPaused: function () {
+                this._state = MediaPlayer.STATE.PAUSED;
+                this._emitEvent(MediaPlayer.EVENT.PAUSED);
             },
 
             _toEmpty: function () {

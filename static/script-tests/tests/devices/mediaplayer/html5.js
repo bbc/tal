@@ -38,6 +38,13 @@
     // HTML5 specific tests
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    MixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config);
+    var deviceMockingHooks = {
+        finishBuffering: function(mediaPlayer, currentTime, range) {
+            mediaPlayer._range = range; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            mediaPlayer._currentTime = currentTime; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+        }
+    };
+    MixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);
 
 })();
