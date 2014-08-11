@@ -434,15 +434,38 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
-    // On media completion: transition to COMPLETE
+    mixins.testWhenMediaFinishesWhenPlayingThenGoesToCompleteState = function (queue) {
+        expectAsserts(7);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this.mediaPlayer);
+            assertEquals(MediaPlayer.STATE.COMPLETE, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.COMPLETE,
+                // Availability of currentTime/range at this point is device-specific.
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.COMPLETE
+            });
+        });
+    };
 
-
-    //If buffering starts, transition to BUFFERING
-
-
-
-    // Regular status event
-
+    mixins.testWhenBufferingStartsWhilePlayingGoesToBufferingState = function (queue) {
+        expectAsserts(9);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            deviceMockingHooks.startBuffering(this.mediaPlayer);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.BUFFERING,
+                currentTime: 0,
+                range: { start: 0, end: 100 },
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.BUFFERING
+            });
+        });
+    };
 
 
     // *******************************************

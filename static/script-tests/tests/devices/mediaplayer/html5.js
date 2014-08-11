@@ -37,6 +37,9 @@
 
     // HTML5 specific tests
 
+    // TODO: Ensure status codes emitted at least once per second.
+
+
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
     var deviceMockingHooks = {
         finishBuffering: function(mediaPlayer, currentTime, range) {
@@ -46,6 +49,12 @@
         },
         emitPlaybackError: function(mediaPlayer) {
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+        },
+        reachEndOfMedia: function(mediaPlayer) {
+            mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+        },
+        startBuffering: function(mediaPlayer) {
+            mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         }
     };
     MixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);

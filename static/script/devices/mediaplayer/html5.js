@@ -170,6 +170,14 @@ require.def(
                 this._toError();
             },
 
+            _onDeviceBuffering: function() {
+                this._toBuffering();
+            },
+
+            _onEndOfMedia: function() {
+                this._toComplete();
+            },
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
@@ -177,7 +185,6 @@ require.def(
                 this._currentTime = undefined; // FIXME
                 this._range = undefined; // FIXME
             },
-
 
             _toStopped: function () {
                 this._currentTime = undefined; // FIXME
@@ -199,6 +206,12 @@ require.def(
             _toPaused: function () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
+            },
+
+            _toComplete: function () {
+                this._currentTime = undefined; // FIXME
+                this._state = MediaPlayer.STATE.COMPLETE;
+                this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
 
             _toEmpty: function () {
