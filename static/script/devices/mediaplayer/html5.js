@@ -75,14 +75,11 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (time) {
-                this.play();
-            },
-
-            /**
-            * @inheritDoc
-            */
-            pause: function () {
-                if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._toBuffering();
+                } else if (this.getState() === MediaPlayer.STATE.STOPPED) {
+                    this._toBuffering();
+                } else if (this.getState() === MediaPlayer.STATE.BUFFERING) {
                     this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 } else {
                     this._toError();
@@ -92,8 +89,21 @@ require.def(
             /**
             * @inheritDoc
             */
-            stop: function () {
+            pause: function () {
                 if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                } else if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._toPaused();
+                } else {
+                    this._toError();
+                }
+            },
+
+            /**
+            * @inheritDoc
+            */
+            stop: function () {
+                if (this.getState() === MediaPlayer.STATE.BUFFERING || this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._toStopped();
                 } else {
                     this._toError();
@@ -166,6 +176,8 @@ require.def(
 
 
             _toStopped: function () {
+                this._currentTime = undefined; // FIXME
+                this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },

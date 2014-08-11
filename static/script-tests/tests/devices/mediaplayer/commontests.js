@@ -375,18 +375,67 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
-    // playFrom(time)
-//Call playFrom(time) : seek to time (clamped to the available range) and transition to BUFFERING
+    mixins.testWhenCallPlayFromWhilePlayingGoesToBufferingState = function (queue) {
+        expectAsserts(7);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            this.mediaPlayer.playFrom(90);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.BUFFERING,
+                // Availability of range/currentTime at this point is device-specific.
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.BUFFERING
+            });
+        });
+    };
 
-    // pause()
-//Call pause() : pause playback and transition to PAUSED
+    mixins.testWhenCallingPauseWhilePlayingGoesToPausedState = function (queue) {
+        expectAsserts(9);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            this.mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.PAUSED,
+                currentTime: 0,
+                range: { start: 0, end: 100 },
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.PAUSED
+            });
+        });
+    };
 
-    // stop()
-//Call stop() : transition to STOPPED
+    mixins.testWhenCallingStopWhilePlayingGoesToStoppedState = function (queue) {
+        expectAsserts(9);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
+            this.mediaPlayer.stop();
+            assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.STOPPED,
+                currentTime: undefined,
+                range: undefined,
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.STOPPED
+            });
+        });
+    };
+
 
     // Playback error
 
+
     // Regular status event
+
+
+    // On media completion: transition to COMPLETE
+
+
+    //If buffering starts, transition to BUFFERING
 
     // *******************************************
     // ********* PAUSED state tests **************
