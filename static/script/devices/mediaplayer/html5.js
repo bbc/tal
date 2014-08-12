@@ -92,6 +92,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
+                    case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
                         break;
 
@@ -129,6 +130,7 @@ require.def(
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
+                    case MediaPlayer.STATE.COMPLETE:
                         this._toStopped();
                         break;
 
@@ -144,6 +146,7 @@ require.def(
             reset: function () {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
                         this._toEmpty();
                         break;
 
@@ -248,7 +251,6 @@ require.def(
 
             _toComplete: function () {
                 this._currentTime = undefined; // FIXME
-                this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },

@@ -39,6 +39,8 @@
     // HTML5 specific tests
     //---------------------
 
+    // TODO: Ensure errors are logged.
+
     //---------------------
     // Common tests
     //---------------------
