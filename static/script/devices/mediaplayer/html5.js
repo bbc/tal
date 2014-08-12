@@ -27,10 +27,11 @@
 require.def(
     "antie/devices/mediaplayer/html5",
     [
+        "antie/runtimecontext",
         "antie/devices/device",
         "antie/devices/mediaplayer/mediaplayer"
     ],
-    function(Device, MediaPlayer) {
+    function(RuntimeContext, Device, MediaPlayer) {
         "use strict";
 
         var Player = MediaPlayer.extend({
@@ -50,6 +51,11 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
+                    var device = RuntimeContext.getDevice();
+
+                    var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
+
+                    this._mediaElement = device._createElement(this._type, "mediaPlayer" + idSuffix);
                     this._toStopped();
                 } else {
                     this._toError();

@@ -39,6 +39,51 @@
     // HTML5 specific tests
     //---------------------
 
+    this.HTML5MediaPlayerTests.prototype.testVideoElementCreatedWhenSettingSourceWithVideoType = function(queue) {
+        expectAsserts(2);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayerImpl, MediaPlayer) {
+
+                var device = application.getDevice();
+                var instance = device.getMediaPlayer();
+
+                this.sandbox.stub(device, "_createElement");
+
+                instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+                assert(device._createElement.calledOnce);
+                assert(device._createElement.calledWith("video", "mediaPlayerVideo"));
+            }, config);
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testAudioElementCreatedWhenSettingSourceWithAudioType = function(queue) {
+        expectAsserts(2);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayerImpl, MediaPlayer) {
+
+                var device = application.getDevice();
+                var instance = device.getMediaPlayer();
+
+                this.sandbox.stub(device, "_createElement");
+
+                instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+
+                assert(device._createElement.calledOnce);
+                assert(device._createElement.calledWith("audio", "mediaPlayerAudio"));
+            }, config);
+    };
+
+
+    // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: Ensure any source elements are created on setSources
+    // TODO: Ensure any required event listeners/callbacks are created on setSources
+    // TODO: Ensure the audio/video object is destroyed on reset()
+    // TODO: Ensure any source elements and callbacks are destroyed on reset()
+    // TODO: Ensure audio/video object is at the back of the DOM.
+    // TODO: Ensure video object is full screen.
+    // TODO: Ensure video object is anchored top/left
+    // TODO: Ensure playback events handled
+    // TODO: Ensure error events handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
 
