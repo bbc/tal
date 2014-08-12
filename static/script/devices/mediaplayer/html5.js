@@ -60,14 +60,23 @@ require.def(
             * @inheritDoc
             */
             play : function () {
-                if (this.getState() === MediaPlayer.STATE.PLAYING) {
-                    return;
-                } else if (this.getState() === MediaPlayer.STATE.STOPPED) {
-                    this._toBuffering();
-                } else if (this.getState() === MediaPlayer.STATE.BUFFERING) {
-                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                } else {
-                    this._toError();
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.PLAYING:
+                    case MediaPlayer.STATE.BUFFERING:
+                        break;
+
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        break;
+
+                    case MediaPlayer.STATE.PAUSED:
+                        this._toPlaying();
+                        break;
+
+                    default:
+                        this._toError();
+                        break;
                 }
             },
 
@@ -75,14 +84,20 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (time) {
-                if (this.getState() === MediaPlayer.STATE.PLAYING) {
-                    this._toBuffering();
-                } else if (this.getState() === MediaPlayer.STATE.STOPPED) {
-                    this._toBuffering();
-                } else if (this.getState() === MediaPlayer.STATE.BUFFERING) {
-                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                } else {
-                    this._toError();
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.BUFFERING:
+                        break;
+
+                    case MediaPlayer.STATE.PLAYING:
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.PAUSED:
+                        this._toBuffering();
+                        break;
+
+                    default:
+                        this._toError();
+                        break;
                 }
             },
 
@@ -90,12 +105,18 @@ require.def(
             * @inheritDoc
             */
             pause: function () {
-                if (this.getState() === MediaPlayer.STATE.BUFFERING) {
-                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                } else if (this.getState() === MediaPlayer.STATE.PLAYING) {
-                    this._toPaused();
-                } else {
-                    this._toError();
+                this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.BUFFERING:
+                        break;
+
+                    case MediaPlayer.STATE.PLAYING:
+                        this._toPaused();
+                        break;
+
+                    default:
+                        this._toError();
+                        break;
                 }
             },
 
@@ -103,10 +124,15 @@ require.def(
             * @inheritDoc
             */
             stop: function () {
-                if (this.getState() === MediaPlayer.STATE.BUFFERING || this.getState() === MediaPlayer.STATE.PLAYING) {
-                    this._toStopped();
-                } else {
-                    this._toError();
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.BUFFERING:
+                    case MediaPlayer.STATE.PLAYING:
+                        this._toStopped();
+                        break;
+
+                    default:
+                        this._toError();
+                        break;
                 }
             },
 
@@ -114,10 +140,14 @@ require.def(
             * @inheritDoc
             */
             reset: function () {
-                if (this.getState() === MediaPlayer.STATE.STOPPED) {
-                    this._toEmpty();
-                } else {
-                    this._toError();
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toEmpty();
+                        break;
+
+                    default:
+                        this._toError();
+                        break;
                 }
             },
 
