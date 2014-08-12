@@ -43,14 +43,19 @@
     };
 
     var createSubClass = function(MediaPlayer) {
+        var range = { start: 0, end: 100 };
         return MediaPlayer.extend({
+            getClampedTime: function(time, within) {
+                range = within;
+                return this._getClampedTime(time);
+            },
             doEvent: function(type) {
                 this._emitEvent(type);
             },
             getSource: function () { return "url"; },
             getMimeType: function () { return "mime/type"; },
             getCurrentTime: function () { return 0; },
-            getRange: function () { return { start: 0, end: 100 }; },
+            getRange: function () { return range; },
             getState: function () { return MediaPlayer.STATE.PLAYING; }
         });
     };
@@ -149,6 +154,32 @@
         });
     };
 
+    this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
+        expectAsserts(14);
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+
+            var SubClass = createSubClass(MediaPlayer);
+            var instance = new SubClass();
+
+            assertEquals(0,   instance.getClampedTime(-100, {start:0, end:100}));
+            assertEquals(0,   instance.getClampedTime(0,    {start:0, end:100}));
+            assertEquals(1,   instance.getClampedTime(1,    {start:0, end:100}));
+            assertEquals(50,  instance.getClampedTime(50,   {start:0, end:100}));
+            assertEquals(100, instance.getClampedTime(100,  {start:0, end:100}));
+            assertEquals(100, instance.getClampedTime(101, {start:0, end:100}));
+            assertEquals(100, instance.getClampedTime(200, {start:0, end:100}));
+
+            assertEquals(50, instance.getClampedTime(0,  {start:50, end:100}));
+            assertEquals(50, instance.getClampedTime(49, {start:50, end:100}));
+            assertEquals(50, instance.getClampedTime(50, {start:50, end:100}));
+            assertEquals(51, instance.getClampedTime(51, {start:50, end:100}));
+
+            assertEquals(149, instance.getClampedTime(149, {start:50, end:150}));
+            assertEquals(150, instance.getClampedTime(150, {start:50, end:150}));
+            assertEquals(150, instance.getClampedTime(151, {start:50, end:150}));
+
+        });
+    };
 
     var testThatMediaPlayerFunctionThrowsError = function (action) {
         return function (queue) {

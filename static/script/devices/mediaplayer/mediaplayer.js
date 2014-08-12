@@ -89,6 +89,22 @@ require.def(
             },
 
             /**
+             * Clamp a time value so it does not exceed the current range.
+             * @param time The time value to clamp
+             * @protected
+             */
+            _getClampedTime: function(time) {
+                var range = this.getRange();
+                if (time < range.start) {
+                    return range.start;
+                } else if (time > range.end) {
+                    return range.end;
+                } else {
+                    return time;
+                }
+            },
+
+            /**
             * Set the media resource to be played.
             * Calling this in any state other than EMPTY is an error.
             * @param mediaType Value from the MediaPlayer.TYPE enum; audio or video.
