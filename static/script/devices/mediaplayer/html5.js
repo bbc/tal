@@ -128,6 +128,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
+                    case MediaPlayer.STATE.PAUSED:
                         this._toStopped();
                         break;
 

@@ -366,11 +366,13 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
 
     mixins.testWhenCallPlayWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.doTest(queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
+            var originalCount = this.eventCallback.callCount;
             this.mediaPlayer.play();
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
+            assertEquals(originalCount, this.eventCallback.callCount);
         });
     };
 
@@ -530,16 +532,32 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     };
 
     mixins.testWhenCallPauseWhileAlreadyPausedThenRemainInPausedState = function (queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.doTest(queue, function (MediaPlayer) {
             getToPausedState.call(this, MediaPlayer);
+            var originalCount = this.eventCallback.callCount;
             this.mediaPlayer.pause();
             assertEquals(MediaPlayer.STATE.PAUSED, this.mediaPlayer.getState());
+            assertEquals(originalCount, this.eventCallback.callCount);
         });
     };
 
-    // pause() : do nothing
-    // stop() : transition to STOPPED
+    mixins.testWhenCallingStopWhilePausedGoesToStoppedState = function (queue) {
+        expectAsserts(9);
+        this.doTest(queue, function (MediaPlayer) {
+            getToPausedState.call(this, MediaPlayer);
+            this.mediaPlayer.stop();
+            assertEquals(MediaPlayer.STATE.STOPPED, this.mediaPlayer.getState());
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.STOPPED,
+                currentTime: undefined,
+                range: undefined,
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.STOPPED
+            });
+        });
+    };
 
     // If we finish buffering when paused then make sure we're still paused.
 
