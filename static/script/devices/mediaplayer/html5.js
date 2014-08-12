@@ -178,6 +178,12 @@ require.def(
                 this._toComplete();
             },
 
+            _onStatus: function() {
+                if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._emitEvent(MediaPlayer.EVENT.STATUS);
+                }
+            },
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
@@ -210,6 +216,7 @@ require.def(
 
             _toComplete: function () {
                 this._currentTime = undefined; // FIXME
+                this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },

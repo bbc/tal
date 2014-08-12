@@ -467,6 +467,27 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
+    mixins.testGetRegularStatusEventWhenPlaying = function (queue) {
+        expectAsserts(8);
+        this.doTest(queue, function (MediaPlayer) {
+            deviceMockingHooks.mockTime(this.mediaPlayer);
+            getToPlayingState.call(this, MediaPlayer);
+            var originalCount = this.eventCallback.callCount;
+            deviceMockingHooks.makeOneSecondPass(this.mediaPlayer);
+            this.assertLatestEvent({
+                state: MediaPlayer.STATE.PLAYING,
+                // Cannot test current time as it will be updating
+                range: { start: 0, end: 100 },
+                url: "testUrl",
+                mimeType: "testMimeType",
+                type: MediaPlayer.EVENT.STATUS
+            });
+            deviceMockingHooks.makeOneSecondPass(this.mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(this.mediaPlayer);
+            assertTrue(this.eventCallback.callCount - originalCount >= 3); // Three seconds so must have had at least three status messages
+            deviceMockingHooks.unmockTime(this.mediaPlayer);
+        });
+    };
 
     // *******************************************
     // ********* PAUSED state tests **************
