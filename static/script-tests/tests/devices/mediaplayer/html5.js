@@ -40,6 +40,7 @@
     //---------------------
 
     // TODO: Ensure errors are logged.
+    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
 
     //---------------------
     // Common tests
