@@ -96,7 +96,10 @@
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
-                var guidanceChallengeResponseCallBackStub = this.sandbox.stub();
+                var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
+                var guidanceChallengeResponseCallBack = {
+                    onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
+                }
 
                 var appHandler = {
                     showChallenge: showChallengeStub
@@ -106,9 +109,9 @@
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertNoException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBackStub)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
                 });
-                assertTrue(showChallengeStub.calledWith("Test message", guidanceChallengeResponseCallBackStub));
+                assertTrue(showChallengeStub.calledWith("Test message", guidanceChallengeResponseCallBack));
             })
     };
 
@@ -120,14 +123,17 @@
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub().returns('foo');
-                var guidanceChallengeResponseCallBackStub = this.sandbox.stub();
+                var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
+                var guidanceChallengeResponseCallBack = {
+                    onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
+                }
 
                 var appHandler = {
                     showChallenge: showChallengeStub
                 }
 
                 device.registerAppPgHandler(appHandler);
-                var returnValue = device.parentalGuidanceHelper.showChallenge('testing', guidanceChallengeResponseCallBackStub);
+                var returnValue = device.parentalGuidanceHelper.showChallenge('testing', guidanceChallengeResponseCallBack);
 
                 assertEquals('foo', returnValue);
             })
