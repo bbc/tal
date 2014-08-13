@@ -56,6 +56,15 @@ require.def(
                     var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
 
                     this._mediaElement = device._createElement(this._type, "mediaPlayer" + idSuffix);
+
+                    var body = document.getElementsByTagName("body")[0];
+                    device.prependChildElement(body, this._mediaElement);
+
+                    var source = device._createElement("source");
+                    source.src = url;
+                    source.type = mimeType;
+                    device.appendChildElement(this._mediaElement, source);
+
                     this._toStopped();
                 } else {
                     this._toError();
@@ -150,6 +159,12 @@ require.def(
             * @inheritDoc
             */
             reset: function () {
+
+                if (this._mediaElement) {
+                    var device = RuntimeContext.getDevice();
+                    device.removeElement(this._mediaElement);
+                }
+
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
