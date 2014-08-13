@@ -88,6 +88,54 @@
             });
     };
 
+    this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenCallBackObjectDoesNotContrainOnGuidanceChallengeResponse = function (queue) {
+        expectAsserts(2);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+            function (application, AppDefaultPgHandler) {
+
+                var device = application.getDevice();
+                var showChallengeStub = this.sandbox.stub();
+                var guidanceChallengeResponseCallBack = {};
+
+                var appHandler = {
+                    showChallenge: showChallengeStub
+                }
+
+                device.registerAppPgHandler(appHandler);
+
+                assertNotUndefined(device.parentalGuidanceHelper._appHandler);
+                assertException(function() {
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                }, 'Error');
+            })
+    };
+
+    this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenOnGuidanceChallengeResponseIsNotAFunction = function (queue) {
+        expectAsserts(2);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+            function (application, AppDefaultPgHandler) {
+
+                var device = application.getDevice();
+                var showChallengeStub = this.sandbox.stub();
+                var guidanceChallengeResponseCallBack = {
+                    onGuidanceChallengeResponse: "foo"
+                };
+
+                var appHandler = {
+                    showChallenge: showChallengeStub
+                }
+
+                device.registerAppPgHandler(appHandler);
+
+                assertNotUndefined(device.parentalGuidanceHelper._appHandler);
+                assertException(function() {
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                }, 'Error');
+            })
+    };
+
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeCallsAppHandlerWithCorrectArguments = function (queue) {
         expectAsserts(3);
 
