@@ -36,6 +36,8 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         queuedApplicationInit(queue, 'lib/mockapplication', [mediaPlayerDeviceModifierRequireName],
             function(application, MediaPlayerImpl) {
 
+                deviceMockingHooks.setup(this.sandbox, application);
+
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
 
@@ -47,6 +49,8 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', [mediaPlayerDeviceModifierRequireName],
             function(application, MediaPlayerImpl) {
+
+                deviceMockingHooks.setup(this.sandbox, application);
 
                 var device = application.getDevice();
                 var instance = device.getMediaPlayer();
@@ -67,6 +71,8 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", mediaPlayerDeviceModifierRequireName],
             function(application, MediaPlayer, MediaPlayerImpl) {
+
+                deviceMockingHooks.setup(this.sandbox, application);
 
                 var device = application.getDevice();
                 self.mediaPlayer = device.getMediaPlayer();
@@ -109,7 +115,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             mimeType: "testMimeType",
             type: MediaPlayer.EVENT.BUFFERING
         });
-        deviceMockingHooks.finishBuffering(this.mediaPlayer);
+        deviceMockingHooks.finishBuffering(this.mediaPlayer, 0, { start: 0, end: 100 });
         assertEquals(postBufferingState, this.mediaPlayer.getState());
     };
 
@@ -459,7 +465,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
                 mimeType: "testMimeType",
                 type: MediaPlayer.EVENT.BUFFERING
             });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            deviceMockingHooks.finishBuffering(this.mediaPlayer, 0, { start: 0, end: 100 });
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
         });
     };

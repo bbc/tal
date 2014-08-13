@@ -28,7 +28,9 @@
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var stubCreateElementResults = undefined;
-    var stubCreateElement = function (sandbox, device) {
+    var stubCreateElement = function (sandbox, application) {
+
+        var device = application.getDevice();
 
         var stubFunc = function(type, id) {
             if (id && stubCreateElementResults[type]) {
@@ -43,11 +45,18 @@
 
     this.HTML5MediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
+
+        // We will use a div to provide fake elements for video and audio elements. This is to get around browser
+        // implementations of the media elements preventing you from doing particular things unless a video has been
+        // loaded and is in the right state, for example you might receive:
+        //      InvalidStateError: Failed to set the 'currentTime' property on 'HTMLMediaElement': The element's readyState is HAVE_NOTHING
         stubCreateElementResults = {
-            video: document.createElement("video"),
-            audio: document.createElement("audio"),
+            video: document.createElement("div"),
+            audio: document.createElement("div"),
             source: document.createElement("source")
         };
+        stubCreateElementResults.video.seekable = sinon.createStubInstance(TimeRanges);
+        stubCreateElementResults.audio.seekable = sinon.createStubInstance(TimeRanges);
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
@@ -74,7 +83,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, device);
+                var stub = stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -89,7 +98,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, device);
+                var stub = stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
@@ -104,7 +113,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -121,7 +130,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -140,7 +149,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
@@ -157,7 +166,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
@@ -176,7 +185,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, device);
+                var stub = stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -194,7 +203,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -210,7 +219,7 @@
             function(application, MediaPlayerImpl, MediaPlayer) {
 
                 var device = application.getDevice();
-                stubCreateElement(this.sandbox, device);
+                stubCreateElement(this.sandbox, application);
 
                 var instance = device.getMediaPlayer();
                 instance.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -220,7 +229,13 @@
             }, config);
     };
 
+
+
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: Handle audio/video.duration === NaN when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
+    // TODO: Handle audio/video.duration === Inf when not pre-defined  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
+    // TODO: Handle audio/video.duration === 0 when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
@@ -249,9 +264,17 @@
 
     // Setup device specific mocking
     var deviceMockingHooks = {
+        setup: function(sandbox, application) {
+            stubCreateElement(sandbox,application);
+        },
         finishBuffering: function(mediaPlayer, currentTime, range) {
-            mediaPlayer._range = range; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._currentTime = currentTime; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            stubCreateElementResults.video.seekable.start.returns(range.start);
+            stubCreateElementResults.video.seekable.end.returns(range.end);
+            stubCreateElementResults.audio.seekable.start.returns(range.start);
+            stubCreateElementResults.audio.seekable.end.returns(range.end);
+
+            stubCreateElementResults.video.currentTime = currentTime;
+            stubCreateElementResults.audio.currentTime = currentTime;
             mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {
