@@ -55,8 +55,14 @@
             audio: document.createElement("div"),
             source: document.createElement("source")
         };
-        stubCreateElementResults.video.seekable = sinon.createStubInstance(TimeRanges);
-        stubCreateElementResults.audio.seekable = sinon.createStubInstance(TimeRanges);
+        stubCreateElementResults.video.seekable = {
+            start: this.sandbox.stub(),
+            end: this.sandbox.stub()
+        };
+        stubCreateElementResults.audio.seekable = {
+            start: this.sandbox.stub(),
+            end: this.sandbox.stub()
+        };
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
