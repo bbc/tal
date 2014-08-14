@@ -55,14 +55,15 @@
             audio: document.createElement("div"),
             source: document.createElement("source")
         };
-        stubCreateElementResults.video.seekable = {
-            start: this.sandbox.stub(),
-            end: this.sandbox.stub()
-        };
-        stubCreateElementResults.audio.seekable = {
-            start: this.sandbox.stub(),
-            end: this.sandbox.stub()
-        };
+        var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+        for (var i = 0; i < mediaElements.length; i++) {
+            var media = mediaElements[i];
+            media.seekable = {
+                start: this.sandbox.stub(),
+                end: this.sandbox.stub()
+            };
+            media.play = this.sandbox.stub();
+        }
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
@@ -185,17 +186,59 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayPassedThroughToMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
+            assert(stubCreateElementResults.video.play.notCalled);
+
+            this._mediaPlayer.play();
+
+            assert(stubCreateElementResults.video.play.calledOnce);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testWeDoNotAccessSeekableRangesWhenThereAreNoSeekableRanges = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            stubCreateElementResults.video.seekable.length = 0;
+            assertUndefined(this._mediaPlayer.getRange());
+            assert(stubCreateElementResults.video.seekable.start.notCalled);
+            assert(stubCreateElementResults.video.seekable.end.notCalled);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testSeekableTimesObtainedFromFirstSeekableRange = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            stubCreateElementResults.video.seekable.length = 1;
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.getRange();
+            assert(stubCreateElementResults.video.seekable.start.alwaysCalledWith(0));
+            assert(stubCreateElementResults.video.seekable.end.alwaysCalledWith(0));
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testWhenThereAreManySeekableRangesGotoError = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            stubCreateElementResults.video.seekable.length = 2;
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.getRange();
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+        });
+    };
 
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: getRange() returns the actual range. Must check seekable.length. If zero, no range is available. Should also pass indexes to start and end.
-     // ?? Should just do 0 -> duration for now??
-    // TODO: play() actually plays.
     // TODO: Ensure video object is full screen.
     // TODO: Ensure video object is anchored top/left
     // TODO: playFrom(...) actually plays, from specified point.
     // TODO: pause() actually pauses.
+    // TODO: play() actually plays, when paused
     // TODO: call load() at end of setSource
     // TODO: Handle audio/video.duration === NaN when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Handle audio/video.duration === Inf when not pre-defined  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
@@ -226,13 +269,16 @@
             stubCreateElement(sandbox,application);
         },
         finishBuffering: function(mediaPlayer, currentTime, range) {
-            stubCreateElementResults.video.seekable.start.returns(range.start);
-            stubCreateElementResults.video.seekable.end.returns(range.end);
-            stubCreateElementResults.audio.seekable.start.returns(range.start);
-            stubCreateElementResults.audio.seekable.end.returns(range.end);
 
-            stubCreateElementResults.video.currentTime = currentTime;
-            stubCreateElementResults.audio.currentTime = currentTime;
+            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+            for (var i = 0; i < mediaElements.length; i++) {
+                var media = mediaElements[i];
+                media.seekable.length = 1;
+                media.seekable.start.returns(range.start);
+                media.seekable.end.returns(range.end);
+                media.currentTime = currentTime;
+            }
+
             mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {

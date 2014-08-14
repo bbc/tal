@@ -82,6 +82,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
+                        this._mediaElement.play();
                         this._toBuffering();
                         break;
 
@@ -215,11 +216,13 @@ require.def(
             */
             getRange: function () {
                 var result = undefined;
-                if (this._mediaElement) {
+                if (this._mediaElement && this._mediaElement.seekable.length === 1) {
                     result = {
-                        start: this._mediaElement.seekable.start(),
-                        end: this._mediaElement.seekable.end()
+                        start: this._mediaElement.seekable.start(0),
+                        end: this._mediaElement.seekable.end(0)
                     };
+                } else if (this.getState() !== MediaPlayer.STATE.ERROR && this._mediaElement && this._mediaElement.seekable.length > 1) {
+                    this._toError();
                 }
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
