@@ -215,6 +215,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             stubCreateElementResults.video.seekable.length = 1;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.play();
             this._mediaPlayer.getRange();
             assert(stubCreateElementResults.video.seekable.start.alwaysCalledWith(0));
             assert(stubCreateElementResults.video.seekable.end.alwaysCalledWith(0));
@@ -228,14 +229,27 @@
             this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
             stubCreateElementResults.video.seekable.length = 2;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.play();
             assertUndefined(this._mediaPlayer.getRange());
             assert(warnStub.calledWith("Multiple seekable ranges detected"));
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testWhenThereIsNoSeekablePropertyWeReturnUndefinedAndLogAWarning = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
+            delete stubCreateElementResults.video.seekable;
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.play();
+            assertUndefined(this._mediaPlayer.getRange());
+            assert(warnStub.calledWith("'seekable' property missing from media element"));
+        });
+    };
+
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: getRange() returns the actual range. Must check seekable.length. If zero, no range is available. Should also pass indexes to start and end.
     // TODO: Ensure video object is full screen.
     // TODO: Ensure video object is anchored top/left
     // TODO: playFrom(...) actually plays, from specified point.

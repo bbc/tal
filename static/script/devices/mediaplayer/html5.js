@@ -196,45 +196,54 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                var result = undefined;
-                if (this._mediaElement) {
-                    result = this._mediaElement.currentTime;
-                }
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
-                        result = undefined;
                         break;
+
                     default:
+                        if (this._mediaElement) {
+                            return this._mediaElement.currentTime;
+                        }
                         break;
                 }
-                return result;
+                return undefined;
             },
 
             /**
             * @inheritDoc
             */
             getRange: function () {
-                var result = undefined;
-                if (this._mediaElement) {
-                    if (this._mediaElement.seekable.length === 1) {
-                        result = {
-                            start: this._mediaElement.seekable.start(0),
-                            end: this._mediaElement.seekable.end(0)
-                        };
-                    } else if (this._mediaElement.seekable.length > 1) {
-                        RuntimeContext.getDevice().getLogger().warn("Multiple seekable ranges detected");
-                    }
-                }
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
-                        result = undefined;
                         break;
+
                     default:
-                        break;
+                        return this._getSeekableRange();
                 }
-                return result;
+                return undefined;
+            },
+
+            _getSeekableRange: function () {
+                if (this._mediaElement) {
+                    var seekable = this._mediaElement.seekable;
+                    var logger = RuntimeContext.getDevice().getLogger();
+
+                    if (!seekable) {
+                        logger.warn("'seekable' property missing from media element");
+
+                    } else if (seekable.length === 1) {
+                        return {
+                            start: seekable.start(0),
+                            end: seekable.end(0)
+                        };
+
+                    } else if (seekable.length > 1) {
+                        logger.warn("Multiple seekable ranges detected");
+                    }
+                }
+                return undefined;
             },
 
             /**
@@ -247,8 +256,10 @@ require.def(
             _onFinishedBuffering: function() {
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
+
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._toPaused();
+                    
                 } else {
                     this._toPlaying();
                 }
