@@ -38,7 +38,7 @@
 		var notify = callbacks.add(function() { });
 		setTimeout(notify, timeInMillis);
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptWithTimedOutResponse = function(queue) {
 		expectAsserts(1);
 
@@ -59,7 +59,7 @@
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptWithDefaultFiveSecondTimedOutResponse = function(queue) {
 		expectAsserts(1);
 
@@ -80,7 +80,7 @@
 			});
 		});
 	};
-		
+
 	this.DefaultNetworkTest.prototype.testLoadScriptWithSuccessResponse = function(queue) {
 		expectAsserts(1);
 
@@ -101,7 +101,7 @@
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptMultipleRequestsWithDifferentSuffixes = function(queue) {
 		expectAsserts(2);
 
@@ -125,7 +125,7 @@
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptMultipleRequestsWithSameSuffixThrowsError = function(queue) {
 		expectAsserts(2);
 
@@ -148,7 +148,7 @@
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptSequentialRequestsWithSameSuffixAreAllowed = function(queue) {
 		expectAsserts(2);
 
@@ -160,7 +160,7 @@
 						assertEquals("Did not get expected success response from overridding call", "test1", data);
 					})
 				};
-				
+
 				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
 				this.waitFor(callbacks, 1000);
 			});
@@ -170,13 +170,13 @@
 						assertEquals("Did not get expected success response from overridding call", "test1", data);
 					})
 				};
-					
+
 				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
 				this.waitFor(callbacks, 1000);
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadScriptSubsequentRequestWithSameSuffixIsAllowedAfterTimeout = function(queue) {
 		expectAsserts(2);
 
@@ -188,7 +188,7 @@
 						assert("Timeout should have triggered", true);
 					})
 				};
-				
+
 				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 10, "test1");
 				this.waitFor(callbacks, 20);
 			});
@@ -198,13 +198,13 @@
 						assertEquals("Did not get expected success response from overridding call", "test1", data);
 					})
 				};
-					
+
 				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
 				this.waitFor(callbacks, 1000);
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadAuthenticatedURL = function(queue) {
 		expectAsserts(1);
 
@@ -254,7 +254,7 @@
 			});
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testLoadURLError = function(queue) {
 		expectAsserts(1);
 
@@ -310,7 +310,7 @@
 		});
 
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testCrossDomainPostEnsureTimeoutIsCancelledForSuccessfulSubmissions = function(queue) {
         expectAsserts(1);
 
@@ -328,23 +328,23 @@
                 });
 
                 var iframes = document.body.getElementsByTagName("iframe");
-                
+
                 var iframe = iframes[0];
                 iframe.addEventListener('load', function() {
                     iframe.removeEventListener('load', arguments.callee);
 
-                    window.setTimeout(function() {                        
+                    window.setTimeout(function() {
                         // Simulate success of POST
                         iframe.dispatchEvent(new Event('load'));
                     }, 0);
                 });
                 // ensure timeout does not fire
-                this.waitFor(callbacks, 1500);                
+                this.waitFor(callbacks, 1500);
             });
         });
 
     };
-	
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
@@ -360,7 +360,7 @@
 			assert(successSpy.calledWith({ test : "myValue" }));
 		});
 	},
-	
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
@@ -375,7 +375,7 @@
 			assert(errorSpy.calledOnce);
 		});
 	},
-	
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetDelegatesToLoadScriptWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
@@ -385,12 +385,12 @@
 			var myId = "test";
 			var testTimeout = 1;
 			var testUrl = "http://test";
-			var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});			
+			var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
 			device.executeCrossDomainGet(testUrl, {onSuccess: successSpy, onError: errorSpy}, {timeout: testTimeout, id: myId});
 			assert(loadScriptStub.calledWith(testUrl + "?callback=%callback%", /%callback%/, {onSuccess : successSpy, onError : errorSpy}, testTimeout, myId));
 		});
 	},
-	
+
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedAllowsCallbackNameChange = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": false }});
@@ -401,7 +401,7 @@
             assertEquals(testUrl + "?jsonpCallback=%callback%", loadScriptStub.getCall(0).args[0]);
         });
     };
-    
+
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedRespectsExistingQueryParameters = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": false }});
@@ -411,7 +411,7 @@
             assertEquals("http://test?callback=%callback%&existingQueryString=blah", loadScriptStub.getCall(0).args[0]);
         });
     };
-	
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsLoadUrlWithJsonPayloadWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
@@ -442,11 +442,11 @@
 			assert(loadUrlStub.calledWith(testUrl, expectedArgs));
 		});
 	};
-	
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsCrossDomainPostWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
-			
+
 			var testUrl = "http://test";
 			var message = { test : "myValue" };
 			var payload = "{\"test\":\"myValue\"}";
@@ -457,9 +457,27 @@
 			var crossDomainPostStub = this.sandbox.stub(BrowserDevice.prototype, 'crossDomainPost');
 
 			device.executeCrossDomainPost(testUrl, message, opts);
-			assert(crossDomainPostStub.calledWith(testUrl, { "myField" : payload }, { onLoad : successSpy, onError : errorSpy} ) );
+			assert(crossDomainPostStub.calledWith(testUrl, { "myField" : payload }, { onLoad : successSpy, onError : errorSpy, blankUrl: undefined } ) );
 		});
 	};
-	
-	
+
+	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsCrossDomainPostWithaCustomIframeWhenCorsIsNotSupported = function(queue) {
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
+
+			var testUrl = "http://test";
+      var message = { test : "myValue" };
+      var payload = "{\"test\":\"myValue\"}";
+      var successSpy = this.sandbox.spy();
+      var errorSpy = this.sandbox.spy();
+			var opts = { onLoad : successSpy, onError : errorSpy, fieldName : "myField", blankUrl: "/not-blank.html" };
+
+			var crossDomainPostStub = this.sandbox.stub(BrowserDevice.prototype, 'crossDomainPost');
+
+			device.executeCrossDomainPost(testUrl, message, opts);
+			assert(crossDomainPostStub.calledWith(testUrl, { "myField" : payload }, { onLoad : successSpy, onError : errorSpy, blankUrl: '/not-blank.html' } ) );
+		});
+	};
+
+
 }());
