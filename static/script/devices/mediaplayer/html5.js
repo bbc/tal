@@ -216,13 +216,15 @@ require.def(
             */
             getRange: function () {
                 var result = undefined;
-                if (this._mediaElement && this._mediaElement.seekable.length === 1) {
-                    result = {
-                        start: this._mediaElement.seekable.start(0),
-                        end: this._mediaElement.seekable.end(0)
-                    };
-                } else if (this.getState() !== MediaPlayer.STATE.ERROR && this._mediaElement && this._mediaElement.seekable.length > 1) {
-                    this._toError();
+                if (this._mediaElement) {
+                    if (this._mediaElement.seekable.length === 1) {
+                        result = {
+                            start: this._mediaElement.seekable.start(0),
+                            end: this._mediaElement.seekable.end(0)
+                        };
+                    } else if (this._mediaElement.seekable.length > 1) {
+                        RuntimeContext.getDevice().getLogger().warn("Multiple seekable ranges detected");
+                    }
                 }
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:

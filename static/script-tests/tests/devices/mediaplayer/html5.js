@@ -85,8 +85,8 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
                 self._createElementStub = stubCreateElement(this.sandbox, application);
-                var device = application.getDevice();
-                self._mediaPlayer = device.getMediaPlayer();
+                this._device = application.getDevice();
+                self._mediaPlayer = this._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
             }, config);
     };
@@ -221,13 +221,15 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testWhenThereAreManySeekableRangesGotoError = function(queue) {
-        expectAsserts(1);
+    this.HTML5MediaPlayerTests.prototype.testWhenThereAreManySeekableRangesGetRangeReturnsUndefinedAndThisIsLogged = function(queue) {
+        expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
             stubCreateElementResults.video.seekable.length = 2;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.getRange();
-            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+            assertUndefined(this._mediaPlayer.getRange());
+            assert(warnStub.calledWith("Multiple seekable ranges detected"));
         });
     };
 
