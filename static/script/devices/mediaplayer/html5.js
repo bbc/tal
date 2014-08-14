@@ -56,6 +56,12 @@ require.def(
                     var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
 
                     this._mediaElement = device._createElement(this._type, "mediaPlayer" + idSuffix);
+                    this._mediaElement.style.position = "absolute";
+                    this._mediaElement.style.top = "0px";
+                    this._mediaElement.style.left = "0px";
+                    this._mediaElement.style.width = "100%";
+                    this._mediaElement.style.height = "100%";
+                    this._mediaElement.style.zIndex = "-1";
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -259,7 +265,7 @@ require.def(
 
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._toPaused();
-                    
+
                 } else {
                     this._toPlaying();
                 }

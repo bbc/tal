@@ -248,6 +248,19 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testVideoElementIsFullScreen = function(queue) {
+        expectAsserts(6);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals("absolute", stubCreateElementResults.video.style.position);
+            assertEquals("0px", stubCreateElementResults.video.style.top);
+            assertEquals("0px", stubCreateElementResults.video.style.left);
+            assertEquals("100%", stubCreateElementResults.video.style.width);
+            assertEquals("100%", stubCreateElementResults.video.style.height);
+            assertEquals("-1", stubCreateElementResults.video.style.zIndex);
+        });
+    };
+
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Ensure video object is full screen.
