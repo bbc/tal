@@ -282,6 +282,50 @@
 		});
 	};
 
+	this.DefaultNetworkTest.prototype.testLoadURLWith202StatusCodeAsASuccess = function(queue) {
+		expectAsserts(1);
+		var self = this;
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			var errorSpy = sinon.spy();
+			var successSpy = sinon.spy();
+
+			queue.call("Waiting for data to load", function() {
+				var opts = {
+					onLoad: successSpy,
+					onError: errorSpy
+				};
+				device.loadURL("/test/script-tests/fixtures/test.json", opts);
+
+				self.requests[0].respond(202, {}, '{}');
+				assertTrue('onLoad is called in case of 202 HTTP response', successSpy.calledWith('{}', 202));
+			});
+		});
+	};
+
+	this.DefaultNetworkTest.prototype.testLoadURLWithA300StatusCodeAsAnError = function(queue) {
+		expectAsserts(1);
+		var self = this;
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			var errorSpy = sinon.spy();
+			var successSpy = sinon.spy();
+
+			queue.call("Waiting for data to load", function() {
+				var opts = {
+					onLoad: successSpy,
+					onError: errorSpy
+				};
+				device.loadURL("/test/script-tests/fixtures/test.json", opts);
+
+				self.requests[0].respond(300, {}, '{}');
+				assertTrue('errorSpy is called in case of 300 HTTP response', errorSpy.calledWith('{}', 300));
+			});
+		});
+	};
+
 	this.DefaultNetworkTest.prototype.testLoadURLError = function(queue) {
 		expectAsserts(1);
 		var self = this;
