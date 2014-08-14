@@ -23,17 +23,14 @@
  */
 require.def('antie/devices/parentalguidance/appdefaultpghandler',
     [
-        'antie/devices/browserdevice'
+        'antie/devices/browserdevice',
+        'antie/devices/parentalguidance/basepghandler'
     ],
-    function (Device) {
+    function (Device, BasePgHandler) {
         'use strict';
 
-        var appDefaultPgHandler = {
+        var appDefaultPgHandler = BasePgHandler.extend({
 
-            /**
-             * Has the user already setup a PIN/Password for PG?
-             * @returns {boolean}
-             */
             isChallengeActive: function() {
                 if (this._appHandler) {
                     return this._appHandler.isChallengeActive();
@@ -41,12 +38,6 @@ require.def('antie/devices/parentalguidance/appdefaultpghandler',
                     throw new Error('No default parental guidance handler is registered');
                 }
             },
-            /**
-             * Show UI for pin challenge
-             * @param {string} optional message to display when showing challenge.
-             * @param {Object} callback object containing onGuidanceChallengeResponse(response) function
-             *                   where response is defined by object in pgchallengeresponse
-             */
             showChallenge: function(message, guidanceChallengeResponseCallBack) {
                 if (!this._appHandler) {
                     throw new Error('No default parental guidance handler is registered');
@@ -57,23 +48,15 @@ require.def('antie/devices/parentalguidance/appdefaultpghandler',
                    return this._appHandler.showChallenge(message, guidanceChallengeResponseCallBack);
                 }
             },
-            /**
-             * Determines whether handler can display PG message as part of its PIN challenge
-             * @returns {boolean}
-             */
             supportsMessage: function() {
               return true;
             },
-            /**
-             * Determines whether handler can handle display of PG settings screen.
-             * @returns {boolean}
-             */
             isConfigurable: function() {
                 return true;
             }
-        };
+        });
 
-        Device.prototype.parentalGuidanceHelper = appDefaultPgHandler;
+        Device.prototype.parentalGuidanceHelper = new appDefaultPgHandler;
 
         /**
          *
@@ -82,5 +65,6 @@ require.def('antie/devices/parentalguidance/appdefaultpghandler',
         Device.prototype.registerAppPgHandler = function(appHandler) {
             this.parentalGuidanceHelper._appHandler = appHandler;
         };
+
     }
 );

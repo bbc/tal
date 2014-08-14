@@ -34,6 +34,18 @@
 
     };
 
+    this.AppDefaultPgHandlerTest.prototype.testAppDefaultPgHandlerExtendsBasePgHandler = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler", "antie/devices/parentalguidance/appdefaultpghandler"],
+            function (application, BasePgHandler, AppDefaultPgHandler) {
+
+                var device = application.getDevice();
+
+                assertInstanceOf(BasePgHandler, device.parentalGuidanceHelper);
+            });
+    };
+
     this.AppDefaultPgHandlerTest.prototype.testThatRegisterAppPgHandlerAddsCorrectObjectToDevice = function (queue) {
         expectAsserts(1);
 
