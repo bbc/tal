@@ -79,166 +79,124 @@
 
     };
 
+    this.HTML5MediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayerImpl, MediaPlayer) {
+                self._createElementStub = stubCreateElement(this.sandbox, application);
+                var device = application.getDevice();
+                self._mediaPlayer = device.getMediaPlayer();
+                action.call(self, MediaPlayer);
+            }, config);
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementCreatedWhenSettingSourceWithVideoType = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-                var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-                assert(stub.calledWith("video", "mediaPlayerVideo"));
-            }, config);
+            assert(this._createElementStub.calledWith("video", "mediaPlayerVideo"));
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testAudioElementCreatedWhenSettingSourceWithAudioType = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
 
-                var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-
-                assert(stub.calledWith("audio", "mediaPlayerAudio"));
-            }, config);
+            assert(this._createElementStub.calledWith("audio", "mediaPlayerAudio"));
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testCreatedVideoElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-                var body = document.getElementsByTagName("body")[0];
-                assertSame(stubCreateElementResults.video, body.firstChild);
-
-            }, config);
+            var body = document.getElementsByTagName("body")[0];
+            assertSame(stubCreateElementResults.video, body.firstChild);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.reset();
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
+            var searchResult = document.getElementById('mediaPlayerVideo');
 
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-                instance.reset();
-
-                var searchResult = document.getElementById('mediaPlayerVideo');
-
-                assertNull(searchResult);
-
-            }, config);
+            assertNull(searchResult);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testCreatedAudioElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-
-                var body = document.getElementsByTagName("body")[0];
-                assertSame(stubCreateElementResults.audio, body.firstChild);
-
-            }, config);
+            var body = document.getElementsByTagName("body")[0];
+            assertSame(stubCreateElementResults.audio, body.firstChild);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testAudioElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+            this._mediaPlayer.reset();
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
+            var searchResult = document.getElementById('mediaPlayerAudio');
 
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-                instance.reset();
-
-                var searchResult = document.getElementById('mediaPlayerAudio');
-
-                assertNull(searchResult);
-
-            }, config);
+            assertNull(searchResult);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testSourceElementAddedToVideoOnSetSources = function(queue) {
         expectAsserts(3);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-                var device = application.getDevice();
-                var stub = stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-                assert(stub.calledWith("source"));
-                assertEquals(1, stubCreateElementResults.video.children.length);
-                assertSame(stubCreateElementResults.source, stubCreateElementResults.video.firstChild);
-
-            }, config);
+            assert(this._createElementStub.calledWith("source"));
+            assertEquals(1, stubCreateElementResults.video.children.length);
+            assertSame(stubCreateElementResults.source, stubCreateElementResults.video.firstChild);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testSourceURLSetOnSetSources = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-                assertEquals('http://testurl/', stubCreateElementResults.source.src);
-
-            }, config);
+            assertEquals('http://testurl/', stubCreateElementResults.source.src);
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testSourceTypeSetOnSetSources = function(queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-                var device = application.getDevice();
-                stubCreateElement(this.sandbox, application);
-
-                var instance = device.getMediaPlayer();
-                instance.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-                assertEquals('video/mp4', stubCreateElementResults.source.type);
-
-            }, config);
+            assertEquals('video/mp4', stubCreateElementResults.source.type);
+        });
     };
 
 
 
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: getRange() returns the actual range. Must check seekable.length. If zero, no range is available. Should also pass indexes to start and end.
+     // ?? Should just do 0 -> duration for now??
+    // TODO: play() actually plays.
+    // TODO: Ensure video object is full screen.
+    // TODO: Ensure video object is anchored top/left
+    // TODO: playFrom(...) actually plays, from specified point.
+    // TODO: pause() actually pauses.
+    // TODO: call load() at end of setSource
     // TODO: Handle audio/video.duration === NaN when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Handle audio/video.duration === Inf when not pre-defined  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Handle audio/video.duration === 0 when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
@@ -247,20 +205,14 @@
     // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
     // TODO: Ensure source object error event listeners are added on setSources
     // TODO: Ensure any source elements and callbacks are destroyed on reset()
-    // TODO: Ensure video object is full screen.
-    // TODO: Ensure video object is anchored top/left
     // TODO: Ensure playback events handled
     // TODO: Ensure error events handled (from video/audio)
     // TODO: Ensure error events handled (from source)
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    // TODO: play() actually plays.
-    // TODO: playFrom(...) actually plays, from specified point.
-    // TODO: pause() actually pauses.
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: getCurrentTime() actually returns the current time.
-    // TODO: getRange() returns the actual range.
     // TODO: Resolve all FIXMEs in common test device mocking hooks
     // TODO: Resolve all FIXMEs in production code base
 
