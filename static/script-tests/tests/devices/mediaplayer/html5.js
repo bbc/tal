@@ -304,8 +304,16 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testAutoplayIsTurnedOffOnMediaElementCreation = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertBoolean(stubCreateElementResults.video.autoplay);
+            assertFalse(stubCreateElementResults.video.autoplay);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Set autoplaying flag to false following media element creation  http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Determine whether to use canplay or canplaythrough events to determine whether we can attempt to move from BUFFERING to PLAYING and actually play the content. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#event-media-canplay
@@ -323,7 +331,7 @@
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
     // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
     // TODO: Ensure source object error event listeners are added on setSources
-    // TODO: Ensure any source elements and callbacks are destroyed on reset()
+    // TODO: Ensure any source elements, event listeners and callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled
     // TODO: Ensure error events handled (from video/audio)
     // TODO: Ensure error events handled (from source)

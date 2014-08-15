@@ -56,6 +56,7 @@ require.def(
                     var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
 
                     this._mediaElement = device._createElement(this._type, "mediaPlayer" + idSuffix);
+                    this._mediaElement.autoplay = false;
                     this._mediaElement.style.position = "absolute";
                     this._mediaElement.style.top = "0px";
                     this._mediaElement.style.left = "0px";
