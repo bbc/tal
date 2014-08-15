@@ -263,8 +263,6 @@
 
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Ensure video object is full screen.
-    // TODO: Ensure video object is anchored top/left
     // TODO: playFrom(...) actually plays, from specified point.
     // TODO: pause() actually pauses.
     // TODO: play() actually plays, when paused
@@ -284,7 +282,6 @@
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
-    // TODO: getCurrentTime() actually returns the current time.
     // TODO: Resolve all FIXMEs in common test device mocking hooks
     // TODO: Resolve all FIXMEs in production code base
 
