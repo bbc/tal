@@ -91,6 +91,20 @@
             }, config);
     };
 
+    var makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest = function(method, args) {
+        return function(queue) {
+            expectAsserts(2);
+            this.runMediaPlayerTest(queue, function (MediaPlayer) {
+                var errorStub = this.sandbox.stub();
+                this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+                this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                assert(errorStub.calledWith("Cannot " + method + " while in the 'EMPTY' state"));
+                this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                assert(errorStub.calledWith("Cannot " + method + " while in the 'ERROR' state"));
+            });
+        };
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -261,6 +275,34 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testErrorWhileSettingSourceInInvalidStateIsLogged = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assert(errorStub.calledWith("Cannot set source unless in the 'EMPTY' state"));
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("play");
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingFromInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("playFrom", [0]);
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhilePausingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("pause");
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhileStoppingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("stop");
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhileResettingInInvalidStateIsLogged = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+            this._mediaPlayer.reset();
+            assert(errorStub.calledWith("Cannot reset while in the 'EMPTY' state"));
+        });
+    };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: playFrom(...) actually plays, from specified point.
@@ -278,7 +320,7 @@
     // TODO: Ensure playback events handled
     // TODO: Ensure error events handled (from video/audio)
     // TODO: Ensure error events handled (from source)
-    // TODO: Ensure errors are logged.
+    // TODO: Ensure all errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)

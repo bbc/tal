@@ -73,7 +73,7 @@ require.def(
 
                     this._toStopped();
                 } else {
-                    this._toError();
+                    this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
 
@@ -97,7 +97,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot play while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -119,7 +119,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -139,7 +139,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot pause while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -157,7 +157,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot stop while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -179,7 +179,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot reset while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -325,7 +325,8 @@ require.def(
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function () {
+            _toError: function (errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
