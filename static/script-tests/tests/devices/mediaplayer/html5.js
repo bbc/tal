@@ -55,6 +55,8 @@
             audio: document.createElement("div"),
             source: document.createElement("source")
         };
+        this.eventListeners = {};
+        var self = this;
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
             var media = mediaElements[i];
@@ -63,6 +65,10 @@
                 end: this.sandbox.stub()
             };
             media.play = this.sandbox.stub();
+            media.addEventListener = function (event, callback) {
+                if (self.eventListeners[event]) { throw "Listener already registered on mock for event: " + event; }
+                self.eventListeners[event] = callback;
+            };
         }
     };
 
@@ -313,6 +319,21 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testGoToPlayingStateWhenGetCanPlayThroughEvent = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            assertFunction(this.eventListeners.canplaythrough);
+
+            this._mediaPlayer.play();
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            this.eventListeners.canplaythrough();
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
@@ -365,7 +386,7 @@
                 media.currentTime = currentTime;
             }
 
-            mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            mediaPlayer._onFinishedBuffering();
         },
         emitPlaybackError: function(mediaPlayer) {
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.

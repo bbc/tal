@@ -64,6 +64,9 @@ require.def(
                     this._mediaElement.style.height = "100%";
                     this._mediaElement.style.zIndex = "-1";
 
+                    var self = this;
+                    this._mediaElement.addEventListener("canplaythrough", function (event) { self._onFinishedBuffering(event); });
+
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
 
