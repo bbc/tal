@@ -318,7 +318,10 @@
     // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Determine whether to use canplay or canplaythrough events to determine whether we can attempt to move from BUFFERING to PLAYING and actually play the content. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#event-media-canplay
     // TODO: Determine whether we should move from BUFFERING to PLAYING when calling play on the media object, or only when the play or playing events have fired http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+      // -> We should only move from buffering to playing when the device tells us it has actually started playing
     // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+      // -> Our API spec says that if we pause while actually playing, we should immediately enter the paused state.
+      //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
     // TODO: Transition to the COMPLETED state when the ended event fires. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
     // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
