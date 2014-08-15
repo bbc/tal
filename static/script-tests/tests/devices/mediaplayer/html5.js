@@ -305,6 +305,14 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: Set autoplaying flag to false following media element creation  http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+    // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+    // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+    // TODO: Determine whether to use canplay or canplaythrough events to determine whether we can attempt to move from BUFFERING to PLAYING and actually play the content. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#event-media-canplay
+    // TODO: Determine whether we should move from BUFFERING to PLAYING when calling play on the media object, or only when the play or playing events have fired http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+    // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+    // TODO: Transition to the COMPLETED state when the ended event fires. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+    // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
     // TODO: pause() actually pauses.
     // TODO: play() actually plays, when paused
@@ -314,6 +322,8 @@
     // TODO: Handle audio/video.duration === 0 when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
+    //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
+    //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
     // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
     // TODO: Ensure source object error event listeners are added on setSources
     // TODO: Ensure any source elements and callbacks are destroyed on reset()
