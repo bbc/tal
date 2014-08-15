@@ -317,9 +317,6 @@
     // TODO: pause() actually pauses.
     // TODO: play() actually plays, when paused
     // TODO: call load() at end of setSource
-    // TODO: Handle audio/video.duration === NaN when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
-    // TODO: Handle audio/video.duration === Inf when not pre-defined  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
-    // TODO: Handle audio/video.duration === 0 when unknown  https://developer.mozilla.org/en/docs/Web/API/HTMLMediaElement
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
