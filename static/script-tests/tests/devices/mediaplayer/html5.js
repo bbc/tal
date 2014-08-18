@@ -45,6 +45,61 @@
         return sandbox.stub(device, "_createElement", stubFunc);
     };
 
+    // Setup device specific mocking
+    var deviceMockingHooks = {
+        setup: function(sandbox, application) {
+            stubCreateElement(sandbox,application);
+        },
+        finishBuffering: function(mediaPlayer, currentTime, range) {
+
+            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+            for (var i = 0; i < mediaElements.length; i++) {
+                var media = mediaElements[i];
+                media.seekable.length = 1;
+                media.seekable.start.returns(range.start);
+                media.seekable.end.returns(range.end);
+                media.currentTime = currentTime;
+            }
+
+            mediaEventListeners.canplaythrough();
+        },
+        emitPlaybackError: function(mediaPlayer) {
+
+            // MEDIA_ERR_NETWORK == 2
+            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
+            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
+            stubCreateElementResults.video.error =  { code: 2 };
+            stubCreateElementResults.audio.error =  { code: 2 };
+
+            var errorEvent = {
+                type: "error"
+            };
+            mediaEventListeners.error(errorEvent);
+        },
+        reachEndOfMedia: function(mediaPlayer) {
+            var endedEvent = {
+                type: "ended"
+            };
+            mediaEventListeners.ended(endedEvent);
+        },
+        startBuffering: function(mediaPlayer) {
+            var waitingEvent = {
+                type: "waiting"
+            };
+            mediaEventListeners.waiting(waitingEvent);
+        },
+        mockTime: function(mediaplayer) {
+        },
+        makeOneSecondPass: function(mediaplayer, time) {
+            var timeUpdateEvent = {
+                type: "timeupdate"
+            };
+            mediaEventListeners.timeupdate(timeUpdateEvent);
+        },
+        unmockTime: function(mediaplayer) {
+        }
+    };
+
     this.HTML5MediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
@@ -426,6 +481,49 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInPlayingState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.play();
+            mediaEventListeners.canplaythrough();
+            this._mediaPlayer.playFrom(60);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+            assertEquals(60, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInCompleteState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.play();
+            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            this._mediaPlayer.playFrom(60);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+            assertEquals(60, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInPausedState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.play();
+            mediaEventListeners.canplaythrough();
+            this._mediaPlayer.pause();
+            this._mediaPlayer.playFrom(60);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+            assertEquals(60, stubCreateElementResults.video.currentTime);
+        });
+    };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
@@ -436,12 +534,12 @@
       //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
     // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
+    //   While playing *DONE*
     //   While stopped
     //   While buffering
     //   While buffering and new seek point is immediately available
-    //   While playing
-    //   While paused
-    //   While complete
+    //   While paused *DONE*
+    //   While complete *DONE*
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
@@ -455,65 +553,11 @@
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: Resolve all FIXMEs in production code base
+    // TODO: Replace direct calls to mediaEventListeners with calls to deviceMockingHooks
 
     //---------------------
     // Common tests
     //---------------------
-
-    // Setup device specific mocking
-    var deviceMockingHooks = {
-        setup: function(sandbox, application) {
-            stubCreateElement(sandbox,application);
-        },
-        finishBuffering: function(mediaPlayer, currentTime, range) {
-
-            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-            for (var i = 0; i < mediaElements.length; i++) {
-                var media = mediaElements[i];
-                media.seekable.length = 1;
-                media.seekable.start.returns(range.start);
-                media.seekable.end.returns(range.end);
-                media.currentTime = currentTime;
-            }
-
-            mediaEventListeners.canplaythrough();
-        },
-        emitPlaybackError: function(mediaPlayer) {
-
-            // MEDIA_ERR_NETWORK == 2
-            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
-            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
-            stubCreateElementResults.video.error =  { code: 2 };
-            stubCreateElementResults.audio.error =  { code: 2 };
-
-            var errorEvent = {
-                type: "error"
-            };
-            mediaEventListeners.error(errorEvent);
-        },
-        reachEndOfMedia: function(mediaPlayer) {
-            var endedEvent = {
-                type: "ended"
-            };
-            mediaEventListeners.ended(endedEvent);
-        },
-        startBuffering: function(mediaPlayer) {
-            var waitingEvent = {
-                type: "waiting"
-            };
-            mediaEventListeners.waiting(waitingEvent);
-        },
-        mockTime: function(mediaplayer) {
-        },
-        makeOneSecondPass: function(mediaplayer, time) {
-            var timeUpdateEvent = {
-                type: "timeupdate"
-            };
-            mediaEventListeners.timeupdate(timeUpdateEvent);
-        },
-        unmockTime: function(mediaplayer) {
-        }
-    };
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
     MixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);
