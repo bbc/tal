@@ -386,7 +386,6 @@
     // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
       // -> Our API spec says that if we pause while actually playing, we should immediately enter the paused state.
       //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
-    // TODO: Transition to the COMPLETED state when the ended event fires. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
     // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
     // TODO: pause() actually pauses.
@@ -455,13 +454,14 @@
             mediaEventListeners.waiting(waitingEvent);
         },
         mockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to set up fake timers if required
         },
         makeOneSecondPass: function(mediaplayer, time) {
-            mediaplayer._onStatus();  // FIXME - do not do this in an actual implementation - replace it with proper event / setTimeout mock / whatever.
+            var timeUpdateEvent = {
+                type: "timeupdate"
+            };
+            mediaEventListeners.timeupdate(timeUpdateEvent);
         },
         unmockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to tear down fake timers if required
         }
     };
 

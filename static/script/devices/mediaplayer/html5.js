@@ -69,6 +69,7 @@ require.def(
                     this._mediaElement.addEventListener("error", function (event) { self._onMediaError(event); });
                     this._mediaElement.addEventListener("ended", function (event) { self._onEndOfMedia(event); });
                     this._mediaElement.addEventListener("waiting", function(event) { self._onDeviceBuffering(event); });
+                    this._mediaElement.addEventListener("timeupdate", function(event) { self._onStatus(event); });
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
