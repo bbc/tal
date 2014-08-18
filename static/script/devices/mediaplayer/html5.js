@@ -66,6 +66,7 @@ require.def(
 
                     var self = this;
                     this._mediaElement.addEventListener("canplaythrough", function (event) { self._onFinishedBuffering(event); });
+                    this._mediaElement.addEventListener("error", function (event) { self._onMediaError(event); });
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -73,6 +74,7 @@ require.def(
                     var source = device._createElement("source");
                     source.src = url;
                     source.type = mimeType;
+                    source.addEventListener("error", function (event) { self._onSourceError(event); });
                     device.appendChildElement(this._mediaElement, source);
 
                     this._toStopped();
@@ -275,8 +277,12 @@ require.def(
                 }
             },
 
-            _onDeviceError: function() {
-                this._toError();
+            _onMediaError: function(evt) {
+                this._toError("Media element emitted error with code: " + this._mediaElement.error.code);
+            },
+
+            _onSourceError: function(evt) {
+                this._toError("Source element emitted error");
             },
 
             _onDeviceBuffering: function() {

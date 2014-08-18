@@ -28,7 +28,8 @@
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var stubCreateElementResults = undefined;
-    var eventListeners = undefined;
+    var mediaEventListeners = undefined;
+    var sourceEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -56,7 +57,8 @@
             audio: document.createElement("div"),
             source: document.createElement("source")
         };
-        eventListeners = {};
+        mediaEventListeners = {};
+        sourceEventListeners = {};
         var self = this;
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
@@ -67,10 +69,14 @@
             };
             media.play = this.sandbox.stub();
             media.addEventListener = function (event, callback) {
-                if (eventListeners[event]) { throw "Listener already registered on mock for event: " + event; }
-                eventListeners[event] = callback;
+                if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
+                mediaEventListeners[event] = callback;
             };
         }
+        this.sandbox.stub(stubCreateElementResults.source, "addEventListener", function(event, callback) {
+            if (sourceEventListeners[event]) { throw "Listener already registered on source mock for event: " + event; }
+            sourceEventListeners[event] = callback;
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
@@ -325,15 +331,68 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            assertFunction(eventListeners.canplaythrough);
+            assertFunction(mediaEventListeners.canplaythrough);
 
             this._mediaPlayer.play();
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
 
-            eventListeners.canplaythrough();
+            mediaEventListeners.canplaythrough();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
+
+    this.HTML5MediaPlayerTests.prototype.testErrorEventFromMediaElementCausesErrorTransitionWithCodeLogged = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            assertFunction(mediaEventListeners.error);
+
+            var errorEvent = {
+                type: "error",
+                target: stubCreateElementResults.video
+            };
+
+            stubCreateElementResults.video.error =  { code: 2 }; // MEDIA_ERR_NETWORK - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
+
+            mediaEventListeners.error(errorEvent);
+
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+            assert(errorStub.calledWith("Media element emitted error with code: 2"));
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testErrorEventFromSourceElementCausesErrorTransitionWithMessageLogged = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            assertFunction(sourceEventListeners.error);
+
+            var errorEvent = {
+                type: "error",
+                target: stubCreateElementResults.source
+            };
+
+            // We don't set the media element error object as we're emitting from the source, as if during the
+            // resource selection algorithm, using source elements, when the resource fetch algorithm fails.
+            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+
+            sourceEventListeners.error(errorEvent);
+
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+            assert(errorStub.calledWith("Source element emitted error"));
+        });
+    };
+
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
@@ -356,10 +415,8 @@
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
     // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
     // TODO: Ensure source object error event listeners are added on setSources
-    // TODO: Ensure any source elements, event listeners and callbacks are destroyed on reset() to help avoid memory leaks.
+    // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled
-    // TODO: Ensure error events handled (from video/audio)
-    // TODO: Ensure error events handled (from source)
     // TODO: Ensure all errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: stop() actually stops.
@@ -387,10 +444,21 @@
                 media.currentTime = currentTime;
             }
 
-            eventListeners.canplaythrough();
+            mediaEventListeners.canplaythrough();
         },
         emitPlaybackError: function(mediaPlayer) {
-            mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+
+            // MEDIA_ERR_NETWORK == 2
+            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
+            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
+            stubCreateElementResults.video.error =  { code: 2 };
+            stubCreateElementResults.audio.error =  { code: 2 };
+
+            var errorEvent = {
+                type: "error",
+                target: mediaPlayer._mediaElement // Accessing private attributes is white-box rather than black-box; necessary here as we can't tell if we loaded an audio or video source
+            };
+            mediaEventListeners.error(errorEvent);
         },
         reachEndOfMedia: function(mediaPlayer) {
             mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
