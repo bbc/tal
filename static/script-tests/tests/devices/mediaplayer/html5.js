@@ -286,7 +286,7 @@
             assertEquals("0px", stubCreateElementResults.video.style.left);
             assertEquals("100%", stubCreateElementResults.video.style.width);
             assertEquals("100%", stubCreateElementResults.video.style.height);
-            assertEquals("-1", stubCreateElementResults.video.style.zIndex);
+            assertEquals("", stubCreateElementResults.video.style.zIndex);
         });
     };
 
@@ -436,7 +436,12 @@
       //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
     // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
-    // TODO: call load() at end of setSource
+    //   While stopped
+    //   While buffering
+    //   While buffering and new seek point is immediately available
+    //   While playing
+    //   While paused
+    //   While complete
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
@@ -449,7 +454,6 @@
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
-    // TODO: Resolve all FIXMEs in common test device mocking hooks
     // TODO: Resolve all FIXMEs in production code base
 
     //---------------------
