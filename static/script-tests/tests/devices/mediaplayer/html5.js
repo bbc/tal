@@ -28,6 +28,7 @@
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var stubCreateElementResults = undefined;
+    var eventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -55,7 +56,7 @@
             audio: document.createElement("div"),
             source: document.createElement("source")
         };
-        this.eventListeners = {};
+        eventListeners = {};
         var self = this;
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
@@ -66,8 +67,8 @@
             };
             media.play = this.sandbox.stub();
             media.addEventListener = function (event, callback) {
-                if (self.eventListeners[event]) { throw "Listener already registered on mock for event: " + event; }
-                self.eventListeners[event] = callback;
+                if (eventListeners[event]) { throw "Listener already registered on mock for event: " + event; }
+                eventListeners[event] = callback;
             };
         }
     };
@@ -324,12 +325,12 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            assertFunction(this.eventListeners.canplaythrough);
+            assertFunction(eventListeners.canplaythrough);
 
             this._mediaPlayer.play();
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
 
-            this.eventListeners.canplaythrough();
+            eventListeners.canplaythrough();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
@@ -386,7 +387,7 @@
                 media.currentTime = currentTime;
             }
 
-            mediaPlayer._onFinishedBuffering();
+            eventListeners.canplaythrough();
         },
         emitPlaybackError: function(mediaPlayer) {
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
