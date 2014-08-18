@@ -392,6 +392,21 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayPassedThroughToMediaElementWhenInPausedState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.play();
+            this._mediaPlayer.pause();
+            mediaEventListeners.canplaythrough();
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+
+            this._mediaPlayer.play();
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+        });
+    };
+
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
@@ -402,7 +417,6 @@
       //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
     // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: playFrom(...) actually plays, from specified point.
-    // TODO: pause() actually pauses.
     // TODO: play() actually plays, when paused
     // TODO: call load() at end of setSource
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
