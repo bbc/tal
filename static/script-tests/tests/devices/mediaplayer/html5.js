@@ -449,7 +449,10 @@
             mediaEventListeners.ended(endedEvent);
         },
         startBuffering: function(mediaPlayer) {
-            mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            var waitingEvent = {
+                type: "waiting"
+            };
+            mediaEventListeners.waiting(waitingEvent);
         },
         mockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to set up fake timers if required
