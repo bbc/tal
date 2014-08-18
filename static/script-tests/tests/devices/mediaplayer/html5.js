@@ -407,6 +407,16 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPausePassedThroughToMediaElementWhenInBufferedState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.play();
+            this._mediaPlayer.pause();
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
