@@ -80,6 +80,8 @@ require.def(
                     source.addEventListener("error", function (event) { self._onSourceError(event); });
                     device.appendChildElement(this._mediaElement, source);
 
+                    this._mediaElement.load();
+
                     this._toStopped();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
