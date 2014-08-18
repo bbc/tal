@@ -68,6 +68,7 @@
                 end: this.sandbox.stub()
             };
             media.play = this.sandbox.stub();
+            media.pause = this.sandbox.stub();
             media.addEventListener = function (event, callback) {
                 if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
                 mediaEventListeners[event] = callback;
@@ -375,6 +376,19 @@
 
             assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
             assert(errorStub.calledWith("Source element emitted error"));
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPausePassedThroughToMediaElementWhenInPlayingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.play();
+            mediaEventListeners.canplaythrough();
+            this._mediaPlayer.pause();
+
+            assert(stubCreateElementResults.video.pause.calledOnce);
         });
     };
 
