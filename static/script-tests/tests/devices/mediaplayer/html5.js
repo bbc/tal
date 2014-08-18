@@ -394,14 +394,9 @@
 
             assertFunction(mediaEventListeners.error);
 
-            var errorEvent = {
-                type: "error",
-                target: stubCreateElementResults.video
-            };
-
             stubCreateElementResults.video.error =  { code: 2 }; // MEDIA_ERR_NETWORK - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
 
-            mediaEventListeners.error(errorEvent);
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
             assert(errorStub.calledWith("Media element emitted error with code: 2"));
@@ -441,7 +436,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
             this._mediaPlayer.pause();
 
             assert(stubCreateElementResults.video.pause.calledOnce);
@@ -454,7 +449,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.play();
             this._mediaPlayer.pause();
-            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
             this._mediaPlayer.play();
@@ -487,7 +482,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
             this._mediaPlayer.playFrom(60);
 
             assert(stubCreateElementResults.video.play.calledTwice);
@@ -501,7 +496,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
             this._mediaPlayer.playFrom(60);
 
@@ -516,7 +511,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            mediaEventListeners.canplaythrough();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
             this._mediaPlayer.pause();
             this._mediaPlayer.playFrom(60);
 
@@ -553,7 +548,6 @@
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: Resolve all FIXMEs in production code base
-    // TODO: Replace direct calls to mediaEventListeners with calls to deviceMockingHooks
 
     //---------------------
     // Common tests
