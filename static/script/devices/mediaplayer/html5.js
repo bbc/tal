@@ -67,6 +67,7 @@ require.def(
                     var self = this;
                     this._mediaElement.addEventListener("canplaythrough", function (event) { self._onFinishedBuffering(event); });
                     this._mediaElement.addEventListener("error", function (event) { self._onMediaError(event); });
+                    this._mediaElement.addEventListener("ended", function (event) { self._onEndOfMedia(event); });
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
