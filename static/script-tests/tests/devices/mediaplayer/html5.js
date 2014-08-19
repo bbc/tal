@@ -50,7 +50,7 @@
         setup: function(sandbox, application) {
             stubCreateElement(sandbox,application);
         },
-        finishBuffering: function(mediaPlayer, currentTime, range) {
+        gotMetadata: function(mediaPlayer, currentTime, range) {
 
             var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
             for (var i = 0; i < mediaElements.length; i++) {
@@ -60,7 +60,9 @@
                 media.seekable.end.returns(range.end);
                 media.currentTime = currentTime;
             }
-
+            mediaEventListeners.loadedmetadata();
+        },
+        finishBuffering: function(mediaPlayer) {
             mediaEventListeners.canplaythrough();
         },
         emitPlaybackError: function(mediaPlayer) {
@@ -436,7 +438,8 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
 
             assert(stubCreateElementResults.video.pause.calledOnce);
@@ -449,7 +452,8 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.play();
             this._mediaPlayer.pause();
-            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
             this._mediaPlayer.play();
@@ -482,7 +486,8 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.playFrom(60);
 
             assert(stubCreateElementResults.video.play.calledTwice);
@@ -496,7 +501,8 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
             this._mediaPlayer.playFrom(60);
 
@@ -511,7 +517,8 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.play();
-            deviceMockingHooks.finishBuffering(this._mediaPlayer, 0, { start: 0, end: 100 } );
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
             this._mediaPlayer.playFrom(60);
 
@@ -520,15 +527,62 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(7);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(50);
+            assertFalse(stubCreateElementResults.video.play.called);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertUndefined(stubCreateElementResults.video.currentTime);
+
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            assertTrue(stubCreateElementResults.video.play.called);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromThenPauseSetsCurrentTimeAndCallsPauseOnMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(8);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.play();
+            this._mediaPlayer.pause();
+            assertFalse(stubCreateElementResults.video.play.called);
+            assertFalse(stubCreateElementResults.video.pause.called);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertUndefined(stubCreateElementResults.video.currentTime);
+
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            assertTrue(stubCreateElementResults.video.pause.called);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // TODO: Test in CATAL when 'starting paused' **SHOULD BE HANDLED BY HD/SD SWITCHING TEST**
+    //   Should we autoplay on switch? Current test does
+    // TODO: from STOPPED, call play, pause then play. Should still be in BUFFERING at the end of this, and play should have been called twice (it wont be at present)
     // TODO: playFrom(...) actually plays, from specified point.
     //   While playing *DONE*
-    //   While stopped
+    //   While stopped *done?*
     //   While buffering
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
     //   While complete *DONE*
+    // ? Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: Resolve all FIXMEs in production code base

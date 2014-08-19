@@ -69,6 +69,7 @@ require.def(
                     this._mediaElement.addEventListener("ended", function (event) { self._onEndOfMedia(event); });
                     this._mediaElement.addEventListener("waiting", function(event) { self._onDeviceBuffering(event); });
                     this._mediaElement.addEventListener("timeupdate", function(event) { self._onStatus(event); });
+                    this._mediaElement.addEventListener("loadedmetadata", function(event) { self._onMetadata(event); });
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -119,11 +120,15 @@ require.def(
             playFrom: function (time) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._targetSeekTime = time;
+                        this._toBuffering();
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._mediaElement.currentTime = time;
@@ -147,7 +152,9 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        this._mediaElement.pause();
+                        if (!this._waitingToSeek()) {
+                            this._mediaElement.pause();
+                        }
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
@@ -308,6 +315,21 @@ require.def(
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
+            },
+
+            _onMetadata: function() {
+                if (this._waitingToSeek()) {
+                    this._mediaElement.currentTime = this._targetSeekTime;
+                    this._mediaElement.play();
+                    if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                        this._mediaElement.pause();
+                    }
+                }
+                this._targetSeekTime = undefined;
+            },
+
+            _waitingToSeek: function () {
+                return !!this._targetSeekTime;
             },
 
             _wipe: function () {
