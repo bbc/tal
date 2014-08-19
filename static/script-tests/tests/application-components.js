@@ -88,164 +88,155 @@
 	   );
     };
 	this.ApplicationComponentsTest.prototype.testAddComponentContainerWithModuleLoadsModule = function(queue) {
-	   expectAsserts(1);
+	   expectAsserts(7);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
-			   [],
-			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var onLoad = callbacks.add(function() {
-							   assert(true);
-						   });
-					   	application.addEventListener("load", onLoad);
-				   		application.addComponentContainer("test","fixtures/components/emptycomponent");
-				   	});
+			   [
+                   'antie/widgets/componentcontainer'
+               ],
+			   function(application, ComponentContainer) {
+                   var appendStub = this.sandbox.stub(application.getRootWidget(), "appendChildWidget");
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   var showStub = this.sandbox.stub();
+                   getStub.returns({ show: showStub });
+
+                   application.addComponentContainer("test","fixtures/components/emptycomponent");
+
+
+                   assert(appendStub.calledOnce);
+                   assertInstanceOf(ComponentContainer, appendStub.args[0][0]);
+                   assertEquals("test", appendStub.args[0][0].id);
+
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(showStub.calledOnce);
+                   assert(showStub.calledWith("fixtures/components/emptycomponent"));
 			   }
 	   );
     };
 	this.ApplicationComponentsTest.prototype.testAddComponentContainerWithModuleLoadsModuleWithArgs = function(queue) {
-	   expectAsserts(1);
+	   expectAsserts(7);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
-			   [],
-			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var args = {"an":"object"};
-						var onLoad = callbacks.add(function(evt) {
-							assertSame(args, evt.args);
-						});
-					   	application.addEventListener("load", onLoad);
-				   		application.addComponentContainer("test","fixtures/components/emptycomponent", args);
-				   	});
-			   }
+           [
+               'antie/widgets/componentcontainer'
+           ],
+           function(application, ComponentContainer) {
+               var appendStub = this.sandbox.stub(application.getRootWidget(), "appendChildWidget");
+               var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+               var showStub = this.sandbox.stub();
+               getStub.returns({ show: showStub });
+
+               var args = {"an":"object"};
+               application.addComponentContainer("test","fixtures/components/emptycomponent", args);
+
+
+               assert(appendStub.calledOnce);
+               assertInstanceOf(ComponentContainer, appendStub.args[0][0]);
+               assertEquals("test", appendStub.args[0][0].id);
+
+               assert(getStub.calledOnce);
+               assert(getStub.calledWith("test"));
+
+               assert(showStub.calledOnce);
+               assert(showStub.calledWith("fixtures/components/emptycomponent", args));
+           }
 	   );
     };
 
 	this.ApplicationComponentsTest.prototype.testPushComponent = function(queue) {
-	   expectAsserts(1);
+	   expectAsserts(4);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
 			   [],
 			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var onLoad = callbacks.add(function() {
-							   assert(true);
-						   });
-					   	var container = application.addComponentContainer("test");
-						container.addEventListener("load", onLoad);
-				   		application.pushComponent("test","fixtures/components/emptycomponent");
-				   	});
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   var pushStub = this.sandbox.stub();
+                   getStub.returns({ pushComponent: pushStub });
+
+                   application.pushComponent("test","fixtures/components/emptycomponent");
+
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(pushStub.calledOnce);
+                   assert(pushStub.calledWith("fixtures/components/emptycomponent"));
 			   }
 	   );
     };
 	this.ApplicationComponentsTest.prototype.testPushComponentWithArgs = function(queue) {
-	   expectAsserts(1);
+	   expectAsserts(4);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
 			   [],
 			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var args = {"an":"object"};
-						var onLoad = callbacks.add(function(evt) {
-							assertSame(args, evt.args);
-						});
-					   	var container = application.addComponentContainer("test");
-						container.addEventListener("load", onLoad);
-				   		application.pushComponent("test", "fixtures/components/emptycomponent", args);
-				   	});
+
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   var pushStub = this.sandbox.stub();
+                   getStub.returns({ pushComponent: pushStub });
+
+                   var args = {"an":"object"};
+                   application.pushComponent("test","fixtures/components/emptycomponent", args);
+
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(pushStub.calledOnce);
+                   assert(pushStub.calledWith("fixtures/components/emptycomponent", args));
 			   }
 	   );
     };
-	this.ApplicationComponentsTest.prototype.testPopComponentWithOneItemOnStack = function(queue) {
-	   expectAsserts(1);
+	this.ApplicationComponentsTest.prototype.testPopComponent = function(queue) {
+	   expectAsserts(4);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
 			   [],
 			   function(application) {
-				   	queue.call("Wait for component hide", function(callbacks) {
-					   	application.addComponentContainer("test");
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   var backStub = this.sandbox.stub();
+                   getStub.returns({ back: backStub });
 
-						var onAfterHide = callbacks.add(function() {
-							assert(true);
-						});
-						application.addEventListener("aftershow", function() {
-							application.popComponent("test");
-						});
-						application.addEventListener("afterhide", onAfterHide);
+                   application.popComponent("test");
 
-				   		application.pushComponent("test", "fixtures/components/emptycomponent");
-				   	});
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(backStub.calledOnce);
+                   assert(backStub.calledWith());
 			   }
 	   );
     };
-	this.ApplicationComponentsTest.prototype.testPopComponentWithTwoDifferentComponentsOnStack = function(queue) {
-	   expectAsserts(3);
 
-	   queuedApplicationInit(
-			   queue,
-			   "lib/mockapplication",
-			   [],
-			   function(application) {
-				   	queue.call("Wait for component hide", function(callbacks) {
-					    var container = application.addComponentContainer("test");
-
-						var done = callbacks.add(function() {
-							assertEquals("fixtures/components/emptycomponent", container.getCurrentModule());
-						});
-
-						var callCount = 0;
-						container.addEventListener("aftershow", function() {
-							container.removeEventListener("aftershow", arguments.callee);
-							assertEquals("fixtures/components/emptycomponent", container.getCurrentModule());
-
-							container.addEventListener("aftershow", function() {
-								container.removeEventListener("aftershow", arguments.callee);
-								assertEquals("fixtures/components/buttoncomponent", container.getCurrentModule());
-
-								container.addEventListener("aftershow", function() {
-									container.removeEventListener("aftershow", arguments.callee);
-									done();
-								});
-
-								application.popComponent("test");
-							});
-
-							application.pushComponent("test", "fixtures/components/buttoncomponent", {depth:2});
-						});
-
-				   		application.pushComponent("test", "fixtures/components/emptycomponent", {depth:1});
-				   	});
-			   });
-	};
 	this.ApplicationComponentsTest.prototype.testHideComponent = function(queue) {
-	   expectAsserts(2);
+	   expectAsserts(4);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
 			   [],
 			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var onAfterHide = callbacks.add(function() {
-							assertNull(application.getComponent("test").getContent());
-						});
-					   	application.addEventListener("aftershow", function() {
-							assertNotNull(application.getComponent("test").getContent());
-							application.hideComponent("test");
-						});
-						application.addEventListener("afterhide", onAfterHide);
-				   		application.addComponentContainer("test","fixtures/components/emptycomponent");
-				   	});
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   var hideStub = this.sandbox.stub();
+                   getStub.returns({ hide: hideStub });
+
+                   application.hideComponent("test");
+
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(hideStub.calledOnce);
+                   assert(hideStub.calledWith());
 			   }
 	   );
     };
@@ -263,23 +254,27 @@
 	   );
     };
 	this.ApplicationComponentsTest.prototype.testSetActiveComponent = function(queue) {
-	   expectAsserts(1);
+	   expectAsserts(4);
 
 	   queuedApplicationInit(
 			   queue,
 			   "lib/mockapplication",
 			   [],
 			   function(application) {
-				   	queue.call("Wait for component load", function(callbacks) {
-					   	var container = application.addComponentContainer("test");
-						var root = application.getRootWidget();
-						var onLoad = callbacks.add(function() {
-							application.setActiveComponent("test");
-							assertSame(container, root.getActiveChildWidget());
-						});
-					   	application.addEventListener("aftershow", onLoad);
-				   		application.showComponent("test", "fixtures/components/buttoncomponent");
-				   	});
+
+                   var obj  = { my: "object" };
+
+                   var getStub = this.sandbox.stub(application.getRootWidget(), "getChildWidget");
+                   getStub.returns(obj);
+                   var setActiveStub = this.sandbox.stub(application.getRootWidget(), "setActiveChildWidget");
+
+                   application.setActiveComponent("test");
+
+                   assert(getStub.calledOnce);
+                   assert(getStub.calledWith("test"));
+
+                   assert(setActiveStub.calledOnce);
+                   assert(setActiveStub.calledWith(obj));
 			   }
 	   );
     };
