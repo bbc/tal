@@ -521,13 +521,7 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
-    // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
-    // TODO: Determine whether to use canplay or canplaythrough events to determine whether we can attempt to move from BUFFERING to PLAYING and actually play the content. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#event-media-canplay
-    // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
-      // -> Our API spec says that if we pause while actually playing, we should immediately enter the paused state.
-      //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
-    // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
+    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: playFrom(...) actually plays, from specified point.
     //   While playing *DONE*
     //   While stopped
@@ -535,6 +529,15 @@
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
     //   While complete *DONE*
+    // TODO: stop() actually stops.
+    // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
+    // TODO: Resolve all FIXMEs in production code base
+    // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+    // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
+    // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
+      // -> Our API spec says that if we pause while actually playing, we should immediately enter the paused state.
+      //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
+    // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
@@ -544,10 +547,6 @@
     // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled
     // TODO: Ensure all errors are logged.
-    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    // TODO: stop() actually stops.
-    // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
-    // TODO: Resolve all FIXMEs in production code base
 
     //---------------------
     // Common tests
