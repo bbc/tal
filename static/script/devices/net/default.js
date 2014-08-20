@@ -272,7 +272,8 @@ require.def(
                formData[opts.fieldName] = payload;
                this.crossDomainPost(url, formData, {
                    onLoad: opts.onLoad,
-                   onError: opts.onError
+                   onError: opts.onError,
+                   blankUrl: opts.blankUrl
                });
            }
         };
