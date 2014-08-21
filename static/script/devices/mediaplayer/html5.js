@@ -319,7 +319,7 @@ require.def(
 
             _onMetadata: function() {
                 if (this._waitingToSeek()) {
-                    this._mediaElement.currentTime = this._targetSeekTime;
+                    this._mediaElement.currentTime = this._getClampedTime( this._targetSeekTime);
                     this._mediaElement.play();
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                         this._mediaElement.pause();

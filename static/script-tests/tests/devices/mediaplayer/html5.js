@@ -561,6 +561,16 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInStoppedState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(110);
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     this.HTML5MediaPlayerTests.prototype.testPlayFromThenPauseSetsCurrentTimeAndCallsPauseOnMediaElementWhenInStoppedState = function(queue) {
         expectAsserts(8);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
