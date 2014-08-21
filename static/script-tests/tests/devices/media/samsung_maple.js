@@ -43,16 +43,18 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.createdTVMPlugin = true;
 
             this.tvmwPlugin.GetSource = this.sandbox.stub();
+            this.tvmwPlugin.SetSource = this.sandbox.stub();
             this.tvmwPlugin.SetMediaSource = this.sandbox.stub();
 
         } else {
             this.sandbox.stub(this.tvmwPlugin, "GetSource");
+            this.sandbox.stub(this.tvmwPlugin, "SetSource");
         }
 
         // If we don't have a Player plugin create it...
         this.createdPlayerPlugin = false;
-        this.playerPlugin = document.getElementById('playerPlugin');
-        if (!this.playerPlugin) {
+        //this.playerPlugin = document.getElementById('playerPlugin');
+        //if (!this.playerPlugin) {
             this.playerPlugin = document.createElement('object');
             this.playerPlugin.id = 'playerPlugin';
             document.body.appendChild(this.playerPlugin);
@@ -64,7 +66,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.playerPlugin.Resume = this.sandbox.stub();
             this.playerPlugin.SetDisplayArea = this.sandbox.stub();
             this.playerPlugin.JumpForward = this.sandbox.stub();
-        }
+        //}
     };
 
     this.SamsungMapleTest.prototype.tearDown = function() {
@@ -458,6 +460,36 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
 
                 clock.restore();
 
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testThatStopIsCalledOnThePlayerPluginWhenAHideEventIsFired = function (queue) {
+      expectAsserts(1);
+      var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
+            function(application, SamsungPlayer,  MediaErrorEvent) {
+
+              var callbackStub = self.sandbox.stub();
+              var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+              var event = new CustomEvent('hide');
+              window.dispatchEvent(event);
+              assertTrue(this.playerPlugin.Stop.calledOnce);
+            }, config);
+    };
+
+    this.SamsungMapleTest.prototype.testThatStopIsCalledOnThePlayerPluginWhenAHideEventIsFired = function (queue) {
+      expectAsserts(1);
+      var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple_unload", "antie/events/mediaevent"],
+            function(application, SamsungPlayer,  MediaErrorEvent) {
+
+              var callbackStub = self.sandbox.stub();
+              var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+
+              var event = new CustomEvent('hide');
+              window.dispatchEvent(event);
+              assertTrue(this.playerPlugin.Stop.calledOnce);
             }, config);
     };
 
