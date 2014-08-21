@@ -55,11 +55,8 @@ require.def(
 
                 this.mediaSource = null;
 
-                var self = this;
-                window.addEventListener('hide', function () {
-                    self.playerPlugin.Stop();
-                    self.tvmwPlugin.SetSource(self.originalSource);
-                }, false);
+                this._addExitStrategyEventListener();
+
 
                 if (mediaType == "audio") {
                     this._mediaType = "audio";
@@ -399,6 +396,14 @@ require.def(
                     var dimensions = Application.getCurrentApplication().getDevice().getScreenSize();
                     this.setWindow(0, 0, dimensions.width, dimensions.height);
                 }
+            },
+
+            _addExitStrategyEventListener: function() {
+              var self = this;
+              window.addEventListener('hide', function() {
+                self.playerPlugin.Stop();
+                self.tvmwPlugin.SetSource(self.originalSource);
+              });
             }
         });
 
