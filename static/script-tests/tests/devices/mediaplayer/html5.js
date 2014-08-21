@@ -488,9 +488,23 @@
             this._mediaPlayer.play();
             deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
-            this._mediaPlayer.playFrom(110);
+            this._mediaPlayer.playFrom(100);
 
             assert(stubCreateElementResults.video.play.calledTwice);
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.play();
+            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            this._mediaPlayer.playFrom(110);
+
             assertEquals(100, stubCreateElementResults.video.currentTime);
         });
     };
@@ -504,7 +518,7 @@
             deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
-            this._mediaPlayer.playFrom(110);
+            this._mediaPlayer.playFrom(100);
 
             assert(stubCreateElementResults.video.play.calledTwice);
             assertEquals(100, stubCreateElementResults.video.currentTime);
@@ -520,7 +534,7 @@
             deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
-            this._mediaPlayer.playFrom(110);
+            this._mediaPlayer.playFrom(100);
 
             assert(stubCreateElementResults.video.play.calledTwice);
             assertEquals(100, stubCreateElementResults.video.currentTime);
