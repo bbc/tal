@@ -126,12 +126,13 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
+                        //TODO
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._mediaElement.currentTime = this._getClampedTime(time);
+                        this._seekTo(time);
                         this._mediaElement.play();
                         this._toBuffering();
                         break;
@@ -319,7 +320,7 @@ require.def(
 
             _onMetadata: function() {
                 if (this._waitingToSeek()) {
-                    this._mediaElement.currentTime = this._getClampedTime( this._targetSeekTime);
+                    this._seekTo(this._targetSeekTime);
                     this._mediaElement.play();
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                         this._mediaElement.pause();
@@ -330,6 +331,10 @@ require.def(
 
             _waitingToSeek: function () {
                 return !!this._targetSeekTime;
+            },
+
+            _seekTo: function(time) {
+                this._mediaElement.currentTime = this._getClampedTime(time);
             },
 
             _wipe: function () {
