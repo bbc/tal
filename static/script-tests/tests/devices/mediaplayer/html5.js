@@ -564,6 +564,7 @@
             assertTrue(stubCreateElementResults.video.pause.called);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             assertEquals(50, stubCreateElementResults.video.currentTime);
+            sinon.assert.callOrder(stubCreateElementResults.video.play, stubCreateElementResults.video.pause);
 
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
