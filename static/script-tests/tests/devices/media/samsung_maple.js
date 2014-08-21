@@ -53,8 +53,8 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
 
         // If we don't have a Player plugin create it...
         this.createdPlayerPlugin = false;
-        //this.playerPlugin = document.getElementById('playerPlugin');
-        //if (!this.playerPlugin) {
+        this.playerPlugin = document.getElementById('playerPlugin');
+        if (!this.playerPlugin) {
             this.playerPlugin = document.createElement('object');
             this.playerPlugin.id = 'playerPlugin';
             document.body.appendChild(this.playerPlugin);
@@ -66,7 +66,7 @@ jstestdriver.console.warn("devices/media/samsung_maple.js is poorly tested!");
             this.playerPlugin.Resume = this.sandbox.stub();
             this.playerPlugin.SetDisplayArea = this.sandbox.stub();
             this.playerPlugin.JumpForward = this.sandbox.stub();
-        //}
+        }
     };
 
     this.SamsungMapleTest.prototype.tearDown = function() {
