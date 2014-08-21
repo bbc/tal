@@ -26,7 +26,7 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/samsung_maple_unload"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    this.SamsungMapleTest = AsyncTestCase("SamsungMapleTest");
+    this.SamsungMapleTest = AsyncTestCase("SamsungMapleUnloadTest");
 
     this.SamsungMapleTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
