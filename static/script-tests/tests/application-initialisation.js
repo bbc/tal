@@ -51,18 +51,31 @@
 		});
 	};
 
-	this.ApplicationInitialisationTest.prototype.testReadyCalled = function(queue) {
-		expectAsserts(1);
+	this.ApplicationInitialisationTest.prototype.testOnReadyHandlerCalledWhenCallingReady = function(queue) {
+		expectAsserts(4);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication"], function(application, MockApplication) {
-			application.destroy();
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/application"], function(application, Application) {
 
-			queue.call("Wait for run to be called", function(callbacks) {
-				var onReady = callbacks.add(function() {
-					assert(true);
-				});
-				this.application = new MockApplication(document.createElement('div'), null, null, onReady);
-			});
+            application.destroy();
+
+            var clock = sinon.useFakeTimers();
+
+            var onReady = this.sandbox.stub();
+
+            var app = new Application(document.createElement('div'), null, null, onReady);
+
+            assert(onReady.notCalled);
+
+            app.ready();
+
+            assert(onReady.notCalled);
+
+            clock.tick(1);
+
+            assert(onReady.calledOnce);
+            assert(onReady.calledWith(app));
+
+            clock.restore();
 		});
 	};
 
