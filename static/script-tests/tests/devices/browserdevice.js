@@ -153,36 +153,34 @@
 		});
 	};
 
-	this.BrowserDeviceTest.prototype.testCreateImageOnLoad = function(queue) {
-		expectAsserts(1);
+	this.BrowserDeviceTest.prototype.testCreateImageSetsProvidedElementProperties = function(queue) {
+		expectAsserts(10);
 
 		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for image to load", function(callbacks) {
-				// Not possible to serve an image from fixtures - JsTestDriver gives wrong MIME type
-				// Generate an image via canvas and load it
-				var imgSrc = document.createElement('canvas').toDataURL();
-				var onLoad = callbacks.add(function() {
-					assert(true);
-				});
-				var onError = callbacks.addErrback(function() {});
-				device.createImage(null, null, imgSrc, null, onLoad, onError);
-			});
-		});
-	};
 
-	this.BrowserDeviceTest.prototype.testCreateImageOnError = function(queue) {
-		expectAsserts(1);
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for image to load", function(callbacks) {
-				var onLoad = callbacks.addErrback(function() {});
-				var onError = callbacks.add(function() {
-					assert(true);
-				});
-				device.createImage(null, null, "invalid:protocol", null, onLoad, onError);
-			});
+            var createElementStub = this.sandbox.stub(document, "createElement");
+            var mockImage =  { style: { } };
+            createElementStub.returns(mockImage);
+
+            var onLoad = this.sandbox.stub();
+            var onError = this.sandbox.stub();
+
+            var classes = [];
+
+            device.createImage("id", classes, "http://mydomain.com/image.jpg", {width: 100, height: 200}, onLoad, onError);
+
+            assert(createElementStub.calledOnce);
+            assert(createElementStub.calledWith("img"));
+            assertEquals("id", mockImage.id);
+            assertUndefined(mockImage.className);
+            assertEquals("http://mydomain.com/image.jpg", mockImage.src);
+            assertEquals("100px", mockImage.style.width);
+            assertEquals("200px", mockImage.style.height);
+            assertEquals("", mockImage.alt);
+            assertSame(onLoad, mockImage.onload);
+            assertSame(onError, mockImage.onerror);
 		});
 	};
 
