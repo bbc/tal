@@ -436,7 +436,7 @@
     };
 
     this.WidgetTest.prototype.testHideMakesElementHidden = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         queuedApplicationInit(
             queue,
@@ -446,25 +446,19 @@
                 var widget = new Widget();
                 var device = application.getDevice();
 
-                // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
-                document.body.appendChild(widget.outputElement);
+                var hideStub = this.sandbox.stub(device, "hideElement");
 
-                queue.call("Wait for tween", function(callbacks) {
-                    var onComplete = callbacks.add(function() {
-                        assertEquals("hidden", widget.outputElement.style.visibility);
-                        assertEquals(0, Math.round(parseFloat(widget.outputElement.style.opacity)));
-                    });
-                    widget.hide({
-                        to : {
-                            top : 10,
-                            left : 15
-                        },
-                        fps: 25,
-                        duration: 1000,
-                        onComplete : onComplete
-                    });
-                });
+                var options = { };
+                var outputElement = { };
+
+                // Mock out the output element
+                widget.outputElement = outputElement;
+
+                widget.hide(options);
+
+                assert(hideStub.calledOnce);
+                assert(hideStub.calledWith(options));
+                assertEquals({ el: outputElement}, options);
             }
         );
     };
@@ -533,7 +527,7 @@
     };
 
     this.WidgetTest.prototype.testMoveToMovesElementAsSpecified = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
             {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
@@ -547,28 +541,20 @@
                 var widget = new Widget();
                 var device = application.getDevice();
 
-                // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
-                document.body.appendChild(widget.outputElement);
+                var options = { };
+                var outputElement = { };
 
-                queue.call("Wait for tween", function(callbacks) {
-                    var onComplete = callbacks.add(function() {
-                        assertEquals(200, Math.round(parseFloat(widget.outputElement.style.left.replace(/px$/, ''))));
-                        assertEquals(300, Math.round(parseFloat(widget.outputElement.style.top.replace(/px$/, ''))));
-                    });
-                    widget.moveTo({
-                        from: {
-                            left: 100,
-                            top: 200
-                        },
-                        to: {
-                            left: 200,
-                            top: 300
-                        },
-                        skipAnim: false,
-                        onComplete: onComplete
-                    });
-                });
+                var moveToStub = this.sandbox.stub(device, "moveElementTo");
+
+                // Mock out the output element
+                widget.outputElement = outputElement;
+
+                widget.moveTo(options);
+
+                assert(moveToStub.calledOnce);
+                assert(moveToStub.calledWith(options));
+                assertEquals({el: outputElement}, options);
+
             }, config
         );
     };
