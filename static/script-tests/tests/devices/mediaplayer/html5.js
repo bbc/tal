@@ -595,6 +595,17 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromZeroThenPauseDefersCallToPauseOnMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+            assertFalse(stubCreateElementResults.video.pause.called);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: _waitingToSeek is wrong when targetSeekTime is zero
     // TODO: Disallow play-from-STOPPED state

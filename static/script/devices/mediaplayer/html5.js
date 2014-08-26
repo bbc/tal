@@ -330,7 +330,7 @@ require.def(
             },
 
             _waitingToSeek: function () {
-                return !!this._targetSeekTime;
+                return this._targetSeekTime !== undefined;
             },
 
             _seekTo: function(time) {
