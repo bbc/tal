@@ -87,28 +87,7 @@ require.def(
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
-
-            /**
-            * @inheritDoc
-            */
-            play : function () {
-                this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                switch (this.getState()) {
-                    case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.BUFFERING:
-                        break;                    
-
-                    case MediaPlayer.STATE.PAUSED:
-                        this._mediaElement.play();
-                        this._toPlaying();
-                        break;
-
-                    default:
-                        this._toError("Cannot play while in the '" + this.getState() + "' state");
-                        break;
-                }
-            },
-
+            
             /**
             * @inheritDoc
             */
@@ -160,6 +139,27 @@ require.def(
 
                     default:
                         this._toError("Cannot pause while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
+            * @inheritDoc
+            */
+            resume : function () {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.PLAYING:
+                    case MediaPlayer.STATE.BUFFERING:
+                        break;                    
+
+                    case MediaPlayer.STATE.PAUSED:
+                        this._mediaElement.play();
+                        this._toPlaying();
+                        break;
+
+                    default:
+                        this._toError("Cannot resume while in the '" + this.getState() + "' state");
                         break;
                 }
             },

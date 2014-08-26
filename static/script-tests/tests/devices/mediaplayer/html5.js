@@ -344,12 +344,12 @@
             assert(errorStub.calledWith("Cannot set source unless in the 'EMPTY' state"));
         });
     };
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("play");
-
+    
     this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingFromInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("playFrom", [0]);
 
     this.HTML5MediaPlayerTests.prototype.testErrorWhilePausingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("pause");
+
+    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("resume");
 
     this.HTML5MediaPlayerTests.prototype.testErrorWhileStoppingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("stop");
 
@@ -433,7 +433,7 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testPlayPassedThroughToMediaElementWhenInPausedState = function(queue) {
+    this.HTML5MediaPlayerTests.prototype.testPlayCalledOnMediaElementWhenResumeInPausedState = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -443,7 +443,7 @@
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.resume();
 
             assert(stubCreateElementResults.video.play.calledTwice);
         });
@@ -564,9 +564,9 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.playFrom(50);
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(50);            
             this._mediaPlayer.pause();
+            
             assertFalse(stubCreateElementResults.video.play.called);
             assertFalse(stubCreateElementResults.video.pause.called);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
@@ -595,12 +595,10 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Disallow play-from-STOPPED state.
-    //   Update spec
-    //   Update all tests and code
     // TODO: Rename play to resume.
     //   Update spec
     //   Update all tests and code
+    //   Update CATAL
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Test in CATAL when 'starting paused' **SHOULD BE HANDLED BY HD/SD SWITCHING TEST**
     //   Should we autoplay on switch? Current test does

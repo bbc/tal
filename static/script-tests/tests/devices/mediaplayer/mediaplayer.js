@@ -197,16 +197,16 @@
         mediaPlayer.setSource('url', 'mime');
     });
 
-    this.MediaPlayerTest.prototype.testMediaPlayerpPlayThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
-        mediaPlayer.play();
-    });
-
     this.MediaPlayerTest.prototype.testMediaPlayerPlayFromThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
         mediaPlayer.playFrom("jumbo");
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerPauseThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
         mediaPlayer.pause();
+    });
+
+    this.MediaPlayerTest.prototype.testMediaPlayerResumeThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
+        mediaPlayer.resume();
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerStopThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {

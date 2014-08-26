@@ -116,17 +116,6 @@ require.def(
             },
 
             /**
-            * Request that the media start playing.
-            * A media source must have been set with setSource before calling this.
-            * If the Media is paused, call this to unpause it.
-            * This may transition to the buffering state if enough media data is not yet available to play.
-            * Calling this in state EMPTY is an error.
-            */
-            play : function () {
-                throw new Error("play method has not been implemented");
-            },
-
-            /**
             * Request that the media start playing from Time.
             * A media source must have been set with setSource before calling this.
             * This can be used to resume media after changing source.
@@ -146,6 +135,16 @@ require.def(
             */
             pause: function () {
                 throw new Error("pause method has not been implemented");
+            },
+
+            /**
+            * Request that the media resume playing after being paused.
+            * If the Media is paused, call this to resume playing it.
+            * If the media is buffering, call this to resume playback in a playing state once buffering ends.
+            * Calling this in state EMPTY or STOPPED is an error.
+            */
+            resume : function () {
+                throw new Error("resume method has not been implemented");
             },
 
             /**

@@ -169,10 +169,10 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetMimeTypeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getMimeType");
     mixins.testGetCurrentTimeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getRange");
-
-    mixins.testCallingPlayInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "play");
+   
     mixins.testCallingPlayFromInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "playFrom");
     mixins.testCallingPauseInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "pause");
+    mixins.testCallingResumeInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "resume");
     mixins.testCallingStopInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "stop");
     mixins.testCallingResetInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "reset");
 
@@ -212,7 +212,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingSetSourceInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "setSource");
     mixins.testCallingPauseInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "pause");
     mixins.testCallingStopInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "stop");
-    mixins.testCallingPlayInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "play");
+    mixins.testCallingResumeInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "resume");
 
     mixins.testCallingResetInStoppedStateGoesToEmptyState = function (queue) {
         expectAsserts(4);
@@ -291,12 +291,12 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     };
 
 
-    mixins.testWhenPauseThenPlayCalledBeforeBufferingFinishesThenWeGoToPlayingState = function (queue) {
+    mixins.testWhenPauseThenResumeCalledBeforeBufferingFinishesThenWeGoToPlayingState = function (queue) {
         expectAsserts(10);
         this.doTest(queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
             this.mediaPlayer.pause();
-            this.mediaPlayer.play();
+            this.mediaPlayer.resume();
             assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
@@ -369,12 +369,12 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingSetSourceInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "setSource");
     mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
 
-    mixins.testWhenCallPlayWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
+    mixins.testWhenCallResumeWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
         expectAsserts(3);
         this.doTest(queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             var originalCount = this.eventCallback.callCount;
-            this.mediaPlayer.play();
+            this.mediaPlayer.resume();
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             assertEquals(originalCount, this.eventCallback.callCount);
         });
@@ -512,11 +512,11 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testCallingSetSourceInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "setSource");
     mixins.testCallingResetInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "reset");
 
-    mixins.testWhenCallingPlayWhilePausedGoesToPlayingState = function (queue) {
+    mixins.testWhenCallingResumeWhilePausedGoesToPlayingState = function (queue) {
         expectAsserts(9);
         this.doTest(queue, function (MediaPlayer) {
             getToPausedState.call(this, MediaPlayer);
-            this.mediaPlayer.play();
+            this.mediaPlayer.resume();
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             this.assertLatestEvent({
                 state: MediaPlayer.STATE.PLAYING,
@@ -585,9 +585,9 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
     // Availability of getCurrentTime() is device-specific at this point.
 
-    mixins.testCallingSetSourceInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "setSource");
-    mixins.testCallingPlayInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "play");
+    mixins.testCallingSetSourceInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "setSource");    
     mixins.testCallingPauseInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "pause");
+    mixins.testCallingResumeInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "resume");
     mixins.testCallingResetInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "reset");
 
     mixins.testWhenCallPlayFromWhileCompleteGoesToBufferingState = function (queue) {
@@ -630,10 +630,10 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetCurrentTimeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getRange");
 
-    mixins.testCallingSetSourceInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "setSource");
-    mixins.testCallingPlayInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "play");
+    mixins.testCallingSetSourceInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "setSource");   
     mixins.testCallingPlayFromInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "playFrom");
     mixins.testCallingPauseInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "pause");
+    mixins.testCallingResumeInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "resume");
     mixins.testCallingStopInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "stop");
 
     mixins.testCallingResetInErrorStateGoesToEmptyState = function (queue) {
