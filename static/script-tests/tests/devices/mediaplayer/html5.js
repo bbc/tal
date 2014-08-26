@@ -270,20 +270,7 @@
 
             assertEquals('video/mp4', stubCreateElementResults.source.type);
         });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testPlayPassedThroughToMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assert(stubCreateElementResults.video.play.notCalled);
-
-            this._mediaPlayer.play();
-
-            assert(stubCreateElementResults.video.play.calledOnce);
-        });
-    };
+    };    
 
     this.HTML5MediaPlayerTests.prototype.testWeDoNotAccessSeekableRangesWhenThereAreNoSeekableRanges = function(queue) {
         expectAsserts(3);
@@ -301,7 +288,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             stubCreateElementResults.video.seekable.length = 1;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             this._mediaPlayer.getRange();
             assert(stubCreateElementResults.video.seekable.start.alwaysCalledWith(0));
             assert(stubCreateElementResults.video.seekable.end.alwaysCalledWith(0));
@@ -315,7 +302,7 @@
             this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
             stubCreateElementResults.video.seekable.length = 2;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             assertUndefined(this._mediaPlayer.getRange());
             assert(warnStub.calledWith("Multiple seekable ranges detected"));
         });
@@ -328,7 +315,7 @@
             this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
             delete stubCreateElementResults.video.seekable;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             assertUndefined(this._mediaPlayer.getRange());
             assert(warnStub.calledWith("'seekable' property missing from media element"));
         });
@@ -437,7 +424,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
@@ -450,7 +437,7 @@
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
@@ -466,8 +453,9 @@
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             assert(stubCreateElementResults.video.pause.calledOnce);
         });
     };
@@ -485,7 +473,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.playFrom(100);
@@ -500,7 +488,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.playFrom(110);
@@ -514,7 +502,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
@@ -530,7 +518,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.play();
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
@@ -607,7 +595,10 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Disallow play-from-STOPPED state
+    // TODO: Disallow play-from-STOPPED state.
+    //   Update spec
+    //   Update all tests and code
+    // TODO: Rename play to resume.
     //   Update spec
     //   Update all tests and code
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)

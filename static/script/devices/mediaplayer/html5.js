@@ -96,12 +96,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.BUFFERING:
-                        break;
-
-                    case MediaPlayer.STATE.STOPPED:
-                        this._mediaElement.play();
-                        this._toBuffering();
-                        break;
+                        break;                    
 
                     case MediaPlayer.STATE.PAUSED:
                         this._mediaElement.play();
@@ -341,6 +336,7 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
+                this._targetSeekTime = undefined;
             },
 
             _toStopped: function () {
