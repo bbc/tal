@@ -190,45 +190,48 @@
 	 * hidden via its container.
 	 */
 	this.ComponentTest.prototype.testLifecycleEventsOnHide = function(queue) {
-		expectAsserts(3);
+		expectAsserts(5);
 
-		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer"],
-				function(application, ComponentContainer) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer",
+                // We don't expose the next two, but we must require them so that the loading of the module done
+                // through require in the ComponentContainer works as expected with the fake timers.
+                "antie/widgets/component", "fixtures/components/eventtestcomponent"],
+            function(application, ComponentContainer) {
 
-					var stubs = {
-						load: this.sandbox.stub(),
-						beforerender: this.sandbox.stub(),
-						beforeshow: this.sandbox.stub(),
-						aftershow: this.sandbox.stub(),
-						beforehide: this.sandbox.stub(),
-						afterhide: this.sandbox.stub()
-					};
+                var clock = sinon.useFakeTimers();
 
-					// Show the component first - not part of this test.
-					queue.call("Wait for component to be shown", function(callbacks) {
-						container.addEventListener("aftershow", callbacks.add(function() {
-							assert('Component has been shown', true);
-						}));
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
 
-						container.show("fixtures/components/eventtestcomponent", stubs);
-					});
-					
-					// Hide the component and ensure that the events are fired.
-					queue.call("Wait for component to be hidden", function(callbacks) {
-						container.addEventListener("afterhide", callbacks.add(function() {
-							assert('beforehide event fired first', stubs.beforehide.calledBefore(stubs.afterhide));
-							assert('afterhide (on the component) fired', stubs.afterhide.calledOnce);
-						}));
-						
-						container.hide(false, stubs);
-					});
-				}
-		);
+                var stubs = {
+                    load: this.sandbox.stub(),
+                    beforerender: this.sandbox.stub(),
+                    beforeshow: this.sandbox.stub(),
+                    aftershow: this.sandbox.stub(),
+                    beforehide: this.sandbox.stub(),
+                    afterhide: this.sandbox.stub()
+                };
+
+                container.show("fixtures/components/eventtestcomponent", stubs);
+
+                // Nudge the require along:
+                clock.tick(1);
+
+                assert('beforehide never called', stubs.beforehide.notCalled);
+                assert('afterhide never called', stubs.afterhide.notCalled);
+
+                container.hide(false, stubs);
+
+                assert('beforehide fired', stubs.beforehide.calledOnce);
+                assert('afterhide fired', stubs.afterhide.calledOnce);
+                assert('beforehide event fired first', stubs.beforehide.calledBefore(stubs.afterhide));
+
+                clock.restore();
+            }
+        );
 	};
 
 })();
