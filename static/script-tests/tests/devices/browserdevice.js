@@ -224,20 +224,84 @@
 			});
 		});
 	};
-	this.BrowserDeviceTest.prototype.testLoadStyleSheetWithCallback = function(queue) {
-		expectAsserts(1);
+	this.BrowserDeviceTest.prototype.testLoadStyleSheetCallbackFiredAfter200msOfCSSRuleLoadingWhenCSSRulesSupported = function(queue) {
+		expectAsserts(5);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for stylesheet to load", function(callbacks) {
-				var callback = callbacks.add(function() {
-					assert(true);
-				});
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
-			});
+            var createElement = document.createElement;
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { sheet: { cssRules: true }, parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
+
+            var clock = sinon.useFakeTimers();
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledTwice);
+            assert(callback.notCalled);
+
+            clock.tick(199);
+
+            assert(callback.notCalled);
+
+            clock.tick(2);
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith("/test/script-tests/fixtures/dynamicstylesheet.css"));
+
+            clock.restore();
 		});
 	};
+    this.BrowserDeviceTest.prototype.testLoadStyleSheetCallbackFiredAfterImgErrorWhenCSSRulesNotSupported = function(queue) {
+        expectAsserts(5);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+
+            var createElement = document.createElement;
+            var img = { parentNode: { removeChild: this.sandbox.stub() } };
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { parentNode: { removeChild: function() {} } };
+                } else if (tag === "link") {
+                    return { };
+                } else if (tag === "img") {
+                    return img;
+                }
+                return createElement(tag);
+            });
+
+            var topLevelElement = document.documentElement || document.body.parentNode || document;
+            this.sandbox.stub(topLevelElement, "appendChild");
+
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledThrice);
+            assert(callback.notCalled);
+
+            assertFunction(img.onerror);
+
+            img.onerror();
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith("/test/script-tests/fixtures/dynamicstylesheet.css"));
+
+        });
+    };
 	this.BrowserDeviceTest.prototype.testAppendChildElement = function(queue) {
 		expectAsserts(7);
 
