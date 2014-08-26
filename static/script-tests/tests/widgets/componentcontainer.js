@@ -352,20 +352,21 @@
 				"lib/mockapplication",
 				["antie/widgets/componentcontainer", "antie/widgets/component"],
 				function(application, ComponentContainer, Component) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+                    var clock = sinon.useFakeTimers();
 
-					queue.call("Waiting for components to show", function(callbacks) {
-						var performAsserts = callbacks.add(function(evt) {
-							container.removeEventListener('afterhide', performAsserts);
-							assertNull(container.getContent());
-						});
-						container.addEventListener('aftershow', function() {
-							container.addEventListener('afterhide', performAsserts);
-							container.hide();
-						});
-						container.show("fixtures/components/emptycomponent");
-					});
+                    var container = new ComponentContainer("container");
+                    application.getRootWidget().appendChildWidget(container);
+
+                    container.show("fixtures/components/emptycomponent");
+
+                    // Nudge the require along:
+                    clock.tick(1);
+
+                    container.hide();
+
+                    assertNull(container.getContent());
+
+                    clock.restore();
 				}
 		);
 	};
