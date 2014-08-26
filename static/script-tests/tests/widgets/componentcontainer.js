@@ -110,31 +110,48 @@
     };
 
     this.ComponentContainerTest.prototype.testMultipleShowsOfSameComponentDoesntCallLoadComponentMoreThanOnce = function (queue) {
-//        expectAsserts(1);
-//
+        expectAsserts(2);
+
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/componentcontainer"],
-            function (application, ComponentContainer) {
+            ["antie/widgets/componentcontainer",
+                // We don't expose the next two, but we must require them so that the loading of the module done
+                // through require in the ComponentContainer works as expected with the fake timers.
+                "antie/widgets/component", "fixtures/components/eventtestcomponent"],
+            function(application, ComponentContainer) {
+
+                var clock = sinon.useFakeTimers();
+
                 var container = new ComponentContainer("container");
                 application.getRootWidget().appendChildWidget(container);
 
-                var loadSpy = this.sandbox.spy(container, "_loadComponentCallback");
+                var stubs = {
+                    load: this.sandbox.stub(),
+                    beforerender: this.sandbox.stub(),
+                    beforeshow: this.sandbox.stub(),
+                    aftershow: this.sandbox.stub(),
+                    beforehide: this.sandbox.stub(),
+                    afterhide: this.sandbox.stub()
+                };
 
-                queue.call("Show component", function (callbacks) {
+                container.show("fixtures/components/eventtestcomponent", stubs);
 
-                    var beforeRender = callbacks.add( function(){} );
+                // Nudge the require along:
+                clock.tick(1);
 
-                    container.addEventListener("beforerender", beforeRender);
-                    container.show("fixtures/components/multipleshowcomponent");
-                    container.show("fixtures/components/multipleshowcomponent" );
-                });
+                assert(stubs.load.calledOnce);
 
-                queue.call("Assert", function (callbacks) {
-                  assertTrue( loadSpy.calledOnce );
-                });
-            });
+                container.show("fixtures/components/eventtestcomponent", stubs);
+
+                // There shouldn't be another require, but let's make sure:
+                clock.tick(1);
+
+                assert(stubs.load.calledOnce);
+
+                clock.restore();
+            }
+        );
     };
 
  	this.ComponentContainerTest.prototype.testShowWithArgs = function(queue) {
