@@ -323,22 +323,24 @@
 		expectAsserts(1);
 
 		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer", "antie/widgets/component"],
-				function(application, ComponentContainer, Component) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer", "fixtures/components/emptycomponent"],
+            function(application, ComponentContainer, EmptyComponent) {
+                var clock = sinon.useFakeTimers();
 
-					queue.call("Waiting for components to show", function(callbacks) {
-						var performAsserts = callbacks.add(function(evt) {
-							container.removeEventListener('aftershow', performAsserts);
-							assertInstanceOf(Component, container.getContent());
-						});
-						container.addEventListener('aftershow', performAsserts);
-						container.show("fixtures/components/emptycomponent", null, true);
-					});
-				}
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
+
+                container.pushComponent("fixtures/components/emptycomponent", null);
+
+                // Nudge the require along:
+                clock.tick(1);
+
+                assertInstanceOf(EmptyComponent, container.getContent());
+
+                clock.restore();
+            }
 		);
 	};
 
