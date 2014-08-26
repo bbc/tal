@@ -271,23 +271,15 @@
     this.WidgetTest.prototype.testGetComponent = function(queue) {
         expectAsserts(1);
 
-        // Uses subclass of Widget as we must use a renderable widget.
-        queuedComponentInit(
-            queue,
-            "fixtures/components/emptycomponent",
-            null,
-            ["antie/widgets/container"],
-            function(application, container, Container) {
-                queue.call("Waiting for components to show", function(callbacks) {
-                    var performAsserts = callbacks.add(function(evt) {
-                        var widget = new Container();
-                        evt.component.appendChildWidget(widget);
-                        assertSame(evt.component, widget.getComponent());
-                    });
-                    container.addEventListener('beforerender', performAsserts);
-                });
-            }
-        );
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/widgets/widget", "antie/widgets/component"], function(application, Widget, Component) {
+
+            var component = new Component("componentID");
+            var widget = new Widget("widgetID");
+
+            component.appendChildWidget(widget);
+
+            assertSame(component, widget.getComponent());
+        });
     };
 
     this.WidgetTest.prototype.testRemoveFocus = function(queue) {
