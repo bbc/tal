@@ -596,6 +596,10 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: _waitingToSeek is wrong when targetSeekTime is zero
+    // TODO: Disallow play-from-STOPPED state
+    //   Update spec
+    //   Update all tests and code
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Test in CATAL when 'starting paused' **SHOULD BE HANDLED BY HD/SD SWITCHING TEST**
     //   Should we autoplay on switch? Current test does
