@@ -913,6 +913,7 @@
 	};
 
     this.ContainerTest.prototype.testFocussingChildButtonDoesNotCauseBlurOnParentWhenParentAlreadyFocussed = function(queue) {
+        expectAsserts(1);
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
@@ -920,7 +921,6 @@
             function(application, Container, Button) {
                 var root, container1, container2, button, handlerCalled;
 
-                queue.call('setup widget tree', function () {
                     root = new Container("root");
                     application.setRootWidget(root);
                     container1 = new Container("container1");
@@ -936,15 +936,10 @@
                         }
                     });
                     handlerCalled = false;
-                });
 
-                queue.call('Try second focus', function () {
                     button.focus();
-                });
 
-                queue.call('assert handler not called', function () {
                     assertFalse('Blur event fired on parent', handlerCalled);
-                })
             }
         );
 
