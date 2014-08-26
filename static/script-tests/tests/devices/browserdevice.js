@@ -201,29 +201,63 @@
         });
     };
 
-	this.BrowserDeviceTest.prototype.testLoadStyleSheet = function(queue) {
-		expectAsserts(2);
+	this.BrowserDeviceTest.prototype.testLoadStyleSheetImportsStyleSheetWhenCSSRulesSupported = function(queue) {
+		expectAsserts(3);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for stylesheet to load", function(callbacks) {
-				var div = document.createElement('div');
-				div.id = "sizingdiv";
-				document.body.appendChild(div);
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 
-				assertEquals(0, div.offsetHeight);
-				var timeout = callbacks.add(function() {
-					var d2 = document.getElementById('sizingdiv');
-					assertNotEquals(0, d2.offsetHeight);
-					document.body.removeChild(d2);
-				});
+            var createElement = document.createElement;
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { sheet: { cssRules: true }, parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", function(){
-					timeout();
-				});
-			});
-		});
-	};
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            var appendToHead = this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+            this.sandbox.stub(window, "setInterval");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledTwice);
+            assertEquals('@import url("/test/script-tests/fixtures/dynamicstylesheet.css");', createElementStub.returnValues[1].innerHTML);
+            assert(appendToHead.calledWith(createElementStub.returnValues[1]));
+       });
+    };
+    this.BrowserDeviceTest.prototype.testLoadStyleSheetLinksStyleSheetWhenCSSRulesNotSupported = function(queue) {
+        expectAsserts(2);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+
+            var createElement = document.createElement;
+            var link = { };
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { parentNode: { removeChild: function() {} } };
+                } else if (tag === "link") {
+                    return link;
+                } else if (tag === "img") {
+                    return { parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
+
+            var topLevelElement = document.documentElement || document.body.parentNode || document;
+            this.sandbox.stub(topLevelElement, "appendChild");
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var appendToHead = this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css");
+
+            assertEquals("/test/script-tests/fixtures/dynamicstylesheet.css", link.href);
+            assert(appendToHead.calledWith(link));
+        });
+    };
 	this.BrowserDeviceTest.prototype.testLoadStyleSheetCallbackFiredAfter200msOfCSSRuleLoadingWhenCSSRulesSupported = function(queue) {
 		expectAsserts(5);
 
