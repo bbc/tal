@@ -419,24 +419,30 @@
  	this.ComponentContainerTest.prototype.testGetCurrentModule = function(queue) {
 		expectAsserts(1);
 
-		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer", "antie/widgets/component"],
-				function(application, ComponentContainer, Component) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer",
+                // We don't expose the next few, but we must require them so that the loading of the module done
+                // through require in the ComponentContainer works as expected with the fake timers.
+                "antie/widgets/component", "fixtures/components/emptycomponent", "fixtures/components/buttoncomponent"],
+            function(application, ComponentContainer) {
 
-					queue.call("Waiting for components to show", function(callbacks) {
-						var performAsserts = callbacks.add(function(evt) {
-							container.removeEventListener('aftershow', performAsserts);
-							assertEquals("fixtures/components/emptycomponent", container.getCurrentModule());
-						});
-						container.addEventListener('aftershow', performAsserts);
-						container.show("fixtures/components/emptycomponent", null);
-					});
-				}
-		);
+                var clock = sinon.useFakeTimers();
+
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
+
+                container.show("fixtures/components/emptycomponent", null, true);
+
+                // Nudge the require along:
+                clock.tick(1);
+
+                assertEquals("fixtures/components/emptycomponent", container.getCurrentModule());
+
+                clock.restore();
+            }
+        );
 	};
 
 
