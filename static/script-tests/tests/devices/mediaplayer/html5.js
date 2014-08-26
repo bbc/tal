@@ -476,10 +476,10 @@
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
-            this._mediaPlayer.playFrom(100);
+            this._mediaPlayer.playFrom(10);
 
             assert(stubCreateElementResults.video.play.calledTwice);
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -506,10 +506,10 @@
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
-            this._mediaPlayer.playFrom(100);
+            this._mediaPlayer.playFrom(10);
 
             assert(stubCreateElementResults.video.play.calledTwice);
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -522,10 +522,10 @@
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.pause();
-            this._mediaPlayer.playFrom(100);
+            this._mediaPlayer.playFrom(10);
 
             assert(stubCreateElementResults.video.play.calledTwice);
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -566,7 +566,7 @@
 
             this._mediaPlayer.playFrom(50);            
             this._mediaPlayer.pause();
-            
+
             assertFalse(stubCreateElementResults.video.play.called);
             assertFalse(stubCreateElementResults.video.pause.called);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
@@ -594,12 +594,38 @@
         });
     };
 
-    // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Rename play to resume.
-    //   Update spec
-    //   Update all tests and code
-    //   Update CATAL
-    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+   this.HTML5MediaPlayerTests.prototype.testPlayNotCalledWhenSeekToTimeIsGreaterThanRangeEndWhenInStoppedState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(101);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertFalse(stubCreateElementResults.video.play.called);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayNotCalledWhenSeekToTimeIsGreaterThanRangeEndWhenInPlayingState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            
+            this._mediaPlayer.playFrom(101);
+            
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assert(stubCreateElementResults.video.play.calledOnce);
+        });
+    };
+    
+    // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
+    // TODO: Ensure playFrom(...) clamps to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Test in CATAL when 'starting paused' **SHOULD BE HANDLED BY HD/SD SWITCHING TEST**
     //   Should we autoplay on switch? Current test does
     // TODO: from STOPPED, call play, pause then play. Should still be in BUFFERING at the end of this, and play should have been called twice (it wont be at present)
@@ -629,6 +655,7 @@
     // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled
     // TODO: Ensure all errors are logged.
+    // Update CATAL videoplayer.js 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
 
     //---------------------
     // Common tests
