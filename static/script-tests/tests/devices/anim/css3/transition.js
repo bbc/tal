@@ -28,10 +28,6 @@
 
     this.TransitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
-
-        sinon.assert.pass = function() {
-            assert(true);
-        };
     };
 
     this.TransitionTest.prototype.tearDown = function() {
@@ -274,7 +270,8 @@
                 toSpy = spy.withArgs("top", "50px");
                 tDefApplySpy = sinon.spy(TransitionElement.prototype, "applyDefinition");
                 
-                trans = new Transition(obj.tDef, obj.tEnds, obj.element);                
+                trans = new Transition(obj.tDef, obj.tEnds, obj.element);
+                this.sandbox.stub(sinon.assert, "pass", function() { assert(true); });
                 sinon.assert.callOrder(fromSpy, forceSpy, tDefApplySpy);
             }
         );   
