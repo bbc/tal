@@ -355,7 +355,7 @@
     };
 
     this.WidgetTest.prototype.testShowMakesElementVisible = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         queuedApplicationInit(
             queue,
@@ -365,25 +365,18 @@
                 var widget = new Widget();
                 var device = application.getDevice();
 
-                // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
-                document.body.appendChild(widget.outputElement);
+                var outputElement = { };
+                var options = { };
 
-                queue.call("Wait for tween", function(callbacks) {
-                    var onComplete = callbacks.add(function() {
-                        assertEquals("visible", widget.outputElement.style.visibility);
-                        assertEquals(1, Math.round(parseFloat(widget.outputElement.style.opacity)));
-                    });
-                    widget.show({
-                        to : {
-                            top : 10,
-                            left : 15
-                        },
-                        fps: 25,
-                        duration: 1000,
-                        onComplete : onComplete
-                    });
-                });
+                var showStub = this.sandbox.stub(device, "showElement");
+
+                widget.outputElement = outputElement;
+
+                widget.show(options);
+
+                assert(showStub.calledOnce);
+                assert(showStub.calledWith(options));
+                assertEquals({el: outputElement }, options);
             }
         );
     };
