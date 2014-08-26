@@ -149,8 +149,14 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/componentcontainer"],
+				["antie/widgets/componentcontainer",
+                    // We don't expose the next two, but we must require them so that the loading of the module done
+                    // through require in the ComponentContainer works as expected with the fake timers.
+                    "antie/widgets/component", "fixtures/components/eventtestcomponent"],
 				function(application, ComponentContainer) {
+
+                    var clock = sinon.useFakeTimers();
+
 					var container = new ComponentContainer("container");
 					application.getRootWidget().appendChildWidget(container);
 
@@ -163,23 +169,19 @@
 						afterhide: this.sandbox.stub()
 					};
 
-					// Show the component, ensure the events are all fired in the correct order.
-					queue.call("Wait for component to be shown", function(callbacks) {
-						container.addEventListener("aftershow", callbacks.add(function() {
-							assert('load event fired first', stubs.load.calledBefore(stubs.beforerender));
-							assert('beforeRender event fired before beforeShow', stubs.beforerender.calledBefore(stubs.beforeshow));
-							assert('beforeShow event fired before afterShow', stubs.beforeshow.calledBefore(stubs.aftershow));
-							assert('afterShow (on the component) fired', stubs.aftershow.calledOnce);
-						}));
+                    container.show("fixtures/components/eventtestcomponent", stubs);
 
-						container.show("fixtures/components/eventtestcomponent", stubs);
-					});
-					
-					// Ensure that none of the hide-related events have been fired.
-					queue.call("Ensure hiding events are never called", function(callbacks) {
-						assert('beforehide never called', !stubs.beforehide.called);
-						assert('afterhide never called', !stubs.afterhide.called);
-					});
+                    // Nudge the require along:
+                    clock.tick(1);
+
+                    assert('load event fired first', stubs.load.calledBefore(stubs.beforerender));
+                    assert('beforeRender event fired before beforeShow', stubs.beforerender.calledBefore(stubs.beforeshow));
+                    assert('beforeShow event fired before afterShow', stubs.beforeshow.calledBefore(stubs.aftershow));
+                    assert('afterShow (on the component) fired', stubs.aftershow.calledOnce);
+                    assert('beforehide never called', !stubs.beforehide.called);
+                    assert('afterhide never called', !stubs.afterhide.called);
+
+                    clock.restore();
 				}
 		);
 	};
