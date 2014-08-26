@@ -115,7 +115,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             mimeType: "testMimeType",
             type: MediaPlayer.EVENT.BUFFERING
         });
-        deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(this.mediaPlayer);
         assertEquals(postBufferingState, this.mediaPlayer.getState());
     };
@@ -264,7 +264,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         expectAsserts(9);
         this.doTest(queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             this.assertLatestEvent({
@@ -284,7 +284,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             getToBufferingState.call(this, MediaPlayer);
             this.mediaPlayer.pause();
             assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PAUSED, this.mediaPlayer.getState());
             this.assertLatestEvent({
@@ -306,7 +306,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             this.mediaPlayer.pause();
             this.mediaPlayer.play();
             assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             this.assertLatestEvent({
@@ -326,7 +326,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this.mediaPlayer.playFrom(50);
             assertEquals(MediaPlayer.STATE.BUFFERING, this.mediaPlayer.getState());
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
             this.assertLatestEvent({
@@ -364,7 +364,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     var getToPlayingState = function (MediaPlayer) {
         this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
         this.mediaPlayer.play();
-        deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(this.mediaPlayer);
         assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
     };
@@ -471,7 +471,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
                 mimeType: "testMimeType",
                 type: MediaPlayer.EVENT.BUFFERING
             });
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.PLAYING, this.mediaPlayer.getState());
         });
@@ -507,7 +507,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
         this.mediaPlayer.play();
         this.mediaPlayer.pause();
-        deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(this.mediaPlayer);
         assertEquals(MediaPlayer.STATE.PAUSED, this.mediaPlayer.getState());
     };
@@ -581,7 +581,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     var  getToCompleteState = function (MediaPlayer) {
         this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
         this.mediaPlayer.play();
-        deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(this.mediaPlayer);
         deviceMockingHooks.reachEndOfMedia(this.mediaPlayer);
         assertEquals(MediaPlayer.STATE.COMPLETE, this.mediaPlayer.getState());
@@ -659,7 +659,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             getToBufferingState.call(this, MediaPlayer);
             this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "myURL", "mime/type");
             assertEquals(MediaPlayer.STATE.ERROR, this.mediaPlayer.getState());
-            deviceMockingHooks.gotMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             assertEquals(MediaPlayer.STATE.ERROR, this.mediaPlayer.getState());
         });
