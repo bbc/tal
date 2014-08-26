@@ -1163,32 +1163,6 @@
         );
     };
     
-    function queueKeyRepeatsThenAssertCorrectTALEvents(keyDownFn, keyHoldFn, stubs, queue) {
-        var repeats, repeatDelay, mockElement;
-         function repeatAndEnd() {
-            var i;
-            for(i = 0; i !== repeats; i += 1) {
-                keyHoldFn();
-            }
-            document.onkeyup(mockElement);
-        }
-        
-        function assertCorrectTALKeyHoldEvents() {
-            assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
-            assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
-            assertEquals("TAL keypress event fired repeats (" + repeats + ") + 1 times: ", repeats + 1, stubs.talPress.callCount);
-            sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
-        }
-        
-        repeats = 3; // Fairly arbitrary
-        repeatDelay = 200; // 200ms (unlikely to be less then this)
-        mockElement = getMockDomLeftKeyEvent();
-        
-        keyDownFn(); // press the key down
-        queue.call(repeatAndEnd, repeatDelay); // hold it down then let go.
-        queue.call(assertCorrectTALKeyHoldEvents, repeatDelay + 100); // ensure TAL events have fired
-    }
-    
     this.BrowserDeviceTest.prototype.testFirefox3OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
         queuedRequire(queue, 
             [
@@ -1208,8 +1182,30 @@
                 device = new BrowserDevice(antie.framework.deviceConfiguration);
                 stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
                 mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(ff3KeyDown, ff3KeyRepeat, stubs, queue);
+
+                var repeats, repeatDelay, mockElement;
+                function repeatAndEnd() {
+                    var i;
+                    for(i = 0; i !== repeats; i += 1) {
+                        ff3KeyRepeat();
+                    }
+                    document.onkeyup(mockElement);
+                }
+
+                function assertCorrectTALKeyHoldEvents() {
+                    assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
+                    assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
+                    assertEquals("TAL keypress event fired repeats (" + repeats + ") + 1 times: ", repeats + 1, stubs.talPress.callCount);
+                    sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
+                }
+
+                repeats = 3; // Fairly arbitrary
+                repeatDelay = 200; // 200ms (unlikely to be less then this)
+                mockElement = getMockDomLeftKeyEvent();
+
+                ff3KeyDown(); // press the key down
+                queue.call(repeatAndEnd, repeatDelay); // hold it down then let go.
+                queue.call(assertCorrectTALKeyHoldEvents, repeatDelay + 100); // ensure TAL events have fired
             }
         );
     };
