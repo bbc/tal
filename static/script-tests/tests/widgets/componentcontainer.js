@@ -290,24 +290,33 @@
  	this.ComponentContainerTest.prototype.testPushComponent = function(queue) {
 		expectAsserts(1);
 
-		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer"],
-				function(application, ComponentContainer) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer",
+                // We don't expose the next few, but we must require them so that the loading of the module done
+                // through require in the ComponentContainer works as expected with the fake timers.
+                "antie/widgets/component", "fixtures/components/emptycomponent"],
+            function(application, ComponentContainer) {
 
-					queue.call("Waiting for components to show", function(callbacks) {
-						var performAsserts = callbacks.add(function(evt) {
-							container.removeEventListener('aftershow', performAsserts);
-							assert(true);
-						});
-						container.addEventListener('aftershow', performAsserts);
-						container.pushComponent("fixtures/components/emptycomponent", null);
-					});
-				}
-		);
+                var clock = sinon.useFakeTimers();
+
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
+
+                var afterShowStub = this.sandbox.stub();
+                container.addEventListener("aftershow", afterShowStub);
+
+                container.pushComponent("fixtures/components/emptycomponent", null);
+
+                // Nudge the require along:
+                clock.tick(1);
+
+                assert(afterShowStub.calledOnce);
+
+                clock.restore();
+            }
+        );
 	};
 
  	this.ComponentContainerTest.prototype.testGetContent = function(queue) {
