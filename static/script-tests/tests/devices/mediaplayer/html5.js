@@ -623,15 +623,19 @@
             assert(stubCreateElementResults.video.play.calledOnce);
         });
     };
-    
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
-    // TODO: Ensure playFrom(...) clamps to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    // TODO: Test in CATAL when 'starting paused' **SHOULD BE HANDLED BY HD/SD SWITCHING TEST**
-    //   Should we autoplay on switch? Current test does
     // TODO: from STOPPED, call play, pause then play. Should still be in BUFFERING at the end of this, and play should have been called twice (it wont be at present)
     // TODO: playFrom(...) actually plays, from specified point.
     //   While playing *DONE*
-    //   While stopped *done?*
+    //   While stopped *DONE*
+    //   While buffering
+    //   While buffering and new seek point is immediately available
+    //   While paused *DONE*
+    //   While complete *DONE*
+    // TODO: Ensure playFrom(...) clamps to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    //   While playing *DONE*
+    //   While stopped *DONE*
     //   While buffering
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
