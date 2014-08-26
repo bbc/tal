@@ -201,35 +201,47 @@
 	this.ComponentContainerTest.prototype.testShowIncludesComponent = function(queue) {
 		expectAsserts(4);
 
-		queuedApplicationInit(
-				queue,
-				"lib/mockapplication",
-				["antie/widgets/componentcontainer"],
-				function(application, ComponentContainer) {
-					var container = new ComponentContainer("container");
-					application.getRootWidget().appendChildWidget(container);
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/componentcontainer",
+                // We don't expose the next two, but we must require them so that the loading of the module done
+                // through require in the ComponentContainer works as expected with the fake timers.
+                "antie/widgets/component", "fixtures/components/emptycomponent"],
+            function(application, ComponentContainer) {
 
-					var loadStub = this.sandbox.stub();
-					var beforeRenderStub = this.sandbox.stub();
-					var beforeShowStub = this.sandbox.stub();
+                var clock = sinon.useFakeTimers();
 
-					queue.call("Wait for component to be shown", function(callbacks) {
-						container.addEventListener("load", loadStub);
-						container.addEventListener("beforerender", beforeRenderStub);
-						container.addEventListener("beforeshow", beforeShowStub);
-						container.addEventListener("aftershow", callbacks.add(function(evt) {
-							var component = container.getContent();
+                var container = new ComponentContainer("container");
+                application.getRootWidget().appendChildWidget(container);
 
-							assertEquals('Component on load event', component, loadStub.args[0][0].component);
-							assertEquals('Component on beforerender event', component, beforeRenderStub.args[0][0].component);
-							assertEquals('Component on beforeshow event', component, beforeShowStub.args[0][0].component);
-							assertEquals('Component on aftershow event', component, evt.component);
-						}));
+                var loadStub =  this.sandbox.stub();
+                var beforeRenderStub = this.sandbox.stub();
+                var beforeShowStub = this.sandbox.stub();
+                var afterShowStub = this.sandbox.stub();
 
-						container.show("fixtures/components/emptycomponent", {});
-					});
-				}
-		);
+                container.addEventListener("load", loadStub);
+                container.addEventListener("beforerender", beforeRenderStub);
+                container.addEventListener("beforeshow", beforeShowStub);
+                container.addEventListener("aftershow", afterShowStub);
+
+                var args = { };
+
+                container.show("fixtures/components/emptycomponent", args);
+
+                // Nudge the require along:
+                clock.tick(1);
+
+                var component = container.getContent();
+
+                assertSame(component, loadStub.args[0][0].component);
+                assertSame(component, beforeRenderStub.args[0][0].component);
+                assertSame(component, beforeShowStub.args[0][0].component);
+                assertSame(component, afterShowStub.args[0][0].component);
+
+                clock.restore();
+            }
+        );
 	};
 
  	this.ComponentContainerTest.prototype.testShowKeepHistoryBack = function(queue) {
