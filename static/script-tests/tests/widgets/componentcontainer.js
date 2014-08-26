@@ -425,7 +425,7 @@
             ["antie/widgets/componentcontainer",
                 // We don't expose the next few, but we must require them so that the loading of the module done
                 // through require in the ComponentContainer works as expected with the fake timers.
-                "antie/widgets/component", "fixtures/components/emptycomponent", "fixtures/components/buttoncomponent"],
+                "antie/widgets/component", "fixtures/components/emptycomponent"],
             function(application, ComponentContainer) {
 
                 var clock = sinon.useFakeTimers();
@@ -455,7 +455,7 @@
             ["antie/widgets/componentcontainer",
                 // We don't expose the next few, but we must require them so that the loading of the module done
                 // through require in the ComponentContainer works as expected with the fake timers.
-                "antie/widgets/component", "fixtures/components/emptycomponent", "fixtures/components/buttoncomponent"],
+                "antie/widgets/component", "fixtures/components/emptycomponent"],
             function(application, ComponentContainer) {
 
                 var clock = sinon.useFakeTimers();
