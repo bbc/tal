@@ -487,7 +487,9 @@
 				["antie/widgets/horizontalcarousel", "antie/widgets/button", "antie/formatter"],
 				function(application, HorizontalCarousel, Button, Formatter) {
 					var device = application.getDevice();
-					
+
+                    var clock = sinon.useFakeTimers();
+
 					// Data binding must be used in order for the wrapped carousel elements to be created.
 					dataSource = ["a", "b", "c", "d"];
 					var SimpleFormatter = Formatter.extend({
@@ -514,25 +516,23 @@
 					// No clones created yet:
 					assertEquals(dataSource.length, widget.getChildWidgetCount());
 					assertEquals(0, document.getElementsByClassName('clone').length);
-				}
-		);
-		
-		// _onDataBound in the horizontal carousel is responsible for cloning the items. It is called after
-		// a delay. Therefore we have to wait before asserting that the cloned items are present.
-		// We expect 4 cloned items at either end, padding the carousel to full width at its extremities
-		// (one real item at 100px, 4 clones at 100px each = 100px + (4 * 100px) = 500px)
-		
-		queue.call('Checking for cloned items (after delay)',
-				function(callbacks) {
-					var assertCallback = callbacks.add(function() {
-						// We expect to still have the same number of real 'widgets'...
-						assertEquals(dataSource.length, widget.getChildWidgetCount());
-						
-						// ... but have an additional 8 cloned elements (4 either side of the real widgets) to
-						// display the wrapped carousel.
-						assertEquals(8, document.getElementsByClassName('clone').length);
-					});
-					setTimeout(assertCallback, 150); // cloning occurs after 100ms by default
+
+                    // _onDataBound in the horizontal carousel is responsible for cloning the items. It is called after
+                    // a delay. Therefore we have to wait before asserting that the cloned items are present.
+                    // We expect 4 cloned items at either end, padding the carousel to full width at its extremities
+                    // (one real item at 100px, 4 clones at 100px each = 100px + (4 * 100px) = 500px)
+
+                    clock.tick(150);
+
+                    // We expect to still have the same number of real 'widgets'...
+                    assertEquals(dataSource.length, widget.getChildWidgetCount());
+
+                    // ... but have an additional 8 cloned elements (4 either side of the real widgets) to
+                    // display the wrapped carousel.
+                    assertEquals(8, document.getElementsByClassName('clone').length);
+
+                    clock.restore();
+
 				});
 	};
 	this.HorizontalCarouselTest.prototype.testGetWrappedElementToLeft = function(queue) {
