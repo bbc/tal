@@ -39,7 +39,7 @@
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the LOG method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -58,7 +58,7 @@
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the DEBUG method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -78,7 +78,7 @@
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the INFO method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -97,7 +97,7 @@
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the WARN method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -116,7 +116,7 @@
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the ERROR method
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all"
 			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -135,7 +135,7 @@
         // set log level to Error with default (console) logger. Ensure error messages ONLY are logged.
         var config = {
                 "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+                "modifiers":getModifiers()},"logging": {
                     "level": "error", "strategy": "default"
                   },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -159,7 +159,7 @@
 		// set log level to Warn with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "warn", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -183,7 +183,7 @@
         // set log level to Info with default (console) logger. Ensure error, warn, log and info messages ONLY are logged.
         var config = {
                 "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+                "modifiers":getModifiers()},"logging": {
                     "level": "info", "strategy": "default"
                   },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -207,7 +207,7 @@
         // set log level to Debug with default (console) logger. Ensure all messages are logged.
         var config = {
                 "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+                "modifiers":getModifiers()},"logging": {
                     "level": "debug", "strategy": "default"
                   },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -231,7 +231,7 @@
         // set log level to All with default (console) logger. Ensure all messages are logged (equivalent to 'debug' level).
         var config = {
                 "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+                "modifiers":getModifiers()},"logging": {
                     "level": "all", "strategy": "default"
                   },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -255,7 +255,7 @@
 	    // set log level to None with default (console) logger. Ensure error and warn messages ONLY are logged.
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				    "level": "none", "strategy": "default"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -279,7 +279,7 @@
 		// ensure the Alert logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "all", "strategy" : "alert"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -299,7 +299,7 @@
         // ensure the Consume logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "all", "strategy" : "consumelog"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -319,7 +319,7 @@
         // ensure the JsTestDriver logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "all", "strategy" : "jstestdriver"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -339,7 +339,7 @@
 		// ensure the onscreen logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "all", "strategy" : "onscreen"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -359,7 +359,7 @@
 		// ensure the XHR logging strategy can be configured
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 					"level": "all", "strategy" : "xhr"
 				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -377,7 +377,7 @@
 	this.LoggingTest.prototype.testSavingSaves = function(queue) {
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all", "strategy": "saving"
 				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -396,7 +396,7 @@
 	this.LoggingTest.prototype.testSavingSavesLogLevel = function (queue) {
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all", "strategy": "saving"
 				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -414,7 +414,7 @@
 	this.LoggingTest.prototype.testSavingSavesLogMessage = function (queue) {
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all", "strategy": "saving"
 				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -433,7 +433,7 @@
 	this.LoggingTest.prototype.testSavingStoresMultipleMessages = function (queue) {
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all", "strategy": "saving"
 				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -454,7 +454,7 @@
 	this.LoggingTest.prototype.testSavingClearsMessagesAfterRetrieved = function (queue) {
 		var config = {
 				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
+				"modifiers":getModifiers()},"logging": {
 				"level": "all", "strategy": "saving"
 				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -490,5 +490,9 @@
       logger.log('Log message');
       logger.warn('Warn message');
       logger.error('Error message');
+  }
+
+  function getModifiers() {
+      return ["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"];
   }
 })();
