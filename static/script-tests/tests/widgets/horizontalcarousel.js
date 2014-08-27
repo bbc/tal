@@ -852,6 +852,8 @@
 				function(application, HorizontalCarousel, List, Button) {
 					var device = application.getDevice();
 
+                    var clock = sinon.useFakeTimers();
+
 					widget = new HorizontalCarousel("id");
 					widget.setWrapMode(HorizontalCarousel.WRAP_MODE_NONE);
 					widget.setAlignment(HorizontalCarousel.ALIGNMENT_LEFT);
@@ -863,19 +865,23 @@
 
 					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
-					
-				}
-		);
+                    clock.tick(300);
 
-		queue.call('Check scrollHandle has been reset',
-			function(callbacks) {
-				var assertCallback = callbacks.add(function() {
+                    widget.setActiveChildIndex(0, false); // Don't reposition
+                    widget.selectNextChildWidget();
+
+                    // Check the scrollhandle is set, just to confirm that it is being set then unset,
+                    // rather than never being set!
+                    assert('Scrollhandle set', !!widget._scrollHandle);
+
+                    clock.tick(1200); // t = 1500
+
 					assert('Scrollhandle not set', !widget._scrollHandle);
-				});
-				setTimeout(assertCallback, 1500);
-			}
-		);
-		
+
+                    clock.restore();
+            }
+        );
+
 
 	};
 	this.HorizontalCarouselTest.prototype.addTestButtons = function(noButtonsReq, widget, Button) {
