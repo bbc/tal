@@ -403,7 +403,7 @@ require.def(
               window.addEventListener('hide', function() {
                 self.playerPlugin.Stop();
                 self.tvmwPlugin.SetSource(self.originalSource);
-              });
+              }, false);
             }
         });
 
