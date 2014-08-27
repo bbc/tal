@@ -699,7 +699,9 @@
 				["antie/widgets/horizontalcarousel", "antie/widgets/button", "antie/formatter"],
 				function(application, HorizontalCarousel, Button, Formatter) {
 					var device = application.getDevice();
-					
+
+                    var clock = sinon.useFakeTimers();
+
 					var dataSource = ["a", "b", "c", "d"];
 					var SimpleFormatter = Formatter.extend({
 						format: function(iterator) {
@@ -725,62 +727,57 @@
 						style.height = "100px";
 						style.outline = "1px solid blue";
 					}
-				}, config); // Use styletopleft rather than CSS3 animation
-		
-		// Wait for cloned items to be created, then attempt to move to the left. Assert that this triggers
-		// an attempt to move the carousel to the fake, cloned element at the end of the carousel.
-		
-		queue.call('Checking for first call to scrollElementTo',
-				function(callbacks) {
-					var startMoveCallback = callbacks.add(function() {
-						// Check we have cloned elements now.
-						assertEquals(8, document.getElementsByClassName('clone').length);
-						
-						widget.setActiveChildIndex(3, false);
-						
-						// Move the carousel to the left
-						deviceScrollElementSpy.reset();
-						widget.selectNextChildWidget();
-						
-						assertEquals('scrollElementTo called first time', 1, deviceScrollElementSpy.callCount);
 
-						// 00 01 02 03 04 05 06 07 08 09 10 11
-						// F  F  F  F  R  R  R  R  F  F  F  F    (F = Fake, R = Real)
-						
-						// Begin at item 07, last real item
-						// Move right to item 08, first fake item (clone of item 04).
-						// 4 fake + 4 real items to the left = 800px
-						
-						assertEquals(800, deviceScrollElementSpy.getCall(0).args[0].to.left);
-						assert('Animation NOT skipped on first call', !deviceScrollElementSpy.getCall(0).args[0].skipAnim);
-						deviceScrollElementSpy.reset();
-					});
-					setTimeout(startMoveCallback, 150); // Cloning occurs after 100ms
-				}
-		);
-		
-		// Assert that a second move occurs, this time with animation skipped, to reposition to the
-		// real widget at the opposite end of the carousel.
-		
-		queue.call('Checking for second call to scrollElementTo (without animation)',
-				function(callbacks) {
-					var assertCallback = callbacks.add(function() {
-						// Note: The onComplete callback is called twice using css3 animation...
-						assertEquals('scrollElementTo called a second time', 1, deviceScrollElementSpy.callCount);
+                    // Wait for cloned items to be created, then attempt to move to the left. Assert that this triggers
+                    // an attempt to move the carousel to the fake, cloned element at the end of the carousel.
 
-						// 00 01 02 03 04 05 06 07 08 09 10 11
-						// F  F  F  F  R  R  R  R  F  F  F  F    (F = Fake, R = Real)
-						
-						// Move to item 04, first real item. 4 fake items to the left = 400px
-						
-						// Repositioned to left-hand side of carousel: 4 fake items off screen
-						assertEquals(400, deviceScrollElementSpy.getCall(0).args[0].to.left);
-						assert('Animation skipped on second call', deviceScrollElementSpy.getCall(0).args[0].skipAnim);
-					});
-					setTimeout(assertCallback, 1000);
-				}
-		);
-	};
+                    clock.tick(150);
+
+                    // Check we have cloned elements now.
+                    assertEquals(8, document.getElementsByClassName('clone').length);
+
+                    widget.setActiveChildIndex(3, false);
+
+                    // Move the carousel to the left
+                    deviceScrollElementSpy.reset();
+                    widget.selectNextChildWidget();
+
+                    assertEquals('scrollElementTo called first time', 1, deviceScrollElementSpy.callCount);
+
+                    // 00 01 02 03 04 05 06 07 08 09 10 11
+                    // F  F  F  F  R  R  R  R  F  F  F  F    (F = Fake, R = Real)
+
+                    // Begin at item 07, last real item
+                    // Move right to item 08, first fake item (clone of item 04).
+                    // 4 fake + 4 real items to the left = 800px
+
+                    assertEquals(800, deviceScrollElementSpy.getCall(0).args[0].to.left);
+                    assert('Animation NOT skipped on first call', !deviceScrollElementSpy.getCall(0).args[0].skipAnim);
+                    deviceScrollElementSpy.reset();
+
+		
+                    // Assert that a second move occurs, this time with animation skipped, to reposition to the
+                    // real widget at the opposite end of the carousel.
+
+                    clock.tick(850); // t = 1000
+
+                    // Note: The onComplete callback is called twice using css3 animation...
+                    assertEquals('scrollElementTo called a second time', 1, deviceScrollElementSpy.callCount);
+
+                    // 00 01 02 03 04 05 06 07 08 09 10 11
+                    // F  F  F  F  R  R  R  R  F  F  F  F    (F = Fake, R = Real)
+
+                    // Move to item 04, first real item. 4 fake items to the left = 400px
+
+                    // Repositioned to left-hand side of carousel: 4 fake items off screen
+                    assertEquals(400, deviceScrollElementSpy.getCall(0).args[0].to.left);
+                    assert('Animation skipped on second call', deviceScrollElementSpy.getCall(0).args[0].skipAnim);
+
+                    clock.restore();
+
+                }, config); // Use styletopleft rather than CSS3 animation
+
+    };
  	this.HorizontalCarouselTest.prototype.testAnimationCompleteCallbackIsSpecified = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
@@ -869,7 +866,7 @@
 					
 				}
 		);
-		
+
 		queue.call('Check scrollHandle has been reset',
 			function(callbacks) {
 				var assertCallback = callbacks.add(function() {
@@ -879,19 +876,7 @@
 			}
 		);
 		
-		queue.call('Wait for carosel init',
-		    function(callbacks) {
-                var runTestCallback = callbacks.add(function() {
-                    widget.setActiveChildIndex(0, false); // Don't reposition
-                    widget.selectNextChildWidget();
-                    
-                    // Check the scrollhandle is set, just to confirm that it is being set then unset,
-                    // rather than never being set!
-                    assert('Scrollhandle set', !!widget._scrollHandle);
-    		      });
-		      setTimeout(runTestCallback, 300);
-		      }
-		);
+
 	};
 	this.HorizontalCarouselTest.prototype.addTestButtons = function(noButtonsReq, widget, Button) {
 		for(var i = 0; i < noButtonsReq; i++) {
