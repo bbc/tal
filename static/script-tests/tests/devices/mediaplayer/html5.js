@@ -653,21 +653,36 @@
         });
     };
 
+     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndHasMetadata = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            this._mediaPlayer.playFrom(10);            
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInBufferingStateAndHasMetadata = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            this._mediaPlayer.playFrom(110);            
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
-    // TODO: playFrom(...) actually plays, from specified point.
-    //   While playing *DONE*
-    //   While stopped *DONE*
-    //   While buffering *DONE*
-    //   While buffering and new seek point is immediately available
-    //   While paused *DONE*
-    //   While complete *DONE*
-    // TODO: Ensure playFrom(...) clamps to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    //   While playing *DONE*
-    //   While stopped *DONE*
-    //   While buffering *DONE*
-    //   While buffering and new seek point is immediately available
-    //   While paused *DONE*
-    //   While complete *DONE*
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: Resolve all FIXMEs & TODOs in production code base

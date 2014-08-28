@@ -100,7 +100,12 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        this._targetSeekTime = time;
+                        if (this._waitingToSeek()) {
+                            this._targetSeekTime = time;
+                        } else {
+                            this._seekTo(time);
+                            this._playIfNotAtEndOfMedia();
+                        }
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
