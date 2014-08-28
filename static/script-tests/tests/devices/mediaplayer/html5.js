@@ -682,6 +682,62 @@
         });
     };
 
+     this.HTML5MediaPlayerTests.prototype.testStopWhenInBufferingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+     this.HTML5MediaPlayerTests.prototype.testStopWhenInPlayingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            this._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+     this.HTML5MediaPlayerTests.prototype.testStopWhenInPausedState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            this._mediaPlayer.pause();
+            this._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.calledTwice);
+        });
+    };
+
+     this.HTML5MediaPlayerTests.prototype.testStopWhenInCompleteState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this.mediaPlayer);
+            this._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)

@@ -178,6 +178,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._mediaElement.pause();
                         this._toStopped();
                         break;
 
