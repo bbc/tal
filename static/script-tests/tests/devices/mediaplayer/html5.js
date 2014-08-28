@@ -131,6 +131,7 @@
                 if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
                 mediaEventListeners[event] = callback;
             };
+            media.removeEventListener = this.sandbox.stub();
         }
         this.sandbox.stub(stubCreateElementResults.source, "addEventListener", function(event, callback) {
             if (sourceEventListeners[event]) { throw "Listener already registered on source mock for event: " + event; }
@@ -738,8 +739,19 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testResetRemoveAllEventListenersFromTheMediaElement = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');  
+
+            this._mediaPlayer.reset();                   
+
+            assertEquals(6, stubCreateElementResults.video.removeEventListener.callCount);
+        });
+    };
+   
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
-    // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
     // TODO: Resolve all FIXMEs & TODOs in production code base
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource

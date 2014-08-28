@@ -64,12 +64,18 @@ require.def(
                     this._mediaElement.style.height = "100%";
 
                     var self = this;
-                    this._mediaElement.addEventListener("canplaythrough", function (event) { self._onFinishedBuffering(event); });
-                    this._mediaElement.addEventListener("error", function (event) { self._onMediaError(event); });
-                    this._mediaElement.addEventListener("ended", function (event) { self._onEndOfMedia(event); });
-                    this._mediaElement.addEventListener("waiting", function(event) { self._onDeviceBuffering(event); });
-                    this._mediaElement.addEventListener("timeupdate", function(event) { self._onStatus(event); });
-                    this._mediaElement.addEventListener("loadedmetadata", function(event) { self._onMetadata(event); });
+                    this._wrapOnFinishedBuffering = function (event) { self._onFinishedBuffering(event); };
+                    this._wrapOnMediaError = function (event) { self._onMediaError(event); };
+                    this._wrapOnEndOfMedia = function (event) { self._onEndOfMedia(event); };
+                    this._wrapOnDeviceBuffering = function (event) { self._onDeviceBuffering(event); };
+                    this._wrapOnStatus = function (event) { self._onStatus(event); };
+                    this._wrapOnMetadata = function (event) { self._onMetadata(event); };
+                    this._mediaElement.addEventListener("canplaythrough", this._wrapOnFinishedBuffering);
+                    this._mediaElement.addEventListener("error", this._wrapOnMediaError);
+                    this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
+                    this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering);
+                    this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus);
+                    this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata);
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -194,6 +200,13 @@ require.def(
             reset: function () {
 
                 if (this._mediaElement) {
+                    this._mediaElement.removeEventListener("canplaythrough", this._wrapOnFinishedBuffering);
+                    this._mediaElement.removeEventListener("error", this._wrapOnMediaError);
+                    this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia);
+                    this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering);
+                    this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus);
+                    this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata);
+
                     var device = RuntimeContext.getDevice();
                     device.removeElement(this._mediaElement);
                 }
