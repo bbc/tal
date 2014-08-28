@@ -107,7 +107,7 @@
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
 
         var config = this.getDefaultConfig();
 
@@ -121,27 +121,24 @@
             inner.style.top = "200px";
             inner.style.left = "100px";
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
-                onComplete = callbacks.add(function() {
-                    assert('onComplete called', true);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            var onComplete = this.sandbox.stub();
+
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+
+             assert(onComplete.calledOnce);
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
@@ -153,27 +150,23 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
         }, config);
     };
 
@@ -181,7 +174,7 @@
      * Test scrollElementTo() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
@@ -193,26 +186,21 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
         }, config);
     };
 
