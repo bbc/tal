@@ -206,7 +206,7 @@
 
 
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
@@ -214,33 +214,32 @@
             var device, div, startTime;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: 100,
-                        top: 200
-                    },
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            var onComplete = this.sandbox.stub();
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: 100,
+                    top: 200
+                },
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
         }, config);
     };
 
