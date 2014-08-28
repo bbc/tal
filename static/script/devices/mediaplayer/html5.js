@@ -86,6 +86,7 @@ require.def(
                     source.addEventListener("error", function (event) { self._onSourceError(event); });
                     device.appendChildElement(this._mediaElement, source);
 
+                    this._mediaElement.preload = "auto";
                     this._mediaElement.load();
 
                     this._toStopped();

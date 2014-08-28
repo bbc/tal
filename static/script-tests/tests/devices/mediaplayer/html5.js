@@ -469,6 +469,14 @@
         });
     };
 
+      this.HTML5MediaPlayerTests.prototype.testMediaElementPreloadAttributeIsSetToAuto= function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals("auto", stubCreateElementResults.video.preload);            
+        });
+    };
+
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInPlayingState = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
@@ -752,8 +760,6 @@
    
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
-    // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
-    // TODO: Resolve all FIXMEs & TODOs in production code base
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
@@ -765,6 +771,7 @@
     // TODO: Ensure playback events handled if/as required
     // TODO: Ensure all errors are logged.
     // Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
+    // Add a STOP button to the catal new media videoplayer page
     // ? Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
 
     //---------------------
