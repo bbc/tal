@@ -42,27 +42,28 @@
 			var device = application.getDevice();
 			var div = device.createContainer();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onStart = function() {
-					assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
-				};
-				var onComplete = callbacks.add(function() {
-					assertEquals(100, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
-				});
-				device._tween({
-					el: div,
-					style: div.style,
-					from: {
-						top:"0px"
-					},
-					to: {
-						top:"100px"
-					},
-					className: null,
-					onComplete: onComplete,
-					onStart: onStart
-				});
-			});
+            var clock = sinon.useFakeTimers();
+
+            device._tween({
+                el: div,
+                style: div.style,
+                from: {
+                    top:"0px"
+                },
+                to: {
+                    top:"100px"
+                },
+                className: null
+            });
+
+            assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
+
+            clock.tick(840);
+
+            assertEquals(100, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
+
+            clock.restore();
+
 		}, config);
 	};
 
