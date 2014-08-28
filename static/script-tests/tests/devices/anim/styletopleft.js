@@ -253,30 +253,32 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: div.style.left,
-                        top: div.style.top
-                    },
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: div.style.left,
+                    top: div.style.top
+                },
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
+
         }, config);
     };
 
