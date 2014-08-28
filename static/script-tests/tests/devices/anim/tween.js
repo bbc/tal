@@ -76,27 +76,33 @@
 			var device = application.getDevice();
 			var div = device.createContainer();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onStart = function() {
-					assertClassName("testing", div);
-				};
-				var onComplete = callbacks.add(function() {
-					assertClassName("nottesting", div);
-				});
-				device._tween({
-					el: div,
-					style: div.style,
-					from: {
-						top:"0px"
-					},
-					to: {
-						top:"100px"
-					},
-					className: "testing",
-					onComplete: onComplete,
-					onStart: onStart
-				});
-			});
+            var clock = sinon.useFakeTimers();
+
+            device._tween({
+                el: div,
+                style: div.style,
+                from: {
+                    top:"0px"
+                },
+                to: {
+                    top:"100px"
+                },
+                className: "testing"
+            });
+
+            assertClassName("testing", div);
+
+            // It looks like we should only need to tick for 840, the default duration of the animation. However the
+            // callback that sorts out the class name doesn't run until tick 866.666666666667 (repeatably). This seems
+            // to be because the Shifty timeoutHandler waits for the animation to complete and it's only on the next
+            // tick (as determined by the easing function) that the Shifty stop method is called, and it is that which
+            // invokes the callback set up in _tween, which in turn updates the class name.
+            clock.tick(867);
+
+            assertClassName("nottesting", div);
+
+            clock.restore();
+
 		}, config);
 	};
 
