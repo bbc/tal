@@ -625,7 +625,6 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
-    // TODO: from STOPPED, call play, pause then play. Should still be in BUFFERING at the end of this, and play should have been called twice (it wont be at present)
     // TODO: playFrom(...) actually plays, from specified point.
     //   While playing *DONE*
     //   While stopped *DONE*
@@ -640,26 +639,21 @@
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
     //   While complete *DONE*
-    // ? Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
     // TODO: stop() actually stops.
     // TODO: reset() clears down all event listeners (to prevent memory leaks from DOM object and JavaScript keeping each other in scope)
-    // TODO: Resolve all FIXMEs in production code base
+    // TODO: Resolve all FIXMEs & TODOs in production code base
     // TODO: Consider the implications of no autoplaying and if that implies we should use the preload attribute http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
     // TODO: Handle an error event on media load http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
-    // TODO: Determine whether we should enter the PAUSED state immediately on pause (if not BUFFERING) or only do so when the pause event fires http://www.w3.org/TR/2011/WD-html5-20110405/video.html#mediaevents
-      // -> Our API spec says that if we pause while actually playing, we should immediately enter the paused state.
-      //    OTOH, if we pause while buffering, we do not immediately enter the paused state. We stay in buffering, and when the device says buffering is complete, we move to the paused state.
-    // TODO: Determine whether to transition from BUFFERING to PLAYING or PAUSED following the seeked event. http://www.w3.org/TR/2011/WD-html5-20110405/video.html#seeking
     // TODO: Ensure that when getting the source when it contains an apostorophe is escaped (see devices/media/html5.js:166)
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
-    // TODO: Ensure all video/audio object event listeners/callbacks are created on setSources
-    // TODO: Ensure source object error event listeners are added on setSources
+    //   !! Note: this effectively flips the 'html5memoryleakfix' behaviour to be the default. As a result, we may need to make a sub-modifier for the old behaviour... :-)
     // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
-    // TODO: Ensure playback events handled
+    // TODO: Ensure playback events handled if/as required
     // TODO: Ensure all errors are logged.
-    // Update CATAL videoplayer.js 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
+    // Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
+    // ? Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
 
     //---------------------
     // Common tests
