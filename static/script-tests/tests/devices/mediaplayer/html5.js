@@ -624,18 +624,47 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndDontHaveMetadata = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.playFrom(10);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assert(stubCreateElementResults.video.play.calledOnce);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInBufferingStateAndDontHaveMetadata = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.playFrom(110);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assertEquals(100, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.    
     // TODO: playFrom(...) actually plays, from specified point.
     //   While playing *DONE*
     //   While stopped *DONE*
-    //   While buffering
+    //   While buffering *DONE*
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
     //   While complete *DONE*
     // TODO: Ensure playFrom(...) clamps to the available range (there's a _getClampedTime helper in the MediaPlayer)
     //   While playing *DONE*
     //   While stopped *DONE*
-    //   While buffering
+    //   While buffering *DONE*
     //   While buffering and new seek point is immediately available
     //   While paused *DONE*
     //   While complete *DONE*

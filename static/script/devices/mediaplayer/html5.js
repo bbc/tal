@@ -100,7 +100,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        //TODO
+                        this._targetSeekTime = time;
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
