@@ -26,6 +26,14 @@
     // How many milliseconds to give a 'no animation' transition to complete
     var noAnimToleranceMs = 20;
 
+    // The default animation duration in tween.js is 840, so it's reasonable to think we should only need to tick for
+    // 840 to get the onComplete callback to be fired. However the callback passed to shifty that invokes onComplete
+    // doesn't run until tick 866.666666666667. This seems to be because the Shifty timeoutHandler waits for the
+    // animation to complete and it's only on the next tick (as determined by the easing function) that the Shifty stop
+    // method is called, and it is that which invokes the callback which invokes onComplete.
+    var DEFAULT_ONCOMPLETE_TIMEOUT = 867;
+
+
     // jshint newcap: false
     this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation");
 
@@ -62,7 +70,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
@@ -74,27 +82,28 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
