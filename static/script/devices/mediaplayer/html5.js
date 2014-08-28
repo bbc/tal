@@ -198,19 +198,6 @@ require.def(
             * @inheritDoc
             */
             reset: function () {
-
-                if (this._mediaElement) {
-                    this._mediaElement.removeEventListener("canplaythrough", this._wrapOnFinishedBuffering);
-                    this._mediaElement.removeEventListener("error", this._wrapOnMediaError);
-                    this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia);
-                    this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering);
-                    this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus);
-                    this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata);
-
-                    var device = RuntimeContext.getDevice();
-                    device.removeElement(this._mediaElement);
-                }
-
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
@@ -367,6 +354,23 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
+                this._destroyMediaElement();
+            },
+
+            _destroyMediaElement: function () {
+                if (this._mediaElement) {
+                    this._mediaElement.removeEventListener("canplaythrough", this._wrapOnFinishedBuffering);
+                    this._mediaElement.removeEventListener("error", this._wrapOnMediaError);
+                    this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia);
+                    this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering);
+                    this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus);
+                    this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata);
+
+                    var device = RuntimeContext.getDevice();
+                    device.removeElement(this._mediaElement);
+
+                    delete this._mediaElement;
+                }
             },
 
             _toStopped: function () {
