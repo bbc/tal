@@ -778,26 +778,25 @@
                 });
                 setSpy = this.sandbox.spy(el.style, 'setProperty');
 
-                queue.call("Wait for tween", function(callbacks) {
-                    var onComplete;
-                    onComplete = callbacks.add(function() {
-                        assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
-                    });
+                var clock = sinon.useFakeTimers();
 
-                    options = {
-                        el: el,
-                        from: { width: 60 },
-                        to: { width: 100 },
-                        duration: 50,
-                        onComplete: onComplete
-                    };
+                options = {
+                    el: el,
+                    from: { width: 60 },
+                    to: { width: 100 },
+                    duration: 50
+                };
 
-                    this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
 
-                    device.tweenElementStyle(options);
-                    assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
-                    setTimeout(onComplete, 50);
-                });
+                device.tweenElementStyle(options);
+                assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
+
+                clock.tick(50);
+
+                assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
+
+                clock.restore();
             },
             config
         );
