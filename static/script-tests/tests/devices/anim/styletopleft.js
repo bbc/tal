@@ -1295,14 +1295,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var startTime, device, div1, div2;
+            var device, div1, div2;
             
-            startTime = Date.now();
             device = application.getDevice();
             div1 = device.createContainer("id");
             div2 = device.createContainer("id2");
             div1.style.left = '0px';
             div2.style.left = '0px';
+
+            var clock = sinon.useFakeTimers();
 
             // Start moving div1 immediately
             device.moveElementTo({
@@ -1318,49 +1319,33 @@
             });
 
             // Start moving div2 after 50ms, a quarter of a frame at 5fps
-            queue.call('Kick off second animation after a delay', function(callbacks) {
-                var moveElement = callbacks.add(function() {
-                    device.moveElementTo({
-                        el: div2,
-                        style: div2.style,
-                        to: {
-                            top: 100,
-                            left: 100
-                        },
-                        skipAnim: false,
-                        fps: 5,
-                        duration: 300
-                    });
-                });
-
-                setTimeout(moveElement, 50);
+            clock.tick(50);
+            device.moveElementTo({
+                el: div2,
+                style: div2.style,
+                to: {
+                    top: 100,
+                    left: 100
+                },
+                skipAnim: false,
+                fps: 5,
+                duration: 300
             });
 
-            // Poll for the style.left properties changing on the two divs. Ensure this happens at the same time
-            // (as far as possible with polling :/)
-            queue.call('Wait for style.left to change', function(callbacks) {
-                var assertions, timer;
-                // Wait until assertions have been done. Assert that the two divs have been updated by comparing
-                // their respective left positions.
-                // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
-                // in its timing even within itself, resulting in slightly different tween values from the same
-                // input.
-                assertions = callbacks.add(function() {
-                    var tolerance = 5;
-                    //console.log('div1.style.left: ' + div1.style.left);
-                    //console.log('div2.style.left: ' + div2.style.left);
-                    assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
-                });
+            while (!(parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1)) {
+                // Wait until a property changes (we expect both to change at the same time)
+                clock.tick(1);
+            }
 
-                // Poll for changes every 10ms. Perform assertions when one property changes.  
-                timer = setInterval(function() {
-                    // If either style.left property has changed, ensure the other has too
-                    if (parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1) {
-                        clearInterval(timer);
-                        assertions();
-                    }
-                }, 10);
-            });
+            // Assert that the two divs have been updated by comparing their respective left positions.
+            // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
+            // in its timing even within itself, resulting in slightly different tween values from the same
+            // input.
+            var tolerance = 5;
+            assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
+
+            clock.restore();
+
         }, config);
     };
 
