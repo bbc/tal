@@ -391,28 +391,30 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        top: 200
-                    },
-                    to: {
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    top: 200
+                },
+                to: {
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+
+            clock.restore();
+
         }, config);
     };
 
@@ -426,28 +428,30 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: 100
-                    },
-                    to: {
-                        left: 100
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: 100
+                },
+                to: {
+                    left: 100
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
+
+            clock.restore();
+
         }, config);
     };
 
