@@ -958,7 +958,7 @@
             'lib/mockapplication',
             [],
             function(application) {
-                var device, div, el, options, completeSpy;
+                var device, el, options, completeSpy;
                 el = {
                     style: {
                         getPropertyValue: function(property) {
@@ -1003,7 +1003,7 @@
             'lib/mockapplication',
             [],
             function(application) {
-                var device, div, el, options, completeSpy;
+                var device, el, options, completeSpy;
                 el = {
                     style: {
                         getPropertyValue: function(property) {
