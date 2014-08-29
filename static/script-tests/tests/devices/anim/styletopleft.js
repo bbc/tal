@@ -1101,6 +1101,8 @@
                 device = application.getDevice();
                 div = _createScrollableDiv(device);
 
+                var clock = sinon.useFakeTimers();
+
                 device.tweenElementStyle(
                     {
                         el: el,
@@ -1115,15 +1117,13 @@
                         duration: 30
                     }
                 );
-                
-                queue.call('Check destinations after animation', function(callbacks) {
-                    var assertDestinationReached = callbacks.add(
-                        function () {
-                        assertEquals('To value of bottom has been set', 0, parseInt(el.style.bottom, 10));
-                        assertEquals('To value of right has been set', 100, parseInt(el.style.right, 10));
-                    });
-                    setTimeout(assertDestinationReached, 100);
-                });
+
+                clock.tick(100);
+
+                assertEquals('To value of bottom has been set', 0, parseInt(el.style.bottom, 10));
+                assertEquals('To value of right has been set', 100, parseInt(el.style.right, 10));
+
+                clock.restore();
 
             }, 
             config
