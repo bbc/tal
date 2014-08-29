@@ -102,17 +102,17 @@
                 this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 obj = {};
                 addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement, true);
-                
+
+                var clock = sinon.useFakeTimers();
+
                 trans = new Transition(obj.tDef, obj.tEnds, obj.element);
                 assertFalse(trans._completed);
-            }
-        );
-        queue.call('Wait for callback',
-            function(callbacks) {
-                var checkAtEnd = callbacks.add(function() {
-                    assertTrue(trans._completed);
-                });
-                setTimeout(checkAtEnd, 100 + 100);
+
+                clock.tick(200);
+
+                assertTrue(trans._completed);
+
+                clock.restore();
             }
         );
     };
@@ -171,21 +171,21 @@
                     }
                 );
 
+                var clock = sinon.useFakeTimers();
+
                 trans = new Transition(newTransDef, tEnds, el);
                 
                 // can't compare the transdef object directly as sinon tries to recurse through element and dies from stack overflow
                 assertEquals("check definition set", ["top", "left", "opacity", "newOne"], applySpy.getCall(0).args[0].getProperties());
+
+                clock.tick(200);
+
+                // can't compare the transdef object directly as sinon tries to recurse through element and dies from stack overflow
+                assertEquals("check definition reset", existingProperties, applySpy.getCall(1).args[0].getProperties());
+
+                clock.restore();
             }
         );   
-        queue.call('Wait for callback',
-            function(callbacks) {
-                var checkAtEnd = callbacks.add(function() {
-                    // can't compare the transdef object directly as sinon tries to recurse through element and dies from stack overflow
-                    assertEquals("check definition reset", existingProperties, applySpy.getCall(1).args[0].getProperties());
-                });
-                setTimeout(checkAtEnd, 100 + 100);
-            }
-        );
     };
     
     this.TransitionTest.prototype.testTransitionFromValuesSetOnElement = function(queue) {
@@ -512,15 +512,16 @@
                     }
                 );
 
+                var clock = sinon.useFakeTimers();
+
                 trans = new Transition(transDef, endPoints, el);
-            }
-        );
-        queue.call('Wait for callback',
-            function(callbacks) {
-                var checkAtEnd = callbacks.add(function() {
-                    assertTrue(targetSpy.called);
-                });
-                setTimeout(checkAtEnd, 10 + 50);
+
+                clock.tick(60);
+
+                assertTrue(targetSpy.called);
+
+                clock.restore();
+
             }
         );
     };
