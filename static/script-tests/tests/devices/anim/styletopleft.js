@@ -1365,6 +1365,8 @@
             div.style.left = '0px';
             div.style.top = '0px';
 
+            var clock = sinon.useFakeTimers();
+
             anim = device.moveElementTo({
                 el: div,
                 style: div.style,
@@ -1380,14 +1382,14 @@
             assertFalse('Element in its end position (left)', div.style.top === "100px");
             assertFalse('Element in its end position (top)', div.style.top === "200px");
 
-            queue.call('Wait a moment and cancel the animation', function(callbacks) {
-                // Wait a fraction of a second, cancel animation, then check it's jumped to its end state.
-                setTimeout(callbacks.add(function() {
-                    device.stopAnimation(anim);
-                    assertEquals('Element in its end position (left)', '100px', div.style.left);
-                    assertEquals('Element in its end position (top)', '200px', div.style.top);
-                }), 100);
-            });
+            clock.tick(100);
+
+            device.stopAnimation(anim);
+            assertEquals('Element in its end position (left)', '100px', div.style.left);
+            assertEquals('Element in its end position (top)', '200px', div.style.top);
+
+            clock.restore();
+
         }, config);
     };
 
