@@ -324,7 +324,7 @@
      * @param queue
      */
     this.StyleTopLeftAnimationTest.prototype.testShowAndHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = this.getDefaultConfig();
 
@@ -333,48 +333,50 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, hideElement, showElementonComplete, hideElementonComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                hideElement = function() {
-                    device.hideElement({
-                        el: div,
-                        style: div.style,
-                        from: {
-                            opacity: div.style.opacity
-                        },
-                        to: {
-                            opacity: 0
-                        },
-                        skipAnim: false,
-                        onComplete: hideElementonComplete
-                    });
-                };
+            var clock = sinon.useFakeTimers();
+            var showComplete = this.sandbox.stub();
 
-                showElementonComplete = callbacks.add(function() {
-                    assertEquals(1, parseFloat(div.style.opacity));
-                    hideElement();
-                });
-
-                hideElementonComplete = callbacks.add(function() {
-                    assertEquals(0, parseFloat(div.style.opacity));
-                });
-
-                device.showElement({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        opacity: div.style.opacity
-                    },
-                    to: {
-                        opacity: 1
-                    },
-                    skipAnim: false,
-                    onComplete: showElementonComplete
-                });
-                assert(tweenSpy.called);
+            device.showElement({
+                el: div,
+                style: div.style,
+                from: {
+                    opacity: div.style.opacity
+                },
+                to: {
+                    opacity: 1
+                },
+                skipAnim: false,
+                onComplete: showComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(showComplete.calledOnce);
+            assertEquals(1, parseFloat(div.style.opacity));
+
+            var hideComplete = this.sandbox.stub();
+
+            device.hideElement({
+                el: div,
+                style: div.style,
+                from: {
+                    opacity: div.style.opacity
+                },
+                to: {
+                    opacity: 0
+                },
+                skipAnim: false,
+                onComplete: hideComplete
+            });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(hideComplete.calledOnce);
+            assertEquals(0, parseFloat(div.style.opacity));
+
+            clock.restore();
+
         }, config);
     };
 
