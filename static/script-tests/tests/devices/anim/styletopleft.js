@@ -547,61 +547,56 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.hideElement({
-                    el: div,
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.hideElement({
+                el: div,
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
+            clock.restore();
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.hideElement({
-                    el: div,
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.hideElement({
+                el: div,
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
         }, config);
     };
 
@@ -609,31 +604,26 @@
      * Test hideElement() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.hideElement({
+            device.hideElement({
                     el: div,
                     onComplete: onComplete
                 });
-                assertFalse(tweenSpy.called);
-            });
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
         }, config);
     };
 
