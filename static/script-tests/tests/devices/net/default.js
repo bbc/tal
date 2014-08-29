@@ -63,23 +63,26 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testLoadScriptWithDefaultFiveSecondTimedOutResponse = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for script to load", function(callbacks) {
 
-				var opts = {
-					onError: callbacks.add(function() {
-						assert("Expected on error to be called as timeout expired", true);
-					}),
-					onSuccess: function(data) {
-						assert("Expected on success not to be called", false);
-					}
-				};
-				device.loadScript("/test/script-tests/fixtures/timedoutdynamicscript.js?callback=%callback%", /%callback%/, opts, undefined, "test");
-				this.waitFor(callbacks, 6000);
-			});
+            var clock = sinon.useFakeTimers();
+
+            var opts = {
+                onError: this.sandbox.stub(),
+                onSuccess: this.sandbox.stub()
+            };
+
+            device.loadScript("/test/script-tests/fixtures/timedoutdynamicscript.js?callback=%callback%", /%callback%/, opts, undefined, "test");
+
+            clock.tick(6000);
+
+            assert(opts.onSuccess.notCalled);
+            assert(opts.onError.called);
+
+            clock.restore();
 		});
 	};
 
