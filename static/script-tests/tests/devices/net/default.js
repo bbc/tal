@@ -87,23 +87,40 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testLoadScriptWithSuccessResponse = function(queue) {
-		expectAsserts(1);
+		expectAsserts(6);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for script to load", function(callbacks) {
 
-				var opts = {
-					onSuccess: callbacks.add(function(data) {
-						assertEquals("Did not get on load response", "test1", data);
-					}),
-					onError: function() {
-						assert("Timed out response should not occur", false);
-					}
-				};
-				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
-				this.waitFor(callbacks, 1500);
-			});
+            var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
+            var head = { appendChild: this.sandbox.stub() };
+            getElementStub.returns([ head ]);
+
+            var opts = {
+                onError: this.sandbox.stub(),
+                onSuccess: this.sandbox.stub()
+            };
+
+            device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
+
+            assert(head.appendChild.calledOnce);
+            var script = head.appendChild.args[0][0];
+            var url = script.src;
+
+            // Some browsers return the host name/port rather than the relative URL we pass in. which is why we only
+            // check the end of the string here:
+            var expectedURL = "/test/script-tests/fixtures/dynamicscript1.js?callback=_antie_callback_test1";
+            assertEquals(expectedURL, url.substr(url.length - expectedURL.length));
+
+            assertFunction(window._antie_callback_test1);
+
+            var resultData = { };
+
+            window._antie_callback_test1(resultData);
+
+            assert(opts.onSuccess.calledOnce);
+            assert(opts.onError.notCalled);
+            assertSame(resultData, opts.onSuccess.args[0][0]);
 		});
 	};
 
