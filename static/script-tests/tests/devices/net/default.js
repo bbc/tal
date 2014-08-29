@@ -188,21 +188,25 @@
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for script to load", function(callbacks) {
 
-				var opts = {
-					onSuccess: callbacks.add(function(data) {
-						assertEquals("Did not get expected success response from overridding call", "test1", data);
-					})
-				};
-				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
-				try {
-					device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, {}, 1, "test1");
-				} catch (e){
-					assert(true);
-				}
-				this.waitFor(callbacks, 1000);
-			});
+            var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
+            var head = { appendChild: this.sandbox.stub() };
+            getElementStub.returns([ head ]);
+
+            var exceptionReceived = false;
+
+            device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, {}, 1000, "test1");
+            try {
+                device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, {}, 1, "test1");
+            } catch (e){
+                exceptionReceived = true;
+            }
+
+            assert(exceptionReceived);
+
+            // Clean up
+            assertFunction(window._antie_callback_test1);
+            window._antie_callback_test1("");
 		});
 	};
 
