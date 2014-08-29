@@ -518,36 +518,31 @@
      * Test moveElementTo() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+
         }, config);
     };
 
