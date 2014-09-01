@@ -435,17 +435,33 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testLoadURLError = function(queue) {
-		expectAsserts(1);
+		expectAsserts(3);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for data to load", function(callbacks) {
-				var opts = {
-					onLoad: callbacks.addErrback(function() {}),
-					onError: callbacks.add(function() {assert(true);})
-				};
-				device.loadURL("/test/script-tests/fixtures/doesnotexist.json", opts);
-			});
+
+            var xhr = sinon.useFakeXMLHttpRequest();
+            var requests = this.requests = [];
+
+            xhr.onCreate = function (xhr) {
+                requests.push(xhr);
+            };
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadURL("/test/script-tests/fixtures/doesnotexist.json", opts);
+
+            assertEquals(1, requests.length);
+
+            requests[0].respond(404, { "Content-Type": "application/json" }, '{"hello":"world"}');
+
+            assert(opts.onError.calledOnce);
+            assert(opts.onLoad.notCalled);
+
+            xhr.restore();
 		});
 	};
 
