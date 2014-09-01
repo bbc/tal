@@ -45,6 +45,10 @@
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
+            var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
+            var head = { appendChild: this.sandbox.stub() };
+            getElementStub.returns([ head ]);
+
             var clock = sinon.useFakeTimers();
 
             var opts = {
@@ -67,6 +71,10 @@
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
+            var head = { appendChild: this.sandbox.stub() };
+            getElementStub.returns([ head ]);
 
             var clock = sinon.useFakeTimers();
 
@@ -129,7 +137,6 @@
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
 
             var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
             var head = { appendChild: this.sandbox.stub() };
@@ -332,19 +339,34 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testLoadAuthenticatedURL = function(queue) {
-		expectAsserts(1);
+		expectAsserts(4);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for data to load", function(callbacks) {
-				var opts = {
-					onLoad: callbacks.add(function(data) {
-						assertEquals('{"hello":"world"}', data);
-					}),
-					onError: callbacks.addErrback(function() {})
-				};
-				device.loadAuthenticatedURL("/test/script-tests/fixtures/test.json", opts);
-			});
+
+            var xhr = sinon.useFakeXMLHttpRequest();
+            var requests = this.requests = [];
+
+            xhr.onCreate = function (xhr) {
+                requests.push(xhr);
+            };
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadAuthenticatedURL("/test/script-tests/fixtures/test.json", opts);
+
+            assertEquals(1, requests.length);
+
+            requests[0].respond(200, { "Content-Type": "application/json" }, '{"hello":"world"}');
+
+            assert(opts.onError.notCalled);
+            assert(opts.onLoad.calledOnce);
+            assert(opts.onLoad.calledWith('{"hello":"world"}'));
+
+            xhr.restore();
 		});
 	};
 
