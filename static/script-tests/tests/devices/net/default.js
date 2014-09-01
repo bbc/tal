@@ -211,30 +211,66 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testLoadScriptSequentialRequestsWithSameSuffixAreAllowed = function(queue) {
-		expectAsserts(2);
+		expectAsserts(13);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Load first script", function(callbacks) {
-				var opts = {
-					onSuccess: callbacks.add(function(data) {
-						assertEquals("Did not get expected success response from overridding call", "test1", data);
-					})
-				};
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
-				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
-				this.waitFor(callbacks, 1000);
-			});
-			queue.call("Load next script", function(callbacks) {
-				var opts = {
-					onSuccess: callbacks.add(function(data) {
-						assertEquals("Did not get expected success response from overridding call", "test1", data);
-					})
-				};
+            var getElementStub = this.sandbox.stub(document, "getElementsByTagName");
+            var head = { appendChild: this.sandbox.stub() };
+            getElementStub.returns([ head ]);
 
-				device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts, 1000, "test1");
-				this.waitFor(callbacks, 1000);
-			});
+            var opts1 = {
+                onError: this.sandbox.stub(),
+                onSuccess: this.sandbox.stub()
+            };
+
+            device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts1, 1000, "test1");
+
+            assert(head.appendChild.calledOnce);
+
+            var script1 = head.appendChild.args[0][0];
+            var url1 = script1.src;
+
+            // Some browsers return the host name/port rather than the relative URL we pass in. which is why we only
+            // check the end of the string here:
+            var expectedURL1 = "/test/script-tests/fixtures/dynamicscript1.js?callback=_antie_callback_test1";
+            assertEquals(expectedURL1, url1.substr(url1.length - expectedURL1.length));
+
+            assertFunction(window._antie_callback_test1);
+
+            var resultData1 = { };
+
+            window._antie_callback_test1(resultData1);
+
+            assert(opts1.onSuccess.calledOnce);
+            assert(opts1.onError.notCalled);
+            assertSame(resultData1, opts1.onSuccess.args[0][0]);
+
+            assertUndefined(window._antie_callback_test1);
+
+            var opts2 = {
+                onError: this.sandbox.stub(),
+                onSuccess: this.sandbox.stub()
+            };
+
+            device.loadScript("/test/script-tests/fixtures/dynamicscript1.js?callback=%callback%", /%callback%/, opts2, 1000, "test1");
+
+            assert(head.appendChild.calledTwice);
+
+            var script2 = head.appendChild.args[1][0];
+            var url2 = script2.src;
+            assertEquals(expectedURL1, url2.substr(url2.length - expectedURL1.length));
+
+            assertFunction(window._antie_callback_test1);
+
+            var resultData2 = { };
+
+            window._antie_callback_test1(resultData2);
+
+            assert(opts2.onSuccess.calledOnce);
+            assert(opts2.onError.notCalled);
+            assertSame(resultData2, opts2.onSuccess.args[0][0]);
 		});
 	};
 
