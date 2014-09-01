@@ -403,19 +403,34 @@
 
 
 	this.DefaultNetworkTest.prototype.testLoadURL = function(queue) {
-		expectAsserts(1);
+		expectAsserts(4);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for data to load", function(callbacks) {
-				var opts = {
-					onLoad: callbacks.add(function(data) {
-						assertEquals('{"hello":"world"}', data);
-					}),
-					onError: callbacks.addErrback(function() {})
-				};
-				device.loadURL("/test/script-tests/fixtures/test.json", opts);
-			});
+
+            var xhr = sinon.useFakeXMLHttpRequest();
+            var requests = this.requests = [];
+
+            xhr.onCreate = function (xhr) {
+                requests.push(xhr);
+            };
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadURL("/test/script-tests/fixtures/test.json", opts);
+
+            assertEquals(1, requests.length);
+
+            requests[0].respond(200, { "Content-Type": "application/json" }, '{"hello":"world"}');
+
+            assert(opts.onError.notCalled);
+            assert(opts.onLoad.calledOnce);
+            assert(opts.onLoad.calledWith('{"hello":"world"}'));
+
+            xhr.restore();
 		});
 	};
 
