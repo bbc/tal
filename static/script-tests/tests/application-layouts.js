@@ -64,21 +64,41 @@
 		});
 	};
 	this.ApplicationLayoutsTest.prototype.testSetLayoutIsCalled = function(queue) {
-		expectAsserts(1);
+		expectAsserts(7);
 
-		queuedRequire(queue, ["lib/mockapplication"], function(MockApplication) {
-			queue.call("Wait for setLayout to be called", function(callbacks) {
-				var setLayoutSpy;
-				var onBeforeInit = callbacks.add(function() {
-					setLayoutSpy = this.sandbox.spy(MockApplication.prototype, 'setLayout');
-				});
-				var onReady = callbacks.add(function() {
-					var layout = require(antie.framework.deviceConfiguration.layouts[1].module);
-					assert(setLayoutSpy.calledWith(layout));
-				});
-				this.application = new MockApplication(document.createElement('div'), null, null, onReady, null, onBeforeInit);
-			});
-		});
+        queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication", "antie/devices/device"], function(application, MockApplication, Device) {
+
+            var device = application.getDevice();
+            application.destroy();
+
+            var deviceLoadStub = this.sandbox.stub(Device, "load");
+
+            var setLayoutStub = this.sandbox.stub(MockApplication.prototype, "setLayout");
+
+            var app = new MockApplication(document.createElement('div'), null, null, null);
+
+
+            assert(deviceLoadStub.calledOnce);
+            var deviceLoadCallbacks = deviceLoadStub.args[0][1];
+            assertObject(deviceLoadCallbacks);
+            assertFunction(deviceLoadCallbacks.onSuccess);
+
+            var requireStub = this.sandbox.stub(window, "require");
+
+            deviceLoadCallbacks.onSuccess(device);
+
+            assert(requireStub.calledOnce);
+            var requireCallback = requireStub.args[0][1];
+            assertFunction(requireCallback);
+
+            assert(setLayoutStub.notCalled);
+
+            var mockLayout = { };
+
+            requireCallback(mockLayout);
+
+            assert(setLayoutStub.calledOnce);
+        });
 	};
 	this.ApplicationLayoutsTest.prototype.testGetLayout = function(queue) {
 		expectAsserts(1);

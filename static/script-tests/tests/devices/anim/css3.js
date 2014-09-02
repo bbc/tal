@@ -23,9 +23,6 @@
  */
 
 (function() {
-    // How many milliseconds to give a 'no animation' transition to complete
-    var noAnimToleranceMs = 20;
-    
     // jshint newcap: false
     this.CSS3AnimationTest = AsyncTestCase("Css3AnimationTest");
 
@@ -82,7 +79,7 @@
             "deviceConfigurationKey": "devices-html5-1"
         };
     };
-    
+
 	/**
 	 * Get the transition properties for a given element from its CSS.
 	 */
@@ -97,44 +94,62 @@
 				duration: parseInt(match[2], 10) * durationMultiplier,
 				easing: match[4]
 			};
-		} 
-		
+		}
+
 		return false;
-		
+
 	};
 
-	this.CSS3AnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
-		expectAsserts(3);
+	this.CSS3AnimationTest.prototype.testScrollElementTo = function(queue) {
+		expectAsserts(2);
 
 		var config;
 		config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner, self, startTime;
+			var device, inner;
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
-			self = this;
-			startTime = Date.now();
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("-100px", inner.style.getPropertyValue("left"));
-					assertEquals("-200px", inner.style.getPropertyValue("top"));
-					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-				});
-
-				device.scrollElementTo({
-					el: this.div,
-					to: {
-						left: 100,
-						top: 200
-					},
-					skipAnim: false,
-					onComplete: onComplete
-				});
-
+			device.scrollElementTo({
+				el: this.div,
+				to: {
+					left: 100,
+					top: 200
+				},
+				skipAnim: false
 			});
+
+            assertEquals("-100px", inner.style.getPropertyValue("left"));
+            assertEquals("-200px", inner.style.getPropertyValue("top"));
 		}, config);
 	};
+
+	// TODO: need to test that scrollElementTo() with skipAnim = false calls onComplete eventually
+
+    this.CSS3AnimationTest.prototype.testScrollElementToWithAnimDoesNotCallOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, inner, onCompleteStub;
+            device = application.getDevice();
+            inner = this.createScrollableDiv(device);
+            onCompleteStub = this.sandbox.stub();
+
+            device.scrollElementTo({
+                el: this.div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onCompleteStub
+            });
+
+            assert(onCompleteStub.notCalled);
+        }, config);
+    };
 
 	this.CSS3AnimationTest.prototype.testScrollElementToWithNoLeftValue = function(queue) {
 		expectAsserts(2);
@@ -142,26 +157,20 @@
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner, self;
+			var device, inner;
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
-			self = this;
-			
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("0px", inner.style.getPropertyValue("left"));
-					assertEquals("-200px", inner.style.getPropertyValue("top"));
-				});
 
-				device.scrollElementTo({
-					el: this.div,
-					to: {
-						top: 200
-					},
-					skipAnim: false,
-					onComplete: onComplete
-				});
+			device.scrollElementTo({
+				el: this.div,
+				to: {
+					top: 200
+				},
+				skipAnim: false
 			});
+
+            assertEquals("0px", inner.style.getPropertyValue("left"));
+            assertEquals("-200px", inner.style.getPropertyValue("top"));
 		}, config);
 	};
 
@@ -171,85 +180,70 @@
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner, self;
+			var device, inner;
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
-			self = this;
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("-100px", inner.style.getPropertyValue("left"));
-					assertEquals("0px", inner.style.getPropertyValue("top"));
-				});
 
-				device.scrollElementTo({
-					el: this.div,
-					to: {
-						left: 100
-					},
-					skipAnim: false,
-					onComplete: onComplete
-				});
+			device.scrollElementTo({
+				el: this.div,
+				to: {
+					left: 100
+				},
+				skipAnim: false
 			});
+
+            assertEquals("-100px", inner.style.getPropertyValue("left"));
+            assertEquals("0px", inner.style.getPropertyValue("top"));
 		}, config);
 	};
 
-	this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
-		expectAsserts(3);
+    this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
 
-		var config = this.getDefaultCssConfig();
+        var config = this.getDefaultCssConfig();
 
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, inner, startTime;
-			device = application.getDevice();
-			inner = this.createScrollableDiv(device);
-			startTime = Date.now();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, inner, onCompleteStub;
+            device = application.getDevice();
+            inner = this.createScrollableDiv(device);
+            onCompleteStub = this.sandbox.stub();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("-100px", inner.style.getPropertyValue("left"));
-					assertEquals("-200px", inner.style.getPropertyValue("top"));
-					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-				});
-				device.scrollElementTo({
-					el: this.div,
-					to: {
-						left: 100,
-						top: 200
-					},
-					skipAnim: true,
-					onComplete: onComplete
-				});
-			});
-		}, config);
-	};
-	
-   this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(3);
+            device.scrollElementTo({
+                el: this.div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: true,
+                onComplete: onCompleteStub
+            });
+
+            assertTrue(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
 
         var config = this.getDefaultCssConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, inner, startTime;
+            var device, inner, onCompleteStub;
             device = application.getDevice();
             inner = this.createScrollableDiv(device);
-            startTime = Date.now();
+            onCompleteStub = this.sandbox.stub();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var onComplete = callbacks.add(function() {
-                    assertEquals("-100px", inner.style.getPropertyValue("left"));
-                    assertEquals("-200px", inner.style.getPropertyValue("top"));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: this.div,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
+            device.scrollElementTo({
+                el: this.div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onCompleteStub
             });
+
+            assertTrue(onCompleteStub.calledOnce);
         }, config);
     };
 
@@ -259,7 +253,7 @@
 	 */
 	this.CSS3AnimationTest.prototype.testScrollElementRejectsNonMaskElement = function(queue) {
 		expectAsserts(1);
-		
+
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -274,18 +268,18 @@
 				},
 				skipAnim : false
 			});
-			
+
 			assertFalse(!!result);
 		}, config);
 	};
-	
+
 	/**
 	 * scrollElementTo() requires an element with an ID ending in _mask. Ensure that the method
 	 * returns a truthy result if this is correctly passed in.
 	 */
 	this.CSS3AnimationTest.prototype.testScrollElementToRequiresMaskElement = function(queue) {
 		expectAsserts(1);
-		
+
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -300,18 +294,18 @@
 				},
 				skipAnim : false
 			});
-			
+
 			assert('scrollElementTo() returns truthy result (not null)', !!result);
 		}, config);
 	};
-	
+
 	/**
 	 * scrollElementTo() requires an element with an ID ending in _mask and a child node.
 	 * Ensure that the method returns a falsy value if the _mask element has no children.
 	 */
 	this.CSS3AnimationTest.prototype.testScrollElementToRequiresMaskElementChild = function(queue) {
 		expectAsserts(1);
-		
+
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -319,7 +313,7 @@
 			device = application.getDevice();
 			inner = this.createScrollableDiv(device);
 			this.div.removeChild(inner); // this.div now has no children
-			
+
 			result = device.scrollElementTo({
 				el: this.div, // element has an id ending in _mask
 				to: {
@@ -328,260 +322,239 @@
 				},
 				skipAnim : false
 			});
-			
+
 			assertFalse(!!result);
 		}, config);
-	};	
+	};
 
-	this.CSS3AnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
-		expectAsserts(3);
+	this.CSS3AnimationTest.prototype.testMoveElementTo = function(queue) {
+		expectAsserts(2);
 
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, div, startTime;
+			var device, div;
 			device = application.getDevice();
 			div = this.createScrollableDiv(device);
-			startTime = Date.now();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("100px", div.style.getPropertyValue("left"));
-					assertEquals("200px", div.style.getPropertyValue("top"));
-					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-				});
-				device.moveElementTo({
-					el: div,
-					to: {
-						left: 100,
-						top: 200
-					},
-					skipAnim: false,
-					onComplete: onComplete
-				});
-
+			device.moveElementTo({
+				el: div,
+				to: {
+					left: 100,
+					top: 200
+				},
+				skipAnim: false
 			});
+
+			assertEquals("100px", div.style.getPropertyValue("left"));
+            assertEquals("200px", div.style.getPropertyValue("top"));
 		}, config);
 	};
 
-	this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
-		expectAsserts(3);
+	// TODO: need to test that moveElementTo() with skipAnim = false calls onComplete eventually
 
-		var config = this.getDefaultCssConfig();
+    this.CSS3AnimationTest.prototype.testMoveElementToWithAnimDoesNotCallOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
 
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, div, startTime;
-			device = application.getDevice();
-			div = this.createScrollableDiv(device);
-			startTime = Date.now();
+        var config = this.getDefaultCssConfig();
 
-			queue.call("Wait for tween", function(callbacks) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, div, onCompleteStub;
+            device = application.getDevice();
+            div = this.createScrollableDiv(device);
+            onCompleteStub = this.sandbox.stub();
 
-				var onComplete = callbacks.add(function() {
-					assertEquals("100px", div.style.getPropertyValue("left"));
-					assertEquals("200px", div.style.getPropertyValue("top"));
-					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-				});
-				device.moveElementTo({
-					el: div,
-					to: {
-						left: 100,
-						top: 200
-					},
-					skipAnim: true,
-					onComplete: onComplete
-				});
-			});
-		}, config);
-	};
-	
-   this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(3);
+            device.moveElementTo({
+                el: div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onCompleteStub
+            });
+
+            assert(onCompleteStub.notCalled);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, div, onCompleteStub;
+            device = application.getDevice();
+            div = this.createScrollableDiv(device);
+            onCompleteStub = this.sandbox.stub();
+
+            device.moveElementTo({
+                el: div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: true,
+                onComplete: onCompleteStub
+            });
+
+            assert(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
 
         var config = this.getDefaultCssConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div, onCompleteStub;
             device = application.getDevice();
             div = this.createScrollableDiv(device);
-            startTime = Date.now();
+            onCompleteStub = this.sandbox.stub();
 
-            queue.call("Wait for tween", function(callbacks) {
-
-                var onComplete = callbacks.add(function() {
-                    assertEquals("100px", div.style.getPropertyValue("left"));
-                    assertEquals("200px", div.style.getPropertyValue("top"));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
+            device.moveElementTo({
+                el: div,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onCompleteStub
             });
+
+            assert(onCompleteStub.calledOnce);
         }, config);
     };
 
-
-	this.CSS3AnimationTest.prototype.testHideElementWithAnim = function(queue) {
-		expectAsserts(3);
-
-		var config = this.getDefaultCssConfig();
-
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, startTime;
-			device = application.getDevice();
-			startTime = Date.now();
-			this.createScrollableDiv(device);
-
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("hidden", this.div.style.visibility);
-					assertEquals(0, parseFloat(this.div.style.opacity));
-					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-				});
-				device.hideElement({
-					el: this.div,
-					skipAnim: false,
-					onComplete: onComplete
-				});
-			});
-		}, config);
-	};
-	this.CSS3AnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
-		expectAsserts(3);
+	this.CSS3AnimationTest.prototype.testHideElement = function(queue) {
+		expectAsserts(2);
 
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, startTime;
-			device = application.getDevice();
-			startTime = Date.now();
+			var device = application.getDevice();
 			this.createScrollableDiv(device);
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("hidden", this.div.style.visibility);
-					assertEquals(0, parseFloat(this.div.style.opacity));
-					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-				});
-				device.hideElement({
-					el: this.div,
-					skipAnim: true,
-					onComplete: onComplete
-				});
+			device.hideElement({
+				el: this.div,
+				skipAnim: false
 			});
+
+            assertEquals("hidden", this.div.style.visibility);
+            assertEquals(0, parseFloat(this.div.style.opacity));
 		}, config);
 	};
-	
-   this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
-        expectAsserts(3);
 
-        var config = this.getDefaultCssConfig(); 
+	// TODO: need to test that hideElement() with skipAnim = false calls onComplete eventually
+
+    this.CSS3AnimationTest.prototype.testHideElementWithNoAnimCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, onCompleteStub;
+            device = application.getDevice();
+            onCompleteStub = this.sandbox.stub();
+            this.createScrollableDiv(device);
+
+            device.hideElement({
+                el: this.div,
+                skipAnim: true,
+                onComplete: onCompleteStub
+            });
+
+            assert(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, startTime;
+            var device, onCompleteStub;
             device = application.getDevice();
-            startTime = Date.now();
+            onCompleteStub = this.sandbox.stub();
             this.createScrollableDiv(device);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var onComplete = callbacks.add(function() {
-                    assertEquals("hidden", this.div.style.visibility);
-                    assertEquals(0, parseFloat(this.div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.hideElement({
-                    el: this.div,
-                    onComplete: onComplete
-                });
+            device.hideElement({
+                el: this.div,
+                onComplete: onCompleteStub
             });
+
+            assert(onCompleteStub.calledOnce);
         }, config);
     };
 
-	this.CSS3AnimationTest.prototype.testShowElementWithAnim = function(queue) {
-		expectAsserts(3);
+	this.CSS3AnimationTest.prototype.testShowElement = function(queue) {
+		expectAsserts(2);
 
 		var config = this.getDefaultCssConfig();
 
 		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, startTime;
-			device = application.getDevice();
-			startTime = Date.now();
+			var device = application.getDevice();
 			this.createScrollableDiv(device);
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("visible", this.div.style.visibility);
-					assertEquals(1, parseFloat(this.div.style.opacity));
-					assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-				});
-				device.showElement({
-					el: this.div,
-					skipAnim: false,
-					onComplete: onComplete
-				});
+			device.showElement({
+				el: this.div,
+				skipAnim: false
 			});
-		}, config);
-	};
-	this.CSS3AnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
-		expectAsserts(3);
 
-		var config = this.getDefaultCssConfig();
-
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device, startTime;
-			device = application.getDevice();
-			startTime = Date.now();
-			this.createScrollableDiv(device);
-
-			queue.call("Wait for tween", function(callbacks) {
-				var onComplete = callbacks.add(function() {
-					assertEquals("visible", this.div.style.visibility);
-					assertEquals(1, parseFloat(this.div.style.opacity));
-					assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-				});
-				device.showElement({
-					el: this.div,
-					skipAnim: true,
-					onComplete: onComplete
-				});
-			});
+            assertEquals("visible", this.div.style.visibility);
+            assertEquals(1, parseFloat(this.div.style.opacity));
 		}, config);
 	};
 
-    this.CSS3AnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
-        expectAsserts(3);
+	// TODO: need to test that showElement() with skipAnim = false calls onComplete eventually
 
-        var config = this.getDefaultCssConfig(); 
+	this.CSS3AnimationTest.prototype.testShowElementWithNoAnimCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device, onCompleteStub;
+            device = application.getDevice();
+            onCompleteStub = this.sandbox.stub();
+            this.createScrollableDiv(device);
+
+            device.showElement({
+                el: this.div,
+                skipAnim: true,
+                onComplete: onCompleteStub
+            });
+
+            assert(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testShowElementWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(1);
+
+        var config = this.getDefaultCssConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, startTime;
+            var device, onCompleteStub;
             device = application.getDevice();
-            startTime = Date.now();
+            onCompleteStub = this.sandbox.stub();
             this.createScrollableDiv(device);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var onComplete = callbacks.add(function() {
-                    assertEquals("visible", this.div.style.visibility);
-                    assertEquals(1, parseFloat(this.div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.showElement({
-                    el: this.div,
-                    onComplete: onComplete
-                });
+            device.showElement({
+                el: this.div,
+                onComplete: onCompleteStub
             });
+
+            assert(onCompleteStub.calledOnce);
         }, config);
     };
 
-    /**
+	/**
      * Where specific parameters for FPS, duration and easing are passed to showElement(), ensure
      * these are passed on the CSS3 transition property.
      */
@@ -594,19 +567,19 @@
             var device, div, transition;
             device = application.getDevice();
             div = device.createContainer("id");
-            
+
             device.showElement({
                 el: div,
                 duration: 123
             });
-            
+
             transition = this.getTransition(div);
-            
+
             assert('Valid transition property is set', !!transition);
             assertEquals('Duration passed through', 123, transition.duration);
         }, config);
     };
-    
+
     /**
      * Where specific parameters for FPS, duration and easing are passed to hideElement(), ensure
      * these are passed on to the CSS3 transition property.
@@ -625,14 +598,14 @@
                 el: div,
                 duration: 321
             });
-            
+
             transition = this.getTransition(div);
-            
+
             assert('Valid transition property is set', !!transition);
             assertEquals('Duration passed through', 321, transition.duration);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to showElement(),
      * and no defaults are specified in the device config file, ensure the hardcoded default parameters
@@ -647,18 +620,18 @@
             var device, div, transition;
             device = application.getDevice();
             div = device.createContainer("id");
-            
+
             device.showElement({
                 el: div // No animation properties provided, defaults will be used
             });
-            
+
             transition = this.getTransition(div);
-            
+
             assert('Valid transition property is set', !!transition);
             assertEquals('Duration passed through', 840, transition.duration);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to hideElement(),
      * and no defaults are specified in the device config file, ensure the hardcoded default parameters
@@ -673,18 +646,18 @@
             var device, div, transition;
             device = application.getDevice();
             div = device.createContainer("id");
-            
+
             device.hideElement({
                 el: div // No animation properties provided, defaults will be used
             });
-            
+
             transition = this.getTransition(div);
-            
+
             assert('Valid transition property is set', !!transition);
             assertEquals('Duration passed through', 840, transition.duration);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to showElement(),
      * ensure the defaults from the device config file are used.
@@ -695,27 +668,27 @@
         // This is the configuration!!
         var config;
         config = this.getDefaultCssConfig();
-        
+
         config.defaults = {
             "showElementFade": {
-                "fps": 11, 
+                "fps": 11,
                 "duration": 555,
                 "easing": "easeInCubic"
             }
         };
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
+            queue,
+            'lib/mockapplication',
             [
                 'antie/devices/anim/css3/transitiondefinition'
-            ], 
+            ],
             function(application, TransitionDefinition) {
                 var device, div, durSpy;
                 durSpy = this.sandbox.spy(TransitionDefinition.prototype, "getPropertyDuration").withArgs("opacity");
                 device = application.getDevice();
                 div = device.createContainer("id");
-                
+
                 device.showElement({
                     el: div // No animation properties provided, config will be used
                 });
@@ -731,29 +704,29 @@
     this.CSS3AnimationTest.prototype.testConfigurationHideAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-        // This is the configuration!!        
+        // This is the configuration!!
         var config;
         config = this.getDefaultCssConfig();
         config.defaults = {
             "hideElementFade": {
-                "fps": 22, 
+                "fps": 22,
                 "duration": 777,
                 "easing": "easeInQuint"
              }
         };
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
+            queue,
+            'lib/mockapplication',
             [
                 'antie/devices/anim/css3/transitiondefinition'
-            ], 
+            ],
             function(application, TransitionDefinition) {
                 var device, div, durSpy;
                 durSpy = this.sandbox.spy(TransitionDefinition.prototype, "getPropertyDuration").withArgs("opacity");
                 device = application.getDevice();
                 div = device.createContainer("id");
-                
+
                 device.hideElement({
                     el: div // No animation properties provided, config will be used
                 });
@@ -805,26 +778,25 @@
                 });
                 setSpy = this.sandbox.spy(el.style, 'setProperty');
 
-                queue.call("Wait for tween", function(callbacks) {
-                    var onComplete;
-                    onComplete = callbacks.add(function() {
-                        assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
-                    });
+                var clock = sinon.useFakeTimers();
 
-                    options = {
-                        el: el,
-                        from: { width: 60 },
-                        to: { width: 100 },
-                        duration: 50,
-                        onComplete: onComplete
-                    };
+                options = {
+                    el: el,
+                    from: { width: 60 },
+                    to: { width: 100 },
+                    duration: 50
+                };
 
-                    this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
+                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
 
-                    device.tweenElementStyle(options);
-                    assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
-                    setTimeout(onComplete, 50);
-                });
+                device.tweenElementStyle(options);
+                assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
+
+                clock.tick(50);
+
+                assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
+
+                clock.restore();
             },
             config
         );

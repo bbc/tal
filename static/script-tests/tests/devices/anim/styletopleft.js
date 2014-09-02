@@ -26,6 +26,14 @@
     // How many milliseconds to give a 'no animation' transition to complete
     var noAnimToleranceMs = 20;
 
+    // The default animation duration in tween.js is 840, so it's reasonable to think we should only need to tick for
+    // 840 to get the onComplete callback to be fired. However the callback passed to shifty that invokes onComplete
+    // doesn't run until tick 866.666666666667. This seems to be because the Shifty timeoutHandler waits for the
+    // animation to complete and it's only on the next tick (as determined by the easing function) that the Shifty stop
+    // method is called, and it is that which invokes the callback which invokes onComplete.
+    var DEFAULT_ONCOMPLETE_TIMEOUT = 867;
+
+
     // jshint newcap: false
     this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation");
 
@@ -62,7 +70,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
@@ -74,31 +82,32 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
 
         var config = this.getDefaultConfig();
 
@@ -112,27 +121,24 @@
             inner.style.top = "200px";
             inner.style.left = "100px";
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
-                onComplete = callbacks.add(function() {
-                    assert('onComplete called', true);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            var onComplete = this.sandbox.stub();
+
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+
+             assert(onComplete.calledOnce);
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
@@ -144,27 +150,23 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
         }, config);
     };
 
@@ -172,7 +174,7 @@
      * Test scrollElementTo() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
@@ -184,66 +186,60 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
-                    assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.scrollElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.scrollElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+            assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
+            assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
         }, config);
     };
 
 
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: 100,
-                        top: 200
-                    },
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            var onComplete = this.sandbox.stub();
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: 100,
+                    top: 200
+                },
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
         }, config);
     };
 
@@ -257,30 +253,32 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: div.style.left,
-                        top: div.style.top
-                    },
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: div.style.left,
+                    top: div.style.top
+                },
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
+
         }, config);
     };
 
@@ -294,27 +292,29 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(0, parseFloat(div.style.opacity));
-                });
-                device.hideElement({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        opacity: div.style.opacity
-                    },
-                    to: {
-                        opacity: 0
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.hideElement({
+                el: div,
+                style: div.style,
+                from: {
+                    opacity: div.style.opacity
+                },
+                to: {
+                    opacity: 0
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assertEquals(0, parseFloat(div.style.opacity));
+            assert(onComplete.calledOnce);
+
+            clock.restore();
+
         }, config);
     };
 
@@ -324,7 +324,7 @@
      * @param queue
      */
     this.StyleTopLeftAnimationTest.prototype.testShowAndHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = this.getDefaultConfig();
 
@@ -333,48 +333,50 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, hideElement, showElementonComplete, hideElementonComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
 
-                hideElement = function() {
-                    device.hideElement({
-                        el: div,
-                        style: div.style,
-                        from: {
-                            opacity: div.style.opacity
-                        },
-                        to: {
-                            opacity: 0
-                        },
-                        skipAnim: false,
-                        onComplete: hideElementonComplete
-                    });
-                };
+            var clock = sinon.useFakeTimers();
+            var showComplete = this.sandbox.stub();
 
-                showElementonComplete = callbacks.add(function() {
-                    assertEquals(1, parseFloat(div.style.opacity));
-                    hideElement();
-                });
-
-                hideElementonComplete = callbacks.add(function() {
-                    assertEquals(0, parseFloat(div.style.opacity));
-                });
-
-                device.showElement({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        opacity: div.style.opacity
-                    },
-                    to: {
-                        opacity: 1
-                    },
-                    skipAnim: false,
-                    onComplete: showElementonComplete
-                });
-                assert(tweenSpy.called);
+            device.showElement({
+                el: div,
+                style: div.style,
+                from: {
+                    opacity: div.style.opacity
+                },
+                to: {
+                    opacity: 1
+                },
+                skipAnim: false,
+                onComplete: showComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(showComplete.calledOnce);
+            assertEquals(1, parseFloat(div.style.opacity));
+
+            var hideComplete = this.sandbox.stub();
+
+            device.hideElement({
+                el: div,
+                style: div.style,
+                from: {
+                    opacity: div.style.opacity
+                },
+                to: {
+                    opacity: 0
+                },
+                skipAnim: false,
+                onComplete: hideComplete
+            });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(hideComplete.calledOnce);
+            assertEquals(0, parseFloat(div.style.opacity));
+
+            clock.restore();
+
         }, config);
     };
 
@@ -389,28 +391,30 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        top: 200
-                    },
-                    to: {
-                        top: 200
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    top: 200
+                },
+                to: {
+                    top: 200
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals(0, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+
+            clock.restore();
+
         }, config);
     };
 
@@ -424,33 +428,35 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    from: {
-                        left: 100
-                    },
-                    to: {
-                        left: 100
-                    },
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                from: {
+                    left: 100
+                },
+                to: {
+                    left: 100
+                },
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(0, parseFloat(div.style.top.replace(/px$/, '')));
+
+            clock.restore();
+
         }, config);
     };
 
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimNoMovement = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
 
         var config = this.getDefaultConfig();
 
@@ -462,59 +468,49 @@
             div.style.top = "200px";
             div.style.left = "100px";
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assert('onComplete called', true);
-                });
-
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+
         }, config);
     };
 
@@ -522,95 +518,85 @@
      * Test moveElementTo() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
-                    assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.moveElementTo({
-                    el: div,
-                    style: div.style,
-                    to: {
-                        left: 100,
-                        top: 200
-                    },
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.moveElementTo({
+                el: div,
+                style: div.style,
+                to: {
+                    left: 100,
+                    top: 200
+                },
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
+            assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
+
         }, config);
     };
 
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.hideElement({
-                    el: div,
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.hideElement({
+                el: div,
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
+            clock.restore();
+
         }, config);
     };
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.hideElement({
-                    el: div,
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.hideElement({
+                el: div,
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
         }, config);
     };
 
@@ -618,90 +604,81 @@
      * Test hideElement() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("hidden", div.style.visibility);
-                    assertEquals(0, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.hideElement({
+            device.hideElement({
                     el: div,
                     onComplete: onComplete
                 });
-                assertFalse(tweenSpy.called);
-            });
+
+            assert(onComplete.calledOnce);
+            assertEquals("hidden", div.style.visibility);
+            assertEquals(0, parseFloat(div.style.opacity));
+
         }, config);
     };
 
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var clock = sinon.useFakeTimers();
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("visible", div.style.visibility);
-                    assertEquals(1, parseFloat(div.style.opacity));
-                    assert("Took some time", Date.now() - startTime > noAnimToleranceMs);
-                });
-                device.showElement({
-                    el: div,
-                    skipAnim: false,
-                    onComplete: onComplete
-                });
-                assert(tweenSpy.called);
+            device.showElement({
+                el: div,
+                skipAnim: false,
+                onComplete: onComplete
             });
+
+            clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
+
+            assert(onComplete.calledOnce);
+            assertEquals("visible", div.style.visibility);
+            assertEquals(1, parseFloat(div.style.opacity));
+
+            clock.restore();
+
         }, config);
     };
+
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("visible", div.style.visibility);
-                    assertEquals(1, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.showElement({
-                    el: div,
-                    skipAnim: true,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.showElement({
+                el: div,
+                skipAnim: true,
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals("visible", div.style.visibility);
+            assertEquals(1, parseFloat(div.style.opacity));
+
         }, config);
     };
 
@@ -709,32 +686,27 @@
      * Test showElement() skips animation when specified in config.
      */
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var config = this.getDefaultConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, startTime;
+            var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
-            startTime = Date.now();
 
-            queue.call("Wait for tween", function(callbacks) {
-                var tweenSpy, onComplete;
-                tweenSpy = this.sandbox.spy(device, '_tween');
+            var onComplete = this.sandbox.stub();
 
-                onComplete = callbacks.add(function() {
-                    assertEquals("visible", div.style.visibility);
-                    assertEquals(1, parseFloat(div.style.opacity));
-                    assert("Complete (almost) immediately", Date.now() - startTime < noAnimToleranceMs);
-                });
-                device.showElement({
-                    el: div,
-                    onComplete: onComplete
-                });
-                assertFalse(tweenSpy.called);
+            device.showElement({
+                el: div,
+                onComplete: onComplete
             });
+
+            assert(onComplete.calledOnce);
+            assertEquals("visible", div.style.visibility);
+            assertEquals(1, parseFloat(div.style.opacity));
+
         }, config);
     };
 
@@ -986,7 +958,7 @@
             'lib/mockapplication',
             [],
             function(application) {
-                var device, div, el, options, completeSpy;
+                var device, el, options, completeSpy;
                 el = {
                     style: {
                         getPropertyValue: function(property) {
@@ -1031,7 +1003,7 @@
             'lib/mockapplication',
             [],
             function(application) {
-                var device, div, el, options, completeSpy;
+                var device, el, options, completeSpy;
                 el = {
                     style: {
                         getPropertyValue: function(property) {
@@ -1129,6 +1101,8 @@
                 device = application.getDevice();
                 div = _createScrollableDiv(device);
 
+                var clock = sinon.useFakeTimers();
+
                 device.tweenElementStyle(
                     {
                         el: el,
@@ -1143,15 +1117,13 @@
                         duration: 30
                     }
                 );
-                
-                queue.call('Check destinations after animation', function(callbacks) {
-                    var assertDestinationReached = callbacks.add(
-                        function () {
-                        assertEquals('To value of bottom has been set', 0, parseInt(el.style.bottom, 10));
-                        assertEquals('To value of right has been set', 100, parseInt(el.style.right, 10));
-                    });
-                    setTimeout(assertDestinationReached, 100);
-                });
+
+                clock.tick(100);
+
+                assertEquals('To value of bottom has been set', 0, parseInt(el.style.bottom, 10));
+                assertEquals('To value of right has been set', 100, parseInt(el.style.right, 10));
+
+                clock.restore();
 
             }, 
             config
@@ -1323,14 +1295,15 @@
         var config = this.getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var startTime, device, div1, div2;
+            var device, div1, div2;
             
-            startTime = Date.now();
             device = application.getDevice();
             div1 = device.createContainer("id");
             div2 = device.createContainer("id2");
             div1.style.left = '0px';
             div2.style.left = '0px';
+
+            var clock = sinon.useFakeTimers();
 
             // Start moving div1 immediately
             device.moveElementTo({
@@ -1346,49 +1319,33 @@
             });
 
             // Start moving div2 after 50ms, a quarter of a frame at 5fps
-            queue.call('Kick off second animation after a delay', function(callbacks) {
-                var moveElement = callbacks.add(function() {
-                    device.moveElementTo({
-                        el: div2,
-                        style: div2.style,
-                        to: {
-                            top: 100,
-                            left: 100
-                        },
-                        skipAnim: false,
-                        fps: 5,
-                        duration: 300
-                    });
-                });
-
-                setTimeout(moveElement, 50);
+            clock.tick(50);
+            device.moveElementTo({
+                el: div2,
+                style: div2.style,
+                to: {
+                    top: 100,
+                    left: 100
+                },
+                skipAnim: false,
+                fps: 5,
+                duration: 300
             });
 
-            // Poll for the style.left properties changing on the two divs. Ensure this happens at the same time
-            // (as far as possible with polling :/)
-            queue.call('Wait for style.left to change', function(callbacks) {
-                var assertions, timer;
-                // Wait until assertions have been done. Assert that the two divs have been updated by comparing
-                // their respective left positions.
-                // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
-                // in its timing even within itself, resulting in slightly different tween values from the same
-                // input.
-                assertions = callbacks.add(function() {
-                    var tolerance = 5;
-                    //console.log('div1.style.left: ' + div1.style.left);
-                    //console.log('div2.style.left: ' + div2.style.left);
-                    assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
-                });
+            while (!(parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1)) {
+                // Wait until a property changes (we expect both to change at the same time)
+                clock.tick(1);
+            }
 
-                // Poll for changes every 10ms. Perform assertions when one property changes.  
-                timer = setInterval(function() {
-                    // If either style.left property has changed, ensure the other has too
-                    if (parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1) {
-                        clearInterval(timer);
-                        assertions();
-                    }
-                }, 10);
-            });
+            // Assert that the two divs have been updated by comparing their respective left positions.
+            // Only ensure they're ROUGHLY similar, because the shifty library isn't completely accurate
+            // in its timing even within itself, resulting in slightly different tween values from the same
+            // input.
+            var tolerance = 5;
+            assert('Expecting div1 and div2 styles to be roughly equal', Math.abs(parseFloat(div1.style.left) - parseFloat(div2.style.left)) < tolerance);
+
+            clock.restore();
+
         }, config);
     };
 
@@ -1408,6 +1365,8 @@
             div.style.left = '0px';
             div.style.top = '0px';
 
+            var clock = sinon.useFakeTimers();
+
             anim = device.moveElementTo({
                 el: div,
                 style: div.style,
@@ -1423,14 +1382,14 @@
             assertFalse('Element in its end position (left)', div.style.top === "100px");
             assertFalse('Element in its end position (top)', div.style.top === "200px");
 
-            queue.call('Wait a moment and cancel the animation', function(callbacks) {
-                // Wait a fraction of a second, cancel animation, then check it's jumped to its end state.
-                setTimeout(callbacks.add(function() {
-                    device.stopAnimation(anim);
-                    assertEquals('Element in its end position (left)', '100px', div.style.left);
-                    assertEquals('Element in its end position (top)', '200px', div.style.top);
-                }), 100);
-            });
+            clock.tick(100);
+
+            device.stopAnimation(anim);
+            assertEquals('Element in its end position (left)', '100px', div.style.left);
+            assertEquals('Element in its end position (top)', '200px', div.style.top);
+
+            clock.restore();
+
         }, config);
     };
 
