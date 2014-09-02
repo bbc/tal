@@ -466,7 +466,7 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testCrossDomainPost = function(queue) {
-		expectAsserts(31);
+		expectAsserts(35);
 
         // FIXME - This is an awful, awful test introduced to replace a queue.call based JSTestDriver test that mocked
         // some, but not all, of the network traffic involved. Both this test and the production code that it is testing
@@ -474,6 +474,9 @@
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var setTimeoutSpy = this.sandbox.spy(window, "setTimeout");
+            var clearTimeoutSpy = this.sandbox.spy(window, "clearTimeout");
 
             var form = {
                 submit: this.sandbox.stub(),
@@ -520,6 +523,7 @@
             assertEquals("/test/script-tests/fixtures/blank.html#1", iframe.src);
             assertFunction(iframe.onload);
             assert(iframe.document.createElement.notCalled);
+            assert(setTimeoutSpy.calledOnce);
 
             iframe.contentWindow = {
                 location: { href: "/test/script-tests/fixtures/blank.html#1" },
@@ -569,43 +573,12 @@
             assert(opts.onLoad.calledOnce);
             assert(opts.onLoad.calledWith(response));
             assert(opts.onError.notCalled);
+            assert(setTimeoutSpy.calledOnce);
+            assert(clearTimeoutSpy.calledOnce);
+            assert(clearTimeoutSpy.calledWith(setTimeoutSpy.returnValues[0]));
 		});
 
 	};
-
-	this.DefaultNetworkTest.prototype.testCrossDomainPostEnsureTimeoutIsCancelledForSuccessfulSubmissions = function(queue) {
-        expectAsserts(1);
-
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            queue.call("Wait for cross domain post to timeout", function(callbacks) {
-
-                // We're posting to an unreachable endpoint, so will need to
-                // simulate the successful POST ourselves.
-                device.crossDomainPost("http://10.1.1.255", {"hello":"world"}, {
-                    onLoad: callbacks.add(function() { assert(true); }),
-                    onError: callbacks.addErrback('post should not timeout'),
-                    blankUrl: "/test/script-tests/fixtures/blank.html",
-                    timeout : 1
-                });
-
-                var iframes = document.body.getElementsByTagName("iframe");
-
-                var iframe = iframes[0];
-                iframe.addEventListener('load', function() {
-                    iframe.removeEventListener('load', arguments.callee);
-
-                    window.setTimeout(function() {
-                        // Simulate success of POST
-                        iframe.dispatchEvent(new Event('load'));
-                    }, 0);
-                });
-                // ensure timeout does not fire
-                this.waitFor(callbacks, 1500);
-            });
-        });
-
-    };
 
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
