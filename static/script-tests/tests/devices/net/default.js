@@ -466,42 +466,109 @@
 	};
 
 	this.DefaultNetworkTest.prototype.testCrossDomainPost = function(queue) {
-		expectAsserts(8);
+		expectAsserts(31);
+
+        // FIXME - This is an awful, awful test introduced to replace a queue.call based JSTestDriver test that mocked
+        // some, but not all, of the network traffic involved. Both this test and the production code that it is testing
+        // need a heap of refactoring and re-writing to clean them up.
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Wait for cross domain post", function(callbacks) {
 
-				// We're posting to an unreachable endpoint, so will need to
-				// simulate the successful POST ourselves.
-				device.crossDomainPost("http://10.1.1.255", {"goodbye":"salford", "hello":"world"}, {
-					onLoad: callbacks.add(function() { assert(true); }),
-					onError: callbacks.addErrback('post should complete succesfully'),
-					blankUrl: "/test/script-tests/fixtures/blank.html"
-				});
+            var form = {
+                submit: this.sandbox.stub(),
+                appendChild: this.sandbox.stub()
+            };
+            var iframe = {
+                style: { },
+                document: {
+                    createElement: this.sandbox.stub(),
+                    appendChild: this.sandbox.stub()
+                },
+                parentNode: {
+                    removeChild: this.sandbox.stub()
+                }
+            };
+            var inputs = [ ];
+            var createElementStub = this.sandbox.stub(document, "createElement", function(type) {
+                if (type === "iframe") {
+                    return iframe;
+                } else if (type === "input") {
+                    var input = { };
+                    inputs.push(input);
+                    return input;
+                }
+                throw "Unexpected creation";
+            });
+            var appendChildStub = this.sandbox.stub(document.body, "appendChild");
 
-				var iframes = document.body.getElementsByTagName("iframe");
-				assertEquals(1, iframes.length);
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub(),
+                blankUrl: "/test/script-tests/fixtures/blank.html"
+            };
 
-				var iframe = iframes[0];
-				iframe.addEventListener('load', function() {
-					iframe.removeEventListener('load', arguments.callee);
+            var postData = {"goodbye":"salford", "hello":"world"};
 
-					window.setTimeout(function() {
-						var doc = iframe.contentWindow.document;
-						var forms = doc.body.getElementsByTagName("form");
-						assertEquals(1, forms.length);
-						var fields = forms[0].getElementsByTagName("input");
-						assertEquals(2, fields.length);
-						assertEquals("goodbye", fields[0].name);
-						assertEquals("salford", fields[0].value);
-						assertEquals("hello", fields[1].name);
-						assertEquals("world", fields[1].value);
-						// Simulate success of POST
-						iframe.dispatchEvent(new Event('load'));
-					}, 0);
-				});
-			});
+            var url = "http://10.1.1.255/";
+
+            device.crossDomainPost(url, postData, opts);
+
+            assert(createElementStub.calledOnce);
+            assert(createElementStub.calledWith("iframe"));
+            assert(appendChildStub.calledWith(iframe));
+            assertEquals("/test/script-tests/fixtures/blank.html#1", iframe.src);
+            assertFunction(iframe.onload);
+            assert(iframe.document.createElement.notCalled);
+
+            iframe.contentWindow = {
+                location: { href: "/test/script-tests/fixtures/blank.html#1" },
+                document: {
+                    body: { appendChild: this.sandbox.stub() },
+                    createElement: this.sandbox.stub()
+                }
+            };
+
+            iframe.contentWindow.document.createElement.returns(form);
+
+            // Simulate loading of blank URL
+            iframe.onload();
+
+            assert(iframe.contentWindow.document.createElement.calledOnce);
+            assert(iframe.contentWindow.document.createElement.calledWith("form"));
+            assert(iframe.contentWindow.document.body.appendChild.calledOnce);
+            assert(iframe.contentWindow.document.body.appendChild.calledWith(form));
+            assertEquals(3,createElementStub.callCount);
+            assertEquals(2, inputs.length);
+
+            assertEquals("goodbye", inputs[0].name);
+            assertEquals("salford", inputs[0].value);
+            assertEquals("hidden", inputs[0].type);
+            assertEquals("hello", inputs[1].name);
+            assertEquals("world", inputs[1].value);
+            assertEquals("hidden", inputs[1].type);
+
+            assertEquals('POST', form.method);
+            assertEquals(url, form.action);
+            assert(form.appendChild.calledTwice);
+            assert(form.appendChild.calledWith(inputs[0]));
+            assert(form.appendChild.calledWith(inputs[1]));
+
+            assert(form.submit.calledOnce);
+            assertFunction(iframe.onload);
+
+            var response = { };
+            iframe.contentWindow.name = response;
+
+            // Simulate success of POST
+            iframe.onload();
+
+            assertNull(iframe.onload);
+            assert(iframe.parentNode.removeChild.calledOnce);
+            assert(iframe.parentNode.removeChild.calledWith(iframe));
+            assert(opts.onLoad.calledOnce);
+            assert(opts.onLoad.calledWith(response));
+            assert(opts.onError.notCalled);
 		});
 
 	};
