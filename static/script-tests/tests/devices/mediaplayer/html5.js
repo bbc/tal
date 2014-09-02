@@ -844,13 +844,16 @@
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
-    // - PlayFrom when stopped and there is a current time and we play from that current time.
+    // - PlayFrom when stopped and there is a current time and we play from that current time
+    //  - For example, setSource(), play(), stop(), playFrom(currentTime)
+    // TODO: test where we playFrom whilst paused, and no buffering is required so the device never fires 'finished buffering': needs the 'playing' event...
+    // TODO: clean up playFrom; its become a beast...
     // TODO: Playing event nuances:
     // - Remove the "playing" event listener on clean up
-    // - Handle when we call playFrom(x), pause() and then playing event occurs (so we end in paused not in playing)
-    // - Handle when we call pause(), resume(), stop() and then playing event occurs (so we end in stopped, not in playing)
-    // TODO: consider having a test where we playFrom the frame after the current frame whilst paused: should need the 'playing' event...
-    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
+    // - Handle when we call playFrom(x), pause() and then playing event occurs after (so we should end in paused not in playing)
+    // - Handle when we call pause(), resume(), stop() and then playing event occurs after (so we should end in stopped, not in playing)
+    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not?? Again, 'playing' event should fix this
+    // TODO: ?? Do we also need to handle the 'pause' event? Everywhere we've needed 'playing', we could have called pause immediately after the playFrom...
     // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
