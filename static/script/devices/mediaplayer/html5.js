@@ -117,10 +117,20 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
-                    case MediaPlayer.STATE.COMPLETE:
                         this._seekTo(time);
                         this._playIfNotAtEndOfMedia();
                         this._toBuffering();
+                        break;
+
+                    case MediaPlayer.STATE.COMPLETE:
+                        if (this._mediaElement.currentTime === this._getClampedTime(time)) {
+                            this._toBuffering();
+                            this._toComplete();
+                        } else {
+                            this._seekTo(time);
+                            this._playIfNotAtEndOfMedia();
+                            this._toBuffering();
+                        }
                         break;
 
                     default:

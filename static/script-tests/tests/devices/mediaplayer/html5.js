@@ -757,10 +757,39 @@
             assertEquals(6, stubCreateElementResults.video.removeEventListener.callCount);
         });
     };
-   
+
+    this.HTML5MediaPlayerTests.prototype.testPlayingFromTheEndWhenCompletedGoesToBufferingThenToCompleted = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+            stubCreateElementResults.video.currentTime = 100;
+
+            this._mediaPlayer.playFrom(110);
+
+            // We must have events indicating we pass through the buffering state and end in the complete state, even if
+            // the underlying media implementation does not re-emit the "ended" (end of media being reached) event for
+            // a second time - therefore wqe do not re-issue the reachEndOfMedia call.
+            assert(eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.COMPLETE, eventCallback.args[1][0].type);
+        });
+    };
+
+    // TODO: Determine if we need second copy with reach end of media called again.
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Test: playFrom(@end) when COMPLETED goes to buffering but does not return to completed (because the play is not fired because we're already at the end)
+    // TODO: Check that playFrom(currentTime) does the right thing in each state.
     // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
     // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
