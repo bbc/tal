@@ -223,7 +223,7 @@
             device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
 
             assert(createElementStub.calledTwice);
-            assertEquals('@import url("/test/script-tests/fixtures/dynamicstylesheet.css");', createElementStub.returnValues[1].innerHTML);
+            assertEquals("@import url('/test/script-tests/fixtures/dynamicstylesheet.css');", createElementStub.returnValues[1].innerHTML);
             assert(appendToHead.calledWith(createElementStub.returnValues[1]));
        });
     };
