@@ -758,7 +758,7 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testPlayingFromTheEndWhenCompletedGoesToBufferingThenToCompleted = function(queue) {
+    this.HTML5MediaPlayerTests.prototype.testPlayFromTheEndWhenCompletedGoesToBufferingThenToCompleted = function(queue) {
         expectAsserts(4);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -782,6 +782,29 @@
             assert(eventCallback.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.COMPLETE, eventCallback.args[1][0].type);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+            stubCreateElementResults.video.currentTime = 50;
+
+            this._mediaPlayer.playFrom(50);
+
+            assert(eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
         });
     };
 

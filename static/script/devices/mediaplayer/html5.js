@@ -116,6 +116,17 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        if (this._mediaElement.currentTime === this._getClampedTime(time)) {
+                            this._toBuffering();
+                            this._toPlaying();
+                        } else {
+                            this._seekTo(time);
+                            this._playIfNotAtEndOfMedia();
+                            this._toBuffering();
+                        }
+                        break;
+
+
                     case MediaPlayer.STATE.PAUSED:
                         this._seekTo(time);
                         this._playIfNotAtEndOfMedia();
