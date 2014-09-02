@@ -70,12 +70,14 @@ require.def(
                     this._wrapOnDeviceBuffering = function (event) { self._onDeviceBuffering(event); };
                     this._wrapOnStatus = function (event) { self._onStatus(event); };
                     this._wrapOnMetadata = function (event) { self._onMetadata(event); };
+                    this._wrapOnPlaying = function (event) { self._onPlaying(event); };
                     this._mediaElement.addEventListener("canplaythrough", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("error", this._wrapOnMediaError);
                     this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
                     this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering);
                     this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus);
                     this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata);
+                    this._mediaElement.addEventListener("playing", this._wrapOnPlaying);
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -350,6 +352,10 @@ require.def(
                     }
                 }
                 this._targetSeekTime = undefined;
+            },
+
+            _onPlaying: function() {
+                this._toPlaying();
             },
 
             _waitingToSeek: function () {

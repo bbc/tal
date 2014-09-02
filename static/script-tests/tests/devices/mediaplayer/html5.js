@@ -808,11 +808,48 @@
         });
     };
 
-    // TODO: Determine if we need second copy with reach end of media called again.
+    this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPausedGoesToBufferingThenToPlaying = function(queue) {
+        expectAsserts(7);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assert(stubCreateElementResults.video.play.calledOnce);
+
+            stubCreateElementResults.video.currentTime = 50;
+
+            this._mediaPlayer.pause();
+
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+
+            this._mediaPlayer.playFrom(50);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+
+            assert(eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+
+            mediaEventListeners.playing();
+
+            assert(eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+        });
+    };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Test: playFrom(@end) when COMPLETED goes to buffering but does not return to completed (because the play is not fired because we're already at the end)
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
+    // - PlayFrom when stopped and there is a current time and we play from that current time.
+    // TODO: Playing event nuances:
+    // - Remove the "playing" event listener on clean up
+    // - Handle when we call playFrom(x), pause() and then playing event occurs (so we end in paused not in playing)
+    // - Handle when we call pause(), resume(), stop() and then playing event occurs (so we end in stopped, not in playing)
+    // TODO: consider having a test where we playFrom the frame after the current frame whilst paused: should need the 'playing' event...
     // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
     // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
