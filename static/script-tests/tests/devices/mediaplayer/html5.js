@@ -762,7 +762,7 @@
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Test: playFrom(@end) when COMPLETED goes to buffering but does not return to completed (because the play is not fired because we're already at the end)
     // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
-    // TODO: ? Consider switching from using a <source> element to setting the 'src' attribute on the <media> element. It would be much simpler...
+    // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
