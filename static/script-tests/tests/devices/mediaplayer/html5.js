@@ -760,7 +760,9 @@
    
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // ? Consider switching from using a <source> element to setting the 'src' attribute on the <media> element. It would be much simpler...
+    // TODO: Test: playFrom(@end) goes to buffering not completed??
+    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
+    // TODO: ? Consider switching from using a <source> element to setting the 'src' attribute on the <media> element. It would be much simpler...
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
@@ -768,9 +770,12 @@
     // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled if/as required
     // TODO: Ensure all errors are logged.
-    // Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
-    // Add a STOP button to the catal new media videoplayer page
-    // ? Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
+    // TODO: Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
+    // TODO: Add a STOP button to the catal new media videoplayer page
+    // TODO: Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
+    //   * Experiment: ability to run common tests against real device backend, not just against mocked device
+    //    ? Do the tests make sense that way? What about device mocking hooks etc?
+    //    ? How would we run/deploy these? They're no use if we can't automate them on the device hive…
 
     //---------------------
     // Common tests
