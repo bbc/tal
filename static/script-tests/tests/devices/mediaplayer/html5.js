@@ -760,7 +760,7 @@
    
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Test: playFrom(@end) goes to buffering not completed??
+    // TODO: Test: playFrom(@end) when COMPLETED goes to buffering but does not return to completed (because the play is not fired because we're already at the end)
     // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not??
     // TODO: ? Consider switching from using a <source> element to setting the 'src' attribute on the <media> element. It would be much simpler...
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
