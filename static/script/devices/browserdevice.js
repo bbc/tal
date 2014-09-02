@@ -191,7 +191,7 @@ require.def("antie/devices/browserdevice",
                 if (callback && supportsCssRules()) {
                     var style = this._createElement("style");
                     style.type = "text/css";
-                    style.innerHTML = '@import url("' + url + '");';
+                    style.innerHTML = "@import url('" + url + "');";
                     style.className = "added-by-antie";
                     document.getElementsByTagName("head")[0].appendChild(style);
 
