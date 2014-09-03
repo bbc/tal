@@ -1332,9 +1332,15 @@
                 duration: 300
             });
 
+            var timeout = 2000;
             while (!(parseInt(div1.style.left, 10) > 1 || parseInt(div2.style.left, 10) > 1)) {
                 // Wait until a property changes (we expect both to change at the same time)
                 clock.tick(1);
+                timeout--;
+                if (timeout <= 0) {
+                    fail("Properties not changed");
+                    break;
+                }
             }
 
             // Assert that the two divs have been updated by comparing their respective left positions.
