@@ -701,10 +701,10 @@
 			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
 
 			var testUrl = "http://test";
-      var message = { test : "myValue" };
-      var payload = "{\"test\":\"myValue\"}";
-      var successSpy = this.sandbox.spy();
-      var errorSpy = this.sandbox.spy();
+            var message = { test : "myValue" };
+            var payload = "{\"test\":\"myValue\"}";
+            var successSpy = this.sandbox.spy();
+            var errorSpy = this.sandbox.spy();
 			var opts = { onLoad : successSpy, onError : errorSpy, fieldName : "myField", blankUrl: "/not-blank.html" };
 
 			var crossDomainPostStub = this.sandbox.stub(BrowserDevice.prototype, 'crossDomainPost');
