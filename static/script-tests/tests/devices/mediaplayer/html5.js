@@ -842,7 +842,23 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromAfterMetadata = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+            assert(stubCreateElementResults.video.play.calledOnce);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not?? Again, 'playing' event should fix this
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
     // - PlayFrom when stopped and there is a current time and we play from that current time
     //  - For example, setSource(), play(), stop(), playFrom(currentTime)
@@ -852,7 +868,6 @@
     // - Remove the "playing" event listener on clean up
     // - Handle when we call playFrom(x), pause() and then playing event occurs after (so we should end in paused not in playing)
     // - Handle when we call pause(), resume(), stop() and then playing event occurs after (so we should end in stopped, not in playing)
-    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not?? Again, 'playing' event should fix this
     // TODO: ?? Do we also need to handle the 'pause' event? Everywhere we've needed 'playing', we could have called pause immediately after the playFrom...
     // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
@@ -862,6 +877,7 @@
     // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
     // TODO: Ensure playback events handled if/as required
     // TODO: Ensure all errors are logged.
+    // TODO: Make sure all 'FIXME' and 'TODO' comments in the implementation are resolved
     // TODO: Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
     // TODO: Add a STOP button to the catal new media videoplayer page
     // TODO: Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...

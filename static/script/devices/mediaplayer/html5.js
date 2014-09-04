@@ -104,12 +104,19 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
-                        this._targetSeekTime = time;
-                        this._toBuffering();
+                        if (this._deferSeeking()) {
+                            this._targetSeekTime = time;
+                            this._toBuffering();
+                        } else {
+                            //FIXME: This inconsistent ordering is painful. Instead, ALWAYS defer seeks when STOPPED, and process deferred seeks when entering BUFFERING (if possible)
+                            this._toBuffering();
+                            this._seekTo(time);
+                            this._playIfNotAtEndOfMedia();
+                        }
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (this._waitingToSeek()) {
+                        if (this._deferSeeking()) {
                             this._targetSeekTime = time;
                         } else {
                             this._seekTo(time);
@@ -162,7 +169,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (!this._waitingToSeek()) {
+                        if (!this._deferSeeking()) {
                             this._mediaElement.pause();
                         }
                         break;
@@ -344,7 +351,7 @@ require.def(
             },
 
             _onMetadata: function() {
-                if (this._waitingToSeek()) {
+                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_deferSeeking() && " on the front of this?
                     this._seekTo(this._targetSeekTime);
                     this._playIfNotAtEndOfMedia();
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -352,14 +359,15 @@ require.def(
                     }
                 }
                 this._targetSeekTime = undefined;
+                this._deferSeeks = false;
             },
 
             _onPlaying: function() {
                 this._toPlaying();
             },
 
-            _waitingToSeek: function () {
-                return this._targetSeekTime !== undefined;
+            _deferSeeking: function () {
+                return this._deferSeeks;
             },
 
             _seekTo: function(time) {
@@ -368,6 +376,7 @@ require.def(
 
             _playIfNotAtEndOfMedia: function() {
                 if (!this._isAtEndOfMedia()) {
+                    // FIXME: comment here explaining why...
                     this._mediaElement.play();
                 }
             },
@@ -383,6 +392,7 @@ require.def(
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
                 this._destroyMediaElement();
+                this._deferSeeks = true;
             },
 
             _destroyMediaElement: function () {
