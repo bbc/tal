@@ -102,54 +102,33 @@ require.def(
             */
             playFrom: function (time) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                this._targetSeekTime = time;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
-                        if (this._deferSeeking()) {
-                            this._targetSeekTime = time;
-                            this._toBuffering();
-                        } else {
-                            //FIXME: This inconsistent ordering is painful. Instead, ALWAYS defer seeks when STOPPED, and process deferred seeks when entering BUFFERING (if possible)
-                            this._toBuffering();
-                            this._seekTo(time);
-                            this._playIfNotAtEndOfMedia();
-                        }
+                    case MediaPlayer.STATE.PAUSED:
+                        this._toBuffering();
+                        this._playFromIfReady();
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (this._deferSeeking()) {
-                            this._targetSeekTime = time;
-                        } else {
-                            this._seekTo(time);
-                            this._playIfNotAtEndOfMedia();
-                        }
+                        this._playFromIfReady();
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                        if (this._mediaElement.currentTime === this._getClampedTime(time)) {
-                            this._toBuffering();
-                            this._toPlaying();
+                        this._toBuffering();
+                        if (this._tryingToSeekToCurrentTime(time)) {
+                            this._toPlaying();                            
                         } else {
-                            this._seekTo(time);
-                            this._playIfNotAtEndOfMedia();
-                            this._toBuffering();
+                            this._playFromIfReady();
                         }
                         break;
 
-
-                    case MediaPlayer.STATE.PAUSED:
-                        this._seekTo(time);
-                        this._playIfNotAtEndOfMedia();
-                        this._toBuffering();
-                        break;
-
                     case MediaPlayer.STATE.COMPLETE:
-                        if (this._mediaElement.currentTime === this._getClampedTime(time)) {
-                            this._toBuffering();
-                            this._toComplete();
+                        this._toBuffering();
+                        if (this._tryingToSeekToCurrentTime(time)) {
+                            this._toComplete();                            
                         } else {
-                            this._seekTo(time);
-                            this._playIfNotAtEndOfMedia();
-                            this._toBuffering();
+                            this._playFromIfReady();
                         }
                         break;
 
@@ -169,7 +148,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (!this._deferSeeking()) {
+                        if (!this._notReadyToPlay()) {
                             this._mediaElement.pause();
                         }
                         break;
@@ -351,7 +330,22 @@ require.def(
             },
 
             _onMetadata: function() {
-                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_deferSeeking() && " on the front of this?
+                this._deferSeeks = false;
+                this._deferredPlayFrom();
+            },
+
+            _onPlaying: function() {
+                this._toPlaying();
+            },
+
+            _playFromIfReady: function () {
+                if (!this._notReadyToPlay()) {
+                    this._deferredPlayFrom();
+                }
+            },
+
+            _deferredPlayFrom: function () {
+                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_notReadyToPlay() && " on the front of this?
                     this._seekTo(this._targetSeekTime);
                     this._playIfNotAtEndOfMedia();
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -359,15 +353,14 @@ require.def(
                     }
                 }
                 this._targetSeekTime = undefined;
-                this._deferSeeks = false;
             },
 
-            _onPlaying: function() {
-                this._toPlaying();
-            },
-
-            _deferSeeking: function () {
+            _notReadyToPlay: function () {
                 return this._deferSeeks;
+            },
+
+            _tryingToSeekToCurrentTime: function (time) {
+                return this._mediaElement.currentTime === this._getClampedTime(time);
             },
 
             _seekTo: function(time) {
