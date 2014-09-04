@@ -148,7 +148,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (!this._notReadyToPlay()) {
+                        if (this._readyToPlayFrom()) {
                             this._mediaElement.pause();
                         }
                         break;
@@ -339,13 +339,13 @@ require.def(
             },
 
             _playFromIfReady: function () {
-                if (!this._notReadyToPlay()) {
+                if (this._readyToPlayFrom()) {
                     this._deferredPlayFrom();
                 }
             },
 
             _deferredPlayFrom: function () {
-                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_notReadyToPlay() && " on the front of this?
+                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_readyToPlayFrom() && " on the front of this?
                     this._seekTo(this._targetSeekTime);
                     this._playIfNotAtEndOfMedia();
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -355,8 +355,8 @@ require.def(
                 this._targetSeekTime = undefined;
             },
 
-            _notReadyToPlay: function () {
-                return this._deferSeeks;
+            _readyToPlayFrom: function () {
+                return !this._deferSeeks;
             },
 
             _tryingToSeekToCurrentTime: function (time) {
