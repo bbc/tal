@@ -858,7 +858,6 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Test: Dont call playFrom() till after loademetadata event. Should play but may not?? Again, 'playing' event should fix this
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
     // - PlayFrom when stopped and there is a current time and we play from that current time
     //  - For example, setSource(), play(), stop(), playFrom(currentTime)

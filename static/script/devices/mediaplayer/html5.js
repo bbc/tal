@@ -149,6 +149,7 @@ require.def(
 
                     case MediaPlayer.STATE.BUFFERING:
                         if (this._readyToPlayFrom) {
+                            // If we are not ready to playFrom, then calling pause would seek to the start of media, which we might not want.
                             this._mediaElement.pause();
                         }
                         break;
