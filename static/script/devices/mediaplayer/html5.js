@@ -148,7 +148,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (this._readyToPlayFrom()) {
+                        if (this._readyToPlayFrom) {
                             this._mediaElement.pause();
                         }
                         break;
@@ -330,7 +330,7 @@ require.def(
             },
 
             _onMetadata: function() {
-                this._deferSeeks = false;
+                this._readyToPlayFrom = true;
                 if (this._waitingToPlayFrom()) {
                     this._deferredPlayFrom();
                 }
@@ -341,7 +341,7 @@ require.def(
             },
 
             _playFromIfReady: function() {
-                if (this._readyToPlayFrom()) {
+                if (this._readyToPlayFrom) {
                     if (this._waitingToPlayFrom()) {
                         this._deferredPlayFrom();
                     }
@@ -359,10 +359,6 @@ require.def(
                     this._mediaElement.pause();
                 }
                 this._targetSeekTime = undefined;
-            },
-
-            _readyToPlayFrom: function() {
-                return !this._deferSeeks;
             },
 
             _tryingToSeekToCurrentTime: function(time) {
@@ -391,7 +387,7 @@ require.def(
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
                 this._destroyMediaElement();
-                this._deferSeeks = true;
+                this._readyToPlayFrom = false;
             },
 
             _destroyMediaElement: function() {
