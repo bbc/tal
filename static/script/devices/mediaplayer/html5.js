@@ -46,7 +46,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            setSource: function (mediaType, url, mimeType) {
+            setSource: function(mediaType, url, mimeType) {
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
                     this._source = url;
@@ -64,13 +64,13 @@ require.def(
                     this._mediaElement.style.height = "100%";
 
                     var self = this;
-                    this._wrapOnFinishedBuffering = function (event) { self._onFinishedBuffering(event); };
-                    this._wrapOnMediaError = function (event) { self._onMediaError(event); };
-                    this._wrapOnEndOfMedia = function (event) { self._onEndOfMedia(event); };
-                    this._wrapOnDeviceBuffering = function (event) { self._onDeviceBuffering(event); };
-                    this._wrapOnStatus = function (event) { self._onStatus(event); };
-                    this._wrapOnMetadata = function (event) { self._onMetadata(event); };
-                    this._wrapOnPlaying = function (event) { self._onPlaying(event); };
+                    this._wrapOnFinishedBuffering = function(event) { self._onFinishedBuffering(event); };
+                    this._wrapOnMediaError = function(event) { self._onMediaError(event); };
+                    this._wrapOnEndOfMedia = function(event) { self._onEndOfMedia(event); };
+                    this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(event); };
+                    this._wrapOnStatus = function(event) { self._onStatus(event); };
+                    this._wrapOnMetadata = function(event) { self._onMetadata(event); };
+                    this._wrapOnPlaying = function(event) { self._onPlaying(event); };
                     this._mediaElement.addEventListener("canplaythrough", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("error", this._wrapOnMediaError);
                     this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
@@ -85,7 +85,7 @@ require.def(
                     var source = device._createElement("source");
                     source.src = url;
                     source.type = mimeType;
-                    source.addEventListener("error", function (event) { self._onSourceError(event); });
+                    source.addEventListener("error", function(event) { self._onSourceError(event); });
                     device.appendChildElement(this._mediaElement, source);
 
                     this._mediaElement.preload = "auto";
@@ -100,7 +100,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            playFrom: function (time) {
+            playFrom: function(time) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = time;
                 switch (this.getState()) {
@@ -141,7 +141,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            pause: function () {
+            pause: function() {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PAUSED:
@@ -167,7 +167,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            resume : function () {
+            resume : function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
@@ -188,7 +188,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            stop: function () {
+            stop: function() {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
@@ -207,7 +207,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            reset: function () {
+            reset: function() {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
@@ -223,21 +223,21 @@ require.def(
             /**
             * @inheritDoc
             */
-            getSource: function () {
+            getSource: function() {
                 return this._source;
             },
 
             /**
             * @inheritDoc
             */
-            getMimeType: function () {
+            getMimeType: function() {
                 return this._mimeType;
             },
 
             /**
             * @inheritDoc
             */
-            getCurrentTime: function () {
+            getCurrentTime: function() {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
@@ -255,7 +255,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getRange: function () {
+            getRange: function() {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
@@ -267,7 +267,7 @@ require.def(
                 return undefined;
             },
 
-            _getSeekableRange: function () {
+            _getSeekableRange: function() {
                 if (this._mediaElement) {
                     var seekable = this._mediaElement.seekable;
                     var logger = RuntimeContext.getDevice().getLogger();
@@ -291,7 +291,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getState: function () {
+            getState: function() {
                 return this._state;
             },
 
@@ -331,35 +331,41 @@ require.def(
 
             _onMetadata: function() {
                 this._deferSeeks = false;
-                this._deferredPlayFrom();
+                if (this._waitingToPlayFrom()) {
+                    this._deferredPlayFrom();
+                }
             },
 
             _onPlaying: function() {
                 this._toPlaying();
             },
 
-            _playFromIfReady: function () {
+            _playFromIfReady: function() {
                 if (this._readyToPlayFrom()) {
-                    this._deferredPlayFrom();
+                    if (this._waitingToPlayFrom()) {
+                        this._deferredPlayFrom();
+                    }
                 }
             },
 
-            _deferredPlayFrom: function () {
-                if (this._targetSeekTime !== undefined) { // FIXME: should there be "_readyToPlayFrom() && " on the front of this?
-                    this._seekTo(this._targetSeekTime);
-                    this._playIfNotAtEndOfMedia();
-                    if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                        this._mediaElement.pause();
-                    }
+            _waitingToPlayFrom: function() {
+                return this._targetSeekTime !== undefined;
+            },
+
+            _deferredPlayFrom: function() {
+                this._seekTo(this._targetSeekTime);
+                this._playIfNotAtEndOfMedia();
+                if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                    this._mediaElement.pause();
                 }
                 this._targetSeekTime = undefined;
             },
 
-            _readyToPlayFrom: function () {
+            _readyToPlayFrom: function() {
                 return !this._deferSeeks;
             },
 
-            _tryingToSeekToCurrentTime: function (time) {
+            _tryingToSeekToCurrentTime: function(time) {
                 return this._mediaElement.currentTime === this._getClampedTime(time);
             },
 
@@ -374,12 +380,12 @@ require.def(
                 }
             },
 
-            _isAtEndOfMedia: function () {
+            _isAtEndOfMedia: function() {
                 var range = this.getRange();
                 return this._mediaElement.currentTime === range.end;
             },
 
-            _wipe: function () {
+            _wipe: function() {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
@@ -388,7 +394,7 @@ require.def(
                 this._deferSeeks = true;
             },
 
-            _destroyMediaElement: function () {
+            _destroyMediaElement: function() {
                 if (this._mediaElement) {
                     this._mediaElement.removeEventListener("canplaythrough", this._wrapOnFinishedBuffering);
                     this._mediaElement.removeEventListener("error", this._wrapOnMediaError);
@@ -404,37 +410,37 @@ require.def(
                 }
             },
 
-            _toStopped: function () {
+            _toStopped: function() {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },
 
-            _toBuffering: function () {
+            _toBuffering: function() {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
             },
 
-            _toPlaying: function () {
+            _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
             },
 
-            _toPaused: function () {
+            _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
             },
 
-            _toComplete: function () {
+            _toComplete: function() {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
 
-            _toEmpty: function () {
+            _toEmpty: function() {
                 this._wipe();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function (errorMessage) {
+            _toError: function(errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
