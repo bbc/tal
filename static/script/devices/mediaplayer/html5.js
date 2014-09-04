@@ -116,7 +116,7 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (this._tryingToSeekToCurrentTime(time)) {
+                        if (this._tryingToSeekToCurrentTime()) {
                             this._toPlaying();                            
                         } else {
                             this._playFromIfReady();
@@ -125,7 +125,7 @@ require.def(
 
                     case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
-                        if (this._tryingToSeekToCurrentTime(time)) {
+                        if (this._tryingToSeekToCurrentTime()) {
                             this._toComplete();                            
                         } else {
                             this._playFromIfReady();
@@ -361,8 +361,8 @@ require.def(
                 this._targetSeekTime = undefined;
             },
 
-            _tryingToSeekToCurrentTime: function(time) {
-                return this._mediaElement.currentTime === this._getClampedTime(time);
+            _tryingToSeekToCurrentTime: function() {
+                return this._mediaElement.currentTime === this._getClampedTime(this._targetSeekTime);
             },
 
             _seekTo: function(time) {
