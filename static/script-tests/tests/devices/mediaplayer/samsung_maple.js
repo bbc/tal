@@ -41,7 +41,7 @@
             mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {
-            mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            window.SamsungMapleOnRenderError();
         },
         reachEndOfMedia: function(mediaPlayer) {
             mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
@@ -68,9 +68,48 @@
         this.sandbox.restore();
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/samsung_maple", "antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayerImpl, MediaPlayer) {
+                this._device = application.getDevice();
+                self._mediaPlayer = this._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
+            }, config);
+    };
+
     //---------------------
     // Samsung Maple specific tests
     //---------------------
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorAddedDuringSetSource = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            assertUndefined(window.SamsungMapleOnRenderError);
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertFunction(window.SamsungMapleOnRenderError);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertFunction(window.SamsungMapleOnRenderError);
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            assertUndefined(window.SamsungMapleOnRenderError);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnReset = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertFunction(window.SamsungMapleOnRenderError);
+            this._mediaPlayer.reset();
+            assertUndefined(window.SamsungMapleOnRenderError);
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure errors are logged.

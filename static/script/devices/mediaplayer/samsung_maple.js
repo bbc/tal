@@ -50,6 +50,7 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
+                    this._registerEventHandlers();
                     this._toStopped();
                 } else {
                     this._toError();
@@ -216,12 +217,27 @@ require.def(
                 }
             },
 
+            _registerEventHandlers: function() {
+                var self = this;
+                window.SamsungMapleOnRenderError = function () {
+                    self._onDeviceError();
+                };
+            },
+
+            _unregisterEventHandlers: function() {
+                var eventHandlers = [ 'SamsungMapleOnRenderError' ];
+                for (var i = 0; i < eventHandlers.length; i++){
+                    delete window[eventHandlers[i]];
+                }
+            },
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._currentTime = undefined; // FIXME
                 this._range = undefined; // FIXME
+                this._unregisterEventHandlers();
             },
 
             _toStopped: function () {
