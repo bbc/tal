@@ -1,3 +1,5 @@
+/* global webapis */
+
 /**
  * @fileOverview Requirejs module containing the antie.devices.broadcastsource.samsungtvsource class.
  *
@@ -35,6 +37,8 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
         'antie/events/tunerpresentingevent'
     ],
     function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
+        'use strict';
+
         /**
          * Contains a Samsung Maple implementation of the antie broadcast TV source.
          * @see http://www.samsungdforum.com/Guide/ref00014/PL_WINDOW_SOURCE.html

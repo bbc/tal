@@ -1,3 +1,5 @@
+/* global jstestdriver */
+
 /**
  * @fileOverview Requirejs module containing base antie.devices.logging.jstestdriver class.
  *
@@ -32,6 +34,8 @@ require.def(
 	],
 	function( Module, Device ) 
 	{
+		'use strict';
+
 		var enabledLevels = null;
 		var loggingMethods = {
 			/**
