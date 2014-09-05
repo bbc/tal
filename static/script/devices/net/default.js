@@ -76,7 +76,7 @@ require.def(
 			var head = document.getElementsByTagName("head")[0];
 			head.appendChild(script);
 			return script;
-		},
+		};
 		
 		/**
 		 * Loads a resource from a URL protected by device authentication.
@@ -87,7 +87,7 @@ require.def(
 		Device.prototype.loadAuthenticatedURL = function(url, opts) {
 			// Simple implementation - assuming XHR in browser can perform client-authenticated SSL requests
 			return this.loadURL(url, opts);
-		},
+		};
 		/**
 		 * Loads a resource from a URL.
 		 * @param {String} url The URL to load.
@@ -125,7 +125,7 @@ require.def(
 				}
 			}
 			return xhr;
-		},
+		};
 		/**
 		 * Performs a POST HTTP request to a URL on a different host/domain.
 		 * @param {String} url The URL to post to.
@@ -211,7 +211,7 @@ require.def(
 
 			timeoutHandle = setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
-		},
+		};
 		
         /**
          * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
@@ -246,7 +246,7 @@ require.def(
                }
                this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
            }
-        },
+        };
 
         /**
          * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability

@@ -138,6 +138,7 @@ require.def('antie/widgets/horizontalcarousel',
 			},
 			refreshViewport: function() {
 				var _centerWidget = this._activeChildWidget || this._childWidgetOrder[0];
+				var i;
 				if(!_centerWidget) {
 					return;
 				}
@@ -146,7 +147,7 @@ require.def('antie/widgets/horizontalcarousel',
 					this.setAutoRenderChildren(true);
 
 					var device = this.getCurrentApplication().getDevice();
-					var i, index, elpos, elsize;
+					var index, elpos, elsize;
 
 					if(!_centerWidget.outputElement) {
 						_centerWidget.outputElement = _centerWidget.render(device);
@@ -190,6 +191,9 @@ require.def('antie/widgets/horizontalcarousel',
 
 					this.setAutoRenderChildren(false);
 				} else if((this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_CLASSES) && this.outputElement && _centerWidget.outputElement) {
+
+					var node, w;
+
 					device = this.getCurrentApplication().getDevice();
 					elpos = device.getElementOffset(_centerWidget.outputElement);
 					elsize = device.getElementSize(_centerWidget.outputElement);
@@ -205,10 +209,10 @@ require.def('antie/widgets/horizontalcarousel',
 
 					var count = this._childWidgetOrder.length;
 
-					for(var i=0; i<nodes.length; i++) {
-						var node = nodes[i];
+					for(i=0; i<nodes.length; i++) {
+						node = nodes[i];
 						if(!node.cloneOfWidget) {
-							var w = this._childWidgetOrder[i - this._prefixClones];
+							w = this._childWidgetOrder[i - this._prefixClones];
 							if(w) {
 								w.removeClass('inviewport');
 								w.removeClass('nearviewport');
@@ -216,11 +220,11 @@ require.def('antie/widgets/horizontalcarousel',
 						}
 					}
 
-					for(var i=0; i<nodes.length; i++) {
-						var node = nodes[i];
+					for(i=0; i<nodes.length; i++) {
+						node = nodes[i];
 						var nodepos = device.getElementOffset(node);
 						var nodesize = device.getElementSize(node);
-						var w = node.cloneOfWidget || this._childWidgetOrder[i - this._prefixClones];
+						w = node.cloneOfWidget || this._childWidgetOrder[i - this._prefixClones];
 						if(!w) { continue; }
 
 						if(((nodepos.left + nodesize.width) >= viewportLeft) && (nodepos.left < viewportRight)) {
@@ -383,12 +387,13 @@ require.def('antie/widgets/horizontalcarousel',
 					var visibleWidth = 0;
 					var i = 0;
 					var prefixClones = 0;
+					var w;
 				
 					this._nodeOffset = 0;
 					this._childWidgetsInDocument = [];
 
 					if(this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_NONE) {
-						for(var w=0; w<this._childWidgetOrder.length; w++) {
+						for(w=0; w<this._childWidgetOrder.length; w++) {
 							this._childWidgetOrder[w].addClass('inviewport');
 						}
 					}
@@ -417,10 +422,9 @@ require.def('antie/widgets/horizontalcarousel',
 						// TODO: For carousels with items that all have the same width we can use 'maskSize.width / 2'
 
 						var requiredWidth = this._multiWidthItems ? maskSize.width : Math.ceil(maskSize.width / 2);
-
 						while(copyWidth < requiredWidth) {
-							var w = this._childWidgetOrder[i];
 							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
+							w = this._childWidgetOrder[i];
 							clone.cloneOfWidget = w;
 
 							if(w.hasClass('active')) {
@@ -431,7 +435,7 @@ require.def('antie/widgets/horizontalcarousel',
 								device.removeClassFromElement(clone, 'buttonFocussed', true);
 							}
 							device.appendChildElement(this.outputElement, clone);
-							var w = device.getElementSize(w.outputElement).width;
+							w = device.getElementSize(w.outputElement).width;
 							if(i === 0 && this._childWidgetOrder.length !== 1) {
 								requiredWidth += w;
 							}
@@ -443,7 +447,7 @@ require.def('antie/widgets/horizontalcarousel',
 						copyWidth = 0;
 						i = this._childWidgetOrder.length-1;
 						while(copyWidth < requiredWidth) {
-							var w = this._childWidgetOrder[i];
+							w = this._childWidgetOrder[i];
 							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
 							clone.cloneOfWidget = w;
 

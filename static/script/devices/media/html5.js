@@ -36,6 +36,7 @@ require.def(
         'antie/application'
     ],
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, Application) {
+
         var currentPlayer = null;
         var isMuted = null;
         var currentVolume = -1;
@@ -308,7 +309,7 @@ require.def(
                     delete sourceElements[sourceElementIndex];
                 }
 
-                delete sourceElements;
+                sourceElements = null;
 
 
                 // Remove event listeners

@@ -45,8 +45,8 @@ require.def('antie/events/pagechangeevent',
 				this.countername = countername;
 				this.labels = labels;
 				this._super('pagechange');
-				if (log) {
-					log('Page change:', countername, labels);
+				if (window.log) {
+					window.log('Page change:', countername, labels);
 				}
 			}
 		});

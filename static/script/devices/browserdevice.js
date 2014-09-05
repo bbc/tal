@@ -31,6 +31,7 @@ require.def("antie/devices/browserdevice",
         "antie/historian"
     ],
     function(Device, KeyEvent, Historian) {
+        'use strict';
 
         function trim(str) {
             return str.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -216,7 +217,7 @@ require.def("antie/devices/browserdevice",
                     // http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
                     if (callback) {
                         var img = this._createElement("img");
-                        function done() {
+                        var done = function() {
                             img.onerror = function() {};
                             callback(url);
                             img.parentNode.removeChild(img);
@@ -514,8 +515,8 @@ require.def("antie/devices/browserdevice",
                     stylesheetElements.push(linkElements[i]);
                 }
 
-                for (var i = 0; i < styleElements.length; i++) {
-                    stylesheetElements.push(styleElements[i]);
+                for (var j = 0; j < styleElements.length; j++) {
+                    stylesheetElements.push(styleElements[j]);
                 }
 
                 return stylesheetElements;

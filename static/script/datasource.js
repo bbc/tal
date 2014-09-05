@@ -27,6 +27,7 @@
 require.def('antie/datasource',
 	['antie/class'],
 	function(Class) {
+
 		/**
 		 * Utility class to wrap disparate functions into a common interface for binding to lists.
 		 * @name antie.DataSource

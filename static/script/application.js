@@ -55,6 +55,7 @@ require.def('antie/application',
 			 * @constructor
 			 * @ignore
 			 */
+
 			init: function(rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride) {
 				RuntimeContext.setCurrentApplication(this);
 
