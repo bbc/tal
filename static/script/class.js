@@ -61,11 +61,11 @@ require.def('antie/class', function() {
         }
     
 		// The dummy class constructor
-		function newClass() {
+		var newClass = function() {
 			// All construction is actually done in the init method
 			if ( !initializing && this.init )
 				this.init.apply(this, arguments);
-		}
+		};
         
         // Populate our constructed prototype object
         newClass.prototype = proto;

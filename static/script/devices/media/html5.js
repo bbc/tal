@@ -36,6 +36,7 @@ require.def(
         'antie/application'
     ],
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, Application) {
+        'use strict';
 
         var currentPlayer = null;
         var isMuted = null;
