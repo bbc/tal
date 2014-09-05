@@ -37,11 +37,8 @@
 
 	this.LoggingTest.prototype.testDefaultLog = function(queue) {
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the LOG method
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all"
-			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+		var loglevel = "all";
+        var config = getConfig(loglevel);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -56,12 +53,8 @@
 
 	this.LoggingTest.prototype.testDefaultDebug = function(queue) {
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the DEBUG method
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all"
-			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var config = getConfig(loglevel);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -76,11 +69,8 @@
 
 	this.LoggingTest.prototype.testDefaultInfo = function(queue) {
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the INFO method
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all"
-			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var config = getConfig(loglevel);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -95,11 +85,8 @@
 
 	this.LoggingTest.prototype.testDefaultWarn = function(queue) {
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the WARN method
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all"
-			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var config = getConfig(loglevel);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -114,11 +101,8 @@
 
 	this.LoggingTest.prototype.testDefaultError = function(queue) {
 		//load all logging modules and set logging level to all - but don't select a logging strat - test that we get the default module and call the ERROR method
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all"
-			  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var config = getConfig(loglevel);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -133,12 +117,9 @@
 
    this.LoggingTest.prototype.testLoggingLevelError = function(queue) {
         // set log level to Error with default (console) logger. Ensure error messages ONLY are logged.
-        var config = {
-                "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-                    "level": "error", "strategy": "default"
-                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+       var loglevel = "error";
+       var logstrategy = "default";
+       var config = getConfig(loglevel, logstrategy);
 
         expectAsserts(5);
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -157,12 +138,9 @@
 
 	this.LoggingTest.prototype.testLoggingLevelWarn = function(queue) {
 		// set log level to Warn with default (console) logger. Ensure error and warn messages ONLY are logged.
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "warn", "strategy": "default"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+		var loglevel = "warn";
+		var logstrategy = "default";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -181,12 +159,9 @@
 
    this.LoggingTest.prototype.testLoggingLevelInfo = function(queue) {
         // set log level to Info with default (console) logger. Ensure error, warn, log and info messages ONLY are logged.
-        var config = {
-                "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-                    "level": "info", "strategy": "default"
-                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+       var loglevel = "info";
+       var logstrategy = "default";
+       var config = getConfig(loglevel, logstrategy);
 
         expectAsserts(5);
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -205,12 +180,9 @@
 
     this.LoggingTest.prototype.testLoggingLevelDebug = function(queue) {
         // set log level to Debug with default (console) logger. Ensure all messages are logged.
-        var config = {
-                "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-                    "level": "debug", "strategy": "default"
-                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "debug";
+        var logstrategy = "default";
+        var config = getConfig(loglevel, logstrategy);
 
         expectAsserts(5);
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -229,12 +201,9 @@
 
     this.LoggingTest.prototype.testLoggingLevelAll = function(queue) {
         // set log level to All with default (console) logger. Ensure all messages are logged (equivalent to 'debug' level).
-        var config = {
-                "modules":{"base":"antie/devices/browserdevice",
-                "modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-                    "level": "all", "strategy": "default"
-                  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "default";
+        var config = getConfig(loglevel, logstrategy);
 
         expectAsserts(5);
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -253,11 +222,9 @@
 
 	this.LoggingTest.prototype.testLoggingLevelNone = function(queue) {
 	    // set log level to None with default (console) logger. Ensure error and warn messages ONLY are logged.
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				    "level": "none", "strategy": "default"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "none";
+        var logstrategy = "default";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(5);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -277,12 +244,9 @@
 	this.LoggingTest.prototype.testLoggingSetAlert = function(queue) {
 
 		// ensure the Alert logging strategy can be configured
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "all", "strategy" : "alert"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "alert";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -297,12 +261,9 @@
 	this.LoggingTest.prototype.testLoggingSetConsume = function(queue) {
 
         // ensure the Consume logging strategy can be configured
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "all", "strategy" : "consumelog"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "consumelog";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -317,12 +278,9 @@
 	this.LoggingTest.prototype.testLoggingSetJsTestDriver = function(queue) {
 
         // ensure the JsTestDriver logging strategy can be configured
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "all", "strategy" : "jstestdriver"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "jstestdriver";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -337,12 +295,9 @@
 	this.LoggingTest.prototype.testLoggingSetOnScreen = function(queue) {
 
 		// ensure the onscreen logging strategy can be configured
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "all", "strategy" : "onscreen"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "onscreen";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -357,12 +312,9 @@
 	this.LoggingTest.prototype.testLoggingSetXhr = function(queue) {
 
 		// ensure the XHR logging strategy can be configured
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-					"level": "all", "strategy" : "xhr"
-				  },"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-
+        var loglevel = "all";
+        var logstrategy = "xhr";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -375,11 +327,9 @@
 	};
 
 	this.LoggingTest.prototype.testSavingSaves = function(queue) {
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all", "strategy": "saving"
-				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var logstrategy = "saving";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -394,11 +344,9 @@
 	};
 
 	this.LoggingTest.prototype.testSavingSavesLogLevel = function (queue) {
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all", "strategy": "saving"
-				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var logstrategy = "saving";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -412,11 +360,9 @@
 	};
 
 	this.LoggingTest.prototype.testSavingSavesLogMessage = function (queue) {
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all", "strategy": "saving"
-				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var logstrategy = "saving";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -431,11 +377,9 @@
 	};
 
 	this.LoggingTest.prototype.testSavingStoresMultipleMessages = function (queue) {
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all", "strategy": "saving"
-				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var logstrategy = "saving";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -452,11 +396,9 @@
 	};
 
 	this.LoggingTest.prototype.testSavingClearsMessagesAfterRetrieved = function (queue) {
-		var config = {
-				"modules":{"base":"antie/devices/browserdevice",
-				"modifiers":["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]},"logging": {
-				"level": "all", "strategy": "saving"
-				},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var loglevel = "all";
+        var logstrategy = "saving";
+        var config = getConfig(loglevel, logstrategy);
 
 		expectAsserts(1);
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -490,5 +432,15 @@
       logger.log('Log message');
       logger.warn('Warn message');
       logger.error('Error message');
+  }
+
+  function getConfig(level, strategy) {
+      return {
+          "modules": {"base": "antie/devices/browserdevice",
+              "modifiers": ["antie/devices/logging/default", "antie/devices/logging/alert", "antie/devices/logging/jstestdriver", "antie/devices/logging/onscreen", "antie/devices/logging/xhr", "antie/devices/logging/consumelog", "antie/devices/logging/saving"]}, "logging": {
+              "level": level, "strategy": strategy
+          }, "input": {"map": {}}, "layouts": [
+              {"width": 960, "height": 540, "module": "fixtures/layouts/default", "classes": ["browserdevice540p"]}
+          ], "deviceConfigurationKey": "devices-html5-1"};
   }
 })();
