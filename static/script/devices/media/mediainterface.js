@@ -30,6 +30,8 @@ require.def(
         'antie/class'
     ],
     function(Class) {
+        'use strict';
+
         var MediaInterface = Class.extend({
 
             /**

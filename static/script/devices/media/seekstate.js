@@ -31,6 +31,7 @@ require.def('antie/devices/media/seekstate',
     ],
 
     function(Class, MediaEvent){
+        'use strict';
 
         var State = {
                         None        : 0,

@@ -31,6 +31,8 @@ require.def(
 		'antie/storageprovider'
 	],
 	function(Device, StorageProvider) {
+		'use strict';
+
 		// http://www.quirksmode.org/js/cookies.html
 		var namespaces = {};
 

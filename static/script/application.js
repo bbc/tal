@@ -34,7 +34,8 @@ require.def('antie/application',
 		'antie/devices/device'
 	],
 	function(Class, RuntimeContext, ComponentContainer, Button, List, Device) {
-		
+		'use strict';
+
 		/**
 		 * Abstract base class for Bigscreen applications.
 		 * @name antie.Application
@@ -184,7 +185,7 @@ require.def('antie/application',
 				if(callback) {
 					var currentlyLoadingIndex = -1;
 					var self = this;
-					function cssLoadedCallback() {
+					var cssLoadedCallback = function() {
 						if(++currentlyLoadingIndex < css.length) {
 							self._device.loadStyleSheet(styleBaseUrl + css[currentlyLoadingIndex], cssLoadedCallback);
 						} else {

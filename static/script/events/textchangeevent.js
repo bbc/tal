@@ -27,6 +27,8 @@
 require.def('antie/events/textchangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when text is changed by an onscreen keyboard
 		 * @name antie.events.TextChangeEvent

@@ -27,6 +27,8 @@
 require.def('antie/widgets/listitem',
 	['antie/widgets/container'],
 	function(Container) {
+		'use strict';
+
 		/**
 		 * The ListItem widget is a container widget that is used by the {@link antie.widgets.List} widget when set to <code>List.RENDER_MODE_LIST</code>.
 		 * If you wish to control the classNames and id of list items, you can manually create them in your component/formatter and append them to the list.

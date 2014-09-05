@@ -27,6 +27,8 @@
 require.def('antie/events/pagechangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when the page has changed (for stat reporting)
 		 * @name antie.events.PageChangeEvent

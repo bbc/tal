@@ -31,6 +31,7 @@ require.def(
 		'antie/devices/media/html5'
 	],
 	function (HTML5Player) {
+		'use strict';
 
 		HTML5Player.prototype._requiresWebkitMemoryLeakFix = function() {
 			return true;

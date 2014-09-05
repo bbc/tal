@@ -27,6 +27,8 @@
 require.def('antie/events/networkstatuschangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when the network state of a device changes (e.g. it goes offline).
 		 * @name antie.events.NetworkStatusChangeEvent

@@ -36,6 +36,8 @@ require.def('antie/runtimecontext',
 	 * @private
 	 */
 	function(Class) {
+		'use strict';
+
 		var applicationObject;
 
 		var RuntimeContext = Class.extend(/** @lends antie.RuntimeContext.prototype */ {
