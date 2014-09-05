@@ -28,6 +28,7 @@ require.def(
 	'antie/devices/exit/closewindow',
 	['antie/devices/browserdevice'],
 	function(Device) {
+        'use strict';
 
         /**
 	     * Exits the application by invoking the window.close method
