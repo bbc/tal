@@ -1,3 +1,7 @@
+/** 
+ * Surpression of JSHint 'Don't make functions within a loop'
+ */
+/* jshint -W083 */
 /**
  * @fileOverview Requirejs module containing HTML5 video and audio media wrapper
  *
