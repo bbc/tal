@@ -72,8 +72,22 @@
     // Samsung Maple specific tests
     //---------------------
 
+    // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
+    // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
+    // TODO: See if all three plugins required by the media/samsung_maple modifier are required
+    // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
+    // TODO: Clean up methods added to window (for use as e.g. playerPlugin.OnRenderingComplete) on tear-down
+    // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
+    // -- "hide" is needed for newer devices
+    // -- "unload" is needed for older devices - media/samsung_maple_unload
+    // BE AWARE: Properties are set on the plugin that contain the name of a function on window which are the callback to call when the given event happens (e.g. media/samsung_maple.js:125)
+    // TODO: Determine if we need to call our own time update method - media/samsung_maple calls it in a ocuple of places (onRenderingComplete and onCurrentPlayTime)
+    // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
+    // TODO: Determine if calls (e.g. JumpForward) are blocking
+    // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
 
     //---------------------
     // Common tests
