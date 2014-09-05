@@ -917,6 +917,7 @@
     //    ? Do the tests make sense that way? What about device mocking hooks etc?
     //    ? How would we run/deploy these? They're no use if we can't automate them on the device hive…
     // TODO: test in firefox
+    // TODO: Sort out type annotations for MediaPlayer function params.
 
     //---------------------
     // Common tests
