@@ -857,10 +857,37 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPlayedThenStoppedGoesToBufferingThenToPlaying = function(queue) {
+        expectAsserts(5);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+            stubCreateElementResults.video.currentTime = 50;
+
+            this._mediaPlayer.stop();
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+
+            this._mediaPlayer.playFrom(50);
+
+            assert(stubCreateElementResults.video.play.calledTwice);
+
+            assert(eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+
+            mediaEventListeners.playing();
+
+            assert(eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
-    // - PlayFrom when stopped and there is a current time and we play from that current time
-    //  - For example, setSource(), play(), stop(), playFrom(currentTime)
+    // - If PLAYING and then playFrom somewhere that is already buffered, do we get enough playing/canplaythrough events to get us out of BUFFERING?
     // TODO: test where we playFrom whilst paused, and no buffering is required so the device never fires 'finished buffering': needs the 'playing' event...
     // TODO: clean up playFrom; its become a beast...
     // TODO: Playing event nuances:
@@ -883,6 +910,7 @@
     //   * Experiment: ability to run common tests against real device backend, not just against mocked device
     //    ? Do the tests make sense that way? What about device mocking hooks etc?
     //    ? How would we run/deploy these? They're no use if we can't automate them on the device hive…
+    // TODO: test in firefox
 
     //---------------------
     // Common tests

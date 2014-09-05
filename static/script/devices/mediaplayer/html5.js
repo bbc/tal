@@ -117,7 +117,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
                         if (this._tryingToSeekToCurrentTime()) {
-                            this._toPlaying();                            
+                            this._toPlaying();
                         } else {
                             this._playFromIfReady();
                         }
@@ -126,7 +126,7 @@ require.def(
                     case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
                         if (this._tryingToSeekToCurrentTime()) {
-                            this._toComplete();                            
+                            this._toComplete();
                         } else {
                             this._playFromIfReady();
                         }
