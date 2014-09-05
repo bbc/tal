@@ -372,7 +372,8 @@ require.def(
 
             _playIfNotAtEndOfMedia: function() {
                 if (!this._isAtEndOfMedia()) {
-                    // FIXME: comment here explaining why...
+                    // Playing while at the end of the media can cause it to re-start from the start.
+                    // Avoid this by not playing if we're already at the end.
                     this._mediaElement.play();
                 }
             },
