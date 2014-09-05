@@ -28,6 +28,8 @@ require.def(
 	'antie/devices/net/default',
 	['antie/devices/browserdevice'],
 	function(Device) {
+        'use strict';
+
 		/**
 		 * Loads an external script that calls a specified callback function.
 		 * Used for loading data via JSON-P.
