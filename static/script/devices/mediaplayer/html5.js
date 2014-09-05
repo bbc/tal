@@ -100,9 +100,9 @@ require.def(
             /**
             * @inheritDoc
             */
-            playFrom: function(time) {
+            playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                this._targetSeekTime = time;
+                this._targetSeekTime = seconds;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
@@ -297,15 +297,7 @@ require.def(
             },
 
             _onFinishedBuffering: function() {
-                if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
-                    return;
-
-                } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._toPaused();
-
-                } else {
-                    this._toPlaying();
-                }
+                this._exitBuffering();
             },
 
             _onMediaError: function(evt) {
@@ -338,7 +330,19 @@ require.def(
             },
 
             _onPlaying: function() {
-                this._toPlaying();
+                this._exitBuffering();
+            },
+
+            _exitBuffering: function () {
+                if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
+                    return;
+
+                } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                    this._toPaused();
+
+                } else {
+                    this._toPlaying();
+                }
             },
 
             _playFromIfReady: function() {
@@ -366,8 +370,8 @@ require.def(
                 return this._mediaElement.currentTime === this._getClampedTime(this._targetSeekTime);
             },
 
-            _seekTo: function(time) {
-                this._mediaElement.currentTime = this._getClampedTime(time);
+            _seekTo: function(seconds) {
+                this._mediaElement.currentTime = this._getClampedTime(seconds);
             },
 
             _playIfNotAtEndOfMedia: function() {

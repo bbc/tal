@@ -80,8 +80,8 @@ require.def(
             /**
             * @inheritDoc
             */
-            playFrom: function (time) {
-                this._targetSeekTime = time;
+            playFrom: function (seconds) {
+                this._targetSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:

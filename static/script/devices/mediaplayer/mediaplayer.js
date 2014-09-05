@@ -90,17 +90,17 @@ require.def(
 
             /**
              * Clamp a time value so it does not exceed the current range.
-             * @param time The time value to clamp
+             * @param seconds The time value to clamp in seconds from the start of the media
              * @protected
              */
-            _getClampedTime: function(time) {
+            _getClampedTime: function(seconds) {
                 var range = this.getRange();
-                if (time < range.start) {
+                if (seconds < range.start) {
                     return range.start;
-                } else if (time > range.end) {
+                } else if (seconds > range.end) {
                     return range.end;
                 } else {
-                    return time;
+                    return seconds;
                 }
             },
 
@@ -122,8 +122,9 @@ require.def(
             * This may transition to the buffering state if enough media data is not yet available to play.
             * If the media is buffering, call this to resume playback in a playing state once buffering ends.
             * Calling this in state EMPTY is an error.
+            * @param seconds time to play from in seconds from the start of the media
             */
-            playFrom: function (time) {
+            playFrom: function (seconds) {
                 throw new Error("playFrom method has not been implemented");
             },
 
@@ -201,7 +202,7 @@ require.def(
             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
             * For live playback, 'end' is the current live time.
             * For live playback, both 'start' and 'end' may advance over time.
-            * If no range§ is available, then this returns an object with 'start' and 'end' properties which both have the value undefined.
+            * If no range is available, then this returns an object with 'start' and 'end' properties which both have the value undefined.
             * @return object Object with 'start' and 'end' numeric properties.
             */
             getRange: function () {

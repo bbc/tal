@@ -886,8 +886,14 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
+    // TODO: Make the 'time' types much clearer in the MediaPlayer class. If not new type, then name and document units.
+    // TODO: Stop using 'canplaythrough' event and replace with 'playing'
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
     // - If PLAYING and then playFrom somewhere that is already buffered, do we get enough playing/canplaythrough events to get us out of BUFFERING?
+    //  ! Wont get 'playing' or 'canplaythrough', will only get 'seeked'
+    // TODO: If we are already BUFFERING and we get the 'waiting' HTML5 event, we fire a second Buffering event...
+    // - Same if in PLAYING and get playing event...
+    // - And others! but partially fixed by '_exitBuffering'
     // TODO: test where we playFrom whilst paused, and no buffering is required so the device never fires 'finished buffering': needs the 'playing' event...
     // TODO: clean up playFrom; its become a beast...
     // TODO: Playing event nuances:
