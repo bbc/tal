@@ -51,7 +51,6 @@ require.def("antie/devices/browserdevice",
              */
             init: function(config) {
                 this._super(config);
-                this._textSizeCache = {};
 
                 this.addClassToElement(this.getTopLevelElement(), "notanimating");
             },
@@ -442,39 +441,6 @@ require.def("antie/devices/browserdevice",
                 return clone;
             },
             /**
-             * Get the height (in pixels) of a given block of text (of a provided set of class names) when constrained to a fixed width.
-             *
-             * @deprecated This function does not always give accurate results. When measuring size, it only takes into account
-             * the classes on the text element being measured. It doesn't consider any CSS styles that may have been passed down
-             * through the DOM.
-             *
-             * @param {String} text The text to measure.
-             * @param {Integer} maxWidth The width the text is constrained to.
-             * @param {Array} classNames An array of class names which define the style of the text.
-             * @returns The height (in pixels) that is required to display this block of text.
-             */
-            getTextHeight: function(text, maxWidth, classNames) {
-                /// TODO: is there a more efficient way of doing this?
-                var cacheKey = maxWidth + ":" + classNames.join(" ") + ":" + text;
-                var height;
-                if (!(height = this._textSizeCache[cacheKey])) {
-                    if (!this._measureTextElement) {
-                        this._measureTextElement = this.createLabel("measure", null, "fW");
-                        this._measureTextElement.style.display = "block";
-                        this._measureTextElement.style.position = "absolute";
-                        this._measureTextElement.style.top = "-10000px";
-                        this._measureTextElement.style.left = "-10000px";
-                        this.appendChildElement(document.body, this._measureTextElement);
-                    }
-                    this._measureTextElement.className = classNames.join(" ");
-                    this._measureTextElement.style.width = (typeof maxWidth === 'number') ? maxWidth + "px" : maxWidth;
-                    this._measureTextElement.innerHTML = text;
-
-                    height = this._textSizeCache[cacheKey] = this._measureTextElement.clientHeight;
-                }
-                return height;
-            },
-            /**
              * Returns all direct children of an element which have the provided tagName.
              * @param {Element} el The element who's children you wish to search.
              * @param {String} tagName The tag name you are looking for.
@@ -486,7 +452,7 @@ require.def("antie/devices/browserdevice",
                 for (var i = 0; i < el.childNodes.length; i++) {
                     if(el.childNodes[i].tagName){
                         if (el.childNodes[i].tagName.toLowerCase() == tagName) {
-                        children.push(el.childNodes[i]);
+                            children.push(el.childNodes[i]);
                         }
                     }
                 }
@@ -535,10 +501,10 @@ require.def("antie/devices/browserdevice",
 //                        left: rect.left - parentRect.left
 //                    };
 //                } else {
-                    offsets = {
-                        top: el.offsetTop,
-                        left: el.offsetLeft
-                    };
+                offsets = {
+                    top: el.offsetTop,
+                    left: el.offsetLeft
+                };
 //                }
                 return offsets;
             },
@@ -567,7 +533,7 @@ require.def("antie/devices/browserdevice",
              */
             setCurrentRoute: function(route) {
                 var history = this.getHistorian().toString();
-                
+
                 if (route.length > 0) {
                     window.location.hash = "#" + route.join("/") + history;
                 } else {
@@ -582,7 +548,7 @@ require.def("antie/devices/browserdevice",
                 var unescaped = unescape(window.location.hash).split(Historian.HISTORY_TOKEN, 1)[0];
                 return (unescaped.replace(/^#/, '').split('/'));
             },
-            
+
             /**
              * gets historian for current location
              * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
@@ -590,7 +556,7 @@ require.def("antie/devices/browserdevice",
             getHistorian: function() {
                 return new Historian(decodeURI(this.getWindowLocation().href));
             },
-            
+
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:
@@ -602,7 +568,6 @@ require.def("antie/devices/browserdevice",
             getWindowLocation: function() {
                 var windowLocation, copyProps, prop, i, newLocation;
                 windowLocation = this._windowLocation || window.location; // Allow stubbing for unit testing
-
                 // Has the device missed the route off the href? Fix this.
                 if (windowLocation.hash && windowLocation.hash.length > 1 && windowLocation.href && windowLocation.href.lastIndexOf('#') === -1) {
                     // Copy properties to new object, as modifying href on the original window.location triggers a navigation.

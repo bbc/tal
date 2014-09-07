@@ -32,13 +32,28 @@
 	this.LabelTest.prototype.tearDown = function() {
 		this.sandbox.restore();
 	};
+
+    function stubDeviceConfig(sandbox, device, deviceSupportsTruncation) {
+        sandbox.stub(device, "getConfig", function() {
+            return {
+                css: {
+                    supportsTextTruncation: deviceSupportsTruncation
+                }
+            };
+        });
+    }
+
+
 	this.LabelTest.prototype.testInterface = function(queue) {
 		expectAsserts(2);
 
 		queuedApplicationInit(
 			queue,
 			"lib/mockapplication",
-			["antie/widgets/label","antie/widgets/widget"],
+            [
+                "antie/widgets/label",
+                "antie/widgets/widget"
+            ],
 			function(application, Label, Widget) {
 				assertEquals('Label should be a function', 'function', typeof Label);
 				assert('Label should extend from Widget', new Label() instanceof Widget);
@@ -50,7 +65,7 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/label"],
+               ["antie/widgets/label"],
 				function(application, Label) {
 					var widget = new Label("hello", "world");
 
@@ -71,8 +86,9 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/label"],
+                ["antie/widgets/label"],
 				function(application, Label) {
+
 					var widget1 = new Label("hello");
 					assertEquals("hello", widget1.getText());
 
@@ -84,55 +100,156 @@
 				}
 		);
 	};
- 	this.LabelTest.prototype.testTruncation = function(queue) {
-		expectAsserts(9);
+
+	this.LabelTest.prototype.testTruncateTextCalledAfterTimeoutOfZeroWhenTruncationIsEnabledOnFirstRender = function(queue) {
+		expectAsserts(2);
 
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
 				["antie/widgets/label"],
 				function(application, Label) {
-					var text = "The Quick Brown Fox Jumped Over The Lazy Dog";
-					var widget1 = new Label(text);
-					application.getRootWidget().appendChildWidget(widget1);
-					assertEquals(text, widget1.getText());
+                    var device = application.getDevice();
+                    stubDeviceConfig(this.sandbox, device, false);
 
-					var device = application.getDevice();
-					document.body.appendChild(application.getRootWidget().render(device));
-					var el = widget1.render(device);
-					el.style.display = "block";
-					var size = device.getElementSize(el);
+                    var clock = this.sandbox.useFakeTimers();
 
-					widget1.setTruncationMode(Label.TRUNCATION_MODE_NONE);
-					widget1.setText(text);
-					assertEquals(size, device.getElementSize(el));
-
-					widget1.setMaximumLines(1);
-					widget1.setText(text);
-					assertEquals(size, device.getElementSize(el));
-
-					widget1.setWidth(100);
-					widget1.setText(text);
-					assertEquals(size, device.getElementSize(el));
-
-					el.style.width = "100px";
-					widget1.setText(text);
-					assertNotEquals(size, device.getElementSize(el));
-
-					widget1.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
-					widget1.setText(text);
-
-					var newSize = device.getElementSize(el);
-					assert(newSize.width <= 100);
-					assertEquals(size.height, newSize.height);
-
-					widget1.setMaximumLines(2);
-					widget1.setText(text);
-
-					var newSize2 = device.getElementSize(el);
-					assert(newSize.width <= 100);
-					assertNotEquals(newSize.height, newSize2.height);
+                    var label = new Label("hello");
+                    var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
+                    label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                    label.render(device);
+                    assert(!truncateTextSpy.called);
+                    clock.tick(0);
+                    assert(truncateTextSpy.calledOnce);
 				}
 		);
 	};
+
+    this.LabelTest.prototype.testTruncateTextCalledImmediatelyWhenTruncationIsEnabledOnFutureRenders = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, false);
+
+                var clock = this.sandbox.useFakeTimers();
+
+                var label = new Label("hello");
+                this.sandbox.stub(label, "getCurrentApplication", function() {
+                    return {
+                        getDevice: function() {
+                            return device;
+                        }
+                    };
+                });
+                this.sandbox.stub(document, "contains").returns(true);
+                var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.render(device);
+                clock.tick(0);
+                label.setText("Something else");
+                assert(truncateTextSpy.calledTwice);
+            }
+        );
+    };
+
+    this.LabelTest.prototype.testSetCssForTruncationIsCalledWhenUsingCss = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, true);
+
+                var label = new Label("hello");
+                var setCssForTruncationSpy = this.sandbox.stub(label, '_setCssForTruncation');
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.setSplitAtWordBoundary(false);
+                label.useCssForTruncationIfAvailable(true);
+                label.setMaximumLines(2);
+                label.render(device);
+                assert(setCssForTruncationSpy.calledOnce);
+            }
+        );
+    };
+
+    this.LabelTest.prototype.testSetTruncationAlgorithmIsUsedWhenRequestingCssButDeviceDoesNotSupportIt = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, false);
+
+                var clock = this.sandbox.useFakeTimers();
+
+                var label = new Label("hello");
+                var truncateTextSpy = this.sandbox.stub(label, '_truncateText');
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.setSplitAtWordBoundary(false);
+                label.useCssForTruncationIfAvailable(true);
+                label.setMaximumLines(2);
+                label.render(device);
+                clock.tick(0);
+                assert(truncateTextSpy.calledOnce);
+            }
+        );
+    };
+
+    this.LabelTest.prototype.testExceptionThrownWhenTryingToUseCssWithoutSpecifyingNumberOfLines = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, true);
+
+                var label = new Label("hello");
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.useCssForTruncationIfAvailable(true);
+                label.setSplitAtWordBoundary(false);
+
+                assertException(function() {
+                    label.render(device);
+                }, "Error");
+            }
+        );
+    };
+
+    this.LabelTest.prototype.testExceptionThrownWhenTryingToUseCssWithTheTruncateAtWordBoundarySet = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/label"],
+            function(application, Label) {
+                var device = application.getDevice();
+                stubDeviceConfig(this.sandbox, device, true);
+
+                var label = new Label("hello");
+                label.setTruncationMode(Label.TRUNCATION_MODE_RIGHT_ELLIPSIS);
+                label.useCssForTruncationIfAvailable(true);
+                label.setSplitAtWordBoundary(true);
+                label.setMaximumLines(2);
+
+                assertException(function() {
+                    label.render(device);
+                }, "Error");
+            }
+        );
+    };
 })();
