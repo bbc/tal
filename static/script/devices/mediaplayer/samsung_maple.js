@@ -256,7 +256,9 @@ require.def(
                     'SamsungMapleOnRenderError',
                     'SamsungMapleOnRenderingComplete',
                     'SamsungMapleOnBufferingStart',
-                    'SamsungMapleOnBufferingComplete'
+                    'SamsungMapleOnBufferingComplete',
+                    'SamsungMapleOnStreamInfoReady',
+                    'SamsungMapleOnCurrentPlayTime'
                 ];
 
                 for (var i = 0; i < eventHandlers.length; i++){

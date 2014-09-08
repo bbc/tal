@@ -38,13 +38,17 @@
             playerPlugin.GetDuration = function() {
                 return range.end * 1000;
             };
-            window.SamsungMapleOnStreamInfoReady();
-            // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
-            window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
+            if (window.SamsungMapleOnStreamInfoReady && window.SamsungMapleOnCurrentPlayTime) {
+                // Make sure we have the event listeners before calling them (we may have torn down during onError)
+                window.SamsungMapleOnStreamInfoReady();
+                // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
+                window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
+            }
         },
         finishBuffering: function(mediaPlayer) {
             mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
             if (window.SamsungMapleOnBufferingComplete) {
+                // Make sure we have the event listener before calling it (we may have torn down during onError)
                 window.SamsungMapleOnBufferingComplete();
             }
         },
@@ -107,7 +111,9 @@
         'SamsungMapleOnRenderError',
         'SamsungMapleOnRenderingComplete',
         'SamsungMapleOnBufferingStart',
-        'SamsungMapleOnBufferingComplete'
+        'SamsungMapleOnBufferingComplete',
+        'SamsungMapleOnStreamInfoReady',
+        'SamsungMapleOnCurrentPlayTime'
     ];
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
