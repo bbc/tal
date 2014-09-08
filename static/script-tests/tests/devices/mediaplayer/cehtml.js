@@ -90,7 +90,7 @@
     // TODO: Make stop actually stop
     // TODO: Make resume actually resume
     // TODO: Ensure reset actually clears the state
-    // TODO: Ensure errore are handled
+    // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
