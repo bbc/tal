@@ -38,7 +38,9 @@
         },
         finishBuffering: function(mediaPlayer) {
             mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            if (window.SamsungMapleOnBufferingComplete) {
+                window.SamsungMapleOnBufferingComplete();
+            }
         },
         emitPlaybackError: function(mediaPlayer) {
             window.SamsungMapleOnRenderError();
@@ -47,7 +49,7 @@
             window.SamsungMapleOnRenderingComplete();
         },
         startBuffering: function(mediaPlayer) {
-            mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            window.SamsungMapleOnBufferingStart();
         },
         mockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to set up fake timers if required
@@ -82,7 +84,12 @@
     // Samsung Maple specific tests
     //---------------------
 
-    var listenerFunctions = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
+    var listenerFunctions = [
+        'SamsungMapleOnRenderError',
+        'SamsungMapleOnRenderingComplete',
+        'SamsungMapleOnBufferingStart',
+        'SamsungMapleOnBufferingComplete'
+    ];
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
@@ -166,6 +173,7 @@
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
     // TODO: See if all three plugins required by the media/samsung_maple modifier are required
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
+    // TODO: Ensure we stop and tear-down the media object on error / reset (particularly that references to the event handlers we tear down from Window are removed)
     // TODO: Clean up methods added to window (for use as e.g. playerPlugin.OnRenderingComplete) on tear-down
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
     // -- "hide" is needed for newer devices

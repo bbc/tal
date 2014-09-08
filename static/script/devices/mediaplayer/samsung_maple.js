@@ -225,10 +225,23 @@ require.def(
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
                 };
+                window.SamsungMapleOnBufferingStart = function () {
+                    self._onDeviceBuffering();
+                };
+                window.SamsungMapleOnBufferingComplete = function () {
+                    self._onFinishedBuffering();
+                };
+
             },
 
             _unregisterEventHandlers: function() {
-                var eventHandlers = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
+                var eventHandlers = [
+                    'SamsungMapleOnRenderError',
+                    'SamsungMapleOnRenderingComplete',
+                    'SamsungMapleOnBufferingStart',
+                    'SamsungMapleOnBufferingComplete'
+                ];
+
                 for (var i = 0; i < eventHandlers.length; i++){
                     delete window[eventHandlers[i]];
                 }
