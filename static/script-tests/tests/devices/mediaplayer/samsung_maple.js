@@ -152,6 +152,14 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
+    // TODO: Make setSource actually set the source and start the media loading
+    // TODO: Make playFrom actually seek
+    // TODO: Make playFrom actually seek
+    // TODO: Make pause actually pause
+    // TODO: Make stop actually stop
+    // TODO: Make resume actually resume
+    // TODO: Ensure reset actually clears the state
+    // TODO: Ensure errore are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
