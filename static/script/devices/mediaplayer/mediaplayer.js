@@ -1,5 +1,6 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch native external media players
+ * @fileOverview Requirejs module containing base class for device
+ * modifiers for media playback
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -34,36 +35,46 @@ require.def(
     function(Class, CallbackManager) {
         "use strict";
 
-        var MediaPlayer = Class.extend({
-
+        /**
+         * Base class for media playback device modifiers.
+         * @name antie.devices.mediaplayer.MediaPlayer
+         * @class
+         * @abstract
+         * @extends antie.Class
+         */
+        var MediaPlayer = Class.extend(/** @lends antie.devices.mediaplayer.MediaPlayer.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function() {
                 this._callbackManager = new CallbackManager();
             },
 
             /**
-            * Add an event callback to receive all media player events from now on.
-            *
-            * Note that failing to remove callbacks when you are finished with them can stop garbage collection
-            * of objects/closures containing those callbacks and so create memory leaks in your application.
-            * @param thisArg The object to use as "this" when calling the callback.
-            * @param callback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
-            */
+             * Add an event callback to receive all media player events from now on.
+             *
+             * Note that failing to remove callbacks when you are finished with them can stop garbage collection
+             * of objects/closures containing those callbacks and so create memory leaks in your application.
+             * @param {Object} thisArg The object to use as "this" when calling the callback.
+             * @param {Function} callback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
+             */
             addEventCallback: function(thisArg, callback) {
                 this._callbackManager.addCallback(thisArg, callback);
             },
 
             /**
-            * Stop receiving events with the specified callback.
-            * @param thisArg The object specified to use as "this" when adding the callback.
-            * @param eventCallback Function to which events are no longer to be passed
-            */
+             * Stop receiving events with the specified callback.
+             * @param {Object} thisArg The object specified to use as "this" when adding the callback.
+             * @param {Function} callback Function to which events are no longer to be passed
+             */
             removeEventCallback: function(thisArg, callback) {
                 this._callbackManager.removeCallback(thisArg, callback);
             },
 
             /**
-            * Stop receiving events to any callbacks.
-            */
+             * Stop receiving events to any callbacks.
+             */
             removeAllEventCallbacks: function() {
                 this._callbackManager.removeAllCallbacks();
             },
@@ -71,7 +82,7 @@ require.def(
             /**
              * Protected method, for use by subclasses to emit events of any specified type, adding in the
              * standard payload used by all events.
-             * @param event The type of the event to be emitted.
+             * @param {String} eventType The type of the event to be emitted.
              * @protected
              */
             _emitEvent: function(eventType) {
@@ -90,7 +101,7 @@ require.def(
 
             /**
              * Clamp a time value so it does not exceed the current range.
-             * @param seconds The time value to clamp in seconds from the start of the media
+             * @param {Number} seconds The time value to clamp in seconds from the start of the media
              * @protected
              */
             _getClampedTime: function(seconds) {
@@ -105,12 +116,12 @@ require.def(
             },
 
             /**
-            * Set the media resource to be played.
-            * Calling this in any state other than EMPTY is an error.
-            * @param mediaType Value from the MediaPlayer.TYPE enum; audio or video.
-            * @param url location of the media resource to play
-            * @param mimeType type of media resource
-            */
+             * Set the media resource to be played.
+             * Calling this in any state other than EMPTY is an error.
+             * @param {antie.devices.mediaplayer.MediaPlayer.TYPE} mediaType Value from the MediaPlayer.TYPE enum; audio or video.
+             * @param {String} url location of the media resource to play
+             * @param {String} mimeType type of media resource
+             */
             setSource: function (mediaType, url, mimeType) {
                 throw new Error("setSource method has not been implemented");
             },
@@ -245,8 +256,10 @@ require.def(
         };
 
         /**
-        * Media Types
-        */
+         * An enum of valid Media Types
+         * @name antie.devices.mediaplayer.MediaPlayer.TYPE
+         * @enum {String}
+         */
         MediaPlayer.TYPE = {
             VIDEO: "video",
             AUDIO: "audio"
