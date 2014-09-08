@@ -309,6 +309,10 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
+                if (this._state === MediaPlayer.STATE.BUFFERING) {
+                    return;
+                }
+
                 this._toBuffering();
             },
 

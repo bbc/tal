@@ -913,10 +913,24 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testWaitingHtml5EventWhileBufferingOnlyGivesSingleBufferingEvent = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+
+            this._mediaPlayer.playFrom(0);
+            mediaEventListeners.waiting();
+
+            assert(eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
     // TODO: If we are already BUFFERING and we get the 'waiting' HTML5 event, we fire a second Buffering event...
-    // - Same if in PLAYING and get playing event...
-    // - And others! but partially fixed by '_exitBuffering'
     // TODO: test where we playFrom whilst paused, and no buffering is required so the device never fires 'finished buffering': needs the 'playing' event...
     // TODO: clean up playFrom; its become a beast...
     // TODO: Playing event nuances:
