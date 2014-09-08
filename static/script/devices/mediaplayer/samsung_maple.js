@@ -222,10 +222,13 @@ require.def(
                 window.SamsungMapleOnRenderError = function () {
                     self._onDeviceError();
                 };
+                window.SamsungMapleOnRenderingComplete = function () {
+                    self._onEndOfMedia();
+                };
             },
 
             _unregisterEventHandlers: function() {
-                var eventHandlers = [ 'SamsungMapleOnRenderError' ];
+                var eventHandlers = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
                 for (var i = 0; i < eventHandlers.length; i++){
                     delete window[eventHandlers[i]];
                 }

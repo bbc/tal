@@ -44,7 +44,7 @@
             window.SamsungMapleOnRenderError();
         },
         reachEndOfMedia: function(mediaPlayer) {
-            mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            window.SamsungMapleOnRenderingComplete();
         },
         startBuffering: function(mediaPlayer) {
             mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
@@ -82,32 +82,72 @@
     // Samsung Maple specific tests
     //---------------------
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorAddedDuringSetSource = function(queue) {
-        expectAsserts(2);
+    var listenerFunctions = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            assertUndefined(window.SamsungMapleOnRenderError);
+
+            var i;
+            var func;
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertUndefined("Expecting " + func + " to be undefined", window[func]);
+            }
+
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertFunction(window.SamsungMapleOnRenderError);
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertFunction("Expecting " + func + " to be a function", window[func]);
+            }
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnError = function(queue) {
-        expectAsserts(2);
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnError = function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertFunction(window.SamsungMapleOnRenderError);
+
+            var i;
+            var func;
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertFunction("Expecting " + func + " to be a function", window[func]);
+            }
+
             deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-            assertUndefined(window.SamsungMapleOnRenderError);
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertUndefined("Expecting " + func + " to be undefined", window[func]);
+            }
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnReset = function(queue) {
-        expectAsserts(2);
+        expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertFunction(window.SamsungMapleOnRenderError);
+
+            var i;
+            var func;
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertFunction("Expecting " + func + " to be a function", window[func]);
+            }
+
             this._mediaPlayer.reset();
-            assertUndefined(window.SamsungMapleOnRenderError);
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                assertUndefined("Expecting " + func + " to be undefined", window[func]);
+            }
         });
     };
 
