@@ -72,6 +72,7 @@ require.def(
                     this._wrapOnMetadata = function(event) { self._onMetadata(event); };
                     this._wrapOnPlaying = function(event) { self._onPlaying(event); };
                     this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering);
+                    this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("error", this._wrapOnMediaError);
                     this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
                     this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering);
@@ -398,7 +399,8 @@ require.def(
 
             _destroyMediaElement: function() {
                 if (this._mediaElement) {
-                    this._mediaElement.removeEventListener("canplaythrough", this._wrapOnFinishedBuffering);
+                    this._mediaElement.removeEventListener("canplay", this._wrapOnFinishedBuffering);
+                    this._mediaElement.removeEventListener("seeked", this._wrapOnFinishedBuffering);
                     this._mediaElement.removeEventListener("error", this._wrapOnMediaError);
                     this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia);
                     this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering);

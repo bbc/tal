@@ -754,7 +754,7 @@
 
             this._mediaPlayer.reset();                   
 
-            assertEquals(6, stubCreateElementResults.video.removeEventListener.callCount);
+            assertEquals(7, stubCreateElementResults.video.removeEventListener.callCount);
         });
     };
 
@@ -885,11 +885,32 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testPlayFromBufferedTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this.mediaPlayer);
+
+            var eventCallback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventCallback);
+            stubCreateElementResults.video.currentTime = 50;
+
+            this._mediaPlayer.playFrom(25);
+
+            assert(eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+
+            mediaEventListeners.seeked();
+
+            assert(eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+        });
+    };
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Stop using 'canplaythrough' event and replace with 'canplay'
-    // TODO: Check that playFrom(currentTime) does the right thing in each state.
-    // - If PLAYING and then playFrom somewhere that is already buffered, do we get enough playing/canplaythrough events to get us out of BUFFERING?
-    //  ! Wont get 'playing' or 'canplaythrough', will only get 'seeked'
     // TODO: If we are already BUFFERING and we get the 'waiting' HTML5 event, we fire a second Buffering event...
     // - Same if in PLAYING and get playing event...
     // - And others! but partially fixed by '_exitBuffering'
