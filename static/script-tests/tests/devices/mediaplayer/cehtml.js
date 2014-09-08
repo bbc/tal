@@ -83,6 +83,26 @@
     // TODO: Ensure errore are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
+    // TODO: Determine if the seekTo call blocks until it is complete (see media/cehtml.js:240)
+    // TODO: media/cehtmlmediatypefix.js equivalent
+    // TODO: Ensure the object data attribute is set tot the URL of the content (CEA-2014-A 5.7.1)
+    // TODO: Ensure the object type attribute is set to the MIME-type of the content (CEA-2014-A 5.7.1.a (1))
+    // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
+    // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
+    // TODO: Determine if we should use full screen or windowed mode, which are handled differently. (CEA-2014-A 5.7.1.c / 5.7.3)
+    //    - 5.7.1.c - there are differences in full screen and windowed modes - fullscreen is 5.7.3
+    //    - 5.7.1.g (5) - setFullScreen (default false, 5.7.1.g (3)) - changing modes SHALL not affect the Z-index. If the <overlay> capability is not none other element can be put on top.
+    //    - 5.7.3.a (1) - [full screen] SHOULD scale the video content…
+    //    - 5.7.3.b - Inside the browser area, full-screen video objects are regular video objects that SHALL cover the entire browser area
+    //    - 5.7.3.c - If there is no longer a visible full-screen video object in the browser area … [it] SHALL switch to non-full-screen mode [which MAY scale the browser area - 5.7.3.d]
+    // TODO: Handle "seek" failing (CEA-2014-A 5.7.1.F (13))
+    // TODO: Handle "seek" not affecting play state (CEA-2014-A 5.7.1.F (13))
+    // TODO: Handle "stop" reverting play position to 0 (CEA-2014-A req 5.7.1.f (12))
+    // TODO: Create the object element using document.write or the DOM createElement method instead of directly including an oject tag in the CE-HTML page (CEA-2014-A 5.7.1.j)
+    // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
+    // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
+    // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
 
     //---------------------
     // Common tests
