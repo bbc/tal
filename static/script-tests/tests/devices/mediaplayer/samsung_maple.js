@@ -27,18 +27,30 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+    var playerPlugin = null;
+
     // Setup device specific mocking
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
 
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            mediaPlayer._range = range; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._currentTime = currentTime; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            playerPlugin.GetDuration = function() {
+                return range.end * 1000;
+            };
+            if (window.SamsungMapleOnStreamInfoReady && window.SamsungMapleOnCurrentPlayTime) {
+                // Make sure we have the event listeners before calling them (we may have torn down during onError)
+                window.SamsungMapleOnStreamInfoReady();
+                // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
+                window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
+            }
         },
         finishBuffering: function(mediaPlayer) {
             mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            if (window.SamsungMapleOnBufferingComplete) {
+                // Make sure we have the event listener before calling it (we may have torn down during onError)
+                window.SamsungMapleOnBufferingComplete();
+            }
         },
         emitPlaybackError: function(mediaPlayer) {
             window.SamsungMapleOnRenderError();
@@ -47,7 +59,7 @@
             window.SamsungMapleOnRenderingComplete();
         },
         startBuffering: function(mediaPlayer) {
-            mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            window.SamsungMapleOnBufferingStart();
         },
         mockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to set up fake timers if required
@@ -62,6 +74,19 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
+
+        playerPlugin = { };
+
+        var originalGetElementById = document.getElementById;
+        this.sandbox.stub(document, "getElementById", function(id) {
+           switch(id) {
+               case "playerPlugin":
+                   return playerPlugin;
+                   break;
+               default:
+                   return originalGetElementById.call(document, id);
+           }
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.tearDown = function() {
@@ -82,7 +107,14 @@
     // Samsung Maple specific tests
     //---------------------
 
-    var listenerFunctions = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
+    var listenerFunctions = [
+        'SamsungMapleOnRenderError',
+        'SamsungMapleOnRenderingComplete',
+        'SamsungMapleOnBufferingStart',
+        'SamsungMapleOnBufferingComplete',
+        'SamsungMapleOnStreamInfoReady',
+        'SamsungMapleOnCurrentPlayTime'
+    ];
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
@@ -152,6 +184,7 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
+    // TODO: Test that playerPlugin.OnXXXX is set to the string SamsungMapleXXXX for each event listener.
     // TODO: Make setSource actually set the source and start the media loading
     // TODO: Make playFrom actually seek
     // TODO: Make playFrom actually seek
@@ -160,12 +193,16 @@
     // TODO: Make resume actually resume
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
+    //      - on connection failed
+    //      - on network disconnected
+    //      - on stream not found
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
     // TODO: See if all three plugins required by the media/samsung_maple modifier are required
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
+    // TODO: Ensure we stop and tear-down the media object on error / reset (particularly that references to the event handlers we tear down from Window are removed)
     // TODO: Clean up methods added to window (for use as e.g. playerPlugin.OnRenderingComplete) on tear-down
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
     // -- "hide" is needed for newer devices

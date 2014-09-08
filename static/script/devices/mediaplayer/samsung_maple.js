@@ -38,6 +38,7 @@ require.def(
             init: function() {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
+                this.playerPlugin = document.getElementById('playerPlugin');
                 this._wipe();
             },
 
@@ -217,6 +218,17 @@ require.def(
                 }
             },
 
+            _onMetadata: function() {
+                this._range = {
+                    start: 0,
+                    end: this.playerPlugin.GetDuration() / 1000
+                };
+            },
+
+            _onCurrentTime: function(timeInMillis) {
+                this._currentTime = timeInMillis / 1000;
+            },
+
             _registerEventHandlers: function() {
                 var self = this;
                 window.SamsungMapleOnRenderError = function () {
@@ -225,10 +237,30 @@ require.def(
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
                 };
+                window.SamsungMapleOnBufferingStart = function () {
+                    self._onDeviceBuffering();
+                };
+                window.SamsungMapleOnBufferingComplete = function () {
+                    self._onFinishedBuffering();
+                };
+                window.SamsungMapleOnStreamInfoReady = function () {
+                    self._onMetadata();
+                };
+                window.SamsungMapleOnCurrentPlayTime = function (timeInMillis) {
+                    self._onCurrentTime(timeInMillis);
+                };
             },
 
             _unregisterEventHandlers: function() {
-                var eventHandlers = [ 'SamsungMapleOnRenderError', 'SamsungMapleOnRenderingComplete' ];
+                var eventHandlers = [
+                    'SamsungMapleOnRenderError',
+                    'SamsungMapleOnRenderingComplete',
+                    'SamsungMapleOnBufferingStart',
+                    'SamsungMapleOnBufferingComplete',
+                    'SamsungMapleOnStreamInfoReady',
+                    'SamsungMapleOnCurrentPlayTime'
+                ];
+
                 for (var i = 0; i < eventHandlers.length; i++){
                     delete window[eventHandlers[i]];
                 }
