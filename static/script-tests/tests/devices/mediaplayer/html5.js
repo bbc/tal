@@ -754,7 +754,7 @@
 
             this._mediaPlayer.reset();                   
 
-            assertEquals(7, stubCreateElementResults.video.removeEventListener.callCount);
+            assertEquals(8, stubCreateElementResults.video.removeEventListener.callCount);
         });
     };
 
