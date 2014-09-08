@@ -299,10 +299,6 @@ require.def(
                 this._toError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
-            _onSourceError: function(evt) {
-                this._toError("Source element emitted error");
-            },
-
             _onDeviceBuffering: function() {
                 if (this._state === MediaPlayer.STATE.BUFFERING) {
                     return;

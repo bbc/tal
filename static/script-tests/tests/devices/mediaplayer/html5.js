@@ -891,12 +891,6 @@
 
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
-    //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
-    //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
-    //   !! Note: this effectively flips the 'html5memoryleakfix' behaviour to be the default. As a result, we may need to make a sub-modifier for the old behaviour... :-)
-    // TODO: Ensure any media AND source elements, media AND source event listeners/callbacks are destroyed on reset() to help avoid memory leaks.
-    // TODO: Ensure playback events handled if/as required
     // TODO: Ensure all errors are logged.
     // TODO: Make sure all 'FIXME' and 'TODO' comments in the implementation are resolved
     // TODO: Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
