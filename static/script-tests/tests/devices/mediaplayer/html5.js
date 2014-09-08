@@ -891,15 +891,10 @@
 
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Ensure all errors are logged.
-    // TODO: Make sure all 'FIXME' and 'TODO' comments in the implementation are resolved
-    // TODO: Update CATAL videoplayer.js new media 'SEEK to END' button, it doesn't need to subtract a second from the end time any more.
-    // TODO: Add a STOP button to the catal new media videoplayer page
     // TODO: Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
     //   * Experiment: ability to run common tests against real device backend, not just against mocked device
     //    ? Do the tests make sense that way? What about device mocking hooks etc?
     //    ? How would we run/deploy these? They're no use if we can't automate them on the device hive…
-    // TODO: test in firefox
     // TODO: Sort out type annotations for MediaPlayer function params.
 
     //---------------------
