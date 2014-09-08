@@ -68,8 +68,18 @@
         this.sandbox.restore();
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/cehtml", "antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayerImpl, MediaPlayer) {
+                this._device = application.getDevice();
+                self._mediaPlayer = this._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
+            }, config);
+    };
+
     //---------------------
-    // Samsung Maple specific tests
+    // CEHTML specific tests
     //---------------------
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
