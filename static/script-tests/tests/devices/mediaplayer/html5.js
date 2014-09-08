@@ -748,13 +748,16 @@
     };
 
     this.HTML5MediaPlayerTests.prototype.testResetRemoveAllEventListenersFromTheMediaElement = function(queue) {
-        expectAsserts(1);
+        expectAsserts(8);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');  
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.reset();
 
-            this._mediaPlayer.reset();                   
-
-            assertEquals(8, stubCreateElementResults.video.removeEventListener.callCount);
+            for (var eventName in mediaEventListeners) {
+                if (mediaEventListeners.hasOwnProperty(eventName)) {
+                    assertTrue('Removed listener for ' + eventName, stubCreateElementResults.video.removeEventListener.withArgs(eventName).called);
+                }
+            }
         });
     };
 
