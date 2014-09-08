@@ -875,8 +875,22 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testResetUnloadsMediaElementSourceAsPerGuidelines = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            stubCreateElementResults.video.load.reset();
+            this.sandbox.stub(stubCreateElementResults.video, 'removeAttribute');
+
+            this._mediaPlayer.reset();
+
+            assertTrue(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
+            assertTrue(stubCreateElementResults.video.load.calledOnce);
+        });
+    };
+
+
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Switch from using a <source> element to setting the 'src' attribute on the <media> element.
     // TODO: Ensure that the "src" attribute is removed from the audio/media element on tear-down (see device/media/html5.js:331 and chat with Tom W in iPlayer)
     //       "... [we should handle this] by being very careful about removing all references to the element and allowing it to be garbage collected, or, even better, by removing the element's src attribute and any source element descendants, and invoking the element's load() method."
     //          -- http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements

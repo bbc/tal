@@ -402,6 +402,9 @@ require.def(
                     this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus);
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata);
 
+                    this._mediaElement.removeAttribute('src');
+                    this._mediaElement.load();
+
                     var device = RuntimeContext.getDevice();
                     device.removeElement(this._mediaElement);
 
