@@ -184,6 +184,7 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
+    // TODO: Test that playerPlugin.OnXXXX is set to the string SamsungMapleXXXX for each event listener.
     // TODO: Make setSource actually set the source and start the media loading
     // TODO: Make playFrom actually seek
     // TODO: Make playFrom actually seek
