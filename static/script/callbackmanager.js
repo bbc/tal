@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing base antie.DataSource class.
+ * @fileOverview Requirejs module containing the CallbackManager utility class.
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -25,7 +25,9 @@
  */
 
 require.def('antie/callbackmanager',
-    ['antie/class'],
+    [
+        'antie/class'
+    ],
     function(Class) {
         /**
          * Utility class to deal with adding/removing callbacks and calling all current callbacks.
@@ -33,7 +35,7 @@ require.def('antie/callbackmanager',
          * @class
          * @extends antie.Class
          */
-        return Class.extend(/** @lends antie.DataSource.prototype */ {
+        return Class.extend(/** @lends antie.CallbackManager.prototype */ {
             /**
              * @constructor
              * @ignore
@@ -47,8 +49,8 @@ require.def('antie/callbackmanager',
              *
              * Note that failing to remove callbacks when you are finished with them can stop garbage collection
              * of objects/closures containing those callbacks and so create memory leaks in your application.
-             * @param thisArg The object to use as "this" when calling the callback.
-             * @param callback The callback function
+             * @param {Object} thisArg The object to use as "this" when calling the callback.
+             * @param {Function} callback The callback function
              */
             addCallback: function(thisArg, callback) {
                 if (this._getIndexOf(thisArg,callback) === undefined) {
@@ -58,8 +60,8 @@ require.def('antie/callbackmanager',
 
             /**
              * Remove the specified callback.
-             * @param thisArg The object that was used as "this" when adding the callback.
-             * @param callback The callback function
+             * @param {Object} thisArg The object that was used as "this" when adding the callback.
+             * @param {Function} callback The callback function
              */
             removeCallback: function(thisArg, callback) {
                 var foundIndex = this._getIndexOf(thisArg,callback);
@@ -70,7 +72,7 @@ require.def('antie/callbackmanager',
             },
 
             _getIndexOf: function(thisArg, callback) {
-                var result = undefined;
+                var result;
                 for (var i = 0; i < this._callbacks.length; i++) {
                     if (this._callbacks[i][0] === thisArg && this._callbacks[i][1] === callback) {
                         result = i;

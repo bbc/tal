@@ -127,71 +127,71 @@ require.def(
             },
 
             /**
-            * Request that the media start playing from Time.
-            * A media source must have been set with setSource before calling this.
-            * This can be used to resume media after changing source.
-            * This may transition to the buffering state if enough media data is not yet available to play.
-            * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-            * Calling this in state EMPTY is an error.
-            * @param seconds time to play from in seconds from the start of the media
-            */
+             * Request that the media start playing from Time.
+             * A media source must have been set with setSource before calling this.
+             * This can be used to resume media after changing source.
+             * This may transition to the buffering state if enough media data is not yet available to play.
+             * If the media is buffering, call this to resume playback in a playing state once buffering ends.
+             * Calling this in state EMPTY is an error.
+             * @param {Number} seconds Time to play from in seconds from the start of the media
+             */
             playFrom: function (seconds) {
                 throw new Error("playFrom method has not been implemented");
             },
 
             /**
-            * Request that the media be paused.
-            * If the Media is playing, call this to pause it.
-            * If the media is buffering, call this to resume playback in a paused state once buffering ends.
-            * Calling this in state EMPTY or STOPPED is an error.
-            */
+             * Request that the media be paused.
+             * If the Media is playing, call this to pause it.
+             * If the media is buffering, call this to resume playback in a paused state once buffering ends.
+             * Calling this in state EMPTY or STOPPED is an error.
+             */
             pause: function () {
                 throw new Error("pause method has not been implemented");
             },
 
             /**
-            * Request that the media resume playing after being paused.
-            * If the Media is paused, call this to resume playing it.
-            * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-            * Calling this in state EMPTY or STOPPED is an error.
-            */
-            resume : function () {
+             * Request that the media resume playing after being paused.
+             * If the Media is paused, call this to resume playing it.
+             * If the media is buffering, call this to resume playback in a playing state once buffering ends.
+             * Calling this in state EMPTY or STOPPED is an error.
+             */
+            resume: function () {
                 throw new Error("resume method has not been implemented");
             },
 
             /**
-            * Request that the media be stopped.
-            * If the Media is playing, call this to stop the media.
-            * Note that the source is still set after calling stop. 
-            * Call reset after stop to unset the source.
-            * Calling this in state EMPTY is an error.
-            */
+             * Request that the media be stopped.
+             * If the Media is playing, call this to stop the media.
+             * Note that the source is still set after calling stop.
+             * Call reset after stop to unset the source.
+             * Calling this in state EMPTY is an error.
+             */
             stop: function () {
                 throw new Error("stop method has not been implemented");
             },
 
             /**
-            * Reset the Media Player.
-            * When the media is stopped, calling reset will reset the player to a clean state with no source set.
-            * Calling this in any state other than STOPPED or ERROR is an error.
-            */
+             * Reset the Media Player.
+             * When the media is stopped, calling reset will reset the player to a clean state with no source set.
+             * Calling this in any state other than STOPPED or ERROR is an error.
+             */
             reset: function () {
                 throw new Error("reset method has not been implemented");
             },
 
             /**
-            * Get the source url.
-            * If no source is set (in state EMPTY for example), then this returns undefined.
-            * @return string The url
-            */
+             * Get the source URL.
+             * If no source is set (in state EMPTY for example), then this returns undefined.
+             * @return {String} The URL
+             */
             getSource: function () {
                 throw new Error("getSource method has not been implemented");
             },
 
             /**
-            * Get the source mimeType.
+            * Get the source MIME type.
             * If no source is set (in state EMPTY for example), then this returns undefined.
-            * @return string The mimeType
+            * @return {String} The MIME type
             */
             getMimeType: function () {
                 throw new Error("getMimeType method has not been implemented");
@@ -200,7 +200,7 @@ require.def(
             /**
             * Get the current play time.
             * If no current time is available, then this returns undefined.
-            * @return number The current play time in seconds from the start of the media.
+            * @return {Number} The current play time in seconds from the start of the media.
             */
             getCurrentTime: function () {
                 throw new Error("getCurrentTime method has not been implemented");
@@ -214,7 +214,7 @@ require.def(
             * For live playback, 'end' is the current live time.
             * For live playback, both 'start' and 'end' may advance over time.
             * If no range is available, then this returns an object with 'start' and 'end' properties which both have the value undefined.
-            * @return object Object with 'start' and 'end' numeric properties.
+            * @return {Object} Object with 'start' and 'end' numeric properties.
             */
             getRange: function () {
                 throw new Error("getRange method has not been implemented");
@@ -222,7 +222,7 @@ require.def(
 
             /**
             * Get the current state of the Media PLayer state machine.
-            * @return {MediaPlayer.STATE} The current state of the Media Player state machine.
+            * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
             */
             getState: function () {
                 throw new Error("getState method has not been implemented");
@@ -230,7 +230,9 @@ require.def(
         });
 
         /**
-        * Media Player State Machine
+        * An enumeration of possible media player states.
+        * @name antie.devices.mediaplayer.MediaPlayer.STATE
+        * @enum {String}
         */
         MediaPlayer.STATE = {
             EMPTY:      "EMPTY",     // No source set
@@ -256,7 +258,7 @@ require.def(
         };
 
         /**
-         * An enum of valid Media Types
+         * An enumeration of valid Media Types.
          * @name antie.devices.mediaplayer.MediaPlayer.TYPE
          * @enum {String}
          */
