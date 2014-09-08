@@ -27,14 +27,20 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+    var playerPlugin = null;
+
     // Setup device specific mocking
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
 
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            mediaPlayer._range = range; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._currentTime = currentTime; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            playerPlugin.GetDuration = function() {
+                return range.end * 1000;
+            };
+            window.SamsungMapleOnStreamInfoReady();
+            // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
+            window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
         },
         finishBuffering: function(mediaPlayer) {
             mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
@@ -64,6 +70,19 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
+
+        playerPlugin = { };
+
+        var originalGetElementById = document.getElementById;
+        this.sandbox.stub(document, "getElementById", function(id) {
+           switch(id) {
+               case "playerPlugin":
+                   return playerPlugin;
+                   break;
+               default:
+                   return originalGetElementById.call(document, id);
+           }
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.tearDown = function() {
@@ -167,6 +186,9 @@
     // TODO: Make resume actually resume
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
+    //      - on connection failed
+    //      - on network disconnected
+    //      - on stream not found
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
