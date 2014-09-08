@@ -89,6 +89,7 @@ require.def(
                     device.appendChildElement(this._mediaElement, source);
 
                     this._mediaElement.preload = "auto";
+                    this._mediaElement.src = url;
                     this._mediaElement.load();
 
                     this._toStopped();
