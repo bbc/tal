@@ -63,7 +63,7 @@
             mediaEventListeners.loadedmetadata();
         },
         finishBuffering: function(mediaPlayer) {
-            mediaEventListeners.canplaythrough();
+            mediaEventListeners.canplay();
         },
         emitPlaybackError: function(mediaPlayer) {
 
@@ -886,8 +886,7 @@
     };
 
     // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Make the 'time' types much clearer in the MediaPlayer class. If not new type, then name and document units.
-    // TODO: Stop using 'canplaythrough' event and replace with 'playing'
+    // TODO: Stop using 'canplaythrough' event and replace with 'canplay'
     // TODO: Check that playFrom(currentTime) does the right thing in each state.
     // - If PLAYING and then playFrom somewhere that is already buffered, do we get enough playing/canplaythrough events to get us out of BUFFERING?
     //  ! Wont get 'playing' or 'canplaythrough', will only get 'seeked'

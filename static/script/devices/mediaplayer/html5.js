@@ -71,7 +71,7 @@ require.def(
                     this._wrapOnStatus = function(event) { self._onStatus(event); };
                     this._wrapOnMetadata = function(event) { self._onMetadata(event); };
                     this._wrapOnPlaying = function(event) { self._onPlaying(event); };
-                    this._mediaElement.addEventListener("canplaythrough", this._wrapOnFinishedBuffering);
+                    this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("error", this._wrapOnMediaError);
                     this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
                     this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering);
