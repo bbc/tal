@@ -82,12 +82,6 @@ require.def(
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
 
-                    var source = device._createElement("source");
-                    source.src = url;
-                    source.type = mimeType;
-                    source.addEventListener("error", function(event) { self._onSourceError(event); });
-                    device.appendChildElement(this._mediaElement, source);
-
                     this._mediaElement.preload = "auto";
                     this._mediaElement.src = url;
                     this._mediaElement.load();

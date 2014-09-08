@@ -29,7 +29,6 @@
 
     var stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
-    var sourceEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -112,10 +111,8 @@
         stubCreateElementResults = {
             video: document.createElement("div"),
             audio: document.createElement("div"),
-            source: document.createElement("source")
         };
         mediaEventListeners = {};
-        sourceEventListeners = {};
         var self = this;
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
@@ -133,10 +130,6 @@
             };
             media.removeEventListener = this.sandbox.stub();
         }
-        this.sandbox.stub(stubCreateElementResults.source, "addEventListener", function(event, callback) {
-            if (sourceEventListeners[event]) { throw "Listener already registered on source mock for event: " + event; }
-            sourceEventListeners[event] = callback;
-        });
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
@@ -244,17 +237,6 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testSourceElementAddedToVideoOnSetSources = function(queue) {
-        expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-            assert(this._createElementStub.calledWith("source"));
-            assertEquals(1, stubCreateElementResults.video.children.length);
-            assertSame(stubCreateElementResults.source, stubCreateElementResults.video.firstChild);
-        });
-    };
-
     this.HTML5MediaPlayerTests.prototype.testSourceURLSetOnSetSource = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
@@ -263,24 +245,6 @@
             assertEquals('http://testurl/', stubCreateElementResults.video.src);
         });
     };
-
-    this.HTML5MediaPlayerTests.prototype.testSourceURLSetOnSetSources_Old = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assertEquals('http://testurl/', stubCreateElementResults.source.src);
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testSourceTypeSetOnSetSources = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assertEquals('video/mp4', stubCreateElementResults.source.type);
-        });
-    };    
 
     this.HTML5MediaPlayerTests.prototype.testWeDoNotAccessSeekableRangesWhenThereAreNoSeekableRanges = function(queue) {
         expectAsserts(3);
@@ -402,33 +366,6 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testErrorEventFromSourceElementCausesErrorTransitionWithMessageLogged = function(queue) {
-        expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-
-            var errorStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
-
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assertFunction(sourceEventListeners.error);
-
-            var errorEvent = {
-                type: "error",
-                target: stubCreateElementResults.source
-            };
-
-            // We don't set the media element error object as we're emitting from the source, as if during the
-            // resource selection algorithm, using source elements, when the resource fetch algorithm fails.
-            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html#loading-the-media-resource
-
-            sourceEventListeners.error(errorEvent);
-
-            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
-            assert(errorStub.calledWith("Source element emitted error"));
-        });
-    };
-
     this.HTML5MediaPlayerTests.prototype.testPausePassedThroughToMediaElementWhenInPlayingState = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
@@ -470,7 +407,7 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testLoadCalledOnMediaElementWhenSetSourceIsCalled= function(queue) {
+    this.HTML5MediaPlayerTests.prototype.testLoadCalledOnMediaElementWhenSetSourceIsCalled = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -478,7 +415,7 @@
         });
     };
 
-      this.HTML5MediaPlayerTests.prototype.testMediaElementPreloadAttributeIsSetToAuto= function(queue) {
+      this.HTML5MediaPlayerTests.prototype.testMediaElementPreloadAttributeIsSetToAuto = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
