@@ -889,14 +889,6 @@
         });
     };
 
-
-    // WARNING WARNING WARNING WARNING: These TODOs are NOT exhaustive.
-    // TODO: Do we want any 'mini-integration' tests as part of the UT suite: PC suggests using removeTestsForIncompatibleDevices() and having device specific integration tests...
-    //   * Experiment: ability to run common tests against real device backend, not just against mocked device
-    //    ? Do the tests make sense that way? What about device mocking hooks etc?
-    //    ? How would we run/deploy these? They're no use if we can't automate them on the device hive…
-    // TODO: Sort out type annotations for MediaPlayer function params.
-
     //---------------------
     // Common tests
     //---------------------
