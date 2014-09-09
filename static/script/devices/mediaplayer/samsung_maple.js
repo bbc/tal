@@ -280,7 +280,14 @@ require.def(
                     'SamsungMapleOnCurrentPlayTime'
                 ];
 
+                var func;
+                var hook;
+
                 for (var i = 0; i < eventHandlers.length; i++){
+                    func = eventHandlers[i];
+                    hook = func.substring("SamsungMaple".length);
+                    this.playerPlugin[hook] = undefined;
+
                     delete window[eventHandlers[i]];
                 }
             },

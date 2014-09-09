@@ -205,6 +205,60 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
+            }
+
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnResetr= function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
+            }
+
+            this._mediaPlayer.reset();
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Test that playerPlugin.OnXXXX is set to the string SamsungMapleXXXX for each event listener.
     // TODO: Make setSource actually set the source and start the media loading
