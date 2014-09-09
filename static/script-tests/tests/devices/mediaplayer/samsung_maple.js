@@ -66,8 +66,8 @@
         mockTime: function(mediaplayer) {
 
         },
-        makeOneSecondPass: function(mediaplayer, time) {
-            window.SamsungMapleOnCurrentPlayTime(time);
+        makeOneSecondPass: function(mediaplayer, time) { // TODO: Is this an inappropriate name, or are we just using it inappropriately (i.e. setting current time)
+            window.SamsungMapleOnCurrentPlayTime(time*1000);
         },
         unmockTime: function(mediaplayer) {
 
@@ -317,9 +317,29 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        expectAsserts(5);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer, 50);
+            assertEquals(50, this._mediaPlayer.getCurrentTime());
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.playFrom(50);
+            assert(eventHandler.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
+        })
+    };
 
     // TODO: Make sure we've handled each state correctly for playFrom
-    // - Buffering (shouldn't recieve a second, subsequent, buffering event)
     // - Playing (when seeking to current time)
     // - Paused (when seeking to current time)
 
