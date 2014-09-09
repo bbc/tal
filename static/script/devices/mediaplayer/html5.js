@@ -350,7 +350,9 @@ require.def(
             },
 
             _tryingToSeekToCurrentTime: function() {
-                return this._mediaElement.currentTime === this._getClampedTime(this._targetSeekTime);
+                var currentTime = this._mediaElement.currentTime;
+                var targetTime = this._getClampedTime(this._targetSeekTime);
+                return Math.abs(currentTime - targetTime) <= 1;
             },
 
             _seekTo: function(seconds) {
