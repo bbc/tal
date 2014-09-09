@@ -63,7 +63,7 @@
             // FIXME - Implementations can use this hook to set up fake timers if required
         },
         makeOneSecondPass: function(mediaplayer, time) {
-            mediaplayer._onStatus();  // FIXME - do not do this in an actual implementation - replace it with proper event / setTimeout mock / whatever.
+            window.SamsungMapleOnCurrentPlayTime(time);
         },
         unmockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to tear down fake timers if required

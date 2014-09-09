@@ -234,6 +234,7 @@ require.def(
             },
 
             _onCurrentTime: function(timeInMillis) {
+                this._onStatus();
 //                this._currentTime = timeInMillis / 1000;
             },
 
@@ -280,15 +281,12 @@ require.def(
                     'SamsungMapleOnCurrentPlayTime'
                 ];
 
-                var func;
-                var hook;
-
                 for (var i = 0; i < eventHandlers.length; i++){
-                    func = eventHandlers[i];
-                    hook = func.substring("SamsungMaple".length);
+                    var handler = eventHandlers[i];
+                    var hook = handler.substring("SamsungMaple".length);
                     this.playerPlugin[hook] = undefined;
 
-                    delete window[eventHandlers[i]];
+                    delete window[handler];
                 }
             },
 
