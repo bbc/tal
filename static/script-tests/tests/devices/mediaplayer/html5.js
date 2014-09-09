@@ -448,7 +448,7 @@
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
             this._mediaPlayer.playFrom(110);
 
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(99.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -510,7 +510,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(110);
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(99.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -549,36 +549,6 @@
         });
     };
 
-   this.HTML5MediaPlayerTests.prototype.testPlayNotCalledWhenSeekToTimeIsGreaterThanRangeEndWhenInStoppedState = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            this._mediaPlayer.playFrom(101);
-            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
-
-            assertEquals(100, stubCreateElementResults.video.currentTime);
-            assertFalse(stubCreateElementResults.video.play.called);
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testPlayNotCalledWhenSeekToTimeIsGreaterThanRangeEndWhenInPlayingState = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
-            
-            this._mediaPlayer.playFrom(101);
-            
-            assertEquals(100, stubCreateElementResults.video.currentTime);
-            assert(stubCreateElementResults.video.play.calledOnce);
-        });
-    };
-
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndDontHaveMetadata = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
@@ -604,7 +574,7 @@
             deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
 
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(99.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -633,7 +603,7 @@
             this._mediaPlayer.playFrom(110);            
             deviceMockingHooks.finishBuffering(this.mediaPlayer);
 
-            assertEquals(100, stubCreateElementResults.video.currentTime);
+            assertEquals(99.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -704,33 +674,6 @@
                     assertTrue('Removed listener for ' + eventName, stubCreateElementResults.video.removeEventListener.withArgs(eventName).called);
                 }
             }
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testPlayFromTheEndWhenCompletedGoesToBufferingThenToCompleted = function(queue) {
-        expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
-            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
-
-            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
-
-            var eventCallback = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventCallback);
-            stubCreateElementResults.video.currentTime = 100;
-
-            this._mediaPlayer.playFrom(110);
-
-            // We must have events indicating we pass through the buffering state and end in the complete state, even if
-            // the underlying media implementation does not re-emit the "ended" (end of media being reached) event for
-            // a second time - therefore wqe do not re-issue the reachEndOfMedia call.
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.COMPLETE, eventCallback.args[1][0].type);
         });
     };
 

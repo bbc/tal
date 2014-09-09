@@ -106,10 +106,11 @@ require.def(
              */
             _getClampedTime: function(seconds) {
                 var range = this.getRange();
+                var nearToEnd = range.end - 0.1;
                 if (seconds < range.start) {
                     return range.start;
-                } else if (seconds > range.end) {
-                    return range.end;
+                } else if (seconds > nearToEnd) {
+                    return nearToEnd;
                 } else {
                     return seconds;
                 }
