@@ -155,7 +155,7 @@
     };
 
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
-        expectAsserts(17);
+        expectAsserts(18);
         queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
@@ -180,6 +180,8 @@
             assertEquals(149.9, instance.getClampedTime(149.9, {start:50, end:150}));
             assertEquals(149.9, instance.getClampedTime(150,   {start:50, end:150}));
             assertEquals(149.9, instance.getClampedTime(151,   {start:50, end:150}));
+
+            assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
 
         });
     };

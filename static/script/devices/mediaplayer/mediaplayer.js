@@ -101,12 +101,13 @@ require.def(
 
             /**
              * Clamp a time value so it does not exceed the current range.
+             * Clamps to near the end instead of the end itself to allow for devices that cannot seek to the very end of the media.
              * @param {Number} seconds The time value to clamp in seconds from the start of the media
              * @protected
              */
             _getClampedTime: function(seconds) {
                 var range = this.getRange();
-                var nearToEnd = range.end - 0.1;
+                var nearToEnd = Math.max(range.end - 0.1, range.start);
                 if (seconds < range.start) {
                     return range.start;
                 } else if (seconds > nearToEnd) {
@@ -134,6 +135,9 @@ require.def(
              * This may transition to the buffering state if enough media data is not yet available to play.
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
              * Calling this in state EMPTY is an error.
+             * Clamps the time to the seekable range of the media.
+             * If trying to play at (or past) the very end of the media, this will actually begin playback just before the end.
+             * This allows the media playback to complete normally.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
             playFrom: function (seconds) {
