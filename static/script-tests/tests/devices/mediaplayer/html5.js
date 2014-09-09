@@ -678,52 +678,23 @@
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
-        expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
-
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-
-            var eventCallback = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventCallback);
-            stubCreateElementResults.video.currentTime = 50;
-
-            this._mediaPlayer.playFrom(50);
-
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
-        });
+        var currentAndTargetTime = 50;
+        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentAndTargetTime, currentAndTargetTime);
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromJustBeforeCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
-        expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this.mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this.mediaPlayer);
-
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-
-            var eventCallback = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventCallback);
-            stubCreateElementResults.video.currentTime = 50.999;
-
-            this._mediaPlayer.playFrom(50);
-
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
-        });
+        var currentTime = 50.999;
+        var targetTime = 50;
+        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentTime, targetTime);
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromJustAfterCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
+        var currentTime = 50;
+        var targetTime = 50.999;
+        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentTime, targetTime);
+    };
+
+    this.HTML5MediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue, currentTime, targetTime) {
         expectAsserts(4);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -736,9 +707,9 @@
 
             var eventCallback = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventCallback);
-            stubCreateElementResults.video.currentTime = 50;
+            stubCreateElementResults.video.currentTime = currentTime;
 
-            this._mediaPlayer.playFrom(50.999);
+            this._mediaPlayer.playFrom(targetTime);
 
             assert(eventCallback.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
