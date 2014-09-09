@@ -38,11 +38,9 @@
             playerPlugin.GetDuration = function() {
                 return range.end * 1000;
             };
-            if (window.SamsungMapleOnStreamInfoReady && window.SamsungMapleOnCurrentPlayTime) {
+            if (window.SamsungMapleOnStreamInfoReady) {
                 // Make sure we have the event listeners before calling them (we may have torn down during onError)
                 window.SamsungMapleOnStreamInfoReady();
-                // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
-                window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
             }
         },
         finishBuffering: function(mediaPlayer) {

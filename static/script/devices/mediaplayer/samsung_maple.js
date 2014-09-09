@@ -173,7 +173,15 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                return this._currentTime; // FIXME
+                var result = undefined;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        break;
+                    default:
+                        result = this._currentTime;
+                        break;
+                }
+                return result;
             },
 
             /**
@@ -226,7 +234,7 @@ require.def(
             },
 
             _onCurrentTime: function(timeInMillis) {
-                this._currentTime = timeInMillis / 1000;
+//                this._currentTime = timeInMillis / 1000;
             },
 
             _registerEventHandlers: function() {
@@ -270,13 +278,13 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
-                this._currentTime = undefined; // FIXME
+                this._currentTime = undefined;
                 this._range = undefined; // FIXME
                 this._unregisterEventHandlers();
             },
 
             _toStopped: function () {
-                this._currentTime = undefined; // FIXME
+                this._currentTime = 0;
                 this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
@@ -298,7 +306,7 @@ require.def(
             },
 
             _toComplete: function () {
-                this._currentTime = undefined; // FIXME
+                this._currentTime = undefined;
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
