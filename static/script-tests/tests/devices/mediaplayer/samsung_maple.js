@@ -300,11 +300,28 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testNoSecondBufferingEventWhenPlayingFromABufferingState = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            var numEvents = eventHandler.callCount;
+            this._mediaPlayer.playFrom(10);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(numEvents, eventHandler.callCount);
+        })
+    };
+
+
     // TODO: Make sure we've handled each state correctly for playFrom
-    // - Buffering
-    // - Playing
-    // - Paused
-    // - Complete
+    // - Buffering (shouldn't recieve a second, subsequent, buffering event)
+    // - Playing (when seeking to current time)
+    // - Paused (when seeking to current time)
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
