@@ -38,7 +38,7 @@ require.def(
             init: function() {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
-                this.playerPlugin = document.getElementById('playerPlugin');
+                this._playerPlugin = document.getElementById('playerPlugin');
                 this._wipe();
             },
 
@@ -82,16 +82,14 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
-                this._targetSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        break;
-
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._playerPlugin.ResumePlay(this._source, seconds);
                         this._toBuffering();
                         break;
 
@@ -173,7 +171,15 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                return this._currentTime; // FIXME
+                var result = undefined;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        break;
+                    default:
+                        result = this._currentTime;
+                        break;
+                }
+                return result;
             },
 
             /**
@@ -221,11 +227,12 @@ require.def(
             _onMetadata: function() {
                 this._range = {
                     start: 0,
-                    end: this.playerPlugin.GetDuration() / 1000
+                    end: this._playerPlugin.GetDuration() / 1000
                 };
             },
 
             _onCurrentTime: function(timeInMillis) {
+                this._onStatus();
                 this._currentTime = timeInMillis / 1000;
             },
 
@@ -234,21 +241,32 @@ require.def(
                 window.SamsungMapleOnRenderError = function () {
                     self._onDeviceError();
                 };
+                this._playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
                 };
+                this._playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
+
                 window.SamsungMapleOnBufferingStart = function () {
                     self._onDeviceBuffering();
                 };
+                this._playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
+
                 window.SamsungMapleOnBufferingComplete = function () {
                     self._onFinishedBuffering();
                 };
+                this._playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
+
                 window.SamsungMapleOnStreamInfoReady = function () {
                     self._onMetadata();
                 };
+                this._playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
+
                 window.SamsungMapleOnCurrentPlayTime = function (timeInMillis) {
                     self._onCurrentTime(timeInMillis);
                 };
+                this._playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
             },
 
             _unregisterEventHandlers: function() {
@@ -262,7 +280,11 @@ require.def(
                 ];
 
                 for (var i = 0; i < eventHandlers.length; i++){
-                    delete window[eventHandlers[i]];
+                    var handler = eventHandlers[i];
+                    var hook = handler.substring("SamsungMaple".length);
+                    this._playerPlugin[hook] = undefined;
+
+                    delete window[handler];
                 }
             },
 
@@ -270,13 +292,13 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
-                this._currentTime = undefined; // FIXME
+                this._currentTime = undefined;
                 this._range = undefined; // FIXME
                 this._unregisterEventHandlers();
             },
 
             _toStopped: function () {
-                this._currentTime = undefined; // FIXME
+                this._currentTime = 0;
                 this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
@@ -298,7 +320,7 @@ require.def(
             },
 
             _toComplete: function () {
-                this._currentTime = undefined; // FIXME
+                this._currentTime = undefined;
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },

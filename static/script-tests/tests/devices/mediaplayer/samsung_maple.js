@@ -33,20 +33,22 @@
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
 
+            // Override ResumePlay to update the time for the common tests only - although the Samsung specific tests
+            // do use these mocking hooks, they do not call setup.
+            playerPlugin.ResumePlay = function (source, seconds) {
+                window.SamsungMapleOnCurrentPlayTime(seconds * 1000);
+            }
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             playerPlugin.GetDuration = function() {
                 return range.end * 1000;
             };
-            if (window.SamsungMapleOnStreamInfoReady && window.SamsungMapleOnCurrentPlayTime) {
+            if (window.SamsungMapleOnStreamInfoReady) {
                 // Make sure we have the event listeners before calling them (we may have torn down during onError)
                 window.SamsungMapleOnStreamInfoReady();
-                // TODO: Determine if we really should be calling a play event tick to force the current time to be updated when we are not necessarily actually playing...
-                window.SamsungMapleOnCurrentPlayTime(currentTime * 1000); // convert to millis
             }
         },
         finishBuffering: function(mediaPlayer) {
-            mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
             if (window.SamsungMapleOnBufferingComplete) {
                 // Make sure we have the event listener before calling it (we may have torn down during onError)
                 window.SamsungMapleOnBufferingComplete();
@@ -62,20 +64,22 @@
             window.SamsungMapleOnBufferingStart();
         },
         mockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to set up fake timers if required
+
         },
         makeOneSecondPass: function(mediaplayer, time) {
-            mediaplayer._onStatus();  // FIXME - do not do this in an actual implementation - replace it with proper event / setTimeout mock / whatever.
+            window.SamsungMapleOnCurrentPlayTime(time);
         },
         unmockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to tear down fake timers if required
+
         }
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
-        playerPlugin = { };
+        playerPlugin = {
+            ResumePlay: this.sandbox.stub()
+        };
 
         var originalGetElementById = document.getElementById;
         this.sandbox.stub(document, "getElementById", function(id) {
@@ -160,7 +164,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnReset = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
@@ -183,11 +187,129 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
+            }
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
+            }
+
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnReset = function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
+            }
+
+            this._mediaPlayer.reset();
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInStoppedState = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertTrue(playerPlugin.ResumePlay.notCalled);
+            this._mediaPlayer.playFrom(0);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 0));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledWithTimePassedIntoPlayingFrom = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertTrue(playerPlugin.ResumePlay.notCalled);
+            this._mediaPlayer.playFrom(19);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 19));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInBufferingState = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 0));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            this._mediaPlayer.playFrom(50);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 50));
+            assertTrue(playerPlugin.ResumePlay.calledTwice);
+        })
+    };
+
+    // TODO: Make sure we've handled each state correctly for playFrom
+    // - Buffering
+    // - Playing
+    // - Paused
+    // - Complete
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Test that playerPlugin.OnXXXX is set to the string SamsungMapleXXXX for each event listener.
     // TODO: Make setSource actually set the source and start the media loading
     // TODO: Make playFrom actually seek
-    // TODO: Make playFrom actually seek
+    // TODO: Make playFrom actually play
     // TODO: Make pause actually pause
     // TODO: Make stop actually stop
     // TODO: Make resume actually resume
@@ -198,6 +320,7 @@
     //      - on stream not found
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // -- Edge case: when we playFrom beyond end of video from stopped state we need to clamp after metadata is loaded
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
     // TODO: See if all three plugins required by the media/samsung_maple modifier are required
@@ -212,6 +335,7 @@
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
+    // TODO: Investigate when millisenconds should be used
 
     //---------------------
     // Common tests
