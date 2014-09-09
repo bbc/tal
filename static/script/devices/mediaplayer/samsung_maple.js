@@ -82,12 +82,9 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
-                this._targetSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        break;
-
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
@@ -236,7 +233,7 @@ require.def(
 
             _onCurrentTime: function(timeInMillis) {
                 this._onStatus();
-//                this._currentTime = timeInMillis / 1000;
+                this._currentTime = timeInMillis / 1000;
             },
 
             _registerEventHandlers: function() {

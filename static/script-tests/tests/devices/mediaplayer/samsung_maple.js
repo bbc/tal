@@ -33,6 +33,11 @@
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
 
+            // Override ResumePlay to update the time for the common tests only - although the Samsung specific tests
+            // do use these mocking hooks, they do not call setup.
+            playerPlugin.ResumePlay = function (source, seconds) {
+                window.SamsungMapleOnCurrentPlayTime(seconds * 1000);
+            }
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             playerPlugin.GetDuration = function() {
@@ -44,7 +49,6 @@
             }
         },
         finishBuffering: function(mediaPlayer) {
-            mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
             if (window.SamsungMapleOnBufferingComplete) {
                 // Make sure we have the event listener before calling it (we may have torn down during onError)
                 window.SamsungMapleOnBufferingComplete();
@@ -283,6 +287,19 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInBufferingState = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 0));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            this._mediaPlayer.playFrom(50);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 50));
+            assertTrue(playerPlugin.ResumePlay.calledTwice);
+        })
+    };
+
     // TODO: Make sure we've handled each state correctly for playFrom
     // - Buffering
     // - Playing
@@ -303,6 +320,7 @@
     //      - on stream not found
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // -- Edge case: when we playFrom beyond end of video from stopped state we need to clamp after metadata is loaded
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
     // TODO: See if all three plugins required by the media/samsung_maple modifier are required
