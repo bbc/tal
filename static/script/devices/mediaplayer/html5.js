@@ -101,6 +101,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
+                    case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
                         this._playFromIfReady();
                         break;
@@ -113,15 +114,6 @@ require.def(
                         this._toBuffering();
                         if (this._tryingToSeekToCurrentTime()) {
                             this._toPlaying();
-                        } else {
-                            this._playFromIfReady();
-                        }
-                        break;
-
-                    case MediaPlayer.STATE.COMPLETE:
-                        this._toBuffering();
-                        if (this._tryingToSeekToCurrentTime()) {
-                            this._toComplete();
                         } else {
                             this._playFromIfReady();
                         }
@@ -350,7 +342,7 @@ require.def(
 
             _deferredPlayFrom: function() {
                 this._seekTo(this._targetSeekTime);
-                this._playIfNotAtEndOfMedia();
+                this._mediaElement.play();
                 if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._mediaElement.pause();
                 }
@@ -363,19 +355,6 @@ require.def(
 
             _seekTo: function(seconds) {
                 this._mediaElement.currentTime = this._getClampedTime(seconds);
-            },
-
-            _playIfNotAtEndOfMedia: function() {
-                if (!this._isAtEndOfMedia()) {
-                    // Playing while at the end of the media can cause it to re-start from the start.
-                    // Avoid this by not playing if we're already at the end.
-                    this._mediaElement.play();
-                }
-            },
-
-            _isAtEndOfMedia: function() {
-                var range = this.getRange();
-                return this._mediaElement.currentTime === range.end;
             },
 
             _wipe: function() {

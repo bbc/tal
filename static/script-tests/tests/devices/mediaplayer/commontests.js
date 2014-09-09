@@ -312,7 +312,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
-    mixins.testWhenBufferingEnteredUsingPlayFromAndBufferingFinishesThenWeGoToPlayingFromSpecifiedPoint = function (queue) {
+    mixins.testWhenPlayFromMiddleOfMediaAndBufferingFinishesThenWeGoToPlayingFromSpecifiedPoint = function (queue) {
         expectAsserts(9);
         this.doTest(queue, function (MediaPlayer) {
             this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");

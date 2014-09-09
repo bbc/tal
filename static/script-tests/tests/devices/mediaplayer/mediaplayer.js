@@ -155,7 +155,7 @@
     };
 
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
-        expectAsserts(14);
+        expectAsserts(18);
         queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
@@ -165,18 +165,23 @@
             assertEquals(0,   instance.getClampedTime(0,    {start:0, end:100}));
             assertEquals(1,   instance.getClampedTime(1,    {start:0, end:100}));
             assertEquals(50,  instance.getClampedTime(50,   {start:0, end:100}));
-            assertEquals(100, instance.getClampedTime(100,  {start:0, end:100}));
-            assertEquals(100, instance.getClampedTime(101, {start:0, end:100}));
-            assertEquals(100, instance.getClampedTime(200, {start:0, end:100}));
+            assertEquals(99,  instance.getClampedTime(99,   {start:0, end:100}));
+            assertEquals(99.9,  instance.getClampedTime(99.9, {start:0, end:100}));
+            assertEquals(99.9,  instance.getClampedTime(100,  {start:0, end:100}));
+            assertEquals(99.9,  instance.getClampedTime(101,  {start:0, end:100}));
+            assertEquals(99.9,  instance.getClampedTime(200,  {start:0, end:100}));
 
             assertEquals(50, instance.getClampedTime(0,  {start:50, end:100}));
             assertEquals(50, instance.getClampedTime(49, {start:50, end:100}));
             assertEquals(50, instance.getClampedTime(50, {start:50, end:100}));
             assertEquals(51, instance.getClampedTime(51, {start:50, end:100}));
 
-            assertEquals(149, instance.getClampedTime(149, {start:50, end:150}));
-            assertEquals(150, instance.getClampedTime(150, {start:50, end:150}));
-            assertEquals(150, instance.getClampedTime(151, {start:50, end:150}));
+            assertEquals(149,   instance.getClampedTime(149,   {start:50, end:150}));
+            assertEquals(149.9, instance.getClampedTime(149.9, {start:50, end:150}));
+            assertEquals(149.9, instance.getClampedTime(150,   {start:50, end:150}));
+            assertEquals(149.9, instance.getClampedTime(151,   {start:50, end:150}));
+
+            assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
 
         });
     };
