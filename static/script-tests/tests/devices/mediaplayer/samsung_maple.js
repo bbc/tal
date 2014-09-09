@@ -66,8 +66,8 @@
         mockTime: function(mediaplayer) {
 
         },
-        makeOneSecondPass: function(mediaplayer, time) {
-            window.SamsungMapleOnCurrentPlayTime(time);
+        makeOneSecondPass: function(mediaplayer, time) { // TODO: Is this an inappropriate name, or are we just using it inappropriately (i.e. setting current time)
+            window.SamsungMapleOnCurrentPlayTime(time*1000);
         },
         unmockTime: function(mediaplayer) {
 
@@ -300,11 +300,48 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testNoSecondBufferingEventWhenPlayingFromABufferingState = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            var numEvents = eventHandler.callCount;
+            this._mediaPlayer.playFrom(10);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(numEvents, eventHandler.callCount);
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        expectAsserts(5);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer, 50);
+            assertEquals(50, this._mediaPlayer.getCurrentTime());
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.playFrom(50);
+            assert(eventHandler.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
+        })
+    };
+
     // TODO: Make sure we've handled each state correctly for playFrom
-    // - Buffering
-    // - Playing
-    // - Paused
-    // - Complete
+    // - Playing (when seeking to current time)
+    // - Paused (when seeking to current time)
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading

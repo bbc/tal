@@ -85,7 +85,18 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
+                        this._playerPlugin.ResumePlay(this._source, seconds);
+                        break;
+
                     case MediaPlayer.STATE.PLAYING:
+                        this._toBuffering();
+                        if (seconds === this.getCurrentTime()) {
+                            this._toPlaying();
+                        } else {
+                            this._playerPlugin.ResumePlay(this._source, seconds);
+                        }
+                        break;
+
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
