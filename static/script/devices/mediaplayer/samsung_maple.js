@@ -92,7 +92,7 @@ require.def(
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._playerPlugin.ResumePlay(this._source, 0);
+                        this._playerPlugin.ResumePlay(this._source, seconds);
                         this._toBuffering();
                         break;
 

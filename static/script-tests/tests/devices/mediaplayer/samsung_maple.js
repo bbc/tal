@@ -270,9 +270,19 @@
             assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 0));
             assertTrue(playerPlugin.ResumePlay.calledOnce);
         })
-    }
+    };
 
-    // TODO: Make sure that we convert seconds to millis when calling
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledWithTimePassedIntoPlayingFrom = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertTrue(playerPlugin.ResumePlay.notCalled);
+            this._mediaPlayer.playFrom(19);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 19));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+        })
+    };
+
     // TODO: Make sure we've handled each state correctly for playFrom
     // - Buffering
     // - Playing
@@ -307,6 +317,7 @@
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
+    // TODO: Investigate when millisenconds should be used
 
     //---------------------
     // Common tests
