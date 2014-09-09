@@ -242,21 +242,32 @@ require.def(
                 window.SamsungMapleOnRenderError = function () {
                     self._onDeviceError();
                 };
+                this.playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
                 };
+                this.playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
+
                 window.SamsungMapleOnBufferingStart = function () {
                     self._onDeviceBuffering();
                 };
+                this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
+
                 window.SamsungMapleOnBufferingComplete = function () {
                     self._onFinishedBuffering();
                 };
+                this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
+
                 window.SamsungMapleOnStreamInfoReady = function () {
                     self._onMetadata();
                 };
+                this.playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
+
                 window.SamsungMapleOnCurrentPlayTime = function (timeInMillis) {
                     self._onCurrentTime(timeInMillis);
                 };
+                this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
             },
 
             _unregisterEventHandlers: function() {

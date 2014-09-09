@@ -158,7 +158,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleOnRenderErrorRemovedOnReset = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
@@ -177,6 +177,30 @@
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
                 assertUndefined("Expecting " + func + " to be undefined", window[func]);
+            }
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
+        expectAsserts(listenerFunctions.length * 2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            var i;
+            var func;
+            var hook;
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertUndefined(playerPlugin[hook]);
+            }
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            for (i = 0; i < listenerFunctions.length; i++){
+                func = listenerFunctions[i];
+                hook = func.substring("SamsungMaple".length);
+                assertEquals(func, playerPlugin[hook]);
             }
         });
     };
