@@ -38,7 +38,7 @@ require.def(
             init: function() {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
-                this.playerPlugin = document.getElementById('playerPlugin');
+                this._playerPlugin = document.getElementById('playerPlugin');
                 this._wipe();
             },
 
@@ -92,6 +92,7 @@ require.def(
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._playerPlugin.ResumePlay(this._source, 0);
                         this._toBuffering();
                         break;
 
@@ -229,7 +230,7 @@ require.def(
             _onMetadata: function() {
                 this._range = {
                     start: 0,
-                    end: this.playerPlugin.GetDuration() / 1000
+                    end: this._playerPlugin.GetDuration() / 1000
                 };
             },
 
@@ -243,32 +244,32 @@ require.def(
                 window.SamsungMapleOnRenderError = function () {
                     self._onDeviceError();
                 };
-                this.playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+                this._playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
 
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
                 };
-                this.playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
+                this._playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
 
                 window.SamsungMapleOnBufferingStart = function () {
                     self._onDeviceBuffering();
                 };
-                this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
+                this._playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
 
                 window.SamsungMapleOnBufferingComplete = function () {
                     self._onFinishedBuffering();
                 };
-                this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
+                this._playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
 
                 window.SamsungMapleOnStreamInfoReady = function () {
                     self._onMetadata();
                 };
-                this.playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
+                this._playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
 
                 window.SamsungMapleOnCurrentPlayTime = function (timeInMillis) {
                     self._onCurrentTime(timeInMillis);
                 };
-                this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
+                this._playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
             },
 
             _unregisterEventHandlers: function() {
@@ -284,7 +285,7 @@ require.def(
                 for (var i = 0; i < eventHandlers.length; i++){
                     var handler = eventHandlers[i];
                     var hook = handler.substring("SamsungMaple".length);
-                    this.playerPlugin[hook] = undefined;
+                    this._playerPlugin[hook] = undefined;
 
                     delete window[handler];
                 }

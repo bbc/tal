@@ -60,20 +60,22 @@
             window.SamsungMapleOnBufferingStart();
         },
         mockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to set up fake timers if required
+
         },
         makeOneSecondPass: function(mediaplayer, time) {
             window.SamsungMapleOnCurrentPlayTime(time);
         },
         unmockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to tear down fake timers if required
+
         }
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
-        playerPlugin = { };
+        playerPlugin = {
+            ResumePlay: this.sandbox.stub()
+        };
 
         var originalGetElementById = document.getElementById;
         this.sandbox.stub(document, "getElementById", function(id) {
@@ -232,7 +234,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnResetr= function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
@@ -259,11 +261,28 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInStoppedState = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertTrue(playerPlugin.ResumePlay.notCalled);
+            this._mediaPlayer.playFrom(0);
+            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 0));
+            assertTrue(playerPlugin.ResumePlay.calledOnce);
+        })
+    }
+
+    // TODO: Make sure that we convert seconds to millis when calling
+    // TODO: Make sure we've handled each state correctly for playFrom
+    // - Buffering
+    // - Playing
+    // - Paused
+    // - Complete
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Test that playerPlugin.OnXXXX is set to the string SamsungMapleXXXX for each event listener.
     // TODO: Make setSource actually set the source and start the media loading
     // TODO: Make playFrom actually seek
-    // TODO: Make playFrom actually seek
+    // TODO: Make playFrom actually play
     // TODO: Make pause actually pause
     // TODO: Make stop actually stop
     // TODO: Make resume actually resume
