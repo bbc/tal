@@ -27,6 +27,8 @@
 require.def('antie/events/focusdelayevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when focus is gained by a {@link antie.widgets.Button} and
 		 * has not been lost within an application-wide number of milliseconds.

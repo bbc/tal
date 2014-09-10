@@ -31,6 +31,8 @@ require.def(
 		'antie/devices/media/mediainterface'
 	],
 	function(Device, MediaInterface) {
+		'use strict';
+
 		Device.prototype.getPlayerEmbedMode = function(mediaType) {
 			return MediaInterface.EMBED_MODE_EXTERNAL;
 		};

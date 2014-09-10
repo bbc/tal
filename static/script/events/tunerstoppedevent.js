@@ -27,6 +27,7 @@
 require.def('antie/events/tunerstoppedevent',
     ['antie/events/event'],
     function (Event) {
+        'use strict';
 
         /**
          * Indicates broadcast has stopped playing.

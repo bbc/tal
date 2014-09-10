@@ -27,6 +27,8 @@
 require.def('antie/events/selectevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when a {@link antie.widgets.Button} has been selected/activated/clicked by a user.
 		 * @name antie.events.SelectEvent

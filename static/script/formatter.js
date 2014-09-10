@@ -29,6 +29,8 @@ require.def("antie/formatter",
 		"antie/class"
 	],
 	function(Class) {
+		'use strict';
+
 		/**
 		 * Base formatter. Takes an iterator to a data source and returns a widget tree to represent one or more items of data.
 		 * @name antie.Formatter

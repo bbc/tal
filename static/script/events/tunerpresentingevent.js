@@ -27,6 +27,7 @@
 require.def('antie/events/tunerpresentingevent',
     ['antie/events/event'],
     function (Event) {
+        'use strict';
 
         /**
          * Indicates broadcast has started playing.

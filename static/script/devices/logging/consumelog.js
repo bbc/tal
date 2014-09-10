@@ -32,7 +32,9 @@ require.def(
 	],
 	function( Module, Device ) 
 	{
-		function ignore() {};
+		'use strict';
+
+		function ignore() {}
 
 		var loggingMethods = {
 			log: ignore,

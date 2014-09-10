@@ -27,6 +27,8 @@
 require.def('antie/events/textpagechangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when page is changed in a TextPager object
 		 * @name antie.events.TextPageChangeEvent

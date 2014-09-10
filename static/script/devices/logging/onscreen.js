@@ -32,6 +32,8 @@ require.def(
 	],
 	function( Module, Device) 
 	{
+		'use strict';
+
 		var div = null;
 		var logItems = [];
 

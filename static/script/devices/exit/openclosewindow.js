@@ -30,6 +30,8 @@ require.def(
 	'antie/devices/exit/openclosewindow',
 	['antie/devices/browserdevice'],
 	function(Device) {
+        'use strict';
+
         /**
          * Exits the application by invoking window.open() on the current window,
          * then window.close().

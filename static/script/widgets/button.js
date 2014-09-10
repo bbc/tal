@@ -34,6 +34,8 @@ require.def('antie/widgets/button',
 	 	'antie/events/selectevent'
 	],
 	function(Container, FocusEvent, FocusDelayEvent, BlurEvent, KeyEvent, SelectEvent) {
+		'use strict';
+
 		/**
 		 * The Button widget class represents a container widget which can receive focus and be selected/activated by the user.
 		 * @name antie.widgets.Button

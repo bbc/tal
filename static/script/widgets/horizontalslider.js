@@ -34,6 +34,8 @@ require.def('antie/widgets/horizontalslider',
 		'antie/events/sliderchangeevent'
 	],
 	function(Button, FocusEvent, BlurEvent, KeyEvent, SelectEvent, SliderChangeEvent) {
+		'use strict';
+
 		/**
 		 * The horizontal slider widget provides a method for users to pecificy a value between 0 and 1 using VK_LEFT and VK_RIGHT
 		 * @name antie.widgets.HorizontalSlider
