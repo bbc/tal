@@ -78,6 +78,7 @@
         this.sandbox = sinon.sandbox.create();
 
         playerPlugin = {
+            Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
             Resume: this.sandbox.stub()
         };
@@ -436,7 +437,24 @@
         })
     };
 
-    // TODO: Make resume actually resume
+    this.SamsungMapleMediaPlayerTests.prototype.testPauseCallsPauseWhenPlaying = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(playerPlugin.Pause.notCalled);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            this._mediaPlayer.pause();
+
+            assert(playerPlugin.Pause.calledOnce);
+        })
+    };
+
+
 
 
 

@@ -131,6 +131,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._playerPlugin.Pause();
                         this._toPaused();
                         break;
 
