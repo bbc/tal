@@ -39,7 +39,6 @@ require.def(
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._playerPlugin = document.getElementById('playerPlugin');
-                this._wipe();
             },
 
 
@@ -312,6 +311,7 @@ require.def(
             },
 
             _wipe: function () {
+                this._playerPlugin.Stop();
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;

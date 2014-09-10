@@ -472,7 +472,22 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(playerPlugin.Stop.notCalled);
+
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            assert(playerPlugin.Stop.calledOnce);
+        });
+    };
 
 
 
