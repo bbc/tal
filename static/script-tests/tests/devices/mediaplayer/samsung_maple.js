@@ -66,8 +66,8 @@
         mockTime: function(mediaplayer) {
 
         },
-        makeOneSecondPass: function(mediaplayer, time) { // TODO: Is this an inappropriate name, or are we just using it inappropriately (i.e. setting current time)
-            window.SamsungMapleOnCurrentPlayTime(time*1000);
+        makeOneSecondPass: function(mediaplayer) {
+            window.SamsungMapleOnCurrentPlayTime((mediaplayer.getCurrentTime() + 1) * 1000);
         },
         unmockTime: function(mediaplayer) {
 
@@ -326,7 +326,7 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer, 50);
+            window.SamsungMapleOnCurrentPlayTime(50000);
             assertEquals(50, this._mediaPlayer.getCurrentTime());
 
             var eventHandler = this.sandbox.stub();

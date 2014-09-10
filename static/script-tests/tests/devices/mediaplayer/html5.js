@@ -91,7 +91,7 @@
         },
         mockTime: function(mediaplayer) {
         },
-        makeOneSecondPass: function(mediaplayer, time) {
+        makeOneSecondPass: function(mediaplayer) {
             var timeUpdateEvent = {
                 type: "timeupdate"
             };
