@@ -157,20 +157,6 @@
             }, config);
     };
 
-    var makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest = function(method, args) {
-        return function(queue) {
-            expectAsserts(2);
-            this.runMediaPlayerTest(queue, function (MediaPlayer) {
-                var errorStub = this.sandbox.stub();
-                this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
-                this._mediaPlayer[method].apply(this._mediaPlayer, args);
-                assert(errorStub.calledWith("Cannot " + method + " while in the 'EMPTY' state"));
-                this._mediaPlayer[method].apply(this._mediaPlayer, args);
-                assert(errorStub.calledWith("Cannot " + method + " while in the 'ERROR' state"));
-            });
-        };
-    };
-
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -305,35 +291,6 @@
             assertEquals("100%", stubCreateElementResults.video.style.width);
             assertEquals("100%", stubCreateElementResults.video.style.height);
             assertEquals("", stubCreateElementResults.video.style.zIndex);
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhileSettingSourceInInvalidStateIsLogged = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var errorStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assert(errorStub.calledWith("Cannot set source unless in the 'EMPTY' state"));
-        });
-    };
-    
-    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingFromInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("playFrom", [0]);
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhilePausingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("pause");
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhilePlayingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("resume");
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhileStoppingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("stop");
-
-    this.HTML5MediaPlayerTests.prototype.testErrorWhileResettingInInvalidStateIsLogged = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var errorStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
-            this._mediaPlayer.reset();
-            assert(errorStub.calledWith("Cannot reset while in the 'EMPTY' state"));
         });
     };
 

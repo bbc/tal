@@ -74,8 +74,8 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
                 deviceMockingHooks.setup(this.sandbox, application);
 
-                var device = application.getDevice();
-                self.mediaPlayer = device.getMediaPlayer();
+                self.device = application.getDevice();
+                self.mediaPlayer = self.device.getMediaPlayer();
 
                 self.eventCallback = self.sandbox.stub();
                 self.mediaPlayer.addEventCallback(null, self.eventCallback);
@@ -657,6 +657,53 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
         });
     };
 
+    // *******************************************
+    // ***** Error logged for invalid state ******
+    // *********** transitions tests *************
+    // *******************************************
+
+    var makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest = function(method, args) {
+        return function(queue) {
+            expectAsserts(2);
+            this.doTest(queue, function (MediaPlayer) {
+                var errorStub = this.sandbox.stub();
+                this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
+                this.mediaPlayer[method].apply(this.mediaPlayer, args);
+                assert(errorStub.calledWith("Cannot " + method + " while in the 'EMPTY' state"));
+                this.mediaPlayer[method].apply(this.mediaPlayer, args);
+                assert(errorStub.calledWith("Cannot " + method + " while in the 'ERROR' state"));
+            });
+        };
+    };
+
+    mixins.testErrorWhilePlayingFromInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("playFrom", [0]);
+
+    mixins.testErrorWhilePausingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("pause");
+
+    mixins.testErrorWhilePlayingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("resume");
+
+    mixins.testErrorWhileStoppingInInvalidStateIsLogged = makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest("stop");
+
+    mixins.testErrorWhileSettingSourceInInvalidStateIsLogged = function(queue) {
+        expectAsserts(1);
+        this.doTest(queue, function (MediaPlayer) {
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
+            this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this.mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assert(errorStub.calledWith("Cannot set source unless in the 'EMPTY' state"));
+        });
+    };
+
+    mixins.testErrorWhileResettingInInvalidStateIsLogged = function(queue) {
+        expectAsserts(1);
+        this.doTest(queue, function (MediaPlayer) {
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
+            this.mediaPlayer.reset();
+            assert(errorStub.calledWith("Cannot reset while in the 'EMPTY' state"));
+        });
+    };
 
     // *******************************************
     // ********* Mixin the functions *************
