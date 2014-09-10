@@ -80,7 +80,8 @@
         playerPlugin = {
             Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
-            Resume: this.sandbox.stub()
+            Resume: this.sandbox.stub(),
+            Stop: this.sandbox.stub()
         };
 
         var originalGetElementById = document.getElementById;
@@ -454,12 +455,28 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testStopCallsStopWhenPlaying = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(playerPlugin.Stop.notCalled);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            this._mediaPlayer.stop();
+
+            assert(playerPlugin.Stop.calledOnce);
+        })
+    };
+
 
 
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Make pause actually pause
     // TODO: Make stop actually stop
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
@@ -487,6 +504,7 @@
     // TODO: Ensure all TODOs and FIXMEs in this file are resolved
     //  -- JumpForward / JumpBackward
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
+    // TODO: Investigate how we should handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
 
     //---------------------
     // Common tests

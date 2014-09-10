@@ -150,6 +150,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._playerPlugin.Stop();
                         this._toStopped();
                         break;
 
