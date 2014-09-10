@@ -28,9 +28,10 @@ require.def(
     "antie/devices/mediaplayer/samsung_maple",
     [
         "antie/devices/device",
-        "antie/devices/mediaplayer/mediaplayer"
+        "antie/devices/mediaplayer/mediaplayer",
+        "antie/runtimecontext"
     ],
-    function(Device, MediaPlayer) {
+    function(Device, MediaPlayer, RunTimeContext) {
         "use strict";
 
         var Player = MediaPlayer.extend({
@@ -228,7 +229,8 @@ require.def(
                 }
             },
 
-            _onDeviceError: function() {
+            _onDeviceError: function(message) {
+                RunTimeContext.getDevice().getLogger().error(message);
                 this._toError();
             },
 
@@ -261,9 +263,29 @@ require.def(
             _registerEventHandlers: function() {
                 var self = this;
                 window.SamsungMapleOnRenderError = function () {
-                    self._onDeviceError();
+                    self._onDeviceError("Media element emitted OnRenderError");
                 };
                 this._playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+
+                window.SamsungMapleOnConnectionFailed = function () {
+                    self._onDeviceError("Media element emitted OnConnectionFailed");
+                };
+                this._playerPlugin.OnConnectionFailed = 'SamsungMapleOnConnectionFailed';
+
+                window.SamsungMapleOnNetworkDisconnected = function () {
+                    self._onDeviceError("Media element emitted OnNetworkDisconnected");
+                };
+                this._playerPlugin.OnNetworkDisconnected = 'SamsungMapleOnNetworkDisconnected';
+
+                window.SamsungMapleOnStreamNotFound = function () {
+                    self._onDeviceError("Media element emitted OnStreamNotFound");
+                };
+                this._playerPlugin.OnStreamNotFound = 'SamsungMapleOnStreamNotFound';
+
+                window.SamsungMapleOnAuthenticationFailed = function () {
+                    self._onDeviceError("Media element emitted OnAuthenticationFailed");
+                };
+                this._playerPlugin.OnAuthenticationFailed = 'SamsungMapleOnAuthenticationFailed';
 
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
@@ -298,7 +320,11 @@ require.def(
                     'SamsungMapleOnBufferingStart',
                     'SamsungMapleOnBufferingComplete',
                     'SamsungMapleOnStreamInfoReady',
-                    'SamsungMapleOnCurrentPlayTime'
+                    'SamsungMapleOnCurrentPlayTime',
+                    'SamsungMapleOnConnectionFailed',
+                    'SamsungMapleOnNetworkDisconnected',
+                    'SamsungMapleOnStreamNotFound',
+                    'SamsungMapleOnAuthenticationFailed'
                 ];
 
                 for (var i = 0; i < eventHandlers.length; i++){
