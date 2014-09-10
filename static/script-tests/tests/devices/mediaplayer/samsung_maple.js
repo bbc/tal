@@ -340,6 +340,32 @@
         })
     };
 
+    // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndCallsResumePlay = function(queue) {
+        expectAsserts(7);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assertFalse(playerPlugin.ResumePlay.calledWith("testUrl", 50));
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.playFrom(50);
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
+            assert(playerPlugin.ResumePlay.calledTwice);
+            assert(playerPlugin.ResumePlay.calledWith("testUrl", 50));
+        })
+    };
+
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPausedStateBuffersThenPlays = function(queue) {
         expectAsserts(7);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
