@@ -100,6 +100,11 @@ require.def(
             },
 
             /**
+             * @constant {Number}
+             */
+            CLAMP_OFFSET_FROM_END_OF_RANGE: 0.1,
+
+            /**
              * Clamp a time value so it does not exceed the current range.
              * Clamps to near the end instead of the end itself to allow for devices that cannot seek to the very end of the media.
              * @param {Number} seconds The time value to clamp in seconds from the start of the media
@@ -107,7 +112,7 @@ require.def(
              */
             _getClampedTime: function(seconds) {
                 var range = this.getRange();
-                var nearToEnd = Math.max(range.end - 0.1, range.start);
+                var nearToEnd = Math.max(range.end - this.CLAMP_OFFSET_FROM_END_OF_RANGE, range.start);
                 if (seconds < range.start) {
                     return range.start;
                 } else if (seconds > nearToEnd) {
