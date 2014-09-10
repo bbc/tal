@@ -123,6 +123,11 @@ require.def(
             },
 
             /**
+             * @constant {Number}
+             */
+            CURRENT_TIME_TOLERANCE: 1,
+
+            /**
              * Check whether a time value is near to the current media play time.
              * @param {Number} seconds The time value to test, in seconds from the start of the media
              * @protected
@@ -130,7 +135,7 @@ require.def(
             _isNearToCurrentTime: function(seconds) {
                 var currentTime = this.getCurrentTime();
                 var targetTime = this._getClampedTime(seconds);
-                return Math.abs(currentTime - targetTime) <= 1;
+                return Math.abs(currentTime - targetTime) <= this.CURRENT_TIME_TOLERANCE;
             },
 
             /**
