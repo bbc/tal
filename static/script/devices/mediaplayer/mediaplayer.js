@@ -118,6 +118,17 @@ require.def(
             },
 
             /**
+             * Check whether a time value is near to the current media play time.
+             * @param {Number} seconds The time value to test, in seconds from the start of the media
+             * @protected
+             */
+            _isNearToCurrentTime: function(seconds) {
+                var currentTime = this.getCurrentTime();
+                var targetTime = this._getClampedTime(seconds);
+                return Math.abs(currentTime - targetTime) <= 1;
+            },
+
+            /**
              * Set the media resource to be played.
              * Calling this in any state other than EMPTY is an error.
              * @param {antie.devices.mediaplayer.MediaPlayer.TYPE} mediaType Value from the MediaPlayer.TYPE enum; audio or video.
