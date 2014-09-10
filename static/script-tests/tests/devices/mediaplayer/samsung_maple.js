@@ -270,10 +270,10 @@
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertTrue(playerPlugin.ResumePlay.notCalled);
+            assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(0);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 0));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testURL', 0));
+            assert(playerPlugin.ResumePlay.calledOnce);
         })
     };
 
@@ -281,10 +281,10 @@
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertTrue(playerPlugin.ResumePlay.notCalled);
+            assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(19);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 19));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testURL', 19));
+            assert(playerPlugin.ResumePlay.calledOnce);
         })
     };
 
@@ -293,11 +293,11 @@
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 0));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testUrl', 0));
+            assert(playerPlugin.ResumePlay.calledOnce);
             this._mediaPlayer.playFrom(50);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 50));
-            assertTrue(playerPlugin.ResumePlay.calledTwice);
+            assert(playerPlugin.ResumePlay.calledWith('testUrl', 50));
+            assert(playerPlugin.ResumePlay.calledTwice);
         })
     };
 
