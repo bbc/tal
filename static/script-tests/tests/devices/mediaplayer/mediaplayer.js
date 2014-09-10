@@ -44,17 +44,23 @@
 
     var createSubClass = function(MediaPlayer) {
         var range = { start: 0, end: 100 };
+        var currentTime = 0;
         return MediaPlayer.extend({
-            getClampedTime: function(time, within) {
+            getClampedTime: function(seconds, within) {
                 range = within;
-                return this._getClampedTime(time);
+                return this._getClampedTime(seconds);
+            },
+            isNearToCurrentTime: function (seconds, currentTimeOverride) {
+                range = { start: -10000, end: 10000};
+                currentTime = currentTimeOverride;
+                return this._isNearToCurrentTime(seconds);
             },
             doEvent: function(type) {
                 this._emitEvent(type);
             },
             getSource: function () { return "url"; },
             getMimeType: function () { return "mime/type"; },
-            getCurrentTime: function () { return 0; },
+            getCurrentTime: function () { return currentTime; },
             getRange: function () { return range; },
             getState: function () { return MediaPlayer.STATE.PLAYING; }
         });
@@ -183,6 +189,31 @@
 
             assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
 
+        });
+    };
+
+    this.MediaPlayerTest.prototype.testIsNearToCurrentTimeCalculation = function (queue) {
+        expectAsserts(14);
+        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+
+            var SubClass = createSubClass(MediaPlayer);
+            var instance = new SubClass();
+
+            assertEquals(true,   instance.isNearToCurrentTime(0,      0));
+            assertEquals(true,   instance.isNearToCurrentTime(1,      0));
+            assertEquals(true,   instance.isNearToCurrentTime(-1,     0));
+            assertEquals(false,   instance.isNearToCurrentTime(1.1,   0));
+            assertEquals(false,   instance.isNearToCurrentTime(-1.1,  0));
+            assertEquals(false,   instance.isNearToCurrentTime(1000,  0));
+            assertEquals(false,   instance.isNearToCurrentTime(-1000, 0));
+
+            assertEquals(true,   instance.isNearToCurrentTime(10,     10));
+            assertEquals(true,   instance.isNearToCurrentTime(11,     10));
+            assertEquals(true,   instance.isNearToCurrentTime(9,      10));
+            assertEquals(false,   instance.isNearToCurrentTime(11.1,  10));
+            assertEquals(false,   instance.isNearToCurrentTime(8.9,   10));
+            assertEquals(false,   instance.isNearToCurrentTime(1000,  10));
+            assertEquals(false,   instance.isNearToCurrentTime(-1000, 10));
         });
     };
 

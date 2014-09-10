@@ -349,12 +349,6 @@ require.def(
                 this._targetSeekTime = undefined;
             },
 
-            _isNearToCurrentTime: function(seconds) {
-                var currentTime = this.getCurrentTime();
-                var targetTime = this._getClampedTime(seconds);
-                return Math.abs(currentTime - targetTime) <= 1;
-            },
-
             _seekTo: function(seconds) {
                 this._mediaElement.currentTime = this._getClampedTime(seconds);
             },
