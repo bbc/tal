@@ -102,9 +102,8 @@ require.def(
                         if (seconds === this.getCurrentTime()) {
                             this._playerPlugin.Resume();
                             this._toPlaying();
-// TODO:
-//                        } else {
-//                            this._playerPlugin.ResumePlay(this._source, seconds);
+                        } else {
+                            this._playerPlugin.ResumePlay(this._source, seconds);
                         }
                         break;
 
