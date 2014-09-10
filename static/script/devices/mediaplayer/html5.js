@@ -39,7 +39,6 @@ require.def(
             init: function() {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
-                this._wipe();
             },
 
 

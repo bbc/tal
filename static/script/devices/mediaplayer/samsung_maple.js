@@ -39,7 +39,6 @@ require.def(
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._playerPlugin = document.getElementById('playerPlugin');
-                this._wipe();
             },
 
 
@@ -69,6 +68,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
+                        this._playerPlugin.Resume();
                         this._toPlaying();
                         break;
 
@@ -92,9 +92,8 @@ require.def(
                         this._toBuffering();
                         if (seconds === this.getCurrentTime()) {
                             this._toPlaying();
-// TODO:
-//                        } else {
-//                            this._playerPlugin.ResumePlay(this._source, seconds);
+                        } else {
+                            this._playerPlugin.ResumePlay(this._source, seconds);
                         }
                         break;
 
@@ -103,9 +102,8 @@ require.def(
                         if (seconds === this.getCurrentTime()) {
                             this._playerPlugin.Resume();
                             this._toPlaying();
-// TODO:
-//                        } else {
-//                            this._playerPlugin.ResumePlay(this._source, seconds);
+                        } else {
+                            this._playerPlugin.ResumePlay(this._source, seconds);
                         }
                         break;
 
@@ -132,6 +130,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._playerPlugin.Pause();
                         this._toPaused();
                         break;
 
@@ -150,6 +149,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._playerPlugin.Stop();
                         this._toStopped();
                         break;
 
@@ -311,6 +311,7 @@ require.def(
             },
 
             _wipe: function () {
+                this._playerPlugin.Stop();
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;

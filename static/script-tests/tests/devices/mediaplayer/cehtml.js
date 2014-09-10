@@ -84,7 +84,7 @@
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
-    // TODO: Make playFrom actually seek
+    // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
     // TODO: Make pause actually pause
     // TODO: Make stop actually stop
@@ -93,6 +93,7 @@
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
+    // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
     // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
     // TODO: Determine if the seekTo call blocks until it is complete (see media/cehtml.js:240)
     // TODO: media/cehtmlmediatypefix.js equivalent
