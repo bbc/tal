@@ -486,7 +486,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
             });
             deviceMockingHooks.makeOneSecondPass(this.mediaPlayer);
             deviceMockingHooks.makeOneSecondPass(this.mediaPlayer);
-            assertTrue(this.eventCallback.callCount - originalCount >= 3); // Three seconds so must have had at least three status messages
+            assert(this.eventCallback.callCount - originalCount >= 3); // Three seconds so must have had at least three status messages
             deviceMockingHooks.unmockTime(this.mediaPlayer);
         });
     };

@@ -52,7 +52,7 @@
         mockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to set up fake timers if required
         },
-        makeOneSecondPass: function(mediaplayer, time) {
+        makeOneSecondPass: function(mediaplayer) {
             mediaplayer._onStatus();  // FIXME - do not do this in an actual implementation - replace it with proper event / setTimeout mock / whatever.
         },
         unmockTime: function(mediaplayer) {

@@ -66,8 +66,8 @@
         mockTime: function(mediaplayer) {
 
         },
-        makeOneSecondPass: function(mediaplayer, time) { // TODO: Is this an inappropriate name, or are we just using it inappropriately (i.e. setting current time)
-            window.SamsungMapleOnCurrentPlayTime(time*1000);
+        makeOneSecondPass: function(mediaplayer) {
+            window.SamsungMapleOnCurrentPlayTime((mediaplayer.getCurrentTime() + 1) * 1000);
         },
         unmockTime: function(mediaplayer) {
 
@@ -78,7 +78,8 @@
         this.sandbox = sinon.sandbox.create();
 
         playerPlugin = {
-            ResumePlay: this.sandbox.stub()
+            ResumePlay: this.sandbox.stub(),
+            Resume: this.sandbox.stub()
         };
 
         var originalGetElementById = document.getElementById;
@@ -269,10 +270,10 @@
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertTrue(playerPlugin.ResumePlay.notCalled);
+            assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(0);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 0));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testURL', 0));
+            assert(playerPlugin.ResumePlay.calledOnce);
         })
     };
 
@@ -280,10 +281,10 @@
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assertTrue(playerPlugin.ResumePlay.notCalled);
+            assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(19);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testURL', 19));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testURL', 19));
+            assert(playerPlugin.ResumePlay.calledOnce);
         })
     };
 
@@ -292,11 +293,11 @@
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 0));
-            assertTrue(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testUrl', 0));
+            assert(playerPlugin.ResumePlay.calledOnce);
             this._mediaPlayer.playFrom(50);
-            assertTrue(playerPlugin.ResumePlay.calledWith('testUrl', 50));
-            assertTrue(playerPlugin.ResumePlay.calledTwice);
+            assert(playerPlugin.ResumePlay.calledWith('testUrl', 50));
+            assert(playerPlugin.ResumePlay.calledTwice);
         })
     };
 
@@ -326,7 +327,7 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer, 50);
+            window.SamsungMapleOnCurrentPlayTime(50000);
             assertEquals(50, this._mediaPlayer.getCurrentTime());
 
             var eventHandler = this.sandbox.stub();
@@ -339,8 +340,32 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPausedStateBuffersThenPlays = function(queue) {
+        expectAsserts(7);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            window.SamsungMapleOnCurrentPlayTime(50000);
+            this._mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assertEquals(50, this._mediaPlayer.getCurrentTime());
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            assert(playerPlugin.Resume.notCalled);
+            this._mediaPlayer.playFrom(50);
+            assert(playerPlugin.Resume.calledOnce);
+            assert(eventHandler.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
+        })
+    };
+
     // TODO: Make sure we've handled each state correctly for playFrom
-    // - Playing (when seeking to current time)
     // - Paused (when seeking to current time)
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive

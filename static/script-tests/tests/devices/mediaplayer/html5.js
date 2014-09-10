@@ -91,7 +91,7 @@
         },
         mockTime: function(mediaplayer) {
         },
-        makeOneSecondPass: function(mediaplayer, time) {
+        makeOneSecondPass: function(mediaplayer) {
             var timeUpdateEvent = {
                 type: "timeupdate"
             };
@@ -495,7 +495,7 @@
             assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            assertTrue(stubCreateElementResults.video.play.called);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             assertEquals(50, stubCreateElementResults.video.currentTime);
 
@@ -528,7 +528,7 @@
             assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            assertTrue(stubCreateElementResults.video.pause.called);
+            assert(stubCreateElementResults.video.pause.called);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             assertEquals(50, stubCreateElementResults.video.currentTime);
             sinon.assert.callOrder(stubCreateElementResults.video.play, stubCreateElementResults.video.pause);
@@ -671,7 +671,7 @@
 
             for (var eventName in mediaEventListeners) {
                 if (mediaEventListeners.hasOwnProperty(eventName)) {
-                    assertTrue('Removed listener for ' + eventName, stubCreateElementResults.video.removeEventListener.withArgs(eventName).called);
+                    assert('Removed listener for ' + eventName, stubCreateElementResults.video.removeEventListener.withArgs(eventName).called);
                 }
             }
         });
@@ -844,8 +844,8 @@
 
             this._mediaPlayer.reset();
 
-            assertTrue(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
-            assertTrue(stubCreateElementResults.video.load.calledOnce);
+            assert(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
+            assert(stubCreateElementResults.video.load.calledOnce);
         });
     };
 
