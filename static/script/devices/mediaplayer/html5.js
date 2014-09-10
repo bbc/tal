@@ -112,7 +112,7 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (this._tryingToSeekToCurrentTime(seconds)) {
+                        if (this._isNearToCurrentTime(seconds)) {
                             this._toPlaying();
                         } else {
                             this._playFromIfReady();
@@ -349,7 +349,7 @@ require.def(
                 this._targetSeekTime = undefined;
             },
 
-            _tryingToSeekToCurrentTime: function(seconds) {
+            _isNearToCurrentTime: function(seconds) {
                 var currentTime = this.getCurrentTime();
                 var targetTime = this._getClampedTime(seconds);
                 return Math.abs(currentTime - targetTime) <= 1;
