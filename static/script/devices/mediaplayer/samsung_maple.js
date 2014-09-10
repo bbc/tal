@@ -31,7 +31,7 @@ require.def(
         "antie/devices/mediaplayer/mediaplayer",
         "antie/runtimecontext"
     ],
-    function(Device, MediaPlayer, RunTimeContext) {
+    function(Device, MediaPlayer, RuntimeContext) {
         "use strict";
 
         var Player = MediaPlayer.extend({
@@ -54,7 +54,7 @@ require.def(
                     this._registerEventHandlers();
                     this._toStopped();
                 } else {
-                    this._toError();
+                    this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
 
@@ -74,7 +74,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot resume while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -115,7 +115,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -136,7 +136,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot pause while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -155,7 +155,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot stop while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -171,7 +171,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot reset while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -230,8 +230,7 @@ require.def(
             },
 
             _onDeviceError: function(message) {
-                RunTimeContext.getDevice().getLogger().error(message);
-                this._toError();
+                this._toError(message);
             },
 
             _onDeviceBuffering: function() {
@@ -379,7 +378,8 @@ require.def(
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function () {
+            _toError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
