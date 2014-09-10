@@ -417,16 +417,32 @@
         })
     };
 
-    // TODO: Make sure we've handled each state correctly for playFrom
-    // - Paused (when seeking to current time)
+
+    this.SamsungMapleMediaPlayerTests.prototype.testResumeWhenPausedCallsResume = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+
+            assert(playerPlugin.Resume.notCalled);
+
+            this._mediaPlayer.resume();
+
+            assert(playerPlugin.Resume.calledOnce);
+        })
+    };
+
+    // TODO: Make resume actually resume
+
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Make setSource actually set the source and start the media loading
-    // TODO: Make playFrom actually seek
-    // TODO: Make playFrom actually play
     // TODO: Make pause actually pause
     // TODO: Make stop actually stop
-    // TODO: Make resume actually resume
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
     //      - on connection failed
@@ -450,6 +466,8 @@
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
     // TODO: Investigate when millisenconds should be used
+    // TODO: Ensure all TODOs and FIXMEs in this file are resolved
+    //  -- JumpForward / JumpBackward
 
     //---------------------
     // Common tests

@@ -69,6 +69,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
+                        this._playerPlugin.Resume();
                         this._toPlaying();
                         break;
 
