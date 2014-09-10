@@ -11,7 +11,7 @@
 
 require.def('antie/class', function() {
   "use strict";
-  var initializing = false, fnTest = /var xyz/.test(function () { var xyz; }) ? /\b_super\b/ : /[\D|\d]*/;
+  var initializing = false, fnTest = /var xyz/.test(function () { var xyz; }) ? /\b_super\b/ : /.*/;
 
 	/**
 	 * The base Class implementation (does nothing)
