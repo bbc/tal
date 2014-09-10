@@ -468,6 +468,7 @@
     // TODO: Investigate when millisenconds should be used
     // TODO: Ensure all TODOs and FIXMEs in this file are resolved
     //  -- JumpForward / JumpBackward
+    // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
 
     //---------------------
     // Common tests
