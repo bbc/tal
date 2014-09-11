@@ -94,6 +94,7 @@
                    return originalGetElementById.call(document, id);
            }
         });
+
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.tearDown = function() {
@@ -105,6 +106,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/samsung_maple", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
                 this._device = application.getDevice();
+                this._errorLog = this.sandbox.stub(this._device.getLogger(), "error");
                 self._mediaPlayer = this._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
             }, config);
@@ -120,7 +122,11 @@
         'SamsungMapleOnBufferingStart',
         'SamsungMapleOnBufferingComplete',
         'SamsungMapleOnStreamInfoReady',
-        'SamsungMapleOnCurrentPlayTime'
+        'SamsungMapleOnCurrentPlayTime',
+        'SamsungMapleOnConnectionFailed',
+        'SamsungMapleOnNetworkDisconnected',
+        'SamsungMapleOnStreamNotFound',
+        'SamsungMapleOnAuthenticationFailed'
     ];
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
@@ -489,15 +495,102 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testOnRenderErrorCausesErrorEvent = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            window.SamsungMapleOnRenderError();
+
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
+            assert(this._errorLog.calledOnce);
+            assert(this._errorLog.calledWith("Media element emitted OnRenderError"));
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testOnConnectionFailedCausesErrorEvent = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            window.SamsungMapleOnConnectionFailed();
+
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
+            assert(this._errorLog.calledOnce);
+            assert(this._errorLog.calledWith("Media element emitted OnConnectionFailed"));
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testOnNetworkDisconnectedCausesErrorEvent = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            window.SamsungMapleOnNetworkDisconnected();
+
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
+            assert(this._errorLog.calledOnce);
+            assert(this._errorLog.calledWith("Media element emitted OnNetworkDisconnected"));
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testOnStreamNotFoundCausesErrorEvent = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            window.SamsungMapleOnStreamNotFound();
+
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
+            assert(this._errorLog.calledOnce);
+            assert(this._errorLog.calledWith("Media element emitted OnStreamNotFound"));
+
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testOnAuthenticationFailedCausesErrorEvent = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            window.SamsungMapleOnAuthenticationFailed();
+
+            assert(eventHandler.calledOnce);
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
+            assert(this._errorLog.calledOnce);
+            assert(this._errorLog.calledWith("Media element emitted OnAuthenticationFailed"));
+
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Make stop actually stop
-    // TODO: Ensure reset actually clears the state
-    // TODO: Ensure errors are handled
-    //      - on connection failed
-    //      - on network disconnected
-    //      - on stream not found
     // TODO: Ensure errors are logged.
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // -- Edge case: when we playFrom beyond end of video from stopped state we need to clamp after metadata is loaded

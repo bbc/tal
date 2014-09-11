@@ -28,9 +28,10 @@ require.def(
     "antie/devices/mediaplayer/samsung_maple",
     [
         "antie/devices/device",
-        "antie/devices/mediaplayer/mediaplayer"
+        "antie/devices/mediaplayer/mediaplayer",
+        "antie/runtimecontext"
     ],
-    function(Device, MediaPlayer) {
+    function(Device, MediaPlayer, RuntimeContext) {
         "use strict";
 
         var Player = MediaPlayer.extend({
@@ -53,7 +54,7 @@ require.def(
                     this._registerEventHandlers();
                     this._toStopped();
                 } else {
-                    this._toError();
+                    this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
 
@@ -73,7 +74,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot resume while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -114,7 +115,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -135,7 +136,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot pause while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -154,7 +155,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot stop while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -170,7 +171,7 @@ require.def(
                         break;
 
                     default:
-                        this._toError();
+                        this._toError("Cannot reset while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -228,8 +229,8 @@ require.def(
                 }
             },
 
-            _onDeviceError: function() {
-                this._toError();
+            _onDeviceError: function(message) {
+                this._toError(message);
             },
 
             _onDeviceBuffering: function() {
@@ -261,9 +262,29 @@ require.def(
             _registerEventHandlers: function() {
                 var self = this;
                 window.SamsungMapleOnRenderError = function () {
-                    self._onDeviceError();
+                    self._onDeviceError("Media element emitted OnRenderError");
                 };
                 this._playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+
+                window.SamsungMapleOnConnectionFailed = function () {
+                    self._onDeviceError("Media element emitted OnConnectionFailed");
+                };
+                this._playerPlugin.OnConnectionFailed = 'SamsungMapleOnConnectionFailed';
+
+                window.SamsungMapleOnNetworkDisconnected = function () {
+                    self._onDeviceError("Media element emitted OnNetworkDisconnected");
+                };
+                this._playerPlugin.OnNetworkDisconnected = 'SamsungMapleOnNetworkDisconnected';
+
+                window.SamsungMapleOnStreamNotFound = function () {
+                    self._onDeviceError("Media element emitted OnStreamNotFound");
+                };
+                this._playerPlugin.OnStreamNotFound = 'SamsungMapleOnStreamNotFound';
+
+                window.SamsungMapleOnAuthenticationFailed = function () {
+                    self._onDeviceError("Media element emitted OnAuthenticationFailed");
+                };
+                this._playerPlugin.OnAuthenticationFailed = 'SamsungMapleOnAuthenticationFailed';
 
                 window.SamsungMapleOnRenderingComplete = function () {
                     self._onEndOfMedia();
@@ -298,7 +319,11 @@ require.def(
                     'SamsungMapleOnBufferingStart',
                     'SamsungMapleOnBufferingComplete',
                     'SamsungMapleOnStreamInfoReady',
-                    'SamsungMapleOnCurrentPlayTime'
+                    'SamsungMapleOnCurrentPlayTime',
+                    'SamsungMapleOnConnectionFailed',
+                    'SamsungMapleOnNetworkDisconnected',
+                    'SamsungMapleOnStreamNotFound',
+                    'SamsungMapleOnAuthenticationFailed'
                 ];
 
                 for (var i = 0; i < eventHandlers.length; i++){
@@ -353,7 +378,8 @@ require.def(
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function () {
+            _toError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
