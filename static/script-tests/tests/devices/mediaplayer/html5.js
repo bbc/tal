@@ -50,13 +50,10 @@
             stubCreateElement(sandbox,application);
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-
             var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
             for (var i = 0; i < mediaElements.length; i++) {
                 var media = mediaElements[i];
-                media.seekable.length = 1;
-                media.seekable.start.returns(range.start);
-                media.seekable.end.returns(range.end);
+                media.duration = range.end;
                 media.currentTime = currentTime;
             }
             mediaEventListeners.loadedmetadata();
@@ -117,10 +114,6 @@
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
             var media = mediaElements[i];
-            media.seekable = {
-                start: this.sandbox.stub(),
-                end: this.sandbox.stub()
-            };
             media.play = this.sandbox.stub();
             media.pause = this.sandbox.stub();
             media.load = this.sandbox.stub();
@@ -246,53 +239,14 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testWeDoNotAccessSeekableRangesWhenThereAreNoSeekableRanges = function(queue) {
-        expectAsserts(3);
+    this.HTML5MediaPlayerTests.prototype.testGetRangeGetsEndTimeFromDuration = function(queue) {
+        expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            stubCreateElementResults.video.seekable.length = 0;
-            assertUndefined(this._mediaPlayer.getRange());
-            assert(stubCreateElementResults.video.seekable.start.notCalled);
-            assert(stubCreateElementResults.video.seekable.end.notCalled);
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testSeekableTimesObtainedFromFirstSeekableRange = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            stubCreateElementResults.video.seekable.length = 1;
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
-            this._mediaPlayer.getRange();
-            assert(stubCreateElementResults.video.seekable.start.alwaysCalledWith(0));
-            assert(stubCreateElementResults.video.seekable.end.alwaysCalledWith(0));
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testWhenThereAreManySeekableRangesGetRangeReturnsUndefinedAndThisIsLogged = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var warnStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
-            stubCreateElementResults.video.seekable.length = 2;
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            assertUndefined(this._mediaPlayer.getRange());
-            assert(warnStub.calledWith("Multiple seekable ranges detected"));
-        });
-    };
-
-    this.HTML5MediaPlayerTests.prototype.testWhenThereIsNoSeekablePropertyWeReturnUndefinedAndLogAWarning = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var warnStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
-            delete stubCreateElementResults.video.seekable;
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            assertUndefined(this._mediaPlayer.getRange());
-            assert(warnStub.calledWith("'seekable' property missing from media element"));
-        });
+            stubCreateElementResults.video.duration = 60;
+            assertEquals(60, this._mediaPlayer.getRange());
+        };
     };
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementIsFullScreen = function(queue) {

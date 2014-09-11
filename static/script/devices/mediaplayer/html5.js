@@ -256,21 +256,10 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    var seekable = this._mediaElement.seekable;
-                    var logger = RuntimeContext.getDevice().getLogger();
-
-                    if (!seekable) {
-                        logger.warn("'seekable' property missing from media element");
-
-                    } else if (seekable.length === 1) {
-                        return {
-                            start: seekable.start(0),
-                            end: seekable.end(0)
-                        };
-
-                    } else if (seekable.length > 1) {
-                        logger.warn("Multiple seekable ranges detected");
-                    }
+                    return {
+                        start: 0,
+                        end: this._mediaElement.duration
+                    };
                 }
                 return undefined;
             },
