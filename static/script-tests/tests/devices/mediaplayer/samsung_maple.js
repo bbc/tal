@@ -349,6 +349,7 @@
     };
 
     // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
+    // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndCallsResumePlay = function(queue) {
         expectAsserts(7);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -400,6 +401,7 @@
     };
 
     // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
+    // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndCallsResumePlay = function(queue) {
         expectAsserts(7);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -663,12 +665,11 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    // -- Edge case: when we playFrom beyond end of video from stopped state we need to clamp after metadata is loaded
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
     // TODO: See if all three plugins required by the media/samsung_maple modifier are required
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
+    // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
     // -- "hide" is needed for newer devices
     // -- "unload" is needed for older devices - media/samsung_maple_unload
