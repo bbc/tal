@@ -647,6 +647,21 @@
         })
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationBeforeMetaDataClampsAfterMetadata = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(100);
+
+            assert(playerPlugin.ResumePlay.calledOnce);
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+
+            assert(playerPlugin.ResumePlay.calledTwice);
+            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+        })
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // -- Edge case: when we playFrom beyond end of video from stopped state we need to clamp after metadata is loaded
