@@ -590,8 +590,8 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationClampsToJustBeforeEnd = function(queue) {
-        expectAsserts(3);
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPlayingClampsToJustBeforeEnd = function(queue) {
+        expectAsserts(2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -601,8 +601,49 @@
 
             assert(playerPlugin.ResumePlay.calledTwice);
             assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
-            window.SamsungMapleOnCurrentPlayTime(59900); // TODO: Should time only be updated by device? Related TODO in the main section below
-            assertEquals(59.9, this._mediaPlayer.getCurrentTime());
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstBufferingClampsToJustBeforeEnd = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            this._mediaPlayer.playFrom(100);
+
+            assert(playerPlugin.ResumePlay.calledTwice);
+            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPausedClampsToJustBeforeEnd = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+            this._mediaPlayer.playFrom(100);
+
+            assert(playerPlugin.ResumePlay.calledTwice);
+            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+        })
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstCompleteClampsToJustBeforeEnd = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            this._mediaPlayer.playFrom(100);
+
+            assert(playerPlugin.ResumePlay.calledTwice);
+            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
         })
     };
 
@@ -617,7 +658,8 @@
     // -- "hide" is needed for newer devices
     // -- "unload" is needed for older devices - media/samsung_maple_unload
     // TODO: Determine if we need to call our own time update method - media/samsung_maple calls it in a couple of places (onRenderingComplete and onCurrentPlayTime)
-    // -- Should time only be updated by the device? Related comment in testPlayFromTimeGreaterThanDurationClampsToJustBeforeEnd
+    // -- Should time only be updated by the device? Should playFrom be setting the time?
+    // TODO: Add test that the current time reported is updated by the update events. (Done as a side effect of another test, but should have it's own test really)
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
@@ -626,6 +668,7 @@
     //  -- JumpForward / JumpBackward
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
     // TODO: Investigate how we should handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
+    // TODO: Determine whether we need to call Stop() onRenderingComplete.
 
     //---------------------
     // Common tests
