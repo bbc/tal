@@ -94,7 +94,7 @@ require.def(
                         if (seconds === this.getCurrentTime()) {
                             this._toPlaying();
                         } else {
-                            this._playerPlugin.ResumePlay(this._source, seconds);
+                            this._playerPlugin.ResumePlay(this._source, this._getClampedTime(seconds));
                         }
                         break;
 
