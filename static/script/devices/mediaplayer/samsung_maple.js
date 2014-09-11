@@ -95,7 +95,7 @@ require.def(
                         if (seconds === this.getCurrentTime()) {
                             this._toPlaying();
                         } else {
-                            this._playerPlugin.ResumePlay(this._source, this._seekingTo);
+                            this._playerPlugin.JumpForward(this._seekingTo);
                         }
                         break;
 
@@ -105,7 +105,7 @@ require.def(
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
-                            this._playerPlugin.ResumePlay(this._source, this._seekingTo);
+                            this._playerPlugin.JumpForward(this._seekingTo);
                         }
                         break;
 

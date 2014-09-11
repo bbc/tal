@@ -78,6 +78,8 @@
         this.sandbox = sinon.sandbox.create();
 
         playerPlugin = {
+            JumpBackward: this.sandbox.stub(),
+            JumpForward: this.sandbox.stub(),
             Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
             Resume: this.sandbox.stub(),
@@ -350,8 +352,8 @@
 
     // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
     // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndCallsResumePlay = function(queue) {
-        expectAsserts(7);
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndSeeks = function(queue) {
+        expectAsserts(8);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -359,10 +361,8 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-
-
             assert(playerPlugin.ResumePlay.calledOnce);
-            assertFalse(playerPlugin.ResumePlay.calledWith("testUrl", 50));
+            assert(playerPlugin.JumpForward.notCalled);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -370,10 +370,14 @@
             this._mediaPlayer.playFrom(50);
             assert(eventHandler.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assert(playerPlugin.ResumePlay.calledWith("testUrl", 50));
+
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(50));
         })
     };
+
+    // TODO: Above test equivalent for backward-in-stream seeking.
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPausedStateBuffersThenPlays = function(queue) {
         expectAsserts(7);
@@ -402,8 +406,8 @@
 
     // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
     // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndCallsResumePlay = function(queue) {
-        expectAsserts(7);
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndSeeks = function(queue) {
+        expectAsserts(8);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -412,9 +416,8 @@
             this._mediaPlayer.pause();
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
-
+            assert(playerPlugin.JumpForward.notCalled);
             assert(playerPlugin.ResumePlay.calledOnce);
-            assertFalse(playerPlugin.ResumePlay.calledWith("testUrl", 50));
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -422,10 +425,15 @@
             this._mediaPlayer.playFrom(50);
             assert(eventHandler.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assert(playerPlugin.ResumePlay.calledWith("testUrl", 50));
+
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(50));
         })
     };
+
+    // TODO: Above test equivalent for backward-in-stream seeking.
+
 
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumeWhenPausedCallsResume = function(queue) {
@@ -593,16 +601,19 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPlayingClampsToJustBeforeEnd = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(playerPlugin.JumpForward.notCalled);
+
             this._mediaPlayer.playFrom(100);
 
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(59.9));
         })
     };
 
@@ -620,17 +631,20 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPausedClampsToJustBeforeEnd = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             this._mediaPlayer.pause();
+
+            assert(playerPlugin.JumpForward.notCalled);
+
             this._mediaPlayer.playFrom(100);
 
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(59.9));
         })
     };
 
@@ -685,6 +699,11 @@
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
     // TODO: Investigate how we should handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
     // TODO: Determine whether we need to call Stop() onRenderingComplete.
+    // TODO: PlayFrom Stopped should call ResumePlay (currently does this - make sure we do not change this).
+    // TODO: PlayFrom Complete should call ????
+    // TODO: PlayFrom Buffering should call Jump
+    // TODO: Stop jumping forward as if we are always at 0
+    // TODO: Jump backwards if we are rewinding
 
     //---------------------
     // Common tests
