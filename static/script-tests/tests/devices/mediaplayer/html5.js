@@ -239,14 +239,27 @@
         });
     };
 
+    this.HTML5MediaPlayerTests.prototype.testIfDurationIsMissingGetRangeReturnsUndefinedAndLogsAWarning = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            delete stubCreateElementResults.video.duration;
+            assertUndefined(this._mediaPlayer.getRange());
+            assert(warnStub.calledWith("'duration' property missing from media element"));
+        });
+    };
+
     this.HTML5MediaPlayerTests.prototype.testGetRangeGetsEndTimeFromDuration = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             stubCreateElementResults.video.duration = 60;
-            assertEquals(60, this._mediaPlayer.getRange());
-        };
+            assertEquals({ start: 0, end: 60 }, this._mediaPlayer.getRange());
+        });
     };
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementIsFullScreen = function(queue) {

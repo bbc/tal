@@ -256,10 +256,16 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    return {
-                        start: 0,
-                        end: this._mediaElement.duration
-                    };
+                    if (this._mediaElement.duration !== undefined) {
+                        return {
+                            start: 0,
+                            end: this._mediaElement.duration
+                        };
+                    } else {
+                        RuntimeContext.getDevice().getLogger().warn("'duration' property missing from media element");
+                    }
+
+
                 }
                 return undefined;
             },
