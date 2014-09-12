@@ -91,7 +91,6 @@
            switch(id) {
                case "playerPlugin":
                    return playerPlugin;
-                   break;
                default:
                    return originalGetElementById.call(document, id);
            }
@@ -284,7 +283,7 @@
             this._mediaPlayer.playFrom(0);
             assert(playerPlugin.ResumePlay.calledWith('testURL', 0));
             assert(playerPlugin.ResumePlay.calledOnce);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledWithTimePassedIntoPlayingFrom = function(queue) {
@@ -295,7 +294,7 @@
             this._mediaPlayer.playFrom(19);
             assert(playerPlugin.ResumePlay.calledWith('testURL', 19));
             assert(playerPlugin.ResumePlay.calledOnce);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInBufferingState = function(queue) {
@@ -308,7 +307,7 @@
             this._mediaPlayer.playFrom(50);
             assert(playerPlugin.ResumePlay.calledWith('testUrl', 50));
             assert(playerPlugin.ResumePlay.calledTwice);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testNoSecondBufferingEventWhenPlayingFromABufferingState = function(queue) {
@@ -325,7 +324,7 @@
             this._mediaPlayer.playFrom(10);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             assertEquals(numEvents, eventHandler.callCount);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
@@ -347,11 +346,9 @@
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
-        })
+        });
     };
 
-    // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
-    // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndSeeks = function(queue) {
         expectAsserts(8);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -374,7 +371,7 @@
             assert(playerPlugin.ResumePlay.calledOnce);
             assert(playerPlugin.JumpForward.calledOnce);
             assert(playerPlugin.JumpForward.calledWith(50));
-        })
+        });
     };
 
     // TODO: Above test equivalent for backward-in-stream seeking.
@@ -401,11 +398,9 @@
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
-        })
+        });
     };
 
-    // TODO: Determine if this test is appropriate - should we be calling JumpForward / JumpBackward instead of ResumePlay (possibly falling back to ResumePlay if they fail, as per 'media' implementation)
-    // -- probably; testing on a Samsung 2012 PE6 shows that the ResumePlay(...) call there at present doesn't work.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndSeeks = function(queue) {
         expectAsserts(8);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -429,7 +424,7 @@
             assert(playerPlugin.ResumePlay.calledOnce);
             assert(playerPlugin.JumpForward.calledOnce);
             assert(playerPlugin.JumpForward.calledWith(50));
-        })
+        });
     };
 
     // TODO: Above test equivalent for backward-in-stream seeking.
@@ -451,7 +446,7 @@
             this._mediaPlayer.resume();
 
             assert(playerPlugin.Resume.calledOnce);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPauseCallsPauseWhenPlaying = function(queue) {
@@ -468,7 +463,7 @@
             this._mediaPlayer.pause();
 
             assert(playerPlugin.Pause.calledOnce);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testStopCallsStopWhenPlaying = function(queue) {
@@ -485,7 +480,7 @@
             this._mediaPlayer.stop();
 
             assert(playerPlugin.Stop.calledOnce);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
@@ -614,7 +609,7 @@
 
             assert(playerPlugin.JumpForward.calledOnce);
             assert(playerPlugin.JumpForward.calledWith(59.9));
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstBufferingClampsToJustBeforeEnd = function(queue) {
@@ -627,7 +622,7 @@
 
             assert(playerPlugin.ResumePlay.calledTwice);
             assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPausedClampsToJustBeforeEnd = function(queue) {
@@ -645,7 +640,7 @@
 
             assert(playerPlugin.JumpForward.calledOnce);
             assert(playerPlugin.JumpForward.calledWith(59.9));
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstCompleteClampsToJustBeforeEnd = function(queue) {
@@ -660,7 +655,7 @@
 
             assert(playerPlugin.ResumePlay.calledTwice);
             assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
-        })
+        });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationBeforeMetaDataClampsAfterMetadata = function(queue) {
