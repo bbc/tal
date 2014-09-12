@@ -374,7 +374,29 @@
         });
     };
 
-    // TODO: Above test equivalent for backward-in-stream seeking.
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPlayingBuffersAndSeeks = function(queue) {
+        expectAsserts(9);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(50000);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpBackward.notCalled);
+            assertEquals(50, this._mediaPlayer.getCurrentTime());
+
+            this._mediaPlayer.playFrom(20);
+
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.notCalled);
+            assert(playerPlugin.JumpBackward.calledOnce);
+            assert(playerPlugin.JumpBackward.calledWith(30));
+        });
+    };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPausedStateBuffersThenPlays = function(queue) {
         expectAsserts(7);
@@ -427,7 +449,30 @@
         });
     };
 
-    // TODO: Above test equivalent for backward-in-stream seeking.
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPausedBuffersAndSeeks = function(queue) {
+        expectAsserts(9);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(50000);
+            this._mediaPlayer.pause();
+
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpBackward.notCalled);
+            assertEquals(50, this._mediaPlayer.getCurrentTime());
+
+            this._mediaPlayer.playFrom(20);
+
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.notCalled);
+            assert(playerPlugin.JumpBackward.calledOnce);
+            assert(playerPlugin.JumpBackward.calledWith(30));
+        });
+    };
 
 
 

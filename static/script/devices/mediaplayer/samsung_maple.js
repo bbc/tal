@@ -85,6 +85,7 @@ require.def(
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
+                var jump = this._seekingTo - this.getCurrentTime();
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                         this._playerPlugin.ResumePlay(this._source, this._seekingTo);
@@ -94,8 +95,10 @@ require.def(
                         this._toBuffering();
                         if (seconds === this.getCurrentTime()) {
                             this._toPlaying();
-                        } else {
+                        } else if (jump > 0) {
                             this._playerPlugin.JumpForward(this._seekingTo);
+                        } else {
+                            this._playerPlugin.JumpBackward(Math.abs(jump));
                         }
                         break;
 
@@ -104,8 +107,10 @@ require.def(
                         if (seconds === this.getCurrentTime()) {
                             this._playerPlugin.Resume();
                             this._toPlaying();
-                        } else {
+                        } else if (jump > 0) {
                             this._playerPlugin.JumpForward(this._seekingTo);
+                        } else {
+                            this._playerPlugin.JumpBackward(Math.abs(jump));
                         }
                         break;
 
