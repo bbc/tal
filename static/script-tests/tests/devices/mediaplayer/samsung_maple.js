@@ -715,7 +715,23 @@
 
             assert(playerPlugin.ResumePlay.calledTwice);
             assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
-        })
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testStopIsCalledWhenMediaCompletes = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(playerPlugin.Stop.notCalled);
+
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+
+            assert(playerPlugin.Stop.calledOnce);
+        });
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
@@ -743,7 +759,6 @@
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
     // TODO: Stop jumping forward as if we are always at 0
-    // TODO: Jump backwards if we are rewinding
 
     //---------------------
     // Common tests

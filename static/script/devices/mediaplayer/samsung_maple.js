@@ -100,6 +100,7 @@ require.def(
                         }
                         break;
 
+
                     case MediaPlayer.STATE.PAUSED:
                         this._toBuffering();
                         if (offset === 0) {
@@ -240,6 +241,7 @@ require.def(
             },
 
             _onEndOfMedia: function() {
+                this._playerPlugin.Stop();
                 this._toComplete();
             },
 
