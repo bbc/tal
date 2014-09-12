@@ -371,8 +371,10 @@ require.def(
             },
 
             _toBuffering: function () {
-                this._state = MediaPlayer.STATE.BUFFERING;
-                this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                if (this._state !== MediaPlayer.STATE.BUFFERING) {
+                    this._state = MediaPlayer.STATE.BUFFERING;
+                    this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                }
             },
 
             _toPlaying: function () {
