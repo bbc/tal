@@ -92,20 +92,13 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                        this._toBuffering();
-                        if (seconds === this.getCurrentTime()) {
-                            this._toPlaying();
-                        } else if (jump > 0) {
-                            this._playerPlugin.JumpForward(this._seekingTo);
-                        } else {
-                            this._playerPlugin.JumpBackward(Math.abs(jump));
-                        }
-                        break;
-
                     case MediaPlayer.STATE.PAUSED:
+                        var originalState = this.getState();
                         this._toBuffering();
                         if (seconds === this.getCurrentTime()) {
-                            this._playerPlugin.Resume();
+                            if (originalState === MediaPlayer.STATE.PAUSED) {
+                                this._playerPlugin.Resume();
+                            }
                             this._toPlaying();
                         } else if (jump > 0) {
                             this._playerPlugin.JumpForward(this._seekingTo);
