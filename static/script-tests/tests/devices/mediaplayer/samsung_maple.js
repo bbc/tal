@@ -748,6 +748,26 @@
 
             assert(eventHandler.notCalled);
         });
+
+    };
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhileAtNonZeroTimeGCausesRelativeJump = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            window.SamsungMapleOnCurrentPlayTime(10000);
+
+            assertEquals(10, this._mediaPlayer.getCurrentTime());
+            assert(playerPlugin.JumpForward.notCalled);
+
+            this._mediaPlayer.playFrom(30);
+
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(20));
+        });
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
@@ -774,7 +794,6 @@
     // TODO: PlayFrom Stopped should call ResumePlay (currently does this - make sure we do not change this).
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
-    // TODO: Stop jumping forward as if we are always at 0
 
     //---------------------
     // Common tests
