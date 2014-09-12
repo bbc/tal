@@ -92,13 +92,18 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.PAUSED:
-                        var originalState = this.getState();
                         this._toBuffering();
                         if (offset === 0) {
-                            if (originalState === MediaPlayer.STATE.PAUSED) {
-                                this._playerPlugin.Resume();
-                            }
+                            this._toPlaying();
+                        } else {
+                            this._jump(offset);
+                        }
+                        break;
+
+                    case MediaPlayer.STATE.PAUSED:
+                        this._toBuffering();
+                        if (offset === 0) {
+                            this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
                             this._jump(offset);
