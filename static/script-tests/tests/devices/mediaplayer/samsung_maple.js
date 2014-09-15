@@ -297,16 +297,20 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInBufferingState = function(queue) {
-        expectAsserts(4);
+    // TODO: Don't jump while buffering, wait for OnBufferingComplete? http://www.samsungdforum.com/Guide/tec00118/index.html (different, but related looking, API?)
+    // TODO: Version of this test while device is buffering from initial load, version of this test while device is just generally buffering.
+    this.SamsungMapleMediaPlayerTests.prototype.testJumpOnDeviceWhenPlayFromCalledInBufferingState = function(queue) {
+        expectAsserts(6);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
-            assert(playerPlugin.ResumePlay.calledWith('testUrl', 0));
             assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.ResumePlay.calledWith('testUrl', 0));
+            assert(playerPlugin.JumpForward.notCalled);
             this._mediaPlayer.playFrom(50);
-            assert(playerPlugin.ResumePlay.calledWith('testUrl', 50));
-            assert(playerPlugin.ResumePlay.calledTwice);
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assert(playerPlugin.JumpForward.calledWith(50));
         });
     };
 
@@ -658,15 +662,18 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstBufferingClampsToJustBeforeEnd = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+
+            assert(playerPlugin.JumpForward.notCalled);
+
             this._mediaPlayer.playFrom(100);
 
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assertEquals(59.9, playerPlugin.JumpForward.args[0][0]);
         });
     };
 
@@ -704,17 +711,19 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationBeforeMetaDataClampsAfterMetadata = function(queue) {
-        expectAsserts(3);
+        expectAsserts(5);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(100);
 
             assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.notCalled);
 
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
 
-            assert(playerPlugin.ResumePlay.calledTwice);
-            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.calledOnce);
+            assertEquals(59.9, playerPlugin.JumpForward.args[0][0]);
         });
     };
 
@@ -794,6 +803,25 @@
     // TODO: PlayFrom Stopped should call ResumePlay (currently does this - make sure we do not change this).
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
+    // TODO: In _onMetaData where we're trying to clamp, if we have just loaded then the device is actually playing from
+    //      whatever point it has chosen (close to the end of the media) - jumping from our currentTime (0) will cause
+    //      an incorrect jump! We need to wait for a clock event from the Device and then jump the correct amount - but
+    //      if we do this then we will have allowed an arbitary amount of content to have played (with audio/video)
+    //      before we get that tick event from the device!
+    //  - In fact it's worse than this! Testing on the Samsung 2013 FOXP it's possible to see that following buffering
+    //      you first get a status message with time 0, then one at time 55 when loading 100 seconds into a 57.28 second
+    //      clip (which is where it actually plays from). This means we can't tell if we need to jump on this tick or if
+    //      we have to wait for another one, and by the time we've had enough ticks to work this out we stand a good
+    //      chance of having had video displayed to the user, for a choppy experience!
+    //  - Further to this, http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
+    //      identical API (which has JumoForward and JumpBackward and does not have explicit FastForward or Rewind
+    //      functions - states:
+    //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
+    //          is bigger than the contents length.
+    //      And:
+    //          Please also note that the FF and REW functions may not work properly during the video buffering. In
+    //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
+    //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
 
     //---------------------
     // Common tests

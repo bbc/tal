@@ -88,7 +88,7 @@ require.def(
                 var offset = this._seekingTo - this.getCurrentTime();
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        this._playerPlugin.ResumePlay(this._source, this._seekingTo);
+                        this._jump(offset);
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
@@ -212,7 +212,7 @@ require.def(
             * @inheritDoc
             */
             getRange: function () {
-                return this._range; // FIXME
+                return this._range;
             },
 
             /**
