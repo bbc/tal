@@ -265,8 +265,8 @@ require.def(
             },
 
             _onCurrentTime: function(timeInMillis) {
-                this._onStatus();
                 this._currentTime = timeInMillis / 1000;
+                this._onStatus();
             },
 
             _registerEventHandlers: function() {
