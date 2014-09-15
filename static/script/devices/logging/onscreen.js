@@ -53,7 +53,7 @@ require.def(
 				document.body.appendChild(div);
 			}
 			logItems.push(text);
-			if(logItems.length > 20) {
+			if(logItems.length > 10) {
 				logItems.shift();
 			}
 			div.innerHTML = logItems.join("<hr />");
