@@ -833,6 +833,24 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testStatusEventsOnlyEmittedInPlayingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var callback = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, callback);
+
+            window.SamsungMapleOnCurrentPlayTime(10000);
+
+            assert(callback.notCalled);
+        });
+    };
+
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
