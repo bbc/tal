@@ -860,7 +860,6 @@
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
-    // TODO: on metadata when clamping results in playFrom or pause we end up emitting a whole load of buffering and playing/paused events that we possibly should not be emitting.
 
 
 

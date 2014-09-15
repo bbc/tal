@@ -260,11 +260,9 @@ require.def(
 
                 var clampedTime = this._getClampedTime(this._seekingTo);
                 if (clampedTime !== this._seekingTo) {
-                    var postBufferingState = this._postBufferingState;
-                    this.playFrom(clampedTime);
-                    if (postBufferingState === MediaPlayer.STATE.PAUSED) {
-                        this.pause();
-                    }
+                    this._seekingTo = clampedTime;
+                    var offset = this._seekingTo - this.getCurrentTime(); // FIXME - AT THIS POINT CURRENT TIME IS ALWAYS 0!
+                    this._jump(offset);
                 }
             },
 
