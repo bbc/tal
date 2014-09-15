@@ -226,6 +226,7 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                    this._playerPlugin.Pause();
                     this._toPaused();
                 } else {
                     this._toPlaying();
@@ -259,9 +260,12 @@ require.def(
 
                 var clampedTime = this._getClampedTime(this._seekingTo);
                 if (clampedTime !== this._seekingTo) {
+                    var postBufferingState = this._postBufferingState;
                     this.playFrom(clampedTime);
+                    if (postBufferingState === MediaPlayer.STATE.PAUSED) {
+                        this.pause();
+                    }
                 }
-
             },
 
             _onCurrentTime: function(timeInMillis) {

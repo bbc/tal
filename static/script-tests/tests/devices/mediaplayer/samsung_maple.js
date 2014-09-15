@@ -805,6 +805,36 @@
     };
 
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataResultsInPausedStateAfterInitialBuffering = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(playerPlugin.Pause.calledOnce);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataResultsInPausedStateAfterInitialBufferingWhenClamping = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(100); // Outside of clamped range
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(playerPlugin.Pause.calledOnce);
+        });
+    };
+
+
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
     // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
@@ -830,6 +860,7 @@
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
+    // TODO: on metadata when clamping results in playFrom or pause we end up emitting a whole load of buffering and playing/paused events that we possibly should not be emitting.
 
 
 
