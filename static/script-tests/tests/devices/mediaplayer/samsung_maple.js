@@ -922,9 +922,7 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
-    // -- Not clear at time of writing if the tutorial is limiting it based on some sort of SDK/WYSIWYG restriction, or a Samsung Maple restriction
-    // TODO: See if all three plugins required by the media/samsung_maple modifier are required
+    // TODO: Test the new samsung maple page strategy on older Samsungs (e.g. Samsung D8000)
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
