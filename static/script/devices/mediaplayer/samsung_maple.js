@@ -53,6 +53,7 @@ require.def(
                     this._mimeType = mimeType;
                     this._registerEventHandlers();
                     this._toStopped();
+                    this._currentTimeKnown = false;
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
@@ -84,8 +85,8 @@ require.def(
             */
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                this._seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
-                var offset = this._seekingTo - this.getCurrentTime();
+                var seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
+                var offset = seekingTo - this.getCurrentTime();
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                         this._jump(offset);
@@ -93,27 +94,35 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (offset === 0) {
-                            this._toPlaying();
+                        if (this._currentTimeKnown) {
+                            if (offset === 0) {
+                                this._toPlaying();
+                            } else {
+                                this._jump(offset);
+                            }
                         } else {
-                            this._jump(offset);
+                            this._deferSeekingTo = seekingTo;
                         }
                         break;
 
 
                     case MediaPlayer.STATE.PAUSED:
                         this._toBuffering();
-                        if (offset === 0) {
-                            this._playerPlugin.Resume();
-                            this._toPlaying();
+                        if (this._currentTimeKnown) {
+                            if (offset === 0) {
+                                this._playerPlugin.Resume();
+                                this._toPlaying();
+                            } else {
+                                this._jump(offset);
+                            }
                         } else {
-                            this._jump(offset);
+                            this._deferSeekingTo = seekingTo;
                         }
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._playerPlugin.ResumePlay(this._source, this._seekingTo);
+                        this._playerPlugin.ResumePlay(this._source, seekingTo);
                         this._toBuffering();
                         break;
 
@@ -153,7 +162,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._playerPlugin.Stop();
+                        this._stopPlayer();
                         this._toStopped();
                         break;
 
@@ -242,8 +251,13 @@ require.def(
             },
 
             _onEndOfMedia: function() {
-                this._playerPlugin.Stop();
+                this._stopPlayer();
                 this._toComplete();
+            },
+
+            _stopPlayer: function() {
+                this._playerPlugin.Stop();
+                this._currentTimeKnown = false;
             },
 
             _onStatus: function() {
@@ -257,18 +271,20 @@ require.def(
                     start: 0,
                     end: this._playerPlugin.GetDuration() / 1000
                 };
-
-                var clampedTime = this._getClampedTime(this._seekingTo);
-                if (clampedTime !== this._seekingTo) {
-                    this._seekingTo = clampedTime;
-                    var offset = this._seekingTo - this.getCurrentTime(); // FIXME - AT THIS POINT CURRENT TIME IS ALWAYS 0!
-                    this._jump(offset);
-                }
             },
 
             _onCurrentTime: function(timeInMillis) {
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
+                this._currentTimeKnown = true;
+                this._deferredSeek();
+            },
+
+            _deferredSeek: function() {
+                if (this._deferSeekingTo) {
+                    this.playFrom(this._deferSeekingTo);
+                    this._deferSeekingTo = null;
+                }
             },
 
             _registerEventHandlers: function() {
@@ -348,7 +364,7 @@ require.def(
             },
 
             _wipe: function () {
-                this._playerPlugin.Stop();
+                this._stopPlayer();
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
