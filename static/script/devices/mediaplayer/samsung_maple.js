@@ -89,7 +89,11 @@ require.def(
                 var offset = seekingTo - this.getCurrentTime();
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        this._jump(offset);
+                        if (!this._currentTimeKnown) {
+                            this._deferSeekingTo = seekingTo;
+                        } else {
+                            this._jump(offset);
+                        }
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
