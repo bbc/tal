@@ -824,7 +824,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhilePlayingBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
         expectAsserts(4);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -847,7 +847,29 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhilePausedBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
+            assert(playerPlugin.JumpForward.notCalled);
+
+            this._mediaPlayer.playFrom(50);
+
+            assert(playerPlugin.JumpForward.notCalled);
+
+            // Device may not start playback from exactly the position requested, e.g. it may go to a keyframe
+            var positionCloseToRequestedPosition = 32000;
+            window.SamsungMapleOnCurrentPlayTime(positionCloseToRequestedPosition);
+
+            assert(playerPlugin.JumpForward.calledOnce);
+            assertEquals(18, playerPlugin.JumpForward.args[0][0]);
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Check if we should comment in implementation that only one video component can be added to the design at a time - http://www.samsungdforum.com/Guide/tut00078/index.html
@@ -875,36 +897,7 @@
     // TODO: PlayFrom Buffering should call Jump
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
     // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
-
-
-
-    // TODO: Decide what, if anything, needs to be done about the following, which results in messages with an incorrect time, and unexpected clamping behaviour:
-    //  In _onMetaData where we're trying to clamp, if we have just loaded then the device is actually playing from
-    //  whatever point it has chosen (close to the end of the media) - jumping from our currentTime (0) will cause
-    //  an incorrect jump! We need to wait for a clock event from the Device and then jump the correct amount - but
-    //  if we do this then we will have allowed an arbitary amount of content to have played (with audio/video)
-    //  before we get that tick event from the device!
-    //  - In fact it's worse than this! Testing on the Samsung 2013 FOXP it's possible to see that following buffering
-    //      you first get a status message with time 0, then one at time 55 when loading 100 seconds into a 57.28 second
-    //      clip (which is where it actually plays from). This means we can't tell if we need to jump on this tick or if
-    //      we have to wait for another one, and by the time we've had enough ticks to work this out we stand a good
-    //      chance of having had video displayed to the user, for a choppy experience!
-    //      - The status message with time 0 turned out to be a bug (corrected).
-    //      - Now goes:
-    //          buffering 0
-    //          playing 0
-    //          buffering 0
-    //          playing 0
-    //          status 55
-    //          status 55.12
-    //          status 55.654
-    //          status 56.12
-    //          status 56.64
-    //          status 57.12
-    //          status 57.24
-    //          status 57.28
-    //          complete undefined
-    //  - Further to this, http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
+    // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
     //      identical API (which has JumoForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:
     //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
