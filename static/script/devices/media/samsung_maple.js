@@ -36,6 +36,8 @@ require.def(
         'antie/application'
     ],
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, Application) {
+        'use strict';
+
         function audioLevelCorrection(t) {
             return t * 40.0;
         }

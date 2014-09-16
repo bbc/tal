@@ -27,6 +27,8 @@
 require.def('antie/urlbuilder',
 	['antie/class'],
 	function(Class) {
+		'use strict';
+
 		/**
 		 * Class to build media URLs from various models
 		 * @name antie.URLBuilder

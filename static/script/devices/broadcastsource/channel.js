@@ -29,6 +29,7 @@ require.def('antie/devices/broadcastsource/channel',
         'antie/class'
     ],
     function (Class) {
+        'use strict';
 
         /**
          * Class representing information about a channel.

@@ -30,6 +30,8 @@ require.def('antie/widgets/componentcontainer',
         'antie/events/componentevent'
     ],
     function (Container, ComponentEvent) {
+        'use strict';
+
         var _knownComponents = {};
         /**
          * The ComponentContainer widget class represents a container that Components (sections of UI) may be dynamically loaded into.

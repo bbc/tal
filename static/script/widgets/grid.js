@@ -31,6 +31,8 @@ require.def('antie/widgets/grid',
 	 	'antie/events/selecteditemchangeevent'
 	],
 	function(Container, KeyEvent, SelectedItemChangeEvent) {
+		'use strict';
+
 		/**
 		 * The Grid widget class represents a grid of widgets that may be navigated between using up/down/left/right.
 		 * @name antie.widgets.Grid

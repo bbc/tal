@@ -33,6 +33,7 @@ require.def('antie/widgets/list',
 		'antie/events/selecteditemchangeevent'
 	],
 	function(Container, ListItem, Iterator, DataBoundEvent, SelectedItemChangeEvent) {
+		'use strict';
 		/**
 		 * The List widget contains an ordered list of items which may be populated either by a static
 		 * array or by binding to an asynchronous data source.

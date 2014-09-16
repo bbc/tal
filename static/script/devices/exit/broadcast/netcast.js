@@ -28,6 +28,7 @@ require.def(
     'antie/devices/exit/broadcast/netcast',
     ['antie/devices/browserdevice'],
     function(Device) {
+        'use strict';
 
         /**
          * Exits the application by returning to broadcast using the NetcastExit function.

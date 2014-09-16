@@ -31,6 +31,8 @@ require.def('antie/mediasource',
 			'antie/urlbuilder'
 		],
         function(Class, RuntimeContext, URLBuilder) {
+            'use strict';
+
 			/**
 			 * Base MediaSource (of unknown type). Provides storage of source and type information about a media source.
 			 * @name antie.MediaSource

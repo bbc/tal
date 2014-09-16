@@ -30,6 +30,8 @@ require.def('antie/widgets/textpager',
 	 	'antie/events/textpagechangeevent'
 	],
 	function(Label, TextPageChangeEvent) {
+		'use strict';
+
 		/**
 		 * The TextPager widget displays text. It computers its own size, allows scrolling and reports page numbers.
 		 * @name antie.widgets.TextPager

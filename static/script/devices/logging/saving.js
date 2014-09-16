@@ -30,6 +30,8 @@ require.def(
 	[ 'module', 'antie/devices/device', 'antie/application' ],
 	function(Module, Device, Application)
 	{
+		'use strict';
+
 		var logItems = [];
 
 		var saveData = function (type, data) {

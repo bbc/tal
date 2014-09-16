@@ -27,6 +27,8 @@
 require.def('antie/widgets/scrubbar',
 	['antie/widgets/horizontalslider'],
 	function(HorizontalSlider) {
+		'use strict';
+
 		/**
 		 * The ScrubBar provides a media scrub bar showing current position and portion of the stream that is currently buffered.
 		 * @name antie.widgets.ScrubBar

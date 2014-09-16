@@ -35,6 +35,8 @@ require.def('antie/widgets/media',
 		'antie/events/mediasourceerrorevent'
 	],
 	function(Widget, MediaInterface) {
+        'use strict';
+
 		/**
 		 * The Media widget is responsible for playing video and audio within an application.
 		 * It must be subclassed to provide support for different playback APIs.

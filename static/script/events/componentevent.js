@@ -28,6 +28,8 @@
 require.def('antie/events/componentevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when a {@link antie.widgets.Component} is being loaded/shown/hidden.
 		 * @name antie.events.ComponentEvent
