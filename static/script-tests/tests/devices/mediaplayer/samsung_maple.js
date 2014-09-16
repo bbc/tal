@@ -878,6 +878,7 @@
     // TODO: PlayFrom Complete should call ????
     // TODO: PlayFrom Buffering should call Jump
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
+    // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
 
 
 
