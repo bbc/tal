@@ -94,29 +94,25 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (this._currentTimeKnown) {
-                            if (offset === 0) {
-                                this._toPlaying();
-                            } else {
-                                this._jump(offset);
-                            }
-                        } else {
+                        if (!this._currentTimeKnown) {
                             this._deferSeekingTo = seekingTo;
+                        } else if (offset === 0) {
+                            this._toPlaying();
+                        } else {
+                            this._jump(offset);
                         }
                         break;
 
 
                     case MediaPlayer.STATE.PAUSED:
                         this._toBuffering();
-                        if (this._currentTimeKnown) {
-                            if (offset === 0) {
-                                this._playerPlugin.Resume();
-                                this._toPlaying();
-                            } else {
-                                this._jump(offset);
-                            }
-                        } else {
+                        if (!this._currentTimeKnown) {
                             this._deferSeekingTo = seekingTo;
+                        } else if (offset === 0) {
+                            this._playerPlugin.Resume();
+                            this._toPlaying();
+                        } else {
+                            this._jump(offset);
                         }
                         break;
 
