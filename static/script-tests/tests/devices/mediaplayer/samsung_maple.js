@@ -937,18 +937,11 @@
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
     // TODO: Investigate when millisenconds should be used
-    // TODO: Ensure all TODOs and FIXMEs in this file are resolved
-    //  -- JumpForward / JumpBackward
-    // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
-    // TODO: Investigate how we should handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Determine whether we need to call Stop() onRenderingComplete.
-    // TODO: PlayFrom Stopped should call ResumePlay (currently does this - make sure we do not change this).
-    // TODO: PlayFrom Complete should call ????
-    // TODO: PlayFrom Buffering should call Jump
+    // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
     // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
     // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
-    //      identical API (which has JumoForward and JumpBackward and does not have explicit FastForward or Rewind
+    //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:
     //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
     //          is bigger than the contents length.
