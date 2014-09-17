@@ -59,7 +59,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
+    var createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
         var carousel, handler;
         carousel = new CarouselCore('myCarousel', orientation);
         handler = new Handler();
@@ -67,18 +67,11 @@
         return carousel;
     };
 
-    this.AlignFirstHandlerTest.prototype.createContainerAndAppend = function (Container, toAppend) {
-        var container;
-        container = new Container();
-        container.appendChildWidget(toAppend);
-        return container;
-    };
-
     this.AlignFirstHandlerTest.prototype.testHandlerCausesSetActiveIndexOnBeforeAlign = function (queue) {
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 targetIndex = 1;
                 this.sandbox.spy(carousel, 'setActiveIndex');
 
@@ -93,7 +86,7 @@
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 targetIndex = 1;
                 this.sandbox.spy(carousel, 'setActiveIndex');
 
