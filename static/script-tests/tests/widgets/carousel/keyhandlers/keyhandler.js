@@ -121,7 +121,7 @@
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-		self.sandbox.stub(Navigator.prototype, "previousIndex").returns(3);
+		Navigator.prototype.previousIndex.returns(3);
                 carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 self.sandbox.spy(carousel, 'alignPrevious');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
@@ -136,7 +136,7 @@
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-		self.sandbox.stub(Navigator.prototype, "nextIndex").returns(3);
+		Navigator.prototype.nextIndex.returns(3);
                 carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 self.sandbox.spy(carousel, 'alignNext');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
