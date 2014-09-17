@@ -111,8 +111,6 @@
                 var deviceCreateListSpy = this.sandbox.spy(device, 'showElement');
                 widget.show({});
 
-                jstestdriver.console.log( deviceCreateListSpy.args[ 0 ][ 0 ].el );
-
                 assertEquals( "mask", widget._maskElement, deviceCreateListSpy.args[ 0 ][ 0 ].el );
                 assertEquals( "anim", !animate, deviceCreateListSpy.args[ 0 ][ 0 ].skipAnim );
             }

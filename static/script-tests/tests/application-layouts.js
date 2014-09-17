@@ -127,7 +127,6 @@
 			assert(loadStyleSheetSpy.calledWithExactly("about:styleBaseUrl/2.css"));
 		});
 		*/
-		jstestdriver.console.warn("BrowserDevice::setLayout with stylesheets is currently untested.");
 	};
 
 	this.ApplicationLayoutsTest.prototype.testSetLayoutPreloadImages = function(queue) {
