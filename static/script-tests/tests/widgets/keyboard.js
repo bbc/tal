@@ -89,15 +89,7 @@
 		});
 	};
 	
-	this.KeyboardTest.prototype.testKeyboardBuiltWithSpaceKey = function (queue) {
-		this._verifySpecialKeyBuildsCorrectly(queue, " ", "SPACE");
-	};
-
-	this.KeyboardTest.prototype.testKeyboardBuiltWithDelKey = function (queue) {
-		this._verifySpecialKeyBuildsCorrectly(queue, "-", "DEL");
-	};
-	
-	this.KeyboardTest.prototype._verifySpecialKeyBuildsCorrectly = function(queue, triggerCharacter, buttonText) {
+	var _verifySpecialKeyBuildsCorrectly = function(queue, triggerCharacter, buttonText) {
 		expectAsserts(3);
 
 		queuedApplicationInit(
@@ -112,6 +104,14 @@
  				assertEquals(buttonText, firstButton.getDataItem());
  				assertEquals(1, keyboard.getChildWidgets().length);
 			});		
+	};
+	
+	this.KeyboardTest.prototype.testKeyboardBuiltWithSpaceKey = function (queue) {
+		_verifySpecialKeyBuildsCorrectly(queue, " ", "SPACE");
+	};
+
+	this.KeyboardTest.prototype.testKeyboardBuiltWithDelKey = function (queue) {
+		_verifySpecialKeyBuildsCorrectly(queue, "-", "DEL");
 	};
 	
 	this.KeyboardTest.prototype.testKeyboardBuiltWithEmptyNonFunctioningSpacer = function (queue) {
