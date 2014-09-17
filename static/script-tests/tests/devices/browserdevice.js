@@ -745,17 +745,6 @@
 			assertEquals("id", clone.id);
 		});
 	};
-	this.BrowserDeviceTest.prototype.testCloneElement = function(queue) {
-		expectAsserts(2);
-
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			var el = device.createContainer("id");
-			assertEquals("id", el.id);
-			var clone = device.cloneElement(el);
-			assertEquals("id", clone.id);
-		});
-	};
 	this.BrowserDeviceTest.prototype.testCloneElementDeep = function(queue) {
 		expectAsserts(5);
 

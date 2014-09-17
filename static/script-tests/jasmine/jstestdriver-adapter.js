@@ -309,4 +309,13 @@ assertMatch = function (msg, regex, actual) {
 	}
 
 	expect(regex.test(actual)).toBe(true);
-}
+};
+
+assertNoMatch = function (msg, regex, actual) {
+	if (arguments.length < 3) {
+		actual = regex;
+		regex = msg;
+	}
+
+	expect(regex.test(actual)).toBe(false);
+};
