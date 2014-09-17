@@ -25,46 +25,46 @@
 (function() {
 	this.ConfigurationOverrideAPITest = AsyncTestCase("Configuration override API");
 
-	this.ConfigurationOverrideAPITest.prototype.setUp = function() {
-		this.originalConfiguration = this.getConfiguration();
-		this.setConfiguration({});
+	var setConfiguration = function(newConfiguration) {
+		antie.framework.deviceConfiguration = newConfiguration;
 	};
 
-	this.ConfigurationOverrideAPITest.prototype.tearDown = function() {
-		this.setConfiguration(this.originalConfiguration);
+	var getConfiguration = function() {
+		return antie.framework.deviceConfiguration;
 	};
 
-	this.ConfigurationOverrideAPITest.prototype.assertElementIsDefinedAndEqualTo = function(key, value) {
-		var item = this.getConfiguration()[key];
+	var assertElementIsDefinedAndEqualTo = function(key, value) {
+		var item = getConfiguration()[key];
 		assertNotNull("Configuration element '"+key+"' should not be NULL", item);
 		assertNotUndefined("Configuration element '"+key+"' should not be undefined", item);
 		assertEquals("Configuration element '"+key+"' should have the value '"+value+"'", value, item);
 	};
 
-	this.ConfigurationOverrideAPITest.prototype.setConfiguration = function(newConfiguration) {
-		antie.framework.deviceConfiguration = newConfiguration;
+	this.ConfigurationOverrideAPITest.prototype.setUp = function() {
+		this.originalConfiguration = getConfiguration();
+		setConfiguration({});
 	};
 
-	this.ConfigurationOverrideAPITest.prototype.getConfiguration = function() {
-		return antie.framework.deviceConfiguration;
+	this.ConfigurationOverrideAPITest.prototype.tearDown = function() {
+		setConfiguration(this.originalConfiguration);
 	};
 
 	this.ConfigurationOverrideAPITest.prototype.testAddingSingleElementToConfiguration = function(queue) {
 		expectAsserts(3);
 		ConfigurationApi.override({newelement:'item1'});
-		this.assertElementIsDefinedAndEqualTo('newelement', 'item1');
+		assertElementIsDefinedAndEqualTo('newelement', 'item1');
 	};
 
 	this.ConfigurationOverrideAPITest.prototype.testAddingMultipleElementsToConfiguration = function(queue) {
 		expectAsserts(6);
 		ConfigurationApi.override({newelement:'item1', secondelement:'item2'});
-		this.assertElementIsDefinedAndEqualTo('newelement', 'item1');
-		this.assertElementIsDefinedAndEqualTo('secondelement', 'item2');
+		assertElementIsDefinedAndEqualTo('newelement', 'item1');
+		assertElementIsDefinedAndEqualTo('secondelement', 'item2');
 	};
 
 	this.ConfigurationOverrideAPITest.prototype.testOverridingASingleItemInTheConfigurationDoesntLoseAllTheChildren = function(queue) {
 		expectAsserts(2);
-		this.setConfiguration({
+		setConfiguration({
 			logging : {
 				level : "all",
 				strategy : "onscreen"
@@ -73,14 +73,14 @@
 
 		ConfigurationApi.override({logging:{level:"none"}});
 
-		var config = this.getConfiguration();
+		var config = getConfiguration();
 		assertEquals("Nested item is correctly updated", "none", config.logging.level);
 		assertEquals("Nested item is not overridden", "onscreen", config.logging.strategy);
 	};
 
 	this.ConfigurationOverrideAPITest.prototype.testOverridingASingleItemWithDifferentlyNestedChildrenDoesNotBreak = function(queue) {
 		expectAsserts(4);
-		this.setConfiguration({
+		setConfiguration({
 			a : {
 				b : {
 					c : {
@@ -126,7 +126,7 @@
 		};
 		ConfigurationApi.override(patch);
 
-		var config = this.getConfiguration();
+		var config = getConfiguration();
 
 		assertEquals("c-content-new", config.a.b.c);
 		assertEquals("f-content-unchanged", config.a.b.e.f);
