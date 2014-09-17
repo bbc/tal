@@ -219,6 +219,14 @@ assertSame = function (msg, thing1, thing2) {
     expect(thing2).toBe(thing1);
 };
 
+assertNotSame = function (msg, thing1, thing2) {
+    if (arguments.length < 3) {
+        thing2 = thing1;
+        thing1 = msg;
+    };
+    expect(thing2).not.toBe(thing1);
+};
+
 assertNull = function (msg, thing) {
     if (arguments.length < 2) {
         thing = msg;
@@ -275,6 +283,14 @@ assertException = function (msg, fn) {
     }
     
     expect(fn).toThrow();
+};
+
+assertNoException = function (msg, fn) {
+    if (arguments.length < 2) {
+        fn = msg;
+    }
+    
+    expect(fn).not.toThrow();
 };
 
 assertClassName = function (msg, fn) {
