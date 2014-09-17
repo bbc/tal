@@ -127,7 +127,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.append = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "append");
             carousel = new Carousel();
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
             assertFalse(CarouselCore.prototype.append.calledOnce);
@@ -139,7 +139,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.append = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "append");
             carousel = new Carousel();
             carousel.append(new Button());
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
@@ -152,7 +152,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.setActiveWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
             carousel = new Carousel();
             carousel.setActiveChildWidget(carousel._mask);
             assertTrue(Container.prototype.setActiveChildWidget.calledOnce);
@@ -165,7 +165,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.setActiveWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
             carousel = new Carousel();
             carousel.setActiveChildWidget(new Button());
             assertFalse(Container.prototype.setActiveChildWidget.called);
@@ -178,7 +178,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.hasChildWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
             carousel = new Carousel();
             carousel.hasChildWidget(carousel._mask.id);
             assertTrue(CarouselCore.prototype.hasChildWidget.calledOnce);
@@ -191,7 +191,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.hasChildWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
             carousel = new Carousel();
             carousel.hasChildWidget("testId");
             assertFalse(CarouselCore.prototype.hasChildWidget.called);
@@ -204,7 +204,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel, widget;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.getChildWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "getChildWidget");
             carousel = new Carousel();
             widget = carousel.getChildWidget(carousel._mask.id);
             assertEquals(carousel._mask, widget);
@@ -216,7 +216,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.getChildWidget = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "getChildWidget");
             carousel = new Carousel();
             carousel.getChildWidget("testId");
             assertTrue(WidgetStrip.prototype.getChildWidget.calledOnce);
@@ -228,7 +228,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.insert = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "insert");
             carousel = new Carousel();
             carousel.insertChildWidget(new Button());
             assertTrue(CarouselCore.prototype.insert.calledOnce);
@@ -240,7 +240,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.remove = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "remove");
             carousel = new Carousel();
             carousel.removeChildWidget(new Button(), false);
             assertTrue(CarouselCore.prototype.remove.calledOnce);
@@ -252,7 +252,7 @@
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            CarouselCore.prototype.removeAll = this.sandbox.stub();
+            this.sandbox.stub(CarouselCore.prototype, "removeAll");
             carousel = new Carousel();
             carousel.removeChildWidgets();
             assertTrue(CarouselCore.prototype.removeAll.calledOnce);

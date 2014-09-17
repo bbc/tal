@@ -63,7 +63,7 @@
                 var moveStub, pixelsMoved, mask;
 
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
@@ -89,7 +89,7 @@
                 var moveStub, pixelsMoved, mask;
 
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
@@ -116,7 +116,7 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
@@ -144,7 +144,7 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
@@ -172,7 +172,7 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
@@ -200,7 +200,7 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 0, height: 0});
@@ -229,7 +229,7 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
@@ -258,8 +258,8 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
@@ -283,8 +283,8 @@
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
@@ -307,8 +307,8 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
@@ -334,7 +334,7 @@
                 this.sandbox.stub(Spinner.prototype);
                 function MockWidgetStripFn() {}
                 function fakeOnComplete() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
 
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
@@ -357,7 +357,7 @@
                 var moveStub, pixelsMoved, mask;
                 this.sandbox.stub(Spinner.prototype);
                 function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
 
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
@@ -430,6 +430,7 @@
     };
 
     this.MaskTest.prototype.testSetWidgetStripDoesNotRemoveNonExistantStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -441,7 +442,7 @@
                 var mask, strip1, strip2;
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 strip2 = new WidgetStrip('strip2', verticalOrientation);
-                Mask.prototype.removeChildWidget = sinon.stub();
+                self.sandbox.stub(Mask.prototype, "removeChildWidget");
                 mask = new Mask('testMask', strip1, verticalOrientation);
                 assertFalse("Strip not removed before creation", mask.removeChildWidget.called);
             }
