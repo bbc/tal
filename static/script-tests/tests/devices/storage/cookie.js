@@ -25,21 +25,23 @@
 (function() {
     this.CookieStorageProviderTest = AsyncTestCase("Storage_Cookie");
 
+	var stores;
+
 	this.CookieStorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
-		this.stores = [];
+		stores = [];
 	};
 
 	this.CookieStorageProviderTest.prototype.tearDown = function() {
 		this.sandbox.restore();
-		for(var i=0; i<this.stores.length; i++) {
-			this.stores[i].clear();
+		for(var i=0; i<stores.length; i++) {
+			stores[i].clear();
 		}
 	};
 
- 	this.CookieStorageProviderTest.prototype.getStorage = function(application, storageType, namespace) {
+ 	var getStorage = function(application, storageType, namespace) {
 		var storage = application.getDevice().getStorage(storageType, namespace);
-		this.stores.push(storage);
+		stores.push(storage);
 		return storage;
 	};
 
@@ -49,8 +51,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
 
 			assertSame(storage1, storage2);
 		}, config);
@@ -62,10 +64,10 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
 			storage1.setItem("hello", "world");
 
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
 			var val = storage2.getItem("hello");
 
 			assertEquals("world", val);
@@ -82,10 +84,10 @@
 				"hello": ["house","street","town","region","country","continent","world","solar system","galaxy", "universe"]
 			};
 
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
 			storage1.setItem("hello", obj);
 
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test");
 			var val = storage2.getItem("hello");
 
 			assertEquals(obj, val);
@@ -98,8 +100,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
 
 			assertNotSame(storage1, storage2);
 		}, config);
@@ -111,10 +113,10 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
 			storage1.setItem("hello", "world");
 
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
 
 			assertUndefined(storage2.getItem("hello"));
 		}, config);
@@ -126,7 +128,7 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
 
 			storage.setItem("hello", "world");
 			assertEquals("world", storage.getItem("hello"));
@@ -142,8 +144,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/data/json2','antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test2");
 
 			storage1.setItem("hello", "world");
 			assertEquals("world", storage1.getItem("hello"));
@@ -168,7 +170,7 @@
 			};
 			document.cookie = "test1=" + encodeURIComponent(application.getDevice().encodeJson(obj));
 
-			var storage = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
 
 			var val = storage.getItem("hello");
 			assertEquals(obj.hello, val);
@@ -187,7 +189,7 @@
 			};
 			var str = "test1=" + encodeURIComponent(application.getDevice().encodeJson(obj));
 
-			var storage = this.getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
+			var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, "test1");
 			storage.setItem("hello", obj.hello);
 
 			assertMatch(new RegExp(str), document.cookie);
