@@ -51,7 +51,7 @@
         );
     };
 
-    this.CarouselTest.prototype.stubClassPrototypes = function (classArray) {
+    var stubClassPrototypes = function (self, classArray) {
         function stubUnstubbedFunctions(Class) {
             var prototype, propertyName, property;
             prototype = Class.prototype;
@@ -62,8 +62,7 @@
                 }
             }
         }
-        var i, currentClass, self;
-        self = this;
+        var i, currentClass;
 
         for (i = 0; i !== classArray.length; i += 1) {
             currentClass = classArray[i];
@@ -72,9 +71,10 @@
     },
 
     this.CarouselTest.prototype.testContainerAPIRedirectsToAppropriateClasses = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator]);
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator]);
 
             carousel = new Carousel('myCarousel');
             assertFalse("append", WidgetStrip.prototype.append.called);
@@ -124,10 +124,11 @@
     };
 
     this.CarouselTest.prototype.testAppendChildWidgetCallsContainerPrototypeDuringInit = function (queue) {
+	var self = ths;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "append");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "append");
             carousel = new Carousel();
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
             assertFalse(CarouselCore.prototype.append.calledOnce);
@@ -136,10 +137,11 @@
     };
 
     this.CarouselTest.prototype.testAppendChildWidgetCallsAppendAfterInit = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "append");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "append");
             carousel = new Carousel();
             carousel.append(new Button());
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
@@ -149,10 +151,11 @@
     };
 
     this.CarouselTest.prototype.testSetActiveChildWidgetWithMaskCallsContainerPrototype = function (queue) {
+	var self = ths;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
             carousel = new Carousel();
             carousel.setActiveChildWidget(carousel._mask);
             assertTrue(Container.prototype.setActiveChildWidget.calledOnce);
@@ -162,10 +165,11 @@
     };
 
     this.CarouselTest.prototype.testSetActiveChildWidgetWithNonMaskCallsSetActiveWidget = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "setActiveWidget");
             carousel = new Carousel();
             carousel.setActiveChildWidget(new Button());
             assertFalse(Container.prototype.setActiveChildWidget.called);
@@ -175,10 +179,11 @@
     };
 
     this.CarouselTest.prototype.testHasChildWidgetWithMaskIdCallsCore = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
             carousel = new Carousel();
             carousel.hasChildWidget(carousel._mask.id);
             assertTrue(CarouselCore.prototype.hasChildWidget.calledOnce);
@@ -188,10 +193,11 @@
     };
 
     this.CarouselTest.prototype.testHasChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "hasChildWidget");
             carousel = new Carousel();
             carousel.hasChildWidget("testId");
             assertFalse(CarouselCore.prototype.hasChildWidget.called);
@@ -201,10 +207,11 @@
     };
 
     this.CarouselTest.prototype.testGetChildWidgetWithMaskIdCallsCore = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel, widget;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "getChildWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "getChildWidget");
             carousel = new Carousel();
             widget = carousel.getChildWidget(carousel._mask.id);
             assertEquals(carousel._mask, widget);
@@ -213,10 +220,11 @@
     };
 
     this.CarouselTest.prototype.testGetChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "getChildWidget");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "getChildWidget");
             carousel = new Carousel();
             carousel.getChildWidget("testId");
             assertTrue(WidgetStrip.prototype.getChildWidget.calledOnce);
@@ -225,10 +233,11 @@
     };
 
     this.CarouselTest.prototype.testInsertChildWidgetCallsInsert = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "insert");
+            stubClassPrototypes(self,[WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "insert");
             carousel = new Carousel();
             carousel.insertChildWidget(new Button());
             assertTrue(CarouselCore.prototype.insert.calledOnce);
@@ -237,10 +246,11 @@
     };
 
     this.CarouselTest.prototype.testRemoveChildWidgetCallsRemove = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "remove");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "remove");
             carousel = new Carousel();
             carousel.removeChildWidget(new Button(), false);
             assertTrue(CarouselCore.prototype.remove.calledOnce);
@@ -249,10 +259,11 @@
     };
 
     this.CarouselTest.prototype.testRemoveChildWidgetsCallsRemoveAll = function (queue) {
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
-            this.stubClassPrototypes([WidgetStrip, Mask, Button, Navigator, Container]);
-            this.sandbox.stub(CarouselCore.prototype, "removeAll");
+            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
+            self.sandbox.stub(CarouselCore.prototype, "removeAll");
             carousel = new Carousel();
             carousel.removeChildWidgets();
             assertTrue(CarouselCore.prototype.removeAll.calledOnce);

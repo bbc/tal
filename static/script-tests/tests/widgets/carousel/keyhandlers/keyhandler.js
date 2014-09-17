@@ -131,12 +131,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerCausesDownKeyToAlignNext = function (queue) {
+	var self = this;
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-		this.sandbox.stub(Navigator.prototype, "nextIndex").returns(3);
+		self.sandbox.stub(Navigator.prototype, "nextIndex").returns(3);
                 carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignNext');
+                self.sandbox.spy(carousel, 'alignNext');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(upEvent);
                 assertTrue(carousel.alignNext.calledOnce);
@@ -145,12 +146,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
+	var self = this;
         runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, upEvent;
                 Navigator.prototype.previousIndex.returns(null);
                 carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignPrevious');
+                self.sandbox.spy(carousel, 'alignPrevious');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(upEvent);
                 assertFalse(carousel.alignPrevious.calledOnce);
