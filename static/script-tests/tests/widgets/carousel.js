@@ -124,7 +124,7 @@
     };
 
     this.CarouselTest.prototype.testAppendChildWidgetCallsContainerPrototypeDuringInit = function (queue) {
-	var self = ths;
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
@@ -151,7 +151,7 @@
     };
 
     this.CarouselTest.prototype.testSetActiveChildWidgetWithMaskCallsContainerPrototype = function (queue) {
-	var self = ths;
+	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
