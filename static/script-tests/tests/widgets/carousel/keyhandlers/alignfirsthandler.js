@@ -33,8 +33,7 @@
         this.sandbox.restore();
     };
 
-    this.AlignFirstHandlerTest.prototype.runTest = function (queue, fn) {
-        var self = this;
+    var runTest = function (self, queue, fn) {
         function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
             self.sandbox.stub(WidgetStrip.prototype);
             self.sandbox.stub(Mask.prototype);
@@ -76,7 +75,7 @@
     };
 
     this.AlignFirstHandlerTest.prototype.testHandlerCausesSetActiveIndexOnBeforeAlign = function (queue) {
-        this.runTest(queue,
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
                 carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
@@ -91,7 +90,7 @@
     };
 
     this.AlignFirstHandlerTest.prototype.testHandlerRespondsOnlyToOwnCarouselEvents = function (queue) {
-        this.runTest(queue,
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
                 carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
