@@ -277,8 +277,11 @@ assertFunction = function (msg, thing) {
     expect(typeof thing).toBe("function");
 };
 
-assertException = function (msg, fn) {
+assertException = function (msg, fn, error) {
     if (arguments.length < 2) {
+        fn = msg;
+    } else if (arguments.length === 2 &&  typeof(msg) === "function") {
+        error = fn;
         fn = msg;
     }
     
