@@ -68,7 +68,7 @@
             currentClass = classArray[i];
             stubUnstubbedFunctions(classArray[i]);
         }
-    },
+    };
 
     this.CarouselTest.prototype.testContainerAPIRedirectsToAppropriateClasses = function (queue) {
 	var self = this;
