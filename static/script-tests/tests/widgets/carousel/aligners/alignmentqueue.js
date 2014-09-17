@@ -143,7 +143,6 @@
             function (application, Mask, AlignmentQueue) {
                 var queue;
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.stopAnimation = this.sandbox.stub();
                 queue = new AlignmentQueue(new Mask());
                 queue.add(3, {foo: "bar"});
                 queue.add(4, {bar: "foo"});
