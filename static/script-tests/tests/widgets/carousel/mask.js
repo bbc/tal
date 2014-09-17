@@ -42,12 +42,12 @@
             ],
 			function (application, Mask, verticalOrientation) {
 				var mask, childStub, appendedWidget;
-                function MockWidgetStripFn() {}
                 childStub = this.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+		var mockWidgetStrip = { };
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 appendedWidget = childStub.getCall(0).args[0];
-				assertTrue("Widget strip is child of mask", appendedWidget instanceof MockWidgetStripFn);
+				assertSame("Widget strip is child of mask", appendedWidget, mockWidgetStrip);
 			}
 		);
 	};
@@ -62,11 +62,12 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
 
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
 
                 moveStub = sinon.stub(mask, '_moveContentsTo');
                 mask.alignToIndex(1);
@@ -88,11 +89,12 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
 
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setAlignPoint(25);
@@ -115,12 +117,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
@@ -143,12 +146,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(-0.5);
@@ -171,12 +175,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(2);
@@ -199,12 +204,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 0, height: 0});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
@@ -228,12 +234,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
                 this.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
@@ -257,11 +264,12 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
-                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(0.5);
                 mask.alignToIndex(1);
@@ -282,11 +290,12 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
-                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(-0.5);
                 mask.alignToIndex(1);
@@ -306,11 +315,12 @@
             ],
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
-                this.sandbox.stub(MockWidgetStripFn.prototype, "lengthOfWidgetAtIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: this.sandbox.stub().returns(50)
+		};
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 moveStub = sinon.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(2);
                 mask.alignToIndex(1);
@@ -332,12 +342,13 @@
             function (application, Mask, Spinner, verticalOrientation) {
                 var mask;
                 this.sandbox.stub(Spinner.prototype);
-                function MockWidgetStripFn() {}
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
                 function fakeOnComplete() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
 
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 mask.alignToIndex(4, { onComplete: fakeOnComplete });
                 assertEquals("onComplete function passed to spinner in options object",
                     fakeOnComplete, Spinner.prototype.moveContentsTo.firstCall.args[1].onComplete);
@@ -356,11 +367,12 @@
             function (application, Mask, Spinner, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
                 this.sandbox.stub(Spinner.prototype);
-                function MockWidgetStripFn() {}
-                this.sandbox.stub(MockWidgetStripFn.prototype, "getLengthToIndex").returns(50);
+		var mockWidgetStrip = {
+			getLengthToIndex: this.sandbox.stub().returns(50)
+		};
 
                 this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 mask.alignToIndex(4, { skipAnim: true });
                 assertTrue("skipAnim parameter passed to spinner in options object", Spinner.prototype.moveContentsTo.firstCall.args[1].skipAnim);
             }
