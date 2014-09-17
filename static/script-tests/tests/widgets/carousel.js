@@ -34,7 +34,7 @@
         this.sandbox.restore();
     };
 
-    this.CarouselTest.prototype.queueTest = function(queue, fn) {
+    var queueTest = function(queue, fn) {
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -119,7 +119,7 @@
             assertTrue("getClasses passes through to widget strip", WidgetStrip.prototype.getClasses.called);
 
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
 
     };
 
@@ -132,7 +132,7 @@
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
             assertFalse(CarouselCore.prototype.append.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testAppendChildWidgetCallsAppendAfterInit = function (queue) {
@@ -145,7 +145,7 @@
             assertTrue(Container.prototype.appendChildWidget.calledOnce);
             assertTrue(CarouselCore.prototype.append.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testSetActiveChildWidgetWithMaskCallsContainerPrototype = function (queue) {
@@ -158,7 +158,7 @@
             assertTrue(Container.prototype.setActiveChildWidget.calledOnce);
             assertFalse(CarouselCore.prototype.setActiveWidget.called);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testSetActiveChildWidgetWithNonMaskCallsSetActiveWidget = function (queue) {
@@ -171,7 +171,7 @@
             assertFalse(Container.prototype.setActiveChildWidget.called);
             assertTrue(CarouselCore.prototype.setActiveWidget.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testHasChildWidgetWithMaskIdCallsCore = function (queue) {
@@ -184,7 +184,7 @@
             assertTrue(CarouselCore.prototype.hasChildWidget.calledOnce);
             assertFalse(WidgetStrip.prototype.hasChildWidget.called);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testHasChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
@@ -197,7 +197,7 @@
             assertFalse(CarouselCore.prototype.hasChildWidget.called);
             assertTrue(WidgetStrip.prototype.hasChildWidget.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testGetChildWidgetWithMaskIdCallsCore = function (queue) {
@@ -209,7 +209,7 @@
             widget = carousel.getChildWidget(carousel._mask.id);
             assertEquals(carousel._mask, widget);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testGetChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
@@ -221,7 +221,7 @@
             carousel.getChildWidget("testId");
             assertTrue(WidgetStrip.prototype.getChildWidget.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testInsertChildWidgetCallsInsert = function (queue) {
@@ -233,7 +233,7 @@
             carousel.insertChildWidget(new Button());
             assertTrue(CarouselCore.prototype.insert.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testRemoveChildWidgetCallsRemove = function (queue) {
@@ -245,7 +245,7 @@
             carousel.removeChildWidget(new Button(), false);
             assertTrue(CarouselCore.prototype.remove.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
     this.CarouselTest.prototype.testRemoveChildWidgetsCallsRemoveAll = function (queue) {
@@ -257,7 +257,7 @@
             carousel.removeChildWidgets();
             assertTrue(CarouselCore.prototype.removeAll.calledOnce);
         }
-        this.queueTest(queue, testFunction);
+        queueTest(queue, testFunction);
     };
 
 
