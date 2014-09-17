@@ -32,32 +32,33 @@ require.def(
 		'antie/events/mediaevent'
 	],
 	function (HTML5Player, MediaEvent) {
+		'use strict';
 
 		var originalConstructor = HTML5Player.prototype.init;
-		HTML5Player.prototype.init = function(id, mediaType) {
-			originalConstructor.call(this, id, mediaType);
+		HTML5Player.prototype.init = function(id, mediaType, eventHandlingFunction) {
+			originalConstructor.call(this, id, mediaType, eventHandlingFunction);
 
 			var checkWaitingTimer = null;
 			var waiting = false;
 
 			var self = this;
-			this.addEventListener('pause', function(evt) {
+			this._mediaElement.addEventListener('pause', function(evt) {
 				window.clearTimeout(checkWaitingTimer);
 			});
-			this.addEventListener('timeupdate', function(evt) {
+			this._mediaElement.addEventListener('timeupdate', function(evt) {
 				if(checkWaitingTimer) {
 					window.clearTimeout(checkWaitingTimer);
 				}
 				checkWaitingTimer = window.setTimeout(function() {
 					waiting = true;
-					self.fireEvent(new MediaEvent("waiting"));
+					self._eventHandlingCallback(new MediaEvent("waiting"));
 				}, 500);
 				if(waiting) {
 					waiting = false;
-					self.fireEvent(new MediaEvent("playing"));
+					self._eventHandlingCallback(new MediaEvent("playing"));
 				}
 			});
-			this.addEventListener('ended', function(evt) {
+			this._mediaElement.addEventListener('ended', function(evt) {
 				if(checkWaitingTimer) {
 					window.clearTimeout(checkWaitingTimer);
 				}

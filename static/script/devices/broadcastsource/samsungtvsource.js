@@ -1,7 +1,9 @@
+/* global webapis */
+
 /**
  * @fileOverview Requirejs module containing the antie.devices.broadcastsource.samsungtvsource class.
  *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -28,9 +30,15 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
-        'antie/application'
+        'antie/runtimecontext',
+        'antie/devices/broadcastsource/channel',
+        'antie/events/tunerunavailableevent',
+        'antie/events/tunerstoppedevent',
+        'antie/events/tunerpresentingevent'
     ],
-    function (Device, BaseTvSource, Application) {
+    function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
+        'use strict';
+
         /**
          * Contains a Samsung Maple implementation of the antie broadcast TV source.
          * @see http://www.samsungdforum.com/Guide/ref00014/PL_WINDOW_SOURCE.html
@@ -38,18 +46,49 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
         var PL_WINDOW_SOURCE_TV = 0; // The TV source
         var PL_WINDOW_SOURCE_MEDIA = 43; // The media source
 
-        var DOM_ELEMENT_ID = "pluginObjectWindow";
+        var PL_TV_EVENT_NO_SIGNAL = 101;
+        var PL_TV_EVENT_SOURCE_CHANGED = 114;
+        var PL_TV_EVENT_TUNE_SUCCESS = 103;
+
+        var WINDOW_PLUGIN_DOM_ELEMENT_ID = "pluginObjectWindow";
+        var TV_PLUGIN_DOM_ELEMENT_ID = "pluginObjectTV";
+
         var SamsungSource = BaseTvSource.extend(/** @lends antie.devices.broadcastsource.SamsungSource.prototype */ {
             /**
              * @constructor
              * @ignore
              */
             init: function () {
-                this._samsungSefWindowPlugin = document.getElementById(DOM_ELEMENT_ID);
+                this._samsungSefWindowPlugin = document.getElementById(WINDOW_PLUGIN_DOM_ELEMENT_ID);
 
                 if (!this._samsungSefWindowPlugin) {
                     throw new Error('Unable to initialise Samsung broadcast source');
                 }
+
+                var tvPlugin = document.getElementById(TV_PLUGIN_DOM_ELEMENT_ID);
+
+                var self = this;
+
+                tvPlugin.OnEvent = function(id) {
+                    switch (parseInt(id)) {
+                        case PL_TV_EVENT_NO_SIGNAL:
+                            var unavailableEvent = new TunerUnavailableEvent();
+                            RuntimeContext.getCurrentApplication().broadcastEvent(unavailableEvent);
+                            break;
+                        case PL_TV_EVENT_SOURCE_CHANGED:
+                            var stoppedEvent = new TunerStoppedEvent();
+                            RuntimeContext.getCurrentApplication().broadcastEvent(stoppedEvent);
+                            break;
+                        case PL_TV_EVENT_TUNE_SUCCESS:
+                            var presentingEvent = new TunerPresentingEvent(self.getCurrentChannel());
+                            RuntimeContext.getCurrentApplication().broadcastEvent(presentingEvent);
+                            break;
+                    }
+                };
+
+                tvPlugin.SetEvent(PL_TV_EVENT_TUNE_SUCCESS);
+                tvPlugin.SetEvent(PL_TV_EVENT_NO_SIGNAL);
+                tvPlugin.SetEvent(PL_TV_EVENT_SOURCE_CHANGED);
 
                 this._setBroadcastToFullScreen();
             },
@@ -78,6 +117,46 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 }
                 return channelName;
             },
+            getCurrentChannel : function() {
+                try {
+                    var mapleChannel = webapis.tv.channel.getCurrentChannel();
+                    return this._createChannelFromMapleChannel(mapleChannel);
+
+                } catch (e) {
+                    return false;
+                }
+            },
+            getChannelList: function (params) {
+
+                var self = this;
+
+                var createChannelList = function(mapleChannels) {
+                    var result = [];
+                    for (var i = 0; i < mapleChannels.length; i++) {
+                        result.push(self._createChannelFromMapleChannel(mapleChannels[i]));
+                    }
+                    params.onSuccess(result);
+                };
+
+                try {
+                    var onFailedToRetrieveChannelList = function () {
+                        params.onError({
+                            name : "ChannelListError",
+                            message : "Channel list is not available"
+                        });
+                    };
+
+                    webapis.tv.channel.getChannelList(createChannelList, onFailedToRetrieveChannelList,
+                                                        webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+
+                } catch (error) {
+
+                    params.onError({
+                        name : "ChannelListError",
+                        message : "Channel list is empty or not available"
+                    });
+                }
+            },
             /**
              * Sets the size and position of the visible broadcast source
              * @param top
@@ -99,8 +178,30 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             setChannel : function(params) {
                 this._tuneChannelByTriplet(params);
             },
+            setChannelByName : function(params) {
+                var currentChannel = this.getCurrentChannel();
+                if (!currentChannel) {
+                    params.onError({
+                        name : "ChannelError",
+                        message: "Unable to determine current channel name"
+                    });
+
+                } else if (currentChannel.name === params.channelName) {
+                    this.showCurrentChannel();
+                    params.onSuccess();
+
+                } else {
+
+                    this._tuneToChannelMatchingSpec({
+                            spec: { name: params.channelName },
+                            onError: params.onError,
+                            onSuccess: params.onSuccess
+                        }
+                    );
+                }
+            },
             _setBroadcastToFullScreen : function() {
-                var currentLayout = Application.getCurrentApplication().getLayout().requiredScreenSize;
+                var currentLayout = RuntimeContext.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
             /**
@@ -108,75 +209,121 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
              */
             _tuneChannelByTriplet : function(params) {
 
-                // FIXME: These two parameters should be optional, allowing us to retrieve all channels, but it seems they aren't.
-                var startIndex = 0;
-                var numChannelsToFind = 1000000;
+                this._tuneToChannelMatchingSpec({
+                    spec: {
+                        // FIXME: ONID is always reported as 65535, so we exclude it from the check in order
+                        // to prevent tuning information passed in (e.g. from MHEG) from causing the match
+                        // to fail.
+                        tsid: params.tsid,
+                        sid: params.sid
+                        },
+                    onError: params.onError,
+                    onSuccess: params.onSuccess
+                });
 
-                var _tuneChannel = function(newChannel) {
-                    var newChannelArgs = {
-                        sourceID: newChannel.sourceID,
-                        programNumber: newChannel.programNumber,
-                        transportStreamID: newChannel.transportStreamID,
-                        originalNetworkID: newChannel.originalNetworkID,
-                        ptc: newChannel.ptc,
-                        major: newChannel.major,
-                        minor: newChannel.minor
-                    };
+            },
+            _tuneToChannelMatchingSpec : function (params) {
 
-                    var tuneSuccess = function () {
-                        params.onSuccess();
-                    };
-                    var tuneError = function (error) {
+                var self = this;
+
+                var onChannelListRetrieved = function (channels) {
+
+                    var channel;
+
+                    for (var i = 0; i < channels.length; i++) {
+                        if (self._channelMatchesSpec(channels[i], params.spec)) {
+                            channel = channels[i];
+                            break;
+                        }
+                    }
+
+                    if (channel) {
+                        self._tuneToChannel({
+                            channel: channel,
+                            onError: params.onError,
+                            onSuccess: params.onSuccess
+                        });
+
+                    } else {
+                        params.onError({
+                            name : "ChannelError",
+                            message : "Channel could not be found"
+                        });
+                    }
+                };
+
+                this.getChannelList({
+                    onError: params.onError,
+                    onSuccess: onChannelListRetrieved
+                });
+            },
+            _channelMatchesSpec: function(channel, spec) {
+                var result = true;
+                for (var prop in spec) {
+                    if (!spec.hasOwnProperty(prop)) {
+                        // Don't match on inherited properties (e.g. length)
+                        continue;
+                    }
+                    if (channel[prop] !== spec[prop]) {
+                        // Spec not matched
+                        result = false;
+                        break;
+                    }
+                }
+                return result;
+            },
+            /**
+             * @param params.channel Channel object
+             * @param params.onError Function to call with a string message on error.
+             * @param params.onSuccess Function to call on success.
+             * @private
+             */
+            _tuneToChannel: function(params) {
+
+                var channel = params.channel;
+
+                var newChannelArgs = {
+                    sourceID: channel.sourceId,
+                    programNumber: channel.sid,
+                    transportStreamID: channel.tsid,
+                    originalNetworkID: channel.onid,
+                    ptc: channel.ptc,
+                    major: channel.major,
+                    minor: channel.minor
+                };
+
+                try {
+                    var tuneError = function () {
                         params.onError({
                             name : "ChangeChannelError",
                             message : "Error tuning channel"
                         });
                     };
 
-                    try {
-                        webapis.tv.channel.tune(newChannelArgs, tuneSuccess, tuneError, 0);
-                    } catch (e) {
-                        params.onError({
-                            name : "ChangeChannelError",
-                            message : "Error tuning channel"
-                        })
-                    }
-                };
+                    // Last argument is the Window ID.
+                    // See http://www.samsungdforum.com/Guide/ref00008/tvchannel/dtv_tvchannel_module.html
+                    webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
 
-                var onChannelListRetrieved = function (channels) {
-
-                    for (var i = 0; i < channels.length; i++) {
-                        var channel = channels[i];
-
-                        // FIXME: ONID is always reported as 65535, so exclude from check
-                        if (channel.transportStreamID === params.tsid && channel.programNumber === params.sid) {
-                            _tuneChannel(channel);
-                            return;
-                        }
-                    }
-
-                    // Channel not found in the channel list, call the onError
+                } catch (e) {
                     params.onError({
-                        name : "ChannelError",
-                        message : "Channel could not be found"
-                    });
-                };
-
-                var onFailedToRetrieveChannelList = function (error) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is not available"
-                    });
-                };
-
-                try {
-                    webapis.tv.channel.getChannelList(onChannelListRetrieved, onFailedToRetrieveChannelList, webapis.tv.channel.NAVIGATOR_MODE_ALL, startIndex, numChannelsToFind);
-                } catch (error) {
-                    params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is empty or not available"
+                        name : "ChangeChannelError",
+                        message : "Error tuning channel"
                     });
                 }
+
+            },
+            _createChannelFromMapleChannel: function (mapleChannel) {
+                return new Channel({
+                    name: mapleChannel.channelName,
+                    onid: mapleChannel.originalNetworkID,
+                    tsid: mapleChannel.transportStreamID,
+                    sid: mapleChannel.programNumber,
+                    idType: undefined,
+                    ptc: mapleChannel.ptc,
+                    major: mapleChannel.major,
+                    minor: mapleChannel.minor,
+                    sourceId: mapleChannel.sourceID
+                });
             }
         });
 

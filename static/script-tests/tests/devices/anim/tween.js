@@ -23,6 +23,16 @@
  */
 
 (function() {
+
+    var DEFAULT_TWEEN_TIME = 840;
+
+    // It looks like we should only need to tick for 840, the default duration of the animation. However the
+    // callback that sorts out the class name doesn't run until tick 866.666666666667 (repeatably). This seems
+    // to be because the Shifty timeoutHandler waits for the animation to complete and it's only on the next
+    // tick (as determined by the easing function) that the Shifty stop method is called, and it is that which
+    // invokes the callback set up in _tween, which in turn updates the class name.
+    var DEFAULT_ON_COMPLETE_TIME = 867;
+
 	this.TweenAnimationTest = AsyncTestCase("Animation_Tween");
 
 	this.TweenAnimationTest.prototype.setUp = function() {
@@ -42,27 +52,28 @@
 			var device = application.getDevice();
 			var div = device.createContainer();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onStart = function() {
-					assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
-				};
-				var onComplete = callbacks.add(function() {
-					assertEquals(100, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
-				});
-				device._tween({
-					el: div,
-					style: div.style,
-					from: {
-						top:"0px"
-					},
-					to: {
-						top:"100px"
-					},
-					className: null,
-					onComplete: onComplete,
-					onStart: onStart
-				});
-			});
+            var clock = sinon.useFakeTimers();
+
+            device._tween({
+                el: div,
+                style: div.style,
+                from: {
+                    top:"0px"
+                },
+                to: {
+                    top:"100px"
+                },
+                className: null
+            });
+
+            assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
+
+            clock.tick(DEFAULT_TWEEN_TIME);
+
+            assertEquals(100, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
+
+            clock.restore();
+
 		}, config);
 	};
 
@@ -75,27 +86,28 @@
 			var device = application.getDevice();
 			var div = device.createContainer();
 
-			queue.call("Wait for tween", function(callbacks) {
-				var onStart = function() {
-					assertClassName("testing", div);
-				};
-				var onComplete = callbacks.add(function() {
-					assertClassName("nottesting", div);
-				});
-				device._tween({
-					el: div,
-					style: div.style,
-					from: {
-						top:"0px"
-					},
-					to: {
-						top:"100px"
-					},
-					className: "testing",
-					onComplete: onComplete,
-					onStart: onStart
-				});
-			});
+            var clock = sinon.useFakeTimers();
+
+            device._tween({
+                el: div,
+                style: div.style,
+                from: {
+                    top:"0px"
+                },
+                to: {
+                    top:"100px"
+                },
+                className: "testing"
+            });
+
+            assertClassName("testing", div);
+
+            clock.tick(DEFAULT_ON_COMPLETE_TIME);
+
+            assertClassName("nottesting", div);
+
+            clock.restore();
+
 		}, config);
 	};
 

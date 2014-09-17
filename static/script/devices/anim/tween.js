@@ -31,6 +31,8 @@ require.def(
      'antie/lib/shifty'
      ],
      function(Device, Tweenable) {
+        'use strict';
+
         // A set of queues of DOM updates to perform. Each animation framerate gets its own queue
         // so they are in sync between themselves.
         var animQueues = {};

@@ -29,11 +29,13 @@ require.def(
 	'antie/devices/logging/xhr',
 	[
 	 	'module',
-	 	'antie/application',
+	 	'antie/runtimecontext',
 		'antie/devices/device'
 	],
-	function( Module, Application, Device ) 
+	function( Module, RuntimeContext, Device ) 
 	{
+		'use strict';
+
 		function zeroFill( number, width )
 		{
 		  width -= number.toString().length;
@@ -79,7 +81,7 @@ require.def(
 			
 			var http = new XMLHttpRequest();
 					
-			var device 		= Application.getCurrentApplication().getDevice();
+			var device 		= RuntimeContext.getCurrentApplication().getDevice();
 			var jsonMessage = device.encodeJson( messageObject ); 
 			
 			http.open("POST", url, true);

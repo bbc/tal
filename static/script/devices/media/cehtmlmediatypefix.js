@@ -32,6 +32,7 @@ require.def(
 		'antie/devices/media/cehtml'
 	],
 	function (CEHTMLPlayer) {
+		'use strict';
 
 		CEHTMLPlayer.prototype._requiresMediaTypeFix = function() {
 			return true;

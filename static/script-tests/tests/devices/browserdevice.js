@@ -153,36 +153,34 @@
 		});
 	};
 
-	this.BrowserDeviceTest.prototype.testCreateImageOnLoad = function(queue) {
-		expectAsserts(1);
+	this.BrowserDeviceTest.prototype.testCreateImageSetsProvidedElementProperties = function(queue) {
+		expectAsserts(10);
 
 		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for image to load", function(callbacks) {
-				// Not possible to serve an image from fixtures - JsTestDriver gives wrong MIME type
-				// Generate an image via canvas and load it
-				var imgSrc = document.createElement('canvas').toDataURL();
-				var onLoad = callbacks.add(function() {
-					assert(true);
-				});
-				var onError = callbacks.addErrback(function() {});
-				device.createImage(null, null, imgSrc, null, onLoad, onError);
-			});
-		});
-	};
 
-	this.BrowserDeviceTest.prototype.testCreateImageOnError = function(queue) {
-		expectAsserts(1);
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
-		queuedRequire(queue, ["antie/devices/browserdevice"], function(BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for image to load", function(callbacks) {
-				var onLoad = callbacks.addErrback(function() {});
-				var onError = callbacks.add(function() {
-					assert(true);
-				});
-				device.createImage(null, null, "invalid:protocol", null, onLoad, onError);
-			});
+            var createElementStub = this.sandbox.stub(document, "createElement");
+            var mockImage =  { style: { } };
+            createElementStub.returns(mockImage);
+
+            var onLoad = this.sandbox.stub();
+            var onError = this.sandbox.stub();
+
+            var classes = [];
+
+            device.createImage("id", classes, "http://mydomain.com/image.jpg", {width: 100, height: 200}, onLoad, onError);
+
+            assert(createElementStub.calledOnce);
+            assert(createElementStub.calledWith("img"));
+            assertEquals("id", mockImage.id);
+            assertUndefined(mockImage.className);
+            assertEquals("http://mydomain.com/image.jpg", mockImage.src);
+            assertEquals("100px", mockImage.style.width);
+            assertEquals("200px", mockImage.style.height);
+            assertEquals("", mockImage.alt);
+            assertSame(onLoad, mockImage.onload);
+            assertSame(onError, mockImage.onerror);
 		});
 	};
 
@@ -203,43 +201,141 @@
         });
     };
 
-	this.BrowserDeviceTest.prototype.testLoadStyleSheet = function(queue) {
-		expectAsserts(2);
+	this.BrowserDeviceTest.prototype.testLoadStyleSheetImportsStyleSheetWhenCSSRulesSupported = function(queue) {
+		expectAsserts(3);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+
+            var createElement = document.createElement;
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { sheet: { cssRules: true }, parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            var appendToHead = this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+            this.sandbox.stub(window, "setInterval");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledTwice);
+            assertEquals("@import url('/test/script-tests/fixtures/dynamicstylesheet.css');", createElementStub.returnValues[1].innerHTML);
+            assert(appendToHead.calledWith(createElementStub.returnValues[1]));
+       });
+    };
+    this.BrowserDeviceTest.prototype.testLoadStyleSheetLinksStyleSheetWhenCSSRulesNotSupported = function(queue) {
+        expectAsserts(2);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+
+            var createElement = document.createElement;
+            var link = { };
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { parentNode: { removeChild: function() {} } };
+                } else if (tag === "link") {
+                    return link;
+                } else if (tag === "img") {
+                    return { parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
+
+            var topLevelElement = document.documentElement || document.body.parentNode || document;
+            this.sandbox.stub(topLevelElement, "appendChild");
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var appendToHead = this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css");
+
+            assertEquals("/test/script-tests/fixtures/dynamicstylesheet.css", link.href);
+            assert(appendToHead.calledWith(link));
+        });
+    };
+	this.BrowserDeviceTest.prototype.testLoadStyleSheetCallbackFiredAfter200msOfCSSRuleLoadingWhenCSSRulesSupported = function(queue) {
+		expectAsserts(5);
 
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for stylesheet to load", function(callbacks) {
-				var div = document.createElement('div');
-				div.id = "sizingdiv";
-				document.body.appendChild(div);
 
-				assertEquals(0, div.offsetHeight);
-				var timeout = callbacks.add(function() {
-					var d2 = document.getElementById('sizingdiv');
-					assertNotEquals(0, d2.offsetHeight);
-					document.body.removeChild(d2);
-				});
+            var createElement = document.createElement;
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { sheet: { cssRules: true }, parentNode: { removeChild: function() {} } };
+                }
+                return createElement(tag);
+            });
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", function(){
-					timeout();
-				});
-			});
+            var clock = sinon.useFakeTimers();
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledTwice);
+            assert(callback.notCalled);
+
+            clock.tick(199);
+
+            assert(callback.notCalled);
+
+            clock.tick(2);
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith("/test/script-tests/fixtures/dynamicstylesheet.css"));
+
+            clock.restore();
 		});
 	};
-	this.BrowserDeviceTest.prototype.testLoadStyleSheetWithCallback = function(queue) {
-		expectAsserts(1);
+    this.BrowserDeviceTest.prototype.testLoadStyleSheetCallbackFiredAfterImgErrorWhenCSSRulesNotSupported = function(queue) {
+        expectAsserts(5);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-			queue.call("Waiting for stylesheet to load", function(callbacks) {
-				var callback = callbacks.add(function() {
-					assert(true);
-				});
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 
-				device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
-			});
-		});
-	};
+            var createElement = document.createElement;
+            var img = { parentNode: { removeChild: this.sandbox.stub() } };
+            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+                if (tag === "style") {
+                    return { parentNode: { removeChild: function() {} } };
+                } else if (tag === "link") {
+                    return { };
+                } else if (tag === "img") {
+                    return img;
+                }
+                return createElement(tag);
+            });
+
+            var topLevelElement = document.documentElement || document.body.parentNode || document;
+            this.sandbox.stub(topLevelElement, "appendChild");
+
+
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            var callback = this.sandbox.stub();
+
+            this.sandbox.stub(document.getElementsByTagName("head")[0], "appendChild");
+
+            device.loadStyleSheet("/test/script-tests/fixtures/dynamicstylesheet.css", callback);
+
+            assert(createElementStub.calledThrice);
+            assert(callback.notCalled);
+
+            assertFunction(img.onerror);
+
+            img.onerror();
+
+            assert(callback.calledOnce);
+            assert(callback.calledWith("/test/script-tests/fixtures/dynamicstylesheet.css"));
+
+        });
+    };
 	this.BrowserDeviceTest.prototype.testAppendChildElement = function(queue) {
 		expectAsserts(7);
 
@@ -1067,59 +1163,8 @@
         );
     };
     
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583
-    /*
-    this.BrowserDeviceTest.prototype.testChromeOSXStyleLeftKeyTapBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var device, stubs, mockEvent;
-
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                // fire mock chrome style events
-                document.onkeydown(mockEvent);
-                document.onkeyup(mockEvent);
-                
-                // check correct TAL behaviour
-                assertCorrectTalKeyTapBehaviour(stubs);
-            }
-        );
-    }; 
-    */
-    
-    function queueKeyRepeatsThenAssertCorrectTALEvents(keyDownFn, keyHoldFn, stubs, queue) {
-        var repeats, repeatDelay, mockElement;
-         function repeatAndEnd() {
-            var i;
-            for(i = 0; i !== repeats; i += 1) {
-                keyHoldFn();
-            }
-            document.onkeyup(mockElement);
-        }
-        
-        function assertCorrectTALKeyHoldEvents() {
-            assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
-            assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
-            assertEquals("TAL keypress event fired repeats (" + repeats + ") + 1 times: ", repeats + 1, stubs.talPress.callCount);
-            sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
-        }
-        
-        repeats = 3; // Fairly arbitrary
-        repeatDelay = 200; // 200ms (unlikely to be less then this)
-        mockElement = getMockDomLeftKeyEvent();
-        
-        keyDownFn(); // press the key down
-        queue.call(repeatAndEnd, repeatDelay); // hold it down then let go.
-        queue.call(assertCorrectTALKeyHoldEvents, repeatDelay + 100); // ensure TAL events have fired
-    }
-    
     this.BrowserDeviceTest.prototype.testFirefox3OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
+        expectAsserts(3);
         queuedRequire(queue, 
             [
                 "antie/devices/browserdevice",
@@ -1127,19 +1172,22 @@
             ], 
             function(BrowserDevice, KeyEvent) {
                 var mockEvent, stubs, device;
-                function ff3KeyDown() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                function ff3KeyRepeat() {
-                    document.onkeypress(mockEvent);
-                }
-                
+
                 device = new BrowserDevice(antie.framework.deviceConfiguration);
                 stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
                 mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(ff3KeyDown, ff3KeyRepeat, stubs, queue);
+
+                document.onkeydown(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeypress(mockEvent);
+                document.onkeyup(mockEvent);
+
+                assert("TAL keydown event fired once: ", stubs.talDown.calledOnce);
+                assert("TAL keyup event fired once: ", stubs.talUp.calledOnce);
+                assertEquals("TAL keypress event fired repeats 4 times: ", 4, stubs.talPress.callCount);
+                sinon.assert.callOrder(stubs.talDown, stubs.talPress, stubs.talUp);
             }
         );
     };
@@ -1282,90 +1330,4 @@
         );
     };
 
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    /*
-    this.BrowserDeviceTest.prototype.testFirefox19OSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function ff19KeyDown() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                function ff19KeyRepeat() {
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(ff19KeyDown, ff19KeyRepeat, stubs, queue);
-            }
-        );
-    };
-    */
-    
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    /*
-    this.BrowserDeviceTest.prototype.testChromeOSXStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function chromeKeyDown() {
-                    document.onkeydown(mockEvent);
-                }
-                function chromeKeyRepeat() {
-                    document.onkeydown(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(chromeKeyDown, chromeKeyRepeat, stubs, queue);
-            }
-        );
-    };
-    */
-    
-    // see TVPJSFRMWK-774 BSCREEN-1065 TVPJSFRMWK-583 BSCREEN-1609
-    // This is a case special for some linux's using gecko taken from http://unixpapa.com/js/key.html
-    /*
-    this.BrowserDeviceTest.prototype.testOldGeckoLinuxStyleLeftKeyHoldBehaviourNormalisedCorrectly = function(queue) {
-        queuedRequire(queue, 
-            [
-                "antie/devices/browserdevice",
-                "antie/events/keyevent"
-            ], 
-            function(BrowserDevice, KeyEvent) {
-                var mockEvent, stubs, device;
-                function linuxGeckoKeyDown() {
-                    document.onkeydown(mockEvent);
-                }
-                
-                function linuxGeckoRepeat() {
-                    document.onkeyup(mockEvent);
-                    document.onkeydown(mockEvent);
-                    document.onkeypress(mockEvent);
-                }
-                
-                device = new BrowserDevice(antie.framework.deviceConfiguration);
-                stubs = stubDeviceAndGetEventSpiesForLeftKey(BrowserDevice, KeyEvent, device, this.sandbox);
-                mockEvent = getMockDomLeftKeyEvent();
-                
-                queueKeyRepeatsThenAssertCorrectTALEvents(linuxGeckoKeyDown, linuxGeckoRepeat, stubs, queue);
-            }
-        );
-    };
-    */
 }());

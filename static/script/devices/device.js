@@ -59,6 +59,8 @@ require.def('antie/devices/device',
         'require'
     ],
     function(Class, KeyEvent, StorageProvider, SessionStorage, require) {
+        'use strict';
+
         /**
          * Abstract base class for Antie devices.
          * Device classes contain an abstraction layer between the {@link Application} and the environment in which
@@ -81,6 +83,8 @@ require.def('antie/devices/device',
              * @ignore
              */
             init: function(config) {
+                var kc;
+
                 this._application = null;
                 this._config = config;
                 this._keyMap = {};
@@ -161,7 +165,7 @@ require.def('antie/devices/device',
                                 var A = config.input.map[code][0];
                                 var Z = config.input.map[code][1];
                                 var AcharCode = "A".charCodeAt(0);
-                                for (var kc = A; kc <= Z; kc++) {
+                                for (kc = A; kc <= Z; kc++) {
                                     this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - A) + AcharCode)];
                                 }
                                 break;
@@ -169,7 +173,7 @@ require.def('antie/devices/device',
                                 var zero = config.input.map[code][0];
                                 var nine = config.input.map[code][1];
                                 var zeroCharCode = "0".charCodeAt(0);
-                                for (var kc = zero; kc <= nine; kc++) {
+                                for (kc = zero; kc <= nine; kc++) {
                                     this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - zero) + zeroCharCode)];
                                 }
                                 break;
@@ -180,14 +184,17 @@ require.def('antie/devices/device',
                                 }
                                 break;
                         }
-                    };
+                    }
                 }
 
-                function ignore() {
-                };
-                var ignoreLoggingMethods =
-                {   log     : ignore,   debug   : ignore,   info    : ignore,
-                    warn    : ignore,   error   : ignore
+                function ignore() {}
+
+                var ignoreLoggingMethods = {
+                    log: ignore,
+                    debug: ignore,
+                    info: ignore,
+                    warn: ignore,
+                    error: ignore
                 };
 
                 this.filteredLoggingMethods = filterLoggingMethods(config, selectLoggingStrategy(config, this.loggingStrategies));
@@ -524,13 +531,13 @@ require.def('antie/devices/device',
                 return this._keyMap;
             },
             /**
-             * Creates a player element.
-             * @see antie.devices.media
-             * @param {String} id The ID of the player element.
-             * @param {String} mediaType "video" or "radio".
-             * @returns A player element.
+             * Creates the interface that Media widgets use to communicate
+             *  with the device.
+             * @param id ID to be used when creating DOM elements.
+             * @param mediaType Type of media. "audio" or "video"
+             * @param eventCallback Function that is called to processes media events.
              */
-            createPlayer: function(id, mediaType) {
+            createMediaInterface: function(id, mediaType, eventCallback) {
             },
             /**
              * Gets the player embed mode for the current device

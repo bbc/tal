@@ -28,10 +28,6 @@
 
     this.TransitionEndPointsTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
-
-        sinon.assert.pass = function() {
-            assert(true);
-        };
     };
 
     this.TransitionEndPointsTest.prototype.tearDown = function() {

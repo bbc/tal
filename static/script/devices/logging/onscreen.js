@@ -32,6 +32,8 @@ require.def(
 	],
 	function( Module, Device) 
 	{
+		'use strict';
+
 		var div = null;
 		var logItems = [];
 
@@ -56,7 +58,7 @@ require.def(
 			if(logItems.length > 10) {
 				logItems.shift();
 			}
-			div.innerHTML = logItems.join("<hr noshade />");
+			div.innerHTML = logItems.join("<hr />");
 		}
 		var loggingMethods = {
 			/**

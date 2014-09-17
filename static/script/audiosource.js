@@ -27,6 +27,8 @@
 require.def('antie/audiosource',
         ['antie/mediasource'],
         function(MediaSource) {
+            'use strict';
+
 			/**
 			 * An audio media source. Provides storage of source and type information about an audio media source.
 			 * @name antie.AudioSource

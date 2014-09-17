@@ -27,6 +27,8 @@
 require.def('antie/events/databoundevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised before and after databinding of a {@link antie.widgets.List}.
 		 * @name antie.events.DataBoundEvent

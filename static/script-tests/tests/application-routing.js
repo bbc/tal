@@ -89,19 +89,43 @@
 
 	};
 	this.ApplicationRoutingTest.prototype.testRouteIsCalled = function(queue) {
-		expectAsserts(1);
+		expectAsserts(7);
 
-		queuedRequire(queue, ["lib/mockapplication"], function(MockApplication) {
-			queue.call("Wait for route to be called", function(callbacks) {
-				var routeSpy;
-				var onBeforeInit = callbacks.add(function() {
-					routeSpy = this.sandbox.spy(MockApplication.prototype, 'route');
-				});
-				var onReady = callbacks.add(function() {
-					assert(routeSpy.calledWith(this.application.getDevice().getCurrentRoute()));
-				});
-				this.application = new MockApplication(document.createElement('div'), null, null, onReady, null, onBeforeInit);
-			});
-		});
+        queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication", "antie/devices/device"], function(application, MockApplication, Device) {
+
+            var device = application.getDevice();
+            application.destroy();
+
+            var deviceLoadStub = this.sandbox.stub(Device, "load");
+
+            var routeStub = this.sandbox.stub(MockApplication.prototype, "route");
+
+            var app = new MockApplication(document.createElement('div'), null, null, null);
+
+
+            assert(deviceLoadStub.calledOnce);
+            var deviceLoadCallbacks = deviceLoadStub.args[0][1];
+            assertObject(deviceLoadCallbacks);
+            assertFunction(deviceLoadCallbacks.onSuccess);
+
+            // When we call back indicating success of Device.load, we load the layouts by using require. We mock
+            // out require and simulate the success of the load of the require call that loads the layout module.
+            var requireStub = this.sandbox.stub(window, "require");
+
+            deviceLoadCallbacks.onSuccess(device);
+
+            assert(requireStub.calledOnce);
+            var requireCallback = requireStub.args[0][1];
+            assertFunction(requireCallback);
+
+            assert(routeStub.notCalled);
+
+            var mockLayout = { };
+
+            requireCallback(mockLayout);
+
+            assert(routeStub.calledOnce);
+        });
+
 	};
 })();

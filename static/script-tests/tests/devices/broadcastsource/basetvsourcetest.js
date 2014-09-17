@@ -1,5 +1,5 @@
 /**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
+ * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -125,6 +125,40 @@
             var device = application.getDevice();
             assertTrue(device.isBroadcastSourceSupported());
         }, config);
+    };
+
+
+    this.baseTvSource.prototype.testBaseBroadcastSourceGetCurrentChannelThrowsExceptionWhenNotOverridden = function(queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
+            this.extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
+            var broadcastSource = new BaseTvSource();
+            assertException("Device broadcast source does not override abstract method getCurrentChannel", function() {
+                broadcastSource.getCurrentChannel();
+            });
+        });
+    };
+
+    this.baseTvSource.prototype.testBaseBroadcastSourceSetChannelByNameThrowsExceptionWhenNotOverridden = function(queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
+            this.extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
+            var broadcastSource = new BaseTvSource();
+            assertException("Device broadcast source does not override abstract method setChannelByName", function() {
+                broadcastSource.setChannelByName();
+            });
+        });
+    };
+
+    this.baseTvSource.prototype.testBaseBroadcastSourceGetChannelListThrowsExceptionWhenNotOverridden = function(queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
+            this.extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
+            var broadcastSource = new BaseTvSource();
+            assertException("Device broadcast source does not override abstract method getChannelList", function() {
+                broadcastSource.getChannelList();
+            });
+        });
     };
 
     this.baseTvSource.prototype.extendBaseTvSourceWithNoOverriddenMethods = function(BaseTvSource) {

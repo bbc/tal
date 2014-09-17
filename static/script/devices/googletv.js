@@ -27,15 +27,17 @@
 require.def('antie/devices/googletv',
 	[
 		'antie/devices/browserdevice',
-		'antie/application'
+		'antie/runtimecontext'
 	],
-	function(BrowserDevice, Application) {
+	function(BrowserDevice, RuntimeContext) {
+		'use strict';
+
 		return BrowserDevice.extend({
 			init: function(config) {
 				// Change Application::getBestFitLayout to find the layout with a size
 				// closest to that of the browser resolution, then use CSS zoom to fit
 				// it to the exact screen size.
-				Application.getCurrentApplication().getBestFitLayout = function() {
+				RuntimeContext.getCurrentApplication().getBestFitLayout = function() {
 					var _screenSize = this._device.getScreenSize();
 					var _layouts = this._device.getConfig().layouts;
 

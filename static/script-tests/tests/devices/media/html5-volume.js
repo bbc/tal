@@ -57,94 +57,124 @@
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetMutedStateTrueAppliedToNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setMuted(true);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertTrue(player.outputElement.muted);
+			var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertTrue(mediaElement.muted);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetMutedStateFalseAppliedToNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setMuted(false);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertFalse(player.outputElement.muted);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertFalse(mediaElement.muted);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume0AppliedToNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(0);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0, player.outputElement.volume);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertEquals(0, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume05AppliedToNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(0.5);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0.5, player.outputElement.volume);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertEquals(0.5, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume10AppliedToNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(1.0);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(1.0, player.outputElement.volume);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertEquals(1.0, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolumeBelowMinIsClippedNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
 			device.setVolume(-1);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0, player.outputElement.volume);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertEquals(0, mediaElement.volume);
 
 		}, config);
 	};
@@ -153,37 +183,44 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
 			device.setVolume(-1);
-			device.createPlayer("player", "audio");
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			assert(warnSpy.called);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolumeAboveMaxIsClippedNewPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
-
-			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(1.01);
-			var player = device.createPlayer("player", "audio");
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(1.0, player.outputElement.volume);
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertEquals(1.0, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolumeAboveMaxWarningLoggedNewPlayer = function(queue) {
 		expectAsserts(1);
 
+        var self = this;
+
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
@@ -192,100 +229,131 @@
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
 			device.setVolume(1.01);
-			device.createPlayer("player", "audio");
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			assert(warnSpy.called);
 
 		}, config);
 	};
 
 	this.HTML5VolumeTest.prototype.testPresetMutedStateTrueAppliedToExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
-			var player = device.createPlayer("player", "audio");
+            var spy = this.sandbox.spy(device, "_createElement");
+
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setMuted(true);
-			application.getRootWidget().appendChildWidget(player);
-			assertTrue(player.outputElement.muted);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertTrue(mediaElement.muted);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetMutedStateFalseAppliedToExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setMuted(false);
-			application.getRootWidget().appendChildWidget(player);
-			assertFalse(player.outputElement.muted);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertFalse(mediaElement.muted);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume0AppliedToExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(0);
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0, player.outputElement.volume);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+            assertEquals(0, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume05AppliedToExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(0.5);
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0.5, player.outputElement.volume);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertEquals(0.5, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolume10AppliedToExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(1.0);
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(1.0, player.outputElement.volume);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertEquals(1.0, mediaElement.volume);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolumeBelowMinIsClippedExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(-1);
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(0, player.outputElement.volume);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertEquals(0, mediaElement.volume);
 
 		}, config);
 	};
@@ -294,31 +362,38 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
-			device.createPlayer("player", "audio");
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(-1);
 			assert(warnSpy.called);
 
 		}, config);
 	};
 	this.HTML5VolumeTest.prototype.testPresetVolumeAboveMaxIsClippedExistingPlayer = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
+            var spy = this.sandbox.spy(device, "_createElement");
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
-			var player = device.createPlayer("player", "audio");
+            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(1.01);
-			application.getRootWidget().appendChildWidget(player);
-			assertEquals(1.0, player.outputElement.volume);
+
+            assertTrue(spy.calledOnce);
+            var mediaElement = spy.returnValues[0];
+			assertEquals(1.0, mediaElement.volume);
 
 		}, config);
 	};
@@ -327,12 +402,14 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5","antie/devices/logging/jstestdriver"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+        var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var device = application.getDevice();
 
 			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
 
-			device.createPlayer("player", "audio");
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(1.01);
 			assert(warnSpy.called);
 

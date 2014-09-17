@@ -27,6 +27,8 @@
 require.def('antie/widgets/label',
 	['antie/widgets/widget'],
 	function(Widget) {
+		'use strict';
+
 		/**
 		 * The Label widget displays text. It supports auto-truncation (with ellipsis) of text to fit.
 		 * @name antie.widgets.Label

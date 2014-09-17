@@ -51,18 +51,31 @@
 		});
 	};
 
-	this.ApplicationInitialisationTest.prototype.testReadyCalled = function(queue) {
-		expectAsserts(1);
+	this.ApplicationInitialisationTest.prototype.testOnReadyHandlerCalledWhenCallingReady = function(queue) {
+		expectAsserts(4);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication"], function(application, MockApplication) {
-			application.destroy();
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/application"], function(application, Application) {
 
-			queue.call("Wait for run to be called", function(callbacks) {
-				var onReady = callbacks.add(function() {
-					assert(true);
-				});
-				this.application = new MockApplication(document.createElement('div'), null, null, onReady);
-			});
+            application.destroy();
+
+            var clock = sinon.useFakeTimers();
+
+            var onReady = this.sandbox.stub();
+
+            var app = new Application(document.createElement('div'), null, null, onReady);
+
+            assert(onReady.notCalled);
+
+            app.ready();
+
+            assert(onReady.notCalled);
+
+            clock.tick(1);
+
+            assert(onReady.calledOnce);
+            assert(onReady.calledWith(app));
+
+            clock.restore();
 		});
 	};
 
@@ -101,21 +114,40 @@
 	};
 
 	this.ApplicationInitialisationTest.prototype.testRunIsCalled = function(queue) {
-		expectAsserts(1);
+		expectAsserts(7);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication"], function(application, MockApplication) {
-			application.destroy();
+		queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication", "antie/devices/device"], function(application, MockApplication, Device) {
 
-			queue.call("Wait for run to be called", function(callbacks) {
-				var runSpy;
-				var onBeforeInit = callbacks.add(function() {
-					runSpy = this.sandbox.spy(MockApplication.prototype, 'run');
-				});
-				var onReady = callbacks.add(function() {
-					assert(runSpy.called);
-				});
-				this.application = new MockApplication(document.createElement('div'), null, null, onReady, null, onBeforeInit);
-			});
+            var device = application.getDevice();
+            application.destroy();
+
+            var deviceLoadStub = this.sandbox.stub(Device, "load");
+
+            var runStub = this.sandbox.stub(MockApplication.prototype, "run");
+
+            var app = new MockApplication(document.createElement('div'), null, null, null);
+
+
+            assert(deviceLoadStub.calledOnce);
+            var deviceLoadCallbacks = deviceLoadStub.args[0][1];
+            assertObject(deviceLoadCallbacks);
+            assertFunction(deviceLoadCallbacks.onSuccess);
+
+            var requireStub = this.sandbox.stub(window, "require");
+
+            deviceLoadCallbacks.onSuccess(device);
+
+            assert(requireStub.calledOnce);
+            var requireCallback = requireStub.args[0][1];
+            assertFunction(requireCallback);
+
+            assert(runStub.notCalled);
+
+            var mockLayout = { };
+
+            requireCallback(mockLayout);
+
+            assert(runStub.calledOnce);
 		});
 	};
 	this.ApplicationInitialisationTest.prototype.testGetDevice = function(queue) {

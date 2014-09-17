@@ -152,28 +152,5 @@ function __qr(){
 			});
 		});
 	};
-	
-	/**
-	 * Queues and loads the specified component into a mock application.
-	 * @param {Object} queue The queue to add the import to.
-	 * @param {String} componentModuleName Module name of the component to load.
-	 * @param {Object} args Optional arguments to pass to the components lifecycle events.
-	 * @param {Array} otherDeps Array of requirejs modules to load.
-	 * @param {function(Application,ComponentContainer,...)} callback Function to pass loaded
-	 * 		Application instance, ComponentContainer in which the component will be loaded and
-	 * 		other specified requirejs modules to.
-	 */
-	this.queuedComponentInit = function(queue, componentModuleName, args, otherDeps, callback) {
-		var testCase = queue.q_.testCase_;
-		queuedApplicationInit(queue, "lib/mockapplication", otherDeps, function() {
-			var requireCallbackArguments = Array.prototype.slice.call(arguments);
-			var application = requireCallbackArguments.shift();;
-	
-			var container = application.addComponentContainer("testComponentContainer");
-			callback.apply(testCase, [application, container].concat(requireCallbackArguments));
-	
-			container.show(componentModuleName, args);
-		});
-	};
-	
+
 };

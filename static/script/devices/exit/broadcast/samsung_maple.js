@@ -1,3 +1,5 @@
+/* global Common */
+
 /**
  * @fileOverview Requirejs module containing base antie.devices.exit.broadcast.samsung_maple class.
  *
@@ -28,6 +30,7 @@ require.def(
     'antie/devices/exit/broadcast/samsung_maple',
     ['antie/devices/browserdevice'],
     function(Device) {
+        'use strict';
 
         /**
          * Exits the application by returning to broadcast using the Samsung API.

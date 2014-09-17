@@ -31,6 +31,8 @@ require.def(
 	],
 	function( Module, Device) 
 	{
+		'use strict';
+
 		var enabledLevels = null;
 		var loggingMethods = {
 			/**

@@ -12,13 +12,16 @@
                 "script-tests/mocks/*.js",
                 "script-tests/fixtures/layouts/*.js",
                 "script/**/*.js"
+            ],
+            "exclude" : [
+                "script/devices/**/*.js"
             ]
         },
 
     "testblock" :
         {
             "include" : [ "script-tests/tests/**/*.js" ],
-            "exclude" : [ "script-tests/tests/interactivehtml/*.js", "script-tests/tests/queuedrequire.js" ]
+            "exclude" : [ "script-tests/tests/queuedrequire.js" ]
         },
 
     "serveblock" :
@@ -36,7 +39,8 @@
             "script-tests/fixtures/components/buttoncomponent.js",
             "script-tests/fixtures/components/emptycomponent.js",
             "script-tests/fixtures/components/multipleshowcomponent.js",
-            "script-tests/fixtures/components/eventtestcomponent.js"
+            "script-tests/fixtures/components/eventtestcomponent.js",
+            "script/devices/**/*.js"
         ]
     },
 

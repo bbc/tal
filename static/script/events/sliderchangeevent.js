@@ -27,6 +27,8 @@
 require.def('antie/events/sliderchangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when the value of {@link antie.widgets.Slider} has been changed.
 		 * @name antie.events.SliderChangeEvent

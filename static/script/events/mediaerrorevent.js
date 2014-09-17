@@ -27,6 +27,8 @@
 require.def('antie/events/mediaerrorevent',
 	['antie/events/mediaevent'],
 	function(MediaEvent) {
+		'use strict';
+
 		/**
 		 * Class of events raised when media errors occur
 		 * @name antie.events.MediaErrorEvent

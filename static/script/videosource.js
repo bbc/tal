@@ -27,6 +27,8 @@
 require.def('antie/videosource',
         ['antie/mediasource'],
         function(MediaSource) {
+            'use strict';
+
 			/**
 			 * An video media source. Provides storage of source and type information about an video media source.
 			 * @name antie.VideoSource

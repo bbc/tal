@@ -24,38 +24,51 @@
  * Please contact us for an alternative licence
  */
 
-require.def( 'antie/devices/media/seekstate', [ 'antie/events/mediaevent' ], function( MediaEvent ){
+require.def('antie/devices/media/seekstate',
+    [
+        'antie/class',
+        'antie/events/mediaevent'
+    ],
 
-    var SeekState = function( mediaWidget ){
+    function(Class, MediaEvent){
+        'use strict';
 
         var State = {
-            None        : 0,
-            Seeking     : 1,
-            Playing     : 2
-        };
+                        None        : 0,
+                        Seeking     : 1,
+                        Playing     : 2
+                    };
 
-        this._currentTime   = 0;
-        this._state         = State.None;
+    var SeekState = Class.extend({
 
-        this.seekTo = function( time ){
-            if( time === this._currentTime ){
+        init :function(eventHandlingCallback) {
+            this._eventHandlingCallback = eventHandlingCallback;
+            this._currentTime = 0;
+            this._state = State.None;
+        },
+
+        seekTo: function(time) {
+            if (time === this._currentTime) {
                 return;
             }
 
-            this._state         = State.Seeking;
-            this._currentTime   = time;
+            this._state = State.Seeking;
+            this._currentTime = time;
 
-            mediaWidget.bubbleEvent( new MediaEvent( "seeking", mediaWidget ) );
-        };
+            this._eventHandlingCallback(new MediaEvent("seeking"));
+        },
 
-        this.playing = function(){
-            if( this._state === State.Seeking ){
-                mediaWidget.bubbleEvent( new MediaEvent( "seeked", mediaWidget ) );
+        playing: function() {
+            if (this._state === State.Seeking) {
+                this._eventHandlingCallback(new MediaEvent("seeked"));
             }
 
             this._state = State.Playing;
-        };
-    };
+        }
+
+    });
 
     return SeekState;
-});
+
+}
+);

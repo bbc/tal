@@ -27,6 +27,8 @@
 require.def('antie/events/beforeselecteditemchangeevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when a {@link antie.widgets.List} has been scrolled to another item.
 		 * @name antie.events.BeforeSelectedItemChangeEvent
