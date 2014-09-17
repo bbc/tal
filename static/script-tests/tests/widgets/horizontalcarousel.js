@@ -25,6 +25,16 @@
 (function() {
 	this.HorizontalCarouselTest = AsyncTestCase("HorizontalCarousel");
 
+	var addTestButtons = function(noButtonsReq, widget, Button) {
+		for(var i = 0; i < noButtonsReq; i++) {
+			var button = new Button();
+			widget.appendChildWidget(button);
+			button.outputElement.style.position = "relative";
+			button.outputElement.style.width = "100px";
+			button.outputElement.style.height = "100px";
+			button.outputElement.style.outline = "1px solid blue";
+		}
+	}
 	this.HorizontalCarouselTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
 	};
@@ -416,7 +426,7 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(3, widget, Button);
+					addTestButtons(3, widget, Button);
 
 					// Position carousel at right-most item (of 3)
 					widget.setActiveChildIndex(2, true);
@@ -454,7 +464,7 @@
 
 					application.getRootWidget().appendChildWidget(widget);
 
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					// Position carousel at left-most item
 					widget.setActiveChildIndex(0, true);
@@ -794,7 +804,7 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
@@ -826,7 +836,7 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
@@ -859,7 +869,7 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
@@ -882,16 +892,6 @@
 
 
 	};
-	this.HorizontalCarouselTest.prototype.addTestButtons = function(noButtonsReq, widget, Button) {
-		for(var i = 0; i < noButtonsReq; i++) {
-			var button = new Button();
-			widget.appendChildWidget(button);
-			button.outputElement.style.position = "relative";
-			button.outputElement.style.width = "100px";
-			button.outputElement.style.height = "100px";
-			button.outputElement.style.outline = "1px solid blue";
-		}
-	}
 })();
 /*
 

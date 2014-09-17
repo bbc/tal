@@ -299,5 +299,14 @@ assertNoException = function (msg, fn) {
 assertClassName = function (msg, fn) {
     // TODO: Implement this
 
-    expect(true).toBe(true);
+    expect(true).toBe(false);
 };
+
+assertMatch = function (msg, regex, actual) {
+	if (arguments.length < 3) {
+		actual = regex;
+		regex = msg;
+	}
+
+	expect(regex.test(actual)).toBe(true);
+}
