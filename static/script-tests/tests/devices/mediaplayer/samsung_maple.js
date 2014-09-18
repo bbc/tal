@@ -924,6 +924,8 @@
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
+    // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
+    //    investigation on other devices.
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
     // -- "hide" is needed for newer devices
     // -- "unload" is needed for older devices - media/samsung_maple_unload
