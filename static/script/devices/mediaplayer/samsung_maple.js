@@ -338,6 +338,12 @@ require.def(
                     self._onCurrentTime(timeInMillis);
                 };
                 this._playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
+
+                function onHide() {
+                    self.stop();
+                }
+
+                window.addEventListener('hide', onHide, false);
             },
 
             _unregisterEventHandlers: function() {
