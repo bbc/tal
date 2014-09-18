@@ -421,7 +421,19 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
-            }
+            },
+
+            /**
+             * TODO: Added to allow 'Seek to End' on the Samsung D8000 to work.
+             * Do we:
+             * - Put this in a special D8000 modifier?
+             * - Do something more sophisticated in a D8000 modifier, e.g. check
+             *   whether seek is successful and jump progressively further away
+             *   from the end of the media until it is?
+             * - Do something else?
+             * @constant {Number}
+             */
+            CLAMP_OFFSET_FROM_END_OF_RANGE: 10
         });
 
         var instance = new Player();

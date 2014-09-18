@@ -922,7 +922,6 @@
     };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Test the new samsung maple page strategy on older Samsungs (e.g. Samsung D8000)
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // TODO: Investigate if we should do the teardown in window.hide that is done in the media/samsung_maple modifier
@@ -947,6 +946,7 @@
     //          Please also note that the FF and REW functions may not work properly during the video buffering. In
     //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
     //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
+    // TODO: Review 'Seek to End' workaround on D8000 (involves a huge fudge factor when clamping to the end)
 
     //---------------------
     // Common tests
