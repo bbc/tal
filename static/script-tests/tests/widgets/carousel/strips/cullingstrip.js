@@ -538,9 +538,7 @@
 
     var stubAppAndDevice = function (self, application, Device, Widget) {
         self.sandbox.stub(Device.prototype);
-        self.sandbox.stub(application);
         self.sandbox.stub(Widget.prototype, 'getCurrentApplication').returns(application);
-        application.getDevice.returns(new Device());
     };
 
     var appendAllTo = function (strip, widgetArray, widgetsLength) {
