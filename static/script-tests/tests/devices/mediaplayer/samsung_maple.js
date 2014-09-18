@@ -948,7 +948,9 @@
     //          Please also note that the FF and REW functions may not work properly during the video buffering. In
     //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
     //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
-    // TODO: Review 'Seek to End' workaround on D8000 (involves a huge fudge factor when clamping to the end)
+    // TODO: 'Seek to End' is super unrelaible on Samsung D8000. Do we need to clamp to the end -10 seconds (seems to be the
+    //       amount of time required to ensure 'Seek to End' works)? Or do we use a more cleverer workaround e.g. detect
+    //       failure to seek and try a different seek time?
 
     //---------------------
     // Common tests
