@@ -1016,8 +1016,6 @@
         });
     };
 
-    // TODO: Test that we do not receive an error event if we get both an unload and a hide event.
-
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
