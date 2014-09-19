@@ -344,6 +344,7 @@ require.def(
                 };
 
                 window.addEventListener('hide', this._onWindowHide, false);
+                window.addEventListener('unload', this._onWindowHide, false);
             },
 
             _unregisterEventHandlers: function() {
@@ -369,6 +370,7 @@ require.def(
                 }
 
                 window.removeEventListener('hide', this._onWindowHide, false);
+                window.removeEventListener('unload', this._onWindowHide, false);
             },
 
             _wipe: function () {
