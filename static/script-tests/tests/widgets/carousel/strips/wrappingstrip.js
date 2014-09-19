@@ -40,7 +40,7 @@
         item = createFocusableButton(self, Button, 'item');
         strip.append(item);
         return strip;
-    },
+    };
 
     var create3ItemStripFirstDisabled = function (self, WrappingStrip, Button, maskLength, verticalOrientation) {
         var strip, disabledItem, item2, item3;
@@ -53,7 +53,7 @@
         strip.append(item2);
         strip.append(item3);
         return strip;
-    },
+    };
 
     var create5ItemStripFirst3Disabled = function (self, WrappingStrip, Button, maskLength, verticalOrientation) {
         var strip, item1, item2, disabledItem1, disabledItem2, disabledItem3;
@@ -70,7 +70,7 @@
         strip.append(item1);
         strip.append(item2);
         return strip;
-    },
+    };
 
     var createFocusableButton = function (self, Button, id) {
         var button = new Button(id);
