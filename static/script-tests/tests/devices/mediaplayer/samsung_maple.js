@@ -1039,7 +1039,6 @@
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
-    // TODO: Investigate when millisenconds should be used
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
     // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
