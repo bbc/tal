@@ -1014,8 +1014,6 @@
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
-    // TODO: Determine if we need to call our own time update method - media/samsung_maple calls it in a couple of places (onRenderingComplete and onCurrentPlayTime)
-    // -- Should time only be updated by the device? Should playFrom be setting the time?
     // TODO: Add test that the current time reported is updated by the update events. (Done as a side effect of another test, but should have it's own test really)
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
