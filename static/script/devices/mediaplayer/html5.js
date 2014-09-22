@@ -63,12 +63,12 @@ require.def(
                     this._mediaElement.style.height = "100%";
 
                     var self = this;
-                    this._wrapOnFinishedBuffering = function(event) { self._onFinishedBuffering(event); };
-                    this._wrapOnError = function(event) { self._onDeviceError(event); };
-                    this._wrapOnEndOfMedia = function(event) { self._onEndOfMedia(event); };
-                    this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(event); };
-                    this._wrapOnStatus = function(event) { self._onStatus(event); };
-                    this._wrapOnMetadata = function(event) { self._onMetadata(event); };
+                    this._wrapOnFinishedBuffering = function(event) { self._onFinishedBuffering(); };
+                    this._wrapOnError = function(event) { self._onDeviceError(); };
+                    this._wrapOnEndOfMedia = function(event) { self._onEndOfMedia(); };
+                    this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(); };
+                    this._wrapOnStatus = function(event) { self._onStatus(); };
+                    this._wrapOnMetadata = function(event) { self._onMetadata(); };
                     this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering);
                     this._mediaElement.addEventListener("playing", this._wrapOnFinishedBuffering);
@@ -283,7 +283,7 @@ require.def(
                 this._exitBuffering();
             },
 
-            _onDeviceError: function(evt) {
+            _onDeviceError: function() {
                 this._toError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
