@@ -39,29 +39,33 @@ require.def(
             
             init: function() {
                 this._super();
-                this._waitingTimer = null;
+                this._bufferingTimer = null;
             },
 
             _onStatus: function() {
                 this._super();
+                this._notBufferingAnymore();
+                this._clearBufferingTimer();
+                this._setBufferingTimer();
+            },
+
+            _clearBufferingTimer: function() {
+                if(this._bufferingTimer) {
+                    window.clearTimeout(this._bufferingTimer);
+                }
+            },
+
+            _setBufferingTimer: function() {
+                var self = this;
+                this._bufferingTimer = window.setTimeout(function() {
+                    self._onDeviceBuffering();
+                }, 500);
+            },
+
+            _notBufferingAnymore: function() {
                 if (this.getState() === MediaPlayer.STATE.BUFFERING) {
                     this._onFinishedBuffering();
                 }
-                this._clearWaitingTimer();
-                this._setWaitingTimer();
-            },
-
-            _clearWaitingTimer: function() {
-                if(this._waitingTimer) {
-                    window.clearTimeout(this._waitingTimer);
-                }
-            },
-
-            _setWaitingTimer: function() {
-                var self = this;
-                this._waitingTimer = window.setTimeout(function() {
-                    self._onDeviceBuffering();
-                }, 500);
             }
         });
 
