@@ -1046,6 +1046,8 @@
     //            actually end up skipping to the next key frame, and assumes that we don't make use of the
     //            _isNearToCurrentTime logic to prevent us doing such skips in the first place!
     //              - If the devices handle seeking to the current time, then we are probably okay in any case! Add a CATAL test case for this purpose!
+    //                      - Seeking to current time works for Current time, **BUT** this is because the offset == 0 (on line 103) - Needs to be tested with *slightly* later time.
+    //                      - Seeking to currentTime + 0.5s fails (leaves us buffering) on the 2013 FOXP - FIXME
     // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
     //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:
