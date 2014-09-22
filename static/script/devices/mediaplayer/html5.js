@@ -288,11 +288,9 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
-                if (this._state === MediaPlayer.STATE.BUFFERING) {
-                    return;
+                if (this._state === MediaPlayer.STATE.PLAYING) {
+                    this._toBuffering();
                 }
-
-                this._toBuffering();
             },
 
             _onEndOfMedia: function() {

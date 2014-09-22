@@ -150,6 +150,14 @@
             }, config);
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.toPlaying = function (MediaPlayer) {
+        this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+        this._mediaPlayer.playFrom(0);
+        deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -158,11 +166,7 @@
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             var clock = this.sandbox.useFakeTimers();
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.toPlaying(MediaPlayer);
 
             deviceMockingHooks.makeOneSecondPass();
             clock.tick(1000);
