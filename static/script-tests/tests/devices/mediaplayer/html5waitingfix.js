@@ -143,10 +143,12 @@
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5waitingfix", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
+                self._clock = this.sandbox.useFakeTimers();
                 self._createElementStub = stubCreateElement(this.sandbox, application);
                 this._device = application.getDevice();
                 self._mediaPlayer = this._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
+                self._clock.restore();
             }, config);
     };
 
@@ -165,29 +167,25 @@
     this.HTML5WaitingFixMediaPlayerTests.prototype.testWhenNoTimeUpdatesThenGoToBuffering = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var clock = this.sandbox.useFakeTimers();
             this.toPlaying(MediaPlayer);
 
             deviceMockingHooks.makeOneSecondPass();
-            clock.tick(1000);
+            this._clock.tick(1000);
 
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
-            clock.restore();
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testWhenTimeUpdatesWhileBufferingThenGoToPlaying = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            var clock = this.sandbox.useFakeTimers();
             this.toPlaying(MediaPlayer);
 
             deviceMockingHooks.makeOneSecondPass();
-            clock.tick(1000);
+            this._clock.tick(1000);
             deviceMockingHooks.makeOneSecondPass();
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            clock.restore();
         });
     };
 
