@@ -922,26 +922,27 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaPlayerIsStoppedOnAppHide = function(queue) {
-        expectAsserts(5);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
 
-            assert(addStub.calledTwice);
-            assertEquals('hide', addStub.args[0][0]);
-            var addedCallback = addStub.args[0][1];
-            assertFunction(addedCallback);
-            assertFalse(addStub.args[0][2]);
+            var filtered = addStub.withArgs("hide", sinon.match.func, false);
+            assert(filtered.calledOnce);
+            var addedCallback = filtered.args[0][1];
+
+            assert(playerPlugin.Stop.notCalled);
 
             addedCallback(new CustomEvent('hide') );
+
             assert(playerPlugin.Stop.calledOnce);
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testWindowHideEventListenerIsTornDownOnReset = function(queue) {
-        expectAsserts(11);
+        expectAsserts(4);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
@@ -949,38 +950,34 @@
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
 
-            assert(addStub.calledTwice);
-            assertEquals('hide', addStub.args[0][0]);
-            var addedCallback = addStub.args[0][1];
-            assertFunction(addedCallback);
-            assertFalse(addStub.args[0][2]);
+            var filteredAdd = addStub.withArgs("hide", sinon.match.func, false);
+            assert(filteredAdd.calledOnce);
+            var addedCallback = filteredAdd.args[0][1];
+
             assert(removeStub.notCalled);
 
             this._mediaPlayer.reset();
 
-            assert(addStub.calledTwice);
-            assert(removeStub.calledTwice);
-            assertEquals('hide', removeStub.args[0][0]);
-            var removedCallback = removeStub.args[0][1];
-            assertFunction(removedCallback);
+            var filteredRemove = removeStub.withArgs('hide', sinon.match.func, false);
+            assert(filteredRemove.calledOnce);
+            var removedCallback = filteredRemove.args[0][1];
             assertSame(addedCallback, removedCallback);
-            assertFalse(removeStub.args[0][2]);
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaPlayerIsStoppedOnAppUnload = function(queue) {
-        expectAsserts(5);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
 
-            assert(addStub.calledTwice);
-            assertEquals('unload', addStub.args[1][0]);
-            var addedCallback = addStub.args[1][1];
-            assertFunction(addedCallback);
-            assertFalse(addStub.args[1][2]);
+            var filtered = addStub.withArgs("unload", sinon.match.func, false);
+            assert(filtered.calledOnce);
+            var addedCallback = filtered.args[0][1];
+
+            assert(playerPlugin.Stop.notCalled);
 
             addedCallback(new CustomEvent('unload'));
 
@@ -989,7 +986,7 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testWindowUnloadEventListenerIsTornDownOnReset = function(queue) {
-        expectAsserts(11);
+        expectAsserts(4);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
@@ -997,22 +994,18 @@
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
 
-            assert(addStub.calledTwice);
-            assertEquals('unload', addStub.args[1][0]);
-            var addedCallback = addStub.args[1][1];
-            assertFunction(addedCallback);
-            assertFalse(addStub.args[1][2]);
+            var filteredAdd = addStub.withArgs("unload", sinon.match.func, false);
+            assert(filteredAdd.calledOnce);
+            var addedCallback = filteredAdd.args[0][1];
+
             assert(removeStub.notCalled);
 
             this._mediaPlayer.reset();
 
-            assert(addStub.calledTwice);
-            assert(removeStub.calledTwice);
-            assertEquals('unload', removeStub.args[1][0]);
-            var removedCallback = removeStub.args[1][1];
-            assertFunction(removedCallback);
+            var filteredRemove = removeStub.withArgs('unload', sinon.match.func, false);
+            assert(filteredRemove.calledOnce);
+            var removedCallback = filteredRemove.args[0][1];
             assertSame(addedCallback, removedCallback);
-            assertFalse(removeStub.args[1][2]);
         });
     };
 
