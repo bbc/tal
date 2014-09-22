@@ -44,6 +44,9 @@ require.def(
 
             _onStatus: function() {
                 this._super();
+                if (this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._onFinishedBuffering();
+                }
                 this._clearWaitingTimer();
                 this._setWaitingTimer();
             },

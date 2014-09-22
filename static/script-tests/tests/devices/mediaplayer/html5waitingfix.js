@@ -176,6 +176,21 @@
         });
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.testWhenTimeUpdatesWhileBufferingThenGoToPlaying = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var clock = this.sandbox.useFakeTimers();
+            this.toPlaying(MediaPlayer);
+
+            deviceMockingHooks.makeOneSecondPass();
+            clock.tick(1000);
+            deviceMockingHooks.makeOneSecondPass();
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            clock.restore();
+        });
+    };
+
     //---------------------
     // Common tests
     //---------------------
