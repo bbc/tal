@@ -1009,12 +1009,33 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testCurrentTimeIsUpdatedByOnCurrentPlayTimeEvents = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            assertEquals(0, this._mediaPlayer.getCurrentTime());
+
+            window.SamsungMapleOnCurrentPlayTime(10000);
+
+            assertEquals(10, this._mediaPlayer.getCurrentTime());
+
+            window.SamsungMapleOnCurrentPlayTime(20000);
+
+            assertEquals(20, this._mediaPlayer.getCurrentTime());
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
-    // TODO: Add test that the current time reported is updated by the update events. (Done as a side effect of another test, but should have it's own test really)
     // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
     // TODO: Determine if calls (e.g. JumpForward) are blocking
     // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
