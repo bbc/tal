@@ -1009,21 +1009,45 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testCurrentTimeIsUpdatedByOnCurrentPlayTimeEvents = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            assertEquals(0, this._mediaPlayer.getCurrentTime());
+
+            window.SamsungMapleOnCurrentPlayTime(10000);
+
+            assertEquals(10, this._mediaPlayer.getCurrentTime());
+
+            window.SamsungMapleOnCurrentPlayTime(20000);
+
+            assertEquals(20, this._mediaPlayer.getCurrentTime());
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
-    // TODO: Determine if we need to call our own time update method - media/samsung_maple calls it in a couple of places (onRenderingComplete and onCurrentPlayTime)
-    // -- Should time only be updated by the device? Should playFrom be setting the time?
-    // TODO: Add test that the current time reported is updated by the update events. (Done as a side effect of another test, but should have it's own test really)
-    // TODO: Determine if we should be disabling the screen saver (this is commented out in media/samsung_maple and the associated URL now 404s.
-    // TODO: Determine if calls (e.g. JumpForward) are blocking
-    // BE AWARE: JumpForward does not work consistently between either different points in the playback cycle, or depending on the age of the device: see media/samsung_maple:279-281
-    // TODO: Investigate when millisenconds should be used
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
     // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
+    //      - If the OnBufferingComplete event does not fire then we would not exit the buffering state.
+    //          - Testing if this does happen or not is nigh-on impossible as you have to jump to a point that you know
+    //            you have buffered (but have not yet played as it's reasonable to throw away from your buffer things
+    //            you have finished with).  Skipping only a second or so into the future is unreliable as we know we'll
+    //            actually end up skipping to the next key frame, and assumes that we don't make use of the
+    //            _isNearToCurrentTime logic to prevent us doing such skips in the first place!
+    //              - If the devices handle seeking to the current time, then we are probably okay in any case! Add a CATAL test case for this purpose!
+    //                      - Seeking to current time works for Current time, **BUT** this is because the offset == 0 (on line 103) - Needs to be tested with *slightly* later time.
+    //                      - Seeking to currentTime + 0.5s fails (leaves us buffering) on the 2013 FOXP - FIXME
     // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
     //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:
@@ -1036,6 +1060,9 @@
     // TODO: 'Seek to End' is super unrelaible on Samsung D8000. Do we need to clamp to the end -10 seconds (seems to be the
     //       amount of time required to ensure 'Seek to End' works)? Or do we use a more cleverer workaround e.g. detect
     //       failure to seek and try a different seek time?
+    //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
+    //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
+    // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
 
     //---------------------
     // Common tests
