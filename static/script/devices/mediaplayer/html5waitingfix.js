@@ -43,12 +43,19 @@ require.def(
             },
 
             _onStatus: function() {
-                var self = this;
-
                 this._super();
+                this._clearWaitingTimer();
+                this._setWaitingTimer();
+            },
+
+            _clearWaitingTimer: function() {
                 if(this._waitingTimer) {
                     window.clearTimeout(this._waitingTimer);
                 }
+            },
+
+            _setWaitingTimer: function() {
+                var self = this;
                 this._waitingTimer = window.setTimeout(function() {
                     self._onDeviceBuffering();
                 }, 500);
