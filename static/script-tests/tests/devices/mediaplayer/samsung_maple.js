@@ -86,6 +86,8 @@
             Stop: this.sandbox.stub()
         };
 
+        playerPlugin.Pause.returns(1);
+
         var originalGetElementById = document.getElementById;
         this.sandbox.stub(document, "getElementById", function(id) {
            switch(id) {
@@ -874,17 +876,33 @@
     };
 
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataResultsInPausedStateAfterInitialBuffering = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenDeviceIsAbleToPauseAfterBuffering = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
+
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
             assert(playerPlugin.Pause.calledOnce);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsRemainsInBufferingStateWhenDeviceIsUnableToPauseAfterBuffering = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+
+            playerPlugin.Pause.returns(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
     };
 
@@ -1070,16 +1088,8 @@
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
     // TODO: Handle pause not pausing in the first second or so of playback (debug on device to see if Pause() is returning true or false)
-    // TODO: Determine if there is the potential for a situation where, if no buffering is needed when jumping (via PlayFrom) we could end up in the buffering state even though we're actually playing/paused.
-    //      - If the OnBufferingComplete event does not fire then we would not exit the buffering state.
-    //          - Testing if this does happen or not is nigh-on impossible as you have to jump to a point that you know
-    //            you have buffered (but have not yet played as it's reasonable to throw away from your buffer things
-    //            you have finished with).  Skipping only a second or so into the future is unreliable as we know we'll
-    //            actually end up skipping to the next key frame, and assumes that we don't make use of the
-    //            _isNearToCurrentTime logic to prevent us doing such skips in the first place!
-    //              - If the devices handle seeking to the current time, then we are probably okay in any case! Add a CATAL test case for this purpose!
-    //                      - Seeking to current time works for Current time, **BUT** this is because the offset == 0 (on line 103) - Needs to be tested with *slightly* later time.
-    //                      - Seeking to currentTime + 0.5s fails (leaves us buffering) on the 2013 FOXP - FIXME
+    //       Pause() returns 0 on first attempt (failure), and 1 on success.
+    //       Device should remain in the BUFFERING state while trying and failing to pause.
     // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
     //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:
@@ -1096,6 +1106,7 @@
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
     // TODO: Seek from Paused ends in the paused state on the device (FoxP 2013) but in the Playing state in the API
+    //       Is this because of the _postBufferingState member variable?
 
     //---------------------
     // Common tests

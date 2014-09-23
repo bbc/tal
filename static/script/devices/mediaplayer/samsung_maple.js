@@ -235,8 +235,10 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._playerPlugin.Pause();
-                    this._toPaused();
+                    var result = this._playerPlugin.Pause();
+                    if (result) {
+                        this._toPaused();
+                    }
                 } else {
                     this._toPlaying();
                 }
