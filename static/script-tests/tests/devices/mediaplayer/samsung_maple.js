@@ -924,6 +924,25 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsThenResumingWhileAttemptingToPauseResultsInPlayingState = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+
+            playerPlugin.Pause.returns(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            this._mediaPlayer.resume();
+            playerPlugin.Pause.returns(1);
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenPausedAfterMultipleAttempts = function(queue) {
         expectAsserts(4);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -1129,7 +1148,6 @@
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Need to be able to call resume() from fake BUFFERING that comes when PAUSED is pending.
     // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
     //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
     //      functions - states:

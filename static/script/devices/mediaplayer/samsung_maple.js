@@ -66,7 +66,13 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
+                        if (this._tryingToPause) {
+                            this._tryingToPause = false;
+                            this._toPlaying();
+                        }
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
@@ -263,6 +269,8 @@ require.def(
                 if (result) {
                     this._toPaused();
                 }
+
+                this._tryingToPause = !result;
             },
 
             _onStatus: function() {
@@ -271,7 +279,7 @@ require.def(
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
 
-                if (state === MediaPlayer.STATE.BUFFERING && this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                if (this._tryingToPause) {
                     this._pauseWithStateTransition();
                 }
             },
