@@ -358,21 +358,37 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
-        expectAsserts(5);
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 30;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearAfterCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 32.5;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearBeforeCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 27.500;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(queue, initialTimeMs, targetTimeSecs) {
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            window.SamsungMapleOnCurrentPlayTime(50000);
-            assertEquals(50, this._mediaPlayer.getCurrentTime());
+            window.SamsungMapleOnCurrentPlayTime(initialTimeMs);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.playFrom(targetTimeSecs);
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
@@ -1028,26 +1044,6 @@
             window.SamsungMapleOnCurrentPlayTime(20000);
 
             assertEquals(20, this._mediaPlayer.getCurrentTime());
-        });
-    };
-
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
-        expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            window.SamsungMapleOnCurrentPlayTime(30000);
-
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
-
-            this._mediaPlayer.playFrom(32.499);
-            assert(eventHandler.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
         });
     };
 
