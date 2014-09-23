@@ -40,10 +40,24 @@ require.def(
             init: function() {
                 this._super();
                 this._bufferingTimer = null;
+                this._waitingToPause = false;
+            },
+
+            pause: function() {
+                if(this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                    this._waitingToPause = true;
+                } else {
+                    this._super();
+                }
             },
 
             _onStatus: function() {
                 this._super();
+                if (this._waitingToPause) {
+                    this._mediaElement.pause();
+                    this._waitingToPause = false;
+                }
                 this._notBufferingAnymore();
                 this._clearBufferingTimer();
                 this._setBufferingTimer();

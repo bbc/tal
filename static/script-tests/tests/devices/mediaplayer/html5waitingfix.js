@@ -267,6 +267,21 @@
         });
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.testDeferPauseUntilAfterBuffering = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this.toPlaying(MediaPlayer);
+
+            this._clock.tick(1000);
+            this._mediaPlayer.pause();
+            assert(stubCreateElementResults.video.pause.notCalled);
+
+            deviceMockingHooks.makeOneSecondPass();
+            assert(stubCreateElementResults.video.pause.calledOnce);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+        });
+    };
+
     //---------------------
     // Common tests
     //---------------------
