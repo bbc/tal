@@ -168,6 +168,10 @@
         deviceMockingHooks.makeOneSecondPass();
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.assertState = function (state) {
+        assertEquals(state, this._mediaPlayer.getState());
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -179,7 +183,7 @@
 
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.BUFFERING);
         });
     };
 
@@ -191,7 +195,7 @@
             this.timeOutToBuffering();
             this.sendTimeUpdateEvent();
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PLAYING);
         });
     };
 
@@ -200,14 +204,14 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PLAYING);
             this._clock.tick(100);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PLAYING);
 
             this.sendTimeUpdateEvent();
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PLAYING);
             this._clock.tick(100);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PLAYING);
         });
     };
 
@@ -219,7 +223,7 @@
             this._mediaPlayer.pause();
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PAUSED);
         });
     };
 
@@ -231,7 +235,7 @@
             this._mediaPlayer.stop();
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.STOPPED);
         });
     };
 
@@ -243,7 +247,7 @@
             deviceMockingHooks.reachEndOfMedia(MediaPlayer);
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.COMPLETE);
         });
     };
 
@@ -255,7 +259,7 @@
             deviceMockingHooks.emitPlaybackError(MediaPlayer);
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.ERROR);
         });
     };
 
@@ -271,7 +275,7 @@
 
             this.timeOutToBuffering();
 
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PAUSED);
         });
     };
 
@@ -286,7 +290,7 @@
 
             this.sendTimeUpdateEvent();
             assert(stubCreateElementResults.video.pause.calledOnce);
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            this.assertState(MediaPlayer.STATE.PAUSED);
         });
     };
 
