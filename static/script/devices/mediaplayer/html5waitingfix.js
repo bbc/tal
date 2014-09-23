@@ -54,10 +54,7 @@ require.def(
 
             _onStatus: function() {
                 this._super();
-                if (this._waitingToPause) {
-                    this._mediaElement.pause();
-                    this._waitingToPause = false;
-                }
+                this._pauseIfDeferred();
                 this._notBufferingAnymore();
                 this._clearBufferingTimer();
                 this._setBufferingTimer();
@@ -102,6 +99,13 @@ require.def(
             _notBufferingAnymore: function() {
                 if (this.getState() === MediaPlayer.STATE.BUFFERING) {
                     this._onFinishedBuffering();
+                }
+            },
+
+            _pauseIfDeferred: function() {
+                if (this._waitingToPause) {
+                    this._mediaElement.pause();
+                    this._waitingToPause = false;
                 }
             }
         });
