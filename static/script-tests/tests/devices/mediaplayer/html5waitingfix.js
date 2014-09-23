@@ -215,6 +215,18 @@
         });
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenStopped = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this.toPlaying(MediaPlayer);
+
+            this._mediaPlayer.stop();
+            this._clock.tick(1000);
+
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+        });
+    };
+
     //---------------------
     // Common tests
     //---------------------
