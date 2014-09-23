@@ -46,7 +46,9 @@ require.def(
                 this._super();
                 this._notBufferingAnymore();
                 this._clearBufferingTimer();
-                this._setBufferingTimer();
+                if(this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._setBufferingTimer();
+                }
             },
 
             _toPaused: function() {

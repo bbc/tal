@@ -251,6 +251,22 @@
         });
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenPauseAtStart = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass();
+
+            this._clock.tick(1000);
+
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+        });
+    };
+
     //---------------------
     // Common tests
     //---------------------
