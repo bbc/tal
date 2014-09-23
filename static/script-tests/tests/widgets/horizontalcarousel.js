@@ -432,16 +432,16 @@
 					widget.setActiveChildIndex(2, true);
 					
 					// Set up spy to watch for movement, then trigger it
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 					
 					// Move left - now on centre item
 					widget.selectPreviousChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
 					// Expect carousel to be repositioned to 100px (one item) from the left-hand edge
 					// (middle item is aligned to the left as per ALIGNMENT_LEFT option)
-					assertEquals(100, deviceScrollElementSpy.getCall(0).args[0].to.left);
+					assertEquals(100, deviceScrollElementStub.getCall(0).args[0].to.left);
 				}
 		);
 	};
@@ -470,16 +470,16 @@
 					widget.setActiveChildIndex(0, true);
 					
 					// Set up spy to watch for movement, then trigger it
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 					
 					// Move right - now on centre item
 					widget.selectNextChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
 					// Expect carousel to be repositioned to 100px (one item) from the left-hand edge
 					// (middle item is aligned to the left as per ALIGNMENT_LEFT option)
-					assertEquals(100, deviceScrollElementSpy.getCall(0).args[0].to.left);
+					assertEquals(100, deviceScrollElementStub.getCall(0).args[0].to.left);
 				}
 		);
  	};
@@ -806,14 +806,14 @@
 					application.getRootWidget().appendChildWidget(widget);					
 					addTestButtons(2, widget, Button);
 
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 
 					widget.setActiveChildIndex(0, false); // Don't reposition
 					widget.selectNextChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
-					var onComplete = deviceScrollElementSpy.getCall(0).args[0].onComplete;
+					var onComplete = deviceScrollElementStub.getCall(0).args[0].onComplete;
 					assertEquals('function', typeof onComplete);
 				}
 		);
@@ -838,7 +838,7 @@
 					application.getRootWidget().appendChildWidget(widget);					
 					addTestButtons(2, widget, Button);
 
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 
 					widget.setActiveChildIndex(0, false); // Don't reposition
 					widget.selectNextChildWidget();
@@ -893,56 +893,3 @@
 
 	};
 })();
-/*
-
-			init: function(id, itemFormatter, dataSource, overrideAnimation) {
-
-			render: function(device) {
-
-			refreshViewport: function() {
-
-			setActiveChildWidget: function(widget, reposition) {
-
-			setActiveChildIndex: function(index, reposition) {
-
-			setDataSource: function(data) {
-
-			rebindDataSource: function() {
-
-			_onKeyDown: function(evt) {
-
-			_onDataBound: function(evt) {
-
-			setWrapMode: function(wrapMode) {
-
-			setViewportMode: function(viewportMode, size) {
-
-			setHasMultiWidthItems: function(multiWidthItems) {
-
-			setActivateThenScroll: function(activateThenScroll) {
-
-			setKeepHidden: function(keepHidden) {
-
-			getSelectedChildWidgetIndex: function() {
-
-			selectPreviousChildWidget: function() {
-
-			selectNextChildWidget: function() {
-
-			_moveChildWidgetSelection: function(direction) {
-
-			_isAnimationOverridden : function(animate) {
-
-
-		HorizontalCarousel.SELECTION_DIRECTION_RIGHT = 'right';
-		HorizontalCarousel.SELECTION_DIRECTION_LEFT = 'left';
-
-		HorizontalCarousel.WRAP_MODE_NONE = 0;
-		HorizontalCarousel.WRAP_MODE_NAVIGATION_ONLY = 1;
-		HorizontalCarousel.WRAP_MODE_VISUAL = 2;
-
-		HorizontalCarousel.VIEWPORT_MODE_NONE = 0;
-		HorizontalCarousel.VIEWPORT_MODE_CLASSES = 1;
-		HorizontalCarousel.VIEWPORT_MODE_DOM = 2;
-
-*/
