@@ -157,6 +157,7 @@
         this._mediaPlayer.playFrom(0);
         deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        deviceMockingHooks.makeOneSecondPass();
     };
 
     //---------------------
@@ -168,7 +169,6 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
 
-            deviceMockingHooks.makeOneSecondPass();
             this._clock.tick(1000);
 
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
@@ -180,7 +180,6 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
 
-            deviceMockingHooks.makeOneSecondPass();
             this._clock.tick(1000);
             deviceMockingHooks.makeOneSecondPass();
 
@@ -193,7 +192,6 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
 
-            deviceMockingHooks.makeOneSecondPass();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
             this._clock.tick(100);
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
@@ -210,7 +208,6 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
 
-            deviceMockingHooks.makeOneSecondPass();
             this._mediaPlayer.pause();
             this._clock.tick(1000);
 
