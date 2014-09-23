@@ -164,6 +164,10 @@
         this._clock.tick(1000);
     };
 
+    this.HTML5WaitingFixMediaPlayerTests.prototype.sendTimeUpdateEvent = function () {
+        deviceMockingHooks.makeOneSecondPass();
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -185,7 +189,7 @@
             this.toPlaying(MediaPlayer);
 
             this.timeOutToBuffering();
-            deviceMockingHooks.makeOneSecondPass();
+            this.sendTimeUpdateEvent();
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
@@ -200,7 +204,7 @@
             this._clock.tick(100);
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
 
-            deviceMockingHooks.makeOneSecondPass();
+            this.sendTimeUpdateEvent();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
             this._clock.tick(100);
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
@@ -263,7 +267,7 @@
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            deviceMockingHooks.makeOneSecondPass();
+            this.sendTimeUpdateEvent();
 
             this.timeOutToBuffering();
 
@@ -280,7 +284,7 @@
             this._mediaPlayer.pause();
             assert(stubCreateElementResults.video.pause.notCalled);
 
-            deviceMockingHooks.makeOneSecondPass();
+            this.sendTimeUpdateEvent();
             assert(stubCreateElementResults.video.pause.calledOnce);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
         });
