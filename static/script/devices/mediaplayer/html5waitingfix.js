@@ -59,6 +59,11 @@ require.def(
                 this._super();
             },
 
+            _toComplete: function() {
+                this._clearBufferingTimer();
+                this._super();
+            },
+
             _clearBufferingTimer: function() {
                 if(this._bufferingTimer) {
                     window.clearTimeout(this._bufferingTimer);
