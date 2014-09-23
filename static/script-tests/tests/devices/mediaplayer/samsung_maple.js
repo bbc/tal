@@ -1031,6 +1031,26 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            window.SamsungMapleOnCurrentPlayTime(30000);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this._mediaPlayer.playFrom(32.499);
+            assert(eventHandler.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
@@ -1063,6 +1083,7 @@
     //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
+    // TODO: Seek from Paused ends in the paused state on the device (FoxP 2013) but in the Playing state in the API
 
     //---------------------
     // Common tests
