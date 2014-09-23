@@ -64,9 +64,15 @@ require.def(
                 this._super();
             },
 
+            _toError: function(errorMessage) {
+                this._clearBufferingTimer();
+                this._super(errorMessage);
+            },
+
             _clearBufferingTimer: function() {
                 if(this._bufferingTimer) {
                     window.clearTimeout(this._bufferingTimer);
+                    this._bufferingTimer = null;
                 }
             },
 
