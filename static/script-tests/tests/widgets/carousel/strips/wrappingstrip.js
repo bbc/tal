@@ -825,7 +825,7 @@
                 assertEquals("Second clone appended second", "two",  device.appendChildElement.secondCall.args[1]);
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesPrependsRearClones = function (queue) {
 	var self = this;
@@ -908,7 +908,7 @@
                 assertEquals("Appended clones stored", fakeElements, strip._getAppendedClones());
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCloneFrontItemsClonesElementsBetweenZeroAndFirstIndexPastMaskSize = function (queue) {
 	var self = this;
@@ -1233,14 +1233,10 @@
             ],
             function (application, WidgetStrip, Button, verticalOrientation, Mask) {
                 var strip, device;
-                device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Mask.prototype);
-                device.getElementSize.returns({width: 70, height: 50});
+		this.sandbox.stub(application.getDevice(), "getElementSize").returns({width: 70, height: 50});
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.autoCalculate(false);
-                strip.parentWidget = new Mask();
-                strip.getChildWidgets = self.sandbox.stub().returns(new Button());
+                strip.parentWidget = new Mask('mask', strip, verticalOrientation);
                 strip.append(new Button());
                 assertEquals(50, strip.lengthOfWidgetAtIndex(0));
             }
@@ -1304,6 +1300,5 @@
             }
         );
     };
-
 
 }());
