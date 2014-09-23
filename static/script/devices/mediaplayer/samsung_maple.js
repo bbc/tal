@@ -112,7 +112,7 @@ require.def(
                         this._toBuffering();
                         if (!this._currentTimeKnown) {
                             this._deferSeekingTo = seekingTo;
-                        } else if (offset === 0) {
+                        } else if (this._isNearToCurrentTime(seekingTo)) {
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {

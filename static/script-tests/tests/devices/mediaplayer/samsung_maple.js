@@ -445,29 +445,45 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPausedStateBuffersThenPlays = function(queue) {
-        expectAsserts(7);
+    this.SamsungMapleMediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays = function(queue, initialTimeMs, targetTimeSecs) {
+        expectAsserts(5);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            window.SamsungMapleOnCurrentPlayTime(50000);
+            window.SamsungMapleOnCurrentPlayTime(initialTimeMs);
             this._mediaPlayer.pause();
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
-            assertEquals(50, this._mediaPlayer.getCurrentTime());
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
             assert(playerPlugin.Resume.notCalled);
-            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.playFrom(targetTimeSecs);
             assert(playerPlugin.Resume.calledOnce);
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
         });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
+        var initialTimeMs = 50000;
+        var targetTimeSecs = 50;
+        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearAfterCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
+        var initialTimeMs = 50000;
+        var targetTimeSecs = 52.5;
+        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearBeforeCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
+        var initialTimeMs = 50000;
+        var targetTimeSecs = 47.5;
+        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndSeeks = function(queue) {
