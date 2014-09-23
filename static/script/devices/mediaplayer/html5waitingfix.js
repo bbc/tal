@@ -49,6 +49,11 @@ require.def(
                 this._setBufferingTimer();
             },
 
+            _toPaused: function() {
+                this._clearBufferingTimer();
+                this._super();
+            },
+
             _clearBufferingTimer: function() {
                 if(this._bufferingTimer) {
                     window.clearTimeout(this._bufferingTimer);
