@@ -358,21 +358,37 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
-        expectAsserts(5);
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 30;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearAfterCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 32.5;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearBeforeCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
+        var initialTimeMs = 30000;
+        var targetTimeSecs = 27.500;
+        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(queue, initialTimeMs, targetTimeSecs) {
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            window.SamsungMapleOnCurrentPlayTime(50000);
-            assertEquals(50, this._mediaPlayer.getCurrentTime());
+            window.SamsungMapleOnCurrentPlayTime(initialTimeMs);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.playFrom(targetTimeSecs);
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
@@ -1063,6 +1079,7 @@
     //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
+    // TODO: Seek from Paused ends in the paused state on the device (FoxP 2013) but in the Playing state in the API
 
     //---------------------
     // Common tests

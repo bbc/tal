@@ -100,7 +100,7 @@ require.def(
                         this._toBuffering();
                         if (!this._currentTimeKnown) {
                             this._deferSeekingTo = seekingTo;
-                        } else if (offset === 0) {
+                        } else if (this._isNearToCurrentTime(seekingTo)) {
                             this._toPlaying();
                         } else {
                             this._jump(offset);
@@ -289,6 +289,7 @@ require.def(
 
             _registerEventHandlers: function() {
                 var self = this;
+
                 window.SamsungMapleOnRenderError = function () {
                     self._onDeviceError("Media element emitted OnRenderError");
                 };
@@ -431,7 +432,14 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
-            }
+            },
+
+            /**
+             * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
+             * On a sample device (Samsung FoxP 2013), seeking by two seconds worked 90% of the time, but seeking
+             * by 2.5 seconds was always seen to work.
+             */
+            CURRENT_TIME_TOLERANCE: 2.5
         });
 
         var instance = new Player();

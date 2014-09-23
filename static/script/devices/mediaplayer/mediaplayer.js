@@ -123,7 +123,7 @@ require.def(
             },
 
             /**
-             * @constant {Number}
+             * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
              */
             CURRENT_TIME_TOLERANCE: 1,
 
