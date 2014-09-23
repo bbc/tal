@@ -52,6 +52,15 @@ require.def(
                 }
             },
 
+            resume: function() {
+                if(this.getState() === MediaPlayer.STATE.BUFFERING) {
+                    this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                    this._waitingToPause = false;
+                } else {
+                    this._super();
+                }
+            },
+
             _onStatus: function() {
                 this._super();
                 this._pauseIfDeferred();

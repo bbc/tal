@@ -283,14 +283,29 @@
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this.toPlaying(MediaPlayer);
-
             this.timeOutToBuffering();
+
             this._mediaPlayer.pause();
             assert(stubCreateElementResults.video.pause.notCalled);
 
             this.sendTimeUpdateEvent();
             assert(stubCreateElementResults.video.pause.calledOnce);
             this.assertState(MediaPlayer.STATE.PAUSED);
+        });
+    };
+
+    this.HTML5WaitingFixMediaPlayerTests.prototype.testDeferPauseThenResume = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this.toPlaying(MediaPlayer);
+            this.timeOutToBuffering();
+            this._mediaPlayer.pause();
+
+            this._mediaPlayer.resume();
+            this.sendTimeUpdateEvent();
+
+            assert(stubCreateElementResults.video.pause.notCalled);
+            this.assertState(MediaPlayer.STATE.PLAYING);
         });
     };
 
