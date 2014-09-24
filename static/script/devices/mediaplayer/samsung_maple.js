@@ -95,7 +95,7 @@ require.def(
                 var offset = seekingTo - this.getCurrentTime();
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        if (!this._currentTimeKnown) {
+                        if (!this._currentTimeKnown || this._deviceBuffering) {
                             this._deferSeekingTo = seekingTo;
                         } else {
                             this._jump(offset);
@@ -237,6 +237,7 @@ require.def(
             },
 
             _onFinishedBuffering: function() {
+                this._deviceBuffering = false;
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -251,6 +252,7 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
+                this._deviceBuffering = true;
                 this._toBuffering();
             },
 

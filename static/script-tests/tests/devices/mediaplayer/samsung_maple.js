@@ -299,8 +299,10 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testJumpOnDeviceWhenPlayFromCalledInMidStreamBufferingState = function(queue) {
-        expectAsserts(6);
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhileBufferingDefersJumpUntilPlaying = function(queue) {
+        // Samsung advice to block seeking while buffering:
+        // http://www.samsungdforum.com/Guide/tec00118/index.html
+        expectAsserts(2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -310,13 +312,12 @@
 
             deviceMockingHooks.startBuffering(this._mediaPlayer);
 
-            assert(playerPlugin.ResumePlay.calledOnce);
-            assert(playerPlugin.ResumePlay.calledWith('testUrl', 0));
-            assert(playerPlugin.JumpForward.notCalled);
             this._mediaPlayer.playFrom(50);
-            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.JumpForward.notCalled);
+
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
             assert(playerPlugin.JumpForward.calledOnce);
-            assert(playerPlugin.JumpForward.calledWith(50));
         });
     };
 
@@ -737,6 +738,8 @@
             assert(playerPlugin.JumpForward.notCalled);
 
             this._mediaPlayer.playFrom(100);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(0);
 
             assert(playerPlugin.JumpForward.calledOnce);
             assertEquals(59.9, playerPlugin.JumpForward.args[0][0]);
@@ -994,7 +997,6 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(playerPlugin.JumpForward.notCalled);
-
             this._mediaPlayer.playFrom(50);
 
             assert(playerPlugin.JumpForward.notCalled);
@@ -1153,7 +1155,7 @@
     //      functions - states:
     //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
     //          is bigger than the contents length.
-    //      And:
+    //      And (addressed, hopefully):
     //          Please also note that the FF and REW functions may not work properly during the video buffering. In
     //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
     //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
