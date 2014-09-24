@@ -92,14 +92,10 @@ require.def(
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
-                var offset = seekingTo - this.getCurrentTime();
+
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        if (!this._currentTimeKnown || this._deviceBuffering) {
-                            this._deferSeekingTo = seekingTo;
-                        } else {
-                            this._jump(offset);
-                        }
+                        this._deferSeekingTo = seekingTo;
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
@@ -109,7 +105,7 @@ require.def(
                         } else if (this._isNearToCurrentTime(seekingTo)) {
                             this._toPlaying();
                         } else {
-                            this._jump(offset);
+                            this._seekTo(seekingTo);
                         }
                         break;
 
@@ -122,7 +118,7 @@ require.def(
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
-                            this._jump(offset);
+                            this._seekTo(seekingTo);
                         }
                         break;
 
@@ -237,7 +233,6 @@ require.def(
             },
 
             _onFinishedBuffering: function() {
-                this._deviceBuffering = false;
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -252,7 +247,6 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
-                this._deviceBuffering = true;
                 this._toBuffering();
             },
 
@@ -302,7 +296,8 @@ require.def(
 
             _deferredSeek: function() {
                 if (this._deferSeekingTo) {
-                    this.playFrom(this._deferSeekingTo);
+                    this._toBuffering();
+                    this._seekTo(this._getClampedTime(this._deferSeekingTo));
                     this._deferSeekingTo = null;
                 }
             },
@@ -402,6 +397,11 @@ require.def(
                 this._currentTime = undefined;
                 this._range = undefined;
                 this._unregisterEventHandlers();
+            },
+
+            _seekTo: function(seconds) {
+                var offset = seconds - this.getCurrentTime();
+                this._jump(offset);
             },
 
             _jump: function (offsetSeconds) {
