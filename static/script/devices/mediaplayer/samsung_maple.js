@@ -149,7 +149,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                        this._pauseWithStateTransition();
+                        this._tryPauseWithStateTransition();
                         break;
 
                     default:
@@ -240,7 +240,7 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._pauseWithStateTransition();
+                    this._tryPauseWithStateTransition();
                 } else {
                     this._toPlaying();
                 }
@@ -264,7 +264,7 @@ require.def(
                 this._currentTimeKnown = false;
             },
 
-            _pauseWithStateTransition: function() {
+            _tryPauseWithStateTransition: function() {
                 var result = this._playerPlugin.Pause();
                 if (result) {
                     this._toPaused();
@@ -280,7 +280,7 @@ require.def(
                 }
 
                 if (this._tryingToPause) {
-                    this._pauseWithStateTransition();
+                    this._tryPauseWithStateTransition();
                 }
             },
 
