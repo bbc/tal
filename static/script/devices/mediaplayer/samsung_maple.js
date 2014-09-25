@@ -118,8 +118,8 @@ require.def(
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
-                            this._playerPlugin.Resume();
                             this._seekTo(seekingTo);
+                            this._playerPlugin.Resume();
                         }
                         break;
 

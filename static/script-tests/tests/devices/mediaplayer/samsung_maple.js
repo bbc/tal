@@ -518,7 +518,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesBeforeJumping = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesAfterJump = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -532,7 +532,8 @@
 
             this._mediaPlayer.playFrom(50);
             assert(playerPlugin.Resume.calledOnce);
-            assert(playerPlugin.Resume.calledBefore(playerPlugin.JumpForward));
+            // Call Resume() after JumpForward() to avoid a single frame being played before the jump (D8000).
+            assert(playerPlugin.Resume.calledAfter(playerPlugin.JumpForward));
         });
     };
 
