@@ -1165,7 +1165,7 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturnsToPlayingState = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -1182,8 +1182,9 @@
             this._mediaPlayer.playFrom(30);
 
             assert(eventHandler.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.getCall(0).args[0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.getCall(1).args[0].type);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.firstCall.args[0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.secondCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
 
