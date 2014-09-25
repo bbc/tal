@@ -402,14 +402,17 @@ require.def(
 
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
-                this._jump(offset);
+                var hasJumped = this._jump(offset);
+                if (!hasJumped) {
+                    this._toPlaying();
+                }
             },
 
             _jump: function (offsetSeconds) {
                 if (offsetSeconds > 0) {
-                    this._playerPlugin.JumpForward(offsetSeconds);
+                    return this._playerPlugin.JumpForward(offsetSeconds);
                 } else {
-                    this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
+                    return this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
                 }
             },
 

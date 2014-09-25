@@ -87,6 +87,8 @@
         };
 
         playerPlugin.Pause.returns(1);
+        playerPlugin.JumpBackward.returns(1);
+        playerPlugin.JumpForward.returns(1);
 
         var originalGetElementById = document.getElementById;
         this.sandbox.stub(document, "getElementById", function(id) {
@@ -1162,6 +1164,29 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturnsToPlayingState = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(0);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            playerPlugin.JumpForward.returns(0);
+
+            this._mediaPlayer.playFrom(30);
+
+            assert(eventHandler.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.getCall(0).args[0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.getCall(1).args[0].type);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
@@ -1186,6 +1211,8 @@
     //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
+    // TODO: Now that we check the error code from JumpForward/JumpBackward, do we need to ignore playFrom() if it's within
+    //       a tolerance of the current position?
 
     //---------------------
     // Common tests
