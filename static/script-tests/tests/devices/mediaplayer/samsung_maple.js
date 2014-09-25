@@ -362,6 +362,11 @@
         });
     };
 
+    // We ignore attempts to seek near the current time because in this situation, JumpForward() and JumpBackward()
+    // can return 1 (success) and then continue playing without a jump occurring. This leaves us in the BUFFERING state,
+    // because we wait for an OnBufferingStart/OnBufferingComplete pair. This is distinct from other tests below where
+    // JumpForward() and JumpBackward() return 0 (failure), in which case we are able to transition back to
+    // PLAYING in response.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
         var initialTimeMs = 30000;
         var targetTimeSecs = 30;
