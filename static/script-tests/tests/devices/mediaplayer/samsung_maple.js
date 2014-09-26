@@ -1266,26 +1266,12 @@
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
-    //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
-    //      functions - states:
-    //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
-    //          is bigger than the contents length.
-    //      Samsung FoxP 2013: We have observed JumpForward/JumpBackward giving a return code of 0 (failure). This results
-    //      in the API staying in the Buffering state. We have also _jump being called with abs values of less than 2.5s,
-    //      which shouldn't be possible (?).
-    //      And (addressed, hopefully):
-    //          Please also note that the FF and REW functions may not work properly during the video buffering. In
-    //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
-    //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
     // TODO: 'Seek to End' is super unrelaible on Samsung D8000. Do we need to clamp to the end -10 seconds (seems to be the
     //       amount of time required to ensure 'Seek to End' works)? Or do we use a more cleverer workaround e.g. detect
     //       failure to seek and try a different seek time?
     //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
-    // TODO: Now that we check the error code from JumpForward/JumpBackward, do we need to ignore playFrom() if it's within
-    //       a tolerance of the current position?
 
     //---------------------
     // Common tests
