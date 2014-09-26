@@ -82,6 +82,16 @@
     // CEHTML specific tests
     //---------------------
 
+    // TODO: Resolve problem with the device mocking hooks possibly not being appropriate for this modifier!
+    //  - Sony 2013 HBBTV behaviour around the media Object playTime (i.e. duration) method shows that metadata is not
+    //      available until we have started playing! The same is suspected of playPosition (i.e. currentTime)
+    //      - A play through of the tennis clip. printing out the duration on every onPlayStateChange shows only the
+    //          following state changes (duration reported from object in brackets)
+    //              CONNECTING (undefined)
+    //              PLAYING (57280)
+    //              PLAYING (52780)
+    //              FINISHED (57280)
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
     // TODO: Make playFrom actually play
@@ -116,6 +126,7 @@
     // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
     // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
     // TODO: Be aware that the media object API uses milliseconds rather than seconds
+
 
     //---------------------
     // Common tests
