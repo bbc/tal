@@ -1219,6 +1219,32 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(30);
+
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.playFrom(30);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var deviceSeeksToKeyFrameAtPosition = 30000;
+            window.SamsungMapleOnCurrentPlayTime(deviceSeeksToKeyFrameAtPosition);
+
+            assert(playerPlugin.JumpForward.notCalled);
+            assert(playerPlugin.JumpBackward.notCalled);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.

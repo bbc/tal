@@ -297,8 +297,10 @@ require.def(
 
             _deferredSeek: function() {
                 if (this._deferSeekingTo) {
-                    this._toBuffering();
-                    this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    if (!this._isNearToCurrentTime(this._deferSeekingTo)) {
+                        this._toBuffering();
+                        this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    }
                     this._deferSeekingTo = null;
                 }
             },
