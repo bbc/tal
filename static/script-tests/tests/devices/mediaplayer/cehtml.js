@@ -114,6 +114,8 @@
     // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
     // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
     // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
+    // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
+    // TODO: Be aware that the media object API uses milliseconds rather than seconds
 
     //---------------------
     // Common tests
