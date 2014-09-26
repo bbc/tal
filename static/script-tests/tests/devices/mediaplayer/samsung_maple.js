@@ -1219,7 +1219,22 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsCurrentTime = function(queue) {
+        var targetTime = 30;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearAfterCurrentTime = function(queue) {
+        var targetTime = 32.5;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearBeforeCurrentTime = function(queue) {
+        var targetTime = 27.5;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(queue, targetTime) {
         expectAsserts(4);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -1228,7 +1243,7 @@
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
 
             this._mediaPlayer.playFrom(50);
-            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.playFrom(targetTime);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
