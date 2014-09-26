@@ -1,5 +1,54 @@
 window.additionalTestFns = {};
 
+var unloadRequire;
+(function () {
+	var requireModules = { };
+
+	var originalDef = require.def;
+	var originalDefine = require.define;
+	var originalLoad = require.load;
+
+	require.def = function() {
+		var name = arguments[0];
+		requireModules[name] = true;
+		originalDef.apply(require, arguments);
+	};
+
+	require.define = function() {
+		var name = arguments[0];
+		requireModules[name] = true;
+		originalDefine.apply(require, arguments);
+	};
+	require.load = function(moduleName, contextName) {
+		var module = requireModules[moduleName];
+		if(module) {
+			require.s.contexts["_"].specified[moduleName] = true;
+			require.s.contexts["_"].loaded[moduleName] = false;
+			setTimeout(function() {
+				require.def.apply(require, module);
+				require.completeLoad(moduleName, require.s.contexts["_"]);
+			}, 0);
+			return;
+		}
+		originalLoad.apply(require, arguments);
+	};
+
+	unloadRequire = function() {
+		for(var name in requireModules) {
+			var module = requireModules[name];
+
+			//Allow for anonymous functions
+			if (typeof name === 'string') {
+				delete require.s.contexts["_"].specified[name];
+				delete require.s.contexts["_"].defined[name];
+				delete require.s.contexts["_"].loaded[name];
+			}
+		}
+	};
+
+})();
+
+
 TestCase = function (description, testSuiteClass) {
     var testFns = {};
     var setup;
@@ -30,9 +79,14 @@ TestCase = function (description, testSuiteClass) {
             it (testName, testFns[testName]);
         }
 
-        if (tearDown) {
-            afterEach(tearDown);
-        }
+	var unloadRequireAndTearDown = function () {
+		if (tearDown) {
+			tearDown();
+		}
+		unloadRequire();
+	};
+
+        afterEach(unloadRequireAndTearDown);
     };
 
     describe(description, specDefinitions);
@@ -298,7 +352,6 @@ assertNoException = function (msg, fn) {
 
 assertClassName = function (msg, fn) {
     // TODO: Implement this
-
     expect(true).toBe(false);
 };
 
