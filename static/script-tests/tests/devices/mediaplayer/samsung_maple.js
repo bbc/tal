@@ -1019,7 +1019,7 @@
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(playerPlugin.JumpForward.notCalled);
@@ -1042,7 +1042,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
             this._mediaPlayer.pause();
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(playerPlugin.JumpForward.notCalled);
@@ -1175,7 +1175,7 @@
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             window.SamsungMapleOnCurrentPlayTime(0);
 
@@ -1209,7 +1209,7 @@
             assert(playerPlugin.JumpForward.notCalled);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
 
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             window.SamsungMapleOnCurrentPlayTime(0);
 
