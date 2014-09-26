@@ -362,6 +362,11 @@
         });
     };
 
+    // We ignore attempts to seek near the current time because in this situation, JumpForward() and JumpBackward()
+    // can return 1 (success) and then continue playing without a jump occurring. This leaves us in the BUFFERING state,
+    // because we wait for an OnBufferingStart/OnBufferingComplete pair. This is distinct from other tests below where
+    // JumpForward() and JumpBackward() return 0 (failure), in which case we are able to transition back to
+    // PLAYING in response.
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
         var initialTimeMs = 30000;
         var targetTimeSecs = 30;
@@ -518,7 +523,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesBeforeJumping = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesAfterJump = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -532,7 +537,8 @@
 
             this._mediaPlayer.playFrom(50);
             assert(playerPlugin.Resume.calledOnce);
-            assert(playerPlugin.Resume.calledBefore(playerPlugin.JumpForward));
+            // Call Resume() after JumpForward() to avoid a single frame being played before the jump (D8000).
+            assert(playerPlugin.Resume.calledAfter(playerPlugin.JumpForward));
         });
     };
 
@@ -1013,7 +1019,7 @@
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(playerPlugin.JumpForward.notCalled);
@@ -1036,7 +1042,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
             this._mediaPlayer.pause();
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(playerPlugin.JumpForward.notCalled);
@@ -1165,11 +1171,11 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturnsToPlayingState = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             window.SamsungMapleOnCurrentPlayTime(0);
 
@@ -1182,8 +1188,75 @@
             this._mediaPlayer.playFrom(30);
 
             assert(eventHandler.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.getCall(0).args[0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.getCall(1).args[0].type);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.firstCall.args[0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.secondCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpReturnsToPlayingState = function(queue) {
+        expectAsserts(6);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.playFrom(30);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            playerPlugin.JumpForward.returns(0);
+
+            assert(eventHandler.notCalled);
+            assert(playerPlugin.JumpForward.notCalled);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(0);
+
+            assert(playerPlugin.JumpForward.calledOnce);
+            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.lastCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsCurrentTime = function(queue) {
+        var targetTime = 30;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearAfterCurrentTime = function(queue) {
+        var targetTime = 32.5;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearBeforeCurrentTime = function(queue) {
+        var targetTime = 27.5;
+        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(queue, targetTime) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(30);
+
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.playFrom(targetTime);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var deviceSeeksToKeyFrameAtPosition = 30000;
+            window.SamsungMapleOnCurrentPlayTime(deviceSeeksToKeyFrameAtPosition);
+
+            assert(playerPlugin.JumpForward.notCalled);
+            assert(playerPlugin.JumpBackward.notCalled);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
 
@@ -1193,26 +1266,12 @@
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Investigate http://www.samsungdforum.com/Guide/tec00118/index.html - talking about a similar but not
-    //      identical API (which has JumpForward and JumpBackward and does not have explicit FastForward or Rewind
-    //      functions - states:
-    //          Some of the multimedia containers can not handle the JumpForward function correctly, if the jump target
-    //          is bigger than the contents length.
-    //      Samsung FoxP 2013: We have observed JumpForward/JumpBackward giving a return code of 0 (failure). This results
-    //      in the API staying in the Buffering state. We have also _jump being called with abs values of less than 2.5s,
-    //      which shouldn't be possible (?).
-    //      And (addressed, hopefully):
-    //          Please also note that the FF and REW functions may not work properly during the video buffering. In
-    //          order to eliminate any potential player errors related to that issue, we strongly recommend to block any
-    //          FF and REW operations in the OnBufferingStart callback and activate them back in OnBufferingComplete.
     // TODO: 'Seek to End' is super unrelaible on Samsung D8000. Do we need to clamp to the end -10 seconds (seems to be the
     //       amount of time required to ensure 'Seek to End' works)? Or do we use a more cleverer workaround e.g. detect
     //       failure to seek and try a different seek time?
     //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
     //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
-    // TODO: Now that we check the error code from JumpForward/JumpBackward, do we need to ignore playFrom() if it's within
-    //       a tolerance of the current position?
 
     //---------------------
     // Common tests

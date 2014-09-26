@@ -118,8 +118,8 @@ require.def(
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
-                            this._playerPlugin.Resume();
                             this._seekTo(seekingTo);
+                            this._playerPlugin.Resume();
                         }
                         break;
 
@@ -297,8 +297,10 @@ require.def(
 
             _deferredSeek: function() {
                 if (this._deferSeekingTo) {
-                    this._toBuffering();
-                    this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    if (!this._isNearToCurrentTime(this._deferSeekingTo)) {
+                        this._toBuffering();
+                        this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    }
                     this._deferSeekingTo = null;
                 }
             },
