@@ -28,15 +28,22 @@
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     // Setup device specific mocking
+    var mockData;
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
-
+            mockData = {};
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            mediaPlayer._range = range; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
-            mediaPlayer._currentTime = currentTime; // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            // CEHTML has no 'metadata' event, so keep these values for later
+            mockData.range = range;
+            mockData.currentTime = currentTime;
         },
         finishBuffering: function(mediaPlayer) {
+            if (!mockData.loaded) {
+                mediaPlayer._range = mockData.range; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
+                mediaPlayer._currentTime = mockData.currentTime; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
+                mockData.loaded = true;
+            }
             mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
             mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
