@@ -1262,7 +1262,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaSetOnPlayFrom = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaSetOnPlayFromForVideo = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             screenSize.width = 987;
@@ -1273,6 +1273,15 @@
             this._mediaPlayer.playFrom(0);
             assert(playerPlugin.SetDisplayArea.calledWith(0, 0, 987, 654));
             assert(playerPlugin.SetDisplayArea.calledOnce);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaNotSetOnPlayFromForAudio = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+            this._mediaPlayer.playFrom(0);
+            assert(playerPlugin.SetDisplayArea.notCalled);
         });
     };
 
