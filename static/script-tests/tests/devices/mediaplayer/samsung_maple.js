@@ -25,7 +25,7 @@
 (function() {
     this.SamsungMapleMediaPlayerTests = AsyncTestCase("SamsungMapleMediaPlayer");
 
-    var config = null;
+    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
     var playerPlugin = null;
 
     // Setup device specific mocking
@@ -98,8 +98,6 @@
                    return originalGetElementById.call(document, id);
            }
         });
-
-        config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.tearDown = function() {
@@ -752,30 +750,6 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationClampsToClampOffsetInConfiguration = function(queue) {
-        config.streaming = {
-            overrides: {
-                clampOffsetFromEndOfRange: 10
-            }
-        };
-
-        expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            window.SamsungMapleOnCurrentPlayTime(0);
-
-            assert(playerPlugin.JumpForward.notCalled);
-
-            this._mediaPlayer.playFrom(100);
-
-            assert(playerPlugin.JumpForward.calledOnce);
-            assert(playerPlugin.JumpForward.calledWith(50));
-        });
-    };
-
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstMidStreamBufferingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
@@ -1291,11 +1265,6 @@
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: 'Seek to End' is super unrelaible on Samsung D8000. Do we need to clamp to the end -10 seconds (seems to be the
-    //       amount of time required to ensure 'Seek to End' works)? Or do we use a more cleverer workaround e.g. detect
-    //       failure to seek and try a different seek time?
-    //          - Defer seeking to the next clock tick so we jump forward by the right amount? Current time ticks every
-    //            half-second (ish) so we may be trying to request going up to half a second beyond the end of the media
     // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
     // TODO: Test to ensure we able to set a clampOffsetFromEndOfRange override of zero (0) in config (will currently use default?)
 

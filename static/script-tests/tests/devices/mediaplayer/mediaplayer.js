@@ -162,6 +162,7 @@
 
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
         expectAsserts(18);
+
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
@@ -190,6 +191,28 @@
             assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
 
         });
+    };
+
+    this.MediaPlayerTest.prototype.testClampingCalculationWithOverriddenEndTime = function (queue) {
+        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        config.streaming = {
+            overrides: {
+                clampOffsetFromEndOfRange: 10
+            }
+        };
+
+        expectAsserts(4);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+
+            var SubClass = createSubClass(MediaPlayer);
+            var instance = new SubClass();
+
+            assertEquals(89,  instance.getClampedTime(89,   {start:0, end:100}));
+            assertEquals(90,  instance.getClampedTime(90, {start:0, end:100}));
+            assertEquals(90,  instance.getClampedTime(90.1,  {start:0, end:100}));
+
+            assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
+        }, config);
     };
 
     this.MediaPlayerTest.prototype.testIsNearToCurrentTimeCalculation = function (queue) {
