@@ -256,13 +256,17 @@ require.def(
             },
 
             _getClampOffsetFromConfig: function() {
-                var clampOffsetFromEndOfRange = null;
+                var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
                 if (config && config.streaming && config.streaming.overrides) {
                     clampOffsetFromEndOfRange = config.streaming.overrides.clampOffsetFromEndOfRange;
                 }
 
-                return clampOffsetFromEndOfRange || this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                if(clampOffsetFromEndOfRange !== undefined) {
+                    return clampOffsetFromEndOfRange;
+                } else {
+                    return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                }
             }
         });
 
