@@ -26,6 +26,7 @@
     this.SamsungMapleMediaPlayerTests = AsyncTestCase("SamsungMapleMediaPlayer");
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var screenSize = {};
     var playerPlugin = null;
 
     // Setup device specific mocking
@@ -82,7 +83,8 @@
             Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
             Resume: this.sandbox.stub(),
-            Stop: this.sandbox.stub()
+            Stop: this.sandbox.stub(),
+            SetDisplayArea: this.sandbox.stub()
         };
 
         playerPlugin.Pause.returns(1);
@@ -110,6 +112,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/samsung_maple", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
                 this._device = application.getDevice();
+                this.sandbox.stub(this._device, 'getScreenSize').returns(screenSize);
                 this._errorLog = this.sandbox.stub(this._device.getLogger(), "error");
                 self._mediaPlayer = this._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
@@ -1259,14 +1262,29 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaSetOnPlayFrom = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+            screenSize.width = 987;
+            screenSize.height = 654;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assert(playerPlugin.SetDisplayArea.notCalled);
+            this._mediaPlayer.playFrom(0);
+            assert(playerPlugin.SetDisplayArea.calledWith(0, 0, 987, 654));
+            assert(playerPlugin.SetDisplayArea.calledOnce);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
     // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Determine if we need to set the window size - the Samsung 2010 apparentlyh starts video playback in a small window by default (see media/samsung_maple.js:394)
-    // TODO: Test to ensure we able to set a clampOffsetFromEndOfRange override of zero (0) in config (will currently use default?)
+    // TODO: Issues on samsung maple 5
+    //  - Seek to end seeks to far from the end of the video and attempting to seek again fails
+    //  - Autoplay false tests fail
 
     //---------------------
     // Common tests

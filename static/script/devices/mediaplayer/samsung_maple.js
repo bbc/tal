@@ -125,6 +125,7 @@ require.def(
 
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._setDisplayFullScreen();
                         this._playerPlugin.ResumePlay(this._source, seekingTo);
                         this._toBuffering();
                         break;
@@ -458,6 +459,11 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
+            _setDisplayFullScreen: function() {
+                var dimensions = RuntimeContext.getDevice().getScreenSize();
+                this._playerPlugin.SetDisplayArea(0, 0, dimensions.width, dimensions.height);
             },
 
             /**
