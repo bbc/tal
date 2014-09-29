@@ -162,7 +162,7 @@
 
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
         expectAsserts(18);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -194,7 +194,7 @@
 
     this.MediaPlayerTest.prototype.testIsNearToCurrentTimeCalculation = function (queue) {
         expectAsserts(14);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
