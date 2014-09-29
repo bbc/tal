@@ -263,12 +263,11 @@ require.def(
             },
 
             _tryPauseWithStateTransition: function() {
-                var result = this._playerPlugin.Pause();
-                if (result) {
+                var success = this._isSuccessCode(this._playerPlugin.Pause());
+                if (success) {
                     this._toPaused();
                 }
-
-                this._tryingToPause = !result;
+                this._tryingToPause = !success;
             },
 
             _onStatus: function() {
@@ -405,8 +404,8 @@ require.def(
 
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
-                var hasJumped = this._jump(offset);
-                if (!hasJumped) {
+                var success = this._isSuccessCode(this._jump(offset));
+                if (!success) {
                     this._toPlaying();
                 }
             },
@@ -466,6 +465,11 @@ require.def(
                     var dimensions = RuntimeContext.getDevice().getScreenSize();
                     this._playerPlugin.SetDisplayArea(0, 0, dimensions.width, dimensions.height);
                 }
+            },
+
+            _isSuccessCode: function(code) {
+                var samsung2010ErrorCode = -1;
+                return code && code !== samsung2010ErrorCode;
             },
 
             /**

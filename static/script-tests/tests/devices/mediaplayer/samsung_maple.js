@@ -937,14 +937,29 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBuffering = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningZero = function(queue) {
+        var pauseReturnCode = 0;
+        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningMinusOne = function(queue) {
+        var pauseReturnCode = -1;
+        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningFalse = function(queue) {
+        var pauseReturnCode = false;
+        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails = function(queue, pauseReturnCode) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
 
-            playerPlugin.Pause.returns(0);
+            playerPlugin.Pause.returns(pauseReturnCode);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
@@ -1172,7 +1187,22 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturnsToPlayingState = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningZeroReturnsToPlayingState = function(queue) {
+        var jumpReturnCode = 0;
+        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningMinusOneReturnsToPlayingState = function(queue) {
+        var jumpReturnCode = -1;
+        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningFalseReturnsToPlayingState = function(queue) {
+        var jumpReturnCode = false;
+        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.doTestFailedJumpReturnsToPlayingState = function(queue, jumpReturnCode) {
         expectAsserts(5);
         this.runMediaPlayerTest(queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -1185,7 +1215,7 @@
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
-            playerPlugin.JumpForward.returns(0);
+            playerPlugin.JumpForward.returns(jumpReturnCode);
 
             this._mediaPlayer.playFrom(30);
 
@@ -1290,10 +1320,6 @@
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
     // -- UPDATE: I haven't seen any ill effects on the 2013 FoxP from not using tvmwPlugin - needs further
     //    investigation on other devices.
-    // TODO: Handle any errors from device APIs return values (e.g. Stop(), Pause() etc.)
-    // TODO: Issues on samsung maple 5
-    //  - Seek to end seeks to far from the end of the video and attempting to seek again fails
-    //  - Autoplay false tests fail
 
     //---------------------
     // Common tests
