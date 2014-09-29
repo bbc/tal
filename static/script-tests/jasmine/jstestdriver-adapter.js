@@ -141,6 +141,7 @@ registerTestsWithJasmine = function () {
             }
 
             afterEach(function () {
+		unloadRequire();
                 if(window.fakeApplication) {
                     window.fakeApplication.destroy();
                     window.fakeApplication = null;
