@@ -10,13 +10,13 @@ var unloadRequire;
 
 	require.def = function() {
 		var name = arguments[0];
-		requireModules[name] = true;
+		requireModules[name] = arguments;
 		originalDef.apply(require, arguments);
 	};
 
 	require.define = function() {
 		var name = arguments[0];
-		requireModules[name] = true;
+		requireModules[name] = arguments;
 		originalDefine.apply(require, arguments);
 	};
 	require.load = function(moduleName, contextName) {
