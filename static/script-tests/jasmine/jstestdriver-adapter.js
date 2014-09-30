@@ -131,7 +131,6 @@ registerTestsWithJasmine = function () {
             }
 
             for (var testName in testFns) {
-                console.log(testName);
 
                 it (testName, createRunAsyncTestFunction(testFns[testName]));
             }
@@ -159,7 +158,6 @@ registerTestsWithJasmine = function () {
 
 function createRunAsyncTestFunction(testFn) {
     return function () {
-        console.log(testFn.toString());
         runAsyncTest(testFn);
     };
 }
