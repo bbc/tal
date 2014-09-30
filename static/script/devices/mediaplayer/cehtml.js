@@ -50,12 +50,8 @@ require.def(
                     this._source = url;
                     this._mimeType = mimeType;
                     this._toStopped();
-                    this._mediaElement = this._createElement(mimeType);
-                    this._mediaElement.style.position = "absolute";
-                    this._mediaElement.style.top = "0px";
-                    this._mediaElement.style.left = "0px";
-                    this._mediaElement.style.width = "100%";
-                    this._mediaElement.style.height = "100%";
+                    this._createElement();
+
                     this._addElementToDOM();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
@@ -222,10 +218,15 @@ require.def(
                 }
             },
 
-            _createElement: function(mimeType) {
+            _createElement: function() {
                 var device = RuntimeContext.getDevice();
-                var obj = device._createElement("object", "mediaPlayer");
-                return obj;
+                this._mediaElement = device._createElement("object", "mediaPlayer");
+
+                this._mediaElement.style.position = "absolute";
+                this._mediaElement.style.top = "0px";
+                this._mediaElement.style.left = "0px";
+                this._mediaElement.style.width = "100%";
+                this._mediaElement.style.height = "100%";
             },
 
             _addElementToDOM: function() {
