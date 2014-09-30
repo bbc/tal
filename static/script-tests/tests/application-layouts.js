@@ -49,18 +49,15 @@
 	this.ApplicationLayoutsTest.prototype.testGetBestFitLayoutOnLargerScreen = function(queue) {
 		expectAsserts(1);
 
-		queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+		queuedApplicationInit(queue, "lib/mockapplication", ['antie/devices/browserdevice'], function(application, BrowserDevice) {
 			this.sandbox.stub(BrowserDevice.prototype, 'getScreenSize', function() {
 				return {
 					width: 1000000,
 					height: 1000000
 				};
 			});
-
-			queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-				var layout = application.getBestFitLayout();
-				assertSame(antie.framework.deviceConfiguration.layouts[0], layout);
-			});
+			var layout = application.getBestFitLayout();
+			assertSame(antie.framework.deviceConfiguration.layouts[0], layout);
 		});
 	};
 	this.ApplicationLayoutsTest.prototype.testSetLayoutIsCalled = function(queue) {
