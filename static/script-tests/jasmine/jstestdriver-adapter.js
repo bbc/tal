@@ -349,9 +349,15 @@ assertNoException = function (msg, fn) {
     expect(fn).not.toThrow();
 };
 
-assertClassName = function (msg, fn) {
-    // TODO: Implement this
-    expect(true).toBe(false);
+assertClassName = function (msg, className, element) {
+    if (arguments.length < 3) {
+        element = className;
+        className = msg;
+    }
+
+    var classes = element.className.split(" ");
+	
+    expect(classes).toContain(className);
 };
 
 assertMatch = function (msg, regex, actual) {
