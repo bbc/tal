@@ -316,7 +316,6 @@
 					widget.setActiveChildIndex(1, true);
 
 					assert(deviceScrollElementSpy.called);
-
 					var pos = deviceScrollElementSpy.getCall(0).args[0].to.left;
 					assertEquals(75, pos);
 				}
@@ -839,11 +838,12 @@
 					addTestButtons(2, widget, Button);
 
 					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
-
+					var scrollHandle = { };
+					deviceScrollElementStub.returns(scrollHandle);
 					widget.setActiveChildIndex(0, false); // Don't reposition
 					widget.selectNextChildWidget();
 
-					assert('Scrollhandle set', !!widget._scrollHandle);
+					assertSame('Scrollhandle set', scrollHandle,  widget._scrollHandle);
 				}
 		);
 	};
