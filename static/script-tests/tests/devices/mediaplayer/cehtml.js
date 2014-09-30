@@ -84,13 +84,12 @@
     };
 
     this.CEHTMLMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
-        var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/cehtml", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                self._createElementStub = stubCreateElement(this.sandbox, application);
+                this._createElementStub = stubCreateElement(this.sandbox, application);
                 this._device = application.getDevice();
-                self._mediaPlayer = this._device.getMediaPlayer();
-                action.call(self, MediaPlayer);
+                this._mediaPlayer = this._device.getMediaPlayer();
+                action.call(this, MediaPlayer);
             }, config);
     };
 
@@ -110,7 +109,8 @@
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
-    // ? Why is there a mixture of self and this in runMediaPlayerTest?
+    //  Set size
+    //  Set content type
     // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
     // TODO: Make pause actually pause

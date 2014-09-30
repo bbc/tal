@@ -140,13 +140,12 @@
     };
 
     this.HTML5MediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
-        var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                self._createElementStub = stubCreateElement(this.sandbox, application);
+                this._createElementStub = stubCreateElement(this.sandbox, application);
                 this._device = application.getDevice();
-                self._mediaPlayer = this._device.getMediaPlayer();
-                action.call(self, MediaPlayer);
+                this._mediaPlayer = this._device.getMediaPlayer();
+                action.call(this, MediaPlayer);
             }, config);
     };
 

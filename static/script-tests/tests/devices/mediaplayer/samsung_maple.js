@@ -107,15 +107,13 @@
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
-        var self = this;
-
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/samsung_maple", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
                 this._device = application.getDevice();
                 this.sandbox.stub(this._device, 'getScreenSize').returns(screenSize);
                 this._errorLog = this.sandbox.stub(this._device.getLogger(), "error");
-                self._mediaPlayer = this._device.getMediaPlayer();
-                action.call(self, MediaPlayer);
+                this._mediaPlayer = this._device.getMediaPlayer();
+                action.call(this, MediaPlayer);
             }, config);
     };
 
