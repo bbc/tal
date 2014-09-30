@@ -51,7 +51,8 @@
                 mediaPlayer._currentTime = mockData.currentTime; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
                 mockData.loaded = true;
             }
-            mediaPlayer._currentTime = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mediaPlayer._currentTime;  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            var currentTimeInSeconds = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mockData.currentTime;
+            fakeCEHTMLObject.playPosition = currentTimeInSeconds * 1000;
             mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {
@@ -77,8 +78,10 @@
     this.CEHTMLMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
+        mockData = {};
         fakeCEHTMLObject = document.createElement("div");
         fakeCEHTMLObject.play = this.sandbox.stub();
+        fakeCEHTMLObject.seek = this.sandbox.stub();
     };
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
@@ -157,12 +160,33 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeek = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            this._mediaPlayer.playFrom(10);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.seek.calledWith(10000));
+            assert(fakeCEHTMLObject.play.calledWith(1));
+            assertEquals(10, this._mediaPlayer.getCurrentTime());
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Make playFrom actually play
-    // TODO: Make playFrom actually seek
+    // TODO: Handle playstatechange to switch out of BUFFERING state
+    // TODO: Regular timeupdate event
+    // TODO: getRange
     // TODO: Make pause actually pause
     // TODO: Make stop actually stop
     // TODO: Make resume actually resume
+    // TODO: Make playFrom actually seek
+    //  When already buffering
+    //  When playing
+    //  When paused
+    //  When complete
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.

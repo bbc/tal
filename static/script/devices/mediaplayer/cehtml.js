@@ -93,6 +93,7 @@ require.def(
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._mediaElement.play(1);
+                        this._mediaElement.seek(seconds*1000);
                         this._toBuffering();
                         break;
 
@@ -174,7 +175,18 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                return this._currentTime; // FIXME
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        if (this._mediaElement) {
+                            return this._mediaElement.playPosition / 1000;
+                        }
+                        break;
+                }
+                return undefined;
             },
 
             /**
@@ -241,12 +253,10 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
-                this._currentTime = undefined; // FIXME
                 this._range = undefined; // FIXME
             },
 
             _toStopped: function () {
-                this._currentTime = undefined; // FIXME
                 this._range = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
@@ -268,7 +278,6 @@ require.def(
             },
 
             _toComplete: function () {
-                this._currentTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
