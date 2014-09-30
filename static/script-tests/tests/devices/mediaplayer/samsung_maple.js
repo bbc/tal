@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
     this.SamsungMapleMediaPlayerTests = AsyncTestCase("SamsungMapleMediaPlayer");
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
@@ -31,13 +32,13 @@
 
     // Setup device specific mocking
     var deviceMockingHooks = {
-        setup: function(sandbox, application) {
+        setup: function(/*sandbox, application*/) {
 
             // Override ResumePlay to update the time for the common tests only - although the Samsung specific tests
             // do use these mocking hooks, they do not call setup.
             playerPlugin.ResumePlay = function (source, seconds) {
                 window.SamsungMapleOnCurrentPlayTime(seconds * 1000);
-            }
+            };
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             playerPlugin.GetDuration = function() {
@@ -48,29 +49,27 @@
                 window.SamsungMapleOnStreamInfoReady();
             }
         },
-        finishBuffering: function(mediaPlayer) {
+        finishBuffering: function(/*mediaPlayer*/) {
             if (window.SamsungMapleOnBufferingComplete) {
                 // Make sure we have the event listener before calling it (we may have torn down during onError)
                 window.SamsungMapleOnBufferingComplete();
             }
         },
-        emitPlaybackError: function(mediaPlayer) {
+        emitPlaybackError: function(/*mediaPlayer*/) {
             window.SamsungMapleOnRenderError();
         },
-        reachEndOfMedia: function(mediaPlayer) {
+        reachEndOfMedia: function(/*mediaPlayer*/) {
             window.SamsungMapleOnRenderingComplete();
         },
-        startBuffering: function(mediaPlayer) {
+        startBuffering: function(/*mediaPlayer*/) {
             window.SamsungMapleOnBufferingStart();
         },
-        mockTime: function(mediaplayer) {
-
+        mockTime: function(/*mediaplayer*/) {
         },
         makeOneSecondPass: function(mediaplayer) {
             window.SamsungMapleOnCurrentPlayTime((mediaplayer.getCurrentTime() + 1) * 1000);
         },
-        unmockTime: function(mediaplayer) {
-
+        unmockTime: function(/*mediaplayer*/) {
         }
     };
 
