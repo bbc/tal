@@ -314,6 +314,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    MixinCommonMediaTests(this.HTML5WaitingFixMediaPlayerTests, "antie/devices/mediaplayer/html5waitingfix", config, deviceMockingHooks);
+    window.mixinCommonMediaTests(this.HTML5WaitingFixMediaPlayerTests, "antie/devices/mediaplayer/html5waitingfix", config, deviceMockingHooks);
 
 })();
