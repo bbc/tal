@@ -184,22 +184,30 @@
 		});
 	};
 
-    /**
-     * TODO: This test is a bit fragile, because the jsTestDriver.conf always preloads 2 css files before running the
-     * tests this means that there are always two stylesheets in the DOM, possibly more depending if prior
-     * js-test-driver tests have loaded any stylesheets
-     * @param queue
-     */
-    this.BrowserDeviceTest.prototype.testGetStylesheetElements = function(queue) {
-    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
-    	/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/css3transitions.css">*/
-        expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            assertEquals(2, device.getStylesheetElements().length);
-        });
-    };
+	var createGetStyleSheetsElementsTest = function (linkElements, styleElements) {
+		return function(queue) {
+		        expectAsserts(1);
+
+			var self = this;
+		
+		        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+
+				var stub = self.sandbox.stub(document, "getElementsByTagName");
+				stub.withArgs("link").returns(linkElements);
+				stub.withArgs("style").returns(styleElements);
+
+				var device = new BrowserDevice(antie.framework.deviceConfiguration);
+				assertEquals(linkElements.length + styleElements.length, device.getStylesheetElements().length);
+		        });
+		};
+	};
+
+    this.BrowserDeviceTest.prototype.testGetStylesheetElementsWhenThereAreNone = createGetStyleSheetsElementsTest([], []);
+    this.BrowserDeviceTest.prototype.testGetStylesheetElementsWhenOnlyLinkElements = createGetStyleSheetsElementsTest([{}], []);
+    this.BrowserDeviceTest.prototype.testGetStylesheetElementsWhenOnlyStyleElements = createGetStyleSheetsElementsTest([], [{}]);
+    this.BrowserDeviceTest.prototype.testGetStylesheetElementsWhenBothLinkAndStyleElements = createGetStyleSheetsElementsTest([{}], [{}]);
+    this.BrowserDeviceTest.prototype.testGetStylesheetElementsWhenMultipleLinkAndStyleElements = createGetStyleSheetsElementsTest([{}, {}], [{}, {}]);
 
 	this.BrowserDeviceTest.prototype.testLoadStyleSheetImportsStyleSheetWhenCSSRulesSupported = function(queue) {
 		expectAsserts(3);
