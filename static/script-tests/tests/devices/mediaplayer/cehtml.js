@@ -129,6 +129,7 @@
     // TODO: Ensure reset actually clears the state
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.
+    // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
     // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
