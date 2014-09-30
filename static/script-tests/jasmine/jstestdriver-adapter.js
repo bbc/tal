@@ -141,7 +141,6 @@ registerTestsWithJasmine = function () {
             }
 
             afterEach(function () {
-		unloadRequire();
                 if(window.fakeApplication) {
                     window.fakeApplication.destroy();
                     window.fakeApplication = null;
@@ -150,6 +149,7 @@ registerTestsWithJasmine = function () {
                 if (div) {
                     div.parentNode.removeChild(div);
                 }
+		unloadRequire();
             });
         };
 
