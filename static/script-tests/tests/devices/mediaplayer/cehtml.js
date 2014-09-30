@@ -106,6 +106,16 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsPutAtBackOfDOM = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            var body = document.getElementsByTagName("body")[0];
+            assertSame(fakeCEHTMLObject, body.firstChild);
+        });
+    };
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading

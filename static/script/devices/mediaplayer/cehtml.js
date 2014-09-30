@@ -45,12 +45,15 @@ require.def(
             * @inheritDoc
             */
             setSource: function (mediaType, url, mimeType) {
+                var device = RuntimeContext.getDevice();
+                var body = document.getElementsByTagName("body")[0];
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
                     this._toStopped();
                     this._mediaElement = this._createElement(mimeType);
+                    device.prependChildElement(body, this._mediaElement);
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
