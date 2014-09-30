@@ -109,23 +109,6 @@
 		});
 	};
 
-	this.ApplicationLayoutsTest.prototype.testSetLayoutLoadCSS = function(queue) {
-		/*expectAsserts(3);
-
-		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			var layout = application.getLayout();
-			var device = application.getDevice();
-
-			var loadStyleSheetSpy = this.sandbox.spy(device, 'loadStyleSheet');
-
-			application.setLayout(layout, "about:styleBaseUrl/", null, ["1.css","2.css"], [], []);
-			assertEquals(2, loadStyleSheetSpy.callCount);
-			assert(loadStyleSheetSpy.calledWithExactly("about:styleBaseUrl/1.css"));
-			assert(loadStyleSheetSpy.calledWithExactly("about:styleBaseUrl/2.css"));
-		});
-		*/
-	};
-
 	this.ApplicationLayoutsTest.prototype.testSetLayoutPreloadImages = function(queue) {
 		expectAsserts(3);
 
