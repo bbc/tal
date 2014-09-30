@@ -41,12 +41,6 @@ require.def(
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _createElement: function(contentType) {
-                var device = RuntimeContext.getDevice();
-                var obj = device._createElement("object", "mediaPlayer");
-                this._mediaElement = obj;
-            },
-            
             /**
             * @inheritDoc
             */
@@ -56,7 +50,7 @@ require.def(
                     this._source = url;
                     this._mimeType = mimeType;
                     this._toStopped();
-                    this._createElement(mimeType);
+                    this._mediaElement = this._createElement(mimeType);
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
@@ -222,6 +216,12 @@ require.def(
                 }
             },
 
+            _createElement: function(mimeType) {
+                var device = RuntimeContext.getDevice();
+                var obj = device._createElement("object", "mediaPlayer");
+                return obj;
+            },
+            
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
