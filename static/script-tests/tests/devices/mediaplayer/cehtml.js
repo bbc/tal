@@ -129,9 +129,16 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectContentType = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals("video/mp4", fakeCEHTMLObject.type);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
-    //  Set size
     //  Set content type
     // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
