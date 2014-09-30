@@ -116,6 +116,18 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
+        expectAsserts(6);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals("absolute", fakeCEHTMLObject.style.position);
+            assertEquals("0px", fakeCEHTMLObject.style.top);
+            assertEquals("0px", fakeCEHTMLObject.style.left);
+            assertEquals("100%", fakeCEHTMLObject.style.width);
+            assertEquals("100%", fakeCEHTMLObject.style.height);
+            assertEquals("", fakeCEHTMLObject.style.zIndex);
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading

@@ -51,6 +51,11 @@ require.def(
                     this._mimeType = mimeType;
                     this._toStopped();
                     this._mediaElement = this._createElement(mimeType);
+                    this._mediaElement.style.position = "absolute";
+                    this._mediaElement.style.top = "0px";
+                    this._mediaElement.style.left = "0px";
+                    this._mediaElement.style.width = "100%";
+                    this._mediaElement.style.height = "100%";
                     this._addElementToDOM();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
