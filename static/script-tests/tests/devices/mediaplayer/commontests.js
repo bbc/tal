@@ -24,7 +24,7 @@
 
 // Mix-in a set of common MediaPlayer tests. These tests test the common API behaviour, and so are valid for ALL implementations.
 // It isup to the device implementation test code that pulls these in to make sure that sufficient mocking is in place to allow these tests to run.
-MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks) {
+window.mixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks) {
     var mixins = {};
 
     // ********************************************
@@ -159,7 +159,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     };
 
     mixins.testMediaPlayerStartsInEmptyState = function (queue) {
-        expectAsserts(1); 
+        expectAsserts(1);
         this.doTest(queue, function (MediaPlayer) {
             assertEquals(MediaPlayer.STATE.EMPTY, this._mediaPlayer.getState());
         });
@@ -169,7 +169,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetMimeTypeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getMimeType");
     mixins.testGetCurrentTimeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getRange");
-   
+
     mixins.testCallingPlayFromInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "playFrom");
     mixins.testCallingPauseInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "pause");
     mixins.testCallingResumeInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "resume");
@@ -585,7 +585,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
 
     // Availability of getCurrentTime() is device-specific at this point.
 
-    mixins.testCallingSetSourceInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "setSource");    
+    mixins.testCallingSetSourceInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "setSource");
     mixins.testCallingPauseInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "pause");
     mixins.testCallingResumeInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "resume");
     mixins.testCallingResetInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "reset");
@@ -630,7 +630,7 @@ MixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName
     mixins.testGetCurrentTimeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getRange");
 
-    mixins.testCallingSetSourceInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "setSource");   
+    mixins.testCallingSetSourceInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "setSource");
     mixins.testCallingPlayFromInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "playFrom");
     mixins.testCallingPauseInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "pause");
     mixins.testCallingResumeInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "resume");

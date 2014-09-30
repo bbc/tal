@@ -209,15 +209,11 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                var result = undefined;
-                switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                        break;
-                    default:
-                        result = this._currentTime;
-                        break;
+                if (this.getState() === MediaPlayer.STATE.STOPPED) {
+                    return undefined;
+                } else {
+                    return this._currentTime;
                 }
-                return result;
             },
 
             /**

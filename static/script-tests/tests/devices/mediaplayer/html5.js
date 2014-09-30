@@ -342,7 +342,7 @@
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assertEquals("auto", stubCreateElementResults.video.preload);            
+            assertEquals("auto", stubCreateElementResults.video.preload);
         });
     };
 
@@ -442,7 +442,7 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.playFrom(50);            
+            this._mediaPlayer.playFrom(50);
             this._mediaPlayer.pause();
 
             assertFalse(stubCreateElementResults.video.play.called);
@@ -508,7 +508,7 @@
 
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            this._mediaPlayer.playFrom(10);            
+            this._mediaPlayer.playFrom(10);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(stubCreateElementResults.video.play.calledTwice);
@@ -523,7 +523,7 @@
 
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            this._mediaPlayer.playFrom(110);            
+            this._mediaPlayer.playFrom(110);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(99.9, stubCreateElementResults.video.currentTime);
@@ -777,6 +777,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    MixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);
+    window.mixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);
 
 })();
