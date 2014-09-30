@@ -134,7 +134,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
-            assertEquals("Base implementation should return -1 (Unknown playstate)", "-1", broadcastSource.getPlayState());
+            assertEquals("Base implementation should return -1 (Unknown playstate)", -1, broadcastSource.getPlayState());
         });
     };
 

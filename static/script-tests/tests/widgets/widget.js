@@ -347,8 +347,8 @@
                 });
 
                 assertTrue(spy.calledOnce);
-                assertEquals("25", spy.getCall(0).args[0].fps);
-                assertEquals("1000", spy.getCall(0).args[0].duration);
+                assertEquals(25, spy.getCall(0).args[0].fps);
+                assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
             }
         );
@@ -428,8 +428,8 @@
                 });
 
                 assertTrue(spy.calledOnce);
-                assertEquals("25", spy.getCall(0).args[0].fps);
-                assertEquals("1000", spy.getCall(0).args[0].duration);
+                assertEquals(25, spy.getCall(0).args[0].fps);
+                assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
             }
         );
@@ -519,8 +519,8 @@
                 });
 
                 assertTrue(spy.calledOnce);
-                assertEquals("25", spy.getCall(0).args[0].fps);
-                assertEquals("1000", spy.getCall(0).args[0].duration);
+                assertEquals(25, spy.getCall(0).args[0].fps);
+                assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
             }
         );
