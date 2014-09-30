@@ -222,6 +222,7 @@ require.def(
                 var device = RuntimeContext.getDevice();
                 this._mediaElement = device._createElement("object", "mediaPlayer");
                 this._mediaElement.type = this._mimeType;
+                this._mediaElement.data = this._source;
                 this._mediaElement.style.position = "absolute";
                 this._mediaElement.style.top = "0px";
                 this._mediaElement.style.left = "0px";

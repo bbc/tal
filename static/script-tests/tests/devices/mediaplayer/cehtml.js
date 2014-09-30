@@ -137,9 +137,17 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectSourceURL = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals("http://testurl/", fakeCEHTMLObject.data);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
-    //  Set content type
+    // TODO: Find out about autoplaying on CEHTML devices
     // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
     // TODO: Make pause actually pause
