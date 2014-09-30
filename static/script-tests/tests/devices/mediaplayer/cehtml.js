@@ -38,6 +38,7 @@
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
             mockData = {};
+            stubCreateElement(sandbox, application);
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             // CEHTML has no 'metadata' event, so keep these values for later
@@ -77,6 +78,7 @@
         this.sandbox = sinon.sandbox.create();
 
         fakeCEHTMLObject = document.createElement("div");
+        fakeCEHTMLObject.play = this.sandbox.stub();
     };
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
@@ -145,9 +147,17 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsPlay = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+
+            assert(fakeCEHTMLObject.play.calledWith(1));
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Make setSource actually set the source and start the media loading
-    // TODO: Find out about autoplaying on CEHTML devices
     // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
     // TODO: Make pause actually pause
