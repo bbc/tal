@@ -27,6 +27,12 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+    var fakeCEHTMLObject;
+    var stubCreateElement = function (sandbox, application) {
+        var device = application.getDevice();
+        return sandbox.stub(device, "_createElement").returns(fakeCEHTMLObject);
+    };
+
     // Setup device specific mocking
     var mockData;
     var deviceMockingHooks = {
@@ -69,6 +75,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
+
+        fakeCEHTMLObject = document.createElement("div");
     };
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
@@ -79,6 +87,7 @@
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/cehtml", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
+                self._createElementStub = stubCreateElement(this.sandbox, application);
                 this._device = application.getDevice();
                 self._mediaPlayer = this._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
@@ -89,18 +98,19 @@
     // CEHTML specific tests
     //---------------------
 
-    // TODO: Resolve problem with the device mocking hooks possibly not being appropriate for this modifier!
-    //  - Sony 2013 HBBTV behaviour around the media Object playTime (i.e. duration) method shows that metadata is not
-    //      available until we have started playing! The same is suspected of playPosition (i.e. currentTime)
-    //      - A play through of the tennis clip. printing out the duration on every onPlayStateChange shows only the
-    //          following state changes (duration reported from object in brackets)
-    //              CONNECTING (undefined)
-    //              PLAYING (57280)
-    //              PLAYING (52780)
-    //              FINISHED (57280)
+    this.CEHTMLMediaPlayerTests.prototype.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+
+            assert(this._createElementStub.calledWith("object", "mediaPlayer"));
+        });
+    };
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Make setSource actually set the source and start the media loading
+    // ? Why is there a mixture of self and this in runMediaPlayerTest?
     // TODO: Make playFrom actually play
     // TODO: Make playFrom actually seek
     // TODO: Make pause actually pause
