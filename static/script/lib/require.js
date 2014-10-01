@@ -380,7 +380,7 @@ var require, define;
             newContext = {
                 contextName: contextName,
                 config: {
-                    waitSeconds: 7,
+                    waitSeconds: config.waitSeconds || 7,
                     baseUrl: s.baseUrl || "./",
                     paths: {},
                     packages: {}
