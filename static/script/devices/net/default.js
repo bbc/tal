@@ -98,11 +98,11 @@ require.def(
 			var xhr = new XMLHttpRequest();
 			xhr.open(opts.method || 'GET', url, true);
 			xhr.onreadystatechange = function() {
-				if (this.readyState == 4) {
+				if (this.readyState === 4) {
 					this.onreadystatechange = null;
-					if (this.status == 200) {
+					if (this.status >= 200 && this.status < 300) {
 						if (opts.onLoad) {
-							opts.onLoad(this.responseText);
+							opts.onLoad(this.responseText, this.status);
 						}
 					} else {
 						if (opts.onError) {
