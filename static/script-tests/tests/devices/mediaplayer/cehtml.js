@@ -64,7 +64,9 @@
             mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         startBuffering: function(mediaPlayer) {
-            mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_BUFFERING;
+            fakeCEHTMLObject.onPlayStateChange();
+            //mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         mockTime: function(mediaplayer) {
             // FIXME - Implementations can use this hook to set up fake timers if required
@@ -198,6 +200,20 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToBufferingFromPlaying = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
     };
 

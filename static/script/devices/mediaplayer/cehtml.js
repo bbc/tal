@@ -260,6 +260,7 @@ require.def(
                              //self._eventHandlingCallback(new MediaEvent("loadstart", self));
                              break;
                          case Player.PLAY_STATE_BUFFERING:
+                             self._onDeviceBuffering();
                             // self._eventHandlingCallback(new MediaEvent("waiting", self));
                              break;
                          case Player.PLAY_STATE_FINISHED:
