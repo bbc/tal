@@ -69,6 +69,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
+                        this._mediaElement.play(1);
                         this._toPlaying();
                         break;
 
@@ -114,6 +115,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._mediaElement.play(0);
                         this._toPaused();
                         break;
 
@@ -254,6 +256,7 @@ require.def(
                              self._onFinishedBuffering();
                              break;
                          case Player.PLAY_STATE_PAUSED:
+                             //self.Pause();
                              //self._eventHandlingCallback(new MediaEvent("pause", self));
                              break;
                          case Player.PLAY_STATE_CONNECTING:

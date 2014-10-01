@@ -217,13 +217,48 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToPausedFromPlaying = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            this._mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.calledWith(0));
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedGoesToPlaying = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            this._mediaPlayer.pause();
+            this._mediaPlayer.resume();
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.calledThrice);
+            assertEquals(1, fakeCEHTMLObject.play.args[2][0]);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Handle playstatechange to switch out of BUFFERING state
+    // TODO: Handle playstatechange to switch out of BUFFERING state ** check
     // TODO: Regular timeupdate event
     // TODO: getRange
     // TODO: Make pause actually pause
+    //  When playing ** check
+    //  When buffering
     // TODO: Make stop actually stop
     // TODO: Make resume actually resume
+    //  When paused ** check
+    //  When buffering
     // TODO: Make playFrom actually seek
     //  When already buffering
     //  When playing
