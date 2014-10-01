@@ -134,6 +134,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._mediaElement.stop();
                         this._toStopped();
                         break;
 
@@ -195,7 +196,24 @@ require.def(
             * @inheritDoc
             */
             getRange: function () {
-                return this._range; // FIXME
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        return this._getSeekableRange();
+                };
+                return undefined;
+            },
+
+            _getSeekableRange: function () {
+              if(this._mediaElement) {
+                  return {
+                      start: 0,
+                      end: this._mediaElement.playTime // FIXME
+                  };
+              }
             },
 
             /**
@@ -256,7 +274,6 @@ require.def(
                              self._onFinishedBuffering();
                              break;
                          case Player.PLAY_STATE_PAUSED:
-                             //self.Pause();
                              //self._eventHandlingCallback(new MediaEvent("pause", self));
                              break;
                          case Player.PLAY_STATE_CONNECTING:
