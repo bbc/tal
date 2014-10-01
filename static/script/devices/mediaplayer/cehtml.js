@@ -51,7 +51,7 @@ require.def(
                     this._mimeType = mimeType;
                     this._toStopped();
                     this._createElement();
-
+                    this._registerEventHandlers();
                     this._addElementToDOM();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
@@ -243,6 +243,38 @@ require.def(
                 this._mediaElement.style.height = "100%";
             },
 
+            _registerEventHandlers: function() {
+                var self = this;
+
+                 this._mediaElement.onPlayStateChange = function() {
+                     switch (self._mediaElement.playState) {
+                         case Player.PLAY_STATE_STOPPED:
+                             break;
+                         case Player.PLAY_STATE_PLAYING:
+                             self._onFinishedBuffering();
+                             break;
+                         case Player.PLAY_STATE_PAUSED:
+                             //self._eventHandlingCallback(new MediaEvent("pause", self));
+                             break;
+                         case Player.PLAY_STATE_CONNECTING:
+                             //self._eventHandlingCallback(new MediaEvent("loadstart", self));
+                             break;
+                         case Player.PLAY_STATE_BUFFERING:
+                            // self._eventHandlingCallback(new MediaEvent("waiting", self));
+                             break;
+                         case Player.PLAY_STATE_FINISHED:
+                             //self._eventHandlingCallback(new MediaEvent("ended", self));
+                             break;
+                         case Player.PLAY_STATE_ERROR:
+                             //self._eventHandlingCallback(new MediaErrorEvent(self, 0));
+                             break;
+                         default:
+                             // do nothing
+                             break;
+                     }
+                 }
+            },
+
             _addElementToDOM: function() {
                 var device = RuntimeContext.getDevice();
                 var body = document.getElementsByTagName("body")[0];
@@ -294,6 +326,14 @@ require.def(
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
             }
         });
+
+        Player.PLAY_STATE_STOPPED = 0;
+        Player.PLAY_STATE_PLAYING = 1;
+        Player.PLAY_STATE_PAUSED = 2;
+        Player.PLAY_STATE_CONNECTING = 3;
+        Player.PLAY_STATE_BUFFERING = 4;
+        Player.PLAY_STATE_FINISHED = 5;
+        Player.PLAY_STATE_ERROR = 6;
 
         var instance = new Player();
 

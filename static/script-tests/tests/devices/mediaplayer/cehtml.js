@@ -48,12 +48,14 @@
         finishBuffering: function(mediaPlayer) {
             if (!mockData.loaded) {
                 mediaPlayer._range = mockData.range; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
-                mediaPlayer._currentTime = mockData.currentTime; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
+                mediaPlayer._currentTime = mockData.currentTime * 1000; // FIXME - Do this to our mock object (TBCreated) not to the internal state of our implementation
                 mockData.loaded = true;
             }
             var currentTimeInSeconds = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mockData.currentTime;
             fakeCEHTMLObject.playPosition = currentTimeInSeconds * 1000;
-            mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PLAYING;
+            fakeCEHTMLObject.onPlayStateChange();
+            //mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
@@ -82,6 +84,15 @@
         fakeCEHTMLObject = document.createElement("div");
         fakeCEHTMLObject.play = this.sandbox.stub();
         fakeCEHTMLObject.seek = this.sandbox.stub();
+        fakeCEHTMLObject.onPlayStateChange = this.sandbox.stub();
+
+        fakeCEHTMLObject.PLAY_STATE_STOPPED = 0;
+        fakeCEHTMLObject.PLAY_STATE_PLAYING = 1;
+        fakeCEHTMLObject.PLAY_STATE_PAUSED = 2;
+        fakeCEHTMLObject.PLAY_STATE_CONNECTING = 3;
+        fakeCEHTMLObject.PLAY_STATE_BUFFERING = 4;
+        fakeCEHTMLObject.PLAY_STATE_FINISHED = 5;
+        fakeCEHTMLObject.PLAY_STATE_ERROR = 6;
     };
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
@@ -172,6 +183,21 @@
             assert(fakeCEHTMLObject.seek.calledWith(10000));
             assert(fakeCEHTMLObject.play.calledWith(1));
             assertEquals(10, this._mediaPlayer.getCurrentTime());
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToPlayingWhenFinishedBuffering = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            assertEquals(MediaPlayer.STATE.EMPTY, this._mediaPlayer.getState());
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+            this._mediaPlayer.playFrom(0);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
 
