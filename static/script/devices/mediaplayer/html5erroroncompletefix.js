@@ -41,12 +41,14 @@ require.def(
                 if (this._isNearEnd()) {
                     this._toComplete();
                 } else {
-                    this._toError();
+                    this._super();
                 }
             },
 
             _isNearEnd: function() {
-                var distanceFromEnd = this.getRange().end - this.getCurrentTime();
+                var range = this.getRange();
+                if (!range) { return false; }
+                var distanceFromEnd = range.end - this.getCurrentTime();
                 return distanceFromEnd <= NEAR_TO_END_TOLERANCE;
             }
         });
