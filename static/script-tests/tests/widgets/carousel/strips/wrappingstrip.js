@@ -1233,7 +1233,7 @@
             ],
             function (application, WidgetStrip, Button, verticalOrientation, Mask) {
                 var strip, device;
-		this.sandbox.stub(application.getDevice(), "getElementSize").returns({width: 70, height: 50});
+                self.sandbox.stub(application.getDevice(), "getElementSize").returns({width: 70, height: 50});
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.autoCalculate(false);
                 strip.parentWidget = new Mask('mask', strip, verticalOrientation);
