@@ -49,10 +49,10 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
-                    this._toStopped();
                     this._createElement();
                     this._registerEventHandlers();
                     this._addElementToDOM();
+                    this._toStopped();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
@@ -94,7 +94,7 @@ require.def(
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._mediaElement.play(1);
-                        this._mediaElement.seek(seconds*1000);
+                        this._mediaElement.seek(seconds * 1000);
                         this._toBuffering();
                         break;
 
@@ -211,7 +211,7 @@ require.def(
               if(this._mediaElement) {
                   return {
                       start: 0,
-                      end: this._mediaElement.playTime // FIXME
+                      end: this._mediaElement.playTime / 1000// FIXME **
                   };
               }
             },
@@ -306,11 +306,14 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
-                this._range = undefined; // FIXME
+                if(this._mediaElement) {
+                    this._mediaElement.playTime = undefined; // FIXME **
+                }
+
             },
 
             _toStopped: function () {
-                this._range = undefined; // FIXME
+                //this._mediaElement.playTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },

@@ -47,7 +47,7 @@
         },
         finishBuffering: function(mediaPlayer) {
             if (!mockData.loaded) {
-                fakeCEHTMLObject.playTime = mockData.range.end;
+                fakeCEHTMLObject.playTime = mockData.range.end * 1000;
                 fakeCEHTMLObject.playPosition = mockData.currentTime * 1000;
                 mockData.loaded = true;
             }
@@ -174,13 +174,15 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeek = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeekAndSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(20);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             this._mediaPlayer.playFrom(10);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(fakeCEHTMLObject.seek.calledWith(10000));
@@ -278,17 +280,17 @@
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check
     // TODO: Regular timeupdate event
-    // TODO: getRange
+    // TODO: getRange ** check
     // TODO: Make pause actually pause
     //  When playing ** check
     //  When buffering
-    // TODO: Make stop actually stop
+    // TODO: Make stop actually stop ** check
     // TODO: Make resume actually resume
     //  When paused ** check
     //  When buffering
     // TODO: Make playFrom actually seek
     //  When already buffering
-    //  When playing
+    //  When playing ** check
     //  When paused
     //  When complete
     // TODO: Ensure reset actually clears the state
