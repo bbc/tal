@@ -181,9 +181,28 @@
         });
     };
 
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testErrorBeforeEndIsReportedAsError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            stubCreateElementResults.video.currentTime = 97;
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+        });
+    };
+
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // TODO: Test that error 3+ seconds from the end is reported as an error
     // TODO: Test that error report uses base functionality
+    // TODO: Non network errors are still reported as errors even when complete
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
     //---------------------
