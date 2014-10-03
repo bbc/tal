@@ -387,21 +387,21 @@
         );
     };
     
-//    this.TransitionDefinitionTest.prototype.testSetPropertyTimingFnOnNonExistantPropertyCreatesProperty = function(queue) {
-//        loadTD(queue,
-//            function(TransitionDefinition){
-//                var tDef, endVal, prop;
-//                endVal = 'linear';
-//                prop = 'prop1';
-//                tDef = new TransitionDefinition();
-//                assertFalse(tDef.hasProperty(prop));
-//                assertEquals(undefined, tDef.getPropertyTimingFn(prop));
-//                tDef.setPropertyTimingFn(prop, endVal);
-//                assertTrue(tDef.hasProperty(prop));
-//                assertEquals(endVal, tDef.getPropertyTimingFn(prop));
-//            }
-//        );
-//    };
+    this.TransitionDefinitionTest.prototype.testSetPropertyTimingFnOnNonExistantPropertyCreatesProperty = function(queue) {
+        loadTD(queue,
+            function(TransitionDefinition){
+                var tDef, endVal, prop;
+                endVal = 'linear';
+                prop = 'prop1';
+                tDef = new TransitionDefinition();
+                assertFalse(tDef.hasProperty(prop));
+                assertEquals(undefined, tDef.getPropertyTimingFn(prop));
+                tDef.setPropertyTimingFn(prop, endVal);
+                assertTrue(tDef.hasProperty(prop));
+                assertEquals(endVal, tDef.getPropertyTimingFn(prop));
+            }
+        );
+    };
 
     this.TransitionDefinitionTest.prototype.testAddingDefinitionToAnotherAddsProperties = function(queue) {
         loadTD(queue,
