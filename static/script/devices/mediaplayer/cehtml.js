@@ -274,26 +274,25 @@ require.def(
                              self._onFinishedBuffering();
                              break;
                          case Player.PLAY_STATE_PAUSED:
-                             //self._eventHandlingCallback(new MediaEvent("pause", self));
                              break;
                          case Player.PLAY_STATE_CONNECTING:
-                             //self._eventHandlingCallback(new MediaEvent("loadstart", self));
                              break;
                          case Player.PLAY_STATE_BUFFERING:
                              self._onDeviceBuffering();
-                            // self._eventHandlingCallback(new MediaEvent("waiting", self));
                              break;
                          case Player.PLAY_STATE_FINISHED:
-                             //self._eventHandlingCallback(new MediaEvent("ended", self));
                              break;
                          case Player.PLAY_STATE_ERROR:
-                             //self._eventHandlingCallback(new MediaErrorEvent(self, 0));
                              break;
                          default:
                              // do nothing
                              break;
                      }
                  }
+
+                self._updateInterval = setInterval(function() {
+                    self._onStatus();
+                }, 900);
             },
 
             _addElementToDOM: function() {

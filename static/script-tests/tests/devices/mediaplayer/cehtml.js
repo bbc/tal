@@ -35,6 +35,7 @@
 
     // Setup device specific mocking
     var mockData;
+    var clock;
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
             mockData = {};
@@ -55,7 +56,6 @@
             fakeCEHTMLObject.playPosition = currentTimeInSeconds * 1000;
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PLAYING;
             fakeCEHTMLObject.onPlayStateChange();
-            //mediaPlayer._onFinishedBuffering(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         emitPlaybackError: function(mediaPlayer) {
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
@@ -66,22 +66,21 @@
         startBuffering: function(mediaPlayer) {
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_BUFFERING;
             fakeCEHTMLObject.onPlayStateChange();
-            //mediaPlayer._onDeviceBuffering();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
-        mockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to set up fake timers if required
+        mockTime: function(mediaPlayer) {
+            clock = sinon.useFakeTimers();
         },
-        makeOneSecondPass: function(mediaplayer) {
-            mediaplayer._onStatus();  // FIXME - do not do this in an actual implementation - replace it with proper event / setTimeout mock / whatever.
+        makeOneSecondPass: function(mediaPlayer) {
+            clock.tick(1000);
         },
         unmockTime: function(mediaplayer) {
-            // FIXME - Implementations can use this hook to tear down fake timers if required
+           clock.restore();
         }
     };
 
     this.CEHTMLMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
-
+        
         mockData = {};
         fakeCEHTMLObject = document.createElement("div");
         fakeCEHTMLObject.play = this.sandbox.stub();
@@ -175,19 +174,17 @@
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeekAndSeeksToCorrectTime = function(queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(20);
+            this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            this._mediaPlayer.playFrom(10);
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.playFrom(20);
 
-            assert(fakeCEHTMLObject.seek.calledWith(10000));
+            assert(fakeCEHTMLObject.seek.calledWith(20000));
             assert(fakeCEHTMLObject.play.calledWith(1));
-            assertEquals(10, this._mediaPlayer.getCurrentTime());
         });
     };
 
@@ -277,9 +274,11 @@
         });
     };
 
+
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check
-    // TODO: Regular timeupdate event
+    // TODO: Regular timeupdate event ** check
     // TODO: getRange ** check
     // TODO: Make pause actually pause
     //  When playing ** check
