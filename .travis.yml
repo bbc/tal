@@ -8,4 +8,4 @@ before_install:
 script:
  - cd static
  - bundle install --deployment
- - bundle exec ttr webdriverurl=firefox
+ - bundle exec ttr webdriverurl=firefox verbose
