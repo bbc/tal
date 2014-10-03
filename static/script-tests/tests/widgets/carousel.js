@@ -182,6 +182,8 @@
 	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
+            self.sandbox.stub(CarouselCore.prototype, 'hasChildWidget');
+            self.sandbox.stub(WidgetStrip.prototype, 'hasChildWidget');
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
             carousel = new Carousel();
             carousel.hasChildWidget(carousel._mask.id);
@@ -195,6 +197,8 @@
 	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
+            self.sandbox.stub(CarouselCore.prototype, 'hasChildWidget');
+            self.sandbox.stub(WidgetStrip.prototype, 'hasChildWidget');
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
             carousel = new Carousel();
             carousel.hasChildWidget("testId");
@@ -220,6 +224,7 @@
 	var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
             var carousel;
+            self.sandbox.stub(WidgetStrip.prototype, 'getChildWidget');
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
             carousel = new Carousel();
             carousel.getChildWidget("testId");
