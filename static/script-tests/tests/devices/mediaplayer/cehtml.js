@@ -61,7 +61,8 @@
             mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         reachEndOfMedia: function(mediaPlayer) {
-            mediaPlayer._onEndOfMedia();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_FINISHED;
+            fakeCEHTMLObject.onPlayStateChange();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
         },
         startBuffering: function(mediaPlayer) {
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_BUFFERING;
@@ -80,7 +81,7 @@
 
     this.CEHTMLMediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
-        
+
         mockData = {};
         fakeCEHTMLObject = document.createElement("div");
         fakeCEHTMLObject.play = this.sandbox.stub();
@@ -274,6 +275,20 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesIntoCompleteStateAtTheEnd = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            deviceMockingHooks.reachEndOfMedia();
+
+            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
+            //assert(fakeCEHTMLObject.stop.calledOnce);
+        });
+    };
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
@@ -287,12 +302,14 @@
     // TODO: Make resume actually resume
     //  When paused ** check
     //  When buffering
+    // TODO: Fix seek beyond end of video
     // TODO: Make playFrom actually seek
     //  When already buffering
     //  When playing ** check
     //  When paused
     //  When complete
     // TODO: Ensure reset actually clears the state
+    //  Make sure setInterval is cleaned up
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers

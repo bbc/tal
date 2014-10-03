@@ -281,6 +281,7 @@ require.def(
                              self._onDeviceBuffering();
                              break;
                          case Player.PLAY_STATE_FINISHED:
+                             self._onEndOfMedia();
                              break;
                          case Player.PLAY_STATE_ERROR:
                              break;
