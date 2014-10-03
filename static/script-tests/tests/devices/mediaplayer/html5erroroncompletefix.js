@@ -26,128 +26,25 @@
     // jshint newcap: false
     this.HTML5ErrorOnCompleteFixMediaPlayerTests = AsyncTestCase("HTML5ErrorOnCompleteFixMediaPlayer");
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5erroroncompletefix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    //
+
+    var mixins = this.HTML5MediaPlayerTests.prototype;
+    for (var name in mixins) {
+        this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype[name] = mixins[name];
+    };
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5erroroncompletefix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var stubCreateElementResults;
-    var mediaEventListeners;
-    var stubCreateElement = function (sandbox, application) {
+    var deviceMockingHooks;
 
-        var device = application.getDevice();
-
-        var stubFunc = function(type, id) {
-            if (id && stubCreateElementResults[type]) {
-                stubCreateElementResults[type].id = id;
-            }
-
-            return stubCreateElementResults[type];
-        };
-
-        return sandbox.stub(device, "_createElement", stubFunc);
+    var oldSetUp = this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.setUp;
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.setUp = function(queue) {
+        oldSetUp.call(this, queue);
+        stubCreateElementResults = this.stubCreateElementResults;
+        deviceMockingHooks = this.deviceMockingHooks;
     };
 
-    // Setup device specific mocking
-    var deviceMockingHooks = {
-        setup: function(sandbox, application) {
-            stubCreateElement(sandbox,application);
-        },
-        sendMetadata: function(mediaPlayer, currentTime, range) {
-            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-            for (var i = 0; i < mediaElements.length; i++) {
-                var media = mediaElements[i];
-                media.duration = range.end;
-                media.currentTime = currentTime;
-            }
-            mediaEventListeners.loadedmetadata();
-        },
-        finishBuffering: function(mediaPlayer) {
-            mediaEventListeners.canplay();
-        },
-        emitPlaybackError: function(mediaPlayer) {
-
-            // MEDIA_ERR_NETWORK == 2
-            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
-            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
-            stubCreateElementResults.video.error =  { code: 2 };
-            stubCreateElementResults.audio.error =  { code: 2 };
-
-            var errorEvent = {
-                type: "error"
-            };
-            mediaEventListeners.error(errorEvent);
-        },
-        reachEndOfMedia: function(mediaPlayer) {
-            var endedEvent = {
-                type: "ended"
-            };
-            mediaEventListeners.ended(endedEvent);
-        },
-        startBuffering: function(mediaPlayer) {
-            var waitingEvent = {
-                type: "waiting"
-            };
-            mediaEventListeners.waiting(waitingEvent);
-        },
-        mockTime: function(mediaplayer) {
-        },
-        makeOneSecondPass: function(mediaplayer) {
-            var timeUpdateEvent = {
-                type: "timeupdate"
-            };
-            mediaEventListeners.timeupdate(timeUpdateEvent);
-        },
-        unmockTime: function(mediaplayer) {
-        }
-    };
-
-    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.setUp = function() {
-        this.sandbox = sinon.sandbox.create();
-
-        // We will use a div to provide fake elements for video and audio elements. This is to get around browser
-        // implementations of the media elements preventing you from doing particular things unless a video has been
-        // loaded and is in the right state, for example you might receive:
-        //      InvalidStateError: Failed to set the 'currentTime' property on 'HTMLMediaElement': The element's readyState is HAVE_NOTHING
-        stubCreateElementResults = {
-            video: document.createElement("div"),
-            audio: document.createElement("div"),
-        };
-        mediaEventListeners = {};
-        var self = this;
-        var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-        for (var i = 0; i < mediaElements.length; i++) {
-            var media = mediaElements[i];
-            media.play = this.sandbox.stub();
-            media.pause = this.sandbox.stub();
-            media.load = this.sandbox.stub();
-            media.addEventListener = function (event, callback) {
-                if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
-                mediaEventListeners[event] = callback;
-            };
-            media.removeEventListener = this.sandbox.stub();
-        }
-    };
-
-    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.tearDown = function() {
-        this.sandbox.restore();
-
-        // Ensure we have a clean DOM
-        var elementsToRemove = [ 'mediaPlayerVideo', 'mediaPlayerAudio' ];
-        for (var i = 0; i < elementsToRemove.length; i++) {
-            var element = document.getElementById(elementsToRemove[i]);
-            if (element && element.parentNode) {
-                element.parentNode.removeChild(element);
-            }
-        }
-    };
-
-    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
-                this._createElementStub = stubCreateElement(this.sandbox, application);
-                this._device = application.getDevice();
-                this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
-            }, config);
-    };
+    //
 
     this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testErrorOnEndOfMediaGoesToCompleteState = function(queue) {
         var mediaLength = 100;
@@ -181,16 +78,28 @@
         });
     };
 
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testErrorBeforeEndIsReportedAsError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            stubCreateElementResults.video.currentTime = 97;
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+        });
+    };
+
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // TODO: Test that error 3+ seconds from the end is reported as an error
     // TODO: Test that error report uses base functionality
+    // TODO: Non network errors are still reported as errors even when complete
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
-    //---------------------
-    // Common tests
-    //---------------------
-
-    // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.mixinCommonMediaTests(this.HTML5ErrorOnCompleteFixMediaPlayerTests, "antie/devices/mediaplayer/html5erroroncompletefix", config, deviceMockingHooks);
 
 })();

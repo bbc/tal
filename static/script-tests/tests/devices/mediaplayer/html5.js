@@ -25,9 +25,9 @@
 (function() {
     this.HTML5MediaPlayerTests = AsyncTestCase("HTML5MediaPlayer");
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    this.HTML5MediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    var stubCreateElementResults = undefined;
+    this.HTML5MediaPlayerTests.prototype.stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
@@ -123,6 +123,9 @@
             };
             media.removeEventListener = this.sandbox.stub();
         }
+
+        this.stubCreateElementResults = stubCreateElementResults;
+        this.deviceMockingHooks = deviceMockingHooks;
     };
 
     this.HTML5MediaPlayerTests.prototype.tearDown = function() {
@@ -146,7 +149,7 @@
                 this._device = application.getDevice();
                 this._mediaPlayer = this._device.getMediaPlayer();
                 action.call(this, MediaPlayer);
-            }, config);
+            }, this.config);
     };
 
     //---------------------
@@ -777,6 +780,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.mixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", config, deviceMockingHooks);
+    window.mixinCommonMediaTests(this.HTML5MediaPlayerTests, "antie/devices/mediaplayer/html5", this.HTML5MediaPlayerTests.prototype.config, deviceMockingHooks);
 
 })();
