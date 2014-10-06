@@ -30,7 +30,16 @@
     var fakeCEHTMLObject;
     var stubCreateElement = function (sandbox, application) {
         var device = application.getDevice();
-        return sandbox.stub(device, "_createElement").returns(fakeCEHTMLObject);
+
+        var stubFunc = function(type, id) {
+            if (id && fakeCEHTMLObject) {
+                fakeCEHTMLObject.id = id;
+            }
+
+            return fakeCEHTMLObject;
+        };
+
+        return sandbox.stub(device, "_createElement", stubFunc);
     };
 
     // Setup device specific mocking
@@ -132,6 +141,18 @@
 
             var body = document.getElementsByTagName("body")[0];
             assertSame(fakeCEHTMLObject, body.firstChild);
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.reset();
+
+            var searchResult = document.getElementById("mediaPlayer");
+
+            assertNull(searchResult);
         });
     };
 

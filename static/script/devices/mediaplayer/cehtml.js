@@ -307,9 +307,8 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 if(this._mediaElement) {
-                    this._mediaElement.playTime = undefined; // FIXME **
+                    this._mediaElement.playTime = undefined; // FIXME
                 }
-
             },
 
             _toStopped: function () {
