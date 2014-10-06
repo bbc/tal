@@ -49,18 +49,15 @@
 	this.ApplicationLayoutsTest.prototype.testGetBestFitLayoutOnLargerScreen = function(queue) {
 		expectAsserts(1);
 
-		queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+		queuedApplicationInit(queue, "lib/mockapplication", ['antie/devices/browserdevice'], function(application, BrowserDevice) {
 			this.sandbox.stub(BrowserDevice.prototype, 'getScreenSize', function() {
 				return {
 					width: 1000000,
 					height: 1000000
 				};
 			});
-
-			queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-				var layout = application.getBestFitLayout();
-				assertSame(antie.framework.deviceConfiguration.layouts[0], layout);
-			});
+			var layout = application.getBestFitLayout();
+			assertSame(antie.framework.deviceConfiguration.layouts[0], layout);
 		});
 	};
 	this.ApplicationLayoutsTest.prototype.testSetLayoutIsCalled = function(queue) {
@@ -110,24 +107,6 @@
 			var layout = application.getLayout();
 			assertSame(expectedLayout, layout);
 		});
-	};
-
-	this.ApplicationLayoutsTest.prototype.testSetLayoutLoadCSS = function(queue) {
-		/*expectAsserts(3);
-
-		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			var layout = application.getLayout();
-			var device = application.getDevice();
-
-			var loadStyleSheetSpy = this.sandbox.spy(device, 'loadStyleSheet');
-
-			application.setLayout(layout, "about:styleBaseUrl/", null, ["1.css","2.css"], [], []);
-			assertEquals(2, loadStyleSheetSpy.callCount);
-			assert(loadStyleSheetSpy.calledWithExactly("about:styleBaseUrl/1.css"));
-			assert(loadStyleSheetSpy.calledWithExactly("about:styleBaseUrl/2.css"));
-		});
-		*/
-		jstestdriver.console.warn("BrowserDevice::setLayout with stylesheets is currently untested.");
 	};
 
 	this.ApplicationLayoutsTest.prototype.testSetLayoutPreloadImages = function(queue) {

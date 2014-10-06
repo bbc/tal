@@ -45,7 +45,7 @@
         this.sandbox.restore();
     };
 
-    this.StyleTopLeftAnimationTest.prototype.getDefaultConfig = function() {
+    var getDefaultConfig = function() {
         var config = {
             "modules": {
                 "base": "antie/devices/browserdevice",
@@ -72,7 +72,8 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, inner, startTime;
@@ -83,7 +84,7 @@
             device.appendChildElement(div, inner);
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.scrollElementTo({
                 el: div,
@@ -109,7 +110,8 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnimNoMovement = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
+	var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, inner;
@@ -121,7 +123,7 @@
             inner.style.top = "200px";
             inner.style.left = "100px";
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.scrollElementTo({
                 el: div,
@@ -140,7 +142,8 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
+	var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, inner, startTime;
@@ -150,7 +153,7 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.scrollElementTo({
                 el: div,
@@ -176,7 +179,8 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig(); 
+	var self = this;
+        var config = getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, inner, startTime;
@@ -186,7 +190,7 @@
             startTime = Date.now();
             device.appendChildElement(div, inner);
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.scrollElementTo({
                 el: div,
@@ -208,7 +212,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -217,7 +222,7 @@
 
             var clock = sinon.useFakeTimers();
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
             device.moveElementTo({
                 el: div,
                 style: div.style,
@@ -246,7 +251,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimAndNoDefaultValues = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -254,7 +260,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -285,7 +291,8 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(2);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -293,7 +300,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.hideElement({
                 el: div,
@@ -326,7 +333,8 @@
     this.StyleTopLeftAnimationTest.prototype.testShowAndHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -335,7 +343,7 @@
 
 
             var clock = sinon.useFakeTimers();
-            var showComplete = this.sandbox.stub();
+            var showComplete = self.sandbox.stub();
 
             device.showElement({
                 el: div,
@@ -355,7 +363,7 @@
             assert(showComplete.calledOnce);
             assertEquals(1, parseFloat(div.style.opacity));
 
-            var hideComplete = this.sandbox.stub();
+            var hideComplete = self.sandbox.stub();
 
             device.hideElement({
                 el: div,
@@ -384,7 +392,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoLeftValue = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -392,7 +401,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -421,7 +430,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoTopValue = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -429,7 +439,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -458,7 +468,8 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimNoMovement = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -468,7 +479,7 @@
             div.style.top = "200px";
             div.style.left = "100px";
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -487,14 +498,15 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -520,14 +532,15 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig(); 
+	var self = this;
+        var config = getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.moveElementTo({
                 el: div,
@@ -549,7 +562,8 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -557,7 +571,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.hideElement({
                 el: div,
@@ -578,14 +592,15 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
+	var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.hideElement({
                 el: div,
@@ -606,14 +621,15 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig(); 
+	var self = this;
+        var config = getDefaultConfig(); 
         config.animationDisabled = "true";
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.hideElement({
                     el: div,
@@ -630,7 +646,8 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
@@ -638,7 +655,7 @@
             div = device.createContainer("id");
 
             var clock = sinon.useFakeTimers();
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.showElement({
                 el: div,
@@ -660,14 +677,15 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.showElement({
                 el: div,
@@ -688,7 +706,8 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -696,7 +715,7 @@
             device = application.getDevice();
             div = device.createContainer("id");
 
-            var onComplete = this.sandbox.stub();
+            var onComplete = self.sandbox.stub();
 
             device.showElement({
                 el: div,
@@ -717,14 +736,15 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div,
                 fps: 15,
@@ -746,14 +766,15 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div,
                 fps: 16,
@@ -776,14 +797,15 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div // No animation properties provided, defaults will be used
             });
@@ -803,14 +825,15 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+	var self = this;
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div // No animation properties provided, defaults will be used
             });
@@ -829,8 +852,9 @@
     this.StyleTopLeftAnimationTest.prototype.testConfigurationShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
+	var self = this;
         // This is the configuration!!        
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         config.defaults = {
             "showElementFade": {
                 "fps": 11, 
@@ -844,7 +868,7 @@
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.showElement({
                 el: div // No animation properties provided, config will be used
             });
@@ -863,8 +887,9 @@
     this.StyleTopLeftAnimationTest.prototype.testConfigurationHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
+	var self = this;
         // This is the configuration!!        
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         config.defaults = {
             "hideElementFade": {
                 "fps": 22, 
@@ -878,7 +903,7 @@
             device = application.getDevice();
             div = device.createContainer("id");
             
-            tweenStub = this.sandbox.stub(device, "_tween");
+            tweenStub = self.sandbox.stub(device, "_tween");
             device.hideElement({
                 el: div // No animation properties provided, config will be used
             });
@@ -897,7 +922,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsMoveElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -912,7 +937,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsScrollElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -927,7 +952,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsShowElement = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -942,7 +967,7 @@
     this.StyleTopLeftAnimationTest.prototype.testNoSideEffectsHideElement = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -951,7 +976,8 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenSkipped = function(queue) {
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
+	var self = this;
         expectAsserts(1);
         queuedApplicationInit(
             queue,
@@ -987,7 +1013,7 @@
                 };
 
                 device = application.getDevice();
-                completeSpy = this.sandbox.spy(options, 'onComplete');
+                completeSpy = self.sandbox.spy(options, 'onComplete');
                 device.tweenElementStyle(options);
                 assertTrue("onComplete called", completeSpy.calledOnce);
             },
@@ -996,7 +1022,8 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenNoChange = function(queue) {
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
+	var self = this;
         expectAsserts(1);
         queuedApplicationInit(
             queue,
@@ -1026,7 +1053,7 @@
                 };
 
                 device = application.getDevice();
-                completeSpy = this.sandbox.spy(options, 'onComplete');
+                completeSpy = self.sandbox.spy(options, 'onComplete');
                 device.tweenElementStyle(options);
                 assertTrue("onComplete called", completeSpy.calledOnce);
             },
@@ -1035,7 +1062,7 @@
     };
 
     this.StyleTopLeftAnimationTest.prototype.testFromValuesSetInTweenElementStyle = function(queue) {
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
         queuedApplicationInit(
             queue, 
             'lib/mockapplication', 
@@ -1079,7 +1106,7 @@
     
     this.StyleTopLeftAnimationTest.prototype.testToValuesReachedAfterTweenElementStyle = function(queue) {
         var config;
-        config = this.getDefaultConfig();
+        config = getDefaultConfig();
         expectAsserts(2);
 
         queuedApplicationInit(
@@ -1132,7 +1159,7 @@
     
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleEqualEndpointsReturnNull = function(queue) {
         var config;
-        config = this.getDefaultConfig();
+        config = getDefaultConfig();
 
         queuedApplicationInit(
             queue, 
@@ -1169,7 +1196,7 @@
     
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsSkipAnim = function(queue) {
         var config;
-        config = this.getDefaultConfig();
+        config = getDefaultConfig();
 
         queuedApplicationInit(
             queue, 
@@ -1207,7 +1234,7 @@
     
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsGlobalAnimDisable = function(queue) {
         var config;
-        config = this.getDefaultConfig();
+        config = getDefaultConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(
@@ -1245,7 +1272,7 @@
     
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
         var config;
-        config = this.getDefaultConfig();
+        config = getDefaultConfig();
         config.animationDisabled = "true";
 
         queuedApplicationInit(
@@ -1292,7 +1319,7 @@
     this.StyleTopLeftAnimationTest.prototype.testAnimationsDoNotInterleaveMoveElementTo = function(queue) {
         expectAsserts(1);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div1, div2;
@@ -1362,7 +1389,7 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementJumpsImmediatelyToEndWhenCancelled = function(queue) {
         expectAsserts(4);
 
-        var config = this.getDefaultConfig();
+        var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, anim;

@@ -369,9 +369,8 @@
 
 		application.getDevice().getLogger().warn( "Log Message" );
 
-
 		var logMessages = require('antie/devices/logging/saving').getLogItems();
-		assertEquals( 'Log Message', logMessages[0].message );
+		assertEquals( [ 'Log Message' ], logMessages[0].message );
 
 		}, config );
 	};

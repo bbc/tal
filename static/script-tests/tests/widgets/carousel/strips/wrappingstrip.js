@@ -33,62 +33,63 @@
         this.sandbox.restore();
     };
 
-    this.WrappingStripTest.prototype.create1ItemStripWith1CloneEachEnd = function (WrappingStrip, Button, verticalOrientation) {
+    var create1ItemStripWith1CloneEachEnd = function (self, WrappingStrip, Button, verticalOrientation) {
         var strip, item;
         strip = new WrappingStrip('oneItemStripTwoClones', verticalOrientation);
-        strip._getMaskLength = this.sandbox.stub().returns(10);
-        item = this.createFocusableButton(Button, 'item');
+        strip._getMaskLength = self.sandbox.stub().returns(10);
+        item = createFocusableButton(self, Button, 'item');
         strip.append(item);
         return strip;
-    },
+    };
 
-    this.WrappingStripTest.prototype.create3ItemStripFirstDisabled = function (WrappingStrip, Button, maskLength, verticalOrientation) {
+    var create3ItemStripFirstDisabled = function (self, WrappingStrip, Button, maskLength, verticalOrientation) {
         var strip, disabledItem, item2, item3;
         strip = new WrappingStrip('oneItemStripTwoClones', verticalOrientation);
-        strip._getMaskLength = this.sandbox.stub().returns(maskLength);
-        disabledItem = this.createNonFocusableButton(Button, 'item');
-        item2 = this.createFocusableButton(Button, 'item2');
-        item3 = this.createFocusableButton(Button, 'item3');
+        strip._getMaskLength = self.sandbox.stub().returns(maskLength);
+        disabledItem = createNonFocusableButton(self, Button, 'item');
+        item2 = createFocusableButton(self, Button, 'item2');
+        item3 = createFocusableButton(self, Button, 'item3');
         strip.append(disabledItem);
         strip.append(item2);
         strip.append(item3);
         return strip;
-    },
+    };
 
-    this.WrappingStripTest.prototype.create5ItemStripFirst3Disabled = function (WrappingStrip, Button, maskLength, verticalOrientation) {
+    var create5ItemStripFirst3Disabled = function (self, WrappingStrip, Button, maskLength, verticalOrientation) {
         var strip, item1, item2, disabledItem1, disabledItem2, disabledItem3;
         strip = new WrappingStrip('oneItemStripTwoClones', verticalOrientation);
-        strip._getMaskLength = this.sandbox.stub().returns(maskLength);
-        item1 = this.createFocusableButton(Button, 'item1');
-        item2 = this.createFocusableButton(Button, 'item2');
-        disabledItem1 = this.createNonFocusableButton(Button, 'disabled_item1');
-        disabledItem2 = this.createNonFocusableButton(Button, 'disabled_item2');
-        disabledItem3 = this.createNonFocusableButton(Button, 'disabled_item3');
+        strip._getMaskLength = self.sandbox.stub().returns(maskLength);
+        item1 = createFocusableButton(self, Button, 'item1');
+        item2 = createFocusableButton(self, Button, 'item2');
+        disabledItem1 = createNonFocusableButton(self, Button, 'disabled_item1');
+        disabledItem2 = createNonFocusableButton(self, Button, 'disabled_item2');
+        disabledItem3 = createNonFocusableButton(self, Button, 'disabled_item3');
         strip.append(disabledItem1);
         strip.append(disabledItem2);
         strip.append(disabledItem3);
         strip.append(item1);
         strip.append(item2);
         return strip;
-    },
+    };
 
-    this.WrappingStripTest.prototype.createFocusableButton = function (Button, id) {
+    var createFocusableButton = function (self, Button, id) {
         var button = new Button(id);
-        this.sandbox.stub(button);
+        self.sandbox.stub(button);
         button.isFocusable.returns(true);
         button.outputElement = id + "_clone";
         return button;
     };
 
-    this.WrappingStripTest.prototype.createNonFocusableButton = function (Button, id) {
+    var createNonFocusableButton = function (self, Button, id) {
         var button = new Button(id);
-        this.sandbox.stub(button);
+        self.sandbox.stub(button);
         button.isFocusable.returns(false);
         button.outputElement = id + "_clone";
         return button;
     };
 
     this.WrappingStripTest.prototype.testAppendCallsCreateClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -101,10 +102,10 @@
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = {test: 'item'};
 
-                strip._removeClones = this.sandbox.stub();
-                strip.appendChildWidget = this.sandbox.stub().withArgs(item);
-                strip._createClones = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub().returns("test");
+                strip._removeClones = self.sandbox.stub();
+                strip.appendChildWidget = self.sandbox.stub().withArgs(item);
+                strip._createClones = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub().returns("test");
 
                 strip.append(item);
 
@@ -116,6 +117,7 @@
     };
 
     this.WrappingStripTest.prototype.testInsertCallsCreateClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -128,10 +130,10 @@
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = {test: 'item'};
                 index = 2;
-                strip._removeClones = this.sandbox.stub();
-                strip.insertChildWidget = this.sandbox.stub().withArgs(index, item);
-                strip._createClones = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub().returns("test");
+                strip._removeClones = self.sandbox.stub();
+                strip.insertChildWidget = self.sandbox.stub().withArgs(index, item);
+                strip._createClones = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub().returns("test");
 
                 strip.insert(index, item);
 
@@ -143,6 +145,7 @@
     };
 
     this.WrappingStripTest.prototype.testRemoveCallsCreateClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -155,10 +158,10 @@
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = {test: 'item'};
 
-                strip._removeClones = this.sandbox.stub();
-                strip.removeChildWidget = this.sandbox.stub().withArgs(item, false);
-                strip._createClones = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub().returns("test");
+                strip._removeClones = self.sandbox.stub();
+                strip.removeChildWidget = self.sandbox.stub().withArgs(item, false);
+                strip._createClones = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub().returns("test");
 
                 strip.remove(item, false);
 
@@ -170,6 +173,7 @@
     };
 
     this.WrappingStripTest.prototype.testAppendToWrappingStripRemovesClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -182,10 +186,10 @@
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
 
-                strip._removeClones = this.sandbox.stub();
-                strip._createClones = this.sandbox.stub();
-                strip.appendChildWidget = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub();
+                strip._removeClones = self.sandbox.stub();
+                strip._createClones = self.sandbox.stub();
+                strip.appendChildWidget = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub();
 
                 item = new Button('item');
                 strip.append(item);
@@ -196,6 +200,7 @@
     };
 
     this.WrappingStripTest.prototype.testInsertRemovesClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -208,10 +213,10 @@
                 index = 3;
                 strip = new WrappingStrip('testStrip', verticalOrientation);
 
-                strip._removeClones = this.sandbox.stub();
-                strip._createClones = this.sandbox.stub();
-                strip.insertChildWidget = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub();
+                strip._removeClones = self.sandbox.stub();
+                strip._createClones = self.sandbox.stub();
+                strip.insertChildWidget = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub();
 
                 item = new Button('item');
                 strip.insert(index, item);
@@ -222,6 +227,7 @@
     };
 
     this.WrappingStripTest.prototype.testRemoveRemovesClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -234,10 +240,10 @@
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
 
-                strip._removeClones = this.sandbox.stub();
-                strip._createClones = this.sandbox.stub();
-                strip.removeChildWidget = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub();
+                strip._removeClones = self.sandbox.stub();
+                strip._createClones = self.sandbox.stub();
+                strip.removeChildWidget = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub();
 
                 item = new Button('item');
                 strip.remove(item, false);
@@ -248,6 +254,7 @@
     };
 
     this.WrappingStripTest.prototype.testGetLengthReturnsLengthToIndexPlusOffsetInElementsArray = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -258,9 +265,9 @@
             function (application, Button, WrappingStrip, verticalOrientation) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
 
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
@@ -268,13 +275,14 @@
                 );
                 device.getElementSize.returns({width: 20, height: 20});
 
-                strip = this.create1ItemStripWith1CloneEachEnd(WrappingStrip, Button, verticalOrientation);
+                strip = create1ItemStripWith1CloneEachEnd(self, WrappingStrip, Button, verticalOrientation);
                 assertEquals('getLengthToIndex returns sum of length before widgets and within widgets up to index', 20, strip.getLengthToIndex(0));
             }
         );
     };
 
     this.WrappingStripTest.prototype.testGetLengthToNegativeIndexReturnsPrependedCloneLengthUpToIndex = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -285,8 +293,8 @@
             function (application, Button, WrappingStrip, verticalOrientation) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
@@ -294,13 +302,14 @@
                 );
                 device.getElementSize.returns({width: 20, height: 20});
 
-                strip = this.create1ItemStripWith1CloneEachEnd(WrappingStrip, Button, verticalOrientation);
+                strip = create1ItemStripWith1CloneEachEnd(self, WrappingStrip, Button, verticalOrientation);
                 assertEquals('getLengthToIndex with -1 index returns length up to last pre-clone', 0, strip.getLengthToIndex(-1));
             }
         );
     },
 
     this.WrappingStripTest.prototype.testGetLengthToIndexOneGreaterThenWidgetLengthReturnsLengthToFirstPostClone = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -311,21 +320,22 @@
             function (application, Button, WrappingStrip, verticalOrientation) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
                     }
                 );
                 device.getElementSize.returns({width: 20, height: 20});
-                strip = this.create1ItemStripWith1CloneEachEnd(WrappingStrip, Button, verticalOrientation);
+                strip = create1ItemStripWith1CloneEachEnd(self, WrappingStrip, Button, verticalOrientation);
                 assertEquals('getLengthToIndex with index = widgets.length +1 returns length up to first post-clone', 40, strip.getLengthToIndex(1));
             }
         );
     },
 
     this.WrappingStripTest.prototype.testLengthOfWidgetAtIndexReturnsHeightIfVertical = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -337,12 +347,12 @@
             function (application, WrappingStrip, Button, verticalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 70, height: 50});
                 device.getElementOffset.returns({top: 0, left: 0});
                 strip = new WrappingStrip('strip', verticalOrientation);
-                strip._getMaskLength = this.sandbox.stub();
-                strip.getChildWidgets = this.sandbox.stub().returns([new Button()]);
+                strip._getMaskLength = self.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub().returns([new Button()]);
                 strip.append(new Button());
                 assertEquals(50, strip.lengthOfWidgetAtIndex(0));
             }
@@ -350,6 +360,7 @@
     };
 
     this.WrappingStripTest.prototype.testLengthOfWidgetAtIndexReturnsWidthIfHorizontal = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -361,12 +372,12 @@
             function (application, WrappingStrip, Button, horizontalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 70, height: 50});
                 device.getElementOffset.returns({top: 0, left: 0});
                 strip = new WrappingStrip('strip', horizontalOrientation);
-                strip._getMaskLength = this.sandbox.stub();
-                strip.getChildWidgets = this.sandbox.stub().returns([new Button()]);
+                strip._getMaskLength = self.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub().returns([new Button()]);
                 strip.append(new Button());
                 assertEquals(70, strip.lengthOfWidgetAtIndex(0));
             }
@@ -374,6 +385,7 @@
     };
 
     this.WrappingStripTest.prototype.testCreateClonesWithNoItemsDoesNotCloneElements = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -384,7 +396,7 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var strip, item, disabledItem, items, device;
                 device = application.getDevice();
-                device.cloneElement = this.sandbox.stub();
+                device.cloneElement = self.sandbox.stub();
                 strip = new WrappingStrip('testStrip', verticalOrientation);
 
                 strip._createClones(10);
@@ -395,6 +407,7 @@
     };
 
     this.WrappingStripTest.prototype.testCreateClonesWithZeroNullOrUndefinedMaskDoesNotCloneElements = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -405,8 +418,8 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var strip, item, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
@@ -415,7 +428,7 @@
                 device.getElementSize.returns({width: 20, height: 20});
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = new Button('item');
-                strip.getChildWidgets = this.sandbox.stub().returns([item]);
+                strip.getChildWidgets = self.sandbox.stub().returns([item]);
                 strip._createClones(0);
                 strip._createClones(null);
                 strip._createClones(undefined);
@@ -427,6 +440,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneItemsWithOneMaskFillingItemRepeatsThatItemOnceInEachDirection = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -437,14 +451,14 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var device, strip, item;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 20, height: 20});
                 device.cloneElement.returnsArg(0);
-                item = this.createFocusableButton(Button, 'item');
+                item = createFocusableButton(self, Button, 'item');
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip.getChildWidgets = this.sandbox.stub().returns([item]);
-                strip.getChildWidgetCount = this.sandbox.stub().returns(1);
+                strip.getChildWidgets = self.sandbox.stub().returns([item]);
+                strip.getChildWidgetCount = self.sandbox.stub().returns(1);
                 strip._createClones(15);
 
                 assertEquals('clones array consists of one clone in each direction',
@@ -458,6 +472,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneItemsWithTwoMaskFillingItemsRepeatsItemsOnceInEachDirection = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -468,16 +483,16 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var device, strip, item1, item2;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 20, height: 20});
                 device.cloneElement.returnsArg(0);
-                item1 = this.createFocusableButton(Button, 'item1');
-                item2 = this.createFocusableButton(Button, 'item2');
+                item1 = createFocusableButton(self, Button, 'item1');
+                item2 = createFocusableButton(self, Button, 'item2');
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 strip.outputElement = "test";
-                strip.getChildWidgets = this.sandbox.stub().returns([item1, item2]);
-                strip.getChildWidgetCount = this.sandbox.stub().returns(2);
+                strip.getChildWidgets = self.sandbox.stub().returns([item1, item2]);
+                strip.getChildWidgetCount = self.sandbox.stub().returns(2);
                 strip._createClones(15);
 
                 assertTrue('2 elements cloned',
@@ -493,6 +508,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneItemsWithFourLength20ItemsAndMask50RepeatsThree = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -503,18 +519,18 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var device, strip, item1, item2, item3, item4;
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 20, height: 20});
                 device.cloneElement.returnsArg(0);
-                item1 = this.createFocusableButton(Button, 'item1');
-                item2 = this.createFocusableButton(Button, 'item2');
-                item3 = this.createFocusableButton(Button, 'item3');
-                item4 = this.createFocusableButton(Button, 'item4');
+                item1 = createFocusableButton(self, Button, 'item1');
+                item2 = createFocusableButton(self, Button, 'item2');
+                item3 = createFocusableButton(self, Button, 'item3');
+                item4 = createFocusableButton(self, Button, 'item4');
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 strip.outputElement = "test";
-                strip.getChildWidgets = this.sandbox.stub().returns([item1, item2, item3, item4]);
-                strip.getChildWidgetCount = this.sandbox.stub().returns(4);
+                strip.getChildWidgets = self.sandbox.stub().returns([item1, item2, item3, item4]);
+                strip.getChildWidgetCount = self.sandbox.stub().returns(4);
                 strip._createClones(50);
 
                 assertEquals('6 elements cloned', 6, device.cloneElement.callCount);
@@ -530,6 +546,7 @@
     };
 
     this.WrappingStripTest.prototype.testCorrectCloningOf5ItemStripWithFirst3Disabled = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -540,8 +557,8 @@
             function (application, WrappingStrip, Button, verticalOrientation) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 10 * Math.max(0, array.length - 1);
@@ -549,7 +566,7 @@
                 );
                 device.getElementSize.returns({width: 10, height: 10});
 
-                strip = this.create5ItemStripFirst3Disabled(WrappingStrip, Button, 45, verticalOrientation);
+                strip = create5ItemStripFirst3Disabled(self, WrappingStrip, Button, 45, verticalOrientation);
                 assertEquals("8 front clones created", 8, strip._getAppendedClones().length);
                 assertEquals("5 rear clones created", 5, strip._getPrependedClones().length);
             }
@@ -557,6 +574,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneWhenNoActiveIndexReturnsEmptyArray = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -568,14 +586,14 @@
             function (application, WrappingStrip, WidgetStrip, Button, verticalOrientation) {
                 var strip, disabledItem, items, device;
                 device = application.getDevice();
-                device.getElementSize = this.sandbox.stub().returns({width: 10, height: 10});
-                device.cloneElement = this.sandbox.stub();
-                device.removeClassFromElement = this.sandbox.stub();
+                device.getElementSize = self.sandbox.stub().returns({width: 10, height: 10});
+                device.cloneElement = self.sandbox.stub();
+                device.removeClassFromElement = self.sandbox.stub();
                 disabledItem = new Button();
-                this.sandbox.stub(disabledItem, 'isFocusable');
+                self.sandbox.stub(disabledItem, 'isFocusable');
                 disabledItem.isFocusable.returns(false);
                 items = [disabledItem];
-                this.sandbox.stub(WidgetStrip.prototype, 'getChildWidgets');
+                self.sandbox.stub(WidgetStrip.prototype, 'getChildWidgets');
                 WidgetStrip.prototype.getChildWidgets.returns(items);
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
@@ -586,6 +604,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneThreeSize20ItemsOnMask10ClonesTwoAfterAndOneBeforeWhenFirstDisabled = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -597,8 +616,8 @@
                 var strip, items, device;
 
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
@@ -606,7 +625,7 @@
                 );
                 device.getElementSize.returns({width: 20, height: 20});
 
-                strip = this.create3ItemStripFirstDisabled(WrappingStrip, Button, 10, verticalOrientation);
+                strip = create3ItemStripFirstDisabled(self, WrappingStrip, Button, 10, verticalOrientation);
 
                 assertEquals('2 clones of front items added to rear', 2, strip._getAppendedClones().length);
                 assertEquals('1 clone of rear itmes added to front', 1, strip._getPrependedClones().length);
@@ -616,6 +635,7 @@
     };
 
     this.WrappingStripTest.prototype.testClonesAddedToStripCanBeRetrieved = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -627,13 +647,13 @@
                 var strip, item, i, device, maskLength, clones;
 
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 maskLength = 30;
 
                 strip = new WrappingStrip('test', verticalOrientation);
 
-                strip._cloneFrontItems = this.sandbox.stub().returns(["one", "two"]);
-                strip._cloneRearItems = this.sandbox.stub().returns(["four", "three"]);
+                strip._cloneFrontItems = self.sandbox.stub().returns(["one", "two"]);
+                strip._cloneRearItems = self.sandbox.stub().returns(["four", "three"]);
                 strip._createClones(maskLength);
 
                 assertEquals('All clones returned by _getClones()', ["three", "four", "one", "two"], strip._getClones());
@@ -644,6 +664,7 @@
 
 
     this.WrappingStripTest.prototype.testClonesAreRemovedFromClonesArray = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -660,7 +681,7 @@
                 strip._clones.push("clone1");
                 strip._clones.push("clone2");
 
-                this.sandbox.stub(device, 'removeElement');
+                self.sandbox.stub(device, 'removeElement');
                 strip._removeClones();
 
                 assertEquals('Clone array is empty', [], strip._getClones());
@@ -670,6 +691,7 @@
     };
 
     this.WrappingStripTest.prototype.testAppendCallsAppendChildWidget = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -684,10 +706,10 @@
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = {test: 'item'};
 
-                strip._removeClones = this.sandbox.stub();
-                strip.appendChildWidget = this.sandbox.stub().withArgs(item);
-                strip._createClones = this.sandbox.stub();
-                strip._getMaskLength = this.sandbox.stub();
+                strip._removeClones = self.sandbox.stub();
+                strip.appendChildWidget = self.sandbox.stub().withArgs(item);
+                strip._createClones = self.sandbox.stub();
+                strip._getMaskLength = self.sandbox.stub();
 
                 strip.append(item);
 
@@ -699,6 +721,7 @@
 
 
     this.WrappingStripTest.prototype.testGetMaskLengthAsksParentForLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -708,7 +731,7 @@
             function (application, WrappingStrip, verticalOrientation) {
                 var strip, item, lengthStub;
 
-                lengthStub = this.sandbox.stub();
+                lengthStub = self.sandbox.stub();
 
                 strip = new WrappingStrip('testStrip', verticalOrientation);
                 item = {test: 'item'};
@@ -722,6 +745,7 @@
     };
 
     this.WrappingStripTest.prototype.testCreateClonesCreatesFrontClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -733,13 +757,13 @@
                 var strip, fakeWidgets, device, maskLength;
                 maskLength = 100;
                 device = application.getDevice();
-                this.sandbox.stub(Button.prototype);
+                self.sandbox.stub(Button.prototype);
                 fakeWidgets = [new Button("one"), new Button("two")];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip.getChildWidgets = this.sandbox.stub().returns(fakeWidgets);
-                strip._cloneFrontItems = this.sandbox.stub().returns([]);
-                strip._cloneRearItems = this.sandbox.stub().returns([]);
-                device.appendChildElement = this.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub().returns(fakeWidgets);
+                strip._cloneFrontItems = self.sandbox.stub().returns([]);
+                strip._cloneRearItems = self.sandbox.stub().returns([]);
+                device.appendChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertTrue("Front items cloned", strip._cloneFrontItems.calledWith(fakeWidgets, maskLength));
@@ -749,6 +773,7 @@
     },
 
     this.WrappingStripTest.prototype.testCreateClonesCreatesRearClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -760,13 +785,13 @@
                 var strip, fakeWidgets, device, maskLength;
                 maskLength = 100;
                 device = application.getDevice();
-                this.sandbox.stub(Button.prototype);
+                self.sandbox.stub(Button.prototype);
                 fakeWidgets = [new Button("one"), new Button("two")];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip.getChildWidgets = this.sandbox.stub().returns(fakeWidgets);
-                strip._cloneFrontItems = this.sandbox.stub().returns([]);
-                strip._cloneRearItems = this.sandbox.stub().returns([]);
-                device.appendChildElement = this.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub().returns(fakeWidgets);
+                strip._cloneFrontItems = self.sandbox.stub().returns([]);
+                strip._cloneRearItems = self.sandbox.stub().returns([]);
+                device.appendChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertTrue("Rear items cloned", strip._cloneRearItems.calledWith(fakeWidgets, maskLength));
@@ -776,6 +801,7 @@
     },
 
     this.WrappingStripTest.prototype.testCreateClonesAppendsFrontClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -788,20 +814,21 @@
                 device = application.getDevice();
                 fakeElements = ["one", "two"];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip.getChildWidgets = this.sandbox.stub();
-                strip._refreshElements = this.sandbox.stub();
-                strip._cloneFrontItems = this.sandbox.stub().returns(fakeElements);
-                strip._cloneRearItems = this.sandbox.stub().returns([]);
-                device.appendChildElement = this.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub();
+                strip._refreshElements = self.sandbox.stub();
+                strip._cloneFrontItems = self.sandbox.stub().returns(fakeElements);
+                strip._cloneRearItems = self.sandbox.stub().returns([]);
+                device.appendChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertEquals("First clone appended first", "one", device.appendChildElement.firstCall.args[1]);
                 assertEquals("Second clone appended second", "two",  device.appendChildElement.secondCall.args[1]);
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesPrependsRearClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -814,12 +841,12 @@
                 device = application.getDevice();
                 fakeElements = ["two", "one"];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip.getChildWidgets = this.sandbox.stub();
-                strip._refreshElements = this.sandbox.stub();
-                strip._cloneFrontItems = this.sandbox.stub().returns([]);
-                strip._cloneRearItems = this.sandbox.stub().returns(fakeElements);
-                device.appendChildElement = this.sandbox.stub();
-                device.prependChildElement = this.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub();
+                strip._refreshElements = self.sandbox.stub();
+                strip._cloneFrontItems = self.sandbox.stub().returns([]);
+                strip._cloneRearItems = self.sandbox.stub().returns(fakeElements);
+                device.appendChildElement = self.sandbox.stub();
+                device.prependChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertTrue("Two clones prepended", device.prependChildElement.calledTwice);
@@ -830,6 +857,7 @@
     },
 
     this.WrappingStripTest.prototype.testCreateClonesStoresPrependedClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -842,12 +870,12 @@
                 device = application.getDevice();
                 fakeElements = ["one", "two"];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip._refreshElements = this.sandbox.stub();
-                strip.getChildWidgets = this.sandbox.stub();
-                strip._cloneFrontItems = this.sandbox.stub().returns(["blah"]);
-                strip._cloneRearItems = this.sandbox.stub().returns(fakeElements);
-                device.appendChildElement = this.sandbox.stub();
-                device.prependChildElement = this.sandbox.stub();
+                strip._refreshElements = self.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub();
+                strip._cloneFrontItems = self.sandbox.stub().returns(["blah"]);
+                strip._cloneRearItems = self.sandbox.stub().returns(fakeElements);
+                device.appendChildElement = self.sandbox.stub();
+                device.prependChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertEquals("Prepended clones stored", fakeElements, strip._getPrependedClones());
@@ -856,6 +884,7 @@
     },
 
     this.WrappingStripTest.prototype.testCreateClonesStoresAppendedClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -868,20 +897,21 @@
                 device = application.getDevice();
                 fakeElements = ["one", "two"];
                 strip = new WrappingStrip('testStrip', verticalOrientation);
-                strip._refreshElements = this.sandbox.stub();
-                strip.getChildWidgets = this.sandbox.stub();
-                strip._cloneFrontItems = this.sandbox.stub().returns(fakeElements);
-                strip._cloneRearItems = this.sandbox.stub().returns(["blah"]);
-                device.appendChildElement = this.sandbox.stub();
-                device.prependChildElement = this.sandbox.stub();
+                strip._refreshElements = self.sandbox.stub();
+                strip.getChildWidgets = self.sandbox.stub();
+                strip._cloneFrontItems = self.sandbox.stub().returns(fakeElements);
+                strip._cloneRearItems = self.sandbox.stub().returns(["blah"]);
+                device.appendChildElement = self.sandbox.stub();
+                device.prependChildElement = self.sandbox.stub();
 
                 strip._createClones(maskLength);
                 assertEquals("Appended clones stored", fakeElements, strip._getAppendedClones());
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCloneFrontItemsClonesElementsBetweenZeroAndFirstIndexPastMaskSize = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -897,8 +927,8 @@
                 fakeWidgets = [fakeWidget1, fakeWidget2, fakeWidget3];
 
                 strip = new WrappingStrip('test', verticalOrientation);
-                strip._cloneWidget = this.sandbox.stub();
-                strip._getElementLength = this.sandbox.stub().returns(60);
+                strip._cloneWidget = self.sandbox.stub();
+                strip._getElementLength = self.sandbox.stub().returns(60);
 
                 strip._cloneFrontItems(fakeWidgets, maskLength);
 
@@ -919,6 +949,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneFrontItemsReturnsArrayOfClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -933,14 +964,15 @@
                 expectedClones = ['clone1', 'clone2', 'clone3'];
                 fakeWidgets = [fakeWidget, fakeWidget, fakeWidget];
                 strip = new WrappingStrip('test', verticalOrientation);
-                strip.firstIndexPastActiveLength = this.sandbox.stub().returns(firstHiddenIndex);
-                strip._cloneFromIndexToLength = this.sandbox.stub().returns(expectedClones);
+                strip.firstIndexPastActiveLength = self.sandbox.stub().returns(firstHiddenIndex);
+                strip._cloneFromIndexToLength = self.sandbox.stub().returns(expectedClones);
                 assertEquals('clones returned succesfully', expectedClones, strip._cloneFrontItems(fakeWidgets, maskLength));
             }
         );
     };
 
     this.WrappingStripTest.prototype.testCloneRearItemsClonesElementsBetweenFirstIndexWithinMaskSizeAndLastItem = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -956,8 +988,8 @@
                 fakeWidgets = [fakeWidget1, fakeWidget2, fakeWidget3];
 
                 strip = new WrappingStrip('test', verticalOrientation);
-                strip._cloneWidget = this.sandbox.stub();
-                strip._getElementLength = this.sandbox.stub().returns(60);
+                strip._cloneWidget = self.sandbox.stub();
+                strip._getElementLength = self.sandbox.stub().returns(60);
 
                 strip._cloneRearItems(fakeWidgets, maskLength);
 
@@ -978,6 +1010,7 @@
     };
 
     this.WrappingStripTest.prototype.testCloneRearItemsReturnsArrayOfClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -991,14 +1024,15 @@
                 expectedClones = ['clone1', 'clone2', 'clone3'];
                 fakeWidgets = [fakeWidget, fakeWidget, fakeWidget];
                 strip = new WrappingStrip('test', verticalOrientation);
-                strip.lastIndexOutsideLengthFromEnd = this.sandbox.stub().returns(0);
-                strip._cloneFromIndexToLength = this.sandbox.stub().returns(expectedClones);
+                strip.lastIndexOutsideLengthFromEnd = self.sandbox.stub().returns(0);
+                strip._cloneFromIndexToLength = self.sandbox.stub().returns(expectedClones);
                 assertEquals('clones returned succesfully', expectedClones, strip._cloneRearItems(fakeWidgets, maskLength));
             }
         );
     };
 
     this.WrappingStripTest.prototype.testCloneElementRemovesStateStyles = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1012,10 +1046,10 @@
                 };
 
                 device = application.getDevice();
-                device.cloneElement = this.sandbox.stub().returns("foo");
+                device.cloneElement = self.sandbox.stub().returns("foo");
 
                 strip = new WrappingStrip('test', verticalOrientation);
-                strip._removeStateStylesFromElement = this.sandbox.stub();
+                strip._removeStateStylesFromElement = self.sandbox.stub();
                 strip._cloneElement("test");
 
                 assertTrue("elements clone", device.cloneElement.calledOnce);
@@ -1026,6 +1060,7 @@
     };
 
     this.WrappingStripTest.prototype.testRemoveStateStylesFromElement = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1038,7 +1073,7 @@
                 fakeElement = {fake: "element"};
                 device = application.getDevice();
 
-                device.removeClassFromElement = this.sandbox.stub();
+                device.removeClassFromElement = self.sandbox.stub();
                 removeFocusStub = device.removeClassFromElement.withArgs(fakeElement, 'focus', true);
                 removeActiveStub = device.removeClassFromElement.withArgs(fakeElement, 'active', true);
                 removeButtonFocussedStub = device.removeClassFromElement.withArgs(fakeElement, 'buttonFocussed', true);
@@ -1054,6 +1089,7 @@
     };
 
     this.WrappingStripTest.prototype.testRemoveAllDelegatesToRemoveChildWidget = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1065,8 +1101,8 @@
             function (application, WidgetStrip, Button, verticalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Container.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Container.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.removeAll();
                 assertTrue(Container.prototype.removeChildWidgets.calledOnce);
@@ -1075,6 +1111,7 @@
     };
 
     this.WrappingStripTest.prototype.testRecalcualteRemovesClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1086,13 +1123,13 @@
             function (application, WidgetStrip, Button, verticalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Container.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Container.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 Container.prototype.getChildWidgets.returns([]);
-                strip._getMaskLength = this.sandbox.stub().returns(45);
-                this.sandbox.stub(strip, '_removeClones');
-                this.sandbox.stub(strip, '_createClones');
+                strip._getMaskLength = self.sandbox.stub().returns(45);
+                self.sandbox.stub(strip, '_removeClones');
+                self.sandbox.stub(strip, '_createClones');
                 strip.recalculate();
                 assertTrue(strip._removeClones.calledOnce);
             }
@@ -1100,6 +1137,7 @@
     };
 
     this.WrappingStripTest.prototype.testRecalcualteCreatesClones = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1111,13 +1149,13 @@
             function (application, WidgetStrip, Button, verticalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Container.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Container.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
-                strip._getMaskLength = this.sandbox.stub().returns(45);
+                strip._getMaskLength = self.sandbox.stub().returns(45);
                 Container.prototype.getChildWidgets.returns([]);
-                this.sandbox.stub(strip, '_removeClones');
-                this.sandbox.stub(strip, '_createClones');
+                self.sandbox.stub(strip, '_removeClones');
+                self.sandbox.stub(strip, '_createClones');
                 strip.recalculate();
                 assertTrue(strip._createClones.calledOnce);
             }
@@ -1125,6 +1163,7 @@
     };
 
     this.WrappingStripTest.prototype.testRecalcualteNotCalledOnAppendRemoveOrInsertWhenAutoCalculateOff = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1136,13 +1175,13 @@
             function (application, WidgetStrip, Button, verticalOrientation, Container) {
                 var strip, device, item;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Container.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Container.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
-                strip._getMaskLength = this.sandbox.stub().returns(45);
+                strip._getMaskLength = self.sandbox.stub().returns(45);
                 Container.prototype.getChildWidgets.returns([]);
-                this.sandbox.stub(strip, '_removeClones');
-                this.sandbox.stub(strip, '_createClones');
+                self.sandbox.stub(strip, '_removeClones');
+                self.sandbox.stub(strip, '_createClones');
                 item = new Button();
                 strip.autoCalculate(false);
                 strip.append(item);
@@ -1155,6 +1194,7 @@
     };
 
     this.WrappingStripTest.prototype.testManualRecalcualteStillRecalculatesWithAutoCalculateOff = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1166,13 +1206,13 @@
             function (application, WidgetStrip, Button, verticalOrientation, Container) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Container.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Container.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
-                strip._getMaskLength = this.sandbox.stub().returns(45);
+                strip._getMaskLength = self.sandbox.stub().returns(45);
                 Container.prototype.getChildWidgets.returns([]);
-                this.sandbox.stub(strip, '_removeClones');
-                this.sandbox.stub(strip, '_createClones');
+                self.sandbox.stub(strip, '_removeClones');
+                self.sandbox.stub(strip, '_createClones');
                 strip.autoCalculate(false);
                 strip.recalculate();
                 assertTrue(strip._removeClones.called);
@@ -1182,6 +1222,7 @@
     };
 
     this.WrappingStripTest.prototype.testLengthOfWidgetAtIndexReturnsHeightIfVertical = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1192,14 +1233,10 @@
             ],
             function (application, WidgetStrip, Button, verticalOrientation, Mask) {
                 var strip, device;
-                device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Mask.prototype);
-                device.getElementSize.returns({width: 70, height: 50});
+                self.sandbox.stub(application.getDevice(), "getElementSize").returns({width: 70, height: 50});
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.autoCalculate(false);
-                strip.parentWidget = new Mask();
-                strip.getChildWidgets = this.sandbox.stub().returns(new Button());
+                strip.parentWidget = new Mask('mask', strip, verticalOrientation);
                 strip.append(new Button());
                 assertEquals(50, strip.lengthOfWidgetAtIndex(0));
             }
@@ -1207,6 +1244,7 @@
     };
 
     this.WrappingStripTest.prototype.testLengthOfWidgetAtIndexReturnsWidthIfHorizontal = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1218,14 +1256,14 @@
             function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
                 var strip, device;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Button.prototype);
-                this.sandbox.stub(Mask.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Button.prototype);
+                self.sandbox.stub(Mask.prototype);
                 device.getElementSize.returns({width: 70, height: 50});
                 strip = new WidgetStrip('strip', horizontalOrientation);
                 strip.autoCalculate(false);
                 strip.parentWidget = new Mask();
-                strip.getChildWidgets = this.sandbox.stub().returns(new Button());
+                strip.getChildWidgets = self.sandbox.stub().returns(new Button());
                 strip.append(new Button());
                 assertEquals(70, strip.lengthOfWidgetAtIndex(0));
             }
@@ -1233,6 +1271,7 @@
     };
 
     this.WrappingStripTest.prototype.testClonesRendered = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -1244,15 +1283,15 @@
                 var strip, items, device, initialCallCount, finalCallCount;
 
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(WrappingStrip.prototype,
+                self.sandbox.stub(device);
+                self.sandbox.stub(WrappingStrip.prototype,
                     '_getOffsetToLastElementInArray',
                     function (array) {
                         return 20 * Math.max(0, array.length - 1);
                     }
                 );
                 device.getElementSize.returns({width: 20, height: 20});
-                strip = this.create3ItemStripFirstDisabled(WrappingStrip, Button, 10, verticalOrientation);
+                strip = create3ItemStripFirstDisabled(self, WrappingStrip, Button, 10, verticalOrientation);
                 initialCallCount = device.appendChildElement.callCount;
                 strip.render(device);
                 finalCallCount = device.appendChildElement.callCount;
@@ -1261,261 +1300,5 @@
             }
         );
     };
-
-//    this.WrappingStripTest.prototype.testLengthOfWidgetAtReturnsSetLengthIfProvidedOnAppend = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Button.prototype);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementSize.returns({width: 70, height: 50});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 20);
-//                assertEquals(20, strip.lengthOfWidgetAtIndex(0));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testLengthOfWidgetAtReturnsCalculatedLengthIfNotProvidedOnAppend = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementSize.returns({width: 70, height: 50});
-//                device.getElementOffset.returns({left: 0, top: 0});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 20);
-//                strip.append(new Button());
-//                assertEquals(70, strip.lengthOfWidgetAtIndex(1));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesProvidedLengthsWhenAllUpToIndexProvided = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button(), 50);
-//                strip.append(new Button());
-//                assertEquals(80, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesCalculatedOffsetWhenAllUpToIndexNotProvided = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button());
-//                strip.append(new Button());
-//                assertEquals(40, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesSuppliedLengthWhenInsertingWidget = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button());
-//                strip.insert(1, new Button(), 50);
-//                assertEquals(80, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesSuppliedLengthWhenInsertingWidgetAtStart = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button());
-//                strip.insert(0, new Button(), 50);
-//                assertEquals(50, strip.getLengthToIndex(1));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesSuppliedLengthAfterRemovingWidget = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button(), 40);
-//                strip.remove(strip.widgets()[1]);
-//                strip.append(new Button(), 50);
-//                strip.append(new Button());
-//                assertEquals(80, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesCalculateLengthAfterRemoveAll = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                device.getLogger.returns({warn: function() {}});
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button(), 40);
-//                strip.append(new Button(), 50);
-//                strip.removeAll();
-//                assertEquals(40, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesSetLengthsWithSingleDigit = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button(), 40);
-//                strip.append(new Button(), 50);
-//                strip.setLengths(10);
-//                assertEquals(20, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
-//
-//    this.WrappingStripTest.prototype.testGetLengthToIndexUsesSetLengthsWithArray = function (queue) {
-//        queuedApplicationInit(queue,
-//            'lib/mockapplication',
-//            [
-//                'antie/widgets/carousel/strips/wrappingstrip',
-//                'antie/widgets/button',
-//                'antie/widgets/carousel/orientations/horizontal',
-//                "antie/widgets/carousel/mask"
-//            ],
-//            function (application, WidgetStrip, Button, horizontalOrientation, Mask) {
-//                var strip, device;
-//                device = application.getDevice();
-//                this.sandbox.stub(device);
-//                this.sandbox.stub(Mask.prototype);
-//                device.getElementOffset.returns({left: 40, top: 40});
-//                strip = new WidgetStrip('strip', horizontalOrientation);
-//                strip.parentWidget = new Mask();
-//                strip.append(new Button(), 30);
-//                strip.append(new Button(), 40);
-//                strip.append(new Button(), 50);
-//                strip.setLengths([20, 50, 10]);
-//                assertEquals(70, strip.getLengthToIndex(2));
-//            }
-//        );
-//    };
 
 }());

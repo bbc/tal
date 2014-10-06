@@ -34,6 +34,7 @@
     };
 
     this.MaskTest.prototype.testWidgetStripChildOfMask = function (queue) {
+	var self = this;
 		queuedApplicationInit(queue,
 			'lib/mockapplication',
 			[
@@ -42,17 +43,18 @@
             ],
 			function (application, Mask, verticalOrientation) {
 				var mask, childStub, appendedWidget;
-                function MockWidgetStripFn() {}
-                childStub = this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                childStub = self.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+		var mockWidgetStrip = { };
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 appendedWidget = childStub.getCall(0).args[0];
-				assertTrue("Widget strip is child of mask", appendedWidget instanceof MockWidgetStripFn);
+				assertSame("Widget strip is child of mask", appendedWidget, mockWidgetStrip);
 			}
 		);
 	};
 
     this.MaskTest.prototype.testAlignToIndexAtInitialAlignPointMovesContentsByNegativeOfLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -62,13 +64,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
 
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
 
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
                 mask.alignToIndex(1);
 
                 pixelsMoved = moveStub.getCall(0).args[0];
@@ -79,6 +82,7 @@
     };
 
     this.MaskTest.prototype.testAlignToIndexAtModifiedALignPointMovesContentsByAlignPointMinusLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -88,12 +92,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
 
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setAlignPoint(25);
                 mask.alignToIndex(1);
@@ -106,6 +111,7 @@
     };
 
     this.MaskTest.prototype.testAlignToIndexAtNormalisedAlignPointMovesContentsByAlignPointMinusLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -115,13 +121,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                this.sandbox.stub(device);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
                 mask.alignToIndex(1);
@@ -134,6 +141,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedAlignPointClampedToZero = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -143,13 +151,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                this.sandbox.stub(device);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(-0.5);
                 mask.alignToIndex(1);
@@ -162,6 +171,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedAlignPointClampedToOne = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -171,13 +181,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                this.sandbox.stub(device);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(2);
                 mask.alignToIndex(1);
@@ -190,6 +201,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedAlignPointWorksIfSetBeforeMaskHasSize = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -199,13 +211,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                this.sandbox.stub(device);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 0, height: 0});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
                 device.getElementSize.returns({width: 200, height: 200});
@@ -219,6 +232,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedAlignPointOverriddenBySubsequentAlignPoint = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -228,13 +242,14 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                this.sandbox.stub(device);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(device);
                 device.getElementSize.returns({width: 200, height: 200});
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
 
                 mask.setNormalisedAlignPoint(0.5);
                 mask.setAlignPoint(20);
@@ -248,6 +263,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedWidgetAlign = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -257,12 +273,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(0.5);
                 mask.alignToIndex(1);
                 pixelsMoved = moveStub.getCall(0).args[0];
@@ -273,6 +290,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedWidgetAlignClampedToZero = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -282,12 +300,13 @@
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
                 device = application.getDevice();
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(-0.5);
                 mask.alignToIndex(1);
                 pixelsMoved = moveStub.getCall(0).args[0];
@@ -298,6 +317,7 @@
     };
 
     this.MaskTest.prototype.testNormalisedWidgetAlignClampedToOne = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -306,12 +326,13 @@
             ],
             function (application, Mask, verticalOrientation) {
                 var moveStub, pixelsMoved, mask, device;
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
-                MockWidgetStripFn.prototype.lengthOfWidgetAtIndex = this.sandbox.stub().returns(50);
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
-                moveStub = sinon.stub(mask, '_moveContentsTo');
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50),
+			lengthOfWidgetAtIndex: self.sandbox.stub().returns(50)
+		};
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                moveStub = self.sandbox.stub(mask, '_moveContentsTo');
                 mask.setNormalisedWidgetAlignPoint(2);
                 mask.alignToIndex(1);
                 pixelsMoved = moveStub.getCall(0).args[0];
@@ -322,6 +343,7 @@
     };
 
     this.MaskTest.prototype.testAlignToIndexPassesOnProvidedOnComplete = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -331,13 +353,14 @@
             ],
             function (application, Mask, Spinner, verticalOrientation) {
                 var mask;
-                this.sandbox.stub(Spinner.prototype);
-                function MockWidgetStripFn() {}
+                self.sandbox.stub(Spinner.prototype);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
                 function fakeOnComplete() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
 
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 mask.alignToIndex(4, { onComplete: fakeOnComplete });
                 assertEquals("onComplete function passed to spinner in options object",
                     fakeOnComplete, Spinner.prototype.moveContentsTo.firstCall.args[1].onComplete);
@@ -346,6 +369,7 @@
     };
 
     this.MaskTest.prototype.testAlignToIndexPassesOnProvidedSkipAnim = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -355,12 +379,13 @@
             ],
             function (application, Mask, Spinner, verticalOrientation) {
                 var moveStub, pixelsMoved, mask;
-                this.sandbox.stub(Spinner.prototype);
-                function MockWidgetStripFn() {}
-                MockWidgetStripFn.prototype.getLengthToIndex = this.sandbox.stub().returns(50);
+                self.sandbox.stub(Spinner.prototype);
+		var mockWidgetStrip = {
+			getLengthToIndex: self.sandbox.stub().returns(50)
+		};
 
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
-                mask = new Mask('myCarousel_mask', new MockWidgetStripFn(), verticalOrientation);
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
                 mask.alignToIndex(4, { skipAnim: true });
                 assertTrue("skipAnim parameter passed to spinner in options object", Spinner.prototype.moveContentsTo.firstCall.args[1].skipAnim);
             }
@@ -368,6 +393,7 @@
     };
 
     this.MaskTest.prototype.testGetWidgetStripReturnsStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -378,7 +404,7 @@
                 var mask, strip;
 
                 strip = {mock: 'strip'};
-                this.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                self.sandbox.stub(Mask.prototype, 'appendChildWidget');
 
                 mask = new Mask('myCarousel_mask', strip, verticalOrientation);
 
@@ -407,6 +433,7 @@
     };
 
     this.MaskTest.prototype.testSetWidgetStripRemovesOldStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -421,8 +448,8 @@
                 mask = new Mask('testMask', strip1, verticalOrientation);
 
                 mask.setWidgetStrip(strip1);
-                mask.removeChildWidget = sinon.stub().withArgs(strip1);
-                mask.appendChildWidget = sinon.stub();
+                self.sandbox.stub(mask, "removeChildWidget").withArgs(strip1);
+                self.sandbox.stub(mask, "appendChildWidget");
                 mask.setWidgetStrip(strip2);
                 assertTrue("Old strip removed", mask.removeChildWidget.calledOnce);
             }
@@ -430,6 +457,7 @@
     };
 
     this.MaskTest.prototype.testSetWidgetStripDoesNotRemoveNonExistantStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -441,7 +469,7 @@
                 var mask, strip1, strip2;
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 strip2 = new WidgetStrip('strip2', verticalOrientation);
-                Mask.prototype.removeChildWidget = sinon.stub();
+                self.sandbox.stub(Mask.prototype, "removeChildWidget");
                 mask = new Mask('testMask', strip1, verticalOrientation);
                 assertFalse("Strip not removed before creation", mask.removeChildWidget.called);
             }
@@ -449,6 +477,7 @@
     };
 
     this.MaskTest.prototype.testSetWidgetStripAddsNewStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -461,8 +490,8 @@
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 strip2 = new WidgetStrip('strip2', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
-                mask.removeChildWidget = sinon.stub();
-                mask.appendChildWidget = sinon.stub().withArgs(strip2);
+                self.sandbox.stub(mask, "removeChildWidget");
+                self.sandbox.stub(mask, "appendChildWidget").withArgs(strip2);
                 mask.setWidgetStrip(strip2);
                 assertTrue("New strip added", mask.appendChildWidget.calledOnce);
             }
@@ -470,6 +499,7 @@
     };
 
     this.MaskTest.prototype.testGetLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -482,13 +512,14 @@
                 device = application.getDevice();
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
-                device.getElementSize = sinon.stub().returns({width: 50, height: 50});
+                self.sandbox.stub(device, "getElementSize").returns({width: 50, height: 50});
                 assertEquals("getLength length returns length of mask element", 50, mask.getLength());
             }
         );
     };
 
     this.MaskTest.prototype.testGetLengthPrefersSetLengthOverMeasuredLength = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -502,7 +533,7 @@
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
                 mask.setLength(27);
-                device.getElementSize = sinon.stub();
+                self.sandbox.stub(device, "getElementSize");
                 assertEquals("getLength length returns set length of mask element", 27, mask.getLength());
                 assertEquals("device.getElementSize is never called", 0, device.getElementSize.callCount);
             }
@@ -510,6 +541,7 @@
     };
 
     this.MaskTest.prototype.testMaskClassSet = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -520,7 +552,7 @@
             function (application, Mask, WidgetStrip, verticalOrientation) {
                 var mask, strip1, device, classStub;
                 device = application.getDevice();
-                classStub = this.sandbox.stub(Mask.prototype, 'addClass').withArgs('carouselmask');
+                classStub = self.sandbox.stub(Mask.prototype, 'addClass').withArgs('carouselmask');
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
 
@@ -530,6 +562,7 @@
     };
 
     this.MaskTest.prototype.testMaskSetsOrientationClass = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -541,7 +574,7 @@
                 var mask, strip1, device, classStub, orientationStyle;
                 orientationStyle = verticalOrientation.styleClass();
                 device = application.getDevice();
-                classStub = this.sandbox.stub(Mask.prototype, 'addClass').withArgs(orientationStyle);
+                classStub = self.sandbox.stub(Mask.prototype, 'addClass').withArgs(orientationStyle);
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
 
@@ -551,6 +584,7 @@
     };
 
     this.MaskTest.prototype.testGetLengthGetsDimensionFromOrientation = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -562,9 +596,9 @@
                 var mask, strip1, device, length;
 
                 device = application.getDevice();
-                this.sandbox.stub(device);
+                self.sandbox.stub(device);
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
-                this.sandbox.stub(verticalOrientation, 'dimension').returns("test");
+                self.sandbox.stub(verticalOrientation, 'dimension').returns("test");
                 mask = new Mask('testMask', strip1, verticalOrientation);
                 device.getElementSize.returns({height: 20, test: 50});
                 length = mask.getLength();
@@ -575,6 +609,7 @@
     };
 
     this.MaskTest.prototype.testMaskPassesOrientationToSpinner = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -587,8 +622,8 @@
                 var mask, strip1, device, length;
 
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
                 strip1 = new WidgetStrip('strip1', verticalOrientation);
                 mask = new Mask('testMask', strip1, verticalOrientation);
 
@@ -600,6 +635,7 @@
     };
 
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex0WithAlignPoint0 = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -611,12 +647,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 assertEquals([0, 1, 2], mask.indicesVisibleWhenAlignedToIndex(0));
@@ -625,6 +661,7 @@
     };
 
     this.MaskTest.prototype.testVisibleIndicesBetweenCurrentAndFutureAlignIndexSetOnStripBeforeAlign = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -636,12 +673,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 strip.needsVisibleIndices.returns(true);
@@ -655,6 +692,7 @@
     };
 
     this.MaskTest.prototype.testVisibleIndicesBetweenCurrentAndFutureAlignIndexSetOnStripBeforeAlignToLast = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -666,12 +704,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 strip.needsVisibleIndices.returns(true);
@@ -685,6 +723,7 @@
     };
 
     this.MaskTest.prototype.testVisibleIndicesSetAfterAlignIfStripNeedsThem = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -696,12 +735,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 strip.needsVisibleIndices.returns(true);
@@ -715,6 +754,7 @@
     };
 
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex2WithAlignPoint0 = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -726,12 +766,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 assertEquals([2, 3, 4], mask.indicesVisibleWhenAlignedToIndex(2));
@@ -740,6 +780,7 @@
     };
 
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex0WithAlignPoint10 = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -751,12 +792,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(10);
@@ -766,6 +807,7 @@
     };
 
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex1WithAlignPoint10 = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -777,12 +819,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(10);
@@ -792,6 +834,7 @@
     };
 
     this.MaskTest.prototype.testIndicesVisibleAtAlignedIndex1WithAlignPoint10 = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -803,12 +846,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(10);
@@ -818,6 +861,7 @@
     };
 
     this.MaskTest.prototype.testNoIndicesVisibleAtZeroSizedMask = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -829,12 +873,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 0, height: 0});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(10);
@@ -844,6 +888,7 @@
     };
 
     this.MaskTest.prototype.testIndexBeforeMaskNotVisible = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -855,12 +900,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(-10);
@@ -870,6 +915,7 @@
     };
 
     this.MaskTest.prototype.testIndexAfterMaskNotVisible = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -881,12 +927,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(25);
@@ -896,6 +942,7 @@
     };
 
     this.MaskTest.prototype.testIndexJustInsideMaskVisible = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -907,12 +954,12 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex = this.sandbox.stub().returns(10);
+                strip.lengthOfWidgetAtIndex.returns(10);
                 device.getElementSize.returns({width: 25, height: 25});
                 strip.getChildWidgetCount.returns(5);
                 mask.setAlignPoint(24);
@@ -922,6 +969,7 @@
     };
 
     this.MaskTest.prototype.testStopAnimationPassesThroughToSpinner = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -933,9 +981,9 @@
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
                 var device, mask, strip;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
                 mask.stopAnimation();
@@ -945,6 +993,7 @@
     };
 
     this.MaskTest.prototype.testBeforeAlignToFiresBeforeAlignEventOnStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -958,10 +1007,10 @@
                 var device, mask, strip, targetIndex;
                 targetIndex = 3;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
-                this.sandbox.stub(BeforeAlignEvent.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(BeforeAlignEvent.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
                 mask.beforeAlignTo(0, targetIndex);
@@ -979,6 +1028,7 @@
     };
 
     this.MaskTest.prototype.testAfterAlignToFiresBeforeAlignEventOnStrip = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -992,10 +1042,10 @@
                 var device, mask, strip, targetIndex;
                 targetIndex = 3;
                 device = application.getDevice();
-                this.sandbox.stub(device);
-                this.sandbox.stub(Spinner.prototype);
-                this.sandbox.stub(WidgetStrip.prototype);
-                this.sandbox.stub(AfterAlignEvent.prototype);
+                self.sandbox.stub(device);
+                self.sandbox.stub(Spinner.prototype);
+                self.sandbox.stub(WidgetStrip.prototype);
+                self.sandbox.stub(AfterAlignEvent.prototype);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
                 mask.afterAlignTo(targetIndex);

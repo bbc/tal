@@ -33,8 +33,7 @@
         this.sandbox.restore();
     };
 
-    this.AlignFirstHandlerTest.prototype.runTest = function (queue, fn) {
-        var self = this;
+    var runTest = function (self, queue, fn) {
         function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
             self.sandbox.stub(WidgetStrip.prototype);
             self.sandbox.stub(Mask.prototype);
@@ -60,7 +59,7 @@
         );
     };
 
-    this.AlignFirstHandlerTest.prototype.createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
+    var createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
         var carousel, handler;
         carousel = new CarouselCore('myCarousel', orientation);
         handler = new Handler();
@@ -68,18 +67,11 @@
         return carousel;
     };
 
-    this.AlignFirstHandlerTest.prototype.createContainerAndAppend = function (Container, toAppend) {
-        var container;
-        container = new Container();
-        container.appendChildWidget(toAppend);
-        return container;
-    };
-
     this.AlignFirstHandlerTest.prototype.testHandlerCausesSetActiveIndexOnBeforeAlign = function (queue) {
-        this.runTest(queue,
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 targetIndex = 1;
                 this.sandbox.spy(carousel, 'setActiveIndex');
 
@@ -91,10 +83,10 @@
     };
 
     this.AlignFirstHandlerTest.prototype.testHandlerRespondsOnlyToOwnCarouselEvents = function (queue) {
-        this.runTest(queue,
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, AfterAlignEvent) {
                 var carousel, afterAlignEvent, targetIndex;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                 targetIndex = 1;
                 this.sandbox.spy(carousel, 'setActiveIndex');
 
