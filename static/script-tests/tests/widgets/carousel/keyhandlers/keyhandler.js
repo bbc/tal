@@ -33,8 +33,7 @@
         this.sandbox.restore();
     };
 
-    this.KeyHandlerTest.prototype.runTest = function (queue, fn) {
-        var self = this;
+    var runTest = function (self, queue, fn) {
         function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
             self.sandbox.stub(WidgetStrip.prototype);
             self.sandbox.stub(Mask.prototype);
@@ -60,7 +59,7 @@
         );
     };
 
-    this.KeyHandlerTest.prototype.createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
+    var createCarouselAndAttachHandler = function (CarouselCore, Handler, orientation) {
         var carousel, handler;
         carousel = new CarouselCore('myCarousel', orientation);
         handler = new Handler();
@@ -68,7 +67,7 @@
         return carousel;
     };
 
-    this.KeyHandlerTest.prototype.createContainerAndAppend = function (Container, toAppend) {
+    var createContainerAndAppend = function (Container, toAppend) {
         var container;
         container = new Container();
         container.appendChildWidget(toAppend);
@@ -76,12 +75,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerStopsUpKeyPropogation = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(upEvent);
                 assertFalse(container.bubbleEvent.called);
@@ -90,12 +90,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerStopsDownKeyPropogation = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(upEvent);
                 assertFalse(container.bubbleEvent.called);
@@ -104,12 +105,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerBubblesLeftKeyEvent = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, container, upEvent;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_LEFT);
                 carousel.bubbleEvent(upEvent);
                 assertTrue(container.bubbleEvent.called);
@@ -118,12 +120,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerCausesUpKeyToAlignPrevious = function (queue) {
-        this.runTest(queue,
+	var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-                Navigator.prototype.previousIndex = this.sandbox.stub().returns(3);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignPrevious');
+		Navigator.prototype.previousIndex.returns(3);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                self.sandbox.spy(carousel, 'alignPrevious');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(upEvent);
                 assertTrue(carousel.alignPrevious.calledOnce);
@@ -132,12 +135,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerCausesDownKeyToAlignNext = function (queue) {
-        this.runTest(queue,
+	var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-                Navigator.prototype.nextIndex = this.sandbox.stub().returns(3);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignNext');
+		Navigator.prototype.nextIndex.returns(3);
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                self.sandbox.spy(carousel, 'alignNext');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(upEvent);
                 assertTrue(carousel.alignNext.calledOnce);
@@ -146,12 +150,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
-        this.runTest(queue,
+	var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, upEvent;
                 Navigator.prototype.previousIndex.returns(null);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignPrevious');
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                self.sandbox.spy(carousel, 'alignPrevious');
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(upEvent);
                 assertFalse(carousel.alignPrevious.calledOnce);
@@ -160,12 +165,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnDownWhenNoNextIndex = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, downEvent;
                 Navigator.prototype.nextIndex.returns(null);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                this.sandbox.spy(carousel, 'alignNext');
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                self.sandbox.spy(carousel, 'alignNext');
                 downEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(downEvent);
                 assertFalse(carousel.alignNext.calledOnce);
@@ -174,13 +180,14 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerBubblesUpEventWhenNoPreviousIndex = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, upEvent, container;
                 Navigator.prototype.previousIndex.returns(null);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(upEvent);
                 assertTrue(container.bubbleEvent.called);
@@ -189,13 +196,14 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerBubblesDownEventWhenNoNextIndex = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, downEvent, container;
                 Navigator.prototype.nextIndex.returns(null);
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 downEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(downEvent);
                 assertTrue(container.bubbleEvent.called);
@@ -204,12 +212,13 @@
     };
 
     this.KeyHandlerTest.prototype.testHorizontalHandlerStopsLeftKeyPropogation = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
                 var carousel, container, upEvent;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler, CarouselCore.orientations.HORIZONTAL);
-                container = this.createContainerAndAppend(Container, carousel);
-                container.bubbleEvent = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler, CarouselCore.orientations.HORIZONTAL);
+                container = createContainerAndAppend(Container, carousel);
+                self.sandbox.stub(container, "bubbleEvent");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_LEFT);
                 carousel.bubbleEvent(upEvent);
                 assertFalse(container.bubbleEvent.called);
@@ -218,11 +227,12 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerPassesEmptyAnimationOptionsByDefault = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent;
-                carousel = this.createCarouselAndAttachHandler(CarouselCore, Handler);
-                carousel.alignNext = this.sandbox.stub();
+                carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
+                self.sandbox.stub(carousel, "alignNext");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(upEvent);
                 assertEquals("Animation object empty by default", {}, carousel.alignNext.firstCall.args[0]);
@@ -231,7 +241,8 @@
     };
 
     this.KeyHandlerTest.prototype.testHandlerPassesSpecifiedAnimationOptions = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, upEvent, handler, options;
                 options = {test: "test"};
@@ -239,7 +250,7 @@
                 handler = new Handler();
                 handler.setAnimationOptions(options);
                 handler.attach(carousel);
-                carousel.alignNext = this.sandbox.stub();
+                self.sandbox.stub(carousel, "alignNext");
                 upEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(upEvent);
                 assertEquals("Animation object empty by default", options, carousel.alignNext.firstCall.args[0]);
@@ -248,7 +259,8 @@
     };
 
     this.KeyHandlerTest.prototype.testCallsCompleteBeforeNext = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, nextEvent, handler, options;
                 options = {test: "test"};
@@ -256,8 +268,8 @@
                 handler = new Handler();
                 handler.setAnimationOptions(options);
                 handler.attach(carousel);
-                carousel.alignNext = this.sandbox.stub();
-                carousel.completeAlignment = this.sandbox.stub();
+                self.sandbox.stub(carousel, "alignNext");
+                self.sandbox.stub(carousel, "completeAlignment");
                 nextEvent = new KeyEvent('keydown', KeyEvent.VK_DOWN);
                 carousel.bubbleEvent(nextEvent);
                 assertTrue("completeAlignment called", carousel.completeAlignment.calledOnce);
@@ -267,7 +279,8 @@
     };
 
     this.KeyHandlerTest.prototype.testCallsCompleteBeforePrevious = function (queue) {
-        this.runTest(queue,
+        var self = this;
+        runTest(this, queue,
             function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container) {
                 var carousel, previousEvent, handler, options;
                 options = {test: "test"};
@@ -275,8 +288,8 @@
                 handler = new Handler();
                 handler.setAnimationOptions(options);
                 handler.attach(carousel);
-                carousel.alignPrevious = this.sandbox.stub();
-                carousel.completeAlignment = this.sandbox.stub();
+                self.sandbox.stub(carousel, "alignPrevious");
+                self.sandbox.stub(carousel, "completeAlignment");
                 previousEvent = new KeyEvent('keydown', KeyEvent.VK_UP);
                 carousel.bubbleEvent(previousEvent);
                 assertTrue("completeAlignment called", carousel.completeAlignment.calledOnce);

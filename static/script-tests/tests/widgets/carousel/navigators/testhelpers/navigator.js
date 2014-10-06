@@ -175,7 +175,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
             testSetContainerCalledDuringInit: function (NavClass, sandbox) {
                 var navigator, container;
                 container = {test: 'test'};
-                NavClass.prototype.setContainer = sandbox.stub();
+                sandbox.stub(NavClass.prototype, "setContainer");
                 navigator = new NavClass(container);
                 assertTrue("Container set from constructor", NavClass.prototype.setContainer.calledOnce);
             },

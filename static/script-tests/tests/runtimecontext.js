@@ -78,8 +78,12 @@
 	// Helper
 	function DoTest (queue, test) {
 		queuedRequire(queue, ["antie/runtimecontext"], function(RuntimeContext) { // Make sure the class under test is available
+			var original = RuntimeContext.getCurrentApplication();
 			RuntimeContext.clearCurrentApplication(); // Start from scratch each time
 			test(RuntimeContext); // Run the actual test code
+			// tear down
+			RuntimeContext.clearCurrentApplication();
+			RuntimeContext.setCurrentApplication(original);
 		});
 	}
 })();

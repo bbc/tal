@@ -55,13 +55,14 @@
     };
     
         this.TransitionEndPointsTest.prototype.testConstructorWithOptionsCallsSetFromOptions = function(queue) {
+	var self = this;
         var transEnds;
         loadTEP(
             queue, 
             function(TransitionEndPoints) {
                 var options, setOptionsSpy;
                 options = {};
-                setOptionsSpy = sinon.spy(TransitionEndPoints.prototype, "setFromOptions");
+                setOptionsSpy = self.sandbox.spy(TransitionEndPoints.prototype, "setFromOptions");
                 transEnds = new TransitionEndPoints(options);
                 assert(setOptionsSpy.calledOnce);
                 assert(setOptionsSpy.calledWith(options));

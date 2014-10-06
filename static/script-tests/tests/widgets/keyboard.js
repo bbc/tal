@@ -58,6 +58,15 @@
 	
 	};
 	
+	var _verifyButton = function (keyboard, button, expectedCol, expectedRow, expectedCharacter) {
+		var expectedId = "id_" +expectedCharacter+ "_" +expectedCol+ "_" +expectedRow;
+	
+		assertEquals(expectedId, button.id);
+		assert(button.hasClass("key" + expectedCharacter));
+		assertEquals(expectedCharacter, button.getDataItem());
+		assertEquals(keyboard.getWidgetAt(expectedCol, expectedRow), button);
+	};
+	
 	this.KeyboardTest.prototype.testKeyboardBuiltWithCorrectNumberOfRowsAndCols = function (queue) {
 		expectAsserts(25);
 
@@ -71,33 +80,16 @@
 
  				assertEquals(6, keyboard.getChildWidgets().length);
 
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[0], 0, 0, "a");
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[1], 1, 0, "b");
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[2], 2, 0, "c");
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[3], 0, 1, "d");
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[4], 1, 1, "e");
-				this._verifyButton(keyboard, keyboard.getChildWidgets()[5], 2, 1, "f");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[0], 0, 0, "a");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[1], 1, 0, "b");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[2], 2, 0, "c");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[3], 0, 1, "d");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[4], 1, 1, "e");
+				_verifyButton(keyboard, keyboard.getChildWidgets()[5], 2, 1, "f");
 		});
 	};
 	
-	this.KeyboardTest.prototype._verifyButton = function (keyboard, button, expectedCol, expectedRow, expectedCharacter) {
-		var expectedId = "id_" +expectedCharacter+ "_" +expectedCol+ "_" +expectedRow;
-	
-		assertEquals(expectedId, button.id);
-		assert(button.hasClass("key" + expectedCharacter));
-		assertEquals(expectedCharacter, button.getDataItem());
-		assertEquals(keyboard.getWidgetAt(expectedCol, expectedRow), button);
-	};
-	
-	this.KeyboardTest.prototype.testKeyboardBuiltWithSpaceKey = function (queue) {
-		this._verifySpecialKeyBuildsCorrectly(queue, " ", "SPACE");
-	};
-
-	this.KeyboardTest.prototype.testKeyboardBuiltWithDelKey = function (queue) {
-		this._verifySpecialKeyBuildsCorrectly(queue, "-", "DEL");
-	};
-	
-	this.KeyboardTest.prototype._verifySpecialKeyBuildsCorrectly = function(queue, triggerCharacter, buttonText) {
+	var _verifySpecialKeyBuildsCorrectly = function(queue, triggerCharacter, buttonText) {
 		expectAsserts(3);
 
 		queuedApplicationInit(
@@ -112,6 +104,14 @@
  				assertEquals(buttonText, firstButton.getDataItem());
  				assertEquals(1, keyboard.getChildWidgets().length);
 			});		
+	};
+	
+	this.KeyboardTest.prototype.testKeyboardBuiltWithSpaceKey = function (queue) {
+		_verifySpecialKeyBuildsCorrectly(queue, " ", "SPACE");
+	};
+
+	this.KeyboardTest.prototype.testKeyboardBuiltWithDelKey = function (queue) {
+		_verifySpecialKeyBuildsCorrectly(queue, "-", "DEL");
 	};
 	
 	this.KeyboardTest.prototype.testKeyboardBuiltWithEmptyNonFunctioningSpacer = function (queue) {

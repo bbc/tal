@@ -25,6 +25,16 @@
 (function() {
 	this.HorizontalCarouselTest = AsyncTestCase("HorizontalCarousel");
 
+	var addTestButtons = function(noButtonsReq, widget, Button) {
+		for(var i = 0; i < noButtonsReq; i++) {
+			var button = new Button();
+			widget.appendChildWidget(button);
+			button.outputElement.style.position = "relative";
+			button.outputElement.style.width = "100px";
+			button.outputElement.style.height = "100px";
+			button.outputElement.style.outline = "1px solid blue";
+		}
+	}
 	this.HorizontalCarouselTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
 	};
@@ -110,8 +120,6 @@
 
                 var deviceCreateListSpy = this.sandbox.spy(device, 'showElement');
                 widget.show({});
-
-                jstestdriver.console.log( deviceCreateListSpy.args[ 0 ][ 0 ].el );
 
                 assertEquals( "mask", widget._maskElement, deviceCreateListSpy.args[ 0 ][ 0 ].el );
                 assertEquals( "anim", !animate, deviceCreateListSpy.args[ 0 ][ 0 ].skipAnim );
@@ -308,7 +316,6 @@
 					widget.setActiveChildIndex(1, true);
 
 					assert(deviceScrollElementSpy.called);
-
 					var pos = deviceScrollElementSpy.getCall(0).args[0].to.left;
 					assertEquals(75, pos);
 				}
@@ -418,22 +425,22 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(3, widget, Button);
+					addTestButtons(3, widget, Button);
 
 					// Position carousel at right-most item (of 3)
 					widget.setActiveChildIndex(2, true);
 					
 					// Set up spy to watch for movement, then trigger it
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 					
 					// Move left - now on centre item
 					widget.selectPreviousChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
 					// Expect carousel to be repositioned to 100px (one item) from the left-hand edge
 					// (middle item is aligned to the left as per ALIGNMENT_LEFT option)
-					assertEquals(100, deviceScrollElementSpy.getCall(0).args[0].to.left);
+					assertEquals(100, deviceScrollElementStub.getCall(0).args[0].to.left);
 				}
 		);
 	};
@@ -456,22 +463,22 @@
 
 					application.getRootWidget().appendChildWidget(widget);
 
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					// Position carousel at left-most item
 					widget.setActiveChildIndex(0, true);
 					
 					// Set up spy to watch for movement, then trigger it
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 					
 					// Move right - now on centre item
 					widget.selectNextChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
 					// Expect carousel to be repositioned to 100px (one item) from the left-hand edge
 					// (middle item is aligned to the left as per ALIGNMENT_LEFT option)
-					assertEquals(100, deviceScrollElementSpy.getCall(0).args[0].to.left);
+					assertEquals(100, deviceScrollElementStub.getCall(0).args[0].to.left);
 				}
 		);
  	};
@@ -796,16 +803,16 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
 
 					widget.setActiveChildIndex(0, false); // Don't reposition
 					widget.selectNextChildWidget();
 
-					assertEquals(1, deviceScrollElementSpy.callCount);
+					assertEquals(1, deviceScrollElementStub.callCount);
 					
-					var onComplete = deviceScrollElementSpy.getCall(0).args[0].onComplete;
+					var onComplete = deviceScrollElementStub.getCall(0).args[0].onComplete;
 					assertEquals('function', typeof onComplete);
 				}
 		);
@@ -828,14 +835,15 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
-
+					var deviceScrollElementStub = this.sandbox.stub(device, 'scrollElementTo');
+					var scrollHandle = { };
+					deviceScrollElementStub.returns(scrollHandle);
 					widget.setActiveChildIndex(0, false); // Don't reposition
 					widget.selectNextChildWidget();
 
-					assert('Scrollhandle set', !!widget._scrollHandle);
+					assertSame('Scrollhandle set', scrollHandle,  widget._scrollHandle);
 				}
 		);
 	};
@@ -861,7 +869,7 @@
 					el.style.width = "150px";
 
 					application.getRootWidget().appendChildWidget(widget);					
-					this.addTestButtons(2, widget, Button);
+					addTestButtons(2, widget, Button);
 
 					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
@@ -884,67 +892,4 @@
 
 
 	};
-	this.HorizontalCarouselTest.prototype.addTestButtons = function(noButtonsReq, widget, Button) {
-		for(var i = 0; i < noButtonsReq; i++) {
-			var button = new Button();
-			widget.appendChildWidget(button);
-			button.outputElement.style.position = "relative";
-			button.outputElement.style.width = "100px";
-			button.outputElement.style.height = "100px";
-			button.outputElement.style.outline = "1px solid blue";
-		}
-	}
 })();
-/*
-
-			init: function(id, itemFormatter, dataSource, overrideAnimation) {
-
-			render: function(device) {
-
-			refreshViewport: function() {
-
-			setActiveChildWidget: function(widget, reposition) {
-
-			setActiveChildIndex: function(index, reposition) {
-
-			setDataSource: function(data) {
-
-			rebindDataSource: function() {
-
-			_onKeyDown: function(evt) {
-
-			_onDataBound: function(evt) {
-
-			setWrapMode: function(wrapMode) {
-
-			setViewportMode: function(viewportMode, size) {
-
-			setHasMultiWidthItems: function(multiWidthItems) {
-
-			setActivateThenScroll: function(activateThenScroll) {
-
-			setKeepHidden: function(keepHidden) {
-
-			getSelectedChildWidgetIndex: function() {
-
-			selectPreviousChildWidget: function() {
-
-			selectNextChildWidget: function() {
-
-			_moveChildWidgetSelection: function(direction) {
-
-			_isAnimationOverridden : function(animate) {
-
-
-		HorizontalCarousel.SELECTION_DIRECTION_RIGHT = 'right';
-		HorizontalCarousel.SELECTION_DIRECTION_LEFT = 'left';
-
-		HorizontalCarousel.WRAP_MODE_NONE = 0;
-		HorizontalCarousel.WRAP_MODE_NAVIGATION_ONLY = 1;
-		HorizontalCarousel.WRAP_MODE_VISUAL = 2;
-
-		HorizontalCarousel.VIEWPORT_MODE_NONE = 0;
-		HorizontalCarousel.VIEWPORT_MODE_CLASSES = 1;
-		HorizontalCarousel.VIEWPORT_MODE_DOM = 2;
-
-*/
