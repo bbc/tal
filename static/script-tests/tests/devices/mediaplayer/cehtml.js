@@ -311,6 +311,18 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testStatusEventFirerCleanedUpOnReset = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            var clearIntervalSpy = this.sandbox.spy(window,'clearInterval');
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.reset();
+            var originalCount = window.clearInterval.callCount;
+            assert(clearIntervalSpy.calledOnce);
+        });
+    };
+
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check

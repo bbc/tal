@@ -291,7 +291,7 @@ require.def(
                      }
                  }
 
-                self._updateInterval = setInterval(function() {
+                self._updateInterval = window.setInterval(function() {
                     self._onStatus();
                 }, 900);
             },
@@ -307,6 +307,7 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 if(this._mediaElement) {
+                    window.clearInterval(this._updateInterval);
                     this._destroyMediaElement();
                 }
             },
