@@ -101,8 +101,26 @@
         });
     };
 
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testNonNetworkErrorAtEndIsReportedAsError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            stubCreateElementResults.video.currentTime = 100;
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer, 1);
+
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+        });
+    };
+
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // Refcator/comment/improve the way we bring in the base html5 tests
     // TODO: Non network errors are still reported as errors even when complete
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 

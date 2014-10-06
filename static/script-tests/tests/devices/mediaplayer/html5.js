@@ -61,13 +61,14 @@
         finishBuffering: function(mediaPlayer) {
             mediaEventListeners.canplay();
         },
-        emitPlaybackError: function(mediaPlayer) {
+        emitPlaybackError: function(mediaPlayer, errorCode) {
 
             // MEDIA_ERR_NETWORK == 2
+            errorCode = errorCode !== undefined ? errorCode : 2;
             // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
             // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
-            stubCreateElementResults.video.error =  { code: 2 };
-            stubCreateElementResults.audio.error =  { code: 2 };
+            stubCreateElementResults.video.error =  { code: errorCode };
+            stubCreateElementResults.audio.error =  { code: errorCode };
 
             var errorEvent = {
                 type: "error"
