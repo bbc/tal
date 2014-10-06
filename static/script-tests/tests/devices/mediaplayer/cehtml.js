@@ -322,7 +322,20 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
+            this._mediaPlayer.pause();
+            this._mediaPlayer.playFrom(10);
+
+            assert(fakeCEHTMLObject.seek.calledWith(10000));
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check

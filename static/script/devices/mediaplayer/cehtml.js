@@ -93,8 +93,8 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._mediaElement.play(1);
                         this._mediaElement.seek(seconds * 1000);
+                        this._mediaElement.play(1);
                         this._toBuffering();
                         break;
 
