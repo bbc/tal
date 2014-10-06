@@ -207,6 +207,7 @@
                 var transEl;
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 self.sandbox.spy(transEl, "getComputedStyle");
+                self.sandbox.stub(window, "getComputedStyle");
                 transEl.forceUpdate("top");
                 assert(transEl.getComputedStyle.calledOnce);
             }

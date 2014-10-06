@@ -21,7 +21,7 @@
     "testblock" :
         {
             "include" : [ "script-tests/tests/**/*.js" ],
-            "exclude" : [ "script-tests/tests/queuedrequire.js", "script-tests/tests/devices/anim/**/*.js" ]
+            "exclude" : [ "script-tests/tests/queuedrequire.js" ]
         },
 
     "serveblock" :
