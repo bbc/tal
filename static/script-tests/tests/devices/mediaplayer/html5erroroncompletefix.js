@@ -120,8 +120,4 @@
         });
     };
 
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // TODO: Non network errors are still reported as errors even when complete
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
 })();
