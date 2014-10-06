@@ -199,17 +199,16 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testForceUpdateCallsGetComputedStyle = function(queue) {
 	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
-                self.sandbox.spy(transEl, "getComputedStyle");
                 self.sandbox.stub(window, "getComputedStyle");
                 transEl.forceUpdate("top");
-                assert(transEl.getComputedStyle.calledOnce);
+                assert(window.getComputedStyle.calledOnce);
             }
         );
     };
