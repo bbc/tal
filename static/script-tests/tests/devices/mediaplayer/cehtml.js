@@ -102,13 +102,13 @@
         this.sandbox.restore();
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+    var runMediaPlayerTest = function (self, queue, action) {
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/cehtml", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                this._createElementStub = stubCreateElement(this.sandbox, application);
-                this._device = application.getDevice();
-                this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
             }, config);
     };
 
@@ -118,17 +118,19 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-            assert(this._createElementStub.calledWith("object", "mediaPlayer"));
+            assert(self._createElementStub.calledWith("object", "mediaPlayer"));
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var body = document.getElementsByTagName("body")[0];
             assertSame(fakeCEHTMLObject, body.firstChild);
@@ -137,8 +139,9 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
         expectAsserts(6);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("absolute", fakeCEHTMLObject.style.position);
             assertEquals("0px", fakeCEHTMLObject.style.top);
             assertEquals("0px", fakeCEHTMLObject.style.left);
@@ -150,25 +153,28 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectContentType = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("video/mp4", fakeCEHTMLObject.type);
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectSourceURL = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("http://testurl/", fakeCEHTMLObject.data);
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsPlay = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
 
             assert(fakeCEHTMLObject.play.calledWith(1));
         });
@@ -176,13 +182,14 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeekAndSeeksToCorrectTime = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            this._mediaPlayer.playFrom(20);
+            self._mediaPlayer.playFrom(20);
 
             assert(fakeCEHTMLObject.seek.calledWith(20000));
             assert(fakeCEHTMLObject.play.calledWith(1));
@@ -191,56 +198,60 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToPlayingWhenFinishedBuffering = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToBufferingFromPlaying = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
+            deviceMockingHooks.startBuffering(self._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingPauseWhilePlayingGoesToPaused = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            this._mediaPlayer.pause();
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
+            self._mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, self._mediaPlayer.getState());
             assert(fakeCEHTMLObject.play.calledWith(0));
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedGoesToPlaying = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            this._mediaPlayer.pause();
-            this._mediaPlayer.resume();
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            self._mediaPlayer.pause();
+            self._mediaPlayer.resume();
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
             assert(fakeCEHTMLObject.play.calledThrice);
             assertEquals(1, fakeCEHTMLObject.play.args[2][0]);
         });
@@ -248,44 +259,47 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPlayingGoesToStopped = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            this._mediaPlayer.stop();
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+            self._mediaPlayer.stop();
+            assertEquals(MediaPlayer.STATE.STOPPED, self._mediaPlayer.getState());
             assert(fakeCEHTMLObject.stop.calledOnce);
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPausedGoesToStopped = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            this._mediaPlayer.pause();
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            self._mediaPlayer.pause();
 
-            this._mediaPlayer.stop();
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+            self._mediaPlayer.stop();
+            assertEquals(MediaPlayer.STATE.STOPPED, self._mediaPlayer.getState());
             assert(fakeCEHTMLObject.stop.calledOnce);
         });
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testVideoGoesIntoCompleteStateAtTheEnd = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             deviceMockingHooks.reachEndOfMedia();
 
-            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.COMPLETE, self._mediaPlayer.getState());
             //assert(fakeCEHTMLObject.stop.calledOnce);
         });
     };
