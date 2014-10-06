@@ -377,3 +377,11 @@ assertNoMatch = function (msg, regex, actual) {
 
 	expect(regex.test(actual)).toBe(false);
 };
+
+assertBoolean = function (msg, thing) {
+    if (arguments.length < 2) {
+        thing = msg;
+    }
+
+    expect(typeof thing).toBe("boolean");
+};

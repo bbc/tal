@@ -142,14 +142,14 @@
 
     };
 
-    this.HTML5MediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+    var runMediaPlayerTest = function (self, queue, action) {
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                this._createElementStub = stubCreateElement(this.sandbox, application);
-                this._device = application.getDevice();
-                this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
-            }, this.config);
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
+            }, self.config);
     };
 
     //---------------------
@@ -158,7 +158,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementCreatedWhenSettingSourceWithVideoType = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assert(this._createElementStub.calledWith("video", "mediaPlayerVideo"));
@@ -167,7 +167,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testAudioElementCreatedWhenSettingSourceWithAudioType = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
 
             assert(this._createElementStub.calledWith("audio", "mediaPlayerAudio"));
@@ -176,7 +176,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testCreatedVideoElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var body = document.getElementsByTagName("body")[0];
@@ -186,7 +186,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.reset();
 
@@ -198,7 +198,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testCreatedAudioElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
 
             var body = document.getElementsByTagName("body")[0];
@@ -208,7 +208,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testAudioElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
             this._mediaPlayer.reset();
 
@@ -220,7 +220,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testSourceURLSetOnSetSource = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             assertEquals('http://testurl/', stubCreateElementResults.video.src);
@@ -229,7 +229,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testIfDurationIsMissingGetRangeReturnsUndefinedAndLogsAWarning = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var warnStub = this.sandbox.stub();
             this.sandbox.stub(this._device, "getLogger").returns({warn: warnStub});
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -242,7 +242,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testGetRangeGetsEndTimeFromDuration = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             stubCreateElementResults.video.duration = 60;
@@ -252,7 +252,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testVideoElementIsFullScreen = function(queue) {
         expectAsserts(6);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("absolute", stubCreateElementResults.video.style.position);
             assertEquals("0px", stubCreateElementResults.video.style.top);
@@ -265,7 +265,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testAutoplayIsTurnedOffOnMediaElementCreation = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertBoolean(stubCreateElementResults.video.autoplay);
             assertFalse(stubCreateElementResults.video.autoplay);
@@ -274,7 +274,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testErrorEventFromMediaElementCausesErrorTransitionWithCodeLogged = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
@@ -294,7 +294,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPausePassedThroughToMediaElementWhenInPlayingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -308,7 +308,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayCalledOnMediaElementWhenResumeInPausedState = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -324,7 +324,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPausePassedThroughToMediaElementWhenInBufferedState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -335,7 +335,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testLoadCalledOnMediaElementWhenSetSourceIsCalled = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assert(stubCreateElementResults.video.load.calledOnce);
         });
@@ -343,7 +343,7 @@
 
       this.HTML5MediaPlayerTests.prototype.testMediaElementPreloadAttributeIsSetToAuto = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("auto", stubCreateElementResults.video.preload);
         });
@@ -351,7 +351,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInPlayingState = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -366,7 +366,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -380,7 +380,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInCompleteState = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -396,7 +396,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInPausedState = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -412,7 +412,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
         expectAsserts(7);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(50);
@@ -432,7 +432,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInStoppedState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(110);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -442,7 +442,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromThenPauseSetsCurrentTimeAndCallsPauseOnMediaElementWhenInStoppedState = function(queue) {
         expectAsserts(8);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(50);
@@ -466,7 +466,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromZeroThenPauseDefersCallToPauseOnMediaElementWhenInStoppedState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -477,7 +477,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndDontHaveMetadata = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -492,7 +492,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInBufferingStateAndDontHaveMetadata = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -506,7 +506,7 @@
 
      this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndHasMetadata = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -521,7 +521,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromClampsWhenCalledInBufferingStateAndHasMetadata = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -535,7 +535,7 @@
 
      this.HTML5MediaPlayerTests.prototype.testStopWhenInBufferingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -547,7 +547,7 @@
 
      this.HTML5MediaPlayerTests.prototype.testStopWhenInPlayingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -561,7 +561,7 @@
 
      this.HTML5MediaPlayerTests.prototype.testStopWhenInPausedState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -576,7 +576,7 @@
 
      this.HTML5MediaPlayerTests.prototype.testStopWhenInCompleteState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -591,7 +591,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testResetRemoveAllEventListenersFromTheMediaElement = function(queue) {
         expectAsserts(8);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.reset();
 
@@ -605,37 +605,37 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         var currentAndTargetTime = 50;
-        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentAndTargetTime, currentAndTargetTime);
+        doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(this, queue, currentAndTargetTime, currentAndTargetTime);
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromJustBeforeCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         var currentTime = 50.999;
         var targetTime = 50;
-        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentTime, targetTime);
+        doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(this, queue, currentTime, targetTime);
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromJustAfterCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         var currentTime = 50;
         var targetTime = 50.999;
-        this.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(queue, currentTime, targetTime);
+        doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(this, queue, currentTime, targetTime);
     };
 
-    this.HTML5MediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue, currentTime, targetTime) {
+    var doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(self, queue, currentTime, targetTime) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        runMediaPlayerTest(self, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
 
-            var eventCallback = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventCallback);
+            var eventCallback = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventCallback);
             stubCreateElementResults.video.currentTime = currentTime;
 
-            this._mediaPlayer.playFrom(targetTime);
+            self._mediaPlayer.playFrom(targetTime);
 
             assert(eventCallback.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
@@ -645,7 +645,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPausedGoesToBufferingThenToPlaying = function(queue) {
         expectAsserts(7);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -679,7 +679,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromAfterMetadata = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 
@@ -694,7 +694,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPlayedThenStoppedGoesToBufferingThenToPlaying = function(queue) {
         expectAsserts(5);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -722,7 +722,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromBufferedTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             this._mediaPlayer.playFrom(0);
@@ -747,7 +747,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testWaitingHtml5EventWhileBufferingOnlyGivesSingleBufferingEvent = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             var eventCallback = this.sandbox.stub();
@@ -763,7 +763,7 @@
 
     this.HTML5MediaPlayerTests.prototype.testResetUnloadsMediaElementSourceAsPerGuidelines = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             stubCreateElementResults.video.load.reset();
             this.sandbox.stub(stubCreateElementResults.video, 'removeAttribute');
