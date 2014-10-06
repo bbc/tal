@@ -144,12 +144,18 @@
     };
 
     this.HTML5MediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/html5", "antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayerImpl, MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
                 this._createElementStub = stubCreateElement(this.sandbox, application);
                 this._device = application.getDevice();
                 this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
+                this._clock = sinon.useFakeTimers();
+                try {
+                    action.call(this, MediaPlayer);
+                }
+                finally {
+                    this._clock.restore();
+                }
             }, this.config);
     };
 
