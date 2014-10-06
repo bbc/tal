@@ -26,7 +26,9 @@
     // jshint newcap: false
     this.HTML5ErrorOnCompleteFixMediaPlayerTests = AsyncTestCase("HTML5ErrorOnCompleteFixMediaPlayer");
 
-    //
+    //---------------
+    // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
+    //---------------
 
     var mixins = this.HTML5MediaPlayerTests.prototype;
     for (var name in mixins) {
@@ -44,7 +46,9 @@
         deviceMockingHooks = this.deviceMockingHooks;
     };
 
-    //
+    //---------------
+    // Tests specific to the sub-modifier
+    //---------------
 
     this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testErrorOnEndOfMediaGoesToCompleteState = function(queue) {
         var mediaLength = 100;
@@ -97,9 +101,23 @@
         });
     };
 
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // TODO: Test that error report uses base functionality
-    // TODO: Non network errors are still reported as errors even when complete
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testNonNetworkErrorAtEndIsReportedAsError = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            stubCreateElementResults.video.currentTime = 100;
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer, 1);
+
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+        });
+    };
 
 })();
