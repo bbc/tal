@@ -26,7 +26,9 @@
     // jshint newcap: false
     this.HTML5ErrorOnCompleteFixMediaPlayerTests = AsyncTestCase("HTML5ErrorOnCompleteFixMediaPlayer");
 
-    //
+    //---------------
+    // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
+    //---------------
 
     var mixins = this.HTML5MediaPlayerTests.prototype;
     for (var name in mixins) {
@@ -34,17 +36,9 @@
     };
     this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5erroroncompletefix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    var stubCreateElementResults;
-    var deviceMockingHooks;
-
-    var oldSetUp = this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.setUp;
-    this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.setUp = function(queue) {
-        oldSetUp.call(this, queue);
-        stubCreateElementResults = this.stubCreateElementResults;
-        deviceMockingHooks = this.deviceMockingHooks;
-    };
-
-    //
+    //---------------
+    // Tests specific to the sub-modifier
+    //---------------
 
     this.HTML5ErrorOnCompleteFixMediaPlayerTests.prototype.testErrorOnEndOfMediaGoesToCompleteState = function(queue) {
         var mediaLength = 100;
@@ -63,14 +57,14 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: mediaLength });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this.deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: mediaLength });
+            this.deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            stubCreateElementResults.video.currentTime = currentTimeAtMediaEnd;
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this.stubCreateElementResults.video.currentTime = currentTimeAtMediaEnd;
+            this.deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
             assertEquals(MediaPlayer.EVENT.COMPLETE, eventHandler.lastCall.args[0].type);
             assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
@@ -83,14 +77,14 @@
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this.deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            this.deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            stubCreateElementResults.video.currentTime = 97;
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this.stubCreateElementResults.video.currentTime = 97;
+            this.deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
             assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
             assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
@@ -98,7 +92,7 @@
     };
 
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    // TODO: Test that error report uses base functionality
+    // Refcator/comment/improve the way we bring in the base html5 tests
     // TODO: Non network errors are still reported as errors even when complete
     // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 

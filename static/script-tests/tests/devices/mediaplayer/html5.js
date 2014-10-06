@@ -27,7 +27,7 @@
 
     this.HTML5MediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    this.HTML5MediaPlayerTests.prototype.stubCreateElementResults = undefined;
+    var stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
