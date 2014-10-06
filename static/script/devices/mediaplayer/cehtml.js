@@ -307,8 +307,18 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 if(this._mediaElement) {
-                    this._mediaElement.playTime = undefined; // FIXME
+                    this._destroyMediaElement();
                 }
+            },
+
+            _destroyMediaElement: function() {
+                //this._mediaElement.removeAttribute('src');
+                //this._mediaElement.load();
+                var device = RuntimeContext.getDevice();
+                this._mediaElement.onPlayStateChange = function() {}; //FIXME: onPlaystateChange called by finishedBuffering in mocking hooks, is this correct?
+                device.removeElement(this._mediaElement);
+                this._mediaElement = null;
+                delete this._mediaElement;
             },
 
             _toStopped: function () {
