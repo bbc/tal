@@ -29,10 +29,7 @@
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
     //---------------
 
-    var mixins = this.HTML5MediaPlayerTests.prototype;
-    for (var name in mixins) {
-        this.HTML5WaitingFixMediaPlayerTests.prototype[name] = mixins[name];
-    };
+    this.HTML5MediaPlayerTests.prototype.mixTestsIntoSubModifier(this.HTML5WaitingFixMediaPlayerTests.prototype);
     this.HTML5WaitingFixMediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var stubCreateElementResults;
@@ -44,6 +41,10 @@
         stubCreateElementResults = this.stubCreateElementResults;
         deviceMockingHooks = this.deviceMockingHooks;
     };
+
+    //-------------
+    // Test helpers
+    //-------------
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.toPlaying = function (MediaPlayer) {
         this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');

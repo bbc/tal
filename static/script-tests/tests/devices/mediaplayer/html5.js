@@ -99,6 +99,15 @@
         }
     };
 
+    this.HTML5MediaPlayerTests.prototype.mixTestsIntoSubModifier = function(destination) {
+        var source = this;
+        for (var name in source) {
+            if (source.hasOwnProperty(name)) {
+                destination[name] = source[name];
+            }
+        }
+    };
+
     this.HTML5MediaPlayerTests.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
