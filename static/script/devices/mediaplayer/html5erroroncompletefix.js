@@ -38,7 +38,7 @@ require.def(
         var NEAR_TO_END_TOLERANCE = 2;
         var Player = HTML5MediaPlayer.extend({
             _onDeviceError: function() {
-                if (this._isNearEnd() && this._mediaElement.error.code === 2) {
+                if (this._isNearEnd() && this._isNetworkError()) {
                     this._toComplete();
                 } else {
                     this._super();
@@ -50,6 +50,10 @@ require.def(
                 if (!range) { return false; }
                 var distanceFromEnd = range.end - this.getCurrentTime();
                 return distanceFromEnd <= NEAR_TO_END_TOLERANCE;
+            },
+
+            _isNetworkError: function() {
+                return this._mediaElement.error.code === 2;
             }
         });
 
