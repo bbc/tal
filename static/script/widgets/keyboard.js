@@ -33,6 +33,8 @@ require.def('antie/widgets/keyboard',
 		'antie/events/textchangeevent'
 	],
 	function(Grid, Button, Label, KeyEvent, TextChangeEvent) {
+		'use strict';
+
 		/**
 		 * On-screen keyboard widget.
 		 * @name antie.widgets.Keyboard
@@ -59,8 +61,8 @@ require.def('antie/widgets/keyboard',
 
 				var self = this;
 				var device = self.getCurrentApplication().getDevice();
-				var multitap = device.getConfig().input.multitap;
 
+				this._multitapConfig = device.getConfig().input.multitap;
 				this._focussedCharacter = null;
 				this._currentText = "";
 				this._letterButtons = [];
@@ -149,12 +151,12 @@ require.def('antie/widgets/keyboard',
                 if(evt.keyChar) {
                     evt.stopPropagation();
                     // If the device supports multitap, multitap is enabled and a number is pressed...
-                    if(multitap && this._multiTap && /[0-9]/.test(evt.keyChar)) {
+                    if(this._multitapConfig && this._multiTap && /[0-9]/.test(evt.keyChar)) {
                         if(this._multiTapTimeout) {
                             clearTimeout(this._multiTapTimeout);
                         }
 
-                        var chars = multitap[evt.keyChar];
+                        var chars = this._multitapConfig[evt.keyChar];
                         if((evt.keyChar == this._multiTapLastKey) && this._multiTapTimeout) {
                             this._currentText = this._currentText.substring(0, this._currentText.length - 1);
                         } else {
@@ -219,7 +221,7 @@ require.def('antie/widgets/keyboard',
 						
 						if(letter == " ") { letter = "SPACE" }
 						else if(letter == "-") { letter = "DEL" }
-						else if(letter == "_") { continue };
+						else if(letter == "_") { continue }
 
 						var button = new Button(this.id + '_' + letter + "_" + col + "_" + row);
 						button.setDataItem(letter);

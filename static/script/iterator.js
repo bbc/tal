@@ -27,6 +27,8 @@
 require.def('antie/iterator',
 	['antie/class'],
 	function(Class) {
+		'use strict';
+
 		/**
 		 * Base iterator. Keeps a reference to an array of objects and the current position within it.
 		 * @name antie.Iterator

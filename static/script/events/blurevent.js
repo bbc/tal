@@ -27,6 +27,8 @@
 require.def('antie/events/blurevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when focus is removed from a {@link antie.widgets.Button}.
 		 * @name antie.events.BlurEvent

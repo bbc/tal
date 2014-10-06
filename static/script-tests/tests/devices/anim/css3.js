@@ -778,8 +778,6 @@
                 });
                 setSpy = this.sandbox.spy(el.style, 'setProperty');
 
-                var clock = sinon.useFakeTimers();
-
                 options = {
                     el: el,
                     from: { width: 60 },
@@ -791,12 +789,7 @@
 
                 device.tweenElementStyle(options);
                 assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
-
-                clock.tick(50);
-
                 assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
-
-                clock.restore();
             },
             config
         );

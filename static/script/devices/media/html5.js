@@ -1,3 +1,5 @@
+/* Surpression of JSHint 'Don't make functions within a loop' */
+/* jshint -W083 */
 /**
  * @fileOverview Requirejs module containing HTML5 video and audio media wrapper
  *
@@ -36,6 +38,8 @@ require.def(
         'antie/application'
     ],
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, Application) {
+        'use strict';
+
         var currentPlayer = null;
         var isMuted = null;
         var currentVolume = -1;
@@ -308,7 +312,7 @@ require.def(
                     delete sourceElements[sourceElementIndex];
                 }
 
-                delete sourceElements;
+                sourceElements = null;
 
 
                 // Remove event listeners

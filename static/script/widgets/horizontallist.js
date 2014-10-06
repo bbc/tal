@@ -30,6 +30,8 @@ require.def('antie/widgets/horizontallist',
 	 	'antie/events/keyevent'
 	],
 	function(List, KeyEvent) {
+		'use strict';
+
 		/**
 		 * The HorizontalList widget is a container widget that supports spatial navigation between items using {@link KeyEvent.VK_LEFT} and {@link KeyEvent.VK_RIGHT}.
 		 * @name antie.widgets.HorizontalList

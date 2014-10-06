@@ -1,0 +1,37 @@
+{
+    "globals": {
+        "jQuery": true,
+        "console": true,
+        "module": true,
+        "document": true,
+        "require": true,
+        "window": true,
+        "Image": true,
+        "XMLHttpRequest": true,
+        "setTimeout": true,
+        "clearTimeout": true,
+        "clearInterval": true,
+        "navigator": true,
+        "setInterval": true,
+        "define": true,
+        "HTMLMediaElement": true,
+        "alert": true,
+        "antie": true,
+        "history": true,
+        "unescape": true
+    },
+    "asi": true,
+    "laxbreak": true,
+    "strict": true,
+    "noarg": true,
+    "validthis": true,
+    "latedef": "nofunc",
+    "undef": true,
+    "funcscope": true,
+    "-W041": false, // Treble equals
+    "-W058": false, // Missing "()" invoking a constructor
+    "-W065": false, // Missing radix parameter
+    "boss": true,
+    "newcap": false,
+    "es3": true
+}

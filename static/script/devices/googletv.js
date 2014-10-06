@@ -30,6 +30,8 @@ require.def('antie/devices/googletv',
 		'antie/runtimecontext'
 	],
 	function(BrowserDevice, RuntimeContext) {
+		'use strict';
+
 		return BrowserDevice.extend({
 			init: function(config) {
 				// Change Application::getBestFitLayout to find the layout with a size

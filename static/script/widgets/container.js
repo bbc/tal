@@ -31,6 +31,8 @@ require.def('antie/widgets/container',
         'antie/events/blurevent'
 	],
 	function(Widget, FocusEvent, BlurEvent) {
+		'use strict';
+
 		/**
 		 * The abstract Container widget class represents any Widget that may contain children widgets.
 		 * @name antie.widgets.Container

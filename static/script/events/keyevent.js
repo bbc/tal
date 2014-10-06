@@ -27,6 +27,8 @@
 require.def('antie/events/keyevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when key/remote control buttons are pressed.
 		 * Any keycodes contained in these events will have been mapped to
@@ -43,16 +45,17 @@ require.def('antie/events/keyevent',
 			 * @ignore
 			 */
 			init: function(type, keyCode) {
+				var index;
 				this.keyCode = keyCode;
 
 				// Map hardware alphanumeric key codes back into characters (and space)
 				if(keyCode >= KeyEvent.VK_0 && keyCode <= KeyEvent.VK_9) {
-					var index = keyCode - KeyEvent.VK_0;
+					index = keyCode - KeyEvent.VK_0;
 					this.keyChar = String.fromCharCode("0".charCodeAt(0) + index);
 				} else if(keyCode == KeyEvent.VK_SPACE) {
 					this.keyChar = " ";
 				} else if(keyCode >= KeyEvent.VK_A && keyCode <= KeyEvent.VK_Z) {
-					var index = keyCode - KeyEvent.VK_A;
+					index = keyCode - KeyEvent.VK_A;
 					this.keyChar = String.fromCharCode("A".charCodeAt(0) + index);
 				}
 

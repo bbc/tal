@@ -38,6 +38,7 @@ require.def(
     ],
 
     function(Device, MediaInterface, MediaEvent, MediaErrorEvent, MediaSourceErrorEvent, MediaSource, SeekState, RunTimeContext ) {
+        'use strict';
 
         var CEHTMLPlayer = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {

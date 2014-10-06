@@ -28,6 +28,8 @@ require.def(
 	'antie/storageprovider',
 	['antie/class'],
 	function(Class) {
+		'use strict';
+
 		var StorageProvider = Class.extend({
 			init: function() {
 				this._valueCache = {};

@@ -30,6 +30,8 @@ require.def('antie/widgets/horizontalprogress',
 	 	'antie/widgets/label'
 	],
 	function(Container, Label) {
+		'use strict';
+
 		/**
 		 * The horizontal progress widget provides a UI control for showing progress (with associated label)
 		 * @name antie.widgets.HorizontalProgress

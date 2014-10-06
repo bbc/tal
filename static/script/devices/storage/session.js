@@ -28,6 +28,8 @@ require.def(
 	'antie/devices/storage/session',
 	['antie/storageprovider'],
 	function(StorageProvider) {
+		'use strict';
+
 		var namespaces = {};
 		var SessionStorage = StorageProvider.extend({});
 
