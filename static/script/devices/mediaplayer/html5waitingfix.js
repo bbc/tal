@@ -27,16 +27,15 @@
 require.def(
     "antie/devices/mediaplayer/html5waitingfix",
     [
-        "antie/runtimecontext",
         "antie/devices/device",
         "antie/devices/mediaplayer/mediaplayer",
         "antie/devices/mediaplayer/html5"
     ],
-    function(RuntimeContext, Device, MediaPlayer, HTML5MediaPlayer) {
+    function(Device, MediaPlayer, HTML5MediaPlayer) {
         "use strict";
 
         var Player = HTML5MediaPlayer.extend({
-            
+
             init: function() {
                 this._super();
                 this._bufferingTimer = null;

@@ -23,6 +23,7 @@
  */
 
 (function() {
+    // jshint newcap: false
     this.HTML5WaitingFixMediaPlayerTests = AsyncTestCase("HTML5WaitingFixMediaPlayer");
 
     //---------------

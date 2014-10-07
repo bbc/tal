@@ -28,11 +28,10 @@
 require.def(
     "antie/devices/mediaplayer/html5erroroncompletefix",
     [
-        "antie/devices/mediaplayer/mediaplayer",
         "antie/devices/mediaplayer/html5",
         "antie/devices/device"
     ],
-    function(MediaPlayer, HTML5MediaPlayer, Device, RuntimeContext) {
+    function(HTML5MediaPlayer, Device) {
         "use strict";
 
         var NEAR_TO_END_TOLERANCE = 2;
