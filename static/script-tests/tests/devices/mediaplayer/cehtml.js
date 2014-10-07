@@ -186,7 +186,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsPlay = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -196,48 +196,23 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromCallsSeekAndSeeksToCorrectTime = function(queue) {
-        expectAsserts(2);
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhilePlayingSeeksToCorrectTime = function(queue) {
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
+            assert(fakeCEHTMLObject.play.withArgs(1).calledOnce);
             this._mediaPlayer.playFrom(20);
 
             assert(fakeCEHTMLObject.seek.calledWith(20000));
-            assert(fakeCEHTMLObject.play.calledWith(1));
+            assert(fakeCEHTMLObject.play.withArgs(1).calledTwice);
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToPlayingWhenFinishedBuffering = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-        });
-    };
-
-    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesToBufferingFromPlaying = function(queue) {
-        expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
-        });
-    };
-
-    this.CEHTMLMediaPlayerTests.prototype.testCallingPauseWhilePlayingGoesToPaused = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testCallingPauseWhilePlayingCallsPlayWithZero = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -252,7 +227,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedGoesToPlaying = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedCallsPlay = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -264,11 +239,11 @@
             this._mediaPlayer.resume();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
             assert(fakeCEHTMLObject.play.calledThrice);
-            assertEquals(1, fakeCEHTMLObject.play.args[2][0]);
+            assertEquals(1, fakeCEHTMLObject.play.lastCall.args[0]);
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPlayingGoesToStopped = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPlayingCallsStop = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -282,7 +257,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPausedGoesToStopped = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPausedCallsStop = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -297,28 +272,13 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testVideoGoesIntoCompleteStateAtTheEnd = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            deviceMockingHooks.reachEndOfMedia();
-
-            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
-            //assert(fakeCEHTMLObject.stop.calledOnce);
-        });
-    };
-
-    this.CEHTMLMediaPlayerTests.prototype.testStatusEventFirerCleanedUpOnReset = function(queue) {
-        expectAsserts(1);
+    this.CEHTMLMediaPlayerTests.prototype.testStatusEventTimerCleanedUpOnReset = function(queue) {
+        expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             var clearIntervalSpy = this.sandbox.spy(window,'clearInterval');
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assert(clearIntervalSpy.notCalled);
             this._mediaPlayer.reset();
-            var originalCount = window.clearInterval.callCount;
             assert(clearIntervalSpy.calledOnce);
         });
     };
@@ -357,7 +317,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromTimeOtherThanZero = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -386,7 +346,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMedia = function(queue) {
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMediaSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
