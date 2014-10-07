@@ -90,12 +90,24 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        // Seeking past 0 requires calling play first when media has not been loaded
+                        this._mediaElement.play(1);
+                        this._mediaElement.seek(seconds * 1000);
+                        break;
+
+                    case MediaPlayer.STATE.COMPLETE:
+                        this._toBuffering();
+                        this._mediaElement.stop();
+                        this._mediaElement.play(1);
+                        this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        break;
+
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
-                    case MediaPlayer.STATE.COMPLETE:
-                        this._mediaElement.seek(seconds * 1000);
-                        this._mediaElement.play(1);
                         this._toBuffering();
+                        this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        this._mediaElement.play(1);
                         break;
 
                     default:
@@ -211,7 +223,7 @@ require.def(
               if(this._mediaElement) {
                   return {
                       start: 0,
-                      end: this._mediaElement.playTime / 1000// FIXME **
+                      end: this._mediaElement.playTime / 1000
                   };
               }
             },
@@ -284,6 +296,7 @@ require.def(
                              self._onEndOfMedia();
                              break;
                          case Player.PLAY_STATE_ERROR:
+                             self._onDeviceError();
                              break;
                          default:
                              // do nothing

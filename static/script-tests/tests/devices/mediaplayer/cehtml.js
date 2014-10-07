@@ -67,11 +67,12 @@
             fakeCEHTMLObject.onPlayStateChange();
         },
         emitPlaybackError: function(mediaPlayer) {
-            mediaPlayer._onDeviceError(); // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_ERROR;
+            fakeCEHTMLObject.onPlayStateChange();
         },
         reachEndOfMedia: function(mediaPlayer) {
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_FINISHED;
-            fakeCEHTMLObject.onPlayStateChange();  // FIXME - do not do this in an actual implementation - replace it with proper event mock / whatever.
+            fakeCEHTMLObject.onPlayStateChange();
         },
         startBuffering: function(mediaPlayer) {
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_BUFFERING;
@@ -337,6 +338,54 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteStopsMediaBeforeSeekingAndPlaying = function(queue) {
+        expectAsserts(5);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            this._mediaPlayer.playFrom(10);
+
+            assert(fakeCEHTMLObject.seek.calledWith(10000));
+            assert(fakeCEHTMLObject.stop.calledOnce);
+            assert(fakeCEHTMLObject.play.calledAfter(fakeCEHTMLObject.stop));
+            assert(fakeCEHTMLObject.play.calledBefore(fakeCEHTMLObject.seek));
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromTimeOtherThanZero = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(10);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.seek.calledWith(10000));
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            this._mediaPlayer.playFrom(110);
+
+            assert(fakeCEHTMLObject.seek.calledWith(99.9*1000));
+
+            this._mediaPlayer.playFrom(-1);
+            assert(fakeCEHTMLObject.seek.calledWith(0));
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check
     // TODO: Regular timeupdate event ** check
@@ -348,14 +397,16 @@
     // TODO: Make resume actually resume
     //  When paused ** check
     //  When buffering
-    // TODO: Fix seek beyond end of video
+    // TODO: Fix seek beyond end of video ** check
     // TODO: Make playFrom actually seek
     //  When already buffering
     //  When playing ** check
-    //  When paused
+    //  When paused ** check
     //  When complete
     // TODO: Ensure reset actually clears the state
-    //  Make sure setInterval is cleaned up
+    // TODO: Seeking after complete hangs in buffering
+    // TODO: Investigate double buffering events
+    // TODO: Seeking forward half a second not working properly
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.
     // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers
