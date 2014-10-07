@@ -93,8 +93,8 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
-                        this._mediaElement.play(1);
                         this._mediaElement.seek(seconds * 1000);
+                        this._mediaElement.play(1);
                         this._toBuffering();
                         break;
 
@@ -291,7 +291,7 @@ require.def(
                      }
                  }
 
-                self._updateInterval = setInterval(function() {
+                self._updateInterval = window.setInterval(function() {
                     self._onStatus();
                 }, 900);
             },
@@ -307,9 +307,19 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 if(this._mediaElement) {
-                    this._mediaElement.playTime = undefined; // FIXME **
+                    window.clearInterval(this._updateInterval);
+                    this._destroyMediaElement();
                 }
+            },
 
+            _destroyMediaElement: function() {
+                //this._mediaElement.removeAttribute('src');
+                //this._mediaElement.load();
+                var device = RuntimeContext.getDevice();
+                this._mediaElement.onPlayStateChange = function() {}; //FIXME: onPlaystateChange called by finishedBuffering in mocking hooks, is this correct?
+                device.removeElement(this._mediaElement);
+                this._mediaElement = null;
+                delete this._mediaElement;
             },
 
             _toStopped: function () {

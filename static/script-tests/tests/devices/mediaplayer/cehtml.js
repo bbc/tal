@@ -30,7 +30,16 @@
     var fakeCEHTMLObject;
     var stubCreateElement = function (sandbox, application) {
         var device = application.getDevice();
-        return sandbox.stub(device, "_createElement").returns(fakeCEHTMLObject);
+
+        var stubFunc = function(type, id) {
+            if (id && fakeCEHTMLObject) {
+                fakeCEHTMLObject.id = id;
+            }
+
+            return fakeCEHTMLObject;
+        };
+
+        return sandbox.stub(device, "_createElement", stubFunc);
     };
 
     // Setup device specific mocking
@@ -100,6 +109,12 @@
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
         this.sandbox.restore();
+
+        // Clean up after ourselves in case we haven't reset() the media player
+        var element = document.getElementById("mediaPlayer");
+        if (element && element.parentNode) {
+            element.parentNode.removeChild(element);
+        }
     };
 
     var runMediaPlayerTest = function (self, queue, action) {
@@ -134,6 +149,19 @@
 
             var body = document.getElementsByTagName("body")[0];
             assertSame(fakeCEHTMLObject, body.firstChild);
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            self._mediaPlayer.reset();
+
+            var searchResult = document.getElementById("mediaPlayer");
+
+            assertNull(searchResult);
         });
     };
 
@@ -304,6 +332,33 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testStatusEventFirerCleanedUpOnReset = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var clearIntervalSpy = this.sandbox.spy(window,'clearInterval');
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            self._mediaPlayer.reset();
+            var originalCount = window.clearInterval.callCount;
+            assert(clearIntervalSpy.calledOnce);
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            self._mediaPlayer.pause();
+            self._mediaPlayer.playFrom(10);
+
+            assert(fakeCEHTMLObject.seek.calledWith(10000));
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check
