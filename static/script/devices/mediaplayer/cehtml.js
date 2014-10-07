@@ -83,10 +83,10 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
-                this._targetSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
+                        this._deferSeekingTo = seconds;
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
@@ -284,6 +284,7 @@ require.def(
                              break;
                          case Player.PLAY_STATE_PLAYING:
                              self._onFinishedBuffering();
+                             self._deferredSeek();
                              break;
                          case Player.PLAY_STATE_PAUSED:
                              break;
@@ -307,6 +308,14 @@ require.def(
                 self._updateInterval = window.setInterval(function() {
                     self._onStatus();
                 }, 900);
+            },
+
+            _deferredSeek: function() {
+                if(this._deferSeekingTo !== undefined) {
+                    this._toBuffering();
+                    this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
+                    this._deferSeekingTo = undefined;
+                }
             },
 
             _addElementToDOM: function() {

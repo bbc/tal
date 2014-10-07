@@ -386,7 +386,22 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMedia = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(10);
+            this._mediaPlayer.playFrom(20);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.seek.calledWith(20000));
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
+    // TODO: Don't seek to zero when playing from stopped
     // TODO: Handle playstatechange to switch out of BUFFERING state ** check
     // TODO: Regular timeupdate event ** check
     // TODO: getRange ** check
@@ -399,7 +414,7 @@
     //  When buffering
     // TODO: Fix seek beyond end of video ** check
     // TODO: Make playFrom actually seek
-    //  When already buffering
+    //  When already buffering **
     //  When playing ** check
     //  When paused ** check
     //  When complete ** check
