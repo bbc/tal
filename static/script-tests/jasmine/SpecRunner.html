@@ -38,6 +38,7 @@
         <script type="text/javascript" src="../lib/mockapplication.js"></script>
         <script type="text/javascript" src="../mocks/mockelement.js"></script>
         <script type="text/javascript" src="../tests/devices/mediaplayer/commontests.js"></script>
+        <script type="text/javascript" src="../tests/devices/mediaplayer/html5commontests.js"></script>
 
         <script type="text/javascript">
 
@@ -89,19 +90,6 @@
                             '../tests/devices/media/seekstate',
                             '../tests/devices/mediaplayer/cehtml',
                             '../tests/devices/mediaplayer/html5',
-//
-//
-//********* DELIBERATE SYNTAX ERROR - SEE COMMENT
-//// NOTE: This comment does not seem to be entirely correct.....
-//// Mixing in the base class's tests for the media player sub-modifiers is desirable, however the order that the JavaScript
-//// files are run by require varies depending on the order they are returned by the HTTP requests. This means that we can
-//// receive errors that we have not yet defined a module (that is still loading) when we try to run it during the require.
-//// The tests, being run through queuedApplicationInit/queuedRequire do not have a shared require definition that they can
-//// all depend on, so we can't use require to manage the dependency.
-////
-//// Also, the changes we have made to the html5 tests are causing the html5erroroncompletefix tests to fail through
-//// TAL Test Runner (JSTestDriver)
-
 //                            '../tests/devices/mediaplayer/html5erroroncompletefix',
 //                            '../tests/devices/mediaplayer/html5waitingfix',
                             '../tests/devices/mediaplayer/mediaplayer',

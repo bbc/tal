@@ -22,9 +22,13 @@
  * Please contact us for an alternative licence
  */
 
+window.commonTests = window.commonTests || { };
+window.commonTests.mediaPlayer = window.commonTests.mediaPlayer || { };
+window.commonTests.mediaPlayer.all = window.commonTests.mediaPlayer.all || { };
+
 // Mix-in a set of common MediaPlayer tests. These tests test the common API behaviour, and so are valid for ALL implementations.
 // It isup to the device implementation test code that pulls these in to make sure that sufficient mocking is in place to allow these tests to run.
-window.mixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks) {
+window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks) {
     var mixins = {};
 
     // ********************************************
@@ -49,8 +53,8 @@ window.mixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequ
     mixins.testGettingMediaPlayerRepeatedlyReturnsSameObject = function (queue) {
         expectAsserts(1);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', [mediaPlayerDeviceModifierRequireName],
-            function(application, MediaPlayerImpl) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 deviceMockingHooks.setup(self.sandbox, application);
 
@@ -70,8 +74,8 @@ window.mixinCommonMediaTests = function (testCase, mediaPlayerDeviceModifierRequ
 
 
     var doTest = function (self, queue, test) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", mediaPlayerDeviceModifierRequireName],
-            function(application, MediaPlayer, MediaPlayerImpl) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
 
                 deviceMockingHooks.setup(self.sandbox, application);
 
