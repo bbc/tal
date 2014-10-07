@@ -48,21 +48,21 @@
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
             mockData = {};
+            fakeCEHTMLObject.playPosition = 0;
             stubCreateElement(sandbox, application);
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                fakeCEHTMLObject.playPosition = milliseconds;
+            }
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             // CEHTML has no 'metadata' event, so keep these values for later
             mockData.range = range;
-            mockData.currentTime = currentTime;
         },
         finishBuffering: function(mediaPlayer) {
             if (!mockData.loaded) {
                 fakeCEHTMLObject.playTime = mockData.range.end * 1000;
-                fakeCEHTMLObject.playPosition = mockData.currentTime * 1000;
                 mockData.loaded = true;
             }
-            var currentTimeInSeconds = mediaPlayer._targetSeekTime ? mediaPlayer._targetSeekTime : mockData.currentTime;
-            fakeCEHTMLObject.playPosition = currentTimeInSeconds * 1000;
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PLAYING;
             fakeCEHTMLObject.onPlayStateChange();
         },
@@ -402,9 +402,8 @@
     //  When already buffering
     //  When playing ** check
     //  When paused ** check
-    //  When complete
-    // TODO: Ensure reset actually clears the state
-    // TODO: Seeking after complete hangs in buffering
+    //  When complete ** check
+    // TODO: Ensure reset actually clears the state **
     // TODO: Investigate double buffering events
     // TODO: Seeking forward half a second not working properly
     // TODO: Ensure errors are handled
