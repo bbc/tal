@@ -387,7 +387,7 @@
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMedia = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(10);
@@ -397,6 +397,9 @@
 
             assert(fakeCEHTMLObject.seek.calledWith(20000));
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
 
