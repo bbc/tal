@@ -196,6 +196,6 @@
 
     // Mixin the common tests shared by all HTML5 MediaPlayer implementations (last, so it can detect conflicts)
 
-    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5WaitingFixMediaPlayerTests, "antie/devices/mediaplayer/html5", config);
+    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5WaitingFixMediaPlayerTests, "antie/devices/mediaplayer/html5waitingfix", config);
 
 })();
