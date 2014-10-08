@@ -329,6 +329,18 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromZeroWhenStoppedDoesNotSeek = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.seek.notCalled);
+        });
+    };
+
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
@@ -338,11 +350,11 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             this._mediaPlayer.playFrom(110);
-
             assert(fakeCEHTMLObject.seek.calledWith(99.9*1000));
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             this._mediaPlayer.playFrom(-1);
-            assert(fakeCEHTMLObject.seek.calledWith(0));
+            assertEquals(0, fakeCEHTMLObject.seek.lastCall.args[0]);
         });
     };
 
@@ -378,6 +390,7 @@
             assert(fakeCEHTMLObject.play.calledWith(0));
         });
     };
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Don't seek to zero when playing from stopped

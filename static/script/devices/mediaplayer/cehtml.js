@@ -93,7 +93,9 @@ require.def(
                         this._toBuffering();
                         // Seeking past 0 requires calling play first when media has not been loaded
                         this._mediaElement.play(1);
-                        this._mediaElement.seek(seconds * 1000);
+                        if (seconds > 0) {
+                            this._mediaElement.seek(seconds * 1000);
+                        }
                         break;
 
                     case MediaPlayer.STATE.COMPLETE:
