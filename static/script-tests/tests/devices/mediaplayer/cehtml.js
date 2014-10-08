@@ -110,15 +110,21 @@
 
     this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
         this.sandbox.restore();
+
+        // Clean up after ourselves in case we haven't reset() the media player
+        var element = document.getElementById("mediaPlayer");
+        if (element && element.parentNode) {
+            element.parentNode.removeChild(element);
+        }
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+    var runMediaPlayerTest = function (self, queue, action) {
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/cehtml", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                this._createElementStub = stubCreateElement(this.sandbox, application);
-                this._device = application.getDevice();
-                this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
             }, config);
     };
 
@@ -128,7 +134,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assert(this._createElementStub.calledWith("object", "mediaPlayer"));
@@ -137,7 +144,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var body = document.getElementsByTagName("body")[0];
@@ -147,7 +155,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.reset();
 
@@ -159,7 +168,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
         expectAsserts(6);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("absolute", fakeCEHTMLObject.style.position);
             assertEquals("0px", fakeCEHTMLObject.style.top);
@@ -172,7 +182,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectContentType = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("video/mp4", fakeCEHTMLObject.type);
         });
@@ -180,7 +191,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectSourceURL = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("http://testurl/", fakeCEHTMLObject.data);
         });
@@ -188,7 +200,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
 
@@ -198,7 +211,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhilePlayingSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -214,7 +228,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingPauseWhilePlayingCallsPlayWithZero = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -229,7 +244,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedCallsPlay = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -245,7 +261,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPlayingCallsStop = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -259,7 +276,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPausedCallsStop = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -274,7 +292,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testStatusEventTimerCleanedUpOnReset = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var clearIntervalSpy = this.sandbox.spy(window,'clearInterval');
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(clearIntervalSpy.notCalled);
@@ -285,7 +304,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -300,7 +320,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteStopsMediaBeforeSeekingAndPlaying = function(queue) {
         expectAsserts(5);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -319,7 +340,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteThenPlayFromZeroDoesNotSeek = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -334,7 +356,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(10);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -346,7 +369,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromZeroWhenStoppedDoesNotSeek = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -358,7 +382,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -375,7 +400,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMediaSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(10);
             this._mediaPlayer.playFrom(20);
@@ -392,7 +418,8 @@
 
     this.CEHTMLMediaPlayerTests.prototype.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -420,6 +447,7 @@
     // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
+    // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
     // TODO: Determine if the seekTo call blocks until it is complete (see media/cehtml.js:240)
     // TODO: media/cehtmlmediatypefix.js equivalent
     // TODO: Ensure the object data attribute is set tot the URL of the content (CEA-2014-A 5.7.1)
@@ -439,6 +467,7 @@
     // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
     // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
     // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
+    // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
     // TODO: Be aware that the media object API uses milliseconds rather than seconds
 
 
@@ -447,6 +476,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.mixinCommonMediaTests(this.CEHTMLMediaPlayerTests, "antie/devices/mediaplayer/cehtml", config, deviceMockingHooks);
+    window.commonTests.mediaPlayer.all.mixinTests(this.CEHTMLMediaPlayerTests, "antie/devices/mediaplayer/cehtml", config, deviceMockingHooks);
 
 })();

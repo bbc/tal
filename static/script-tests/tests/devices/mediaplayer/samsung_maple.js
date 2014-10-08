@@ -105,14 +105,14 @@
         this.sandbox.restore();
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.runMediaPlayerTest = function (queue, action) {
+    var runMediaPlayerTest = function (self, queue, action) {
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/samsung_maple", "antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayerImpl, MediaPlayer) {
-                this._device = application.getDevice();
-                this.sandbox.stub(this._device, 'getScreenSize').returns(screenSize);
-                this._errorLog = this.sandbox.stub(this._device.getLogger(), "error");
-                this._mediaPlayer = this._device.getMediaPlayer();
-                action.call(this, MediaPlayer);
+                self._device = application.getDevice();
+                self.sandbox.stub(self._device, 'getScreenSize').returns(screenSize);
+                self._errorLog = self.sandbox.stub(self._device.getLogger(), "error");
+                self._mediaPlayer = self._device.getMediaPlayer();
+                action.call(self, MediaPlayer);
             }, config);
     };
 
@@ -135,7 +135,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var i;
             var func;
@@ -156,7 +156,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnError = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -179,7 +179,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -202,7 +202,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var i;
             var func;
@@ -226,7 +226,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var i;
             var func;
@@ -253,7 +253,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var i;
             var func;
@@ -280,7 +280,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledOnDeviceWhenPlayFromCalledInStoppedState = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(0);
@@ -291,7 +291,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledWithTimePassedIntoPlayingFrom = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(playerPlugin.ResumePlay.notCalled);
             this._mediaPlayer.playFrom(19);
@@ -304,7 +304,7 @@
         // Samsung advice to block seeking while buffering:
         // http://www.samsungdforum.com/Guide/tec00118/index.html
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -324,7 +324,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testJumpOnDeviceWhenPlayFromCalledInInitialBufferingState = function(queue) {
         expectAsserts(7);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             assert(playerPlugin.ResumePlay.calledOnce);
@@ -346,7 +346,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testNoSecondBufferingEventWhenPlayingFromABufferingState = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -369,35 +369,35 @@
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
         var initialTimeMs = 30000;
         var targetTimeSecs = 30;
-        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearAfterCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
         var initialTimeMs = 30000;
         var targetTimeSecs = 32.5;
-        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearBeforeCurrentTimeInPlayingStateBuffersThenPlays = function(queue) {
         var initialTimeMs = 30000;
         var targetTimeSecs = 27.500;
-        this.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(queue, initialTimeMs, targetTimeSecs) {
+    var doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(self, queue, initialTimeMs, targetTimeSecs) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             window.SamsungMapleOnCurrentPlayTime(initialTimeMs);
 
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(targetTimeSecs);
+            self._mediaPlayer.playFrom(targetTimeSecs);
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.args[1][0].type);
@@ -406,7 +406,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndSeeks = function(queue) {
         expectAsserts(8);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -432,7 +432,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPlayingBuffersAndSeeks = function(queue) {
         expectAsserts(9);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
@@ -454,22 +454,22 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays = function(queue, initialTimeMs, targetTimeSecs) {
+    var doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays = function(self, queue, initialTimeMs, targetTimeSecs) {
         expectAsserts(5);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             window.SamsungMapleOnCurrentPlayTime(initialTimeMs);
-            this._mediaPlayer.pause();
+            self._mediaPlayer.pause();
 
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
 
             assert(playerPlugin.Resume.notCalled);
-            this._mediaPlayer.playFrom(targetTimeSecs);
+            self._mediaPlayer.playFrom(targetTimeSecs);
             assert(playerPlugin.Resume.calledOnce);
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
@@ -480,39 +480,40 @@
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
         var initialTimeMs = 50000;
         var targetTimeSecs = 50;
-        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearAfterCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
         var initialTimeMs = 50000;
         var targetTimeSecs = 52.5;
-        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromNearBeforeCurrentTimeWhenPausedBuffersThenPlays = function(queue) {
         var initialTimeMs = 50000;
         var targetTimeSecs = 47.5;
-        this.doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(queue, initialTimeMs, targetTimeSecs);
+        doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays(this, queue, initialTimeMs, targetTimeSecs);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedBuffersAndSeeks = function(queue) {
         expectAsserts(8);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        var self = this;
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
             window.SamsungMapleOnCurrentPlayTime(0);
-            this._mediaPlayer.pause();
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            self._mediaPlayer.pause();
+            assertEquals(MediaPlayer.STATE.PAUSED, self._mediaPlayer.getState());
 
             assert(playerPlugin.JumpForward.notCalled);
             assert(playerPlugin.ResumePlay.calledOnce);
 
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(50);
+            self._mediaPlayer.playFrom(50);
             assert(eventHandler.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
 
@@ -524,7 +525,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesAfterJump = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -543,7 +544,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPausedBuffersAndSeeks = function(queue) {
         expectAsserts(9);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
@@ -570,7 +571,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testResumeWhenPausedCallsResume = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -588,7 +589,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPauseCallsPauseWhenPlaying = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -605,7 +606,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testStopCallsStopWhenPlaying = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -622,7 +623,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -639,7 +640,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testOnRenderErrorCausesErrorEvent = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -658,7 +659,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testOnConnectionFailedCausesErrorEvent = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -677,7 +678,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testOnNetworkDisconnectedCausesErrorEvent = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -696,7 +697,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testOnStreamNotFoundCausesErrorEvent = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -715,7 +716,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testOnAuthenticationFailedCausesErrorEvent = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -734,7 +735,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPlayingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -752,7 +753,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstMidStreamBufferingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -773,7 +774,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstInitialBufferingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
 
@@ -794,7 +795,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPausedClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -813,7 +814,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstCompleteClampsToJustBeforeEnd = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -828,7 +829,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testStopIsCalledWhenMediaCompletes = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -844,7 +845,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testBufferingStartDeviceEventWhenAlreadyBufferingDoesNotCauseSecondEvent = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -860,7 +861,7 @@
     };
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhileAtNonZeroTimeGCausesRelativeJump = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -880,7 +881,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testStatusMessageIncludesUpdatedTime = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -906,7 +907,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenDeviceIsAbleToPauseAfterBuffering = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -921,7 +922,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsRemainsInBufferingStateWhenDeviceIsUnableToPauseAfterBuffering = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -936,40 +937,40 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningZero = function(queue) {
         var pauseReturnCode = 0;
-        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+        doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(this, queue, pauseReturnCode);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningMinusOne = function(queue) {
         var pauseReturnCode = -1;
-        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+        doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(this, queue, pauseReturnCode);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFailsReturningFalse = function(queue) {
         var pauseReturnCode = false;
-        this.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(queue, pauseReturnCode);
+        doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails(this, queue, pauseReturnCode);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails = function(queue, pauseReturnCode) {
+    var doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails = function(self, queue, pauseReturnCode) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            this._mediaPlayer.pause();
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(0);
+            self._mediaPlayer.pause();
 
             playerPlugin.Pause.returns(pauseReturnCode);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             assert(playerPlugin.Pause.calledOnce);
 
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
             assert(playerPlugin.Pause.calledTwice);
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsThenResumingWhileAttemptingToPauseResultsInPlayingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -988,7 +989,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenPausedAfterMultipleAttempts = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -1012,7 +1013,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testStatusEventsOnlyEmittedInPlayingState = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
@@ -1030,7 +1031,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhilePlayingBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
@@ -1052,7 +1053,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhilePausedBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(30);
             this._mediaPlayer.pause();
@@ -1076,7 +1077,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaPlayerIsStoppedOnAppHide = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
 
@@ -1096,7 +1097,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testWindowHideEventListenerIsTornDownOnReset = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
             var removeStub = this.sandbox.stub(window, "removeEventListener");
@@ -1120,7 +1121,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testMediaPlayerIsStoppedOnAppUnload = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
 
@@ -1140,7 +1141,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testWindowUnloadEventListenerIsTornDownOnReset = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             var addStub = this.sandbox.stub(window, "addEventListener");
             var removeStub = this.sandbox.stub(window, "removeEventListener");
@@ -1164,7 +1165,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testCurrentTimeIsUpdatedByOnCurrentPlayTimeEvents = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -1186,46 +1187,46 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningZeroReturnsToPlayingState = function(queue) {
         var jumpReturnCode = 0;
-        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningMinusOneReturnsToPlayingState = function(queue) {
         var jumpReturnCode = -1;
-        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningFalseReturnsToPlayingState = function(queue) {
         var jumpReturnCode = false;
-        this.doTestFailedJumpReturnsToPlayingState(queue, jumpReturnCode);
+        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.doTestFailedJumpReturnsToPlayingState = function(queue, jumpReturnCode) {
+    var doTestFailedJumpReturnsToPlayingState = function(self, queue, jumpReturnCode) {
         expectAsserts(5);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
             window.SamsungMapleOnCurrentPlayTime(0);
 
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
 
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
             playerPlugin.JumpForward.returns(jumpReturnCode);
 
-            this._mediaPlayer.playFrom(30);
+            self._mediaPlayer.playFrom(30);
 
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.firstCall.args[0].type);
             assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.secondCall.args[0].type);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpReturnsToPlayingState = function(queue) {
         expectAsserts(6);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.playFrom(30);
@@ -1250,48 +1251,48 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsCurrentTime = function(queue) {
         var targetTime = 30;
-        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+        doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(this, queue, targetTime);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearAfterCurrentTime = function(queue) {
         var targetTime = 32.5;
-        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+        doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(this, queue, targetTime);
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsNearBeforeCurrentTime = function(queue) {
         var targetTime = 27.5;
-        this.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(queue, targetTime);
+        doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(this, queue, targetTime);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(queue, targetTime) {
+    var doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(self, queue, targetTime) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(30);
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            self._mediaPlayer.playFrom(30);
 
-            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
 
-            this._mediaPlayer.playFrom(50);
-            this._mediaPlayer.playFrom(targetTime);
+            self._mediaPlayer.playFrom(50);
+            self._mediaPlayer.playFrom(targetTime);
 
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 30, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             var deviceSeeksToKeyFrameAtPosition = 30000;
             window.SamsungMapleOnCurrentPlayTime(deviceSeeksToKeyFrameAtPosition);
 
             assert(playerPlugin.JumpForward.notCalled);
             assert(playerPlugin.JumpBackward.notCalled);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
         });
     };
 
     this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaSetOnPlayFromForVideo = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             screenSize.width = 987;
             screenSize.height = 654;
 
@@ -1305,7 +1306,7 @@
 
     this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaNotSetOnPlayFromForAudio = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function(MediaPlayer) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
             this._mediaPlayer.playFrom(0);
             assert(playerPlugin.SetDisplayArea.notCalled);
@@ -1323,6 +1324,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.mixinCommonMediaTests(this.SamsungMapleMediaPlayerTests, "antie/devices/mediaplayer/samsung_maple", config, deviceMockingHooks);
+    window.commonTests.mediaPlayer.all.mixinTests(this.SamsungMapleMediaPlayerTests, "antie/devices/mediaplayer/samsung_maple", config, deviceMockingHooks);
 
 })();

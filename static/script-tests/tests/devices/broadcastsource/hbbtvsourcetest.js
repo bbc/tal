@@ -25,21 +25,128 @@
 (function() {
     this.hbbtvSource = AsyncTestCase("HBBTV Broadcast Source");
 
+    /*  Helper functions to mock out and use HBBTV specific APIs */
+
+    var stubHBBTVSpecificApis = function(self) {
+        self.hbbtvPlugin = document.createElement('object');
+        var hbbtvPlugin = self.hbbtvPlugin;
+        hbbtvPlugin.id = "broadcastVideoObject";
+        hbbtvPlugin.bindToCurrentChannel = function() {
+        };
+        hbbtvPlugin.stop = function() {
+        };
+        hbbtvPlugin.playState = "hbbTvObjectPlayState";
+        hbbtvPlugin.currentChannel = {
+            name : "BBC One",
+            idType : 10, //DVB-C
+            channelType: 123,
+            onid: 321,
+            tsid: 456,
+            sid: 654
+        };
+        hbbtvPlugin.createChannelObject = function() {
+        };
+        hbbtvPlugin.setChannel = function() {
+        };
+        var channelList = getRawChannelList();
+        hbbtvPlugin.getChannelConfig = function() {
+            return {
+                channelList: channelList
+            };
+        };
+
+        var target = document.getElementsByTagName('body')[0];
+        target.appendChild(hbbtvPlugin);
+    };
+
+    var stubChannelListInHbbtvPluginAsItemAccessorOnly = function(self) {
+        var channelList = getRawChannelList();
+        self.hbbtvPlugin.getChannelConfig = function() {
+            return {
+                channelList: {
+                    item: function(itemIndex) {
+                        return channelList[itemIndex];
+                    },
+                    length: channelList.length
+                }
+            };
+        };
+    };
+
+    var stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor = function(self) {
+        var channelList = getRawChannelList();
+        channelList.item = 'trololo';
+
+        self.hbbtvPlugin.getChannelConfig = function() {
+            return {
+                channelList: channelList
+            };
+        };
+    };
+
+    var getRawChannelList = function() {
+        return [
+             {
+                 name: "BBC One",
+                 onid: 1,
+                 tsid: 2,
+                 sid: 3,
+                 idType: 4
+             },
+             {
+                 name: "BBC Two",
+                 onid: 5,
+                 tsid: 6,
+                 sid: 7,
+                 idType: 8
+             },
+             {
+                 name: "BBC Three",
+                 onid: 9,
+                 tsid: 10,
+                 sid: 11,
+                 idType: 12
+             }
+         ];
+    };
+
+    var removeHBBTVSpecificApis = function() {
+        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
+        if (hbbtvPlugin) { // some tests remove this object before the tear down
+            hbbtvPlugin.parentNode.removeChild(hbbtvPlugin);
+        }
+    };
+
+    var getGenericHBBTVConfig = function() {
+        return {modules:{base:"antie/devices/browserdevice",modifiers:[
+            "antie/devices/anim/styletopleft",
+            "antie/devices/media/html5",
+            "antie/devices/net/default",
+            "antie/devices/broadcastsource/hbbtvsource",
+            "antie/devices/data/nativejson",
+            "antie/devices/storage/cookie",
+            "antie/devices/logging/default",
+            "antie/devices/exit/closewindow"
+        ]},input:{map:{}},layouts:[
+            {width:1280,height:720,module:"fixtures/layouts/default",classes:["browserdevice720p"]}
+        ],deviceConfigurationKey:"devices-html5-1"};
+    };
+
     this.hbbtvSource.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
         // Mock the HBBTV APIs and tune to BBC One
-        this.stubHBBTVSpecificApis();
+        stubHBBTVSpecificApis(this);
     };
 
     this.hbbtvSource.prototype.tearDown = function() {
-        this.removeHBBTVSpecificApis();
+        removeHBBTVSpecificApis();
         this.sandbox.restore();
     };
 
     this.hbbtvSource.prototype.testCreateBroadcastSourceReturnsHBBTVObject = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             var device = application.getDevice();
             var returnedBroadcastSource = device.createBroadcastSource();
@@ -54,11 +161,12 @@
     this.hbbtvSource.prototype.testCreateBroadcastSourceReturnsSingletonHBBTVObject = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
+	var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/hbbtvsource"], function(application, HbbTVSource) {
             var device = application.getDevice();
 
-            var hbbtvConstructor = this.sandbox.spy(HbbTVSource.prototype, "init");
+            var hbbtvConstructor = self.sandbox.spy(HbbTVSource.prototype, "init");
 
             device.createBroadcastSource();
             device.createBroadcastSource();
@@ -72,9 +180,9 @@
     this.hbbtvSource.prototype.testCreateBroadcastWhenHbbTvApiIsNotAvailableThrowsException = function(queue) {
         expectAsserts(1);
 
-        this.removeHBBTVSpecificApis();
+        removeHBBTVSpecificApis();
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             assertException("Unable to initialise HbbTV broadcast source", function() {
@@ -86,7 +194,7 @@
     this.hbbtvSource.prototype.testCreateBroadcastSetsPlayStateToUnrealized = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var device = application.getDevice();
@@ -101,10 +209,11 @@
     this.hbbtvSource.prototype.testCreateBroadcastAddsPlayStateChangeEventHandler = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var addEventListenerStub = this.sandbox.stub(this.hbbtvPlugin, "addEventListener");
+            var addEventListenerStub = self.sandbox.stub(self.hbbtvPlugin, "addEventListener");
             var device = application.getDevice();
             device.createBroadcastSource();
 
@@ -118,7 +227,8 @@
 
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var device = application.getDevice();
@@ -126,13 +236,13 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            this.hbbtvPlugin.playState = 1;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 1;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assertEquals(1, broadcastSource.playState);
 
-            this.hbbtvPlugin.playState = 2;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 2;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assertEquals(2, broadcastSource.playState);
 
@@ -143,7 +253,8 @@
 
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent'], function(application, TunerUnavailableEvent) {
 
             var device = application.getDevice();
@@ -151,13 +262,13 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            this.hbbtvPlugin.playState = 2;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 2;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
-            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent')
+            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent')
 
-            this.hbbtvPlugin.playState = 0;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 0;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerUnavailableEvent);
 
@@ -168,7 +279,8 @@
 
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
 
             var device = application.getDevice();
@@ -176,10 +288,10 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent');
 
-            this.hbbtvPlugin.playState = 2;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 2;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerPresentingEvent);
 
@@ -190,7 +302,8 @@
 
         expectAsserts(7);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
 
             var device = application.getDevice();
@@ -198,10 +311,10 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent');
 
-            this.hbbtvPlugin.playState = 2;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 2;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.calledOnce);
             var channel = broadcastEventSpy.args[0][0].channel;
@@ -221,7 +334,8 @@
 
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent'], function(application, TunerStoppedEvent) {
 
             var device = application.getDevice();
@@ -229,10 +343,10 @@
 
             var evt = new CustomEvent("PlayStateChange");
 
-            var broadcastEventSpy = this.sandbox.spy(application, 'broadcastEvent');
+            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent');
 
-            this.hbbtvPlugin.playState = 3;
-            this.hbbtvPlugin.dispatchEvent(evt);
+            self.hbbtvPlugin.playState = 3;
+            self.hbbtvPlugin.dispatchEvent(evt);
 
             assert(broadcastEventSpy.args[0][0] instanceof TunerStoppedEvent);
 
@@ -242,11 +356,12 @@
     this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
+	var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
             var device = application.getDevice();
 
-            this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
+            self.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
                 return false;
             });
 
@@ -257,11 +372,12 @@
     this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianHasBroadcastOriginReturnsTrue = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/historian"], function(application, Historian) {
             var device = application.getDevice();
 
-            this.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
+            self.sandbox.stub(Historian.prototype, "hasBroadcastOrigin", function() {
                 return true;
             });
 
@@ -273,12 +389,13 @@
     this.hbbtvSource.prototype.testShowCurrentChannelSetsTheBroadcastToFullScreenAt720p = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
 
             // Mock getBestFitLayout as unsure of the actual browser size when running in headless environment
-            this.sandbox.stub(application, "getLayout", function() {
+            self.sandbox.stub(application, "getLayout", function() {
                 return {
                     requiredScreenSize: { height: 720, width: 1280 }
                 };
@@ -286,20 +403,21 @@
 
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.showCurrentChannel();
-            assertEquals('BroadcastSource width should be 1280px', '1280px', this.hbbtvPlugin.style.width);
-            assertEquals('BroadcastSource height should be 720px', '720px', this.hbbtvPlugin.style.height);
+            assertEquals('BroadcastSource width should be 1280px', '1280px', self.hbbtvPlugin.style.width);
+            assertEquals('BroadcastSource height should be 720px', '720px', self.hbbtvPlugin.style.height);
         }, config);
     };
 
     this.hbbtvSource.prototype.testShowCurrentChannelSetsTheBroadcastToFullScreenAt1080p = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
 
             // Mock getBestFitLayout as unsure of the browser size when running headless
-            this.sandbox.stub(application, "getLayout", function() {
+            self.sandbox.stub(application, "getLayout", function() {
                 return {
                     requiredScreenSize: { height: 1080, width: 1920 }
                 };
@@ -307,33 +425,35 @@
 
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.showCurrentChannel();
-            assertEquals('BroadcastSource width should be 1920px', '1920px', this.hbbtvPlugin.style.width);
-            assertEquals('BroadcastSource height should be 1080px', '1080px', this.hbbtvPlugin.style.height);
+            assertEquals('BroadcastSource width should be 1920px', '1920px', self.hbbtvPlugin.style.width);
+            assertEquals('BroadcastSource height should be 1080px', '1080px', self.hbbtvPlugin.style.height);
         }, config);
     };
 
     this.hbbtvSource.prototype.testSetPositionWithOffsetSetsTheCorrectCSSProperties = function(queue) {
         expectAsserts(4);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.setPosition(10, 20, 30, 40);
 
-            assertEquals('BroadcastSource top position should be 10px', '10px', this.hbbtvPlugin.style.top);
-            assertEquals('BroadcastSource left position should be 20px', '20px', this.hbbtvPlugin.style.left);
-            assertEquals('BroadcastSource width should be 30px', '30px', this.hbbtvPlugin.style.width);
-            assertEquals('BroadcastSource height should be 40px', '40px', this.hbbtvPlugin.style.height);
+            assertEquals('BroadcastSource top position should be 10px', '10px', self.hbbtvPlugin.style.top);
+            assertEquals('BroadcastSource left position should be 20px', '20px', self.hbbtvPlugin.style.left);
+            assertEquals('BroadcastSource width should be 30px', '30px', self.hbbtvPlugin.style.width);
+            assertEquals('BroadcastSource height should be 40px', '40px', self.hbbtvPlugin.style.height);
         }, config);
     };
 
     this.hbbtvSource.prototype.testShowCurrentChannelCallsHBBTVbindToCurrentChannel = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
+	var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
+            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "bindToCurrentChannel");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.showCurrentChannel();
@@ -344,9 +464,10 @@
     this.hbbtvSource.prototype.testStopCurrentChannelCallsHBBTVStop = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "stop");
+            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "stop");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.stopCurrentChannel();
@@ -357,12 +478,13 @@
     this.hbbtvSource.prototype.testStopCurrentChannelThrowsExceptionIfPlayStateIsUnrealizedAndBindToCurrentChannelThrowsException = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
-            this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
+            self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
 
             var hbbtvPlugin = document.getElementById('broadcastVideoObject');
             hbbtvPlugin.bindToCurrentChannel = function() {
@@ -378,7 +500,8 @@
     this.hbbtvSource.prototype.testStopCurrentChannelCallsBindWhenUnrealized = function(queue) {
         expectAsserts(1);
         var config;
-        config = this.getGenericHBBTVConfig();
+        config = getGenericHBBTVConfig();
+	var self = this;
 
         queuedApplicationInit(
             queue,
@@ -387,8 +510,8 @@
             function(application) {
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
-                hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
-                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
+                hbbtvBindSpy = self.sandbox.spy(self.hbbtvPlugin, "bindToCurrentChannel");
+                hbbtvPlayStateStub = self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
                 broadcastSource.stopCurrentChannel();
                 assertTrue("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
             },
@@ -398,7 +521,8 @@
     this.hbbtvSource.prototype.testStopCurrentChannelDoesNotCallBindWhenNotUnrealized = function(queue) {
         expectAsserts(1);
         var config;
-        config = this.getGenericHBBTVConfig();
+        config = getGenericHBBTVConfig();
+	var self = this;
 
         queuedApplicationInit(
             queue,
@@ -407,8 +531,8 @@
             function(application) {
                 var hbbtvBindSpy, hbbtvPlayStateStub, broadcastSource;
                 broadcastSource = application.getDevice().createBroadcastSource();
-                hbbtvBindSpy = this.sandbox.spy(this.hbbtvPlugin, "bindToCurrentChannel");
-                hbbtvPlayStateStub = this.sandbox.stub(this.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
+                hbbtvBindSpy = self.sandbox.spy(self.hbbtvPlugin, "bindToCurrentChannel");
+                hbbtvPlayStateStub = self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
                 broadcastSource.stopCurrentChannel();
                 assertFalse("Native HBBTV bindToCurrentChannel function called", hbbtvBindSpy.called);
             },
@@ -418,21 +542,22 @@
     this.hbbtvSource.prototype.testStopCurrentChannelSetsPluginHidden = function(queue) {
         expectAsserts(3);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.stopCurrentChannel();
-            assertEquals("hidden", this.hbbtvPlugin.style.visibility);
-            assertEquals("0px", this.hbbtvPlugin.style.width);
-            assertEquals("0px", this.hbbtvPlugin.style.height);
+            assertEquals("hidden", self.hbbtvPlugin.style.visibility);
+            assertEquals("0px", self.hbbtvPlugin.style.width);
+            assertEquals("0px", self.hbbtvPlugin.style.height);
         }, config);
     };
 
     this.hbbtvSource.prototype.testgetCurrentChannelNameGetsTheHBBTVCurrentChannelProperty = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -444,9 +569,10 @@
     this.hbbtvSource.prototype.testgetCurrentChannelNameThrowsExceptionWhenHBBTVCurrentChannelObjectIsNull = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            this.hbbtvPlugin.currentChannel = null;
+            self.hbbtvPlugin.currentChannel = null;
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -459,9 +585,10 @@
     this.hbbtvSource.prototype.testgetCurrentChannelNameThrowsExceptionWhenHBBTVCurrentChannelNamePropertyIsNull = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            this.hbbtvPlugin.currentChannel.name = null;
+            self.hbbtvPlugin.currentChannel.name = null;
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -474,9 +601,10 @@
     this.hbbtvSource.prototype.testgetCurrentChannelNameThrowsExceptionWhenHBBTVCurrentChannelNamePropertyIsUndefined = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            this.hbbtvPlugin.currentChannel.name = undefined;
+            self.hbbtvPlugin.currentChannel.name = undefined;
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -489,7 +617,7 @@
     this.hbbtvSource.prototype.testGetPlayStateReturnsHBBTVPlayStateProperty = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -501,9 +629,10 @@
     this.hbbtvSource.prototype.testSetChannelConstructsCorrectHbbtvChannelObject = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "createChannelObject");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.setChannel({
@@ -522,9 +651,10 @@
     this.hbbtvSource.prototype.testSetChannelCallsHBBTVSetChannelWithCorrectArgs = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "createChannelObject");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.setChannel({
@@ -543,10 +673,11 @@
     this.hbbtvSource.prototype.testSetChannelFallsBackToDVBT = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            this.hbbtvPlugin.currentChannel.idType = undefined;
-            var hbbtvApiSpy = this.sandbox.spy(this.hbbtvPlugin, "createChannelObject");
+            self.hbbtvPlugin.currentChannel.idType = undefined;
+            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "createChannelObject");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.setChannel({
@@ -565,15 +696,16 @@
     this.hbbtvSource.prototype.testChannelChangeSucceededCallbackIsAdded = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var onSuccessSpy = this.sandbox.spy();
-            var onErrorSpy = this.sandbox.spy();
+            var onSuccessSpy = self.sandbox.spy();
+            var onErrorSpy = self.sandbox.spy();
 
-            var listenSpy = this.sandbox.spy(this.hbbtvPlugin, 'addEventListener');
+            var listenSpy = self.sandbox.spy(self.hbbtvPlugin, 'addEventListener');
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -589,15 +721,16 @@
     this.hbbtvSource.prototype.testChannelChangeErrorCallbackIsAdded = function(queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var onSuccessSpy = this.sandbox.spy();
-            var onErrorSpy = this.sandbox.spy();
+            var onSuccessSpy = self.sandbox.spy();
+            var onErrorSpy = self.sandbox.spy();
 
-            var listenSpy = this.sandbox.spy(this.hbbtvPlugin, 'addEventListener');
+            var listenSpy = self.sandbox.spy(self.hbbtvPlugin, 'addEventListener');
             broadcastSource.setChannel({
                 onid : 0x233A,
                 tsid : 4169,
@@ -613,10 +746,11 @@
     this.hbbtvSource.prototype.testOnSuccessCallbackIsFiredWhenChannelChangeSucceededEventIsRaised = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var onSuccessSpy = this.sandbox.spy();
-            var onErrorSpy = this.sandbox.spy();
+            var onSuccessSpy = self.sandbox.spy();
+            var onErrorSpy = self.sandbox.spy();
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -630,7 +764,7 @@
             });
 
             var event = new CustomEvent("ChannelChangeSucceeded", {});
-            this.hbbtvPlugin.dispatchEvent(event);
+            self.hbbtvPlugin.dispatchEvent(event);
 
             assertTrue("OnSuccess callback function called", onSuccessSpy.calledOnce);
             assertTrue("OnError callback function not called", onErrorSpy.notCalled);
@@ -640,13 +774,14 @@
     this.hbbtvSource.prototype.testOnErrorCallbackIsFiredWhenChannelChangeErrorEventIsRaised = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var onSuccessSpy = this.sandbox.spy();
-            var onErrorSpy = this.sandbox.spy();
+            var onSuccessSpy = self.sandbox.spy();
+            var onErrorSpy = self.sandbox.spy();
 
             broadcastSource.setChannel({
                 onid : 0x233A,
@@ -657,7 +792,7 @@
             });
 
             var e = new CustomEvent('ChannelChangeError');
-            this.hbbtvPlugin.dispatchEvent(e);
+            self.hbbtvPlugin.dispatchEvent(e);
 
             assertTrue("OnError callback function called", onErrorSpy.called);
             assertTrue("OnSuccess callback function not called", onSuccessSpy.notCalled);
@@ -667,16 +802,17 @@
     this.hbbtvSource.prototype.testOnErrorCallbackIsFiredWhenCreateChannelObjectFails = function(queue) {
         expectAsserts(2);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            this.hbbtvPlugin.createChannelObject = function() {
+            self.hbbtvPlugin.createChannelObject = function() {
                 return null;
             };
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var onSuccessSpy = this.sandbox.spy();
-            var onErrorSpy = this.sandbox.spy();
+            var onSuccessSpy = self.sandbox.spy();
+            var onErrorSpy = self.sandbox.spy();
 
             broadcastSource.setChannel({
                 onid : 0x233A,
@@ -693,14 +829,15 @@
     this.hbbtvSource.prototype.testGetChannelListFetchesChannelsFromBroadcastVideoObject = function (queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            var getChannelConfigStub = this.sandbox.spy(this.hbbtvPlugin, "getChannelConfig");
+            var getChannelConfigStub = self.sandbox.spy(self.hbbtvPlugin, "getChannelConfig");
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
+            var params = { onSuccess: self.sandbox.stub(), onError: self.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -713,14 +850,15 @@
     this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWithMessageWhenFetchingChannelsThrowsException = function (queue) {
         expectAsserts(3);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").throwsException({message:"Nope"});
+            self.sandbox.stub(self.hbbtvPlugin, "getChannelConfig").throwsException({message:"Nope"});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
+            var params = { onSuccess: self.sandbox.stub(), onError: self.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -737,14 +875,15 @@
     this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWhenChannelListNotReturned = function (queue) {
         expectAsserts(3);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({});
+            self.sandbox.stub(self.hbbtvPlugin, "getChannelConfig").returns({});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
+            var params = { onSuccess: self.sandbox.stub(), onError: self.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -761,14 +900,15 @@
     this.hbbtvSource.prototype.testGetChannelListCallsErrorCallbackWhenChannelListIsEmpty = function (queue) {
         expectAsserts(3);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList: []});
+            self.sandbox.stub(self.hbbtvPlugin, "getChannelConfig").returns({channelList: []});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
+            var params = { onSuccess: self.sandbox.stub(), onError: self.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -785,7 +925,8 @@
     this.hbbtvSource.prototype.testGetChannelListCallsOnSuccessWithArrayOfChannelsContainingChannelInformation = function (queue) {
         expectAsserts(16);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
 
             var channels = [
@@ -805,11 +946,11 @@
                 }
             ];
 
-            this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList: channels});
+            self.sandbox.stub(self.hbbtvPlugin, "getChannelConfig").returns({channelList: channels});
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            var params = { onSuccess: this.sandbox.stub(), onError: this.sandbox.stub()};
+            var params = { onSuccess: self.sandbox.stub(), onError: self.sandbox.stub()};
 
             broadcastSource.getChannelList(params);
 
@@ -842,7 +983,7 @@
     this.hbbtvSource.prototype.testGetCurrentChannelReturnsChannelObjectContainingCurrentChannelInformation = function (queue) {
         expectAsserts(6);
 
-        var config = this.getGenericHBBTVConfig();
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
 
             var device = application.getDevice();
@@ -863,10 +1004,11 @@
     this.hbbtvSource.prototype.testGetCurrentChannelReturnsFalseIfCurrentChannelIsUndefined = function (queue) {
         expectAsserts(1);
 
-        var config = this.getGenericHBBTVConfig();
+	var self = this;
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.hbbtvPlugin.currentChannel = undefined;
+            self.hbbtvPlugin.currentChannel = undefined;
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -875,11 +1017,11 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.doChannelTuningTest = function (queue, channelName, callback) {
-        var config = this.getGenericHBBTVConfig();
+    var doChannelTuningTest = function (self, queue, channelName, callback) {
+        var config = getGenericHBBTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            this.sandbox.stub(application, "getLayout", function() {
+            self.sandbox.stub(application, "getLayout", function() {
                 return {
                     requiredScreenSize: { height: 720, width: 1280 }
                 };
@@ -888,12 +1030,12 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            this.hbbtvPlugin.bindToCurrentChannel = this.sandbox.stub();
+            self.hbbtvPlugin.bindToCurrentChannel = self.sandbox.stub();
 
             var params = {
                 channelName: channelName,
-                onSuccess: this.sandbox.stub(),
-                onError: this.sandbox.stub()
+                onSuccess: self.sandbox.stub(),
+                onError: self.sandbox.stub()
             };
 
             broadcastSource.setChannelByName(params);
@@ -905,7 +1047,7 @@
     this.hbbtvSource.prototype.testTuningToChannelByNameWhenNameIsNotInChannelListCausesOnError = function (queue) {
         expectAsserts(3);
 
-        this.doChannelTuningTest(queue, "NonExistentChannel", function (params) {
+        doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -918,9 +1060,9 @@
     this.hbbtvSource.prototype.testTuningToChannelByNameWhenNameIsNotInChannelListUsingItemAccessorCausesOnError = function (queue) {
         expectAsserts(3);
 
-        this.stubChannelListInHbbtvPluginAsItemAccessorOnly();
+        stubChannelListInHbbtvPluginAsItemAccessorOnly(this);
 
-        this.doChannelTuningTest(queue, "NonExistentChannel", function (params) {
+        doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -933,9 +1075,9 @@
     this.hbbtvSource.prototype.testTuningToChannelByNameWhenNameIsNotInChannelListUsingBrokenItemAccessorAndGoodArrayCausesOnError = function (queue) {
         expectAsserts(3);
 
-        this.stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor();
+        stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor(this);
 
-        this.doChannelTuningTest(queue, "NonExistentChannel", function (params) {
+        doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -948,7 +1090,7 @@
     this.hbbtvSource.prototype.testTuningToCurrentChannelByNameCausesOnSuccess = function (queue) {
         expectAsserts(2);
 
-        this.doChannelTuningTest(queue, "BBC One", function (params) {
+        doChannelTuningTest(this, queue, "BBC One", function (params) {
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
         });
@@ -957,9 +1099,9 @@
     this.hbbtvSource.prototype.testTuningToCurrentChannelByNameUsingItemAccessorInChannelListCausesOnSuccess = function (queue) {
         expectAsserts(2);
 
-        this.stubChannelListInHbbtvPluginAsItemAccessorOnly();
+        stubChannelListInHbbtvPluginAsItemAccessorOnly(this);
 
-        this.doChannelTuningTest(queue, "BBC One", function (params) {
+        doChannelTuningTest(this, queue, "BBC One", function (params) {
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
         });
@@ -968,9 +1110,9 @@
     this.hbbtvSource.prototype.testTuningToCurrentChannelByNameUsingBrokenItemAccessorAndGoodArrayInChannelListCausesOnSuccess = function (queue) {
         expectAsserts(2);
 
-        this.stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor();
+        stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor(this);
 
-        this.doChannelTuningTest(queue, "BBC One", function (params) {
+        doChannelTuningTest(this, queue, "BBC One", function (params) {
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
         });
@@ -980,7 +1122,7 @@
         expectAsserts(4);
 
         var hbbtvPlugin = this.hbbtvPlugin;
-        this.doChannelTuningTest(queue, "BBC One", function () {
+        doChannelTuningTest(this, queue, "BBC One", function () {
             assert(hbbtvPlugin.bindToCurrentChannel.calledOnce);
             assertEquals('1280px', hbbtvPlugin.style.width);
             assertEquals('720px', hbbtvPlugin.style.height);
@@ -994,7 +1136,7 @@
         this.hbbtvPlugin.currentChannel = {
             name : "BBC Two"
         };
-        this.doChannelTuningTest(queue, "BBC Two", function (params) {
+        doChannelTuningTest(this, queue, "BBC Two", function (params) {
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
         });
@@ -1004,7 +1146,7 @@
         expectAsserts(3);
 
         this.hbbtvPlugin.currentChannel = undefined;
-        this.doChannelTuningTest(queue, "BBC Two", function (params) {
+        doChannelTuningTest(this, queue, "BBC Two", function (params) {
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
                 name : "ChannelError",
@@ -1018,7 +1160,7 @@
         expectAsserts(2);
 
         var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
-        this.doChannelTuningTest(queue, "BBC Two", function () {
+        doChannelTuningTest(this, queue, "BBC Two", function () {
             assert(createChannelObjectStub.calledOnce);
             assert(createChannelObjectStub.calledWith(8,5,6,7));
         });
@@ -1028,7 +1170,7 @@
         expectAsserts(2);
 
         var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
-        this.doChannelTuningTest(queue, "BBC Three", function () {
+        doChannelTuningTest(this, queue, "BBC Three", function () {
             assert(createChannelObjectStub.calledOnce);
             assert(createChannelObjectStub.calledWith(12,9,10,11));
         });
@@ -1038,7 +1180,7 @@
         expectAsserts(3);
 
         this.sandbox.stub(this.hbbtvPlugin, "getChannelConfig").returns({channelList:[]});
-        this.doChannelTuningTest(queue, "BBC Three", function (params) {
+        doChannelTuningTest(this, queue, "BBC Three", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -1052,7 +1194,7 @@
         expectAsserts(3);
 
         this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(null);
-        this.doChannelTuningTest(queue, "BBC Three", function (params) {
+        doChannelTuningTest(this, queue, "BBC Three", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
@@ -1069,7 +1211,7 @@
         this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
         var setChannelStub = this.sandbox.stub(this.hbbtvPlugin, "setChannel");
 
-        this.doChannelTuningTest(queue, "BBC Three", function () {
+        doChannelTuningTest(this, queue, "BBC Three", function () {
             assert(setChannelStub.calledOnce);
             // Use assertSame to ensure the object references are the same! setChannelStub.calledWith({}) only checks equality.
             assertSame(channelObj, setChannelStub.args[0][0]);
@@ -1083,7 +1225,7 @@
         this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
 
         var hbbtvPlugin = this.hbbtvPlugin;
-        this.doChannelTuningTest(queue, "BBC Three", function (params) {
+        doChannelTuningTest(this, queue, "BBC Three", function (params) {
             var evt = new CustomEvent('ChannelChangeError');
             hbbtvPlugin.dispatchEvent(evt);
 
@@ -1104,120 +1246,13 @@
         this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
 
         var hbbtvPlugin = this.hbbtvPlugin;
-        this.doChannelTuningTest(queue, "BBC Three", function (params) {
+        doChannelTuningTest(this, queue, "BBC Three", function (params) {
             var evt = new CustomEvent('ChannelChangeSucceeded');
             hbbtvPlugin.dispatchEvent(evt);
 
             assert(params.onError.notCalled);
             assert(params.onSuccess.calledOnce);
         });
-    };
-
-    /*  Helper functions to mock out and use HBBTV specific APIs */
-
-    this.hbbtvSource.prototype.stubHBBTVSpecificApis = function() {
-        this.hbbtvPlugin = document.createElement('object');
-        var hbbtvPlugin = this.hbbtvPlugin;
-        hbbtvPlugin.id = "broadcastVideoObject";
-        hbbtvPlugin.bindToCurrentChannel = function() {
-        };
-        hbbtvPlugin.stop = function() {
-        };
-        hbbtvPlugin.playState = "hbbTvObjectPlayState";
-        hbbtvPlugin.currentChannel = {
-            name : "BBC One",
-            idType : 10, //DVB-C
-            channelType: 123,
-            onid: 321,
-            tsid: 456,
-            sid: 654
-        };
-        hbbtvPlugin.createChannelObject = function() {
-        };
-        hbbtvPlugin.setChannel = function() {
-        };
-        var channelList = this.getRawChannelList();
-        hbbtvPlugin.getChannelConfig = function() {
-            return {
-                channelList: channelList
-            };
-        };
-
-        var target = document.getElementsByTagName('body')[0];
-        target.appendChild(hbbtvPlugin);
-    };
-
-    this.hbbtvSource.prototype.stubChannelListInHbbtvPluginAsItemAccessorOnly = function() {
-        var channelList = this.getRawChannelList();
-        this.hbbtvPlugin.getChannelConfig = function() {
-            return {
-                channelList: {
-                    item: function(itemIndex) {
-                        return channelList[itemIndex];
-                    },
-                    length: channelList.length
-                }
-            };
-        };
-    };
-
-    this.hbbtvSource.prototype.stubChannelListInHbbtvPluginAsArrayAndBrokenItemAccessor = function() {
-        var channelList = this.getRawChannelList();
-        channelList.item = 'trololo';
-
-        this.hbbtvPlugin.getChannelConfig = function() {
-            return {
-                channelList: channelList
-            };
-        };
-    };
-
-    this.hbbtvSource.prototype.getRawChannelList = function() {
-        return [
-             {
-                 name: "BBC One",
-                 onid: 1,
-                 tsid: 2,
-                 sid: 3,
-                 idType: 4
-             },
-             {
-                 name: "BBC Two",
-                 onid: 5,
-                 tsid: 6,
-                 sid: 7,
-                 idType: 8
-             },
-             {
-                 name: "BBC Three",
-                 onid: 9,
-                 tsid: 10,
-                 sid: 11,
-                 idType: 12
-             }
-         ];
-    };
-
-    this.hbbtvSource.prototype.removeHBBTVSpecificApis = function() {
-        var hbbtvPlugin = document.getElementById('broadcastVideoObject');
-        if (hbbtvPlugin) { // some tests remove this object before the tear down
-            hbbtvPlugin.parentNode.removeChild(hbbtvPlugin);
-        }
-    };
-
-    this.hbbtvSource.prototype.getGenericHBBTVConfig = function() {
-        return {modules:{base:"antie/devices/browserdevice",modifiers:[
-            "antie/devices/anim/styletopleft",
-            "antie/devices/media/html5",
-            "antie/devices/net/default",
-            "antie/devices/broadcastsource/hbbtvsource",
-            "antie/devices/data/nativejson",
-            "antie/devices/storage/cookie",
-            "antie/devices/logging/default",
-            "antie/devices/exit/closewindow"
-        ]},input:{map:{}},layouts:[
-            {width:1280,height:720,module:"fixtures/layouts/default",classes:["browserdevice720p"]}
-        ],deviceConfigurationKey:"devices-html5-1"};
     };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/broadcastsource/hbbtvsource'], this.hbbtvSource);

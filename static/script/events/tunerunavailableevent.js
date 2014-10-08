@@ -27,6 +27,7 @@
 require.def('antie/events/tunerunavailableevent',
     ['antie/events/event'],
     function (Event) {
+        'use strict';
 
         /**
          * Indicates broadcast has been interrupted, for example because the broadcast signal has stopped. (e.g. the

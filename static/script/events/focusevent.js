@@ -27,6 +27,8 @@
 require.def('antie/events/focusevent',
 	['antie/events/event'],
 	function(Event) {
+		'use strict';
+
 		/**
 		 * Class of events raised when focus is gained by a {@link antie.widgets.Button}.
 		 * @name antie.events.FocusEvent

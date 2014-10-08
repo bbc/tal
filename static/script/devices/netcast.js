@@ -29,6 +29,8 @@ require.def('antie/devices/netcast',
 		'antie/devices/browserdevice'
 	],
 	function(BrowserDevice) {
+		'use strict';
+
 		return BrowserDevice.extend({
 			exit: function() {
 				window.NetCastBack();

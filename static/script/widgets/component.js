@@ -30,6 +30,8 @@ require.def('antie/widgets/component',
         'antie/runtimecontext'
     ],
     function(Container, RuntimeContext) {
+        'use strict';
+
         /**
          * The Component widget class represents sections of UI that may be dynamically loaded.
          * @name antie.widgets.Component

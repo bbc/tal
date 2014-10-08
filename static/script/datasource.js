@@ -27,6 +27,8 @@
 require.def('antie/datasource',
 	['antie/class'],
 	function(Class) {
+		'use strict';
+
 		/**
 		 * Utility class to wrap disparate functions into a common interface for binding to lists.
 		 * @name antie.DataSource
@@ -48,13 +50,17 @@ require.def('antie/datasource',
 				this._obj = obj;
 				this._func = func;
 				this._args = args;
+
+
 	
 				if(component) {
 					var self = this;
-					component.addEventListener('beforehide', function() {
-						component.removeEventListener('beforehide', arguments.callee);
+
+					var beforeHideListener = function() {
+						component.removeEventListener('beforehide', beforeHideListener);
 						self.abort();
-					});
+					};
+					component.addEventListener('beforehide', beforeHideListener);
 				}
 			},
 			/**

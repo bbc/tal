@@ -27,6 +27,8 @@
 require.def('antie/widgets/image',
 	['antie/widgets/container'],
 	function(Container) {
+		'use strict';
+
 		/**
 		 * The Image widget displays an image. It supports lazy loading/unloading of images to conserve memory.
 		 * You can use CSS to set a background image on the container first and then when the image specified 

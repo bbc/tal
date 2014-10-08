@@ -32,6 +32,8 @@ require.def(
 		'antie/devices/anim/tween'
 	],
 	function(Device, TransitionEndPoints)  {
+        'use strict';
+
 		function movesScroll( startLeft, startTop, changeLeft, changeTop, options ){
 		    var to, from;
 			if ((changeLeft === 0) && (changeTop === 0)) {

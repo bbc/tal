@@ -35,6 +35,8 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
         'antie/events/tunerstoppedevent'
     ],
     function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerPresentingEvent, TunerStoppedEvent ) {
+        'use strict';
+
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
          */

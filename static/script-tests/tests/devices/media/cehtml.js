@@ -22,12 +22,37 @@
  * Please contact us for an alternative licence
  */
 
-jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
-
-
 (function() {
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+
+    var stubCreateElement = function (self, device) {
+
+        self.mediaElement = document.createElement("object");
+        self.mediaElement.stop = self.sandbox.stub();
+
+        self.mediaElement2 = document.createElement("object");
+        self.mediaElement2.stop = self.sandbox.stub();
+
+        self.outputElement = document.createElement("div")
+
+        var useMediaElementOne = true;
+
+        // Can't use calls(0) or onFirstCall - they're Sinon 1.8 and we're on 1.7
+        self.sandbox.stub(device, "_createElement", function (type, id) {
+            if (type === "div") {
+                return self.outputElement;
+            } else if (type === "object") {
+                if (useMediaElementOne) {
+                    useMediaElementOne = false;
+                    return self.mediaElement;
+                } else {
+                    return self.mediaElement2;
+                }
+            }
+        });
+
+    }
 
     this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier");
 
@@ -109,11 +134,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
-                assertUndefined(this.mediaElement.onPlayStateChange);
+                assertUndefined(self.mediaElement.onPlayStateChange);
 
                 mediaInterface.setSources(
                     [
@@ -123,7 +148,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
 
 
             }, config);
@@ -139,7 +164,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -151,11 +176,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 6;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 6;
+                self.mediaElement.onPlayStateChange();
 
                 assertTrue(callbackStub.calledTwice);
                 assertInstanceOf(MediaErrorEvent, callbackStub.args[1][0]);
@@ -174,7 +199,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -186,11 +211,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 5;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 5;
+                self.mediaElement.onPlayStateChange();
 
                 assertTrue(callbackStub.calledTwice);
                 assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
@@ -209,7 +234,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -221,11 +246,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 4;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 4;
+                self.mediaElement.onPlayStateChange();
 
                 assertTrue(callbackStub.calledTwice);
                 assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
@@ -244,7 +269,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -256,11 +281,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 3;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 3;
+                self.mediaElement.onPlayStateChange();
 
                 assertTrue(callbackStub.calledTwice);
                 assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
@@ -279,7 +304,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -291,11 +316,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 2;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 2;
+                self.mediaElement.onPlayStateChange();
 
                 assertTrue(callbackStub.calledTwice);
                 assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
@@ -314,7 +339,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -326,11 +351,11 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
                 assertTrue(callbackStub.calledOnce); // "canplay" from setSources
 
-                this.mediaElement.playState = 1;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 1;
+                self.mediaElement.onPlayStateChange();
 
                 assertEquals(5, callbackStub.callCount);
                 assertInstanceOf(MediaEvent, callbackStub.args[1][0]);
@@ -361,8 +386,8 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
 				var device = application.getDevice();
 
-				this.stubCreateElement(device);
-				this.mediaElement.stop = this.sandbox.stub();
+				stubCreateElement(self,device);
+				self.mediaElement.stop = self.sandbox.stub();
 
 				var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -376,13 +401,13 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
 				var clock = sinon.useFakeTimers();
 
-				this.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
-				this.mediaElement.onPlayStateChange();
+				self.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_PLAYING;
+				self.mediaElement.onPlayStateChange();
 				clock.tick(901);
 				assertEquals(6, callbackStub.callCount);
 
-				this.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_BUFFERING; // anything other than playing
-				this.mediaElement.onPlayStateChange();
+				self.mediaElement.playState = CEHTMLPlayer.PLAY_STATE_BUFFERING; // anything other than playing
+				self.mediaElement.onPlayStateChange();
 				assertEquals(7, callbackStub.callCount);
 				clock.tick(900001);
 				assertEquals(7, callbackStub.callCount);
@@ -404,7 +429,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -416,13 +441,13 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                         }
                     ], { });
 
-                assertFunction(this.mediaElement.onPlayStateChange);
+                assertFunction(self.mediaElement.onPlayStateChange);
 
                 var clock = sinon.useFakeTimers();
                 // t = 0
 
-                this.mediaElement.playState = 1;
-                this.mediaElement.onPlayStateChange();
+                self.mediaElement.playState = 1;
+                self.mediaElement.onPlayStateChange();
 
                 assertEquals(5, callbackStub.callCount);
 
@@ -459,14 +484,14 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 device.createMediaInterface("id", "video", callbackStub);
 
-                assertEquals("100%", this.mediaElement.style.width);
-                assertEquals("100%", this.mediaElement.style.height);
-                assertEquals("absolute", this.mediaElement.style.position);
-                assertEquals("-1", this.mediaElement.style.zIndex);
+                assertEquals("100%", self.mediaElement.style.width);
+                assertEquals("100%", self.mediaElement.style.height);
+                assertEquals("absolute", self.mediaElement.style.position);
+                assertEquals("-1", self.mediaElement.style.zIndex);
             }, config);
     };
 
@@ -520,14 +545,14 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
                 var outputElement = mediaInterface.render();
 
-                assertSame(this.outputElement, outputElement);
-                assertSame(this.outputElement, this.mediaElement.parentNode);
+                assertSame(self.outputElement, outputElement);
+                assertSame(self.outputElement, self.mediaElement.parentNode);
             }, config);
     };
 
@@ -541,7 +566,7 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
 
                 var device = application.getDevice();
 
-                this.stubCreateElement(device);
+                stubCreateElement(self,device);
 
                 var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
 
@@ -558,40 +583,12 @@ jstestdriver.console.warn("devices/media/cehtml.js poorly tested!");
                 var outputElement2 = mediaInterface.render();
 
                 assertSame(outputElement, outputElement2);
-                assertSame(this.outputElement, outputElement);
-                assertSame(this.outputElement, this.mediaElement2.parentNode);
-                assertEquals(1, this.outputElement.childNodes.length);
+                assertSame(self.outputElement, outputElement);
+                assertSame(self.outputElement, self.mediaElement2.parentNode);
+                assertEquals(1, self.outputElement.childNodes.length);
 
             }, config);
     };
 
 
-    this.CEHTMLTest.prototype.stubCreateElement = function (device) {
-
-        this.mediaElement = document.createElement("object");
-        this.mediaElement.stop = this.sandbox.stub();
-
-        this.mediaElement2 = document.createElement("object");
-        this.mediaElement2.stop = this.sandbox.stub();
-
-        this.outputElement = document.createElement("div")
-
-        var useMediaElementOne = true;
-        var self = this;
-
-        // Can't use calls(0) or onFirstCall - they're Sinon 1.8 and we're on 1.7
-        this.sandbox.stub(device, "_createElement", function (type, id) {
-            if (type === "div") {
-                return self.outputElement;
-            } else if (type === "object") {
-                if (useMediaElementOne) {
-                    useMediaElementOne = false;
-                    return self.mediaElement;
-                } else {
-                    return self.mediaElement2;
-                }
-            }
-        });
-
-    }
 })();

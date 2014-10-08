@@ -36,6 +36,8 @@ require.def('antie/widgets/widget',
         'antie/runtimecontext'
     ],
     function(Class, RuntimeContext) {
+        'use strict';
+
         /**
          * Keep a count of generated IDs so we can ensure they're always unique
          * @private

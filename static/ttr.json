@@ -11,6 +11,7 @@
                 "script-tests/api/*.js",
                 "script-tests/mocks/*.js",
                 "script-tests/tests/devices/mediaplayer/commontests.js",
+                "script-tests/tests/devices/mediaplayer/html5commontests.js",
                 "script-tests/fixtures/layouts/*.js",
                 "script/**/*.js"
             ],

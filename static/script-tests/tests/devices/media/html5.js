@@ -22,8 +22,6 @@
  * Please contact us for an alternative licence
  */
 
-jstestdriver.console.warn("devices/media/html5.js is poorly tested!");
-
 (function() {
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};

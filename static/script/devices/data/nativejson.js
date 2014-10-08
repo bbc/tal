@@ -28,6 +28,8 @@ require.def(
 	"antie/devices/data/nativejson",
 	['antie/devices/browserdevice'],
 	function(Device) {
+		'use strict';
+
 		/* Patch Device.prototype.encodeJson and Device.prototype.decodeJson */
 		Device.prototype.decodeJson = function(json) {
 			return JSON.parse(json);
