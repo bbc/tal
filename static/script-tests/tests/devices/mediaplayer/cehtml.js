@@ -437,7 +437,6 @@
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Investigate double buffering events
     // TODO: Seeking forward half a second not working properly
     // TODO: Ensure errors are handled
     // TODO: Ensure errors are logged.

@@ -354,6 +354,16 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
+    mixins.testDeviceBufferingNotificationInBufferingStateDoesNotEmitSecondBufferingEvent = function (queue) {
+        expectAsserts(2);
+        this.doTest(queue, function (MediaPlayer) {
+            getToBufferingState.call(this, MediaPlayer);
+            var callCount = this.eventCallback.callCount;
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            assertEquals(callCount, this.eventCallback.callCount);
+        });
+    };
+
     // *******************************************
     // ********* PLAYING state tests *************
     // *******************************************
