@@ -355,9 +355,12 @@
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            stubCreateElementResults.video.play.reset();
+
             this._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -385,9 +388,12 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+
+            stubCreateElementResults.video.play.reset();
+
             this._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -401,9 +407,12 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             this._mediaPlayer.pause();
+
+            stubCreateElementResults.video.play.reset();
+
             this._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -473,7 +482,7 @@
         });
     };
 
-    this.HTML5MediaPlayerTests.prototype.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInBufferingStateAndDontHaveMetadata = function(queue) {
+    this.HTML5MediaPlayerTests.prototype.testPlayFromDefersSettingCurrentTimeAndCallingPlayOnMediaElementUntilWeHaveMetadata = function(queue) {
         expectAsserts(2);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -481,7 +490,6 @@
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.playFrom(10);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(stubCreateElementResults.video.play.calledOnce);
             assertEquals(10, stubCreateElementResults.video.currentTime);
@@ -509,10 +517,10 @@
 
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            this._mediaPlayer.playFrom(10);            
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            stubCreateElementResults.video.play.reset();
+            this._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -642,7 +650,7 @@
     };
 
     this.HTML5MediaPlayerTests.prototype.testPlayFromCurrentTimeWhenPausedGoesToBufferingThenToPlaying = function(queue) {
-        expectAsserts(7);
+        expectAsserts(6);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
@@ -650,7 +658,7 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            stubCreateElementResults.video.play.reset();
 
             stubCreateElementResults.video.currentTime = 50;
 
@@ -663,7 +671,7 @@
 
             this._mediaPlayer.playFrom(50);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
 
             assert(eventCallback.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
@@ -686,7 +694,7 @@
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
             assertEquals(50, stubCreateElementResults.video.currentTime);
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
         });
     };
 
@@ -703,10 +711,10 @@
 
             var eventCallback = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventCallback);
-
+            stubCreateElementResults.video.play.reset();
             this._mediaPlayer.playFrom(50);
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
 
             assert(eventCallback.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
@@ -770,6 +778,28 @@
 
             assert(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
             assert(stubCreateElementResults.video.load.calledOnce);
+        });
+    };
+
+    this.HTML5MediaPlayerTests.prototype.testMediaElementResumesWhenBufferingCompleteIfWeHaveCalledResumeWhileBufferingDuringThePausedState = function(queue) {
+        // Edge case; it's valid for a device to start buffering at any point, even if it's paused (and we're in our paused state). If this
+        // happens and we call resume() while we are buffering we need to ensure that we tell the device to resume playing when it finishes
+        // buffering.
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            this._mediaPlayer.resume();
+
+            stubCreateElementResults.video.play.reset();
+
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(stubCreateElementResults.video.play.calledOnce);
         });
     };
 
