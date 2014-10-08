@@ -25,45 +25,32 @@
 (function() {
     this.HTML5WaitingFixMediaPlayerTests = AsyncTestCase("HTML5WaitingFixMediaPlayer");
 
-    //---------------
-    // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
-    //---------------
 
-    this.HTML5MediaPlayerTests.prototype.mixTestsIntoSubModifier(this.HTML5WaitingFixMediaPlayerTests.prototype);
-    this.HTML5WaitingFixMediaPlayerTests.prototype.config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    var stubCreateElementResults;
-    var deviceMockingHooks;
-
-    var oldSetUp = this.HTML5WaitingFixMediaPlayerTests.prototype.setUp;
-    this.HTML5WaitingFixMediaPlayerTests.prototype.setUp = function(queue) {
-        oldSetUp.call(this, queue);
-        stubCreateElementResults = this.stubCreateElementResults;
-        deviceMockingHooks = this.deviceMockingHooks;
-    };
+    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     //-------------
     // Test helpers
     //-------------
 
-    this.HTML5WaitingFixMediaPlayerTests.prototype.toPlaying = function (MediaPlayer) {
-        this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-        this._mediaPlayer.playFrom(0);
-        deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-        deviceMockingHooks.finishBuffering(this._mediaPlayer);
-        deviceMockingHooks.makeOneSecondPass();
+    var toPlaying = function (self, MediaPlayer) {
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+        self._mediaPlayer.playFrom(0);
+        self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+        self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
+        self.deviceMockingHooks.makeOneSecondPass();
     };
 
-    this.HTML5WaitingFixMediaPlayerTests.prototype.timeOutToBuffering = function () {
-        this._clock.tick(1000);
+    var timeOutToBuffering = function (self) {
+        self._clock.tick(1000);
     };
 
-    this.HTML5WaitingFixMediaPlayerTests.prototype.sendTimeUpdateEvent = function () {
-        deviceMockingHooks.makeOneSecondPass();
+    var sendTimeUpdateEvent = function (self) {
+        self.deviceMockingHooks.makeOneSecondPass();
     };
 
-    this.HTML5WaitingFixMediaPlayerTests.prototype.assertState = function (state) {
-        assertEquals(state, this._mediaPlayer.getState());
+    var assertState = function (self, state) {
+        assertEquals(state, self._mediaPlayer.getState());
     };
 
     //---------------------
@@ -72,133 +59,142 @@
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testWhenNoTimeUpdatesThenGoToBuffering = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
-            this.timeOutToBuffering();
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.BUFFERING);
+            assertState(this, MediaPlayer.STATE.BUFFERING);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testWhenTimeUpdatesWhileBufferingThenGoToPlaying = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
-            this.timeOutToBuffering();
-            this.sendTimeUpdateEvent();
+            timeOutToBuffering(this);
+            sendTimeUpdateEvent(this);
 
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            assertState(this, MediaPlayer.STATE.PLAYING);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testFrequentTimeUpdatesDoNotGoToBuffering = function(queue) {
         expectAsserts(4);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            assertState(this, MediaPlayer.STATE.PLAYING);
             this._clock.tick(100);
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            assertState(this, MediaPlayer.STATE.PLAYING);
 
-            this.sendTimeUpdateEvent();
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            sendTimeUpdateEvent(this);
+            assertState(this, MediaPlayer.STATE.PLAYING);
             this._clock.tick(100);
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            assertState(this, MediaPlayer.STATE.PLAYING);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenPaused = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
             this._mediaPlayer.pause();
-            this.timeOutToBuffering();
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.PAUSED);
+            assertState(this, MediaPlayer.STATE.PAUSED);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenStopped = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
             this._mediaPlayer.stop();
-            this.timeOutToBuffering();
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.STOPPED);
+            assertState(this, MediaPlayer.STATE.STOPPED);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenComplete = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
-            deviceMockingHooks.reachEndOfMedia(MediaPlayer);
-            this.timeOutToBuffering();
+            this.deviceMockingHooks.reachEndOfMedia(MediaPlayer);
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.COMPLETE);
+            assertState(this, MediaPlayer.STATE.COMPLETE);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenError = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
 
-            deviceMockingHooks.emitPlaybackError(MediaPlayer);
-            this.timeOutToBuffering();
+            this.deviceMockingHooks.emitPlaybackError(MediaPlayer);
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.ERROR);
+            assertState(this, MediaPlayer.STATE.ERROR);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenPauseAtStart = function(queue) {
         expectAsserts(1);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            this.sendTimeUpdateEvent();
+            this.deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            this.deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            sendTimeUpdateEvent(this);
 
-            this.timeOutToBuffering();
+            timeOutToBuffering(this);
 
-            this.assertState(MediaPlayer.STATE.PAUSED);
+            assertState(this, MediaPlayer.STATE.PAUSED);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDeferPauseUntilAfterBuffering = function(queue) {
         expectAsserts(3);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
-            this.timeOutToBuffering();
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
+            timeOutToBuffering(this);
 
             this._mediaPlayer.pause();
-            assert(stubCreateElementResults.video.pause.notCalled);
+            assert(this.stubCreateElementResults.video.pause.notCalled);
 
-            this.sendTimeUpdateEvent();
-            assert(stubCreateElementResults.video.pause.calledOnce);
-            this.assertState(MediaPlayer.STATE.PAUSED);
+            sendTimeUpdateEvent(this);
+            assert(this.stubCreateElementResults.video.pause.calledOnce);
+            assertState(this, MediaPlayer.STATE.PAUSED);
         });
     };
 
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDeferPauseThenResume = function(queue) {
         expectAsserts(2);
-        this.runMediaPlayerTest(queue, function (MediaPlayer) {
-            this.toPlaying(MediaPlayer);
-            this.timeOutToBuffering();
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            toPlaying(this, MediaPlayer);
+            timeOutToBuffering(this);
             this._mediaPlayer.pause();
 
             this._mediaPlayer.resume();
-            this.sendTimeUpdateEvent();
+            sendTimeUpdateEvent(this);
 
-            assert(stubCreateElementResults.video.pause.notCalled);
-            this.assertState(MediaPlayer.STATE.PLAYING);
+            assert(this.stubCreateElementResults.video.pause.notCalled);
+            assertState(this, MediaPlayer.STATE.PLAYING);
         });
     };
+
+    //---------------------
+    // Common tests
+    //---------------------
+
+    // Mixin the common tests shared by all HTML5 MediaPlayer implementations (last, so it can detect conflicts)
+
+    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5WaitingFixMediaPlayerTests, "antie/devices/mediaplayer/html5", config);
+
 })();
