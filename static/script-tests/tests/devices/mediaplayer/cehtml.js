@@ -363,24 +363,27 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
+        expectAsserts(4);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.pause();
+            assert(fakeCEHTMLObject.play.calledOnce);
+            assert(fakeCEHTMLObject.play.calledWith(1));
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(fakeCEHTMLObject.play.calledTwice);
+            assert(fakeCEHTMLObject.play.calledWith(0));
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Don't seek to zero when playing from stopped
-    // TODO: Handle playstatechange to switch out of BUFFERING state ** check
-    // TODO: Regular timeupdate event ** check
-    // TODO: getRange ** check
-    // TODO: Make pause actually pause
-    //  When playing ** check
-    //  When buffering
-    // TODO: Make stop actually stop ** check
     // TODO: Make resume actually resume
-    //  When paused ** check
     //  When buffering
-    // TODO: Fix seek beyond end of video ** check
-    // TODO: Make playFrom actually seek
-    //  When already buffering **
-    //  When playing ** check
-    //  When paused ** check
-    //  When complete ** check
+    // TODO: Fix seek beyond end of video when seeking from stopped state
     // TODO: Ensure reset actually clears the state **
     // TODO: Investigate double buffering events
     // TODO: Seeking forward half a second not working properly
@@ -389,7 +392,6 @@
     // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers
     // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
     // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
-    // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
     // TODO: Determine if the seekTo call blocks until it is complete (see media/cehtml.js:240)
     // TODO: media/cehtmlmediatypefix.js equivalent
     // TODO: Ensure the object data attribute is set tot the URL of the content (CEA-2014-A 5.7.1)
@@ -409,7 +411,6 @@
     // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
     // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
     // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
-    // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
     // TODO: Be aware that the media object API uses milliseconds rather than seconds
 
 
