@@ -140,6 +140,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
         this.stubCreateElementResults = stubCreateElementResults;
         this.deviceMockingHooks = deviceMockingHooks;
+        this.runMediaPlayerTest = runMediaPlayerTest;
     };
 
     mixins.tearDown = function() {
