@@ -47,7 +47,7 @@
         );
     }
     
-    function addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement, mockAddEventLister) {
+    function addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement, mockAddEventLister) {
         var options;
         
         obj.tDef = new TransitionDefinition();
@@ -74,7 +74,7 @@
         obj.element = new MockElement();
         
         if(mockAddEventLister) {
-            sinon.stub(
+            self.sandbox.stub(
                 obj.element,
                 "addEventListener",
                 function(event, callback) {
@@ -94,14 +94,15 @@
     }
     
     this.TransitionTest.prototype.testTransitionSetToCompleteAfterEnd = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue,
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 expectAsserts(2);
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement, true);
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement, true);
 
                 var clock = sinon.useFakeTimers();
 
@@ -118,6 +119,7 @@
     };
     
     this.TransitionTest.prototype.testTransitionRemovedAfterCompletion = function(queue) {
+	var self = this;
         var trans, newTransDef, applySpy, existingProperties;
         loadT(
             queue,
@@ -125,9 +127,9 @@
                 var existingTransDef, tEnds, el;
                 expectAsserts(2);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
-                applySpy = sinon.spy(TransitionElement.prototype, "applyDefinition");
+                applySpy = self.sandbox.spy(TransitionElement.prototype, "applyDefinition");
                 
                 existingTransDef = new TransitionDefinition();
                 existingTransDef.setProperty("top");
@@ -154,7 +156,7 @@
                 existingProperties = existingTransDef.getProperties();
                 el = new MockElement();
                 
-                sinon.stub(
+                self.sandbox.stub(
                     el, 
                     "addEventListener", 
                     function(event, callback) {
@@ -189,6 +191,7 @@
     };
     
     this.TransitionTest.prototype.testTransitionFromValuesSetOnElement = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue, 
@@ -196,11 +199,11 @@
                 var spy;
                 expectAsserts(1);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                spy = sinon.spy(obj.element.style, "setProperty").withArgs("top", "20px");
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                spy = self.sandbox.spy(obj.element.style, "setProperty").withArgs("top", "20px");
                 
                 trans = new Transition(obj.tDef, obj.tEnds, obj.element);
                 assertTrue("setProperty called on element", spy.withArgs("top", "20px").calledOnce);
@@ -210,6 +213,7 @@
     };
     
     this.TransitionTest.prototype.testTransitionToValuesSetOnElement = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue, 
@@ -217,11 +221,11 @@
                 var spy;
                 expectAsserts(1);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                spy = sinon.spy(obj.element.style, "setProperty").withArgs("top", "50px");
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                spy = self.sandbox.spy(obj.element.style, "setProperty").withArgs("top", "50px");
                 
                 trans = new Transition(obj.tDef, obj.tEnds, obj.element);
                 assertTrue("setProperty called on element", spy.withArgs("top", "50px").calledOnce);
@@ -231,6 +235,7 @@
     };
     
     this.TransitionTest.prototype.testTransitionToValuesSetOnElementAfterFromValues = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue, 
@@ -238,11 +243,11 @@
                 var spy, fromSpy, toSpy;
                 expectAsserts(1);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                spy = sinon.spy(obj.element.style, "setProperty");
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                spy = self.sandbox.spy(obj.element.style, "setProperty");
                 fromSpy = spy.withArgs("top", "20px");
                 toSpy = spy.withArgs("top", "50px");
                 
@@ -253,6 +258,7 @@
     };
     
     this.TransitionTest.prototype.testUpdateForcedBetweenFromAndDefApplication = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue, 
@@ -260,24 +266,25 @@
                 var spy, forceSpy, fromSpy, toSpy, tDefApplySpy;
                 expectAsserts(1);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
-                forceSpy = this.sandbox.spy(TransitionElement.prototype, "forceUpdate");
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                forceSpy = self.sandbox.spy(TransitionElement.prototype, "forceUpdate");
                 
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                spy = sinon.spy(TransitionElement.prototype, "setStylePropertyValue");
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                spy = self.sandbox.spy(TransitionElement.prototype, "setStylePropertyValue");
                 fromSpy = spy.withArgs("top", "20px");
                 toSpy = spy.withArgs("top", "50px");
-                tDefApplySpy = sinon.spy(TransitionElement.prototype, "applyDefinition");
+                tDefApplySpy = self.sandbox.spy(TransitionElement.prototype, "applyDefinition");
                 
                 trans = new Transition(obj.tDef, obj.tEnds, obj.element);
-                this.sandbox.stub(sinon.assert, "pass", function() { assert(true); });
+                self.sandbox.stub(sinon.assert, "pass", function() { assert(true); });
                 sinon.assert.callOrder(fromSpy, forceSpy, tDefApplySpy);
             }
         );   
     };
     
     this.TransitionTest.prototype.testUpdateForcedBetweenDefApplicationAndFrom = function(queue) {
+	var self = this;
         var trans, obj;
         loadT(
             queue, 
@@ -285,15 +292,15 @@
                 var spy, forceSpy, fromSpy, toSpy, tDefApplySpy;
                 expectAsserts(3);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
-                forceSpy = this.sandbox.spy(TransitionElement.prototype, "forceUpdate");
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                forceSpy = self.sandbox.spy(TransitionElement.prototype, "forceUpdate");
                 
                 obj = {};
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                spy = sinon.spy(TransitionElement.prototype, "setStylePropertyValue");
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                spy = self.sandbox.spy(TransitionElement.prototype, "setStylePropertyValue");
                 fromSpy = spy.withArgs("top", "20px");
                 toSpy = spy.withArgs("top", "50px");
-                tDefApplySpy = sinon.spy(TransitionElement.prototype, "applyDefinition");
+                tDefApplySpy = self.sandbox.spy(TransitionElement.prototype, "applyDefinition");
                 
                 trans = new Transition(obj.tDef, obj.tEnds, obj.element);                
                 assert(forceSpy.calledAfter(tDefApplySpy));
@@ -304,6 +311,7 @@
     };
     
     this.TransitionTest.prototype.testCallingStopWithNoParamFiresCallbackAndSkipsToEnd = function(queue) {
+	var self = this;
         var trans;
         loadT(
             queue, 
@@ -311,7 +319,7 @@
                 var obj, options, endPoints, lastPropCall;
                 expectAsserts(2);
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 lastPropCall = {};
                 options = {
@@ -321,12 +329,12 @@
                     from: {
                         "someParam": 100
                     },
-                    onComplete: sinon.spy()
+                    onComplete: self.sandbox.spy()
                 };
                 obj = {};
                 endPoints = new TransitionEndPoints(options);
-                addTDefsEndPointsAndElToObj(obj, TransitionDefinition, TransitionEndPoints, MockElement);
-                sinon.stub(obj.element.style, "setProperty", function(prop, value) {
+                addTDefsEndPointsAndElToObj(self, obj, TransitionDefinition, TransitionEndPoints, MockElement);
+                self.sandbox.stub(obj.element.style, "setProperty", function(prop, value) {
                     lastPropCall[prop] = value;
                 });
                 trans = new Transition(obj.tDef, endPoints, obj.element);   
@@ -338,6 +346,7 @@
     };
     
     this.TransitionTest.prototype.testCallingStopWithSkipToEndFalseFiresCallbackAndSkipsToComputedValue = function(queue) {
+	var self = this;
         var trans;
         loadT(
             queue, 
@@ -353,12 +362,12 @@
                     from: {
                         "someParam": 100
                     },
-                    onComplete: sinon.spy()
+                    onComplete: self.sandbox.spy()
                 };
 
                 endPoints = new TransitionEndPoints(options);
                 
-                sinon.stub(TransitionElement.prototype, "getComputedStyle", function() {
+                self.sandbox.stub(TransitionElement.prototype, "getComputedStyle", function() {
                     return {
                         "someParam": 75
                     };    
@@ -367,7 +376,7 @@
                 trans.setProperty("someParam");
                 el = new MockElement();
           
-                sinon.stub(el.style, "setProperty", function(prop, value) {
+                self.sandbox.stub(el.style, "setProperty", function(prop, value) {
                     lastPropCall[prop] = value;
                 });
                 trans = new Transition(trans, endPoints, el);   
@@ -379,12 +388,13 @@
     };
     
     this.TransitionTest.prototype.testStopCalledOnSkippedTransition = function(queue) {
+	var self = this;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var trans, options, endPoints, el, stopSpy;
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 options = {
                     to: {
@@ -393,7 +403,7 @@
                     from: {
                         "someParam": 100
                     },
-                    onComplete: sinon.spy(),
+                    onComplete: self.sandbox.spy(),
                     skipAnim: true
                     
                 };
@@ -401,7 +411,7 @@
                 trans = new TransitionDefinition();
                 trans.setProperty("someParam");
                 el = new MockElement();
-                stopSpy = sinon.spy(Transition.prototype, "stop");
+                stopSpy = self.sandbox.spy(Transition.prototype, "stop");
 
                 trans = new Transition(trans, endPoints, el);   
                 assert(stopSpy.calledWith(true));  
@@ -410,12 +420,13 @@
     };
     
     this.TransitionTest.prototype.testStopCalledOnZeroDurationTransition = function(queue) {
+	var self = this;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, el, stopSpy, transDef, trans;
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 options = {
                     to: {
@@ -424,14 +435,14 @@
                     from: {
                         "someParam": 100
                     },
-                    onComplete: sinon.spy()
+                    onComplete: self.sandbox.spy()
                 };
                 endPoints = new TransitionEndPoints(options);
                 transDef = new TransitionDefinition();
                 transDef.setProperty("someParam");
                 transDef.setPropertyDuration("someParam", 0);
                 el = new MockElement();
-                stopSpy = sinon.spy(Transition.prototype, "stop");
+                stopSpy = self.sandbox.spy(Transition.prototype, "stop");
 
                 trans = new Transition(transDef, endPoints, el);   
                 assert(stopSpy.calledWith(true));  
@@ -440,12 +451,13 @@
     };
     
     this.TransitionTest.prototype.testStopCalledOnChangelessTransition = function(queue) {
+	var self = this;
         loadT(
             queue, 
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, el, stopSpy, transDef, trans;
                 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
                 
                 options = {
                     to: {
@@ -454,14 +466,14 @@
                     from: {
                         "someParam": 50
                     },
-                    onComplete: sinon.spy()
+                    onComplete: self.sandbox.spy()
                 };
                 endPoints = new TransitionEndPoints(options);
                 transDef = new TransitionDefinition();
                 transDef.setProperty("someParam");
                 transDef.setPropertyDuration("someParam", 100);
                 el = new MockElement();
-                stopSpy = sinon.spy(Transition.prototype, "stop");
+                stopSpy = self.sandbox.spy(Transition.prototype, "stop");
 
                 trans = new Transition(transDef, endPoints, el);   
                 assert(stopSpy.calledWith(true));  
@@ -470,6 +482,7 @@
     };
 
     this.TransitionTest.prototype.testEndFnChecksEventTarget = function(queue) {
+	var self = this;
         var targetSpy;
         expectAsserts(1);
         loadT(
@@ -477,8 +490,8 @@
             function(Transition, TransitionDefinition, TransitionEndPoints, MockElement, TransitionElement) {
                 var options, endPoints, el, transDef, trans;
 
-                this.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
-                targetSpy = sinon.spy(TransitionElement.prototype, "isEventTarget");
+                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
+                targetSpy = self.sandbox.spy(TransitionElement.prototype, "isEventTarget");
 
                 options = {
                     to: {
@@ -487,7 +500,7 @@
                     from: {
                         "left": 20
                     },
-                    onComplete: sinon.spy()
+                    onComplete: self.sandbox.spy()
                 };
 
                 endPoints = new TransitionEndPoints(options);
@@ -496,7 +509,7 @@
                 transDef.setPropertyDuration("left", 10);
                 el = new MockElement();
 
-                sinon.stub(
+                self.sandbox.stub(
                     el,
                     "addEventListener",
                     function(event, callback) {

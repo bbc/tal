@@ -34,6 +34,7 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotCallRenderOnWidget = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -43,8 +44,8 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -57,6 +58,7 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotCallRenderOnWidget = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -66,8 +68,8 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -80,6 +82,7 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotAppendOutputElementOfWidgetToAnything = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -89,8 +92,8 @@
                 'antie/devices/device'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -106,6 +109,7 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotPrependOutputElementOfWidgetToAnything = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -115,8 +119,8 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -134,6 +138,7 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotChangeState = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -143,8 +148,8 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -158,6 +163,7 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotChangeState = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -167,9 +173,9 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
 
-                var state = this.createState(WidgetContext, VisibleState);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
@@ -182,6 +188,7 @@
     };
 
     this.VisibleStateTest.prototype.testDetachCallsHideElementWithWidgetElement = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -191,8 +198,8 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var child = new Widget();
                 child.outputElement = "testElement";
@@ -207,6 +214,7 @@
     };
 
     this.VisibleStateTest.prototype.testDetachChangesStateToHidden = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -216,9 +224,9 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
 
-                var state = this.createState(WidgetContext, VisibleState);
+                var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var child = new Widget();
                 state.detach(context, child);
@@ -232,6 +240,7 @@
     };
 
     this.VisibleStateTest.prototype.testHasLengthReturnsTrue = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -241,14 +250,15 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 assertTrue(state.hasLength());
             }
         );
     };
 
     this.VisibleStateTest.prototype.testInViewReturnsTrue = function (queue) {
+	var self = this;
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
@@ -258,22 +268,22 @@
                 'antie/devices/browserdevice'
             ],
             function (application, VisibleState, WidgetContext, Widget, Device) {
-                this.stubWidgetToReturnStubAppAndDevice(Widget, Device, application);
-                var state = this.createState(WidgetContext, VisibleState);
+                stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
+                var state = createState(self, WidgetContext, VisibleState);
                 assertTrue(state.inView());
             }
         );
     };
 
-    this.VisibleStateTest.prototype.createState = function (Context, State) {
-        this.sandbox.stub(Context.prototype);
+    var createState = function (self, Context, State) {
+        self.sandbox.stub(Context.prototype);
         return new State();
     };
 
-    this.VisibleStateTest.prototype.stubWidgetToReturnStubAppAndDevice = function (Widget, Device, application) {
-        this.sandbox.stub(Device.prototype);
-        this.sandbox.stub(Widget.prototype, 'getCurrentApplication');
+    var stubWidgetToReturnStubAppAndDevice = function (self, Widget, Device, application) {
+        self.sandbox.stub(Device.prototype);
+        self.sandbox.stub(Widget.prototype, 'getCurrentApplication');
         Widget.prototype.getCurrentApplication.returns(application);
-        this.sandbox.stub(application, 'getDevice').returns(new Device());
+        self.sandbox.stub(application, 'getDevice').returns(new Device());
     };
 }());

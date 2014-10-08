@@ -116,7 +116,9 @@ require.def(
                 },
                 
                 /*
-                 * forces update of style
+                 * Forces update of style; several browsers don't handle CSS transitions correctly, but you can force
+                 * them to by accessing the computed style of the element after changing it.
+                 * See http://louisremi.com/2012/06/05/working-around-css-transitions-bugs-with-getcomputedstyle/
                  */
                 forceUpdate: function(property) {
                     var style = this.getComputedStyle();

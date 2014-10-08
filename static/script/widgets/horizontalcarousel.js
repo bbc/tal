@@ -32,6 +32,8 @@ require.def('antie/widgets/horizontalcarousel',
 		'antie/events/beforeselecteditemchangeevent'
 	],
 	function(HorizontalList, List, KeyEvent, BeforeSelectedItemChangeEvent) {
+		'use strict';
+
 		/**
 		 * The HorizontalCarousel widget extends the HorizontalList widget to modify the animation behaviour to render a carousel rather than a list.
 		 * @name antie.widgets.HorizontalCarousel
@@ -144,6 +146,7 @@ require.def('antie/widgets/horizontalcarousel',
 					this.setAutoRenderChildren(true);
 
 					var device = this.getCurrentApplication().getDevice();
+					var i, index, elpos, elsize;
 
 					if(!_centerWidget.outputElement) {
 						_centerWidget.outputElement = _centerWidget.render(device);
@@ -151,8 +154,8 @@ require.def('antie/widgets/horizontalcarousel',
 
 					// iterate through the widgets currently in the document
 					// removing any that are no-longer in or near the viewport
-					for(var i=0; i<this._childWidgetsInDocument.length; i++) {
-						var index = i + this._nodeOffset;
+					for(i=0; i<this._childWidgetsInDocument.length; i++) {
+						index = i + this._nodeOffset;
 						if(index < this._selectedIndex - this._viewportSize || index > this._selectedIndex + this._viewportSize) {
 							if(this._childWidgetsInDocument[i].outputElement) {
 								device.removeElement(this._childWidgetsInDocument[i].outputElement);
@@ -164,8 +167,8 @@ require.def('antie/widgets/horizontalcarousel',
 					// to the document (and keep a record of them)
 					this._childWidgetsInDocument = [];
 					var start = ((start = this._selectedIndex - this._viewportSize) < 0) ? 0 : start;
-					for(var i=start; (i <= this._selectedIndex + this._viewportSize) && (i < this._childWidgetOrder.length) ; i++) {
-						var index = i - start + this._prefixClones;
+					for(i=start; (i <= this._selectedIndex + this._viewportSize) && (i < this._childWidgetOrder.length) ; i++) {
+						index = i - start + this._prefixClones;
 
 						this._childWidgetOrder[i].addClass('inviewport');
 						if(!this._childWidgetOrder[i].outputElement) {
@@ -180,16 +183,16 @@ require.def('antie/widgets/horizontalcarousel',
 					if(this._nodeOffset < 0) this._nodeOffset = 0;
 
 					// reposition the carousel over the active item
-					var elpos = device.getElementOffset(_centerWidget.outputElement);
-					var elsize = device.getElementSize(_centerWidget.outputElement);
+					elpos = device.getElementOffset(_centerWidget.outputElement);
+					elsize = device.getElementSize(_centerWidget.outputElement);
 					this._alignToElement(_centerWidget.outputElement, true);
 					//device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
 
 					this.setAutoRenderChildren(false);
 				} else if((this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_CLASSES) && this.outputElement && _centerWidget.outputElement) {
-					var device = this.getCurrentApplication().getDevice();
-					var elpos = device.getElementOffset(_centerWidget.outputElement);
-					var elsize = device.getElementSize(_centerWidget.outputElement);
+					device = this.getCurrentApplication().getDevice();
+					elpos = device.getElementOffset(_centerWidget.outputElement);
+					elsize = device.getElementSize(_centerWidget.outputElement);
 					var maskSize = device.getElementSize(this._maskElement);
 					var nodes = device.getChildElementsByTagName(this.outputElement,
 							this._renderMode === List.RENDER_MODE_LIST ? 'li' : 'div'
@@ -353,7 +356,7 @@ require.def('antie/widgets/horizontalcarousel',
 
 				if(this._childWidgetOrder.length > 0) {
 					// TODO: tidy up
-					function moveLastToFirst() {
+					var moveLastToFirst = function() {
 						var last = self._items[self._childWidgetOrder[self._childWidgetOrder.length - 1]];
 						var first = self._items[self._childWidgetOrder[0]];
 						if(last) {
@@ -765,7 +768,7 @@ require.def('antie/widgets/horizontalcarousel',
 
 					this.bubbleEvent(new BeforeSelectedItemChangeEvent(this, _newSelectedWidget, _newIndex));
 
-					function scrollDone() {
+					var scrollDone = function() {
 						if (!self._activateThenScroll) {
 							self.setActiveChildWidget(_newSelectedWidget);
 							self._selectedIndex = _newIndex;

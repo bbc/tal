@@ -28,6 +28,7 @@ require.def(
     'antie/devices/exit/netcast',
     ['antie/devices/browserdevice'],
     function(Device) {
+        'use strict';
 
         /**
          * Exits the application by returning to the widget page using the NetcastBack function.

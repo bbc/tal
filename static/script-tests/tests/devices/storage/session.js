@@ -25,21 +25,23 @@
 (function() {
 	this.SessionStorageProviderTest = AsyncTestCase("Storage_Session");
 
+	var stores;
+
 	this.SessionStorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
-		this.stores = [];
+		stores = [];
 	};
 
 	this.SessionStorageProviderTest.prototype.tearDown = function() {
 		this.sandbox.restore();
-		for(var i=0; i<this.stores.length; i++) {
-			this.stores[i].clear();
+		for(var i=0; i<stores.length; i++) {
+			stores[i].clear();
 		}
 	};
 
-	this.SessionStorageProviderTest.prototype.getStorage = function(application, storageType, namespace) {
+	var getStorage = function(application, storageType, namespace) {
 		var storage = application.getDevice().getStorage(storageType, namespace);
-		this.stores.push(storage);
+		stores.push(storage);
 		return storage;
 	};
 
@@ -49,8 +51,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
 
 			assertSame(storage1, storage2);
 		}, config);
@@ -62,10 +64,10 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
 			storage1.setItem("hello", "world");
 
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
 			var val = storage2.getItem("hello");
 
 			assertEquals("world", val);
@@ -82,10 +84,10 @@
 				"hello": ["house","street","town","region","country","continent","world","solar system","galaxy", "universe"]
 			};
 
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
 			storage1.setItem("hello", obj);
 
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test");
 			var val = storage2.getItem("hello");
 
 			assertEquals(obj, val);
@@ -98,8 +100,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
 
 			assertNotSame(storage1, storage2);
 		}, config);
@@ -111,8 +113,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
 
 			storage1.setItem("hello", "world");
 			assertUndefined(storage2.getItem("hello"));
@@ -125,7 +127,7 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
+			var storage = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
 
 			storage.setItem("hello", "world");
 			assertEquals("world", storage.getItem("hello"));
@@ -141,8 +143,8 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			var storage1 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
-			var storage2 = this.getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
+			var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test1");
+			var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_SESSION, "test2");
 
 			storage1.setItem("hello", "world");
 			assertEquals("world", storage1.getItem("hello"));

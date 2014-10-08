@@ -1,3 +1,4 @@
+/* global Common */
 /**
  * @fileOverview Requirejs module containing base antie.devices.exit.samsung_maple class.
  *
@@ -28,6 +29,7 @@ require.def(
 	'antie/devices/exit/samsung_maple',
 	['antie/devices/browserdevice'],
 	function(Device) {
+        'use strict';
 
         /**
 	     * Exits the application by navigating to the first page in the browsers history.

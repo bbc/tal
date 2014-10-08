@@ -32,6 +32,7 @@ require.def(
 		'antie/events/mediaevent'
 	],
 	function (HTML5Player, MediaEvent) {
+		'use strict';
 
 		var originalConstructor = HTML5Player.prototype.init;
 		HTML5Player.prototype.init = function(id, mediaType, eventHandlingFunction) {

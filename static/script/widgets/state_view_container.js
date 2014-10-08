@@ -27,6 +27,8 @@ require.def ('antie/widgets/state_view_container', [
     'antie/events/keyevent',
     'antie/widgets/button'
 ], function(Container, KeyEvent, Button){
+    'use strict';
+
     var keyMapping = { }
     keyMapping[KeyEvent.VK_UP] = 'up';
     keyMapping[KeyEvent.VK_DOWN] = 'down';

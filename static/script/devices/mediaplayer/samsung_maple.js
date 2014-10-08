@@ -119,11 +119,13 @@ require.def(
                             this._toPlaying();
                         } else {
                             this._seekTo(seekingTo);
+                            this._playerPlugin.Resume();
                         }
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._setDisplayFullScreenForVideo();
                         this._playerPlugin.ResumePlay(this._source, seekingTo);
                         this._toBuffering();
                         break;
@@ -207,15 +209,11 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                var result = undefined;
-                switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                        break;
-                    default:
-                        result = this._currentTime;
-                        break;
+                if (this.getState() === MediaPlayer.STATE.STOPPED) {
+                    return undefined;
+                } else {
+                    return this._currentTime;
                 }
-                return result;
             },
 
             /**
@@ -261,12 +259,11 @@ require.def(
             },
 
             _tryPauseWithStateTransition: function() {
-                var result = this._playerPlugin.Pause();
-                if (result) {
+                var success = this._isSuccessCode(this._playerPlugin.Pause());
+                if (success) {
                     this._toPaused();
                 }
-
-                this._tryingToPause = !result;
+                this._tryingToPause = !success;
             },
 
             _onStatus: function() {
@@ -296,8 +293,10 @@ require.def(
 
             _deferredSeek: function() {
                 if (this._deferSeekingTo) {
-                    this._toBuffering();
-                    this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    if (!this._isNearToCurrentTime(this._deferSeekingTo)) {
+                        this._toBuffering();
+                        this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    }
                     this._deferSeekingTo = null;
                 }
             },
@@ -401,14 +400,17 @@ require.def(
 
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
-                this._jump(offset);
+                var success = this._isSuccessCode(this._jump(offset));
+                if (!success) {
+                    this._toPlaying();
+                }
             },
 
             _jump: function (offsetSeconds) {
                 if (offsetSeconds > 0) {
-                    this._playerPlugin.JumpForward(offsetSeconds);
+                    return this._playerPlugin.JumpForward(offsetSeconds);
                 } else {
-                    this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
+                    return this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
                 }
             },
 
@@ -452,6 +454,18 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
+            _setDisplayFullScreenForVideo: function() {
+                if (this._type === MediaPlayer.TYPE.VIDEO) {
+                    var dimensions = RuntimeContext.getDevice().getScreenSize();
+                    this._playerPlugin.SetDisplayArea(0, 0, dimensions.width, dimensions.height);
+                }
+            },
+
+            _isSuccessCode: function(code) {
+                var samsung2010ErrorCode = -1;
+                return code && code !== samsung2010ErrorCode;
             },
 
             /**

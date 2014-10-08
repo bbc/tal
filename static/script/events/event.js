@@ -37,6 +37,8 @@
 require.def('antie/events/event',
 	['antie/class'],
 	function(Class) {
+		'use strict';
+
 		var eventCount = 0;
 		var eventListeners = {};
 	

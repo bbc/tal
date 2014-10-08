@@ -32,6 +32,7 @@ require.def(
 	'antie/devices/exit/destroyapplication',
 	['antie/devices/browserdevice'],
 	function(Device) {
+        'use strict';
 
 		// MIME type for the OIPF application manager, as defined by the spec (v1.2)
 		// Spec: http://www.oipf.tv/specifications/root/volume-5-declarative-application-environment-r112/download

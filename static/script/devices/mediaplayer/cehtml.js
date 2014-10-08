@@ -41,7 +41,6 @@ require.def(
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-
             /**
             * @inheritDoc
             */
@@ -50,12 +49,15 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
+                    this._createElement();
+                    this._registerEventHandlers();
+                    this._addElementToDOM();
                     this._toStopped();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
-
+            
             /**
             * @inheritDoc
             */
@@ -67,6 +69,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
+                        this._mediaElement.play(1);
                         this._toPlaying();
                         break;
 
@@ -80,17 +83,35 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
-                this._targetSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
+                        this._deferSeekingTo = seconds;
+                        break;
+
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        // Seeking past 0 requires calling play first when media has not been loaded
+                        this._mediaElement.play(1);
+                        if (seconds > 0) {
+                            this._mediaElement.seek(seconds * 1000);
+                        }
+                        break;
+
+                    case MediaPlayer.STATE.COMPLETE:
+                        this._toBuffering();
+                        this._mediaElement.stop();
+                        this._mediaElement.play(1);
+                        if (seconds > 0) {
+                            this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        }
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
-                    case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
+                        this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        this._mediaElement.play(1);
                         break;
 
                     default:
@@ -110,6 +131,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._mediaElement.play(0);
                         this._toPaused();
                         break;
 
@@ -128,6 +150,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._mediaElement.stop();
                         this._toStopped();
                         break;
 
@@ -171,14 +194,42 @@ require.def(
             * @inheritDoc
             */
             getCurrentTime: function () {
-                return this._currentTime; // FIXME
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        if (this._mediaElement) {
+                            return this._mediaElement.playPosition / 1000;
+                        }
+                        break;
+                }
+                return undefined;
             },
 
             /**
             * @inheritDoc
             */
             getRange: function () {
-                return this._range; // FIXME
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        return this._getSeekableRange();
+                };
+                return undefined;
+            },
+
+            _getSeekableRange: function () {
+              if(this._mediaElement) {
+                  return {
+                      start: 0,
+                      end: this._mediaElement.playTime / 1000
+                  };
+              }
             },
 
             /**
@@ -192,6 +243,7 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                    this._mediaElement.play(0);
                     this._toPaused();
                 } else {
                     this._toPlaying();
@@ -216,17 +268,89 @@ require.def(
                 }
             },
 
+            _createElement: function() {
+                var device = RuntimeContext.getDevice();
+                this._mediaElement = device._createElement("object", "mediaPlayer");
+                this._mediaElement.type = this._mimeType;
+                this._mediaElement.data = this._source;
+                this._mediaElement.style.position = "absolute";
+                this._mediaElement.style.top = "0px";
+                this._mediaElement.style.left = "0px";
+                this._mediaElement.style.width = "100%";
+                this._mediaElement.style.height = "100%";
+            },
+
+            _registerEventHandlers: function() {
+                var self = this;
+
+                 this._mediaElement.onPlayStateChange = function() {
+                     switch (self._mediaElement.playState) {
+                         case Player.PLAY_STATE_STOPPED:
+                             break;
+                         case Player.PLAY_STATE_PLAYING:
+                             self._onFinishedBuffering();
+                             self._deferredSeek();
+                             break;
+                         case Player.PLAY_STATE_PAUSED:
+                             break;
+                         case Player.PLAY_STATE_CONNECTING:
+                             break;
+                         case Player.PLAY_STATE_BUFFERING:
+                             self._onDeviceBuffering();
+                             break;
+                         case Player.PLAY_STATE_FINISHED:
+                             self._onEndOfMedia();
+                             break;
+                         case Player.PLAY_STATE_ERROR:
+                             self._onDeviceError();
+                             break;
+                         default:
+                             // do nothing
+                             break;
+                     }
+                 }
+
+                self._updateInterval = window.setInterval(function() {
+                    self._onStatus();
+                }, 900);
+            },
+
+            _deferredSeek: function() {
+                if(this._deferSeekingTo !== undefined) {
+                    this._toBuffering();
+                    this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
+                    this._deferSeekingTo = undefined;
+                }
+            },
+
+            _addElementToDOM: function() {
+                var device = RuntimeContext.getDevice();
+                var body = document.getElementsByTagName("body")[0];
+                device.prependChildElement(body, this._mediaElement);
+            },
+            
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
-                this._currentTime = undefined; // FIXME
-                this._range = undefined; // FIXME
+                if(this._mediaElement) {
+                    window.clearInterval(this._updateInterval);
+                    this._destroyMediaElement();
+                }
+            },
+
+            _destroyMediaElement: function() {
+                //this._mediaElement.removeAttribute('src');
+                //this._mediaElement.load();
+                var device = RuntimeContext.getDevice();
+                this._mediaElement.onPlayStateChange = function() {}; //FIXME: onPlaystateChange called by finishedBuffering in mocking hooks, is this correct?
+                device.removeElement(this._mediaElement);
+                this._mediaElement = null;
+                delete this._mediaElement;
             },
 
             _toStopped: function () {
-                this._currentTime = undefined; // FIXME
-                this._range = undefined; // FIXME
+                //this._mediaElement.playTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },
@@ -247,7 +371,6 @@ require.def(
             },
 
             _toComplete: function () {
-                this._currentTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
@@ -264,6 +387,14 @@ require.def(
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
             }
         });
+
+        Player.PLAY_STATE_STOPPED = 0;
+        Player.PLAY_STATE_PLAYING = 1;
+        Player.PLAY_STATE_PAUSED = 2;
+        Player.PLAY_STATE_CONNECTING = 3;
+        Player.PLAY_STATE_BUFFERING = 4;
+        Player.PLAY_STATE_FINISHED = 5;
+        Player.PLAY_STATE_ERROR = 6;
 
         var instance = new Player();
 

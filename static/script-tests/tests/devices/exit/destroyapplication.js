@@ -43,6 +43,8 @@
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+		var self = this;
+
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var expectedMimeType = 'application/oipfApplicationManager';
 			
@@ -54,7 +56,7 @@
 					}
 			};
 
-            var oipfSpy = sinon.spy( window.oipfObjectFactory, "isObjectSupported" );
+            var oipfSpy = self.sandbox.spy( window.oipfObjectFactory, "isObjectSupported" );
 
             application.getDevice().exit();
             assertTrue( oipfSpy.calledOnce );

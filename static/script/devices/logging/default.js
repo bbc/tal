@@ -33,6 +33,8 @@ require.def(
 	],
 	function( Module, Device ) 
 	{
+		'use strict';
+
 		var loggingMethods = {
 			/**
 			 * Sets the iterator pointer to the first item

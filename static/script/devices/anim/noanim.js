@@ -29,6 +29,8 @@ require.def(
 	['antie/devices/browserdevice',
     'antie/devices/anim/shared/transitionendpoints'],
 	function(Device, TransitionEndPoints) {
+        'use strict';
+
         /* documented in antie.devices.Device */
 		Device.prototype.scrollElementTo = function(options) {
 			if(new RegExp("_mask$").test(options.el.id)) {

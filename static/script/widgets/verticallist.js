@@ -30,6 +30,8 @@ require.def('antie/widgets/verticallist',
 	 	'antie/events/keyevent'
 	],
 	function(List, KeyEvent) {
+		'use strict';
+
 		/**
 		 * The VerticalList widget is a container widget that supports spatial navigation between items using {@link KeyEvent.VK_UP} and {@link KeyEvent.VK_DOWN}.
 		 * @name antie.widgets.VerticalList

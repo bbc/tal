@@ -53,7 +53,7 @@
         );
     };
 
-    this.HorizontalOrientationTest.prototype.testStyleClassReturnsVertical = function (queue) {
+    this.VerticalOrientationTest.prototype.testStyleClassReturnsVertical = function (queue) {
         queuedRequire(
             queue,
             ['antie/widgets/carousel/orientations/vertical'],

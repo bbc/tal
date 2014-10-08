@@ -108,6 +108,8 @@
             assertObject(deviceLoadCallbacks);
             assertFunction(deviceLoadCallbacks.onSuccess);
 
+            // When we call back indicating success of Device.load, we load the layouts by using require. We mock
+            // out require and simulate the success of the load of the require call that loads the layout module.
             var requireStub = this.sandbox.stub(window, "require");
 
             deviceLoadCallbacks.onSuccess(device);

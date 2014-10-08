@@ -34,7 +34,7 @@
         this.sandbox.restore();
     };
 
-    this.NoAnimAnimationTest.prototype.getConfig = function() {
+    var getConfig = function() {
         var config;
         config = {
             "modules": {
@@ -62,7 +62,7 @@
     this.NoAnimAnimationTest.prototype.testScrollElementTo = function(queue) {
         expectAsserts(3);
 
-        var config = this.getConfig();
+        var config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -84,14 +84,13 @@
             assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
             assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
             assert(onComplete.calledOnce);
-
         }, config);
     };
 
     this.NoAnimAnimationTest.prototype.testMoveElementTo = function(queue) {
         expectAsserts(3);
 
-        var config = this.getConfig();
+        var config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -119,7 +118,7 @@
     this.NoAnimAnimationTest.prototype.testHideElement = function(queue) {
         expectAsserts(3);
 
-        var config = this.getConfig();
+        var config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -142,7 +141,7 @@
     this.NoAnimAnimationTest.prototype.testShowElement = function(queue) {
         expectAsserts(3);
 
-        var config = this.getConfig();
+        var config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
@@ -165,7 +164,7 @@
     this.NoAnimAnimationTest.prototype.testIsAnimationDisabled = function(queue) {
         expectAsserts(1);
 
-        var config = this.getConfig();
+        var config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application){
             var device = application.getDevice();
@@ -176,7 +175,7 @@
     this.NoAnimAnimationTest.prototype.testTweenElementStyleSetsEnd = function(queue) {
         expectAsserts(1);
         var config;
-        config = this.getConfig();
+        config = getConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application){
             var device, div, options;
             device = application.getDevice();
@@ -195,7 +194,7 @@
     this.NoAnimAnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
         expectAsserts(1);
         var config;
-        config = this.getConfig();
+        config = getConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application){
             var device, div, options;
             device = application.getDevice();
@@ -214,7 +213,7 @@
     this.NoAnimAnimationTest.prototype.testTweenElementFiresCallback = function(queue) {
         expectAsserts(1);
         var config;
-        config = this.getConfig();
+        config = getConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application){
             var device, div, options, spy;
             device = application.getDevice();
@@ -235,7 +234,7 @@
     this.NoAnimAnimationTest.prototype.testMoveElementToZeroFiresCallbackWhenStylePropertiesNotYetSet = function (queue) {
         expectAsserts(1);
         var config;
-        config = this.getConfig();
+        config = getConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var device, options;
@@ -259,4 +258,5 @@
     };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/noanim'], this.NoAnimAnimationTest);
+
 })();

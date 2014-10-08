@@ -33,14 +33,14 @@
         this.sandbox.restore();
     };
 
-    this.AlignerTest.prototype.getNavigator = function (Navigator) {
+    var getNavigator = function (Navigator, sandbox) {
         var navigator = new Navigator();
-        this.sandbox.stub(navigator);
+        sandbox.stub(navigator);
         return navigator;
     };
 
-    this.AlignerTest.prototype.getNavigatorStartWithCurrentIndexActive = function (Navigator) {
-        var navigator = this.getNavigator(Navigator);
+    var getNavigatorStartWithCurrentIndexActive = function (Navigator, sandbox) {
+        var navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(1);
         navigator.indexAfter.returns(1);
@@ -50,8 +50,8 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getNavigatorAtEndWithCurrentIndexActive = function (Navigator) {
-        var navigator = this.getNavigator(Navigator);
+    var getNavigatorAtEndWithCurrentIndexActive = function (Navigator, sandbox) {
+        var navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(0);
         navigator.indexAfter.returns(0);
@@ -61,10 +61,10 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getNavigatorAtEndWithCurrentIndexInactive = function (Navigator) {
+    var getNavigatorAtEndWithCurrentIndexInactive = function (Navigator, sandbox) {
         var navigator, first;
         first = true;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
 
         navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(0);
@@ -73,10 +73,10 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled = function (Navigator) {
+    var getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled = function (Navigator, sandbox) {
         var navigator, first;
         first = true;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(0);
         navigator.indexAfter.returns(0);
@@ -84,9 +84,9 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled = function (Navigator) {
+    var getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled = function (Navigator, sandbox) {
         var navigator;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(0);
         navigator.indexAfter.returns(0);
@@ -94,9 +94,9 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled = function (Navigator) {
+    var getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled = function (Navigator, sandbox) {
         var navigator;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(1);
         navigator.previousIndex.returns(2);
         navigator.indexBefore.returns(2);
@@ -104,10 +104,10 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled = function (Navigator) {
+    var getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled = function (Navigator, sandbox) {
         var navigator, first;
         first = true;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(2);
         navigator.previousIndex.returns(2);
         navigator.indexBefore.returns(2);
@@ -115,10 +115,10 @@
         return navigator;
     };
 
-    this.AlignerTest.prototype.getNavigatorAtStartWithCurrentIndexInactive = function (Navigator) {
+    var getNavigatorAtStartWithCurrentIndexInactive = function (Navigator, sandbox) {
         var navigator, first;
         first = true;
-        navigator = this.getNavigator(Navigator);
+        navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(1);
         navigator.indexAfter.returns(1);
@@ -164,7 +164,7 @@
                 var aligner, mask, navigator, initialIndex, alignmentIndex;
                 this.sandbox.stub(Mask.prototype);
 
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 initialIndex = 0;
                 alignmentIndex = 1;
                 mask = new Mask();
@@ -191,7 +191,7 @@
                 var aligner, mask, navigator, alignmentIndex, initialIndex;
                 this.sandbox.stub(Mask.prototype);
 
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 initialIndex = 1;
                 alignmentIndex = 0;
                 mask = new Mask();
@@ -246,7 +246,7 @@
                 alignmentIndex = 1;
                 mask = new Mask();
 
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
 
                 aligner = new Aligner(mask);
                 aligner.alignNext(navigator);
@@ -271,7 +271,7 @@
                 Mask.prototype.alignToIndex.yieldsTo('onComplete');
 
                 mask = new Mask();
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
 
                 alignmentIndex = 0;
                 aligner = new Aligner(mask);
@@ -299,7 +299,7 @@
                 mask = new Mask();
                 
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner.alignNext(navigator);
 
                 assertFalse("afterAlignTo called on mask", mask.afterAlignTo.called);
@@ -394,7 +394,7 @@
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner.alignNext(navigator);
 
@@ -415,7 +415,7 @@
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
@@ -439,7 +439,7 @@
                 mask = new Mask();
                 aligner = new Aligner(mask);
                 aligner._wrap = this.sandbox.stub();
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
@@ -463,7 +463,7 @@
                 aligner = new Aligner(mask);
                 aligner.alignToIndex(0);
                 aligner._wrap = this.sandbox.stub();
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner.alignPrevious(navigator);
 
                 assertTrue("wrapBackward called", aligner._wrap.calledWith(0, 1, navigator, Aligner.directions.BACKWARD));
@@ -483,7 +483,7 @@
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigator(Navigator);
+                navigator = getNavigator(Navigator, this.sandbox);
                 navigator.currentIndex.returns(1);
                 navigator.indexAfter.returns(null);
                 aligner = new Aligner(mask);
@@ -507,7 +507,7 @@
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigator(Navigator);
+                navigator = getNavigator(Navigator, this.sandbox);
                 navigator.currentIndex.returns(1);
                 navigator.indexBefore.returns(null);
                 aligner = new Aligner(mask);
@@ -532,7 +532,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._wrapForward = this.sandbox.stub();
                 aligner.alignNext(navigator);
 
@@ -554,7 +554,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._wrapBackward = this.sandbox.stub();
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
@@ -576,7 +576,7 @@
                 var aligner, mask, wrapAlignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexInactive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
@@ -600,7 +600,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 mask.alignToIndex.yieldsTo('onComplete');
-                navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexInactive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator, {skipAnim: true});
@@ -624,7 +624,7 @@
                 var aligner, mask, wrapAlignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled(Navigator);
+                navigator = getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
@@ -648,7 +648,7 @@
                 var aligner, mask, alignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled(Navigator);
+                navigator = getThreeItemNavigatorAtEndWithCurrentIndexActiveAndLastItemDisabled(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
@@ -671,7 +671,7 @@
                 var aligner, mask, wrapAlignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled(Navigator);
+                navigator = getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
@@ -695,7 +695,7 @@
                 var aligner, mask, alignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled(Navigator);
+                navigator = getFourItemNavigatorAtStartWithCurrentIndexActiveAndFirstAndLastItemsDisabled(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
@@ -718,7 +718,7 @@
                 var aligner, mask, wrapAlignCall, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                navigator = this.getNavigatorAtStartWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtStartWithCurrentIndexInactive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
@@ -742,7 +742,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 mask.alignToIndex.yieldsTo('onComplete');
-                navigator = this.getNavigatorAtStartWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtStartWithCurrentIndexInactive(Navigator, this.sandbox);
                 aligner = new Aligner(mask);
                 aligner.alignPrevious(navigator, {skipAnim: true});
                 animatedCall = mask.alignToIndex.secondCall;
@@ -766,7 +766,7 @@
                 this.sandbox.stub(Mask.prototype);
                 Mask.prototype.alignToIndex.restore();
                 mask = new Mask();
-                navigator = this.getNavigatorAtEndWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexInactive(Navigator, this.sandbox);
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
@@ -795,7 +795,7 @@
                 this.sandbox.stub(Mask.prototype);
                 Mask.prototype.alignToIndex.restore();
                 mask = new Mask();
-                navigator = this.getNavigatorAtStartWithCurrentIndexInactive(Navigator);
+                navigator = getNavigatorAtStartWithCurrentIndexInactive(Navigator, this.sandbox);
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
@@ -825,7 +825,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
@@ -848,7 +848,7 @@
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._lastAlignIndex = 0;
                 aligner.alignPrevious(navigator);
 
@@ -875,7 +875,7 @@
                     if (options && typeof options.onComplete === 'function') { options.onComplete(); }
                 });
                 aligner = new Aligner(mask);
-                navigator = this.getNavigatorAtEndWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
@@ -907,7 +907,7 @@
                 });
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 0;
-                navigator = this.getNavigatorStartWithCurrentIndexActive(Navigator);
+                navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner.alignPrevious(navigator);
 
                 alignCall = mask.alignToIndex.firstCall;

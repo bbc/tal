@@ -84,14 +84,14 @@
         return transDef;
     }
     
-    function makeNewTransElAndApplyMocks(TransitionElement, MockElement) {
+    function makeNewTransElAndApplyMocks(self, TransitionElement, MockElement) {
         var transEl, mockEl;
         mockEl = new MockElement();
         transEl = new TransitionElement(mockEl);
         transEl.mockEl = mockEl;
         transEl._propMap = getMockPropMap();
-        transEl.mockEl.addEventListener = sinon.spy();
-        transEl.mockEl.removeEventListener = sinon.spy();
+	self.sandbox.spy(transEl.mockEl, "addEventListener");
+	self.sandbox.spy(transEl.mockEl, "removeEventListener");
         return transEl;
     }
     
@@ -106,56 +106,61 @@
     };
     
     this.TransitionElementTest.prototype.testElementsPropertiesReturnedAsArray = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, expected;
                 expected = ["top", "left", "opacity"];
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 assertEquals(expected, transEl.getProperties());
             }
         );
     };
     
     this.TransitionElementTest.prototype.testElementsDurationsReturnedAsMsArray = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, expected;
                 expected = [400, 2000, 600];
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 assertEquals(expected, transEl.getDurations());
             }
         );
     };
     
     this.TransitionElementTest.prototype.testElementsTimingFunctionsReturnedAsArray = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, expected;
                 expected = ['linear', 'easeInOut', 'beizer(0, .6, 0.3, -4)'];
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 assertEquals(expected, transEl.getTimingFns());
             }
         );
     };
     
     this.TransitionElementTest.prototype.testElementsDelaysReturnedAsArray = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, expected;
                 expected = [0, 100, 5];
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 assertEquals(expected, transEl.getDelays());
             }
         );
     };
     
     this.TransitionElementTest.prototype.testTransisitonDefinitionApplied = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement, TransitionDefinition) {
                 var transEl, transDef;
                 transDef = getMockTransitionDefinition(TransitionDefinition);
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
-                sinon.spy(transEl.mockEl.style, "setProperty");  
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
+                self.sandbox.spy(transEl.mockEl.style, "setProperty");  
                 transEl.applyDefinition(transDef);
                 assert(transEl.mockEl.style.setProperty.calledWith("transition-property", "fizz,buzz,beep"));
                 assert(transEl.mockEl.style.setProperty.calledWith("transition-delay", "50ms,100ms,0ms"));
@@ -166,11 +171,12 @@
     };
     
     this.TransitionElementTest.prototype.testSetCallbackAddsFnsAsEventListeners = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
                 function callback() {}
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.setCallback(callback);
                 assert(transEl.mockEl.addEventListener.calledTwice);
                 assert(transEl.mockEl.addEventListener.calledWith("transitionend1", callback));
@@ -180,11 +186,12 @@
     };
     
     this.TransitionElementTest.prototype.testRemoveCallbackRemovesEventListeners = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
                 function callback() {}
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.removeCallback(callback);
                 assert(transEl.mockEl.removeEventListener.calledTwice);
                 assert(transEl.mockEl.removeEventListener.calledWith("transitionend1", callback));
@@ -192,25 +199,27 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testForceUpdateCallsGetComputedStyle = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
-                transEl.getComputedStyle = sinon.spy();
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
+                self.sandbox.stub(window, "getComputedStyle");
                 transEl.forceUpdate("top");
-                assert(transEl.getComputedStyle.calledOnce);
+                assert(window.getComputedStyle.calledOnce);
             }
         );
     };
     
     this.TransitionElementTest.prototype.testGetStylePropertyValueReturnsValue = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, value;
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
-                transEl.mockEl.style.getPropertyValue = sinon.stub().returns('somethingOrOther');
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
+                self.sandbox.stub(transEl.mockEl.style, "getPropertyValue").returns('somethingOrOther');
                 value = transEl.getStylePropertyValue('testProperty');
                 assert(transEl.mockEl.style.getPropertyValue.calledWith('testProperty'));
                 assertEquals('somethingOrOther', value);
@@ -219,11 +228,12 @@
     };
     
     this.TransitionElementTest.prototype.testGetStylePropertyOfUndefined = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, value;
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
-                transEl.mockEl.style.getPropertyValue = sinon.stub().returns(undefined);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
+                self.sandbox.stub(transEl.mockEl.style, "getPropertyValue").returns(undefined);
                 value = transEl.getStylePropertyValue('nonExistantProperty');
                 assert(transEl.mockEl.style.getPropertyValue.calledWith('nonExistantProperty'));
                 assertEquals(undefined, value);
@@ -232,12 +242,13 @@
     };
     
     this.TransitionElementTest.prototype.testSetStyleProperty = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, setObj;
                 setObj = {};
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
-                sinon.stub(transEl.mockEl.style, "setProperty", function(prop, value) {
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
+                self.sandbox.stub(transEl.mockEl.style, "setProperty", function(prop, value) {
                     setObj[prop] = value;
                 });
                 
@@ -249,11 +260,12 @@
     };
 
     this.TransitionElementTest.prototype.testIsEventOnElementTrueWhenElementTargetMatches = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, testEvent;
 
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 testEvent = {target: transEl.mockEl};
                 
                 assertTrue("isEventTarget returns true when the events target is the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));
@@ -263,11 +275,12 @@
     };
 
     this.TransitionElementTest.prototype.testIsEventOnElementFalseWhenElementTargetDoesNotMatch = function(queue) {
+	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl, testEvent;
 
-                transEl = makeNewTransElAndApplyMocks(TransitionElement, MockElement);
+                transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 testEvent = {target: new MockElement()};
                 
                 assertFalse("isEventTarget returns false when the events target is not the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));

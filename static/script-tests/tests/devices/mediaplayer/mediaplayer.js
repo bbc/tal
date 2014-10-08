@@ -66,6 +66,10 @@
         });
     };
 
+    var getConfig = function() {
+        return {"modules":{"base":"antie/devices/browserdevice","modifiers":[]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    };
+
     this.MediaPlayerTest.prototype.testEventsEmittedBySubclassGoToAddedCallbackWithAllMetadata = function (queue) {
         expectAsserts(2);
         queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
@@ -162,7 +166,8 @@
 
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
         expectAsserts(18);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -192,9 +197,51 @@
         });
     };
 
+    this.MediaPlayerTest.prototype.testClampingCalculationWithOverriddenEndTime = function (queue) {
+        var config = getConfig();
+        config.streaming = {
+            overrides: {
+                clampOffsetFromEndOfRange: 10
+            }
+        };
+
+        expectAsserts(4);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+
+            var SubClass = createSubClass(MediaPlayer);
+            var instance = new SubClass();
+
+            assertEquals(89,  instance.getClampedTime(89,   {start:0, end:100}));
+            assertEquals(90,  instance.getClampedTime(90, {start:0, end:100}));
+            assertEquals(90,  instance.getClampedTime(90.1,  {start:0, end:100}));
+
+            assertEquals(0, instance.getClampedTime(1,   {start:0, end:0.05}));
+        }, config);
+    };
+
+    this.MediaPlayerTest.prototype.testClampingCalculationWithEndTimeOffsetOfZero = function (queue) {
+        var config = getConfig();
+        config.streaming = {
+            overrides: {
+                clampOffsetFromEndOfRange: 0
+            }
+        };
+
+        expectAsserts(3);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+
+            var SubClass = createSubClass(MediaPlayer);
+            var instance = new SubClass();
+
+            assertEquals(99,  instance.getClampedTime(99,   {start:0, end:100}));
+            assertEquals(100,  instance.getClampedTime(100, {start:0, end:100}));
+            assertEquals(100,  instance.getClampedTime(100.1,  {start:0, end:100}));
+        }, config);
+    };
+
     this.MediaPlayerTest.prototype.testIsNearToCurrentTimeCalculation = function (queue) {
         expectAsserts(14);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();

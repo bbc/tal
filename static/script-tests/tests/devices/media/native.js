@@ -1,1 +1,0 @@
-jstestdriver.console.warn("devices/media/native.js untested!");

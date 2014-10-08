@@ -26,6 +26,8 @@ require.def('antie/devices/parentalguidance/basepghandler',
         'antie/class'
     ],
     function(Class) {
+        'use strict';
+
         var BasePgHandler = Class.extend({
 
             /**

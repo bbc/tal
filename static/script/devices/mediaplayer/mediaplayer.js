@@ -29,10 +29,10 @@ require.def(
     "antie/devices/mediaplayer/mediaplayer",
     [
         "antie/class",
-        "antie/callbackmanager"
-
+        "antie/callbackmanager",
+        "antie/runtimecontext"
     ],
-    function(Class, CallbackManager) {
+    function(Class, CallbackManager, RuntimeContext) {
         "use strict";
 
         /**
@@ -112,7 +112,8 @@ require.def(
              */
             _getClampedTime: function(seconds) {
                 var range = this.getRange();
-                var nearToEnd = Math.max(range.end - this.CLAMP_OFFSET_FROM_END_OF_RANGE, range.start);
+                var offsetFromEnd = this._getClampOffsetFromConfig();
+                var nearToEnd = Math.max(range.end - offsetFromEnd, range.start);
                 if (seconds < range.start) {
                     return range.start;
                 } else if (seconds > nearToEnd) {
@@ -252,6 +253,20 @@ require.def(
             */
             getState: function () {
                 throw new Error("getState method has not been implemented");
+            },
+
+            _getClampOffsetFromConfig: function() {
+                var clampOffsetFromEndOfRange;
+                var config = RuntimeContext.getDevice().getConfig();
+                if (config && config.streaming && config.streaming.overrides) {
+                    clampOffsetFromEndOfRange = config.streaming.overrides.clampOffsetFromEndOfRange;
+                }
+
+                if(clampOffsetFromEndOfRange !== undefined) {
+                    return clampOffsetFromEndOfRange;
+                } else {
+                    return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                }
             }
         });
 
