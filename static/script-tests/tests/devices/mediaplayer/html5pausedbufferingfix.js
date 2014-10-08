@@ -30,6 +30,24 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5pausedbufferingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+    this.HTML5PausedBufferingFixMediaPlayerTests.prototype.testBufferingSignalIgnoredWhenPaused = function(queue) {
+        expectAsserts(2);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            this.deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            this.deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            this.deviceMockingHooks.startBuffering(this._mediaPlayer);
+
+            assert(eventHandler.notCalled);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+        });
+    };
     //---------------------
     // Common tests
     //---------------------
@@ -37,5 +55,11 @@
     // Mixin the common tests shared by all HTML5 MediaPlayer implementations (last, so it can detect conflicts)
 
     window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5PausedBufferingFixMediaPlayerTests, "antie/devices/mediaplayer/html5pausedbufferingfix", config);
+    // ********************
+    // Removal of common tests that are in direct conflict with the purpose of this device sub-modifier
+    // ********************
+
+    delete HTML5PausedBufferingFixMediaPlayerTests.prototype.testMediaElementResumesWhenBufferingCompleteIfWeHaveCalledResumeWhileBufferingDuringThePausedState;
+
 
 })();

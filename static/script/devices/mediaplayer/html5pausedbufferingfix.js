@@ -29,13 +29,22 @@ require.def(
     "antie/devices/mediaplayer/html5pausedbufferingfix",
     [
         "antie/devices/mediaplayer/html5",
-        "antie/devices/device"
+        "antie/devices/device",
+        "antie/devices/mediaplayer/mediaplayer"
     ],
-    function(HTML5MediaPlayer, Device) {
+    function(HTML5MediaPlayer, Device, MediaPlayer) {
         "use strict";
 
         var NEAR_TO_END_TOLERANCE = 2;
         var Player = HTML5MediaPlayer.extend({
+
+            _onDeviceBuffering: function() {
+                if (this._state === MediaPlayer.STATE.PAUSED) {
+                    return;
+                }
+
+                this._super();
+            }
 
         });
 

@@ -287,6 +287,9 @@ require.def(
                 this._toError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
+            /**
+             * @protected
+             */
             _onDeviceBuffering: function() {
                 if (this._state === MediaPlayer.STATE.BUFFERING) {
                     return;
