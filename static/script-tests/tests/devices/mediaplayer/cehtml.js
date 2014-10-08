@@ -317,6 +317,21 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteThenPlayFromZeroDoesNotSeek = function(queue) {
+        expectAsserts(1);
+        this.runMediaPlayerTest(queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            this._mediaPlayer.playFrom(0);
+
+            assert(fakeCEHTMLObject.seek.notCalled);
+        });
+    };
+
     this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(queue, function (MediaPlayer) {

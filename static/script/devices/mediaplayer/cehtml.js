@@ -102,7 +102,9 @@ require.def(
                         this._toBuffering();
                         this._mediaElement.stop();
                         this._mediaElement.play(1);
-                        this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        if (seconds > 0) {
+                            this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        }
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
