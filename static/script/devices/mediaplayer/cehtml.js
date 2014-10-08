@@ -255,7 +255,9 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
-                this._toBuffering();
+                if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
+                    this._toBuffering();
+                }
             },
 
             _onEndOfMedia: function() {
@@ -273,46 +275,43 @@ require.def(
                 this._mediaElement = device._createElement("object", "mediaPlayer");
                 this._mediaElement.type = this._mimeType;
                 this._mediaElement.data = this._source;
-                this._mediaElement.style.position = "absolute";
-                this._mediaElement.style.top = "0px";
-                this._mediaElement.style.left = "0px";
-                this._mediaElement.style.width = "100%";
-                this._mediaElement.style.height = "100%";
+                this._mediaElement.setFullScreen(true);
             },
 
             _registerEventHandlers: function() {
                 var self = this;
+                var DEVICE_UPDATE_PERIOD_MS = 500;
 
-                 this._mediaElement.onPlayStateChange = function() {
-                     switch (self._mediaElement.playState) {
-                         case Player.PLAY_STATE_STOPPED:
-                             break;
-                         case Player.PLAY_STATE_PLAYING:
-                             self._onFinishedBuffering();
-                             self._deferredSeek();
-                             break;
-                         case Player.PLAY_STATE_PAUSED:
-                             break;
-                         case Player.PLAY_STATE_CONNECTING:
-                             break;
-                         case Player.PLAY_STATE_BUFFERING:
-                             self._onDeviceBuffering();
-                             break;
-                         case Player.PLAY_STATE_FINISHED:
-                             self._onEndOfMedia();
-                             break;
-                         case Player.PLAY_STATE_ERROR:
-                             self._onDeviceError();
-                             break;
-                         default:
-                             // do nothing
-                             break;
-                     }
-                 }
+                this._mediaElement.onPlayStateChange = function() {
+                    switch (self._mediaElement.playState) {
+                        case Player.PLAY_STATE_STOPPED:
+                            break;
+                        case Player.PLAY_STATE_PLAYING:
+                            self._onFinishedBuffering();
+                            self._deferredSeek();
+                            break;
+                        case Player.PLAY_STATE_PAUSED:
+                            break;
+                        case Player.PLAY_STATE_CONNECTING:
+                            break;
+                        case Player.PLAY_STATE_BUFFERING:
+                            self._onDeviceBuffering();
+                            break;
+                        case Player.PLAY_STATE_FINISHED:
+                            self._onEndOfMedia();
+                            break;
+                        case Player.PLAY_STATE_ERROR:
+                            self._onDeviceError();
+                            break;
+                        default:
+                            // do nothing
+                            break;
+                    }
+                }
 
                 self._updateInterval = window.setInterval(function() {
                     self._onStatus();
-                }, 900);
+                }, DEVICE_UPDATE_PERIOD_MS);
             },
 
             _deferredSeek: function() {
@@ -340,17 +339,13 @@ require.def(
             },
 
             _destroyMediaElement: function() {
-                //this._mediaElement.removeAttribute('src');
-                //this._mediaElement.load();
                 var device = RuntimeContext.getDevice();
-                this._mediaElement.onPlayStateChange = function() {}; //FIXME: onPlaystateChange called by finishedBuffering in mocking hooks, is this correct?
+                this._mediaElement.onPlayStateChange = undefined;
                 device.removeElement(this._mediaElement);
-                this._mediaElement = null;
-                delete this._mediaElement;
+                this._mediaElement = undefined;
             },
 
             _toStopped: function () {
-                //this._mediaElement.playTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },

@@ -64,7 +64,9 @@
                 mockData.loaded = true;
             }
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PLAYING;
-            fakeCEHTMLObject.onPlayStateChange();
+            if (fakeCEHTMLObject.onPlayStateChange) {
+                fakeCEHTMLObject.onPlayStateChange();
+            }
         },
         emitPlaybackError: function(mediaPlayer) {
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_ERROR;
@@ -98,6 +100,7 @@
         fakeCEHTMLObject.stop = this.sandbox.stub();
         fakeCEHTMLObject.seek = this.sandbox.stub();
         fakeCEHTMLObject.onPlayStateChange = this.sandbox.stub();
+        fakeCEHTMLObject.setFullScreen = this.sandbox.stub();
 
         fakeCEHTMLObject.PLAY_STATE_STOPPED = 0;
         fakeCEHTMLObject.PLAY_STATE_PLAYING = 1;
@@ -167,16 +170,12 @@
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
-        expectAsserts(6);
+        expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assertEquals("absolute", fakeCEHTMLObject.style.position);
-            assertEquals("0px", fakeCEHTMLObject.style.top);
-            assertEquals("0px", fakeCEHTMLObject.style.left);
-            assertEquals("100%", fakeCEHTMLObject.style.width);
-            assertEquals("100%", fakeCEHTMLObject.style.height);
-            assertEquals("", fakeCEHTMLObject.style.zIndex);
+
+            assert(fakeCEHTMLObject.setFullScreen.calledWith(true));
         });
     };
 
@@ -435,23 +434,6 @@
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
-    // TODO: Don't seek to zero when playing from stopped
-    // TODO: Make resume actually resume
-    //  When buffering
-    // TODO: Fix seek beyond end of video when seeking from stopped state
-    // TODO: Ensure reset actually clears the state **
-    // TODO: Investigate double buffering events
-    // TODO: Seeking forward half a second not working properly
-    // TODO: Ensure errors are handled
-    // TODO: Ensure errors are logged.
-    // TODO: Ensure everything is cleaned up: detach and destroy <object>, clean up event handlers
-    // TODO: Ensure playFrom(...) and play() both clamp to the available range (there's a _getClampedTime helper in the MediaPlayer)
-    // TODO: Following the completion of buffering, if we last called playFrom or resume then play and enter the playing state, if we last called pause then pause and enter the paused state.
-    // TODO: Determine if status event 'ticks' need to be done through a setInterval method rather than as a result of events from the object (see media/cehtml.js)
-    // TODO: Determine if the seekTo call blocks until it is complete (see media/cehtml.js:240)
-    // TODO: media/cehtmlmediatypefix.js equivalent
-    // TODO: Ensure the object data attribute is set tot the URL of the content (CEA-2014-A 5.7.1)
-    // TODO: Ensure the object type attribute is set to the MIME-type of the content (CEA-2014-A 5.7.1.a (1))
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
     // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
     // TODO: Determine if we should use full screen or windowed mode, which are handled differently. (CEA-2014-A 5.7.1.c / 5.7.3)
@@ -460,16 +442,7 @@
     //    - 5.7.3.a (1) - [full screen] SHOULD scale the video content…
     //    - 5.7.3.b - Inside the browser area, full-screen video objects are regular video objects that SHALL cover the entire browser area
     //    - 5.7.3.c - If there is no longer a visible full-screen video object in the browser area … [it] SHALL switch to non-full-screen mode [which MAY scale the browser area - 5.7.3.d]
-    // TODO: Handle "seek" failing (CEA-2014-A 5.7.1.F (13))
-    // TODO: Handle "seek" not affecting play state (CEA-2014-A 5.7.1.F (13))
-    // TODO: Handle "stop" reverting play position to 0 (CEA-2014-A req 5.7.1.f (12))
-    // TODO: Create the object element using document.write or the DOM createElement method instead of directly including an oject tag in the CE-HTML page (CEA-2014-A 5.7.1.j)
-    // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
-    // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
-    // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
-    // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
-    // TODO: Be aware that the media object API uses milliseconds rather than seconds
-
+    // TODO: Handle "seek" failing? (CEA-2014-A 5.7.1.F (13))
 
     //---------------------
     // Common tests
