@@ -284,37 +284,38 @@ require.def(
 
             _registerEventHandlers: function() {
                 var self = this;
+                var DEVICE_UPDATE_PERIOD_MS = 500;
 
-                 this._mediaElement.onPlayStateChange = function() {
-                     switch (self._mediaElement.playState) {
-                         case Player.PLAY_STATE_STOPPED:
-                             break;
-                         case Player.PLAY_STATE_PLAYING:
-                             self._onFinishedBuffering();
-                             self._deferredSeek();
-                             break;
-                         case Player.PLAY_STATE_PAUSED:
-                             break;
-                         case Player.PLAY_STATE_CONNECTING:
-                             break;
-                         case Player.PLAY_STATE_BUFFERING:
-                             self._onDeviceBuffering();
-                             break;
-                         case Player.PLAY_STATE_FINISHED:
-                             self._onEndOfMedia();
-                             break;
-                         case Player.PLAY_STATE_ERROR:
-                             self._onDeviceError();
-                             break;
-                         default:
-                             // do nothing
-                             break;
-                     }
-                 }
+                this._mediaElement.onPlayStateChange = function() {
+                    switch (self._mediaElement.playState) {
+                        case Player.PLAY_STATE_STOPPED:
+                            break;
+                        case Player.PLAY_STATE_PLAYING:
+                            self._onFinishedBuffering();
+                            self._deferredSeek();
+                            break;
+                        case Player.PLAY_STATE_PAUSED:
+                            break;
+                        case Player.PLAY_STATE_CONNECTING:
+                            break;
+                        case Player.PLAY_STATE_BUFFERING:
+                            self._onDeviceBuffering();
+                            break;
+                        case Player.PLAY_STATE_FINISHED:
+                            self._onEndOfMedia();
+                            break;
+                        case Player.PLAY_STATE_ERROR:
+                            self._onDeviceError();
+                            break;
+                        default:
+                            // do nothing
+                            break;
+                    }
+                }
 
                 self._updateInterval = window.setInterval(function() {
                     self._onStatus();
-                }, 900);
+                }, DEVICE_UPDATE_PERIOD_MS);
             },
 
             _deferredSeek: function() {
