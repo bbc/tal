@@ -340,17 +340,13 @@ require.def(
             },
 
             _destroyMediaElement: function() {
-                //this._mediaElement.removeAttribute('src');
-                //this._mediaElement.load();
                 var device = RuntimeContext.getDevice();
-                this._mediaElement.onPlayStateChange = function() {}; //FIXME: onPlaystateChange called by finishedBuffering in mocking hooks, is this correct?
+                this._mediaElement.onPlayStateChange = undefined;
                 device.removeElement(this._mediaElement);
-                this._mediaElement = null;
-                delete this._mediaElement;
+                this._mediaElement = undefined;
             },
 
             _toStopped: function () {
-                //this._mediaElement.playTime = undefined; // FIXME
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },
