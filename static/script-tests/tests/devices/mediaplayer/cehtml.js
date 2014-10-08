@@ -442,16 +442,7 @@
     //    - 5.7.3.a (1) - [full screen] SHOULD scale the video content…
     //    - 5.7.3.b - Inside the browser area, full-screen video objects are regular video objects that SHALL cover the entire browser area
     //    - 5.7.3.c - If there is no longer a visible full-screen video object in the browser area … [it] SHALL switch to non-full-screen mode [which MAY scale the browser area - 5.7.3.d]
-    // TODO: Handle "seek" failing (CEA-2014-A 5.7.1.F (13))
-    // TODO: Handle "seek" not affecting play state (CEA-2014-A 5.7.1.F (13))
-    // TODO: Handle "stop" reverting play position to 0 (CEA-2014-A req 5.7.1.f (12))
-    // TODO: Create the object element using document.write or the DOM createElement method instead of directly including an oject tag in the CE-HTML page (CEA-2014-A 5.7.1.j)
-    // TODO: ensure we are using XHTML 1.0 transitional and object tags (CEA-2014-1 5.4.a).
-    // TODO: ensure that we provide non-CSS settings for properties that don't apply to <object> tags (CEA-2014-A Annex G, p 99 - <object>)
-    // TODO: Handle that semantics change if the data is a playlist or a single media item (CEA-2014-A 5.7.1.f) - particularly playPosition, playTime
-    // TODO: Handle the MediaTypeFix (see existing implementation). Certain devices require the media element to be remade if the media type is changed
-    // TODO: Be aware that the media object API uses milliseconds rather than seconds
-
+    // TODO: Handle "seek" failing? (CEA-2014-A 5.7.1.F (13))
 
     //---------------------
     // Common tests
