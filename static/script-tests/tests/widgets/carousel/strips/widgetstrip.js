@@ -514,7 +514,7 @@
                 self.sandbox.stub(device);
                 device.getElementOffset.returns({left: 40, top: 40});
                 strip = new WidgetStrip('strip', horizontalOrientation);
-                strip.getChildWidgets = self.sandbox.stub().returns(["widget1", "widget2"]);
+                strip.getChildWidgets = self.sandbox.stub().returns([{widget: "widget1"}, {widget: "widget2"}]);
                 strip.append(new Button(), 30);
                 strip.append(new Button(), 40);
                 strip.remove(strip.widgets()[1]);
