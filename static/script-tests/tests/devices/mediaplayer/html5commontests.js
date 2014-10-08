@@ -845,18 +845,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     for (var name in mixins) {
         if (mixins.hasOwnProperty(name)) {
             if (testCase.prototype[name]) {
-                if (name === "setUp" || name === "tearDown") {
-                    var specific = testCase.prototype[name];
-                    var general = mixins[name];
-                    testCase.prototype[name] = function() {
-                        // Do our (more general) set-up before the set-up of the class we're being mixed into.
-                        general();
-                        specific();
-                    }
-                } else {
+                if (name !== "setUp" && name !== "tearDown") {
                     throw "Trying to mixin '"+name+"' but that already exists!";
                 }
-
             }
             testCase.prototype[name] = mixins[name];
         }
