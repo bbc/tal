@@ -124,7 +124,13 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.STOPPED:
+                        this._setDisplayFullScreenForVideo();
+                        this._playerPlugin.ResumePlay(this._source, seekingTo);
+                        this._toBuffering();
+                        break;
+
                     case MediaPlayer.STATE.COMPLETE:
+                        this._playerPlugin.Stop();
                         this._setDisplayFullScreenForVideo();
                         this._playerPlugin.ResumePlay(this._source, seekingTo);
                         this._toBuffering();
@@ -251,7 +257,6 @@ require.def(
             },
 
             _onEndOfMedia: function() {
-                this._stopPlayer();
                 this._toComplete();
             },
 
@@ -439,7 +444,6 @@ require.def(
             },
 
             _toComplete: function () {
-                this._currentTime = undefined;
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },

@@ -827,19 +827,23 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testStopIsCalledWhenMediaCompletes = function(queue) {
-        expectAsserts(2);
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayFromAfterMediaCompletedCallsStopBeforeResumePlay = function(queue) {
+        expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            assert(playerPlugin.Stop.notCalled);
-
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
 
+            assert(playerPlugin.Stop.notCalled);
+            playerPlugin.ResumePlay.reset();
+
+            this._mediaPlayer.playFrom(0);
+
             assert(playerPlugin.Stop.calledOnce);
+            assert(playerPlugin.ResumePlay.calledOnce);
+            assert(playerPlugin.Stop.calledBefore(playerPlugin.ResumePlay));
         });
     };
 
@@ -1288,11 +1292,41 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaNotSetOnPlayFromForAudio = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaSetOnPlayFromForVideoWhenCalledAfterMediaCompleted = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            screenSize.width = 987;
+            screenSize.height = 654;
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            playerPlugin.SetDisplayArea.reset();
+
+            this._mediaPlayer.playFrom(0);
+
+            assert(playerPlugin.SetDisplayArea.calledWith(0, 0, 987, 654));
+            assert(playerPlugin.SetDisplayArea.calledOnce);
+            assert(playerPlugin.SetDisplayArea.calledAfter(playerPlugin.Stop));
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDisplayAreaNotSetOnPlayFromForAudioWhenCalledAfterMediaCompleted = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
             this._mediaPlayer.playFrom(0);
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+            playerPlugin.SetDisplayArea.reset();
+
+            this._mediaPlayer.playFrom(0);
+
             assert(playerPlugin.SetDisplayArea.notCalled);
         });
     };
