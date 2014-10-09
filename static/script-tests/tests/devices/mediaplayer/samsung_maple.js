@@ -843,22 +843,6 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testBufferingStartDeviceEventWhenAlreadyBufferingDoesNotCauseSecondEvent = function(queue) {
-        expectAsserts(1);
-        runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-
-            var eventHandler = this.sandbox.stub();
-            this._mediaPlayer.addEventCallback(null, eventHandler);
-
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-
-            assert(eventHandler.notCalled);
-        });
-
-    };
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromWhileAtNonZeroTimeGCausesRelativeJump = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
