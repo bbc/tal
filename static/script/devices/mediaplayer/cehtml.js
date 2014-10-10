@@ -275,7 +275,12 @@ require.def(
                 this._mediaElement = device._createElement("object", "mediaPlayer");
                 this._mediaElement.type = this._mimeType;
                 this._mediaElement.data = this._source;
-                this._mediaElement.setFullScreen(true);
+                this._mediaElement.style.position = "absolute";
+                this._mediaElement.style.top = "0px";
+                this._mediaElement.style.left = "0px";
+                this._mediaElement.style.width = "100%";
+                this._mediaElement.style.height = "100%";
+                //this._mediaElement.setFullScreen(true);
             },
 
             _registerEventHandlers: function() {
@@ -340,7 +345,7 @@ require.def(
 
             _destroyMediaElement: function() {
                 var device = RuntimeContext.getDevice();
-                this._mediaElement.onPlayStateChange = undefined;
+                delete this._mediaElement.onPlayStateChange;
                 device.removeElement(this._mediaElement);
                 this._mediaElement = undefined;
             },

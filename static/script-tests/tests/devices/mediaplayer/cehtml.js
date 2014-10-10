@@ -170,12 +170,19 @@
     };
 
     this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
-        expectAsserts(1);
+        expectAsserts(6);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            assert(fakeCEHTMLObject.setFullScreen.calledWith(true));
+            assertEquals("absolute", fakeCEHTMLObject.style.position);
+            assertEquals("0px", fakeCEHTMLObject.style.top);
+            assertEquals("0px", fakeCEHTMLObject.style.left);
+            assertEquals("100%", fakeCEHTMLObject.style.width);
+            assertEquals("100%", fakeCEHTMLObject.style.height);
+            assertEquals("", fakeCEHTMLObject.style.zIndex);
+
+            //assert(fakeCEHTMLObject.setFullScreen.calledWith(true));
         });
     };
 
@@ -432,6 +439,16 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testOnPlayStateChangeFunctionIsDeletedOnWipe = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assert(fakeCEHTMLObject.hasOwnProperty("onPlayStateChange"));
+            this._mediaPlayer.reset();
+            assertFalse(fakeCEHTMLObject.hasOwnProperty("onPlayStateChange"));
+        });
+    };
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
