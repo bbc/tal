@@ -592,12 +592,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
-    // TODO: when we are in paused state and device emits buffering start, we remain in the paused state, don't emit a buffering message ourselves
-    // TODO: when we are in the paused state and the device is buffering and then the device emits a finished buffering event we should remain paused
-    // TODO: when we are in the paused state and the device is buffering and we call resume() then we should transition to the buffering state
-    // TODO: when we are in the paused state and the device is buffering and we call playFrom() then we should transition to the buffering state
-
-
     // *******************************************
     // ********* COMPLETE state tests ************
     // *******************************************
