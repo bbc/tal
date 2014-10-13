@@ -848,29 +848,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testMediaElementResumesWhenBufferingCompleteIfWeHaveCalledResumeWhileBufferingDuringThePausedState = function(queue) {
-        // Edge case; it's valid for a device to start buffering at any point, even if it's paused (and we're in our paused state). If this
-        // happens and we call resume() while we are buffering we need to ensure that we tell the device to resume playing when it finishes
-        // buffering.
-        expectAsserts(1);
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
-            self._mediaPlayer.pause();
-            deviceMockingHooks.startBuffering(self._mediaPlayer);
-            self._mediaPlayer.resume();
-
-            stubCreateElementResults.video.play.reset();
-
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
-
-            assert(stubCreateElementResults.video.play.calledOnce);
-        });
-    };
-
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************

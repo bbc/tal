@@ -323,7 +323,6 @@ require.def(
                     this._toPaused();
 
                 } else {
-                    this._mediaElement.play();
                     this._toPlaying();
                 }
             },
