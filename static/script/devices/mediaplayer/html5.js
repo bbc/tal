@@ -291,11 +291,13 @@ require.def(
              * @protected
              */
             _onDeviceBuffering: function() {
-                if (this._state === MediaPlayer.STATE.BUFFERING) {
-                    return;
+                switch(this.getState()){
+                    case MediaPlayer.STATE.BUFFERING:
+                    case MediaPlayer.STATE.PAUSED:
+                        break;
+                    default:
+                        this._toBuffering();
                 }
-
-                this._toBuffering();
             },
 
             _onEndOfMedia: function() {

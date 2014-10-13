@@ -581,6 +581,23 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
+    mixins.testDeviceBufferingEventEmittedWhilePausedDoesNotChangeState = function (queue) {
+        expectAsserts(3);
+        doTest(this, queue, function (MediaPlayer) {
+            getToPausedState.call(this, MediaPlayer);
+            var callCount = this.eventCallback.callCount;
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            assertEquals(callCount, this.eventCallback.callCount);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+        });
+    };
+
+    // TODO: when we are in paused state and device emits buffering start, we remain in the paused state, don't emit a buffering message ourselves
+    // TODO: when we are in the paused state and the device is buffering and then the device emits a finished buffering event we should remain paused
+    // TODO: when we are in the paused state and the device is buffering and we call resume() then we should transition to the buffering state
+    // TODO: when we are in the paused state and the device is buffering and we call playFrom() then we should transition to the buffering state
+
+
     // *******************************************
     // ********* COMPLETE state tests ************
     // *******************************************
