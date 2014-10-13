@@ -80,6 +80,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.error(errorEvent);
         },
         reachEndOfMedia: function(mediaPlayer) {
+            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+            for (var i = 0; i < mediaElements.length; i++) {
+                var media = mediaElements[i];
+                media.currentTime = media.duration;
+            }
             var endedEvent = {
                 type: "ended"
             };

@@ -202,6 +202,11 @@ require.def(
                     case MediaPlayer.STATE.ERROR:
                         break;
 
+                    case MediaPlayer.STATE.COMPLETE:
+                        if (this._range) {
+                            return this._range.end;
+                        }
+
                     default:
                         if (this._mediaElement) {
                             return this._mediaElement.playPosition / 1000;
@@ -221,7 +226,7 @@ require.def(
                         break;
 
                     default:
-                        return this._getSeekableRange();
+                        return this._range;
                 };
                 return undefined;
             },
@@ -243,6 +248,7 @@ require.def(
             },
 
             _onFinishedBuffering: function() {
+                this._cacheRange();
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -251,6 +257,10 @@ require.def(
                 } else {
                     this._toPlaying();
                 }
+            },
+
+            _cacheRange: function() {
+                this._range = this._getSeekableRange();
             },
 
             _onDeviceError: function() {

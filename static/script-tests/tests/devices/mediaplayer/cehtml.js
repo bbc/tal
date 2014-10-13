@@ -73,6 +73,9 @@
             fakeCEHTMLObject.onPlayStateChange();
         },
         reachEndOfMedia: function(mediaPlayer) {
+            fakeCEHTMLObject.playTime = 0;
+            fakeCEHTMLObject.playPosition = 0;
+
             fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_FINISHED;
             fakeCEHTMLObject.onPlayStateChange();
         },

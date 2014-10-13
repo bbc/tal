@@ -58,7 +58,8 @@
         emitPlaybackError: function(/*mediaPlayer*/) {
             window.SamsungMapleOnRenderError();
         },
-        reachEndOfMedia: function(/*mediaPlayer*/) {
+        reachEndOfMedia: function(mediaPlayer) {
+            window.SamsungMapleOnCurrentPlayTime(mediaPlayer.getRange().end * 1000);
             window.SamsungMapleOnRenderingComplete();
         },
         startBuffering: function(/*mediaPlayer*/) {
