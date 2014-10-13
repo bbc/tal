@@ -101,6 +101,7 @@
         fakeCEHTMLObject.seek = this.sandbox.stub();
         fakeCEHTMLObject.onPlayStateChange = this.sandbox.stub();
         fakeCEHTMLObject.setFullScreen = this.sandbox.stub();
+        fakeCEHTMLObject.seek.returns(true);
 
         fakeCEHTMLObject.PLAY_STATE_STOPPED = 0;
         fakeCEHTMLObject.PLAY_STATE_PLAYING = 1;
@@ -229,6 +230,22 @@
 
             assert(fakeCEHTMLObject.seek.calledWith(20000));
             assert(fakeCEHTMLObject.play.withArgs(1).calledTwice);
+        });
+    };
+
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhilePlayingReturnsToPlayingStateWhenSeekFails = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            fakeCEHTMLObject.seek.returns(false);
+            this._mediaPlayer.playFrom(10);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
 
