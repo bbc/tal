@@ -57,7 +57,7 @@ require.def(
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
-            
+
             /**
             * @inheritDoc
             */
@@ -251,6 +251,10 @@ require.def(
                 this._cacheRange();
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
+                } else if(this._deferSeekingTo !== undefined) {
+                    this._toBuffering();
+                    this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
+                    this._deferSeekingTo = undefined;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._mediaElement.play(0);
                     this._toPaused();
@@ -264,7 +268,7 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._toError();
+                this._toError('Media element emitted error with code: ' + this._mediaElement.error);
             },
 
             _onDeviceBuffering: function() {
@@ -310,7 +314,6 @@ require.def(
                             break;
                         case Player.PLAY_STATE_PLAYING:
                             self._onFinishedBuffering();
-                            self._deferredSeek();
                             break;
                         case Player.PLAY_STATE_PAUSED:
                             break;
@@ -336,20 +339,12 @@ require.def(
                 }, DEVICE_UPDATE_PERIOD_MS);
             },
 
-            _deferredSeek: function() {
-                if(this._deferSeekingTo !== undefined) {
-                    this._toBuffering();
-                    this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
-                    this._deferSeekingTo = undefined;
-                }
-            },
-
             _addElementToDOM: function() {
                 var device = RuntimeContext.getDevice();
                 var body = document.getElementsByTagName("body")[0];
                 device.prependChildElement(body, this._mediaElement);
             },
-            
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;
