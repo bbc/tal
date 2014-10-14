@@ -442,6 +442,29 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testPlayFromThenPauseWhileBufferingAtStartOfMediaPrioritisesSeekingOverPausing = function(queue) {
+        expectAsserts(5);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(10);
+            this._mediaPlayer.playFrom(20);
+            this._mediaPlayer.pause();
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.seek.calledWith(20000));
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+            // We don't want to tell the device to pause yet - otherwise it will transition to CE-HTML's paused state
+            // after the seek, rather than playing, and as a result we won't exit our BUFFERING state.
+            assert(fakeCEHTMLObject.play.withArgs(0).notCalled);
+
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+        });
+    };
+
     this.CEHTMLMediaPlayerTests.prototype.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
         expectAsserts(4);
         var self = this;
