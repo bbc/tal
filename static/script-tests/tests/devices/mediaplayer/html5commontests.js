@@ -356,9 +356,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
             assertEquals(MediaPlayer.STATE.PAUSED, self._mediaPlayer.getState());
 
+            stubCreateElementResults.video.play.reset();
+
             self._mediaPlayer.resume();
 
-            assert(stubCreateElementResults.video.play.calledTwice);
+            assert(stubCreateElementResults.video.play.calledOnce);
         });
     };
 
@@ -406,7 +408,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -441,7 +443,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -461,7 +463,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -536,16 +538,18 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPlayFromDefersSettingCurrentTimeAndCallingPlayOnMediaElementUntilWeHaveMetadata = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             self._mediaPlayer.playFrom(0);
             self._mediaPlayer.playFrom(10);
+
+            assert(stubCreateElementResults.video.play.notCalled);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -578,7 +582,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(10);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
             assertEquals(10, stubCreateElementResults.video.currentTime);
         });
     };
@@ -736,7 +740,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(50);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
 
             assert(eventCallback.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
@@ -783,7 +787,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             self._mediaPlayer.playFrom(50);
 
-            assert(stubCreateElementResults.video.play.calledOnce);
+            assert(stubCreateElementResults.video.play.called);
 
             assert(eventCallback.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
