@@ -57,7 +57,7 @@ require.def(
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
-            
+
             /**
             * @inheritDoc
             */
@@ -268,7 +268,7 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._toError();
+                this._toError('Media element emitted error with code: ' + this._mediaElement.error);
             },
 
             _onDeviceBuffering: function() {
@@ -344,7 +344,7 @@ require.def(
                 var body = document.getElementsByTagName("body")[0];
                 device.prependChildElement(body, this._mediaElement);
             },
-            
+
             _wipe: function () {
                 this._type = undefined;
                 this._source = undefined;

@@ -493,6 +493,27 @@
         });
     };
 
+    this.CEHTMLMediaPlayerTests.prototype.testDeviceErrorIsReportedWithErrorCode = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var errorStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            fakeCEHTMLObject.error = 2;
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
+            assertEquals('Media element emitted error with code: 2', errorStub.lastCall.args[0]);
+        });
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
     // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
