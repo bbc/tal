@@ -282,7 +282,9 @@ require.def(
             },
 
             _onEndOfMedia: function() {
-                this._toComplete();
+                if (this.getState() !== MediaPlayer.STATE.COMPLETE) {
+                    this._toComplete();
+                }
             },
 
             _onStatus: function() {
