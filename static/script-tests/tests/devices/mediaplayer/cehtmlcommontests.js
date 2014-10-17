@@ -22,10 +22,13 @@
  * Please contact us for an alternative licence
  */
 
-(function() {
-    this.CEHTMLMediaPlayerTests = AsyncTestCase("CEHTMLMediaPlayer");
+window.commonTests = window.commonTests || { };
+window.commonTests.mediaPlayer = window.commonTests.mediaPlayer || { };
+window.commonTests.mediaPlayer.cehtml = window.commonTests.mediaPlayer.cehtml || { };
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlayerDeviceModifierRequireName, config) {
+
+    var mixins = { };
 
     var fakeCEHTMLObject;
     var stubCreateElement = function (sandbox, application) {
@@ -94,7 +97,7 @@
         }
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.setUp = function() {
+    mixins.setUp = function() {
         this.sandbox = sinon.sandbox.create();
 
         mockData = {};
@@ -115,7 +118,7 @@
         fakeCEHTMLObject.PLAY_STATE_ERROR = 6;
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.tearDown = function() {
+    mixins.tearDown = function() {
         this.sandbox.restore();
 
         // Clean up after ourselves in case we haven't reset() the media player
@@ -139,7 +142,7 @@
     // CEHTML specific tests
     //---------------------
 
-    this.CEHTMLMediaPlayerTests.prototype.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
+    mixins.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -149,7 +152,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -160,7 +163,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
+    mixins.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -173,7 +176,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testElementIsFullScreen = function(queue) {
+    mixins.testElementIsFullScreen = function(queue) {
         expectAsserts(6);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -190,7 +193,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectContentType = function(queue) {
+    mixins.testElementHasCorrectContentType = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -199,7 +202,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testElementHasCorrectSourceURL = function(queue) {
+    mixins.testElementHasCorrectSourceURL = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -208,7 +211,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedCallsPlay = function(queue) {
+    mixins.testPlayFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -219,7 +222,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhilePlayingSeeksToCorrectTime = function(queue) {
+    mixins.testPlayFromWhilePlayingSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -236,7 +239,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhilePlayingReturnsToPlayingStateWhenSeekFails = function(queue) {
+    mixins.testPlayFromWhilePlayingReturnsToPlayingStateWhenSeekFails = function(queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -252,7 +255,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingPauseWhilePlayingCallsPlayWithZero = function(queue) {
+    mixins.testCallingPauseWhilePlayingCallsPlayWithZero = function(queue) {
         expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -268,7 +271,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingResumeFromPausedCallsPlay = function(queue) {
+    mixins.testCallingResumeFromPausedCallsPlay = function(queue) {
         expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -285,7 +288,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPlayingCallsStop = function(queue) {
+    mixins.testCallingStopFromPlayingCallsStop = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -300,7 +303,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testCallingStopFromPausedCallsStop = function(queue) {
+    mixins.testCallingStopFromPausedCallsStop = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -316,7 +319,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testStatusEventTimerCleanedUpOnReset = function(queue) {
+    mixins.testStatusEventTimerCleanedUpOnReset = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -328,7 +331,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
+    mixins.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -344,7 +347,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteStopsMediaBeforeSeekingAndPlaying = function(queue) {
+    mixins.testPlayFromWhenCompleteStopsMediaBeforeSeekingAndPlaying = function(queue) {
         expectAsserts(5);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -364,7 +367,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenCompleteThenPlayFromZeroDoesNotSeek = function(queue) {
+    mixins.testPlayFromWhenCompleteThenPlayFromZeroDoesNotSeek = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -380,7 +383,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
+    mixins.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -393,7 +396,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromZeroWhenStoppedDoesNotSeek = function(queue) {
+    mixins.testPlayFromZeroWhenStoppedDoesNotSeek = function(queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -406,7 +409,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
+    mixins.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -424,7 +427,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromWhileBufferingAtStartOfMediaSeeksToCorrectTime = function(queue) {
+    mixins.testPlayFromWhileBufferingAtStartOfMediaSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -442,7 +445,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPlayFromThenPauseWhileBufferingAtStartOfMediaPrioritisesSeekingOverPausing = function(queue) {
+    mixins.testPlayFromThenPauseWhileBufferingAtStartOfMediaPrioritisesSeekingOverPausing = function(queue) {
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -465,7 +468,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
+    mixins.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
         expectAsserts(4);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -482,7 +485,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testOnPlayStateChangeFunctionIsDeletedOnWipe = function(queue) {
+    mixins.testOnPlayStateChangeFunctionIsDeletedOnWipe = function(queue) {
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -493,7 +496,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testDeviceErrorIsReportedWithErrorCode = function(queue) {
+    mixins.testDeviceErrorIsReportedWithErrorCode = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var errorStub = this.sandbox.stub();
@@ -514,7 +517,7 @@
         });
     };
 
-    this.CEHTMLMediaPlayerTests.prototype.testOnlyOneCompleteEventFiredWhenDeviceReportsMultipleCompleteEvents = function(queue) {
+    mixins.testOnlyOneCompleteEventFiredWhenDeviceReportsMultipleCompleteEvents = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -534,6 +537,23 @@
         });
     };
 
+    // *******************************************
+    // ********* Mixin the functions *************
+    // *******************************************
+
+    // Make sure we don't mix in over the top of an existing function, except for setUp and tearDown, for which both
+    // the specific and generic setUp/tearDown should be called
+    for (var name in mixins) {
+        if (mixins.hasOwnProperty(name)) {
+            if (testCase.prototype[name]) {
+                if (name !== "setUp" && name !== "tearDown") {
+                    throw "Trying to mixin '"+name+"' but that already exists!";
+                }
+            }
+            testCase.prototype[name] = mixins[name];
+        }
+    };
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
     // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
@@ -544,6 +564,6 @@
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.commonTests.mediaPlayer.all.mixinTests(this.CEHTMLMediaPlayerTests, "antie/devices/mediaplayer/cehtml", config, deviceMockingHooks);
+    window.commonTests.mediaPlayer.all.mixinTests(testCase, "antie/devices/mediaplayer/cehtml", config, deviceMockingHooks);
 
-})();
+}
