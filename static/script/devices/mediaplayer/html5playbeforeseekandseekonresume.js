@@ -36,6 +36,19 @@ require.def(
     function(HTML5MediaPlayer, Device, MediaPlayer) {
         "use strict";
 
+        /**
+         * MediaPlayer implementation for HTML5 devices that have particular issues when seeking.
+         * There are two conditions that must be satisfied for a device to require this modifier:
+         * 1. If the device cannot reliably seek unless play has previously been called. For example,
+         * when beginning playback for the first time, starting in the middle of the media, but the
+         * device begins playback from the start of the media instead.
+         * 2. If the device cannot reliably resume playback after being paused unless it is asked to seek
+         * first. For example, if you ask the device to begin playback from the middle of the media but
+         * to start paused, and then you resume playback, but the device fails to resume.
+         * @name antie.devices.mediaplayer.html5playbeforeseekandseekonresume
+         * @class
+         * @extends antie.devices.mediaplayer.html5
+         */
         var Player = HTML5MediaPlayer.extend({
             resume : function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;

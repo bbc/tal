@@ -34,6 +34,15 @@ require.def(
     function(Device, MediaPlayer, RuntimeContext) {
         "use strict";
 
+        /**
+         * Main MediaPlayer implementation for Samsung devices implementing the Maple API.
+         * Use this device modifier if a device implements the Samsung Maple media playback standard.
+         * It must support creation of <object> elements with appropriate SAMSUNG_INFOLINK classids.
+         * Those objects must expose an API in accordance with the Samsung Maple media specification.
+         * @name antie.devices.mediaplayer.samsung_maple
+         * @class
+         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         */
         var Player = MediaPlayer.extend({
 
             init: function() {

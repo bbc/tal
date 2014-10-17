@@ -34,6 +34,16 @@ require.def(
     function(Device, MediaPlayer, HTML5MediaPlayer) {
         "use strict";
 
+        /**
+         * MediaPlayer implementation for HTML5 devices that do not report buffering events.
+         * Use this device modifier if an HTML5 device does not send an html5 'waiting' event
+         * when it starts buffering. For example, if the device is playing media, and the bandwidth is
+         * throttled causing the device to suspend playback and buffer, but the device does not report
+         * this buffering activity.
+         * @name antie.devices.mediaplayer.html5waitingfix
+         * @class
+         * @extends antie.devices.mediaplayer.html5
+         */
         var Player = HTML5MediaPlayer.extend({
 
             init: function() {
