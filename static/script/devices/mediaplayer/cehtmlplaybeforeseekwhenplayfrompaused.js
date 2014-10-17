@@ -36,48 +36,10 @@ require.def(
         "use strict";
 
         var Player = CEHTMLMediaPlayer.extend({
-            /**
-             * @inheritDoc
-             */
-            playFrom: function (seconds) {
-                this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                switch (this.getState()) {
-                    case MediaPlayer.STATE.BUFFERING:
-                        this._deferSeekingTo = seconds;
-                        break;
 
-                    case MediaPlayer.STATE.STOPPED:
-                        this._toBuffering();
-                        // Seeking past 0 requires calling play first when media has not been loaded
-                        this._mediaElement.play(1);
-                        if (seconds > 0) {
-                            this._mediaElement.seek(seconds * 1000);
-                        }
-                        break;
-
-                    case MediaPlayer.STATE.COMPLETE:
-                        this._toBuffering();
-                        this._mediaElement.stop();
-                        this._mediaElement.play(1);
-                        if (seconds > 0) {
-                            this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
-                        }
-                        break;
-
-                    case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.PAUSED:
-                        this._toBuffering();
-                        this._mediaElement.play(1);
-                        var seekResult = this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
-                        if(seekResult === false) {
-                            this._toPlaying();
-                        }
-                        break;
-
-                    default:
-                        this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
-                        break;
-                }
+            _seekAndPlayFromPaused: function(seconds) {
+                this._mediaElement.play(1);
+                this._mediaElement.seek(seconds);
             }
         });
 
