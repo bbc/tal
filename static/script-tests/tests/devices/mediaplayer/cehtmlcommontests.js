@@ -148,7 +148,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testSetSourceCreatesCEHTMLObjectElement = function (queue) {
         expectAsserts(1);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -158,7 +157,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCreatedElementIsPutAtBackOfDOM = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
@@ -169,7 +167,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCreatedElementIsRemovedFromDOMOnReset = function(queue) {
         expectAsserts(1);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.reset();
@@ -182,7 +179,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testElementIsFullScreen = function(queue) {
         expectAsserts(6);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
@@ -199,7 +195,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testElementHasCorrectContentType = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("video/mp4", fakeCEHTMLObject.type);
@@ -208,7 +203,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testElementHasCorrectSourceURL = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assertEquals("http://testurl/", fakeCEHTMLObject.data);
@@ -217,7 +211,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -228,7 +221,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhilePlayingSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -245,7 +237,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhilePlayingReturnsToPlayingStateWhenSeekFails = function(queue) {
         expectAsserts(1);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -261,7 +252,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCallingPauseWhilePlayingCallsPlayWithZero = function(queue) {
         expectAsserts(3);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -277,7 +267,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCallingResumeFromPausedCallsPlay = function(queue) {
         expectAsserts(3);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -294,7 +283,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCallingStopFromPlayingCallsStop = function(queue) {
         expectAsserts(2);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -309,7 +297,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testCallingStopFromPausedCallsStop = function(queue) {
         expectAsserts(2);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -325,7 +312,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testStatusEventTimerCleanedUpOnReset = function(queue) {
         expectAsserts(2);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var clearIntervalSpy = this.sandbox.spy(window,'clearInterval');
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -337,7 +323,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenPausedSeeksToCorrectPoint = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -353,7 +338,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenCompleteStopsMediaBeforeSeekingAndPlaying = function(queue) {
         expectAsserts(5);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -373,7 +357,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenCompleteThenPlayFromZeroDoesNotSeek = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -389,7 +372,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenStoppedSeeksToCorrectTime = function(queue) {
         expectAsserts(1);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(10);
@@ -402,7 +384,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromZeroWhenStoppedDoesNotSeek = function(queue) {
         expectAsserts(1);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -415,7 +396,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromClampsWhenCalledInPlayingState = function(queue) {
         expectAsserts(2);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -433,7 +413,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhileBufferingAtStartOfMediaSeeksToCorrectTime = function(queue) {
         expectAsserts(3);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(10);
@@ -474,7 +453,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPauseWhileBufferingCallsPlayWithZeroWhenBufferingEnds = function(queue) {
         expectAsserts(4);
-        var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -491,7 +469,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testOnPlayStateChangeFunctionIsDeletedOnWipe = function(queue) {
         expectAsserts(2);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             assert(fakeCEHTMLObject.hasOwnProperty("onPlayStateChange"));
