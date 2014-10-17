@@ -27,6 +27,26 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtmlplaybeforeseekwhenplayfrompaused"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
+    this.CEHTMLPlayBeforeSeekWhenPlayFromPausedMediaPlayerTests.prototype.testPlayFromWhenPausedCallsPlayBeforeSeek = function(queue) {
+        expectAsserts(3);
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            this.deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            this.deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+
+            this.fakeCEHTMLObject.play.reset();
+            this.fakeCEHTMLObject.seek.reset();
+
+            this._mediaPlayer.playFrom(10);
+
+            assert(this.fakeCEHTMLObject.seek.calledOnce);
+            assert(this.fakeCEHTMLObject.play.calledOnce);
+            assert(this.fakeCEHTMLObject.play.calledBefore(this.fakeCEHTMLObject.seek));
+        });
+    };
+
     // Mixin the common tests shared by all HTML5 MediaPlayer implementations
     window.commonTests.mediaPlayer.cehtml.mixinTests(this.CEHTMLPlayBeforeSeekWhenPlayFromPausedMediaPlayerTests, "antie/devices/mediaplayer/cehtmlplaybeforeseekwhenplayfrompaused", config);
 

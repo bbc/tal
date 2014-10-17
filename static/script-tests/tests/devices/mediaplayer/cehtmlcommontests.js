@@ -116,6 +116,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         fakeCEHTMLObject.PLAY_STATE_BUFFERING = 4;
         fakeCEHTMLObject.PLAY_STATE_FINISHED = 5;
         fakeCEHTMLObject.PLAY_STATE_ERROR = 6;
+
+        this.runMediaPlayerTest = runMediaPlayerTest;
+        this.fakeCEHTMLObject = fakeCEHTMLObject;
+        this.deviceMockingHooks = deviceMockingHooks;
     };
 
     mixins.tearDown = function() {
