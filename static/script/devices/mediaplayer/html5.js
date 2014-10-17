@@ -34,6 +34,15 @@ require.def(
     function(RuntimeContext, Device, MediaPlayer) {
         "use strict";
 
+        /**
+         * Main MediaPlayer implementation for HTML5 devices.
+         * Use this device modifier if a device implements the HTML5 media playback standard.
+         * It must support creation of <video> and <audio> elements, and those objects must expose an
+         * API in accordance with the HTML5 media specification.
+         * @name antie.devices.mediaplayer.html5
+         * @class
+         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         */
         var Player = MediaPlayer.extend({
 
             init: function() {

@@ -34,6 +34,15 @@ require.def(
     function(Device, MediaPlayer, RuntimeContext) {
         "use strict";
 
+        /**
+         * Main MediaPlayer implementation for CEHTML devices.
+         * Use this device modifier if a device implements the CEHTML media playback standard.
+         * It must support creation of <object> elements for media mime types, and those objects must expose an
+         * API in accordance with the CEHTML specification.
+         * @name antie.devices.mediaplayer.cehtml
+         * @class
+         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         */
         var Player = MediaPlayer.extend({
 
             init: function() {

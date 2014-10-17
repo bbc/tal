@@ -35,6 +35,14 @@ require.def(
         "use strict";
 
         var NEAR_TO_END_TOLERANCE = 2;
+
+        /**
+         * MediaPlayer implementation for HTML5 devices that report errors when playback completes.
+         * Use this device modifier if an HTML5 device reports spurious errors when playback completes.
+         * @name antie.devices.mediaplayer.html5erroroncompletefix
+         * @class
+         * @extends antie.devices.mediaplayer.html5
+         */
         var Player = HTML5MediaPlayer.extend({
             _onDeviceError: function() {
                 if (this._isNearEnd() && this._isNetworkError()) {
