@@ -111,7 +111,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
-    var assertBuffering = function (self, MediaPlayer, postBufferingState) {
+    var assertBufferingAndNextState = function (self, MediaPlayer, postBufferingState) {
         assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
         assertLatestEvent(self, {
             state: MediaPlayer.STATE.BUFFERING,
@@ -235,9 +235,52 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         doTest(this, queue, function (MediaPlayer) {
             getToStoppedState.call(this, MediaPlayer);
             this._mediaPlayer.playFrom(0);
-            assertBuffering(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+            assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
         });
     };
+
+    mixins.testFinishBufferingThenPlayFromInStoppedStateGoesToBuffering = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.playFrom(0);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+        });
+    };
+
+
+
+    mixins.testSendMetaDataInStoppedStateStaysInStoppedState = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+        });
+    };
+
+/*
+    mixins.testFinishBufferingInStoppedStateStaysInStoppedState = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+        });
+    };
+
+    mixins.testStartBufferingInStoppedStateStaysInStoppedState = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+        });
+    };
+*/
+
 
     // *******************************************
     // ********* BUFFERING state tests ***********
@@ -400,7 +443,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             this._mediaPlayer.playFrom(90);
-            assertBuffering(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+            assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
         });
     };
 
@@ -549,7 +592,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         doTest(this, queue, function (MediaPlayer) {
             getToPausedState.call(this, MediaPlayer);
             this._mediaPlayer.playFrom(90);
-            assertBuffering(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+            assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
         });
     };
 
@@ -620,7 +663,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         doTest(this, queue, function (MediaPlayer) {
             getToCompleteState.call(this, MediaPlayer);
             this._mediaPlayer.playFrom(90);
-            assertBuffering(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+            assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
         });
     };
 
