@@ -281,12 +281,8 @@ require.def(
             },
 
             _onDeviceBuffering: function() {
-                switch(this.getState()){
-                    case MediaPlayer.STATE.BUFFERING:
-                    case MediaPlayer.STATE.PAUSED:
-                        break;
-                    default:
-                        this._toBuffering();
+                if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._toBuffering();
                 }
             },
 

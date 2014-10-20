@@ -270,7 +270,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
-/*
     mixins.testStartBufferingInStoppedStateStaysInStoppedState = function (queue) {
         expectAsserts(2);
         doTest(this, queue, function (MediaPlayer) {
@@ -279,7 +278,8 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
         });
     };
-*/
+
+    // Test playback error in stopped goes to error
 
 
     // *******************************************
