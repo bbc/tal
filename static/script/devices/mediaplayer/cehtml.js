@@ -117,13 +117,17 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.PAUSED:
                         this._toBuffering();
                         var seekResult = this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
                         if(seekResult === false) {
                             this._toPlaying();
                         }
                         this._mediaElement.play(1);
+                        break;
+
+                    case MediaPlayer.STATE.PAUSED:
+                        this._toBuffering();
+                        this._seekAndPlayFromPaused(this._getClampedTime(seconds) * 1000);
                         break;
 
                     default:
@@ -272,10 +276,6 @@ require.def(
                 }
             },
 
-            _cacheRange: function() {
-                this._range = this._getSeekableRange();
-            },
-
             _onDeviceError: function() {
                 this._toError('Media element emitted error with code: ' + this._mediaElement.error);
             },
@@ -350,6 +350,15 @@ require.def(
                 var device = RuntimeContext.getDevice();
                 var body = document.getElementsByTagName("body")[0];
                 device.prependChildElement(body, this._mediaElement);
+            },
+
+            _cacheRange: function() {
+                this._range = this._getSeekableRange();
+            },
+
+            _seekAndPlayFromPaused: function(seconds) {
+                this._mediaElement.seek(seconds);
+                this._mediaElement.play(1);
             },
 
             _wipe: function () {
