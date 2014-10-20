@@ -315,7 +315,6 @@ require.def(
                     var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
 
                     if (!isNearCurrentTime) {
-                        this._toBuffering();
                         seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
                     }
 
@@ -425,9 +424,6 @@ require.def(
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
                 var success = this._isSuccessCode(this._jump(offset));
-                if (!success) {
-                    this._toPlaying();
-                }
 
                 return success;
             },

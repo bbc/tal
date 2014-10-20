@@ -1174,23 +1174,23 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningZeroReturnsToPlayingState = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningZeroRemainsInBufferingState = function(queue) {
         var jumpReturnCode = 0;
-        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
+        doTestFailedJumpRemainsInBufferingState(this, queue, jumpReturnCode);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningMinusOneReturnsToPlayingState = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningMinusOneRemainsInBufferingState = function(queue) {
         var jumpReturnCode = -1;
-        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
+        doTestFailedJumpRemainsInBufferingState(this, queue, jumpReturnCode);
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningFalseReturnsToPlayingState = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedJumpReturningFalseRemainsInBufferingState = function(queue) {
         var jumpReturnCode = false;
-        doTestFailedJumpReturnsToPlayingState(this, queue, jumpReturnCode);
+        doTestFailedJumpRemainsInBufferingState(this, queue, jumpReturnCode);
     };
 
-    var doTestFailedJumpReturnsToPlayingState = function(self, queue, jumpReturnCode) {
-        expectAsserts(5);
+    var doTestFailedJumpRemainsInBufferingState = function(self, queue, jumpReturnCode) {
+        expectAsserts(4);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             self._mediaPlayer.playFrom(0);
@@ -1206,15 +1206,14 @@
 
             self._mediaPlayer.playFrom(30);
 
-            assert(eventHandler.calledTwice);
+            assert(eventHandler.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.firstCall.args[0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.secondCall.args[0].type);
-            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpReturnsToPlayingState = function(queue) {
-        expectAsserts(6);
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpRemainsInBufferingState = function(queue) {
+        expectAsserts(5);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -1233,10 +1232,12 @@
             window.SamsungMapleOnCurrentPlayTime(0);
 
             assert(playerPlugin.JumpForward.calledOnce);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventHandler.lastCall.args[0].type);
-            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
     };
+
+    // TODO: Only go to BUFFERING state once
+    // TODO: Return to PLAYING state if attempting to seek and time approach playback time
 
     this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpResultsInRepeatedAttemptsToJumpUntilSuccess = function(queue) {
         expectAsserts(7);
@@ -1268,6 +1269,31 @@
 
             window.SamsungMapleOnCurrentPlayTime(3);
             assert(playerPlugin.JumpForward.calledThrice);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testDeferredJumpsDoNotReenterBufferingState = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.playFrom(30);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            playerPlugin.JumpForward.returns(0);
+
+            assert(eventHandler.notCalled);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            window.SamsungMapleOnCurrentPlayTime(0);
+            window.SamsungMapleOnCurrentPlayTime(1);
+            window.SamsungMapleOnCurrentPlayTime(2);
+
+            assert(eventHandler.withArgs(sinon.match({ type: MediaPlayer.EVENT.BUFFERING })).notCalled);
         });
     };
 
