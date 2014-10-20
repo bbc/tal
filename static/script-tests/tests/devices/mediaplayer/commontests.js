@@ -279,7 +279,14 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
-    // Test playback error in stopped goes to error
+    mixins.testPlaybackErrorInStoppedStateGoesToErrorState = function (queue) {
+        expectAsserts(9);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            assertMediaPlayerError(this, MediaPlayer);
+        });
+    };
 
 
     // *******************************************
