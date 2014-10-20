@@ -62,7 +62,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             mockData.range = range;
         },
         finishBuffering: function(mediaPlayer) {
-            if (!mockData.loaded) {
+            if (!mockData.loaded && mockData.range) {
                 fakeCEHTMLObject.playTime = mockData.range.end * 1000;
                 mockData.loaded = true;
             }
