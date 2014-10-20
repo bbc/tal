@@ -1238,6 +1238,39 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpResultsInRepeatedAttemptsToJumpUntilSuccess = function(queue) {
+        expectAsserts(7);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.playFrom(30);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            playerPlugin.JumpForward.returns(0);
+
+            assert(eventHandler.notCalled);
+            assert(playerPlugin.JumpForward.notCalled);
+            assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
+
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            window.SamsungMapleOnCurrentPlayTime(0);
+
+            assert(playerPlugin.JumpForward.calledOnce);
+
+            window.SamsungMapleOnCurrentPlayTime(1);
+            assert(playerPlugin.JumpForward.calledTwice);
+
+            playerPlugin.JumpForward.returns(1);
+            window.SamsungMapleOnCurrentPlayTime(2);
+            assert(playerPlugin.JumpForward.calledThrice);
+
+            window.SamsungMapleOnCurrentPlayTime(3);
+            assert(playerPlugin.JumpForward.calledThrice);
+        });
+    };
+
     this.SamsungMapleMediaPlayerTests.prototype.testDeferredSeekIsCancelledWhenTargetIsCurrentTime = function(queue) {
         var targetTime = 30;
         doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime(this, queue, targetTime);

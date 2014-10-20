@@ -279,6 +279,7 @@ require.def(
                 if (success) {
                     this._toPaused();
                 }
+
                 this._tryingToPause = !success;
             },
 
@@ -288,6 +289,7 @@ require.def(
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
 
+                // TODO: Move into _onCurrentTime
                 if (this._tryingToPause) {
                     this._tryPauseWithStateTransition();
                 }
@@ -309,11 +311,17 @@ require.def(
 
             _deferredSeek: function() {
                 if (this._deferSeekingTo) {
-                    if (!this._isNearToCurrentTime(this._deferSeekingTo)) {
+                    var seekResult;
+                    var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
+
+                    if (!isNearCurrentTime) {
                         this._toBuffering();
-                        this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                        seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
                     }
-                    this._deferSeekingTo = null;
+
+                    if (isNearCurrentTime || seekResult) {
+                        this._deferSeekingTo = null;
+                    }
                 }
             },
 
@@ -420,6 +428,8 @@ require.def(
                 if (!success) {
                     this._toPlaying();
                 }
+
+                return success;
             },
 
             _jump: function (offsetSeconds) {
