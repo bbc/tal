@@ -251,10 +251,14 @@ require.def(
             _onFinishedBuffering: function() {
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
-                } else if (!this._deferSeekingTo && this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._tryPauseWithStateTransition();
-                } else if (!this._deferSeekingTo) {
-                    this._toPlaying();
+                }
+
+                if (this._deferSeekingTo === null) {
+                    if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                        this._tryPauseWithStateTransition();
+                    } else {
+                        this._toPlaying();
+                    }
                 }
             },
 
