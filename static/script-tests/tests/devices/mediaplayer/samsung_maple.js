@@ -1236,11 +1236,8 @@
         });
     };
 
-    // TODO: Only go to BUFFERING state once
-    // TODO: Return to PLAYING state if attempting to seek and time approach playback time
-
     this.SamsungMapleMediaPlayerTests.prototype.testFailedDeferredJumpResultsInRepeatedAttemptsToJumpUntilSuccess = function(queue) {
-        expectAsserts(7);
+        expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(0);
@@ -1269,6 +1266,9 @@
 
             window.SamsungMapleOnCurrentPlayTime(3);
             assert(playerPlugin.JumpForward.calledThrice);
+
+            // No additional events - we remain in BUFFERING
+            assert(eventHandler.notCalled);
         });
     };
 
