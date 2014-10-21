@@ -251,7 +251,7 @@ require.def(
             _onFinishedBuffering: function() {
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
-                } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                } else if (!this._deferSeekingTo && this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._tryPauseWithStateTransition();
                 } else if (!this._deferSeekingTo) {
                     this._toPlaying();
@@ -430,6 +430,10 @@ require.def(
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
                 var success = this._isSuccessCode(this._jump(offset));
+
+                if (success) {
+                    this._currentTime = seconds;
+                }
 
                 return success;
             },
