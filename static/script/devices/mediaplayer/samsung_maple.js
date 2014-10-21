@@ -49,6 +49,9 @@ require.def(
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._playerPlugin = document.getElementById('playerPlugin');
+                this._deferSeekingTo = null;
+                this._postBufferingState = null;
+                this._tryingToPause = false;
             },
 
 
@@ -310,19 +313,20 @@ require.def(
             },
 
             _deferredSeek: function() {
-                if (this._deferSeekingTo) {
-                    var seekResult;
-                    var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
+                if (this._deferSeekingTo === null) {
+                    return;
+                }
 
-                    if (!isNearCurrentTime) {
-                        seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
-                    } else {
-                        this._toPlaying();
-                    }
+                var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
+                if (isNearCurrentTime) {
+                    this._toPlaying();
+                    this._deferSeekingTo = null;
+                    return;
+                }
 
-                    if (isNearCurrentTime || seekResult) {
-                        this._deferSeekingTo = null;
-                    }
+                var seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                if (seekResult) {
+                    this._deferSeekingTo = null;
                 }
             },
 
