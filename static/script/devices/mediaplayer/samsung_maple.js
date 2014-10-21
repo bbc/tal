@@ -52,6 +52,7 @@ require.def(
                 this._deferSeekingTo = null;
                 this._postBufferingState = null;
                 this._tryingToPause = false;
+                this._currentTimeKnown = false;
             },
 
 
@@ -65,7 +66,6 @@ require.def(
                     this._mimeType = mimeType;
                     this._registerEventHandlers();
                     this._toStopped();
-                    this._currentTimeKnown = false;
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
@@ -425,6 +425,9 @@ require.def(
                 this._mimeType = undefined;
                 this._currentTime = undefined;
                 this._range = undefined;
+                this._deferSeekingTo = null;
+                this._tryingToPause = false;
+                this._currentTimeKnown = false;
                 this._unregisterEventHandlers();
             },
 
