@@ -250,7 +250,7 @@ require.def(
                     return;
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
                     this._tryPauseWithStateTransition();
-                } else {
+                } else if (!this._deferSeekingTo) {
                     this._toPlaying();
                 }
             },
@@ -320,6 +320,7 @@ require.def(
 
                     if (isNearCurrentTime || seekResult) {
                         this._deferSeekingTo = null;
+                        this._toPlaying();
                     }
                 }
             },
