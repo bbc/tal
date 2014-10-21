@@ -323,12 +323,11 @@ require.def(
                 if (isNearCurrentTime) {
                     this._toPlaying();
                     this._deferSeekingTo = null;
-                    return;
-                }
-
-                var seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
-                if (seekResult) {
-                    this._deferSeekingTo = null;
+                } else {
+                    var seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    if (seekResult) {
+                        this._deferSeekingTo = null;
+                    }
                 }
             },
 
