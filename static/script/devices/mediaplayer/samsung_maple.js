@@ -291,11 +291,6 @@ require.def(
                 if (state === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
-
-                // TODO: Move into _onCurrentTime
-                if (this._tryingToPause) {
-                    this._tryPauseWithStateTransition();
-                }
             },
 
             _onMetadata: function() {
@@ -309,14 +304,17 @@ require.def(
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
                 this._currentTimeKnown = true;
-                this._deferredSeek();
+
+                if (this._deferSeekingTo !== null) {
+                    this._deferredSeek();
+                }
+
+                if (this._tryingToPause) {
+                    this._tryPauseWithStateTransition();
+                }
             },
 
             _deferredSeek: function() {
-                if (this._deferSeekingTo === null) {
-                    return;
-                }
-
                 var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
                 if (isNearCurrentTime) {
                     this._toPlaying();
