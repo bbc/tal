@@ -26,6 +26,7 @@
  */
 
 require.def(
+    // TODO: Use underscores?
     "antie/devices/mediaplayer/cehtmlplaybeforeseekwhenplayfrompaused",
     [
         "antie/devices/mediaplayer/cehtml",
