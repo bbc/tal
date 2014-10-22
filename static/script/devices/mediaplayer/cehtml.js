@@ -95,6 +95,7 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
+                        // TODO: Spec claims you can seek from buffering...however, we probably want to wait so we can clamp. Possibly an option if devices give us problems?
                         this._deferSeekingTo = seconds;
                         break;
 
@@ -103,6 +104,7 @@ require.def(
                         // Seeking past 0 requires calling play first when media has not been loaded
                         this._mediaElement.play(1);
                         if (seconds > 0) {
+                            // TODO: according to OIPF 7.14.1.1, you should not seek from STOPPED (0 in CEHTML)
                             this._mediaElement.seek(seconds * 1000);
                         }
                         break;
@@ -112,6 +114,7 @@ require.def(
                         this._mediaElement.stop();
                         this._mediaElement.play(1);
                         if (seconds > 0) {
+                            // TODO: according to OIPF 7.14.1.1, you should not seek from FINISHED (5 in CEHTML)
                             this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
                         }
                         break;
@@ -122,10 +125,12 @@ require.def(
                         if(seekResult === false) {
                             this._toPlaying();
                         }
+                        // TODO: Remove this call to play(1), and check if this adversely affects any devices
                         this._mediaElement.play(1);
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
+                        // TODO: consider always deferring play(1) until playStateChange to 2 OR deferring seek until playStateChange to 3, 4, or 1
                         this._toBuffering();
                         this._seekAndPlayFromPaused(this._getClampedTime(seconds) * 1000);
                         break;
@@ -141,6 +146,7 @@ require.def(
             */
             pause: function () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                // TODO: Spec says we can pause from buffering. Will this help observed device issues?
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PAUSED:
@@ -244,6 +250,7 @@ require.def(
                 return undefined;
             },
 
+            // TODO: This function only called in one place - does it need to exist? Can we refactor the 'range' journey in general?
             _getSeekableRange: function () {
               if(this._mediaElement) {
                   return {
@@ -260,6 +267,7 @@ require.def(
                 return this._state;
             },
 
+            // TODO: Consider whether we want to refactor this
             _onFinishedBuffering: function() {
                 this._cacheRange();
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
@@ -433,5 +441,19 @@ require.def(
 
         return Player;
     }
+
+    // 7.14.1.1 State diagram for A/V control objects
+    // Contains useful state diagram
+    // Point 7: 'If seek() is performed beyond the available content the request is rejected and the current playout is maintained.'
+    // 7.14.1.2 Using an A/V control object to play streaming content
+    // This sections has interesting points about calling play(0) from various states
+    // 7.14.3 Extensions to A/V object for trickmodes
+    // TODO: Implement onPlaySpeedChanged() to give us some logging, and check some devices to see if it is used
+    // TODO: Implement onPlayPositionChanged() to give us some logging, and check some devices to see if it is used - this might only be fired when seeking using +ve or -ve play speeds
+    // playSpeeds array might be useful - if '0' is not in the list, then perhaps we cannot pause?
+    // 7.14.8 Extensions to A/V object for UI feedback of buffering A/V content
+    // TODO: Implement onReadyToPlay() to give us some logging, and check some devices to see if it is used
+    // 7.14.9 DOM 2 events for A/V object
+    // playState can change whilst onPlayStateChange is executing
 
 );
