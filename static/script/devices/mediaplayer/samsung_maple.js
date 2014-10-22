@@ -117,7 +117,7 @@ require.def(
                         } else if (this._isNearToCurrentTime(seekingTo)) {
                             this._toPlaying();
                         } else {
-                            this._seekTo(seekingTo);
+                            this._seekToWithFailureStateTransition(seekingTo);
                         }
                         break;
 
@@ -130,7 +130,7 @@ require.def(
                             this._playerPlugin.Resume();
                             this._toPlaying();
                         } else {
-                            this._seekTo(seekingTo);
+                            this._seekToWithFailureStateTransition(seekingTo);
                             this._playerPlugin.Resume();
                         }
                         break;
@@ -440,6 +440,13 @@ require.def(
                 }
 
                 return success;
+            },
+
+            _seekToWithFailureStateTransition: function(seconds) {
+                var success = this._seekTo(seconds);
+                if (!success) {
+                    this._toPlaying();
+                }
             },
 
             _jump: function (offsetSeconds) {
