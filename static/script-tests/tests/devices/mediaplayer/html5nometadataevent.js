@@ -35,26 +35,7 @@
     //---------------
     // Tests specific to the sub-modifier
     //---------------
-    /*
 
-    this.HTML5NoMetadataEventMediaPlayerTests.prototype.testPlayFrom = function(queue) {
-        var self = this;
-        expectAsserts(2);
-        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            self.stubCreateElementResults.video.play = null;
-            var currentTimesOnPlay = [];
-            this.sandbox.stub(self.stubCreateElementResults.video, 'play', function () {
-                currentTimesOnPlay.push(self.stubCreateElementResults.video.currentTime);
-            });
-            self._mediaPlayer.playFrom(50);
-            self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
-            assertSame(0,currentTimesOnPlay[0]);
-            assertSame(50,currentTimesOnPlay[1]);
-        });
-    };
-    */
     //---------------------
     // Common tests
     //---------------------
