@@ -609,6 +609,14 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingSetSourceInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "setSource");
     mixins.testCallingResetInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "reset");
 
+    mixins.testSendMetaDataInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'sendMetadata');
+    mixins.testFinishBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'finishBuffering');
+    mixins.testStartBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'startBuffering');
+
+    mixins.testDeviceErrorInPausedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPausedState);
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInPausedState = makeTimePassingDoesNotCauseStatusEventTest(getToPausedState);
+
     mixins.testWhenCallingResumeWhilePausedGoesToPlayingState = function (queue) {
         expectAsserts(9);
         doTest(this, queue, function (MediaPlayer) {
@@ -660,17 +668,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 mimeType: "testMimeType",
                 type: MediaPlayer.EVENT.STOPPED
             });
-        });
-    };
-
-    mixins.testDeviceBufferingEventEmittedWhilePausedDoesNotChangeState = function (queue) {
-        expectAsserts(3);
-        doTest(this, queue, function (MediaPlayer) {
-            getToPausedState.call(this, MediaPlayer);
-            var callCount = this.eventCallback.callCount;
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-            assertEquals(callCount, this.eventCallback.callCount);
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
         });
     };
 
