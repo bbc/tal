@@ -154,6 +154,56 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         return test;
     };
 
+    var sendDeviceEvent = function (deviceEventName) {
+        if (deviceEventName === 'sendMetadata') {
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+        } else {
+            deviceMockingHooks[deviceEventName](this._mediaPlayer);
+        }
+    };
+
+    var makeDeviceEventStaysInSameStateTest = function (setup, deviceEventName) {
+        var test = function (queue) {
+            expectAsserts(2);
+            doTest(this, queue, function (MediaPlayer) {
+                setup.call(this, MediaPlayer);
+                var previousState = this._mediaPlayer.getState();
+                sendDeviceEvent(deviceEventName);
+                assertEquals(previousState, this._mediaPlayer.getState());
+            });
+        };
+        test.bind(testCase);
+        return test;
+    };
+
+    var makeDeviceErrorGoesToErrorStateTest = function (setup, deviceEventName) {
+        var test = function (queue) {
+            expectAsserts(9);
+            doTest(this, queue, function (MediaPlayer) {
+                setup.call(this, MediaPlayer);
+                deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+                assertMediaPlayerError(this, MediaPlayer);
+            });
+        };
+        test.bind(testCase);
+        return test;
+    };
+
+    var makeTimePassingDoesNotCauseStatusEventTest = function (setup) {
+        var test = function (queue) {
+            expectAsserts(2);
+            doTest(this, queue, function (MediaPlayer) {
+                deviceMockingHooks.mockTime(this._mediaPlayer);
+                setup.call(this, MediaPlayer);
+                deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+                var latestEventType = this.eventCallback.lastCall.args[0].type || '';
+                assert(MediaPlayer.EVENT.STATUS !== latestEventType);
+                deviceMockingHooks.unmockTime(this._mediaPlayer);
+            });
+        };
+        test.bind(testCase);
+        return test;
+    };
 
     // *******************************************
     // ********* EMPTY state tests ***************
@@ -219,6 +269,14 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingStopInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "stop");
     mixins.testCallingResumeInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "resume");
 
+    mixins.testSendMetaDataInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'sendMetadata');
+    mixins.testFinishBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'finishBuffering');
+    mixins.testStartBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'startBuffering');
+
+    mixins.testDeviceErrorInStoppedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToStoppedState);
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInStoppedState = makeTimePassingDoesNotCauseStatusEventTest(getToStoppedState);
+
     mixins.testCallingResetInStoppedStateGoesToEmptyState = function (queue) {
         expectAsserts(4);
         doTest(this, queue, function (MediaPlayer) {
@@ -251,44 +309,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
 
-
-    mixins.testSendMetaDataInStoppedStateStaysInStoppedState = function (queue) {
-        expectAsserts(2);
-        doTest(this, queue, function (MediaPlayer) {
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
-        });
-    };
-
-    mixins.testFinishBufferingInStoppedStateStaysInStoppedState = function (queue) {
-        expectAsserts(2);
-        doTest(this, queue, function (MediaPlayer) {
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
-        });
-    };
-
-    mixins.testStartBufferingInStoppedStateStaysInStoppedState = function (queue) {
-        expectAsserts(2);
-        doTest(this, queue, function (MediaPlayer) {
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
-        });
-    };
-
-    mixins.testNetworkErrorInStoppedStateGoesToErrorState = function (queue) {
-        expectAsserts(9);
-        doTest(this, queue, function (MediaPlayer) {
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-            assertMediaPlayerError(this, MediaPlayer, 2);
-        });
-    };
-
-
     // *******************************************
     // ********* BUFFERING state tests ***********
     // *******************************************
@@ -306,6 +326,13 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     mixins.testCallingSetSourceInBufferingStateIsAnError = makeApiCallCausesErrorTest(getToBufferingState, "setSource");
     mixins.testCallingResetInBufferingStateIsAnError = makeApiCallCausesErrorTest(getToBufferingState, "reset");
+
+    mixins.testSendMetaDataInBufferingStateStaysInBufferingState = makeDeviceEventStaysInSameStateTest(getToBufferingState, 'sendMetadata');
+    mixins.testStartBufferingInBufferingStateStaysInBufferingState = makeDeviceEventStaysInSameStateTest(getToBufferingState, 'startBuffering');
+
+    mixins.testDeviceErrorInBufferingStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToBufferingState);
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInBufferingState = makeTimePassingDoesNotCauseStatusEventTest(getToBufferingState);
 
     mixins.testWhenBufferingFinishesAndNoFurtherApiCallsThenWeGoToPlayingState = function (queue) {
         expectAsserts(9);
@@ -433,6 +460,11 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     mixins.testCallingSetSourceInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "setSource");
     mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
+
+    mixins.testSendMetaDataInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'sendMetadata');
+    mixins.testFinishBufferingInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'finishBuffering');
+
+    mixins.testDeviceErrorInPlayingStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPlayingState);
 
     mixins.testWhenCallResumeWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
         expectAsserts(3);
@@ -577,6 +609,14 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingSetSourceInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "setSource");
     mixins.testCallingResetInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "reset");
 
+    mixins.testSendMetaDataInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'sendMetadata');
+    mixins.testFinishBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'finishBuffering');
+    mixins.testStartBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'startBuffering');
+
+    mixins.testDeviceErrorInPausedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPausedState);
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInPausedState = makeTimePassingDoesNotCauseStatusEventTest(getToPausedState);
+
     mixins.testWhenCallingResumeWhilePausedGoesToPlayingState = function (queue) {
         expectAsserts(9);
         doTest(this, queue, function (MediaPlayer) {
@@ -631,17 +671,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
-    mixins.testDeviceBufferingEventEmittedWhilePausedDoesNotChangeState = function (queue) {
-        expectAsserts(3);
-        doTest(this, queue, function (MediaPlayer) {
-            getToPausedState.call(this, MediaPlayer);
-            var callCount = this.eventCallback.callCount;
-            deviceMockingHooks.startBuffering(this._mediaPlayer);
-            assertEquals(callCount, this.eventCallback.callCount);
-            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
-        });
-    };
-
     // *******************************************
     // ********* COMPLETE state tests ************
     // *******************************************
@@ -664,6 +693,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingPauseInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "pause");
     mixins.testCallingResumeInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "resume");
     mixins.testCallingResetInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "reset");
+
+    mixins.testSendMetaDataInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'sendMetadata');
+    mixins.testFinishBufferingInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'finishBuffering');
+    mixins.testStartBufferingInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'startBuffering');
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInCompleteState = makeTimePassingDoesNotCauseStatusEventTest(getToCompleteState);
 
     mixins.testWhenCallPlayFromWhileCompleteGoesToBufferingState = function (queue) {
         expectAsserts(8);
