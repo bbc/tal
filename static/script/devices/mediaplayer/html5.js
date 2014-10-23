@@ -78,14 +78,14 @@ require.def(
                     this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(); };
                     this._wrapOnStatus = function(event) { self._onStatus(); };
                     this._wrapOnMetadata = function(event) { self._onMetadata(); };
-                    this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering);
-                    this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering);
-                    this._mediaElement.addEventListener("playing", this._wrapOnFinishedBuffering);
-                    this._mediaElement.addEventListener("error", this._wrapOnError);
-                    this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia);
-                    this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering);
-                    this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus);
-                    this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata);
+                    this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.addEventListener("playing", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.addEventListener("error", this._wrapOnError, false);
+                    this._mediaElement.addEventListener("ended", this._wrapOnEndOfMedia, false);
+                    this._mediaElement.addEventListener("waiting", this._wrapOnDeviceBuffering, false);
+                    this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus, false);
+                    this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata, false);
 
                     var body = document.getElementsByTagName("body")[0];
                     device.prependChildElement(body, this._mediaElement);
@@ -99,7 +99,7 @@ require.def(
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
                 }
             },
-            
+
             /**
             * @inheritDoc
             */
@@ -168,7 +168,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.BUFFERING:
-                        break;                    
+                        break;
 
                     case MediaPlayer.STATE.PAUSED:
                         this._mediaElement.play();
