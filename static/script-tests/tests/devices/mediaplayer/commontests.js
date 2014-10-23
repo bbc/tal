@@ -176,6 +176,19 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         return test;
     };
 
+    var makeDeviceErrorGoesToErrorStateTest = function (setup, deviceEventName) {
+        var test = function (queue) {
+            expectAsserts(9);
+            doTest(this, queue, function (MediaPlayer) {
+                setup.call(this, MediaPlayer);
+                deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+                assertMediaPlayerError(this, MediaPlayer);
+            });
+        };
+        test.bind(testCase);
+        return test;
+    };
+
 
     // *******************************************
     // ********* EMPTY state tests ***************
@@ -241,6 +254,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingStopInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "stop");
     mixins.testCallingResumeInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "resume");
 
+    mixins.testSendMetaDataInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'sendMetadata');
+    mixins.testFinishBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'finishBuffering');
+    mixins.testStartBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'startBuffering');
+
+    mixins.testDeviceErrorInStoppedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToStoppedState);
+
     mixins.testCallingResetInStoppedStateGoesToEmptyState = function (queue) {
         expectAsserts(4);
         doTest(this, queue, function (MediaPlayer) {
@@ -269,19 +288,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             this._mediaPlayer.playFrom(0);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
-        });
-    };
-
-    mixins.testSendMetaDataInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'sendMetadata');
-    mixins.testFinishBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'finishBuffering');
-    mixins.testStartBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'startBuffering');
-
-    mixins.testNetworkErrorInStoppedStateGoesToErrorState = function (queue) {
-        expectAsserts(9);
-        doTest(this, queue, function (MediaPlayer) {
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-            assertMediaPlayerError(this, MediaPlayer, 2);
         });
     };
 
