@@ -95,7 +95,6 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        // TODO: Spec claims you can seek from buffering...however, we probably want to wait so we can clamp. Possibly an option if devices give us problems?
                         this._deferSeekingTo = seconds;
                         break;
 
@@ -450,9 +449,6 @@ require.def(
 
     // 7.14.1.1 State diagram for A/V control objects
     // Contains useful state diagram
-    // Point 7: 'If seek() is performed beyond the available content the request is rejected and the current playout is maintained.'
-    // 7.14.1.2 Using an A/V control object to play streaming content
-    // This sections has interesting points about calling play(0) from various states
     // 7.14.3 Extensions to A/V object for trickmodes
     // TODO: Implement onPlaySpeedChanged() to give us some logging, and check some devices to see if it is used
     // playSpeeds array might be useful - if '0' is not in the list, then perhaps we cannot pause?
