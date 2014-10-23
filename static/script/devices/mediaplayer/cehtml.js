@@ -240,16 +240,6 @@ require.def(
                 return undefined;
             },
 
-            // TODO: This function only called in one place - does it need to exist? Can we refactor the 'range' journey in general?
-            _getSeekableRange: function () {
-              if(this._mediaElement) {
-                  return {
-                      start: 0,
-                      end: this._mediaElement.playTime / 1000
-                  };
-              }
-            },
-
             /**
             * @inheritDoc
             */
@@ -351,7 +341,12 @@ require.def(
             },
 
             _cacheRange: function() {
-                this._range = this._getSeekableRange();
+                if(this._mediaElement) {
+                    this._range =  {
+                        start: 0,
+                        end: this._mediaElement.playTime / 1000
+                    };
+                }
             },
 
             _seekAndPlayFromPaused: function(seconds) {
