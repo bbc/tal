@@ -247,18 +247,19 @@ require.def(
                 return this._state;
             },
 
-            // TODO: Consider whether we want to refactor this
             _onFinishedBuffering: function() {
                 this._cacheRange();
+
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
-                } else if(this._deferSeekingTo !== undefined) {
+                }
+
+                if(this._waitingToSeek()) {
                     this._toBuffering();
-                    this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
-                    this._deferSeekingTo = undefined;
-                } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._mediaElement.play(0);
+                    this._performDeferredSeek();
+                } else if (this._waitingToPause()) {
                     this._toPaused();
+                    this._mediaElement.play(0);
                 } else {
                     this._toPlaying();
                 }
@@ -359,6 +360,19 @@ require.def(
                 if (seconds > 0) {
                     this._deferSeekingTo = seconds;
                 }
+            },
+
+            _waitingToSeek: function() {
+                return (this._deferSeekingTo !== undefined);
+            },
+
+            _performDeferredSeek: function() {
+                this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
+                this._deferSeekingTo = undefined;
+            },
+
+            _waitingToPause: function() {
+                return (this._postBufferingState === MediaPlayer.STATE.PAUSED);
             },
 
             _wipe: function () {
