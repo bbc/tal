@@ -461,6 +461,11 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingSetSourceInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "setSource");
     mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
 
+    mixins.testSendMetaDataInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'sendMetadata');
+    mixins.testFinishBufferingInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'finishBuffering');
+
+    mixins.testDeviceErrorInPlayingStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPlayingState);
+
     mixins.testWhenCallResumeWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
         expectAsserts(3);
         doTest(this, queue, function (MediaPlayer) {
