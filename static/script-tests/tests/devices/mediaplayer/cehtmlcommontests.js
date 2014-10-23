@@ -242,7 +242,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.playFrom(20);
 
             assert(seekSpy.calledWith(20000));
-            assert(fakeCEHTMLObject.play.withArgs(1).calledTwice);
+            assert(fakeCEHTMLObject.play.withArgs(1).calledOnce);
         });
     };
 

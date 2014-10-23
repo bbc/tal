@@ -117,8 +117,6 @@ require.def(
                         if(seekResult === false) {
                             this._toPlaying();
                         }
-                        // TODO: Remove this call to play(1), and check if this adversely affects any devices
-                        this._mediaElement.play(1);
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
