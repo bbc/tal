@@ -104,8 +104,7 @@ require.def(
                         // Seeking past 0 requires calling play first when media has not been loaded
                         this._mediaElement.play(1);
                         if (seconds > 0) {
-                            // TODO: according to OIPF 7.14.1.1, you should not seek from STOPPED (0 in CEHTML)
-                            this._mediaElement.seek(seconds * 1000);
+                            this._deferSeekingTo = seconds;
                         }
                         break;
 
@@ -449,7 +448,6 @@ require.def(
     // This sections has interesting points about calling play(0) from various states
     // 7.14.3 Extensions to A/V object for trickmodes
     // TODO: Implement onPlaySpeedChanged() to give us some logging, and check some devices to see if it is used
-    // TODO: Implement onPlayPositionChanged() to give us some logging, and check some devices to see if it is used - this might only be fired when seeking using +ve or -ve play speeds
     // playSpeeds array might be useful - if '0' is not in the list, then perhaps we cannot pause?
     // 7.14.8 Extensions to A/V object for UI feedback of buffering A/V content
     // TODO: Implement onReadyToPlay() to give us some logging, and check some devices to see if it is used
