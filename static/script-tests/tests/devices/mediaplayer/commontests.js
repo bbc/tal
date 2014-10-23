@@ -189,6 +189,21 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         return test;
     };
 
+    var makeTimePassingDoesNotCauseStatusEventTest = function (setup) {
+        var test = function (queue) {
+            expectAsserts(2);
+            doTest(this, queue, function (MediaPlayer) {
+                deviceMockingHooks.mockTime(this._mediaPlayer);
+                setup.call(this, MediaPlayer);
+                deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+                var latestEventType = this.eventCallback.lastCall.args[0].type || '';
+                assert(MediaPlayer.EVENT.STATUS !== latestEventType);
+                deviceMockingHooks.unmockTime(this._mediaPlayer);
+            });
+        };
+        test.bind(testCase);
+        return test;
+    };
 
     // *******************************************
     // ********* EMPTY state tests ***************
@@ -260,19 +275,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     mixins.testDeviceErrorInStoppedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToStoppedState);
 
-    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInStoppedState = function (queue) {
-        expectAsserts(2);
-        doTest(this, queue, function (MediaPlayer) {
-            deviceMockingHooks.mockTime(this._mediaPlayer);
-            getToStoppedState.call(this, MediaPlayer);
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
-
-            var latestEventType = this.eventCallback.lastCall.args[0].type || '';
-            assert(MediaPlayer.EVENT.STATUS !== latestEventType);
-
-            deviceMockingHooks.unmockTime(this._mediaPlayer);
-        });
-    };
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInStoppedState = makeTimePassingDoesNotCauseStatusEventTest(getToStoppedState);
 
     mixins.testCallingResetInStoppedStateGoesToEmptyState = function (queue) {
         expectAsserts(4);
