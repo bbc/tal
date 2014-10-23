@@ -694,6 +694,13 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingResumeInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "resume");
     mixins.testCallingResetInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "reset");
 
+    mixins.testSendMetaDataInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'sendMetadata');
+    mixins.testFinishBufferingInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'finishBuffering');
+    mixins.testStartBufferingInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'startBuffering');
+//    mixins.testDeviceErrorInCompleteStateStaysInCompleteState = makeDeviceEventStaysInSameStateTest(getToCompleteState, 'emitPlaybackError');
+
+    mixins.testTimePassingDoesNotCauseStatusEventToBeSentInCompleteState = makeTimePassingDoesNotCauseStatusEventTest(getToCompleteState);
+
     mixins.testWhenCallPlayFromWhileCompleteGoesToBufferingState = function (queue) {
         expectAsserts(8);
         doTest(this, queue, function (MediaPlayer) {
