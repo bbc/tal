@@ -113,8 +113,7 @@ require.def(
                         this._mediaElement.stop();
                         this._mediaElement.play(1);
                         if (seconds > 0) {
-                            // TODO: according to OIPF 7.14.1.1, you should not seek from FINISHED (5 in CEHTML)
-                            this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                            this._deferSeekingTo = seconds;
                         }
                         break;
 
