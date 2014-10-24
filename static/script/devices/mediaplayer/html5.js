@@ -370,14 +370,14 @@ require.def(
 
             _destroyMediaElement: function() {
                 if (this._mediaElement) {
-                    this._mediaElement.removeEventListener("canplay", this._wrapOnFinishedBuffering);
-                    this._mediaElement.removeEventListener("seeked", this._wrapOnFinishedBuffering);
-                    this._mediaElement.removeEventListener("playing", this._wrapOnFinishedBuffering);
-                    this._mediaElement.removeEventListener("error", this._wrapOnError);
-                    this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia);
-                    this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering);
-                    this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus);
-                    this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata);
+                    this._mediaElement.removeEventListener("canplay", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.removeEventListener("seeked", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.removeEventListener("playing", this._wrapOnFinishedBuffering, false);
+                    this._mediaElement.removeEventListener("error", this._wrapOnError, false);
+                    this._mediaElement.removeEventListener("ended", this._wrapOnEndOfMedia, false);
+                    this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering, false);
+                    this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus, false);
+                    this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
 
                     this._mediaElement.removeAttribute('src');
                     this._mediaElement.load();
