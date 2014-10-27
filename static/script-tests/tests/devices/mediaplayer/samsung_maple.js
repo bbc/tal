@@ -1505,6 +1505,11 @@
         });
     };
 
+    // TODO: SAMSUNG HLS support
+    // TODO: If mime type is application/vnd.apple.mpegurl then when ResumePlay is called, |COMPONENT=HLS should be appended to the url
+    // TODO:    But it should not be appended to the result of getSource()
+
+
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
     // -- This appears to only be the tvmwPlugin - if we don't need it then we shouldn't modify it.
