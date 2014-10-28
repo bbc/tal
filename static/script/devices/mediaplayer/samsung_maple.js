@@ -457,9 +457,13 @@ require.def(
                 }
             },
 
+            _isHlsMimeType: function () {
+                return this._mimeType.toLowerCase() === "application/vnd.apple.mpegurl";
+            },
+
             _wrappedSource: function () {
                 var source = this._source;
-                if (this._mimeType.toLowerCase() === "application/vnd.apple.mpegurl") {
+                if (this._isHlsMimeType()) {
                     source += "|COMPONENT=HLS";
                 }
                 return source;
