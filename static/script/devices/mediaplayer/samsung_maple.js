@@ -458,7 +458,9 @@ require.def(
             },
 
             _isHlsMimeType: function () {
-                return this._mimeType.toLowerCase() === "application/vnd.apple.mpegurl";
+                var mime = this._mimeType.toLowerCase()
+                return mime === "application/vnd.apple.mpegurl"
+                    || mime === "application/x-mpegurl";
             },
 
             _wrappedSource: function () {

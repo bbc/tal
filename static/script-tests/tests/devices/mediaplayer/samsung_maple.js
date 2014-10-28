@@ -1516,6 +1516,17 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppendedWithXMpegUrl = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "test/url", "application/x-mpegURL");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(playerPlugin.ResumePlay.calledWith("test/url|COMPONENT=HLS", 0));
+        });
+    };
+
     this.SamsungMapleMediaPlayerTests.prototype.testGetSourceDoesNotHaveSpecialHlsFragmentAppended = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
