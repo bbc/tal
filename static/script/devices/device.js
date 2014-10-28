@@ -540,6 +540,12 @@ require.def('antie/devices/device',
             createMediaInterface: function(id, mediaType, eventCallback) {
             },
             /**
+             * Get the media player.
+             * This will return the correct implementation for the current device.
+             */
+            getMediaPlayer: function() {
+            },
+            /**
              * Gets the player embed mode for the current device
              * @param {String} mediaType "video" or "radio".
              * @returns The embed mode of the current player
