@@ -137,14 +137,14 @@ require.def(
 
                     case MediaPlayer.STATE.STOPPED:
                         this._setDisplayFullScreenForVideo();
-                        this._playerPlugin.ResumePlay(this._source, seekingTo);
+                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
                         this._toBuffering();
                         break;
 
                     case MediaPlayer.STATE.COMPLETE:
                         this._playerPlugin.Stop();
                         this._setDisplayFullScreenForVideo();
-                        this._playerPlugin.ResumePlay(this._source, seekingTo);
+                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
                         this._toBuffering();
                         break;
 
@@ -455,6 +455,14 @@ require.def(
                 } else {
                     return this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
                 }
+            },
+
+            _wrappedSource: function () {
+                var source = this._source;
+                if (this._mimeType.toLowerCase() === "application/vnd.apple.mpegurl") {
+                    source += "|COMPONENT=HLS";
+                }
+                return source;
             },
 
             _toStopped: function () {

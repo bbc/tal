@@ -1505,6 +1505,17 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppended = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "test/url", "application/vnd.apple.mpegurl");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(playerPlugin.ResumePlay.calledWith("test/url|COMPONENT=HLS", 0));
+        });
+    };
+
     // TODO: SAMSUNG HLS support
     // TODO: If mime type is application/vnd.apple.mpegurl then when ResumePlay is called, |COMPONENT=HLS should be appended to the url
     // TODO:    But it should not be appended to the result of getSource()
