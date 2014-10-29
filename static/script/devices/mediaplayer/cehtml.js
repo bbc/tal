@@ -235,7 +235,7 @@ require.def(
 
                     default:
                         return this._range;
-                };
+                }
                 return undefined;
             },
 
