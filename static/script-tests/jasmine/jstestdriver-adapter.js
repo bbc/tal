@@ -385,3 +385,20 @@ assertBoolean = function (msg, thing) {
 
     expect(typeof thing).toBe("boolean");
 };
+
+jstestdriver = {
+    console: {
+        log: function( msg ){
+            console.log( msg )
+        },
+        warn: function(msg) {
+            console.warn(msg)
+        },
+        error: function(msg) {
+            console.error(msg);
+        },
+        debug: function(msg) {
+            console.debug(msg);
+        }
+    }
+};

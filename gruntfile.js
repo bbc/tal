@@ -18,6 +18,31 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        jasmine: {
+            src: 'static/script/**/*.js',
+            options: {
+                specs: ['static/script-tests/tests/**/*.js'],
+                vendor: [
+                    "static/script-tests/lib/sinon.js",
+                    "static/script-tests/lib/ondevicetestconfigvalidate.js",
+                    "static/script-tests/lib/require.js",
+                    "static/script-tests/jasmine/jstestdriver-adapter.js",
+                    "static/script-tests/lib/mockapplication.js",
+                    "static/script-tests/mocks/mockelement.js",
+                    "static/script-tests/tests/devices/mediaplayer/commontests.js",
+                    "static/script-tests/tests/devices/mediaplayer/html5commontests.js",
+                    "static/script-tests/tests/devices/mediaplayer/cehtmlcommontests.js"
+                ],
+                template: "static/script-tests/jasmine/SpecRunner.html",
+                outfile: 'static/script-tests/jasmine/WebRunner.html',
+                keepRunner: true,
+                display: "full",
+                templateOptions: {
+                    scriptRoot: "../..",
+                    frameworkVersion: "2.1.0"
+                }
+            }
+        },
         watch: {
             jshint: {
                 files: ["static/script/**/*.js"],
@@ -28,4 +53,8 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+
+    // Default task(s).
+    grunt.registerTask('default', ['jasmine', 'jshint']);
 };
