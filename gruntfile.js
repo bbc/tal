@@ -59,6 +59,19 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 
+    grunt.registerTask("hint", ["jshint"]);
+    grunt.registerTask("test", ["jasmine"]);
+
+    grunt.registerTask("full", ["jshint", "jasmine"]);
+
+    grunt.registerTask("spec", ["jasmine:src:build", "openspec"]);
+    grunt.registerTask("openspec", "Open the generated Jasmine spec file", function() {
+        var childProcess = require('child_process');
+        var outfile = grunt.config("jasmine.options.outfile");
+        grunt.log.writeln('Opening ' + outfile + '...');
+        childProcess.exec("open " + outfile);
+    });
+
     // Default task(s).
-    grunt.registerTask('default', ['jasmine', 'jshint']);
+    grunt.registerTask('default', 'test');
 };
