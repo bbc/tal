@@ -33,6 +33,10 @@ module.exports = function (grunt) {
                     "static/script-tests/tests/devices/mediaplayer/html5commontests.js",
                     "static/script-tests/tests/devices/mediaplayer/cehtmlcommontests.js"
                 ],
+                styles: [
+                    "static/script-tests/lib/carousels.css",
+                    "static/script-tests/lib/css3transitions.css"
+                ],
                 template: "static/script-tests/jasmine/SpecRunner.html",
                 outfile: 'static/script-tests/jasmine/WebRunner.html',
                 keepRunner: true,
