@@ -447,13 +447,6 @@ require.def(
         return Player;
     }
 
-    // 7.14.1.1 State diagram for A/V control objects
-    // Contains useful state diagram
-    // 7.14.3 Extensions to A/V object for trickmodes
-    // TODO: Implement onPlaySpeedChanged() to give us some logging, and check some devices to see if it is used
-    // playSpeeds array might be useful - if '0' is not in the list, then perhaps we cannot pause?
-    // 7.14.8 Extensions to A/V object for UI feedback of buffering A/V content
-    // TODO: Implement onReadyToPlay() to give us some logging, and check some devices to see if it is used
     // 7.14.9 DOM 2 events for A/V object
     // playState can change whilst onPlayStateChange is executing
 
