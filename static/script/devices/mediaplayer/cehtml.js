@@ -133,6 +133,23 @@ require.def(
             /**
             * @inheritDoc
             */
+            beginPlayback: function(seconds) {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        this._mediaElement.play(1);
+                        break;
+
+                    default:
+                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
+            * @inheritDoc
+            */
             pause: function () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 // TODO: Spec says we can pause from buffering. Will this help observed device issues?
