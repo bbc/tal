@@ -226,6 +226,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testGetRangeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getRange");
 
     mixins.testCallingPlayFromInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "playFrom");
+    mixins.testCallingBeginPlaybackInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "beginPlayback");
     mixins.testCallingPauseInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "pause");
     mixins.testCallingResumeInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "resume");
     mixins.testCallingStopInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "stop");
@@ -334,6 +335,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     // Availability of getCurrentTime() and getRange() are device-specific at this point.
 
     mixins.testCallingSetSourceInBufferingStateIsAnError = makeApiCallCausesErrorTest(getToBufferingState, "setSource");
+    mixins.testCallingBeginPlaybackInBufferingStateIsAnError = makeApiCallCausesErrorTest(getToBufferingState, "beginPlayback");
     mixins.testCallingResetInBufferingStateIsAnError = makeApiCallCausesErrorTest(getToBufferingState, "reset");
 
     mixins.testSendMetaDataInBufferingStateStaysInBufferingState = makeDeviceEventStaysInSameStateTest(getToBufferingState, 'sendMetadata');
@@ -463,6 +465,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testGetSourceReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getSource", "testUrl");
+    mixins.testCallingBeginPlaybackInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "beginPlayback");
     mixins.testGetMimeTypeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getMimeType", "testMimeType");
     mixins.testGetCurrentTimeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getCurrentTime", 0);
     mixins.testGetRangeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getRange", { start: 0, end: 100 });
@@ -611,6 +614,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testGetSourceReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getSource", "testUrl");
+    mixins.testCallingBeginPlaybackInPausedStateIsAnError = makeApiCallCausesErrorTest(getToPausedState, "beginPlayback");
     mixins.testGetMimeTypeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getMimeType", "testMimeType");
     mixins.testGetCurrentTimeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getCurrentTime", 0);
     mixins.testGetRangeReturnsExpectedValueInPausedState = makeGetMethodReturnsExpectedValueTest(getToPausedState, "getRange", { start: 0, end: 100 });
@@ -694,6 +698,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testGetSourceReturnsExpectedValueInCompleteState = makeGetMethodReturnsExpectedValueTest(getToCompleteState, "getSource", "testUrl");
+    mixins.testCallingBeginPlaybackInCompleteStateIsAnError = makeApiCallCausesErrorTest(getToCompleteState, "beginPlayback");
     mixins.testGetMimeTypeReturnsExpectedValueInCompleteState = makeGetMethodReturnsExpectedValueTest(getToCompleteState, "getMimeType", "testMimeType");
     mixins.testGetRangeReturnsExpectedValueInCompleteState = makeGetMethodReturnsExpectedValueTest(getToCompleteState, "getRange", { start: 0, end: 100 });
     mixins.testGetCurrentTimeReturnsExpectedValueInCompleteState = makeGetMethodReturnsExpectedValueTest(getToCompleteState, "getCurrentTime", 100);
@@ -745,6 +750,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testGetSourceReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getSource");
+    mixins.testCallingBeginPlaybackInErrorStateIsAnError = makeApiCallCausesErrorTest(getToErrorState, "beginPlayback");
     mixins.testGetMimeTypeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getMimeType");
     mixins.testGetCurrentTimeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInErrorState = makeGetMethodReturnsUndefinedTest(getToErrorState, "getRange");
