@@ -168,8 +168,10 @@ require.def(
 
             /**
              * Begin playback of the media resource from wherever the device chooses.
-             * For On Demand assets, this will normally be the start, for Live stream assets it could be the start of the window or the live point.
+             * For On Demand assets, this will normally be the start, for Live stream assets it should be the live point
+             * but could be the start of the stream window on some devices.
              * This function can only be called from the STOPPED state; calling it from any other state is an error.
+             * To begin playback from a specified time offset, use the playFrom function instead.
              */
             beginPlayback: function () {
                 throw new Error("beginPlayback method has not been implemented");
