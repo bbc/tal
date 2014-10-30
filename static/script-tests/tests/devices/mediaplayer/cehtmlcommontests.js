@@ -222,9 +222,19 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testPlayFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
+
+            assert(fakeCEHTMLObject.play.calledWith(1));
+        });
+    };
+
+    mixins.testBeginPlaybackWhenStoppedCallsPlay = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.beginPlayback();
 
             assert(fakeCEHTMLObject.play.calledWith(1));
         });
