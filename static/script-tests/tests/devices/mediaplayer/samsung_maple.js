@@ -291,6 +291,17 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayCalledOnDeviceWhenBeginPlaybackCalledInStoppedState = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assert(playerPlugin.Play.notCalled);
+            this._mediaPlayer.beginPlayback();
+            assert(playerPlugin.Play.calledWith('testURL'));
+            assert(playerPlugin.Play.calledOnce);
+        });
+    };
+
     this.SamsungMapleMediaPlayerTests.prototype.testResumePlayCalledWithTimePassedIntoPlayingFrom = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
