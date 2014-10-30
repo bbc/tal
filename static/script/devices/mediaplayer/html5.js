@@ -136,6 +136,23 @@ require.def(
             /**
             * @inheritDoc
             */
+            beginPlayback: function(seconds) {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        this._mediaElement.play();
+                        break;
+
+                    default:
+                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
+            * @inheritDoc
+            */
             pause: function() {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
@@ -191,6 +208,7 @@ require.def(
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._mediaElement.pause();
+                        this._mediaElement.currentTime = 0;
                         this._toStopped();
                         break;
 

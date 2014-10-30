@@ -167,6 +167,15 @@ require.def(
             },
 
             /**
+             * Begin playback of the media resource from wherever the device chooses.
+             * For On Demand assets, this will normally be the start, for Live stream assets it could be the start of the window or the live point.
+             * This function can only be called from the STOPPED state; calling it from any other state is an error.
+             */
+            beginPlayback: function () {
+                throw new Error("beginPlayback method has not been implemented");
+            },
+
+            /**
              * Request that the media be paused.
              * If the Media is playing, call this to pause it.
              * If the media is buffering, call this to resume playback in a paused state once buffering ends.
