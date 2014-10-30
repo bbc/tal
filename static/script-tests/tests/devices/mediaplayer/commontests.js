@@ -308,6 +308,15 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
+    mixins.testCallingBeginPlaybackInStoppedStateGoesToBufferingState = function (queue) {
+        expectAsserts(8);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            this._mediaPlayer.beginPlayback();
+            assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
 
     // *******************************************
     // ********* BUFFERING state tests ***********

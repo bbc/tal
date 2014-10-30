@@ -82,6 +82,7 @@
             JumpForward: this.sandbox.stub(),
             Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
+            Play: this.sandbox.stub(),
             Resume: this.sandbox.stub(),
             Stop: this.sandbox.stub(),
             SetDisplayArea: this.sandbox.stub()
