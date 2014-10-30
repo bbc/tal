@@ -265,18 +265,19 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    // This code will need to use the .seekable property to support Live playback.
-                    // However it should still fall back to .duration if .seekable is missing on the device.
-                    if (this._mediaElement.duration !== undefined) {
+                    if (this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
+                        return {
+                            start: this._mediaElement.seekable.start(0),
+                            end: this._mediaElement.seekable.end(0)
+                        };
+                    } else if (this._mediaElement.duration !== undefined) {
                         return {
                             start: 0,
                             end: this._mediaElement.duration
                         };
                     } else {
-                        RuntimeContext.getDevice().getLogger().warn("'duration' property missing from media element");
+                        RuntimeContext.getDevice().getLogger().warn("No 'duration' or 'seekable' on media element");
                     }
-
-
                 }
                 return undefined;
             },

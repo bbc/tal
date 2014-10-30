@@ -27,7 +27,7 @@ window.commonTests.mediaPlayer = window.commonTests.mediaPlayer || { };
 window.commonTests.mediaPlayer.html5 = window.commonTests.mediaPlayer.html5 || { };
 
 window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlayerDeviceModifierRequireName, config) {
-    
+
 
     var mixins = { };
 
@@ -59,6 +59,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 var media = mediaElements[i];
                 media.duration = range.end;
                 media.currentTime = currentTime;
+                media.seekable.start.returns(0);
+                media.seekable.end.returns(range.end);
             }
             mediaEventListeners.loadedmetadata();
         },
@@ -136,6 +138,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             media.play = this.sandbox.stub();
             media.pause = this.sandbox.stub();
             media.load = this.sandbox.stub();
+
+            media.seekable = ['timeRange'];
+            media.seekable.start = this.sandbox.stub();
+            media.seekable.end = this.sandbox.stub();
+
             media.addEventListener = function (event, callback) {
                 if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
                 mediaEventListeners[event] = callback;
@@ -260,7 +267,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testIfDurationIsMissingGetRangeReturnsUndefinedAndLogsAWarning = function(queue) {
+    mixins.testIfDurationAndSeekableRangeIsMissingGetRangeReturnsUndefinedAndLogsAWarning = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -268,19 +275,61 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self.sandbox.stub(self._device, "getLogger").returns({warn: warnStub});
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.playFrom(0);
+            delete stubCreateElementResults.video.seekable;
             delete stubCreateElementResults.video.duration;
             assertUndefined(self._mediaPlayer.getRange());
-            assert(warnStub.calledWith("'duration' property missing from media element"));
+            assert(warnStub.calledWith("No 'duration' or 'seekable' on media element"));
         });
     };
 
-    mixins.testGetRangeGetsEndTimeFromDuration = function(queue) {
+    mixins.testSeekableRangeTakesPrecedenceOverDurationOnMediaElement = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.playFrom(0);
+            stubCreateElementResults.video.seekable.start.returns(10);
+            stubCreateElementResults.video.seekable.end.returns(30);
             stubCreateElementResults.video.duration = 60;
+            assertEquals({ start: 10, end: 30 }, self._mediaPlayer.getRange());
+        });
+    };
+
+    mixins.testGetRangeGetsEndTimeFromDurationWhenNoSeekableProperty = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            delete stubCreateElementResults.video.seekable;
+            stubCreateElementResults.video.duration = 60;
+            assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getRange());
+        });
+    };
+
+    mixins.testGetRangeGetsEndTimeFromDurationWhenNoTimeRangesInSeekableProperty = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            stubCreateElementResults.video.seekable = [];
+            stubCreateElementResults.video.duration = 60;
+            assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getRange());
+        });
+    };
+
+    mixins.testGetRangeGetsEndTimeFromFirstTimeRangeInSeekableProperty = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            stubCreateElementResults.video.seekable.start.withArgs(0).returns(0);
+            stubCreateElementResults.video.seekable.end.withArgs(0).returns(60);
+            stubCreateElementResults.video.seekable.start.withArgs(1).returns(333);
+            stubCreateElementResults.video.seekable.end.withArgs(1).returns(666);
+
             assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getRange());
         });
     };
