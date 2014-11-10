@@ -78,7 +78,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             function(application, MediaPlayer) {
 
                 deviceMockingHooks.setup(self.sandbox, application);
-
+                deviceMockingHooks.mockTime();
                 self.device = application.getDevice();
                 self._mediaPlayer = self.device.getMediaPlayer();
 
@@ -86,6 +86,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 self._mediaPlayer.addEventCallback(null, self.eventCallback);
 
                 test.call(self, MediaPlayer);
+                deviceMockingHooks.unmockTime();
             }, config);
     };
 

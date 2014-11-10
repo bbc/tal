@@ -100,13 +100,18 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             fakeCEHTMLObject.onPlayStateChange();
         },
         mockTime: function(mediaPlayer) {
-            clock = sinon.useFakeTimers();
+            if(clock===undefined) {
+              clock = sinon.useFakeTimers();
+            }
         },
         makeOneSecondPass: function(mediaPlayer) {
-            clock.tick(1000);
+           clock.tick(1000);
         },
         unmockTime: function(mediaplayer) {
-           clock.restore();
+          if(clock!==undefined) {
+              clock.restore();
+           }
+           clock = undefined;
         }
     };
 
@@ -575,6 +580,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testGoesToBufferingWhenDeviceBufferingAndNoBufferingEventFired = function(queue) {
+       // expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
@@ -596,6 +608,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
     // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
     // TODO: Handle "seek" failing? (CEA-2014-A 5.7.1.F (13))
+
 
     //---------------------
     // Common tests
