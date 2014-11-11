@@ -346,7 +346,7 @@ require.def(
                     }
                 }
 
-                this._updateInterval = window.setInterval(function() {
+                this._updateInterval = setInterval(function() {
                     self._onStatus();
                 }, DEVICE_UPDATE_PERIOD_MS);
             },
@@ -396,7 +396,7 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 if(this._mediaElement) {
-                    window.clearInterval(this._updateInterval);
+                    clearInterval(this._updateInterval);
                     this._destroyMediaElement();
                 }
             },

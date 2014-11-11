@@ -152,9 +152,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayer) {
                 deviceMockingHooks.setup.call(self, self.sandbox, application);
+                deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
                 action.call(self, MediaPlayer);
+                deviceMockingHooks.unmockTime();
             }, config);
     };
 
