@@ -299,8 +299,6 @@ require.def(
             },
 
             _onStatus: function() {
-                this._lastTime = this.getCurrentTime();
-
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
@@ -453,23 +451,28 @@ require.def(
 
             _setSentinel: function(sentinel) {
                 var self = this;
+                this._lastTime = this.getCurrentTime();
                 clearInterval(this._sentinelInterval);
                 this._sentinelInterval = setInterval(function() {
-                        sentinel.call(self);
-                    }, 1100);
+                    var newTime = self.getCurrentTime();
+                    self._timeHasAdvanced = (newTime > (self._lastTime + 0.2));
+                    self._lastTime = newTime;
+
+                    sentinel.call(self);
+                }, 1100);
             },
 
             _enterBufferingSentinel: function() {
-                if(this._lastTime === this.getCurrentTime()) {
+                if(!this._timeHasAdvanced) {
                     RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
                     this._toBuffering();
                 }
             },
 
             _exitBufferingSentinel: function() {
-                if(this._lastTime !== this.getCurrentTime()) {
+                if(this._timeHasAdvanced) {
                     RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
-                    this._toPlaying();
+                    this._onFinishedBuffering();
                 }
             }
         });
