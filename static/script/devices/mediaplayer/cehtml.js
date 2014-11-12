@@ -58,6 +58,7 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
+                    this._lastTime = 0;
                     this._createElement();
                     this._registerEventHandlers();
                     this._addElementToDOM();
@@ -298,6 +299,8 @@ require.def(
             },
 
             _onStatus: function() {
+                this._lastTime = this.getCurrentTime();
+
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
@@ -397,6 +400,7 @@ require.def(
                 this._mimeType = undefined;
                 if(this._mediaElement) {
                     clearInterval(this._updateInterval);
+                    clearInterval(this._sentinelInterval);
                     this._destroyMediaElement();
                 }
             },
@@ -416,11 +420,13 @@ require.def(
             _toBuffering: function () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                this._setSentinel(this._exitBufferingSentinel);
             },
 
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
+                this._setSentinel(this._enterBufferingSentinel);
             },
 
             _toPaused: function () {
@@ -443,6 +449,28 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
+            _setSentinel: function(sentinel) {
+                var self = this;
+                clearInterval(this._sentinelInterval);
+                this._sentinelInterval = setInterval(function() {
+                        sentinel.call(self);
+                    }, 1100);
+            },
+
+            _enterBufferingSentinel: function() {
+                if(this._lastTime === this.getCurrentTime()) {
+                    RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
+                    this._toBuffering();
+                }
+            },
+
+            _exitBufferingSentinel: function() {
+                if(this._lastTime !== this.getCurrentTime()) {
+                    RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
+                    this._toPlaying();
+                }
             }
         });
 
