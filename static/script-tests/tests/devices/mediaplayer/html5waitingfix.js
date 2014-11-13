@@ -132,18 +132,6 @@
         });
     };
 
-    this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenError = function(queue) {
-        expectAsserts(1);
-        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            toPlaying(this, MediaPlayer);
-
-            this.deviceMockingHooks.emitPlaybackError(MediaPlayer);
-            timeOutToBuffering(this);
-
-            assertState(this, MediaPlayer.STATE.ERROR);
-        });
-    };
-
     this.HTML5WaitingFixMediaPlayerTests.prototype.testDoesNotGoToBufferingWhenPauseAtStart = function(queue) {
         expectAsserts(1);
         this.runMediaPlayerTest(this, queue, function (MediaPlayer) {

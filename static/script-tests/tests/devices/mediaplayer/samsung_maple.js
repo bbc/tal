@@ -156,29 +156,6 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnError = function(queue) {
-        expectAsserts(listenerFunctions.length * 2);
-        runMediaPlayerTest(this, queue, function(MediaPlayer) {
-
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-            var i;
-            var func;
-
-            for (i = 0; i < listenerFunctions.length; i++){
-                func = listenerFunctions[i];
-                assertFunction("Expecting " + func + " to be a function", window[func]);
-            }
-
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-
-            for (i = 0; i < listenerFunctions.length; i++){
-                func = listenerFunctions[i];
-                assertUndefined("Expecting " + func + " to be undefined", window[func]);
-            }
-        });
-    };
-
     this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnReset = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -223,33 +200,6 @@
                 hook = func.substring("SamsungMaple".length);
                 assertEquals(func, playerPlugin[hook]);
             }
-        });
-    };
-
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
-        expectAsserts(listenerFunctions.length * 2);
-        runMediaPlayerTest(this, queue, function(MediaPlayer) {
-
-            var i;
-            var func;
-            var hook;
-
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-            for (i = 0; i < listenerFunctions.length; i++){
-                func = listenerFunctions[i];
-                hook = func.substring("SamsungMaple".length);
-                assertEquals(func, playerPlugin[hook]);
-            }
-
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-
-            for (i = 0; i < listenerFunctions.length; i++){
-                func = listenerFunctions[i];
-                hook = func.substring("SamsungMaple".length);
-                assertUndefined(playerPlugin[hook]);
-            }
-
         });
     };
 
@@ -629,23 +579,6 @@
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
 
             this._mediaPlayer.stop();
-
-            assert(playerPlugin.Stop.calledOnce);
-        });
-    };
-
-    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
-        expectAsserts(2);
-        runMediaPlayerTest(this, queue, function(MediaPlayer) {
-
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
-            deviceMockingHooks.finishBuffering(this._mediaPlayer);
-
-            assert(playerPlugin.Stop.notCalled);
-
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
             assert(playerPlugin.Stop.calledOnce);
         });
