@@ -93,6 +93,7 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
+                this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
@@ -424,7 +425,7 @@ require.def(
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinel(this._enterBufferingSentinel);
+                this._setSentinel(this._enterBufferingSentinel, this._shouldBeSeekedSentinel);
             },
 
             _toPaused: function () {
@@ -449,7 +450,7 @@ require.def(
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
             },
 
-            _setSentinel: function(sentinel) {
+            _setSentinel: function(sentinelA,sentinelB) {
                 var self = this;
                 this._lastTime = this.getCurrentTime();
                 clearInterval(this._sentinelInterval);
@@ -457,8 +458,10 @@ require.def(
                     var newTime = self.getCurrentTime();
                     self._timeHasAdvanced = (newTime > (self._lastTime + 0.2));
                     self._lastTime = newTime;
-
-                    sentinel.call(self);
+                    sentinelA.call(self);
+                    if(sentinelB) {
+                        sentinelB.call(self);
+                    }
                 }, 1100);
             },
 
@@ -473,6 +476,12 @@ require.def(
                 if(this._timeHasAdvanced) {
                     RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
                     this._onFinishedBuffering();
+                }
+            },
+
+            _shouldBeSeekedSentinel: function() {
+                if(this._sentinelSeekTime !== this.getCurrentTime()){
+                    this._mediaElement.seek(this._sentinelSeekTime * 1000);
                 }
             }
         });
