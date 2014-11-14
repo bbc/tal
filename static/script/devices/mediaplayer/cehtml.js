@@ -180,6 +180,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._sentinelSeekTime = undefined;
                         this._mediaElement.stop();
                         this._toStopped();
                         break;
