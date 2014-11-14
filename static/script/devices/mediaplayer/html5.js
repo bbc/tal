@@ -453,6 +453,7 @@ require.def(
 
             _enterBufferingSentinel: function() {
                 if(!this._hasSentinelTimeAdvanced) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                 }
             },
