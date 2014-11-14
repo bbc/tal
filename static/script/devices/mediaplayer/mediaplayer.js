@@ -306,7 +306,13 @@ require.def(
             PAUSED:    "paused",    // Event fired when media playback pauses
             COMPLETE:  "complete",  // Event fired when media playback has reached the end of the media
             ERROR:     "error",     // Event fired when an error condition occurs
-            STATUS:    "status"     // Event fired regularly during play
+            STATUS:    "status",    // Event fired regularly during play
+            SENTINEL_ENTER_BUFFERING:  "sentinel-enter-buffering", // Event fired when a sentinel has to act because the device has started buffering but not reported it
+            SENTINEL_EXIT_BUFFERING:   "sentinel-exit-buffering",  // Event fired when a sentinel has to act because the device has finished buffering but not reported it
+            SENTINEL_PAUSE:            "sentinel-pause",           // Event fired when a sentinel has to act because the device has failed to pause when expected
+            SENTINEL_PLAY:             "sentinel-play",            // Event fired when a sentinel has to act because the device has failed to play when expected
+            SENTINEL_SEEK:             "sentinel-seek",            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
+            SENTINEL_COMPLETE:         "sentinel-complete"         // Event fired when a sentinel has to act because the device has completed the media but not reported it
         };
 
         /**
