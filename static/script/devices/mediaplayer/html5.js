@@ -412,11 +412,13 @@ require.def(
             _toStopped: function() {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
+                this._setSentinels([]);
             },
 
             _toBuffering: function() {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                this._setSentinels([]);
             },
 
             _toPlaying: function() {
@@ -428,11 +430,13 @@ require.def(
             _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
+                this._setSentinels([]);
             },
 
             _toComplete: function() {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
+                this._setSentinels([]);
             },
 
             _toEmpty: function() {
