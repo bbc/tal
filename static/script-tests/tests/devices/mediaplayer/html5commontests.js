@@ -924,6 +924,29 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    // Sentinels
+
+    mixins.fireSentinels = function () {
+        this._clock.tick(1100);
+    };
+
+    mixins.getToPlaying = function (MediaPlayer) {
+        this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        this._mediaPlayer.playFrom(0);
+        deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(this._mediaPlayer);
+    };
+
+    mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHalts = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self.getToPlaying(MediaPlayer);
+            self.fireSentinels();
+            assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************

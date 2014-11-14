@@ -385,6 +385,7 @@ require.def(
                 this._targetSeekTime = undefined;
                 this._destroyMediaElement();
                 this._readyToPlayFrom = false;
+                this._clearSentinels();
             },
 
             _destroyMediaElement: function() {
@@ -411,26 +412,31 @@ require.def(
             _toStopped: function() {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
+                this._setSentinels([]);
             },
 
             _toBuffering: function() {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                this._setSentinels([]);
             },
 
             _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
+                this._setSentinels([ this._enterBufferingSentinel ]);
             },
 
             _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
+                this._setSentinels([]);
             },
 
             _toComplete: function() {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
+                this._setSentinels([]);
             },
 
             _toEmpty: function() {
@@ -443,6 +449,30 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
+            _enterBufferingSentinel: function() {
+                if(!this._hasSentinelTimeAdvanced) {
+                    this._toBuffering();
+                }
+            },
+
+            _clearSentinels: function() {
+                clearInterval(this._sentinelInterval);
+            },
+
+            _setSentinels: function(sentinels) {
+                var self = this;
+                this._clearSentinels();
+                this._lastSentinelTime = this.getCurrentTime();
+                this._sentinelInterval = setInterval(function() {
+                    var newTime = self.getCurrentTime();
+                    self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime);
+                    self._lastSentinelTime = newTime;
+                    for (var i = 0; i < sentinels.length; i++) {
+                        sentinels[i].call(self);
+                    }
+                }, 1100);
             }
         });
 
