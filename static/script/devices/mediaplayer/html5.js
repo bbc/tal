@@ -384,8 +384,8 @@ require.def(
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
                 this._destroyMediaElement();
-                clearInterval(this._sentinelInterval);
                 this._readyToPlayFrom = false;
+                this._clearSentinels();
             },
 
             _destroyMediaElement: function() {
@@ -453,8 +453,13 @@ require.def(
                 }
             },
 
+            _clearSentinels: function() {
+                clearInterval(this._sentinelInterval);
+            },
+
             _setSentinels: function() {
                 var self = this;
+                this._clearSentinels();
                 this._lastSentinelTime = this.getCurrentTime();
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
