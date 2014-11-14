@@ -681,6 +681,31 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSuccessfulInaccurateSeekIsNotRetried = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            // Override mock seek function to be inaccurate by 14 seconds
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                fakeCEHTMLObject.playPosition = milliseconds + 14000;
+                return true;
+            }
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(30);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            assertEquals(45, this._mediaPlayer.getCurrentTime());
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            assert(seekSpy.calledOnce);
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
