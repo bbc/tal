@@ -744,6 +744,35 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekNotRetriedWhenMediaIsStoppedAndThenBeginPlaybackIsCalled = function(queue) {
+        expectAsserts(4);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            fakeCEHTMLObject.stop = function() {
+                fakeCEHTMLObject.playPosition = 0;
+            }
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(30);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(seekSpy.calledOnce);
+
+            this._mediaPlayer.stop();
+            this._mediaPlayer.beginPlayback();
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(0, this._mediaPlayer.getCurrentTime());
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            assert(seekSpy.calledOnce);
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
