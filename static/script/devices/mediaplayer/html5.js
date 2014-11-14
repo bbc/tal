@@ -472,7 +472,6 @@ require.def(
                     for (var i = 0; i < sentinels.length; i++) {
                         sentinels[i].call(self);
                     }
-                    self._enterBufferingSentinel();
                 }, 1100);
             }
         });
