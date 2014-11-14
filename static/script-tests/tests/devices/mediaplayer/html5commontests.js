@@ -905,6 +905,26 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelDoesNothingWhenPlaybackIsWorking = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+
+            var eventCallback = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventCallback);
+            stubCreateElementResults.video.currentTime += 1;
+            fireSentinels(self);
+
+            assert(eventCallback.notCalled);
+            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
+        });
+    };
+
+    // Sentinel doesn't fire when playing but not buffering
+    // Sentinel doesnt fire when buffering but device reports waiting event correctly
+    // ? Test cleanup?
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
