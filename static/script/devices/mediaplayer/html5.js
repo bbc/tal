@@ -384,6 +384,7 @@ require.def(
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
                 this._destroyMediaElement();
+                clearInterval(this._sentinelInterval);
                 this._readyToPlayFrom = false;
             },
 
@@ -421,6 +422,7 @@ require.def(
             _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
+                this._setSentinels();
             },
 
             _toPaused: function() {
@@ -443,6 +445,24 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
+            _enterBufferingSentinel: function() {
+                if(!this._hasSentinelTimeAdvanced) {
+                    this._toBuffering();
+                }
+            },
+
+            _setSentinels: function() {
+                var self = this;
+                this._lastSentinelTime = this.getCurrentTime();
+                this._sentinelInterval = setInterval(function() {
+                    var newTime = self.getCurrentTime();
+                    self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime);
+                    self._lastSentinelTime = newTime;
+
+                    self._enterBufferingSentinel();
+                }, 1100);
             }
         });
 
