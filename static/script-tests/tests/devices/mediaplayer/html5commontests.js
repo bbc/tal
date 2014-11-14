@@ -131,7 +131,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             audio: document.createElement("div"),
         };
         mediaEventListeners = {};
-        var self = this;
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
             var media = mediaElements[i];
@@ -175,6 +174,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+
+                self._eventCallback = self.sandbox.stub();
+                self._mediaPlayer.addEventCallback(null, self._eventCallback);
+
                 self._clock = sinon.useFakeTimers();
                 try {
                     action.call(self, MediaPlayer);
@@ -911,12 +914,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
             stubCreateElementResults.video.currentTime += 1;
+            self._eventCallback.reset();
             fireSentinels(self);
 
-            assert(eventCallback.notCalled);
+            assert(self._eventCallback.notCalled);
             assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
         });
     };
