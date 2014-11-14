@@ -203,6 +203,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assertEquals(expectedState, self._mediaPlayer.getState());
     };
 
+    var assertEvent = function(self, eventType) {
+        var found = false
+        for( i = 0; i < self._eventCallback.args.length; i++) {
+            if(eventType === self._eventCallback.args[i][0].type) {
+                found = true;
+                break;
+            }
+        }
+        assert(found);
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -760,8 +771,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(targetTime);
 
             assert(self._eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
+            assertEvent(self, MediaPlayer.EVENT.BUFFERING);
+            assertEvent(self, MediaPlayer.EVENT.PLAYING);
         });
     };
 
@@ -786,12 +797,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assert(stubCreateElementResults.video.play.called);
 
             assert(self._eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
+            assertEvent(self, MediaPlayer.EVENT.BUFFERING);
 
             mediaEventListeners.playing();
 
             assert(self._eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
+            assertEvent(self, MediaPlayer.EVENT.PLAYING);
         });
     };
 
@@ -829,12 +840,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assert(stubCreateElementResults.video.play.called);
 
             assert(self._eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
+            assertEvent(self, MediaPlayer.EVENT.BUFFERING);
 
             mediaEventListeners.playing();
 
             assert(self._eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
+            assertEvent(self, MediaPlayer.EVENT.PLAYING);
         });
     };
 
@@ -850,12 +861,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(25);
 
             assert(self._eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
+            assertEvent(self, MediaPlayer.EVENT.BUFFERING);
 
             mediaEventListeners.seeked();
 
             assert(self._eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
+            assertEvent(self, MediaPlayer.EVENT.PLAYING);
         });
     };
 
@@ -871,7 +882,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.waiting();
 
             assert(self._eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
+            assertEvent(self, MediaPlayer.EVENT.BUFFERING);
         });
     };
 
@@ -901,7 +912,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._eventCallback.reset();
             fireSentinels(self);
 
-            assertEquals(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, self._eventCallback.args[0][0].type);
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertState(self, MediaPlayer.STATE.BUFFERING);
         });
     };
