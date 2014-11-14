@@ -93,6 +93,7 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
+                this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
@@ -134,7 +135,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function(seconds) {
+            beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -418,13 +419,13 @@ require.def(
             _toBuffering: function () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
-                this._setSentinel(this._exitBufferingSentinel);
+                this._setSentinels([this._exitBufferingSentinel]);
             },
 
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinel(this._enterBufferingSentinel);
+                this._setSentinels([this._enterBufferingSentinel, this._shouldBeSeekedSentinel]);
             },
 
             _toPaused: function () {
@@ -449,16 +450,20 @@ require.def(
                 this._emitEvent(MediaPlayer.EVENT.ERROR);
             },
 
-            _setSentinel: function(sentinel) {
+            _setSentinels: function(sentinels) {
                 var self = this;
                 this._lastTime = this.getCurrentTime();
                 clearInterval(this._sentinelInterval);
+
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._timeHasAdvanced = (newTime > (self._lastTime + 0.2));
                     self._lastTime = newTime;
 
-                    sentinel.call(self);
+                    for (var i = 0; i < sentinels.length; i++) {
+                        sentinels[i].call(self);
+                    }
+
                 }, 1100);
             },
 
@@ -473,6 +478,14 @@ require.def(
                 if(this._timeHasAdvanced) {
                     RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
                     this._onFinishedBuffering();
+                }
+            },
+
+            _shouldBeSeekedSentinel: function() {
+                var SEEK_TOLERANCE = 15;
+                if(Math.abs(this._sentinelSeekTime - this.getCurrentTime()) > SEEK_TOLERANCE){
+                    var seconds = this._getClampedTime(this._sentinelSeekTime);
+                    this._mediaElement.seek(seconds * 1000);
                 }
             }
         });
