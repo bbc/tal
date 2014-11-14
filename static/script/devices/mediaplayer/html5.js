@@ -422,7 +422,7 @@ require.def(
             _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinels();
+                this._setSentinels([ this._enterBufferingSentinel ]);
             },
 
             _toPaused: function() {
@@ -457,7 +457,7 @@ require.def(
                 clearInterval(this._sentinelInterval);
             },
 
-            _setSentinels: function() {
+            _setSentinels: function(sentinels) {
                 var self = this;
                 this._clearSentinels();
                 this._lastSentinelTime = this.getCurrentTime();
@@ -465,7 +465,9 @@ require.def(
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime);
                     self._lastSentinelTime = newTime;
-
+                    for (var i = 0; i < sentinels.length; i++) {
+                        sentinels[i].call(self);
+                    }
                     self._enterBufferingSentinel();
                 }, 1100);
             }
