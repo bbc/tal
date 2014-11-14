@@ -750,15 +750,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
             stubCreateElementResults.video.currentTime = currentTime;
 
             self._mediaPlayer.playFrom(targetTime);
 
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+            assert(self._eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
         });
     };
 
@@ -776,20 +775,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertEquals(MediaPlayer.STATE.PAUSED, self._mediaPlayer.getState());
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
 
             self._mediaPlayer.playFrom(50);
 
             assert(stubCreateElementResults.video.play.called);
 
-            assert(eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assert(self._eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
 
             mediaEventListeners.playing();
 
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+            assert(self._eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
         });
     };
 
@@ -820,20 +818,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             stubCreateElementResults.video.play.reset();
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
 
             self._mediaPlayer.playFrom(50);
 
             assert(stubCreateElementResults.video.play.called);
 
-            assert(eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assert(self._eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
 
             mediaEventListeners.playing();
 
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+            assert(self._eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
         });
     };
 
@@ -843,19 +840,18 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
             stubCreateElementResults.video.currentTime = 50;
 
             self._mediaPlayer.playFrom(25);
 
-            assert(eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assert(self._eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
 
             mediaEventListeners.seeked();
 
-            assert(eventCallback.calledTwice);
-            assertEquals(MediaPlayer.EVENT.PLAYING, eventCallback.args[1][0].type);
+            assert(self._eventCallback.calledTwice);
+            assertEquals(MediaPlayer.EVENT.PLAYING, self._eventCallback.args[1][0].type);
         });
     };
 
@@ -865,14 +861,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
 
             self._mediaPlayer.playFrom(0);
             mediaEventListeners.waiting();
 
-            assert(eventCallback.calledOnce);
-            assertEquals(MediaPlayer.EVENT.BUFFERING, eventCallback.args[0][0].type);
+            assert(self._eventCallback.calledOnce);
+            assertEquals(MediaPlayer.EVENT.BUFFERING, self._eventCallback.args[0][0].type);
         });
     };
 
@@ -899,11 +894,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            var eventCallback = self.sandbox.stub();
-            self._mediaPlayer.addEventCallback(null, eventCallback);
+            self._eventCallback.reset();
             fireSentinels(self);
 
-            assertEquals(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, eventCallback.args[0][0].type);
+            assertEquals(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, self._eventCallback.args[0][0].type);
             assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
         });
     };
