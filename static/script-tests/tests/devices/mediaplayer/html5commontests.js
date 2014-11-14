@@ -930,16 +930,18 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         this._clock.tick(1100);
     };
 
+    mixins.getToPlaying = function (MediaPlayer) {
+        this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        this._mediaPlayer.playFrom(0);
+        deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(this._mediaPlayer);
+    };
+
     mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHalts = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
-            assertEquals(MediaPlayer.STATE.PLAYING, self._mediaPlayer.getState());
-
+            self.getToPlaying(MediaPlayer);
             self.fireSentinels();
             assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
         });
