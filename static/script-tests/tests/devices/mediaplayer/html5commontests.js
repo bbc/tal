@@ -214,6 +214,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assert(found);
     };
 
+    var clearEvents = function(self) {
+        self._eventCallback.reset();
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -765,7 +769,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertState(self, MediaPlayer.STATE.PLAYING);
 
-            self._eventCallback.reset();
+            clearEvents(self);
             stubCreateElementResults.video.currentTime = currentTime;
 
             self._mediaPlayer.playFrom(targetTime);
@@ -790,7 +794,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertState(self, MediaPlayer.STATE.PAUSED);
 
-            self._eventCallback.reset();
+            clearEvents(self);
 
             self._mediaPlayer.playFrom(50);
 
@@ -833,7 +837,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             stubCreateElementResults.video.play.reset();
 
-            self._eventCallback.reset();
+            clearEvents(self);
 
             self._mediaPlayer.playFrom(50);
 
@@ -855,7 +859,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            self._eventCallback.reset();
+            clearEvents(self);
             stubCreateElementResults.video.currentTime = 50;
 
             self._mediaPlayer.playFrom(25);
@@ -876,7 +880,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            self._eventCallback.reset();
+            clearEvents(self);
 
             self._mediaPlayer.playFrom(0);
             mediaEventListeners.waiting();
@@ -902,14 +906,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     // Sentinels
-
     mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHalts = function(queue) {
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            self._eventCallback.reset();
+            clearEvents(self);
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
@@ -924,7 +927,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer);
 
             stubCreateElementResults.video.currentTime += 1;
-            self._eventCallback.reset();
+            clearEvents(self);
             fireSentinels(self);
 
             assert(self._eventCallback.notCalled);
