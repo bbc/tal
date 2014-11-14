@@ -697,12 +697,32 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
             assertEquals(45, this._mediaPlayer.getCurrentTime());
+
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
 
             assert(seekSpy.calledOnce);
+        });
+    };
+
+    mixins.testTimeAdvancingBeyondSeekToleranceDoesNotRetrySeek = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(seekSpy.notCalled);
+
+            for(var i = 0; i <= 16; i++) {
+                deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            }
+
+            assertEquals(17, this._mediaPlayer.getCurrentTime());
+            assert(seekSpy.notCalled);
         });
     };
 

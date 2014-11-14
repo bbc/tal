@@ -483,9 +483,13 @@ require.def(
 
             _shouldBeSeekedSentinel: function() {
                 var SEEK_TOLERANCE = 15;
-                if(Math.abs(this._sentinelSeekTime - this.getCurrentTime()) > SEEK_TOLERANCE){
+                var currentTime = this.getCurrentTime();
+
+                if(Math.abs(this._sentinelSeekTime - currentTime) > SEEK_TOLERANCE){
                     var seconds = this._getClampedTime(this._sentinelSeekTime);
                     this._mediaElement.seek(seconds * 1000);
+                } else {
+                    this._sentinelSeekTime = currentTime;
                 }
             }
         });
