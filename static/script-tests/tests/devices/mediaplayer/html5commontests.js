@@ -1023,6 +1023,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    // Time advancing doesn't reseek to initial seek time after 15s
+    // Target seek time gets clamped when required
+    // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point
+    // Test live stream playback: make sure sentinels dont interfere!
 
     // *******************************************
     // ********* Mixin the functions *************
