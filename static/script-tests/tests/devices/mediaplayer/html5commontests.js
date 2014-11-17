@@ -214,6 +214,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assert(found);
     };
 
+    var assertNoEvents = function(self) {
+        assert(self._eventCallback.notCalled);
+    };
+
     var clearEvents = function(self) {
         self._eventCallback.reset();
     };
@@ -930,7 +934,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             clearEvents(self);
             fireSentinels(self);
 
-            assert(self._eventCallback.notCalled);
+            assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.PLAYING);
         });
     };
@@ -946,12 +950,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             clearEvents(self);
             fireSentinels(self);
 
-            assert(self._eventCallback.notCalled);
+            assertNoEvents(self);
         });
     };
-
-    // Sentinel doesnt fire when buffering but device reports waiting event correctly
-    // ? Test cleanup?
 
     // *******************************************
     // ********* Mixin the functions *************
