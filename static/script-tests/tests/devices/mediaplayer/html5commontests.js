@@ -961,6 +961,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceIsPaused = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+            self._mediaPlayer.pause();
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+        });
+    };
+
      mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
         expectAsserts(2);
         var self = this;
