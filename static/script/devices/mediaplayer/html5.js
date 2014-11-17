@@ -106,6 +106,7 @@ require.def(
             playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
+                this._sentinelSeekTime = seconds;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
@@ -428,7 +429,7 @@ require.def(
             _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinels([ this._enterBufferingSentinel ]);
+                this._setSentinels([ this._shouldBeSeekedSentinel, this._enterBufferingSentinel ]);
             },
 
             _toPaused: function() {
@@ -465,6 +466,13 @@ require.def(
                 if(this._hasSentinelTimeAdvanced || this._mediaElement.paused) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._exitBuffering();
+                }
+            },
+
+            _shouldBeSeekedSentinel: function() {
+                if(Math.abs(this.getCurrentTime() - this._sentinelSeekTime) > 15) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                    this._mediaElement.currentTime = this._sentinelSeekTime;
                 }
             },
 
