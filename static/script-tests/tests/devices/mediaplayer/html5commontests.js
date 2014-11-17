@@ -227,6 +227,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._eventCallback.reset();
     };
 
+    var advancePlayTime = function(self) {
+        stubCreateElementResults.video.currentTime += 1;
+    };
+
     //---------------------
     // HTML5 specific tests
     //---------------------
@@ -933,7 +937,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            stubCreateElementResults.video.currentTime += 1;
+            advancePlayTime(self);
             clearEvents(self);
             fireSentinels(self);
 
@@ -963,7 +967,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToBuffering(self, MediaPlayer);
 
-            stubCreateElementResults.video.currentTime += 1;
+            advancePlayTime(self);
             clearEvents(self);
             fireSentinels(self);
 
