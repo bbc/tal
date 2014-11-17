@@ -277,6 +277,8 @@
 				}
 		);
 	};
+
+    // FIXME: Test intermittently fails
  	this.HorizontalCarouselTest.prototype.testAlignmentCenter = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
@@ -321,6 +323,8 @@
 				}
 		);
 	};
+
+    // FIXME: Test intermittently fails
  	this.HorizontalCarouselTest.prototype.testAlignmentLeft = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);
@@ -364,6 +368,8 @@
 				}
 		);
 	};
+
+    // FIXME: Test intermittently fails
  	this.HorizontalCarouselTest.prototype.testAlignmentRight = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(2);

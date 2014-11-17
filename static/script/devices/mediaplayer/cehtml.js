@@ -285,7 +285,7 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._toError('Media element emitted error with code: ' + this._mediaElement.error);
+                this._reportError('Media element emitted error with code: ' + this._mediaElement.error);
             },
 
             _onDeviceBuffering: function() {
@@ -412,6 +412,11 @@ require.def(
                 this._mediaElement = undefined;
             },
 
+            _reportError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
+                this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
             _toStopped: function () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
@@ -445,10 +450,9 @@ require.def(
             },
 
             _toError: function(errorMessage) {
-                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._reportError(errorMessage);
             },
 
             _setSentinels: function(sentinels) {

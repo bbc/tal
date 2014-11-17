@@ -208,7 +208,6 @@ require.def(
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._mediaElement.pause();
-                        this._mediaElement.currentTime = 0;
                         this._toStopped();
                         break;
 
@@ -312,7 +311,7 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._toError("Media element emitted error with code: " + this._mediaElement.error.code);
+                this._reportError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
             /**
@@ -409,6 +408,11 @@ require.def(
                 }
             },
 
+            _reportError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
+                this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
             _toStopped: function() {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
@@ -418,7 +422,7 @@ require.def(
             _toBuffering: function() {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
-                this._setSentinels([]);
+                this._setSentinels([ this._exitBufferingSentinel ]);
             },
 
             _toPlaying: function() {
@@ -445,16 +449,22 @@ require.def(
             },
 
             _toError: function(errorMessage) {
-                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._reportError(errorMessage);
             },
 
             _enterBufferingSentinel: function() {
                 if(!this._hasSentinelTimeAdvanced) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
+                }
+            },
+
+            _exitBufferingSentinel: function() {
+                if(this._hasSentinelTimeAdvanced || this._mediaElement.paused) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+                    this._exitBuffering();
                 }
             },
 

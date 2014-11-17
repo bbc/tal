@@ -137,6 +137,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             media.play = this.sandbox.stub();
             media.pause = this.sandbox.stub();
             media.load = this.sandbox.stub();
+            media.currentTime = 0;
 
             media.seekable = ['timeRange'];
             media.seekable.start = this.sandbox.stub();
@@ -192,10 +193,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._clock.tick(1100);
     };
 
-    var getToPlaying = function (self, MediaPlayer) {
+    var getToBuffering = function(self, MediaPlayer) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
         self._mediaPlayer.playFrom(0);
         deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+    };
+
+    var getToPlaying = function (self, MediaPlayer) {
+        getToBuffering(self, MediaPlayer);
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
@@ -220,6 +225,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var clearEvents = function(self) {
         self._eventCallback.reset();
+    };
+
+    var advancePlayTime = function(self) {
+        stubCreateElementResults.video.currentTime += 1;
     };
 
     //---------------------
@@ -395,8 +404,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testErrorEventFromMediaElementCausesErrorTransitionWithCodeLogged = function(queue) {
-        expectAsserts(3);
+    mixins.testErrorEventFromMediaElementCausesErrorLogWithCode = function(queue) {
+        expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
@@ -411,7 +420,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             deviceMockingHooks.emitPlaybackError(self._mediaPlayer);
 
-            assertState(self, MediaPlayer.STATE.ERROR);
             assert(errorStub.calledWith("Media element emitted error with code: 2"));
         });
     };
@@ -535,7 +543,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(7);
+        expectAsserts(6);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -543,7 +551,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(50);
             assertFalse(stubCreateElementResults.video.play.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assert(stubCreateElementResults.video.play.called);
@@ -556,14 +563,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testBeginPlaybackCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(5);
+        expectAsserts(4);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.beginPlayback();
             assert(stubCreateElementResults.video.play.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
+
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assertState(self, MediaPlayer.STATE.BUFFERING);
@@ -585,7 +592,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPlayFromThenPauseSetsCurrentTimeAndCallsPauseOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(8);
+        expectAsserts(7);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -596,7 +603,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertFalse(stubCreateElementResults.video.play.called);
             assertFalse(stubCreateElementResults.video.pause.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assert(stubCreateElementResults.video.pause.called);
@@ -930,7 +936,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
 
-            stubCreateElementResults.video.currentTime += 1;
+            advancePlayTime(self);
             clearEvents(self);
             fireSentinels(self);
 
@@ -940,7 +946,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testEnterBufferingSentinelDoesNothingWhenDeviceReportsBufferingCorrectly = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
@@ -953,6 +959,52 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertNoEvents(self);
         });
     };
+
+    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceIsPaused = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+            self._mediaPlayer.pause();
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+        });
+    };
+
+     mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer);
+
+            advancePlayTime(self);
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
+    mixins.testExitBufferingSentinelCausesTransitionToPausedWhenDeviceReportsPaused = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer);
+            self._mediaPlayer.pause();
+
+            clearEvents(self);
+            stubCreateElementResults.video.paused = true;
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+        });
+    };
+
 
     // *******************************************
     // ********* Mixin the functions *************
