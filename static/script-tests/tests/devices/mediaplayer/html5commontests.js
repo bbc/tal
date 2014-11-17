@@ -1006,6 +1006,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenDeviceReadyStateIsHaveEnoughData = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer);
+
+            clearEvents(self);
+            stubCreateElementResults.video.readyState = 4; // HAVE_ENOUGH_DATA = 4
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************

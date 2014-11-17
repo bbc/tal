@@ -459,7 +459,9 @@ require.def(
             },
 
             _exitBufferingSentinel: function() {
-                if(this._hasSentinelTimeAdvanced || this._mediaElement.paused) {
+                var HAVE_ENOUGH_DATA = 4;
+                var hasEnoughData = this._mediaElement.readyState === HAVE_ENOUGH_DATA;
+                if(this._hasSentinelTimeAdvanced || this._mediaElement.paused || hasEnoughData) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._exitBuffering();
                 }
