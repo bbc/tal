@@ -316,7 +316,6 @@ require.def(
                 this._mediaElement.style.left = "0px";
                 this._mediaElement.style.width = "100%";
                 this._mediaElement.style.height = "100%";
-                //this._mediaElement.setFullScreen(true);
             },
 
             _registerEventHandlers: function() {
@@ -398,6 +397,7 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
+                this._sentinelSeekTime = undefined;
                 if(this._mediaElement) {
                     clearInterval(this._updateInterval);
                     clearInterval(this._sentinelInterval);
