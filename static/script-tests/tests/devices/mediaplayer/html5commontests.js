@@ -193,10 +193,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._clock.tick(1100);
     };
 
-    var getToPlaying = function (self, MediaPlayer) {
+    var getToBuffering = function(self, MediaPlayer) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
         self._mediaPlayer.playFrom(0);
         deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+    };
+
+    var getToPlaying = function (self, MediaPlayer) {
+        getToBuffering(self, MediaPlayer);
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
@@ -957,9 +961,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            getToBuffering(self, MediaPlayer);
 
             stubCreateElementResults.video.currentTime += 1;
             clearEvents(self);
