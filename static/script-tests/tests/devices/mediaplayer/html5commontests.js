@@ -947,7 +947,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testEnterBufferingSentinelDoesNothingWhenDeviceReportsBufferingCorrectly = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
@@ -962,7 +962,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testEnterBufferingSentinelDoesNothingWhenDeviceIsPaused = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
