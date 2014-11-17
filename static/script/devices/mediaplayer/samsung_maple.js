@@ -157,7 +157,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function(seconds) {
+            beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -281,7 +281,7 @@ require.def(
             },
 
             _onDeviceError: function(message) {
-                this._toError(message);
+                this._reportError(message);
             },
 
             _onDeviceBuffering: function() {
@@ -489,6 +489,11 @@ require.def(
                 return source;
             },
 
+            _reportError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
+                this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
             _toStopped: function () {
                 this._currentTime = 0;
                 this._range = undefined;
@@ -522,10 +527,9 @@ require.def(
             },
 
             _toError: function(errorMessage) {
-                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._reportError(errorMessage);
             },
 
             _setDisplayFullScreenForVideo: function() {
