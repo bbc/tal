@@ -137,6 +137,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             media.play = this.sandbox.stub();
             media.pause = this.sandbox.stub();
             media.load = this.sandbox.stub();
+            media.currentTime = 0;
 
             media.seekable = ['timeRange'];
             media.seekable.start = this.sandbox.stub();
@@ -535,7 +536,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPlayFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(7);
+        expectAsserts(6);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -543,7 +544,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(50);
             assertFalse(stubCreateElementResults.video.play.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assert(stubCreateElementResults.video.play.called);
@@ -556,14 +556,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testBeginPlaybackCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(5);
+        expectAsserts(4);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.beginPlayback();
             assert(stubCreateElementResults.video.play.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
+
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assertState(self, MediaPlayer.STATE.BUFFERING);
@@ -585,7 +585,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPlayFromThenPauseSetsCurrentTimeAndCallsPauseOnMediaElementWhenInStoppedState = function(queue) {
-        expectAsserts(8);
+        expectAsserts(7);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -596,7 +596,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertFalse(stubCreateElementResults.video.play.called);
             assertFalse(stubCreateElementResults.video.pause.called);
             assertState(self, MediaPlayer.STATE.BUFFERING);
-            assertUndefined(stubCreateElementResults.video.currentTime);
 
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             assert(stubCreateElementResults.video.pause.called);
@@ -951,6 +950,23 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertNoEvents(self);
+        });
+    };
+
+     mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+
+            stubCreateElementResults.video.currentTime += 1;
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
         });
     };
 
