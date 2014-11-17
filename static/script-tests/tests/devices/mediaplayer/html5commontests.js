@@ -1023,6 +1023,24 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelClampsTargetSeekTimeWhenRequired = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(110);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            stubCreateElementResults.video.currentTime = 0;
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     // Time advancing doesn't reseek to initial seek time after 15s
     // Target seek time gets clamped when required
     // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point

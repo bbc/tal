@@ -470,9 +470,10 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
-                if(Math.abs(this.getCurrentTime() - this._sentinelSeekTime) > 15) {
+                var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
+                if(Math.abs(this.getCurrentTime() - clampedSentinelSeekTime) > 15) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
-                    this._mediaElement.currentTime = this._sentinelSeekTime;
+                    this._mediaElement.currentTime = clampedSentinelSeekTime;
                 }
             },
 
