@@ -104,9 +104,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
               clock = sinon.useFakeTimers();
             }
         },
-        makeOneSecondPass: function(mediaPlayer) {
-           clock.tick(1000);
-           fakeCEHTMLObject.playPosition += 1000;
+        makeOneSecondPass: function (mediaPlayer) {
+            clock.tick(1000);
+            if (fakeCEHTMLObject.playState === fakeCEHTMLObject.PLAY_STATE_PLAYING) {
+                fakeCEHTMLObject.playPosition += 1000;
+            }
         },
         unmockTime: function(mediaplayer) {
           if(clock!==undefined) {
@@ -622,9 +624,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering();
             deviceMockingHooks.startBuffering();
-            
-            deviceMockingHooks.makeOneSecondPass();
-            deviceMockingHooks.makeOneSecondPass();
+
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition += 1000;
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition += 1000;
 
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
