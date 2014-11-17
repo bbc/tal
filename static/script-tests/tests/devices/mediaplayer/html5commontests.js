@@ -990,6 +990,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testExitBufferingSentinelCausesTransitionToPausedWhenDeviceReportsPaused = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer);
+            self._mediaPlayer.pause();
+
+            clearEvents(self);
+            stubCreateElementResults.video.paused = true;
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
