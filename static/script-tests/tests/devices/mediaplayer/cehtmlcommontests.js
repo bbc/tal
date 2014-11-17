@@ -49,16 +49,30 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     var mockData;
     var clock;
     var seekSpy;
+    var playSpy;
     var deviceMockingHooks = {
         setup: function(sandbox, application) {
             mockData = {};
             fakeCEHTMLObject.playPosition = 0;
             this._createElementStub = stubCreateElement(sandbox, application);
+
             fakeCEHTMLObject.seek = function(milliseconds) {
                 fakeCEHTMLObject.playPosition = milliseconds;
                 return true;
             }
+
+            fakeCEHTMLObject.play = function(playSpeed) {
+                if (playSpeed === 1 && fakeCEHTMLObject.playState === fakeCEHTMLObject.PLAY_STATE_PAUSED) {
+                    fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PLAYING;
+                }
+
+                if (playSpeed === 0 && fakeCEHTMLObject.playState === fakeCEHTMLObject.PLAY_STATE_PLAYING) {
+                    fakeCEHTMLObject.playState = fakeCEHTMLObject.PLAY_STATE_PAUSED;
+                }
+            }
+
             seekSpy = sandbox.spy(fakeCEHTMLObject, 'seek');
+            playSpy = sandbox.spy(fakeCEHTMLObject, 'play');
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
             // CEHTML has no 'metadata' event, so keep these values for later
@@ -123,7 +137,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
         mockData = {};
         fakeCEHTMLObject = document.createElement("div");
-        fakeCEHTMLObject.play = this.sandbox.stub();
         fakeCEHTMLObject.stop = this.sandbox.stub();
         fakeCEHTMLObject.onPlayStateChange = this.sandbox.stub();
         fakeCEHTMLObject.setFullScreen = this.sandbox.stub();
@@ -236,7 +249,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
 
-            assert(fakeCEHTMLObject.play.calledWith(1));
+            assert(playSpy.calledWith(1));
         });
     };
 
@@ -246,7 +259,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.beginPlayback();
 
-            assert(fakeCEHTMLObject.play.calledWith(1));
+            assert(playSpy.calledWith(1));
         });
     };
 
@@ -258,11 +271,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            assert(fakeCEHTMLObject.play.withArgs(1).calledOnce);
+            assert(playSpy.withArgs(1).calledOnce);
             this._mediaPlayer.playFrom(20);
 
             assert(seekSpy.calledWith(20000));
-            assert(fakeCEHTMLObject.play.withArgs(1).calledOnce);
+            assert(playSpy.withArgs(1).calledOnce);
         });
     };
 
@@ -295,7 +308,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
             this._mediaPlayer.pause();
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
-            assert(fakeCEHTMLObject.play.calledWith(0));
+            assert(playSpy.calledWith(0));
         });
     };
 
@@ -310,7 +323,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.pause();
             this._mediaPlayer.resume();
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
-            assert(fakeCEHTMLObject.play.calledThrice);
+            assert(playSpy.calledThrice);
             assertEquals(1, fakeCEHTMLObject.play.lastCall.args[0]);
         });
     };
@@ -388,8 +401,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assert(seekSpy.calledWith(10000));
 
             assert(fakeCEHTMLObject.stop.calledOnce);
-            assert(fakeCEHTMLObject.play.calledAfter(fakeCEHTMLObject.stop));
-            assert(fakeCEHTMLObject.play.calledBefore(seekSpy));
+            assert(playSpy.calledAfter(fakeCEHTMLObject.stop));
+            assert(playSpy.calledBefore(seekSpy));
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
         });
     };
@@ -505,7 +518,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
             assert(eventHandler.calledOnce);
             assertEquals(MediaPlayer.EVENT.BUFFERING, eventHandler.args[0][0].type);
-            assert(fakeCEHTMLObject.play.withArgs(0).notCalled);
+            assert(playSpy.withArgs(0).notCalled);
 
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
@@ -524,13 +537,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
             this._mediaPlayer.pause();
-            assert(fakeCEHTMLObject.play.calledOnce);
-            assert(fakeCEHTMLObject.play.calledWith(1));
+            assert(playSpy.calledOnce);
+            assert(playSpy.calledWith(1));
 
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            assert(fakeCEHTMLObject.play.calledTwice);
-            assert(fakeCEHTMLObject.play.calledWith(0));
+            assert(playSpy.calledTwice);
+            assert(playSpy.calledWith(0));
         });
     };
 
@@ -818,12 +831,14 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.finishBuffering();
             this._mediaPlayer.pause();
 
-            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+            assert(playSpy.withArgs(0).calledOnce);
 
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition += 1000;
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition += 1000;
 
-            assert(fakeCEHTMLObject.play.withArgs(0).calledTwice);
+            assert(playSpy.withArgs(0).calledTwice);
         });
     };
 
