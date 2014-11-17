@@ -58,7 +58,7 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
-                    this._lastTime = 0;
+                    this._timeAtLastSenintelInterval = 0;
                     this._createElement();
                     this._registerEventHandlers();
                     this._addElementToDOM();
@@ -453,13 +453,13 @@ require.def(
 
             _setSentinels: function(sentinels) {
                 var self = this;
-                this._lastTime = this.getCurrentTime();
+                this._timeAtLastSenintelInterval = this.getCurrentTime();
                 clearInterval(this._sentinelInterval);
 
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
-                    self._timeHasAdvanced = (newTime > (self._lastTime + 0.2));
-                    self._lastTime = newTime;
+                    self._timeHasAdvanced = (newTime > (self._timeAtLastSenintelInterval + 0.2));
+                    self._timeAtLastSenintelInterval = newTime;
 
                     for (var i = 0; i < sentinels.length; i++) {
                         sentinels[i].call(self);
