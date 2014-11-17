@@ -157,7 +157,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function(seconds) {
+            beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
