@@ -156,7 +156,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnError = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnTransitionToErrorState = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -170,7 +170,7 @@
                 assertFunction("Expecting " + func + " to be a function", window[func]);
             }
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.pause();
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -226,7 +226,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnTransiitonToErrorState = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -242,7 +242,7 @@
                 assertEquals(func, playerPlugin[hook]);
             }
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.pause();
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -634,7 +634,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnTransitionToErrorState = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -645,7 +645,7 @@
 
             assert(playerPlugin.Stop.notCalled);
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.beginPlayback();
 
             assert(playerPlugin.Stop.calledOnce);
         });

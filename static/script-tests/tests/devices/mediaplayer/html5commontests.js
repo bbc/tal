@@ -404,8 +404,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testErrorEventFromMediaElementCausesErrorTransitionWithCodeLogged = function(queue) {
-        expectAsserts(3);
+    mixins.testErrorEventFromMediaElementCausesErrorLogWithCode = function(queue) {
+        expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
@@ -420,7 +420,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             deviceMockingHooks.emitPlaybackError(self._mediaPlayer);
 
-            assertState(self, MediaPlayer.STATE.ERROR);
             assert(errorStub.calledWith("Media element emitted error with code: 2"));
         });
     };

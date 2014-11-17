@@ -177,13 +177,17 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         return test;
     };
 
-    var makeDeviceErrorGoesToErrorStateTest = function (setup, deviceEventName) {
+    var makeDeviceErrorGetsReported = function (setup, deviceEventName) {
         var test = function (queue) {
-            expectAsserts(9);
+            expectAsserts(4);
             doTest(this, queue, function (MediaPlayer) {
                 setup.call(this, MediaPlayer);
+                var state = this._mediaPlayer.getState();
                 deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-                assertMediaPlayerError(this, MediaPlayer);
+                assertLatestEvent(this, {
+                    state: state,
+                    type: MediaPlayer.EVENT.ERROR
+                });
             });
         };
         test.bind(testCase);
@@ -275,7 +279,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testFinishBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'finishBuffering');
     mixins.testStartBufferingInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'startBuffering');
 
-    mixins.testDeviceErrorInStoppedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToStoppedState);
+    mixins.testDeviceErrorInStoppedStateGetsReported = makeDeviceErrorGetsReported(getToStoppedState);
 
     mixins.testTimePassingDoesNotCauseStatusEventToBeSentInStoppedState = makeTimePassingDoesNotCauseStatusEventTest(getToStoppedState);
 
@@ -342,7 +346,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testSendMetaDataInBufferingStateStaysInBufferingState = makeDeviceEventStaysInSameStateTest(getToBufferingState, 'sendMetadata');
     mixins.testStartBufferingInBufferingStateStaysInBufferingState = makeDeviceEventStaysInSameStateTest(getToBufferingState, 'startBuffering');
 
-    mixins.testDeviceErrorInBufferingStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToBufferingState);
+    mixins.testDeviceErrorInBufferingStateGetsReported = makeDeviceErrorGetsReported(getToBufferingState);
 
     mixins.testTimePassingDoesNotCauseStatusEventToBeSentInBufferingState = makeTimePassingDoesNotCauseStatusEventTest(getToBufferingState);
 
@@ -477,7 +481,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testSendMetaDataInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'sendMetadata');
     mixins.testFinishBufferingInPlayingStateStaysInPlayingState = makeDeviceEventStaysInSameStateTest(getToPlayingState, 'finishBuffering');
 
-    mixins.testDeviceErrorInPlayingStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPlayingState);
+    mixins.testDeviceErrorInPlayingStateGetsReported = makeDeviceErrorGetsReported(getToPlayingState);
 
     mixins.testWhenCallResumeWhileAlreadyPlayingThenRemainInPlayState = function (queue) {
         expectAsserts(3);
@@ -530,15 +534,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 mimeType: "testMimeType",
                 type: MediaPlayer.EVENT.STOPPED
             });
-        });
-    };
-
-    mixins.testWhenPlaybackErrorOccursWhilePlayingThenGoesToErrorState = function (queue) {
-        expectAsserts(9);
-        doTest(this, queue, function (MediaPlayer) {
-            getToPlayingState.call(this, MediaPlayer);
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
-            assertMediaPlayerError(this, MediaPlayer);
         });
     };
 
@@ -627,7 +622,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testFinishBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'finishBuffering');
     mixins.testStartBufferingInPausedStateStaysInPausedState = makeDeviceEventStaysInSameStateTest(getToPausedState, 'startBuffering');
 
-    mixins.testDeviceErrorInPausedStateGoesToErrorState = makeDeviceErrorGoesToErrorStateTest(getToPausedState);
+    mixins.testDeviceErrorInPausedStateGetsReported = makeDeviceErrorGetsReported(getToPausedState);
 
     mixins.testTimePassingDoesNotCauseStatusEventToBeSentInPausedState = makeTimePassingDoesNotCauseStatusEventTest(getToPausedState);
 
