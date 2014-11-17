@@ -805,6 +805,41 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testUnsuccessfulPauseIsRetried = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering();
+            this._mediaPlayer.pause();
+
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            assert(fakeCEHTMLObject.play.withArgs(0).calledTwice);
+        });
+    };
+
+    mixins.testSuccessfulPauseIsNotRetried = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering();
+            this._mediaPlayer.pause();
+
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+
+            clock.tick(1100);
+
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************

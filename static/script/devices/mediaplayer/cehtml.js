@@ -437,6 +437,7 @@ require.def(
             _toPaused: function () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
+                this._setSentinels([this._shouldBePausedSentinel]);
             },
 
             _toComplete: function () {
@@ -494,6 +495,12 @@ require.def(
                     this._mediaElement.seek(clampedSentinelSeekTime * 1000);
                 } else {
                     this._sentinelSeekTime = currentTime;
+                }
+            },
+
+            _shouldBePausedSentinel: function() {
+                if(this._timeHasAdvanced) {
+                    this._mediaElement.play(0);
                 }
             }
         });
