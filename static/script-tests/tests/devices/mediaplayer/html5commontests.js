@@ -1056,8 +1056,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // Time advancing doesn't reseek to initial seek time after 15s
-    // Seek sentinel should work when paused
+    mixins.testSeekSentinelSetsCurrentTimeWhenPaused = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            self._mediaPlayer.pause();
+            setPlayTimeToZero(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point
     // Test live stream playback: make sure sentinels dont interfere!
 

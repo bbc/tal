@@ -435,7 +435,7 @@ require.def(
             _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
-                this._setSentinels([]);
+                this._setSentinels([ this._shouldBeSeekedSentinel ]);
             },
 
             _toComplete: function() {
