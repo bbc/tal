@@ -193,14 +193,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._clock.tick(1100);
     };
 
-    var getToBuffering = function(self, MediaPlayer) {
+    var getToBuffering = function(self, MediaPlayer, startTime) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-        self._mediaPlayer.playFrom(0);
+        self._mediaPlayer.playFrom(startTime || 0);
         deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
     };
 
-    var getToPlaying = function (self, MediaPlayer) {
-        getToBuffering(self, MediaPlayer);
+    var getToPlaying = function (self, MediaPlayer, startTime) {
+        getToBuffering(self, MediaPlayer, startTime);
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
@@ -229,6 +229,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var advancePlayTime = function(self) {
         stubCreateElementResults.video.currentTime += 1;
+    };
+
+    var setPlayTimeToZero = function (self) {
+        stubCreateElementResults.video.currentTime = 0;
     };
 
     //---------------------
@@ -1009,12 +1013,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.playFrom(50);
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            getToPlaying(self, MediaPlayer, 50);
+            setPlayTimeToZero(self);
 
-            stubCreateElementResults.video.currentTime = 0;
             clearEvents(self);
             fireSentinels(self);
 
@@ -1027,12 +1028,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.playFrom(110);
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            getToPlaying(self, MediaPlayer, 110);
+            setPlayTimeToZero(self);
 
-            stubCreateElementResults.video.currentTime = 0;
             clearEvents(self);
             fireSentinels(self);
 
@@ -1042,7 +1040,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     // Time advancing doesn't reseek to initial seek time after 15s
-    // Target seek time gets clamped when required
+    // Seek sentinel should work when paused
     // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point
     // Test live stream playback: make sure sentinels dont interfere!
 
