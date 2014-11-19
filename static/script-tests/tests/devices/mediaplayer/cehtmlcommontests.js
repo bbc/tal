@@ -679,7 +679,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testUnsuccessfulSeekIsRetriedAndSentinelSeekEventIsFired = function(queue) {
+    mixins.testUnsuccessfulSeekIsRetriedAndSentinelSeekEventIsFiredFromPlayingState = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
@@ -695,6 +695,37 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEquals(0, this._mediaPlayer.getCurrentTime());
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            assertEventTypeHasFired(eventHandler,MediaPlayer.EVENT.SENTINEL_SEEK);
+            assert(seekSpy.calledTwice);
+            assertEquals(30000, seekSpy.args[1][0]);
+        });
+    };
+
+    mixins.testUnsuccessfulSeekIsRetriedAndSentinelSeekEventIsFiredFromPausedState = function(queue) {
+        expectAsserts(5);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            // Override mock seek function to be unsuccessful
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                return true;
+            }
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(0, this._mediaPlayer.getCurrentTime());
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
