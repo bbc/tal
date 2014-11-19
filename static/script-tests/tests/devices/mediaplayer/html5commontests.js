@@ -214,6 +214,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
+    var getToPlayingWithBeginPlayback = function (self, MediaPlayer, time) {
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        self._mediaPlayer.beginPlayback();
+        deviceMockingHooks.sendMetadata(self._mediaPlayer, time, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(self._mediaPlayer);
+    };
+
     var assertState = function(self, expectedState) {
         assertEquals(expectedState, self._mediaPlayer.getState());
     };
@@ -1086,12 +1093,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.beginPlayback();
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
-
-            assertEquals(0, stubCreateElementResults.video.currentTime);
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
 
             clearEvents(self);
             advancePlayTime(self);
@@ -1106,12 +1108,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.beginPlayback();
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 50, { start: 0, end: 100 });
-            deviceMockingHooks.finishBuffering(self._mediaPlayer);
-
-            assertEquals(50, stubCreateElementResults.video.currentTime);
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 50);
 
             clearEvents(self);
             advancePlayTime(self);
