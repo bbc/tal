@@ -1119,10 +1119,58 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point
-    // Test live stream playback: make sure sentinels dont interfere!
+    mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackAfterPreviouslySeeking = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            this._mediaPlayer.stop();
+            this._mediaPlayer.beginPlayback();
+            setPlayTimeToZero(self);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            advancePlayTime(self);
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
+    mixins.testPauseSentinelDoesNotRetryPauseIfPauseSucceeds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+        });
+    };
+
     // paused sentinel
     // end-of-media sentinel
+    // delay between sentinels
+    // Test live stream playback: make sure sentinels dont interfere!
 
     // *******************************************
     // ********* Mixin the functions *************
