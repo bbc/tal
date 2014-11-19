@@ -431,7 +431,11 @@ require.def(
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinels([this._enterBufferingSentinel, this._shouldBeSeekedSentinel]);
+                this._setSentinels([
+                    this._enterBufferingSentinel,
+                    this._shouldBeSeekedSentinel,
+                    this._enterCompleteSentinel
+                ]);
             },
 
             _toPaused: function () {
@@ -456,6 +460,10 @@ require.def(
                 this._reportError(errorMessage);
             },
 
+            _isNearToEnd: function(seconds) {
+                return (this.getRange().end - seconds <= 1);
+            },
+
             _setSentinels: function(sentinels) {
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
@@ -463,18 +471,21 @@ require.def(
 
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
-                    self._timeHasAdvanced = (newTime > (self._timeAtLastSenintelInterval + 0.2));
-                    self._timeAtLastSenintelInterval = newTime;
+
+                    self._timeHasAdvanced = newTime ? (newTime > (self._timeAtLastSenintelInterval + 0.2)) : false;
+                    self._sentinelTimeIsNearEnd = self._isNearToEnd(newTime ? newTime : self._timeAtLastSenintelInterval);
 
                     for (var i = 0; i < sentinels.length; i++) {
                         sentinels[i].call(self);
                     }
 
+                    self._timeAtLastSenintelInterval = newTime;
+
                 }, 1100);
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._timeHasAdvanced) {
+                if(!this._timeHasAdvanced && !this._sentinelTimeIsNearEnd) {
                     RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
                     this._toBuffering();
                 }
@@ -501,6 +512,12 @@ require.def(
             _shouldBePausedSentinel: function() {
                 if(this._timeHasAdvanced) {
                     this._mediaElement.play(0);
+                }
+            },
+
+            _enterCompleteSentinel: function() {
+                if(!this._timeHasAdvanced && this._sentinelTimeIsNearEnd) {
+                    this._onEndOfMedia();
                 }
             }
         });

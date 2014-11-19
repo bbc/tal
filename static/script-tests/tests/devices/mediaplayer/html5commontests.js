@@ -1124,6 +1124,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     // beginPlayback works without causing unnecessary seeking, and if actual playback starts from (eg) live point
     // Test live stream playback: make sure sentinels dont interfere!
+    // paused sentinel
+    // end-of-media sentinel
 
     // *******************************************
     // ********* Mixin the functions *************
