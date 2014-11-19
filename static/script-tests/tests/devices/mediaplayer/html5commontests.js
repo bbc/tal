@@ -1138,8 +1138,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testPauseSentinelFiresIfPauseFails = function(queue) {
-        expectAsserts(3);
+    mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1150,6 +1150,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
+    mixins.testPauseSentinelDoesNotRetryPauseIfPauseSucceeds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
         });
     };
 
