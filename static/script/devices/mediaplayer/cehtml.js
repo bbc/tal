@@ -431,7 +431,11 @@ require.def(
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinels([this._enterBufferingSentinel, this._shouldBeSeekedSentinel]);
+                this._setSentinels([
+                    this._enterBufferingSentinel,
+                    this._shouldBeSeekedSentinel,
+                    this._enterCompleteSentinel
+                ]);
             },
 
             _toPaused: function () {
@@ -464,6 +468,7 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._timeHasAdvanced = (newTime > (self._timeAtLastSenintelInterval + 0.2));
+                    self._timeIsNearEnd = (Math.abs(newTime - self.getRange().end) <= 1);
                     self._timeAtLastSenintelInterval = newTime;
 
                     for (var i = 0; i < sentinels.length; i++) {
@@ -474,7 +479,7 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._timeHasAdvanced) {
+                if(!this._timeHasAdvanced && !this._timeIsNearEnd) {
                     RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
                     this._toBuffering();
                 }
@@ -501,6 +506,12 @@ require.def(
             _shouldBePausedSentinel: function() {
                 if(this._timeHasAdvanced) {
                     this._mediaElement.play(0);
+                }
+            },
+
+            _enterCompleteSentinel: function() {
+                if(!this._timeHasAdvanced && this._timeIsNearEnd) {
+                    this._onEndOfMedia();
                 }
             }
         });
