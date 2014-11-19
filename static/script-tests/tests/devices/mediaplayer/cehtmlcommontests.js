@@ -617,7 +617,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering();
 
-            clock.tick(1100);
             clearIntervalSpy.reset();
 
             assert(clearIntervalSpy.notCalled);
