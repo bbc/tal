@@ -430,7 +430,7 @@ require.def(
             _toPlaying: function() {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
-                this._setSentinels([ this._shouldBeSeekedSentinel, this._enterBufferingSentinel ]);
+                this._setSentinels([ this._endOfMediaSentinel, this._shouldBeSeekedSentinel, this._enterBufferingSentinel ]);
             },
 
             _toPaused: function() {
@@ -457,7 +457,7 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._hasSentinelTimeAdvanced) {
+                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                 }
@@ -490,6 +490,13 @@ require.def(
                 }
             },
 
+            _endOfMediaSentinel: function() {
+                if (!this._hasSentinelTimeAdvanced && this._nearEndOfMedia) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
+                    this._onEndOfMedia();
+                }
+            },
+
             _clearSentinels: function() {
                 clearInterval(this._sentinelInterval);
             },
@@ -501,6 +508,7 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime);
+                    self._nearEndOfMedia = (self.getRange().end - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
                         sentinels[i].call(self);

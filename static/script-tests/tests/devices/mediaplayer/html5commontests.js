@@ -1120,7 +1120,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackAfterPreviouslySeeking = function(queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 50);
@@ -1139,7 +1139,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1150,11 +1150,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
         });
     };
 
     mixins.testPauseSentinelDoesNotRetryPauseIfPauseSucceeds = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1164,6 +1165,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+        });
+    };
+
+    mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIfNoCompleteEventFired = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 100);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertState(self, MediaPlayer.STATE.COMPLETE);
         });
     };
 
