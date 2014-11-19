@@ -99,9 +99,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.waiting(waitingEvent);
         },
         mockTime: function(mediaplayer) {
-            if(clock === undefined) {
-                clock = sinon.useFakeTimers();
+            if(clock !== undefined) {
+                throw "Trying to mock time twice";
             }
+            clock = sinon.useFakeTimers();
         },
         makeOneSecondPass: function(mediaplayer) {
             var timeUpdateEvent = {
@@ -110,10 +111,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.timeupdate(timeUpdateEvent);
         },
         unmockTime: function(mediaplayer) {
-            if(clock !== undefined) {
-                clock.restore();
-                clock = undefined;
+            if(clock === undefined) {
+                throw "Trying to unmock time twice";
             }
+            clock.restore();
+            clock = undefined;
         }
     };
 
@@ -1081,7 +1083,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackCalled = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -1101,7 +1103,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackStartsPlayingHalfWayThroughMedia = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
