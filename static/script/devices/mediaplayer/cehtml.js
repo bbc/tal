@@ -487,6 +487,7 @@ require.def(
             _enterBufferingSentinel: function() {
                 if(!this._timeHasAdvanced && !this._sentinelTimeIsNearEnd) {
                     RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                 }
             },
@@ -494,6 +495,7 @@ require.def(
             _exitBufferingSentinel: function() {
                 if(this._timeHasAdvanced) {
                     RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._onFinishedBuffering();
                 }
             },
@@ -504,6 +506,7 @@ require.def(
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
                 if(Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE){
                     this._mediaElement.seek(clampedSentinelSeekTime * 1000);
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                 } else {
                     this._sentinelSeekTime = currentTime;
                 }
@@ -512,11 +515,13 @@ require.def(
             _shouldBePausedSentinel: function() {
                 if(this._timeHasAdvanced) {
                     this._mediaElement.play(0);
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
                 }
             },
 
             _enterCompleteSentinel: function() {
                 if(!this._timeHasAdvanced && this._sentinelTimeIsNearEnd) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
                 }
             }
