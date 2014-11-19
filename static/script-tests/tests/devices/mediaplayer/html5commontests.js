@@ -1138,6 +1138,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testPauseSentinelFiresIfPauseFails = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            advancePlayTime(self);
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
     // paused sentinel
     // end-of-media sentinel
     // delay between sentinels
