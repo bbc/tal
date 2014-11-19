@@ -435,7 +435,7 @@ require.def(
             _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
-                this._setSentinels([]);
+                this._setSentinels([ this._shouldBeSeekedSentinel ]);
             },
 
             _toComplete: function() {
@@ -470,10 +470,13 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
+                var currentTime = this.getCurrentTime();
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
-                if(Math.abs(this.getCurrentTime() - clampedSentinelSeekTime) > 15) {
+                if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                     this._mediaElement.currentTime = clampedSentinelSeekTime;
+                } else {
+                    this._sentinelSeekTime = currentTime;
                 }
             },
 
