@@ -30,7 +30,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
 
     var mixins = { };
-
+    var clock;
     var stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
@@ -99,6 +99,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.waiting(waitingEvent);
         },
         mockTime: function(mediaplayer) {
+            if(clock !== undefined) {
+                throw "Trying to mock time twice";
+            }
+            clock = sinon.useFakeTimers();
         },
         makeOneSecondPass: function(mediaplayer) {
             var timeUpdateEvent = {
@@ -107,6 +111,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.timeupdate(timeUpdateEvent);
         },
         unmockTime: function(mediaplayer) {
+            if(clock === undefined) {
+                throw "Trying to unmock time twice";
+            }
+            clock.restore();
+            clock = undefined;
         }
     };
 
@@ -172,6 +181,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     var runMediaPlayerTest = function (self, queue, action) {
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayer) {
+                deviceMockingHooks.mockTime(self._mediaPlayer);
+
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
@@ -179,18 +190,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._eventCallback = self.sandbox.stub();
                 self._mediaPlayer.addEventCallback(null, self._eventCallback);
 
-                self._clock = sinon.useFakeTimers();
                 try {
                     action.call(self, MediaPlayer);
                 }
                 finally {
-                    self._clock.restore();
+                    deviceMockingHooks.unmockTime(self._mediaPlayer);
                 }
             }, config);
     };
 
     var fireSentinels = function (self) {
-        self._clock.tick(1100);
+        clock.tick(1100);
     };
 
     var getToBuffering = function(self, MediaPlayer, startTime) {
@@ -201,6 +211,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var getToPlaying = function (self, MediaPlayer, startTime) {
         getToBuffering(self, MediaPlayer, startTime);
+        deviceMockingHooks.finishBuffering(self._mediaPlayer);
+    };
+
+    var getToPlayingWithBeginPlayback = function (self, MediaPlayer, time) {
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+        self._mediaPlayer.beginPlayback();
+        deviceMockingHooks.sendMetadata(self._mediaPlayer, time, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
@@ -1069,6 +1086,36 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackCalled = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackStartsPlayingHalfWayThroughMedia = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 50);
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(51, stubCreateElementResults.video.currentTime);
         });
     };
 

@@ -114,9 +114,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             fakeCEHTMLObject.onPlayStateChange();
         },
         mockTime: function(mediaPlayer) {
-            if(clock===undefined) {
-              clock = sinon.useFakeTimers();
+            if(clock !== undefined) {
+                throw "Trying to mock time twice";
             }
+            clock = sinon.useFakeTimers();
         },
         makeOneSecondPass: function (mediaPlayer) {
             clock.tick(1000);
@@ -125,10 +126,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             }
         },
         unmockTime: function(mediaplayer) {
-          if(clock!==undefined) {
-              clock.restore();
-           }
-           clock = undefined;
+            if (clock === undefined) {
+                throw "Trying to unmock time twice";
+            }
+            clock.restore();
+            clock = undefined;
         }
     };
 
@@ -162,7 +164,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         if (element && element.parentNode) {
             element.parentNode.removeChild(element);
         }
-        deviceMockingHooks.unmockTime();
+
     };
 
     var runMediaPlayerTest = function (self, queue, action) {
@@ -172,7 +174,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
-                action.call(self, MediaPlayer);
+                try {
+                    action.call(self, MediaPlayer);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime();
+                }
+
             }, config);
     };
 

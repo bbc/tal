@@ -383,9 +383,9 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
+                this._clearSentinels();
                 this._destroyMediaElement();
                 this._readyToPlayFrom = false;
-                this._clearSentinels();
             },
 
             _destroyMediaElement: function() {
@@ -435,7 +435,7 @@ require.def(
             _toPaused: function() {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
-                this._setSentinels([ this._shouldBeSeekedSentinel ]);
+                this._setSentinels([ this._shouldBeSeekedSentinel]);
             },
 
             _toComplete: function() {
@@ -470,13 +470,15 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
-                var currentTime = this.getCurrentTime();
-                var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
-                if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
-                    this._mediaElement.currentTime = clampedSentinelSeekTime;
-                } else {
-                    this._sentinelSeekTime = currentTime;
+                if (this._sentinelSeekTime !== undefined) {
+                    var currentTime = this.getCurrentTime();
+                    var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
+                    if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                        this._mediaElement.currentTime = clampedSentinelSeekTime;
+                    } else {
+                        this._sentinelSeekTime = currentTime;
+                    }
                 }
             },
 
