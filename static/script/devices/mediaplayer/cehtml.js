@@ -400,7 +400,7 @@ require.def(
                 this._sentinelSeekTime = undefined;
                 if(this._mediaElement) {
                     clearInterval(this._updateInterval);
-                    clearInterval(this._sentinelInterval);
+                    this._clearSentinels();
                     this._destroyMediaElement();
                 }
             },
@@ -420,6 +420,9 @@ require.def(
             _toStopped: function () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
+                if (this._sentinelInterval) {
+                    this._clearSentinels();
+                }
             },
 
             _toBuffering: function () {
@@ -447,6 +450,7 @@ require.def(
             _toComplete: function () {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
+                this._clearSentinels();
             },
 
             _toEmpty: function () {
@@ -467,8 +471,7 @@ require.def(
             _setSentinels: function(sentinels) {
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
-                clearInterval(this._sentinelInterval);
-
+                this._clearSentinels();
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
 
@@ -482,6 +485,10 @@ require.def(
                     self._timeAtLastSenintelInterval = newTime;
 
                 }, 1100);
+            },
+
+            _clearSentinels: function() {
+                clearInterval(this._sentinelInterval);
             },
 
             _enterBufferingSentinel: function() {
