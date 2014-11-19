@@ -893,6 +893,22 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testGoesToCompleteWhenTimeIsUndefinedAndTimeAtLastIntervalIsNearToEnd = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(99);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering();
+
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition = undefined;
+            clock.tick(1000);
+
+            assertEquals(MediaPlayer.STATE.COMPLETE, this._mediaPlayer.getState());
+        });
+    };
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************

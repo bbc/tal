@@ -460,6 +460,10 @@ require.def(
                 this._reportError(errorMessage);
             },
 
+            _isNearToEnd: function(seconds) {
+                return (this.getRange().end - seconds <= 1);
+            },
+
             _setSentinels: function(sentinels) {
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
@@ -467,19 +471,21 @@ require.def(
 
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
-                    self._timeHasAdvanced = (newTime > (self._timeAtLastSenintelInterval + 0.2));
-                    self._timeIsNearEnd = (Math.abs(newTime - self.getRange().end) <= 1);
-                    self._timeAtLastSenintelInterval = newTime;
+
+                    self._timeHasAdvanced = newTime ? (newTime > (self._timeAtLastSenintelInterval + 0.2)) : false;
+                    self._sentinelTimeIsNearEnd = self._isNearToEnd(newTime ? newTime : self._timeAtLastSenintelInterval);
 
                     for (var i = 0; i < sentinels.length; i++) {
                         sentinels[i].call(self);
                     }
 
+                    self._timeAtLastSenintelInterval = newTime;
+
                 }, 1100);
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._timeHasAdvanced && !this._timeIsNearEnd) {
+                if(!this._timeHasAdvanced && !this._sentinelTimeIsNearEnd) {
                     RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
                     this._toBuffering();
                 }
@@ -510,7 +516,7 @@ require.def(
             },
 
             _enterCompleteSentinel: function() {
-                if(!this._timeHasAdvanced && this._timeIsNearEnd) {
+                if(!this._timeHasAdvanced && this._sentinelTimeIsNearEnd) {
                     this._onEndOfMedia();
                 }
             }
