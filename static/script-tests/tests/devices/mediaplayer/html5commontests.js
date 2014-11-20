@@ -203,6 +203,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         clock.tick(1100);
     };
 
+    var fireAllSentinels = function(self) {
+        clock.tick(5000);
+    };
+
     var getToBuffering = function(self, MediaPlayer, startTime) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
         self._mediaPlayer.playFrom(startTime || 0);
@@ -225,16 +229,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assertEquals(expectedState, self._mediaPlayer.getState());
     };
 
-    var assertEvent = function(self, eventType) {
-        var found = false
+    var eventWasFired = function(self, eventType) {
         for( i = 0; i < self._eventCallback.args.length; i++) {
             if(eventType === self._eventCallback.args[i][0].type) {
-                found = true;
-                break;
+                return true;
             }
         }
-        assert(found);
+        return false;
+    }
+
+    var assertEvent = function(self, eventType) {
+        assertTrue(eventWasFired(self, eventType));
     };
+
+    var assertNoEvent = function(self, eventType) {
+        assertFalse(eventWasFired(self, eventType));
+    }
 
     var assertNoEvents = function(self) {
         assert(self._eventCallback.notCalled);
@@ -1175,7 +1185,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIfNoCompleteEventFired = function(queue) {
+    mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIsNotAdvancingAndNoCompleteEventFired = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1187,6 +1197,35 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
             assertEvent(self, MediaPlayer.EVENT.COMPLETE);
             assertState(self, MediaPlayer.STATE.COMPLETE);
+        });
+    };
+
+    mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIsNotAdvancingWhenWithinASecondOfEndAndNoCompleteEventFired = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 99);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertEvent(self, MediaPlayer.EVENT.COMPLETE);
+            assertState(self, MediaPlayer.STATE.COMPLETE);
+        });
+    };
+
+    mixins.testEndOfMediaSentinelDoesNotActivateIfTimeIsNotAdvancingWhenOutsideASecondOfEndAndNoCompleteEventFired = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 98);
+
+            clearEvents(self);
+            fireAllSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertNoEvent(self, MediaPlayer.EVENT.COMPLETE);
         });
     };
 
@@ -1205,7 +1244,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // paused sentinel
     // end-of-media sentinel
     // delay between sentinels
     // Retire playbeforeseekyaddayadda sub modifier
