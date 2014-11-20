@@ -486,6 +486,7 @@ require.def(
             _shouldBePausedSentinel: function() {
                 if (this._hasSentinelTimeAdvanced) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                    this._emitEvent(MediaPlayer.EVENT.PAUSED);
                     this._mediaElement.pause();
                 }
             },
