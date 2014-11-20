@@ -1244,7 +1244,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // end-of-media sentinel
+    mixins.testEndOfMediaSentinelDoesNotActivateIfTimeIsAdvancingNearEndOfMediaAndNoCompleteEventFired = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 98);
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertNoEvent(self, MediaPlayer.EVENT.COMPLETE);
+        });
+    };
+
     // delay between sentinels
     // Retire playbeforeseekyaddayadda sub modifier
     // Test live stream playback: make sure sentinels dont interfere!
