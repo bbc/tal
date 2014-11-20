@@ -1090,7 +1090,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackCalled = function(queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
@@ -1105,7 +1105,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelDoesNotSeekWhenBeginPlaybackStartsPlayingHalfWayThroughMedia = function(queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 50);
@@ -1139,7 +1139,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1147,9 +1147,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             advancePlayTime(self);
             clearEvents(self);
+            stubCreateElementResults.video.pause.reset();
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assert(stubCreateElementResults.video.pause.calledOnce);
             assertState(self, MediaPlayer.STATE.PAUSED);
         });
     };
@@ -1170,7 +1172,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIfNoCompleteEventFired = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 100);
@@ -1186,7 +1188,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     // paused sentinel
     // end-of-media sentinel
     // delay between sentinels
+    // Retire playbeforeseekyaddayadda sub modifier
     // Test live stream playback: make sure sentinels dont interfere!
+    // Test some of the bugs
 
     // *******************************************
     // ********* Mixin the functions *************
