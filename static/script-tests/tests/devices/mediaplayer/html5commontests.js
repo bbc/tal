@@ -1058,8 +1058,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlaying(self, MediaPlayer, 110);
+            getToBuffering(self, MediaPlayer, 110);
             setPlayTimeToZero(self);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             clearEvents(self);
             fireSentinels(self);
@@ -1256,6 +1257,34 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
             assertNoEvent(self, MediaPlayer.EVENT.COMPLETE);
+        });
+    };
+
+    mixins.testOnlyOneSentinelFiredAtATimeWhenBothSeekAndPauseSentinelsAreNeeded = function(queue) {
+        expectAsserts(6);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.playFrom(30);
+            setPlayTimeToZero(self);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            self._mediaPlayer.pause();
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+
+            clearEvents(self);
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertState(self, MediaPlayer.STATE.PAUSED);
         });
     };
 

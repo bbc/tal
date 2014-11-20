@@ -460,14 +460,18 @@ require.def(
                 if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
+                    return true;
                 }
+                return false;
             },
 
             _exitBufferingSentinel: function() {
                 if(this._hasSentinelTimeAdvanced || this._mediaElement.paused) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._exitBuffering();
+                    return true;
                 }
+                return false;
             },
 
             _shouldBeSeekedSentinel: function() {
@@ -477,10 +481,13 @@ require.def(
                     if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                         this._mediaElement.currentTime = clampedSentinelSeekTime;
+                        this._lastSentinelTime = clampedSentinelSeekTime;
+                        return true;
                     } else {
                         this._sentinelSeekTime = currentTime;
                     }
                 }
+                return false;
             },
 
             _shouldBePausedSentinel: function() {
@@ -488,14 +495,18 @@ require.def(
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
                     this._emitEvent(MediaPlayer.EVENT.PAUSED);
                     this._mediaElement.pause();
+                    return true;
                 }
+                return false;
             },
 
             _endOfMediaSentinel: function() {
                 if (!this._hasSentinelTimeAdvanced && this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
+                    return true;
                 }
+                return false;
             },
 
             _clearSentinels: function() {
@@ -512,7 +523,10 @@ require.def(
                     self._nearEndOfMedia = (self.getRange().end - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
-                        sentinels[i].call(self);
+                        var sentinelActivated = sentinels[i].call(self);
+                        if(sentinelActivated) {
+                            break;
+                        }
                     }
                 }, 1100);
             }
@@ -527,5 +541,4 @@ require.def(
 
         return Player;
     }
-
 );
