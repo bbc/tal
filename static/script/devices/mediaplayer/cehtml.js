@@ -498,7 +498,6 @@ require.def(
             _enterBufferingSentinel: function() {
                 var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd;
                 if(sentinelBufferingRequired) {
-                    RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                 }
@@ -508,7 +507,6 @@ require.def(
             _exitBufferingSentinel: function() {
                 var sentinelExitBufferingRequired = this._timeHasAdvanced;
                 if(sentinelExitBufferingRequired) {
-                    RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._onFinishedBuffering();
                 }
