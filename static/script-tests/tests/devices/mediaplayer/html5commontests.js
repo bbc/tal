@@ -1190,6 +1190,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEndOfMediaSentinelDoesNotActivateIfReachEndOfMediaNormally = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 100);
+            deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.COMPLETE);
+        });
+    };
+
     // paused sentinel
     // end-of-media sentinel
     // delay between sentinels
