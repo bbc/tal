@@ -78,7 +78,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             function(application, MediaPlayer) {
 
                 deviceMockingHooks.setup(self.sandbox, application);
-
+                deviceMockingHooks.mockTime();
                 self.device = application.getDevice();
                 self._mediaPlayer = self.device.getMediaPlayer();
 
@@ -86,6 +86,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 self._mediaPlayer.addEventCallback(null, self.eventCallback);
 
                 test.call(self, MediaPlayer);
+                deviceMockingHooks.unmockTime();
             }, config);
     };
 
@@ -197,12 +198,10 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         var test = function (queue) {
             expectAsserts(2);
             doTest(this, queue, function (MediaPlayer) {
-                deviceMockingHooks.mockTime(this._mediaPlayer);
                 setup.call(this, MediaPlayer);
                 deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
                 var latestEventType = this.eventCallback.lastCall.args[0].type || '';
                 assert(MediaPlayer.EVENT.STATUS !== latestEventType);
-                deviceMockingHooks.unmockTime(this._mediaPlayer);
             });
         };
         test.bind(testCase);
@@ -576,7 +575,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testGetRegularStatusEventWhenPlaying = function (queue) {
         expectAsserts(8);
         doTest(this, queue, function (MediaPlayer) {
-            deviceMockingHooks.mockTime(this._mediaPlayer);
             getToPlayingState.call(this, MediaPlayer);
             var originalCount = this.eventCallback.callCount;
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
@@ -591,7 +589,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
             assert(this.eventCallback.callCount - originalCount >= 3); // Three seconds so must have had at least three status messages
-            deviceMockingHooks.unmockTime(this._mediaPlayer);
         });
     };
 
