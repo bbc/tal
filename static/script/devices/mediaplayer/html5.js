@@ -457,7 +457,9 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia) {
+                var TIME_TOLERANCE_SECS = 2;
+                var sentinelSetOutsideOfTolerance = this._lastSentinelTime - this._sentinelSetTime >= TIME_TOLERANCE_SECS;
+                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia && sentinelSetOutsideOfTolerance) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     return true;
@@ -480,6 +482,7 @@ require.def(
                     var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
                     if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                        //this._mediaElement.play();
                         this._mediaElement.currentTime = clampedSentinelSeekTime;
                         this._lastSentinelTime = clampedSentinelSeekTime;
                         return true;
@@ -516,10 +519,11 @@ require.def(
             _setSentinels: function(sentinels) {
                 var self = this;
                 this._clearSentinels();
+                this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
-                    self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime);
+                    self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
                     self._nearEndOfMedia = (self.getRange().end - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
