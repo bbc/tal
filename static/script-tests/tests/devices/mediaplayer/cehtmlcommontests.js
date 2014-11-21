@@ -639,8 +639,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testGoesToBufferingAndSentinelEventFiredWhenDeviceBufferingAndNoBufferingEventFired = function(queue) {
-        expectAsserts(2);
+    mixins.testGoesToBufferingAndSentinelEventFiredOnSecondSentinelIntervalWhenDeviceBufferingAndNoBufferingEventFired = function(queue) {
+        expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -651,7 +651,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
             clock.tick(1100);
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
 
+            clock.tick(1100);
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
@@ -1011,6 +1014,91 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             clock.tick(1100);
 
             assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
+        });
+    };
+
+    mixins.testUnsuccessfulSeekAndUnsuccessfulPauseFiresOneSentineEventOnInterval = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            // Override mock seek function to be unsuccessful
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                return true;
+            }
+
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.pause();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            clock.tick(1000);
+            fakeCEHTMLObject.playPosition += 1000;
+
+            eventHandler.reset();
+            clock.tick(100);
+
+            assertEquals(1, eventHandler.callCount);
+        });
+    };
+
+    mixins.testUnsuccessfulSeekAndBufferingWithoutBufferingEventFiresOneSentinelEventOnInterval = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            // Override mock seek function to be unsuccessful
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                return true;
+            }
+
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(30);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            clock.tick(1000);
+            eventHandler.reset();
+            clock.tick(100);
+
+            assertNotSame("Only seek or buffering sentinel event should fire, not both",
+                eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING),
+                eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK));
+        });
+    };
+
+    mixins.testUnsuccessfulSeekAndCompleteWithoutCompleteEventFiresSeekSentinelEventOnlyOnInterval = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(99);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            // Override mock seek function to be unsuccessful
+            fakeCEHTMLObject.seek = function(milliseconds) {
+                return true;
+            }
+
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            this._mediaPlayer.playFrom(30);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            clock.tick(1000);
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            clock.tick(100);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_COMPLETE);
         });
     };
 

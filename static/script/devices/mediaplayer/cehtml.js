@@ -435,9 +435,9 @@ require.def(
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
                 this._setSentinels([
-                    this._enterBufferingSentinel,
                     this._shouldBeSeekedSentinel,
-                    this._enterCompleteSentinel
+                    this._enterCompleteSentinel,
+                    this._enterBufferingSentinel
                 ]);
             },
 
@@ -475,14 +475,17 @@ require.def(
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
                 this._clearSentinels();
+                this._sentinelIntervalNumber = 0;
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
+                    self._sentinelIntervalNumber++;
 
                     self._timeHasAdvanced = newTime ? (newTime > (self._timeAtLastSenintelInterval + 0.2)) : false;
                     self._sentinelTimeIsNearEnd = self._isNearToEnd(newTime ? newTime : self._timeAtLastSenintelInterval);
 
                     for (var i = 0; i < sentinels.length; i++) {
-                        sentinels[i].call(self);
+                        var sentinelActionPerformed = sentinels[i].call(self);
+                        if (sentinelActionPerformed) break;
                     }
 
                     self._timeAtLastSenintelInterval = newTime;
@@ -495,45 +498,56 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                if(!this._timeHasAdvanced && !this._sentinelTimeIsNearEnd) {
-                    RuntimeContext.getDevice().getLogger().debug('Enter buffering sentinel activated');
+                var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd && (this._sentinelIntervalNumber > 1);
+                if(sentinelBufferingRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                 }
+                return sentinelBufferingRequired;
             },
 
             _exitBufferingSentinel: function() {
-                if(this._timeHasAdvanced) {
-                    RuntimeContext.getDevice().getLogger().debug('Exit buffering sentinel activated');
+                var sentinelExitBufferingRequired = this._timeHasAdvanced;
+                if(sentinelExitBufferingRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._onFinishedBuffering();
                 }
+                return sentinelExitBufferingRequired;
             },
 
             _shouldBeSeekedSentinel: function() {
                 var SEEK_TOLERANCE = 15;
                 var currentTime = this.getCurrentTime();
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
-                if(Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE){
+
+                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
+
+                if (sentinelSeekRequired) {
                     this._mediaElement.seek(clampedSentinelSeekTime * 1000);
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                 } else {
                     this._sentinelSeekTime = currentTime;
                 }
+
+                return sentinelSeekRequired;
             },
 
             _shouldBePausedSentinel: function() {
-                if(this._timeHasAdvanced) {
+                var sentinelPauseRequired = this._timeHasAdvanced;
+                if(sentinelPauseRequired) {
                     this._mediaElement.play(0);
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
                 }
+                return sentinelPauseRequired;
             },
 
             _enterCompleteSentinel: function() {
-                if(!this._timeHasAdvanced && this._sentinelTimeIsNearEnd) {
+                var sentinelCompleteRequired = !this._timeHasAdvanced && this._sentinelTimeIsNearEnd;
+                if(sentinelCompleteRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
                 }
+                return sentinelCompleteRequired;
             }
         });
 
