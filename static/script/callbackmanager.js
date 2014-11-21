@@ -29,6 +29,8 @@ require.def('antie/callbackmanager',
         'antie/class'
     ],
     function(Class) {
+        'use strict';
+
         /**
          * Utility class to deal with adding/removing callbacks and calling all current callbacks.
          * @name antie.CallbackManager
