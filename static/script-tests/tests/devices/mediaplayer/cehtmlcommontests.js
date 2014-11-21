@@ -639,8 +639,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testGoesToBufferingAndSentinelEventFiredWhenDeviceBufferingAndNoBufferingEventFired = function(queue) {
-        expectAsserts(2);
+    mixins.testGoesToBufferingAndSentinelEventFiredOnSecondSentinelIntervalWhenDeviceBufferingAndNoBufferingEventFired = function(queue) {
+        expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
@@ -651,7 +651,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
             clock.tick(1100);
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
 
+            clock.tick(1100);
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
