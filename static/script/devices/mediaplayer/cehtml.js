@@ -58,6 +58,7 @@ require.def(
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
+                    this._timeAtLastSenintelInterval = 0;
                     this._createElement();
                     this._registerEventHandlers();
                     this._addElementToDOM();
@@ -92,6 +93,7 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
+                this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
@@ -133,7 +135,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function(seconds) {
+            beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -178,6 +180,7 @@ require.def(
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._sentinelSeekTime = undefined;
                         this._mediaElement.stop();
                         this._toStopped();
                         break;
@@ -313,7 +316,6 @@ require.def(
                 this._mediaElement.style.left = "0px";
                 this._mediaElement.style.width = "100%";
                 this._mediaElement.style.height = "100%";
-                //this._mediaElement.setFullScreen(true);
             },
 
             _registerEventHandlers: function() {
@@ -346,7 +348,7 @@ require.def(
                     }
                 }
 
-                this._updateInterval = window.setInterval(function() {
+                this._updateInterval = setInterval(function() {
                     self._onStatus();
                 }, DEVICE_UPDATE_PERIOD_MS);
             },
@@ -395,8 +397,10 @@ require.def(
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
+                this._sentinelSeekTime = undefined;
                 if(this._mediaElement) {
-                    window.clearInterval(this._updateInterval);
+                    clearInterval(this._updateInterval);
+                    this._clearSentinels();
                     this._destroyMediaElement();
                 }
             },
@@ -416,26 +420,40 @@ require.def(
             _toStopped: function () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
+                if (this._sentinelInterval) {
+                    this._clearSentinels();
+                }
             },
 
             _toBuffering: function () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+                this._setSentinels([this._exitBufferingSentinel]);
             },
 
             _toPlaying: function () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
+                this._setSentinels([
+                    this._shouldBeSeekedSentinel,
+                    this._enterCompleteSentinel,
+                    this._enterBufferingSentinel
+                ]);
             },
 
             _toPaused: function () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
+                this._setSentinels([
+                    this._shouldBePausedSentinel,
+                    this._shouldBeSeekedSentinel
+                ]);
             },
 
             _toComplete: function () {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
+                this._clearSentinels();
             },
 
             _toEmpty: function () {
@@ -447,6 +465,89 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
+            },
+
+            _isNearToEnd: function(seconds) {
+                return (this.getRange().end - seconds <= 1);
+            },
+
+            _setSentinels: function(sentinels) {
+                var self = this;
+                this._timeAtLastSenintelInterval = this.getCurrentTime();
+                this._clearSentinels();
+                this._sentinelIntervalNumber = 0;
+                this._sentinelInterval = setInterval(function() {
+                    var newTime = self.getCurrentTime();
+                    self._sentinelIntervalNumber++;
+
+                    self._timeHasAdvanced = newTime ? (newTime > (self._timeAtLastSenintelInterval + 0.2)) : false;
+                    self._sentinelTimeIsNearEnd = self._isNearToEnd(newTime ? newTime : self._timeAtLastSenintelInterval);
+
+                    for (var i = 0; i < sentinels.length; i++) {
+                        var sentinelActionPerformed = sentinels[i].call(self);
+                        if (sentinelActionPerformed) break;
+                    }
+
+                    self._timeAtLastSenintelInterval = newTime;
+
+                }, 1100);
+            },
+
+            _clearSentinels: function() {
+                clearInterval(this._sentinelInterval);
+            },
+
+            _enterBufferingSentinel: function() {
+                var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd && (this._sentinelIntervalNumber > 1);
+                if(sentinelBufferingRequired) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+                    this._toBuffering();
+                }
+                return sentinelBufferingRequired;
+            },
+
+            _exitBufferingSentinel: function() {
+                var sentinelExitBufferingRequired = this._timeHasAdvanced;
+                if(sentinelExitBufferingRequired) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+                    this._onFinishedBuffering();
+                }
+                return sentinelExitBufferingRequired;
+            },
+
+            _shouldBeSeekedSentinel: function() {
+                var SEEK_TOLERANCE = 15;
+                var currentTime = this.getCurrentTime();
+                var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
+
+                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
+
+                if (sentinelSeekRequired) {
+                    this._mediaElement.seek(clampedSentinelSeekTime * 1000);
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                } else {
+                    this._sentinelSeekTime = currentTime;
+                }
+
+                return sentinelSeekRequired;
+            },
+
+            _shouldBePausedSentinel: function() {
+                var sentinelPauseRequired = this._timeHasAdvanced;
+                if(sentinelPauseRequired) {
+                    this._mediaElement.play(0);
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                }
+                return sentinelPauseRequired;
+            },
+
+            _enterCompleteSentinel: function() {
+                var sentinelCompleteRequired = !this._timeHasAdvanced && this._sentinelTimeIsNearEnd;
+                if(sentinelCompleteRequired) {
+                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
+                    this._onEndOfMedia();
+                }
+                return sentinelCompleteRequired;
             }
         });
 
