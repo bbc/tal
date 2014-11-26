@@ -294,7 +294,9 @@ require.def("antie/devices/browserdevice",
              * @param {Element} el The element you are removing the content from.
              */
             clearElement: function(el) {
-                el.innerHTML = "";
+                for (var i = el.childNodes.length - 1; i >= 0; i--) {
+                    el.removeChild(el.childNodes[i]);
+                };
             },
             /**
              * Sets the classes of an element.
