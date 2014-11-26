@@ -425,6 +425,10 @@ require.def("antie/devices/browserdevice",
              * @param {String} content The new content for the element.
              */
             setElementContent: function(el, content) {
+                if (content === "") {
+                    this.clearElement(el);
+                    return;
+                }
                 el.innerHTML = content;
             },
             /**
