@@ -360,7 +360,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekableRangeTakesPrecedenceOverDurationOnMediaElement = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -369,11 +369,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             stubCreateElementResults.video.seekable.end.returns(30);
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 10, end: 30 }, self._mediaPlayer.getRange());
+            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
     mixins.testGetRangeGetsEndTimeFromDurationWhenNoSeekableProperty = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -381,6 +382,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             delete stubCreateElementResults.video.seekable;
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getRange());
+            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
