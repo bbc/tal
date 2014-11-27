@@ -21,6 +21,13 @@ require(
                 expect(el.firstChild.data).toEqual(string);
             });
 
+            it('clears all child nodes', function() {
+                var string = "",
+                    sanitizer = new Sanitizer(string);
+                sanitizer.appendToElement(el);
+                expect(el.childNodes.length).toEqual(0);
+            });
+
             it ('returns strips out tags that are not part of the whitelist', function () {
                  var string = "<script>my string</script>",
                      sanitizer = new Sanitizer(string);

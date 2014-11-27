@@ -32,9 +32,14 @@ require.def('antie/sanitisers/whitelisted',
 
         appendToElement: function (el) {
             var dom = this._createDom();
-            el.innerHTML = '';
-
+            this._clearElement(el);
             this._processDomElement(dom.firstChild, el);
+        },
+
+        _clearElement: function(el) {
+            for (var i = el.childNodes.length - 1; i >= 0; i--) {
+                el.removeChild(el.childNodes[i]);
+            }
         },
 
         _createDom: function () {
