@@ -255,7 +255,24 @@ require.def(
 
                     default:
                         return this._range;
-                };
+                }
+                return undefined;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getDuration: function() {
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        if (this._range) {
+                            return this._range.end;
+                        }
+                }
                 return undefined;
             },
 

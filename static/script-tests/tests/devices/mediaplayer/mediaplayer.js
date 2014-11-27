@@ -62,6 +62,7 @@
             getMimeType: function () { return "mime/type"; },
             getCurrentTime: function () { return currentTime; },
             getRange: function () { return range; },
+            getDuration: function () { return range.end; },
             getState: function () { return MediaPlayer.STATE.PLAYING; }
         });
     };
@@ -86,6 +87,7 @@
                 type: MediaPlayer.EVENT.STATUS,
                 currentTime: 0,
                 range: { start: 0, end: 100 },
+                duration: 100,
                 url: "url",
                 mimeType: "mime/type",
                 state: MediaPlayer.STATE.PLAYING
@@ -105,6 +107,7 @@
                 getMimeType: function () { return "mime/type2"; },
                 getCurrentTime: function () { return 2; },
                 getRange: function () { return { start: 22, end: 200 }; },
+                getDuration: function () { return 666; },
                 getState: function () { return MediaPlayer.STATE.BUFFERING; }
             });
 
@@ -119,6 +122,7 @@
                 type: MediaPlayer.EVENT.BUFFERING,
                 currentTime: 2,
                 range: { start: 22, end: 200 },
+                duration: 666,
                 url: "url2",
                 mimeType: "mime/type2",
                 state: MediaPlayer.STATE.BUFFERING
@@ -314,6 +318,10 @@
 
     this.MediaPlayerTest.prototype.testMediaPlayerGetRangeThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
         mediaPlayer.getRange();
+    });
+
+    this.MediaPlayerTest.prototype.testMediaPlayerGetDurationThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
+        mediaPlayer.getDuration();
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerGetStateThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {

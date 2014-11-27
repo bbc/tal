@@ -282,6 +282,23 @@ require.def(
                 return undefined;
             },
 
+            /**
+             * @inheritDoc
+             */
+            getDuration: function() {
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        if (this._mediaElement) {
+                            return this._mediaElement.duration;
+                        }
+                }
+                return undefined;
+            },
+
             _getSeekableRange: function() {
                 if (this._mediaElement) {
                     if (this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {

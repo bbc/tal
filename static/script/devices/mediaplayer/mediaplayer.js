@@ -91,6 +91,7 @@ require.def(
                     type: eventType,
                     currentTime: this.getCurrentTime(),
                     range: this.getRange(),
+                    duration: this.getDuration(),
                     url: this.getSource(),
                     mimeType: this.getMimeType(),
                     state: this.getState()
