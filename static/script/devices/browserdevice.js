@@ -32,7 +32,7 @@ require.def("antie/devices/browserdevice",
         "antie/historian",
         "antie/sanitiser"
     ],
-    function(Device, KeyEvent, Historian, Sanitizer) {
+    function(Device, KeyEvent, Historian, Sanitiser) {
         'use strict';
 
         function trim(str) {
@@ -424,8 +424,8 @@ require.def("antie/devices/browserdevice",
              * @param {String} content The new content for the element.
              */
             setElementContent: function(el, content) {
-                var sanitizer = new Sanitizer(content);
-                sanitizer.appendToElement(el);
+                var sanitiser = new Sanitiser(content);
+                sanitiser.appendToElement(el);
             },
             /**
              * Clones an element.
