@@ -1107,6 +1107,23 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelDoesNotReseekToInitialSeekTimeAfter15sWhenPlaybackLeavesSeekableRange = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 95);
+
+            clearEvents(self);
+            for (var i = 0; i < 20; i++) {
+                advancePlayTime(self);
+                fireSentinels(self);
+            }
+
+            assertNoEvents(self);
+            assertEquals(115, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testSeekSentinelSetsCurrentTimeWhenPaused = function(queue) {
         expectAsserts(2);
         var self = this;
