@@ -30,7 +30,7 @@ require.def("antie/devices/browserdevice",
         "antie/devices/device",
         "antie/events/keyevent",
         "antie/historian",
-        "antie/sanitiser"
+        "antie/devices/sanitiser"
     ],
     function(Device, KeyEvent, Historian, Sanitiser) {
         'use strict';

@@ -23,8 +23,8 @@
  */
  require(
     [
-        'antie/sanitiser',
-        'antie/sanitisers/whitelisted'
+        'antie/devices/sanitiser',
+        'antie/devices/sanitisers/whitelisted'
     ],
     function(Sanitiser) {
         "use strict";

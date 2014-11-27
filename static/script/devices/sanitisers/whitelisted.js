@@ -23,8 +23,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
- require.def('antie/sanitisers/whitelisted', 
-    ['antie/sanitiser'],
+ require.def('antie/devices/sanitisers/whitelisted', 
+    ['antie/devices/sanitiser'],
     function (Sanitiser) {
 
     'use strict';
