@@ -234,7 +234,6 @@ require.def(
                         if (this._range) {
                             return this._range.end;
                         }
-                        break;
 
                     default:
                         if (this._mediaElement) {
@@ -256,7 +255,7 @@ require.def(
 
                     default:
                         return this._range;
-                }
+                };
                 return undefined;
             },
 
