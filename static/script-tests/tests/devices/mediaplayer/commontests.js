@@ -145,7 +145,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     var makeApiCallCausesErrorTest = function (setup, apiCall) {
         var test = function (queue) {
-            expectAsserts(9);
+            expectAsserts(10);
             doTest(this, queue, function (MediaPlayer) {
                 setup.call(this, MediaPlayer);
                 this._mediaPlayer[apiCall]();
@@ -238,7 +238,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingResetInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "reset");
 
     mixins.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToEmptyState.call(this, MediaPlayer);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
@@ -353,7 +353,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testTimePassingDoesNotCauseStatusEventToBeSentInBufferingState = makeTimePassingDoesNotCauseStatusEventTest(getToBufferingState);
 
     mixins.testWhenBufferingFinishesAndNoFurtherApiCallsThenWeGoToPlayingState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -372,7 +372,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenPauseCalledAndBufferingFinishesThenWeGoToPausedState = function (queue) {
-        expectAsserts(10);
+        expectAsserts(11);
         doTest(this, queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
             this._mediaPlayer.pause();
@@ -394,7 +394,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
 
     mixins.testWhenPauseThenResumeCalledBeforeBufferingFinishesThenWeGoToPlayingState = function (queue) {
-        expectAsserts(10);
+        expectAsserts(11);
         doTest(this, queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
             this._mediaPlayer.pause();
@@ -416,7 +416,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenPlayFromMiddleOfMediaAndBufferingFinishesThenWeGoToPlayingFromSpecifiedPoint = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
             this._mediaPlayer.playFrom(50);
@@ -437,7 +437,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testCallingStopInBufferingStateGoesToStoppedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToBufferingState.call(this, MediaPlayer);
             this._mediaPlayer.stop();
@@ -481,7 +481,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testGetMimeTypeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getMimeType", "testMimeType");
     mixins.testGetCurrentTimeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getCurrentTime", 0);
     mixins.testGetRangeReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getRange", { start: 0, end: 100 });
-    mixins.testGetDurationReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getDuration", { start: 0, end: 100 });
+    mixins.testGetDurationReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getDuration", 100);
 
     mixins.testCallingSetSourceInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "setSource");
     mixins.testCallingResetInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "reset");
@@ -512,7 +512,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenCallingPauseWhilePlayingGoesToPausedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             this._mediaPlayer.pause();
@@ -530,7 +530,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenCallingStopWhilePlayingGoesToStoppedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             this._mediaPlayer.stop();
@@ -548,7 +548,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenMediaFinishesWhenPlayingThenGoesToCompleteState = function (queue) {
-        expectAsserts(8);
+        expectAsserts(9);
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
@@ -566,7 +566,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenBufferingStartsWhilePlayingGoesToBufferingState = function (queue) {
-        expectAsserts(10);
+        expectAsserts(11);
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             deviceMockingHooks.startBuffering(this._mediaPlayer);
@@ -587,7 +587,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testGetRegularStatusEventWhenPlaying = function (queue) {
-        expectAsserts(8);
+        expectAsserts(9);
         doTest(this, queue, function (MediaPlayer) {
             getToPlayingState.call(this, MediaPlayer);
             var originalCount = this.eventCallback.callCount;
@@ -639,7 +639,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testTimePassingDoesNotCauseStatusEventToBeSentInPausedState = makeTimePassingDoesNotCauseStatusEventTest(getToPausedState);
 
     mixins.testWhenCallingResumeWhilePausedGoesToPlayingState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToPausedState.call(this, MediaPlayer);
             this._mediaPlayer.resume();
@@ -677,7 +677,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenCallingStopWhilePausedGoesToStoppedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToPausedState.call(this, MediaPlayer);
             this._mediaPlayer.stop();
@@ -735,7 +735,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testCallingStopInCompleteStateGoesToStoppedState = function (queue) {
-        expectAsserts(9);
+        expectAsserts(10);
         doTest(this, queue, function (MediaPlayer) {
             getToCompleteState.call(this, MediaPlayer);
             this._mediaPlayer.stop();
