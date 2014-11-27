@@ -476,8 +476,10 @@ require.def(
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
                 this._clearSentinels();
+                this._sentinelIntervalNumber = 0;
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
+                    self._sentinelIntervalNumber++;
 
                     self._timeHasAdvanced = newTime ? (newTime > (self._timeAtLastSenintelInterval + 0.2)) : false;
                     self._sentinelTimeIsNearEnd = self._isNearToEnd(newTime ? newTime : self._timeAtLastSenintelInterval);
@@ -497,7 +499,7 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd;
+                var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd && (this._sentinelIntervalNumber > 1);
                 if(sentinelBufferingRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();

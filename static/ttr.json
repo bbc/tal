@@ -25,6 +25,7 @@
         {
             "include" : [ "script-tests/tests/**/*.js" ],
             "exclude" : [
+                "script-tests/tests/devices/storage/*.js"
             ]
         },
 

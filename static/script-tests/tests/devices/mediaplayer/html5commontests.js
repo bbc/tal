@@ -947,18 +947,36 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     // Sentinels
-    mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHalts = function(queue) {
+    mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHaltsOutsideTimeToleranceOfStateChanged = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer);
+            advancePlayTime(self);
+            advancePlayTime(self);
 
             clearEvents(self);
+            fireSentinels(self);
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEvent(self, MediaPlayer.EVENT.BUFFERING);
             assertState(self, MediaPlayer.STATE.BUFFERING);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWithinTimeToleranceOfStateChanged = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+            advancePlayTime(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+            fireSentinels(self);
+
+            assertNoEvents(self);
         });
     };
 
@@ -1231,7 +1249,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testEndOfMediaSentinelDoesNotActivateIfReachEndOfMediaNormally = function(queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 100);
@@ -1288,7 +1306,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // delay between sentinels
     // Retire playbeforeseekyaddayadda sub modifier
     // Test live stream playback: make sure sentinels dont interfere!
     // Test some of the bugs
