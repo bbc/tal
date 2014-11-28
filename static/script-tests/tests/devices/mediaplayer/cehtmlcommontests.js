@@ -236,6 +236,28 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testEventHandlersAreRegisteredAfterMediaElementIsAddedToDOM = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._device.prependChildElement = function() {
+                fakeCEHTMLObject.onPlayStateChange = undefined;
+            };
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertFunction(fakeCEHTMLObject.onPlayStateChange);
+        });
+    };
+
+    mixins.testDataAttributeSetAfterMediaElementIsAddedToDOM = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._device.prependChildElement = function() {
+                fakeCEHTMLObject.data = null;
+            };
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertEquals(fakeCEHTMLObject.data,'testURL');
+        });
+    };
+
     mixins.testElementIsFullScreen = function(queue) {
         expectAsserts(6);
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {

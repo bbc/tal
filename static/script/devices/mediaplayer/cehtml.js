@@ -60,8 +60,9 @@ require.def(
                     this._mimeType = mimeType;
                     this._timeAtLastSenintelInterval = 0;
                     this._createElement();
-                    this._registerEventHandlers();
                     this._addElementToDOM();
+                    this._mediaElement.data = this._source;
+                    this._registerEventHandlers();
                     this._toStopped();
                 } else {
                     this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
@@ -310,7 +311,6 @@ require.def(
                 var device = RuntimeContext.getDevice();
                 this._mediaElement = device._createElement("object", "mediaPlayer");
                 this._mediaElement.type = this._mimeType;
-                this._mediaElement.data = this._source;
                 this._mediaElement.style.position = "absolute";
                 this._mediaElement.style.top = "0px";
                 this._mediaElement.style.left = "0px";
