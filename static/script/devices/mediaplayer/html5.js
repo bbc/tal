@@ -106,7 +106,7 @@ require.def(
             playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
-                this._sentinelSeekTime = seconds;
+
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
@@ -393,7 +393,9 @@ require.def(
             },
 
             _seekTo: function(seconds) {
-                this._mediaElement.currentTime = this._getClampedTime(seconds);
+                var clampedTime = this._getClampedTime(seconds);
+                this._mediaElement.currentTime = clampedTime;
+                this._sentinelSeekTime = clampedTime;
             },
 
             _wipe: function() {
@@ -401,6 +403,7 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
+                this._sentinelSeekTime = undefined;
                 this._clearSentinels();
                 this._destroyMediaElement();
                 this._readyToPlayFrom = false;
@@ -496,12 +499,12 @@ require.def(
             _shouldBeSeekedSentinel: function() {
                 if (this._sentinelSeekTime !== undefined) {
                     var currentTime = this.getCurrentTime();
-                    var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
-                    if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
+
+                    if(Math.abs(currentTime - this._sentinelSeekTime) > 15) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                         //this._mediaElement.play();
-                        this._mediaElement.currentTime = clampedSentinelSeekTime;
-                        this._lastSentinelTime = clampedSentinelSeekTime;
+                        this._mediaElement.currentTime = this._sentinelSeekTime;
+                        this._lastSentinelTime = this._sentinelSeekTime;
                         return true;
                     } else {
                         this._sentinelSeekTime = currentTime;
