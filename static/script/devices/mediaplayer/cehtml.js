@@ -269,7 +269,9 @@ require.def(
                         break;
 
                     default:
-                        return this._mediaElement.playTime / 1000;
+                        if (this._range) {
+                            return this._range.end;
+                        }
                 }
                 return undefined;
             },
@@ -378,7 +380,7 @@ require.def(
                 if(this._mediaElement) {
                     this._range =  {
                         start: 0,
-                        end: this.getDuration()
+                        end: this._mediaElement.playTime / 1000
                     };
                 }
             },
