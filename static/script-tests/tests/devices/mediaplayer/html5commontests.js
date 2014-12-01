@@ -1267,6 +1267,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEndOfMediaSentinelDoesNotActivateIfTimeIsNotAdvancingWhenOutsideSeekableRangeButWithinDuration = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 100);
+            stubCreateElementResults.video.duration = 150;
+
+            clearEvents(self);
+            fireAllSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertNoEvent(self, MediaPlayer.EVENT.COMPLETE);
+        });
+    };
+
     mixins.testEndOfMediaSentinelDoesNotActivateIfReachEndOfMediaNormally = function(queue) {
         expectAsserts(2);
         var self = this;

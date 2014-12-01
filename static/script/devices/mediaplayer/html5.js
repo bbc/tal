@@ -544,7 +544,7 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
-                    self._nearEndOfMedia = (self.getRange().end - (newTime || self._lastSentinelTime)) <= 1;
+                    self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
                         var sentinelActivated = sentinels[i].call(self);
