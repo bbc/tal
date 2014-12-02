@@ -415,6 +415,7 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._sentinelSeekTime = undefined;
+                this._range = undefined;
                 if(this._mediaElement) {
                     clearInterval(this._updateInterval);
                     this._clearSentinels();
