@@ -248,7 +248,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getRange: function () {
+            getSeekableRange: function () {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
@@ -485,7 +485,7 @@ require.def(
             },
 
             _isNearToEnd: function(seconds) {
-                return (this.getRange().end - seconds <= 1);
+                return (this.getDuration() - seconds <= 1);
             },
 
             _setSentinels: function(sentinels) {

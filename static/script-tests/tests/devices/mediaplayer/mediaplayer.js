@@ -61,7 +61,7 @@
             getSource: function () { return "url"; },
             getMimeType: function () { return "mime/type"; },
             getCurrentTime: function () { return currentTime; },
-            getRange: function () { return range; },
+            getSeekableRange: function () { return range; },
             getDuration: function () { return range.end; },
             getState: function () { return MediaPlayer.STATE.PLAYING; }
         });
@@ -106,7 +106,7 @@
                 getSource: function () { return "url2"; },
                 getMimeType: function () { return "mime/type2"; },
                 getCurrentTime: function () { return 2; },
-                getRange: function () { return { start: 22, end: 200 }; },
+                getSeekableRange: function () { return { start: 22, end: 200 }; },
                 getDuration: function () { return 666; },
                 getState: function () { return MediaPlayer.STATE.BUFFERING; }
             });
@@ -316,8 +316,8 @@
         mediaPlayer.getCurrentTime();
     });
 
-    this.MediaPlayerTest.prototype.testMediaPlayerGetRangeThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
-        mediaPlayer.getRange();
+    this.MediaPlayerTest.prototype.testMediaPlayerGetSeekableRangeThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
+        mediaPlayer.getSeekableRange();
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerGetDurationThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {

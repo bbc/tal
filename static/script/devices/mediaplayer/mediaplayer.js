@@ -90,7 +90,7 @@ require.def(
                 var event = {
                     type: eventType,
                     currentTime: this.getCurrentTime(),
-                    range: this.getRange(),
+                    range: this.getSeekableRange(),
                     duration: this.getDuration(),
                     url: this.getSource(),
                     mimeType: this.getMimeType(),
@@ -112,7 +112,7 @@ require.def(
              * @protected
              */
             _getClampedTime: function(seconds) {
-                var range = this.getRange();
+                var range = this.getSeekableRange();
                 var offsetFromEnd = this._getClampOffsetFromConfig();
                 var nearToEnd = Math.max(range.end - offsetFromEnd, range.start);
                 if (seconds < range.start) {
@@ -255,8 +255,8 @@ require.def(
             * If no range is available, this returns undefined.
             * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
             */
-            getRange: function () {
-                throw new Error("getRange method has not been implemented");
+            getSeekableRange: function () {
+                throw new Error("getSeekableRange method has not been implemented");
             },
 
             /**
