@@ -217,12 +217,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         assertEquals(MediaPlayer.STATE.EMPTY, this._mediaPlayer.getState());
     };
 
-    var getToEmptyStateViaReset = function (MediaPlayer) {
-        getToPlayingState.call(this, MediaPlayer);
-        this._mediaPlayer.stop();
-        this._mediaPlayer.reset();
-    };
-
     mixins.testMediaPlayerStartsInEmptyState = function (queue) {
         expectAsserts(1);
         doTest(this, queue, function (MediaPlayer) {
@@ -235,12 +229,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testGetCurrentTimeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getCurrentTime");
     mixins.testGetRangeReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getRange");
     mixins.testGetDurationReturnsUndefinedInEmptyState = makeGetMethodReturnsUndefinedTest(getToEmptyState, "getDuration");
-
-    mixins.testGetSourceReturnsUndefinedInEmptyStateAfterReset = makeGetMethodReturnsUndefinedTest(getToEmptyStateViaReset, "getSource");
-    mixins.testGetMimeTypeReturnsUndefinedInEmptyStateAfterReset = makeGetMethodReturnsUndefinedTest(getToEmptyStateViaReset, "getMimeType");
-    mixins.testGetCurrentTimeReturnsUndefinedInEmptyStateAfterReset = makeGetMethodReturnsUndefinedTest(getToEmptyStateViaReset, "getCurrentTime");
-    mixins.testGetSeekableRangeReturnsUndefinedInEmptyStateAfterReset = makeGetMethodReturnsUndefinedTest(getToEmptyStateViaReset, "getSeekableRange");
-    mixins.testGetDurationReturnsUndefinedInEmptyStateAfterReset = makeGetMethodReturnsUndefinedTest(getToEmptyStateViaReset, "getDuration");
 
     mixins.testCallingPlayFromInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "playFrom");
     mixins.testCallingBeginPlaybackInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "beginPlayback");
