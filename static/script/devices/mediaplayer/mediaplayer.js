@@ -91,6 +91,7 @@ require.def(
                     type: eventType,
                     currentTime: this.getCurrentTime(),
                     range: this.getRange(),
+                    duration: this.getDuration(),
                     url: this.getSource(),
                     mimeType: this.getMimeType(),
                     state: this.getState()
@@ -245,17 +246,28 @@ require.def(
             },
 
             /**
-            * Get the available range of media.
+            * Get the available seekable range of media.
             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
-            * For VOD playback, 'start' is zero and 'end' is the media duration.
+            * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
             * For live playback, 'end' is the current live time.
             * For live playback, both 'start' and 'end' may advance over time.
-            * If no range is available, then this returns an object with 'start' and 'end' properties which both have the value undefined.
-            * @return {Object} Object with 'start' and 'end' numeric properties.
+            * If no range is available, this returns undefined.
+            * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
             */
             getRange: function () {
                 throw new Error("getRange method has not been implemented");
+            },
+
+            /**
+             * Get the duration of the media in seconds.
+             * For VOD playback, this is the duration of the media.
+             * For Live playback, this is positive Infinity.
+             * If no duration is available, this returns undefined.
+             * @return {Number} Duration of media in seconds, or Infinity, or undefined.
+             */
+            getDuration: function() {
+                throw new Error("getDuration method has not been implemented");
             },
 
             /**

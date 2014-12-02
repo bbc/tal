@@ -260,6 +260,16 @@ require.def(
             },
 
             /**
+             * @inheritDoc
+             */
+            getDuration: function() {
+                if (this._range) {
+                    return this._range.end;
+                }
+                return undefined;
+            },
+
+            /**
             * @inheritDoc
             */
             getState: function () {

@@ -106,7 +106,7 @@ require.def(
             playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
-                this._sentinelSeekTime = seconds;
+
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
@@ -282,6 +282,23 @@ require.def(
                 return undefined;
             },
 
+            /**
+             * @inheritDoc
+             */
+            getDuration: function() {
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        break;
+
+                    default:
+                        if (this._mediaElement) {
+                            return this._mediaElement.duration;
+                        }
+                }
+                return undefined;
+            },
+
             _getSeekableRange: function() {
                 if (this._mediaElement) {
                     if (this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
@@ -376,7 +393,9 @@ require.def(
             },
 
             _seekTo: function(seconds) {
-                this._mediaElement.currentTime = this._getClampedTime(seconds);
+                var clampedTime = this._getClampedTime(seconds);
+                this._mediaElement.currentTime = clampedTime;
+                this._sentinelSeekTime = clampedTime;
             },
 
             _wipe: function() {
@@ -384,6 +403,7 @@ require.def(
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._targetSeekTime = undefined;
+                this._sentinelSeekTime = undefined;
                 this._clearSentinels();
                 this._destroyMediaElement();
                 this._readyToPlayFrom = false;
@@ -479,12 +499,12 @@ require.def(
             _shouldBeSeekedSentinel: function() {
                 if (this._sentinelSeekTime !== undefined) {
                     var currentTime = this.getCurrentTime();
-                    var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
-                    if(Math.abs(currentTime - clampedSentinelSeekTime) > 15) {
+
+                    if(Math.abs(currentTime - this._sentinelSeekTime) > 15) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                         //this._mediaElement.play();
-                        this._mediaElement.currentTime = clampedSentinelSeekTime;
-                        this._lastSentinelTime = clampedSentinelSeekTime;
+                        this._mediaElement.currentTime = this._sentinelSeekTime;
+                        this._lastSentinelTime = this._sentinelSeekTime;
                         return true;
                     } else {
                         this._sentinelSeekTime = currentTime;
@@ -524,7 +544,7 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
-                    self._nearEndOfMedia = (self.getRange().end - (newTime || self._lastSentinelTime)) <= 1;
+                    self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
                         var sentinelActivated = sentinels[i].call(self);

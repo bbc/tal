@@ -360,7 +360,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekableRangeTakesPrecedenceOverDurationOnMediaElement = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -369,11 +369,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             stubCreateElementResults.video.seekable.end.returns(30);
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 10, end: 30 }, self._mediaPlayer.getRange());
+            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
     mixins.testGetRangeGetsEndTimeFromDurationWhenNoSeekableProperty = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -381,6 +382,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             delete stubCreateElementResults.video.seekable;
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getRange());
+            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
@@ -1105,6 +1107,23 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelDoesNotReseekToInitialSeekTimeAfter15sWhenPlaybackLeavesSeekableRange = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 95);
+
+            clearEvents(self);
+            for (var i = 0; i < 20; i++) {
+                advancePlayTime(self);
+                fireSentinels(self);
+            }
+
+            assertNoEvents(self);
+            assertEquals(115, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testSeekSentinelSetsCurrentTimeWhenPaused = function(queue) {
         expectAsserts(2);
         var self = this;
@@ -1239,6 +1258,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 98);
+
+            clearEvents(self);
+            fireAllSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+            assertNoEvent(self, MediaPlayer.EVENT.COMPLETE);
+        });
+    };
+
+    mixins.testEndOfMediaSentinelDoesNotActivateIfTimeIsNotAdvancingWhenOutsideSeekableRangeButWithinDuration = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 100);
+            stubCreateElementResults.video.duration = 150;
 
             clearEvents(self);
             fireAllSentinels(self);
