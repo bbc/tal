@@ -105,7 +105,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         assertLatestEvent(self, {
             state: MediaPlayer.STATE.ERROR,
             currentTime: undefined,
-                seekableRange: undefined,
+            seekableRange: undefined,
             duration: undefined,
             url: undefined,
             mimeType: undefined,
