@@ -48,6 +48,10 @@ require.def(
         var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.html5memoryleakunfix.prototype */ {
             init: function() {
                 this._super();
+            },
+
+            _unloadMediaSrc: function() {
+                // Do nothing for this sub-modifier.
             }
         });
 

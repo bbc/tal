@@ -28,7 +28,31 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5memoryleakunfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    // Mixin the common tests shared by all HTML5 MediaPlayer implementations
+    // ---------------
+    // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
+    // ---------------
     window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5MemoryLeakUnfixMediaPlayerTests, "antie/devices/mediaplayer/html5memoryleakunfix", config);
 
+    // ---------------
+    // Remove tests that are irrelevant for this sub-modifier.
+    // ---------------
+    delete this.HTML5MemoryLeakUnfixMediaPlayerTests.prototype.testResetUnloadsMediaElementSourceAsPerGuidelines;
+
+    // ---------------
+    // Additional tests for this sub-modifier.
+    // ---------------
+    this.HTML5MemoryLeakUnfixMediaPlayerTests.prototype.testResetDoesNotUnloadMediaElementSourceAsPerNormalHtml5Guidelines = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self.stubCreateElementResults.video.load.reset();
+            self.sandbox.stub(self.stubCreateElementResults.video, 'removeAttribute');
+
+            self._mediaPlayer.reset();
+
+            assert(self.stubCreateElementResults.video.removeAttribute.withArgs('src').notCalled);
+            assert(self.stubCreateElementResults.video.load.notCalled);
+        });
+    };
 })();
