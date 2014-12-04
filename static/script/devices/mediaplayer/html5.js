@@ -301,7 +301,7 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    if (this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
+                    if (this._readyToPlayFrom && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
                         return {
                             start: this._mediaElement.seekable.start(0),
                             end: this._mediaElement.seekable.end(0)

@@ -59,7 +59,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 var media = mediaElements[i];
                 media.duration = range.end;
                 media.currentTime = currentTime;
-                media.seekable.start.returns(0);
+                media.seekable.start.returns(range.start);
                 media.seekable.end.returns(range.end);
             }
             mediaEventListeners.loadedmetadata();
@@ -365,11 +365,24 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.playFrom(0);
-            stubCreateElementResults.video.seekable.start.returns(10);
-            stubCreateElementResults.video.seekable.end.returns(30);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 10, end: 30 });
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 10, end: 30 }, self._mediaPlayer.getRange());
             assertEquals(60, self._mediaPlayer.getDuration());
+        });
+    };
+
+    mixins.testSeekableIsNotUsedUntilMetadataIsSet = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            stubCreateElementResults.video.seekable.start.returns(0);
+            stubCreateElementResults.video.seekable.end.returns(100);
+            assertUndefined(self._mediaPlayer.getRange());
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            assertEquals({ start: 0, end: 100 }, self._mediaPlayer.getRange());
         });
     };
 
@@ -404,8 +417,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.playFrom(0);
-            stubCreateElementResults.video.seekable.start.withArgs(0).returns(0);
-            stubCreateElementResults.video.seekable.end.withArgs(0).returns(60);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             stubCreateElementResults.video.seekable.start.withArgs(1).returns(333);
             stubCreateElementResults.video.seekable.end.withArgs(1).returns(666);
 
