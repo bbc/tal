@@ -90,7 +90,7 @@ require.def(
                 var event = {
                     type: eventType,
                     currentTime: this.getCurrentTime(),
-                    range: this.getSeekableRange(),
+                    seekableRange: this.getSeekableRange(),
                     duration: this.getDuration(),
                     url: this.getSource(),
                     mimeType: this.getMimeType(),

@@ -105,7 +105,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         assertLatestEvent(self, {
             state: MediaPlayer.STATE.ERROR,
             currentTime: undefined,
-            range: undefined,
+                seekableRange: undefined,
             duration: undefined,
             url: undefined,
             mimeType: undefined,
@@ -258,7 +258,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
-                range: undefined,
+                seekableRange: undefined,
                 duration: undefined,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -374,7 +374,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PLAYING,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -395,7 +395,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PAUSED,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -418,7 +418,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PLAYING,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -439,7 +439,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PLAYING,
                 currentTime: 50,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -457,7 +457,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
-                range: undefined,
+                seekableRange: undefined,
                 duration: undefined,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -532,7 +532,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PAUSED,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -550,7 +550,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
-                range: undefined,
+                seekableRange: undefined,
                 duration: undefined,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -568,7 +568,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.COMPLETE,
                 // Availability of currentTime at this point is device-specific.
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -586,7 +586,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.BUFFERING,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -607,7 +607,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PLAYING,
                 // Cannot test current time as it will be updating
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -659,7 +659,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.PLAYING,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -697,7 +697,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
-                range: undefined,
+                seekableRange: undefined,
                 duration: undefined,
                 url: "testUrl",
                 mimeType: "testMimeType",
@@ -755,7 +755,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             assertLatestEvent(this, {
                 state: MediaPlayer.STATE.STOPPED,
                 currentTime: undefined,
-                range: undefined,
+                seekableRange: undefined,
                 duration: undefined,
                 url: "testUrl",
                 mimeType: "testMimeType",

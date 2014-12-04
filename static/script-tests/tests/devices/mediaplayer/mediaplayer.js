@@ -86,7 +86,7 @@
             assert(callback.calledWith({
                 type: MediaPlayer.EVENT.STATUS,
                 currentTime: 0,
-                range: { start: 0, end: 100 },
+                seekableRange: { start: 0, end: 100 },
                 duration: 100,
                 url: "url",
                 mimeType: "mime/type",
@@ -121,7 +121,7 @@
             assert(callback.calledWith({
                 type: MediaPlayer.EVENT.BUFFERING,
                 currentTime: 2,
-                range: { start: 22, end: 200 },
+                seekableRange: { start: 22, end: 200 },
                 duration: 666,
                 url: "url2",
                 mimeType: "mime/type2",
