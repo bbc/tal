@@ -380,9 +380,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(0);
             stubCreateElementResults.video.seekable.start.returns(0);
             stubCreateElementResults.video.seekable.end.returns(100);
-            assertUndefined(self._mediaPlayer.getRange());
+            assertUndefined(self._mediaPlayer.getSeekableRange());
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            assertEquals({ start: 0, end: 100 }, self._mediaPlayer.getRange());
+            assertEquals({ start: 0, end: 100 }, self._mediaPlayer.getSeekableRange());
         });
     };
 
