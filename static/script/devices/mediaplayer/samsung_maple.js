@@ -255,7 +255,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getRange: function () {
+            getSeekableRange: function () {
                 return this._range;
             },
 
