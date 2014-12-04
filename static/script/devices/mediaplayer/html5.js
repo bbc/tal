@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch native external media players
+ * @fileOverview Requirejs module containing device modifier for HTML5 media playback
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
