@@ -270,7 +270,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getRange: function() {
+            getSeekableRange: function() {
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
