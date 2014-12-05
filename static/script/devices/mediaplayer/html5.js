@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch native external media players
+ * @fileOverview Requirejs module containing device modifier for HTML5 media playback
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -420,14 +420,18 @@ require.def(
                     this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
 
-                    this._mediaElement.removeAttribute('src');
-                    this._mediaElement.load();
+                    this._unloadMediaSrc();
 
                     var device = RuntimeContext.getDevice();
                     device.removeElement(this._mediaElement);
 
                     delete this._mediaElement;
                 }
+            },
+
+            _unloadMediaSrc: function() {
+                this._mediaElement.removeAttribute('src');
+                this._mediaElement.load();
             },
 
             _reportError: function(errorMessage) {
