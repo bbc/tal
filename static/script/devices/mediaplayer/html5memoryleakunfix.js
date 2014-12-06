@@ -1,6 +1,6 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch HTML5 media player,
- * including a fix for devices that emit an error event when media playback completes.
+ * @fileOverview Requirejs module containing device modifier for HTML5 media playback
+ * on devices clearing src on teardown causes problems.
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -26,21 +26,32 @@
  */
 
 require.def(
-    // TODO: Use underscores?
-    "antie/devices/mediaplayer/cehtmlplaybeforeseekwhenplayfrompaused",
+    "antie/devices/mediaplayer/html5memoryleakunfix",
     [
-        "antie/devices/mediaplayer/cehtml",
-        "antie/devices/mediaplayer/mediaplayer",
+        "antie/devices/mediaplayer/html5",
         "antie/devices/device"
     ],
-    function(CEHTMLMediaPlayer, MediaPlayer, Device) {
+    function(HTML5MediaPlayer, Device) {
         "use strict";
 
-        var Player = CEHTMLMediaPlayer.extend({
+        /**
+         * Main MediaPlayer implementation for HTML5 devices where unsetting src during teardown
+         * causes problems.
+         * Use this device modifier if a device implements the HTML5 media playback standard but
+         * crashes or becomes unresponsive on teardown.
+         * It must support creation of <video> and <audio> elements, and those objects must expose an
+         * API in accordance with the HTML5 media specification.
+         * @name antie.devices.mediaplayer.html5memoryleakunfix
+         * @class
+         * @extends antie.devices.mediaplayer.html5.prototype
+         */
+        var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.html5memoryleakunfix.prototype */ {
+            init: function() {
+                this._super();
+            },
 
-            _seekAndPlayFromPaused: function(seconds) {
-                this._mediaElement.play(1);
-                this._mediaElement.seek(seconds);
+            _unloadMediaSrc: function() {
+                // Do nothing for this sub-modifier.
             }
         });
 
@@ -53,5 +64,4 @@ require.def(
 
         return Player;
     }
-
 );

@@ -45,7 +45,6 @@ var unloadRequire;
 			}
 		}
 	};
-
 })();
 
 
@@ -79,12 +78,14 @@ TestCase = function (description, testSuiteClass) {
             it (testName, testFns[testName]);
         }
 
-	var unloadRequireAndTearDown = function () {
-		if (tearDown) {
-			tearDown();
-		}
-		unloadRequire();
-	};
+        var unloadRequireAndTearDown = function () {
+            if (tearDown) {
+                tearDown();
+            }
+
+            unloadRequire();
+            validateExpectAsserts.call(this);
+        };
 
         afterEach(unloadRequireAndTearDown);
     };
@@ -148,13 +149,25 @@ registerTestsWithJasmine = function () {
                 if (div) {
                     div.parentNode.removeChild(div);
                 }
-		unloadRequire();
+                unloadRequire();
+                validateExpectAsserts.call(this);
             });
         };
 
         describe(testSuiteName, specDefinition);
     }
 };
+
+function validateExpectAsserts() {
+    var expectedCount = window._currentExpectedAsserts;
+    if (expectedCount !== undefined) {
+        var actualCount = this.results().passedCount + this.results().failedCount;
+        if (actualCount !== expectedCount) {
+            this.fail('Expected ' + expectedCount + ' assertions, got ' + actualCount);
+        }
+        window._currentExpectedAsserts = undefined;
+    }
+}
 
 function createRunAsyncTestFunction(testFn) {
     return function () {
@@ -211,10 +224,10 @@ jasmine.Block.prototype.execute = function(onComplete) {
 
     for (fnName in otherFns) {
         if (!(fnName in this.spec)) {
-            this.spec[fnName] = otherFns[fnName];            
+            this.spec[fnName] = otherFns[fnName];
         }
     }
-    
+
     if (!jasmine.CATCH_EXCEPTIONS) {
       this.func.apply(this.spec);
     }
@@ -230,7 +243,9 @@ jasmine.Block.prototype.execute = function(onComplete) {
 
 testCase = TestCase;
 
-expectAsserts = function () {};
+expectAsserts = function(count) {
+    window._currentExpectedAsserts = count;
+};
 
 assert = function (msg, condition) {
     if (arguments.length < 2) {
@@ -337,7 +352,7 @@ assertException = function (msg, fn, error) {
         error = fn;
         fn = msg;
     }
-    
+
     expect(fn).toThrow();
 };
 
@@ -345,7 +360,7 @@ assertNoException = function (msg, fn) {
     if (arguments.length < 2) {
         fn = msg;
     }
-    
+
     expect(fn).not.toThrow();
 };
 
@@ -356,7 +371,7 @@ assertClassName = function (msg, className, element) {
     }
 
     var classes = element.className.split(" ");
-	
+
     expect(classes).toContain(className);
 };
 

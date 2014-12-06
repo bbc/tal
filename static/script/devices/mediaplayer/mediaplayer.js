@@ -90,7 +90,8 @@ require.def(
                 var event = {
                     type: eventType,
                     currentTime: this.getCurrentTime(),
-                    range: this.getRange(),
+                    seekableRange: this.getSeekableRange(),
+                    duration: this.getDuration(),
                     url: this.getSource(),
                     mimeType: this.getMimeType(),
                     state: this.getState()
@@ -111,7 +112,7 @@ require.def(
              * @protected
              */
             _getClampedTime: function(seconds) {
-                var range = this.getRange();
+                var range = this.getSeekableRange();
                 var offsetFromEnd = this._getClampOffsetFromConfig();
                 var nearToEnd = Math.max(range.end - offsetFromEnd, range.start);
                 if (seconds < range.start) {
@@ -164,6 +165,17 @@ require.def(
              */
             playFrom: function (seconds) {
                 throw new Error("playFrom method has not been implemented");
+            },
+
+            /**
+             * Begin playback of the media resource from wherever the device chooses.
+             * For On Demand assets, this will normally be the start, for Live stream assets it should be the live point
+             * but could be the start of the stream window on some devices.
+             * This function can only be called from the STOPPED state; calling it from any other state is an error.
+             * To begin playback from a specified time offset, use the playFrom function instead.
+             */
+            beginPlayback: function () {
+                throw new Error("beginPlayback method has not been implemented");
             },
 
             /**
@@ -234,17 +246,28 @@ require.def(
             },
 
             /**
-            * Get the available range of media.
+            * Get the available seekable range of media.
             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
-            * For VOD playback, 'start' is zero and 'end' is the media duration.
+            * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
             * For live playback, 'end' is the current live time.
             * For live playback, both 'start' and 'end' may advance over time.
-            * If no range is available, then this returns an object with 'start' and 'end' properties which both have the value undefined.
-            * @return {Object} Object with 'start' and 'end' numeric properties.
+            * If no range is available, this returns undefined.
+            * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
             */
-            getRange: function () {
-                throw new Error("getRange method has not been implemented");
+            getSeekableRange: function () {
+                throw new Error("getSeekableRange method has not been implemented");
+            },
+
+            /**
+             * Get the duration of the media in seconds.
+             * For VOD playback, this is the duration of the media.
+             * For Live playback, this is positive Infinity.
+             * If no duration is available, this returns undefined.
+             * @return {Number} Duration of media in seconds, or Infinity, or undefined.
+             */
+            getDuration: function() {
+                throw new Error("getDuration method has not been implemented");
             },
 
             /**
@@ -295,7 +318,13 @@ require.def(
             PAUSED:    "paused",    // Event fired when media playback pauses
             COMPLETE:  "complete",  // Event fired when media playback has reached the end of the media
             ERROR:     "error",     // Event fired when an error condition occurs
-            STATUS:    "status"     // Event fired regularly during play
+            STATUS:    "status",    // Event fired regularly during play
+            SENTINEL_ENTER_BUFFERING:  "sentinel-enter-buffering", // Event fired when a sentinel has to act because the device has started buffering but not reported it
+            SENTINEL_EXIT_BUFFERING:   "sentinel-exit-buffering",  // Event fired when a sentinel has to act because the device has finished buffering but not reported it
+            SENTINEL_PAUSE:            "sentinel-pause",           // Event fired when a sentinel has to act because the device has failed to pause when expected
+            SENTINEL_PLAY:             "sentinel-play",            // Event fired when a sentinel has to act because the device has failed to play when expected
+            SENTINEL_SEEK:             "sentinel-seek",            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
+            SENTINEL_COMPLETE:         "sentinel-complete"         // Event fired when a sentinel has to act because the device has completed the media but not reported it
         };
 
         /**

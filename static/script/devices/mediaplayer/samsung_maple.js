@@ -137,19 +137,37 @@ require.def(
 
                     case MediaPlayer.STATE.STOPPED:
                         this._setDisplayFullScreenForVideo();
-                        this._playerPlugin.ResumePlay(this._source, seekingTo);
+                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
                         this._toBuffering();
                         break;
 
                     case MediaPlayer.STATE.COMPLETE:
                         this._playerPlugin.Stop();
                         this._setDisplayFullScreenForVideo();
-                        this._playerPlugin.ResumePlay(this._source, seekingTo);
+                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
                         this._toBuffering();
                         break;
 
                     default:
                         this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
+            * @inheritDoc
+            */
+            beginPlayback: function() {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._toBuffering();
+                        this._setDisplayFullScreenForVideo();
+                        this._playerPlugin.Play(this._wrappedSource());
+                        break;
+
+                    default:
+                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
                         break;
                 }
             },
@@ -237,8 +255,18 @@ require.def(
             /**
             * @inheritDoc
             */
-            getRange: function () {
+            getSeekableRange: function () {
                 return this._range;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getDuration: function() {
+                if (this._range) {
+                    return this._range.end;
+                }
+                return undefined;
             },
 
             /**
@@ -263,7 +291,7 @@ require.def(
             },
 
             _onDeviceError: function(message) {
-                this._toError(message);
+                this._reportError(message);
             },
 
             _onDeviceBuffering: function() {
@@ -457,6 +485,25 @@ require.def(
                 }
             },
 
+            _isHlsMimeType: function () {
+                var mime = this._mimeType.toLowerCase()
+                return mime === "application/vnd.apple.mpegurl"
+                    || mime === "application/x-mpegurl";
+            },
+
+            _wrappedSource: function () {
+                var source = this._source;
+                if (this._isHlsMimeType()) {
+                    source += "|COMPONENT=HLS";
+                }
+                return source;
+            },
+
+            _reportError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
+                this._emitEvent(MediaPlayer.EVENT.ERROR);
+            },
+
             _toStopped: function () {
                 this._currentTime = 0;
                 this._range = undefined;
@@ -490,10 +537,9 @@ require.def(
             },
 
             _toError: function(errorMessage) {
-                RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._reportError(errorMessage);
             },
 
             _setDisplayFullScreenForVideo: function() {

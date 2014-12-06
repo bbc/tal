@@ -59,7 +59,7 @@
             window.SamsungMapleOnRenderError();
         },
         reachEndOfMedia: function(mediaPlayer) {
-            window.SamsungMapleOnCurrentPlayTime(mediaPlayer.getRange().end * 1000);
+            window.SamsungMapleOnCurrentPlayTime(mediaPlayer.getSeekableRange().end * 1000);
             window.SamsungMapleOnRenderingComplete();
         },
         startBuffering: function(/*mediaPlayer*/) {
@@ -82,6 +82,7 @@
             JumpForward: this.sandbox.stub(),
             Pause: this.sandbox.stub(),
             ResumePlay: this.sandbox.stub(),
+            Play: this.sandbox.stub(),
             Resume: this.sandbox.stub(),
             Stop: this.sandbox.stub(),
             SetDisplayArea: this.sandbox.stub()
@@ -155,7 +156,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnError = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnTransitionToErrorState = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -169,7 +170,7 @@
                 assertFunction("Expecting " + func + " to be a function", window[func]);
             }
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.pause();
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -225,7 +226,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnError= function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnTransiitonToErrorState = function(queue) {
         expectAsserts(listenerFunctions.length * 2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -241,7 +242,7 @@
                 assertEquals(func, playerPlugin[hook]);
             }
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.pause();
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -287,6 +288,17 @@
             this._mediaPlayer.playFrom(0);
             assert(playerPlugin.ResumePlay.calledWith('testURL', 0));
             assert(playerPlugin.ResumePlay.calledOnce);
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testPlayCalledOnDeviceWhenBeginPlaybackCalledInStoppedState = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assert(playerPlugin.Play.notCalled);
+            this._mediaPlayer.beginPlayback();
+            assert(playerPlugin.Play.calledWith('testURL'));
+            assert(playerPlugin.Play.calledOnce);
         });
     };
 
@@ -622,7 +634,7 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnError = function(queue) {
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaStoppedOnTransitionToErrorState = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -633,7 +645,7 @@
 
             assert(playerPlugin.Stop.notCalled);
 
-            deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
+            this._mediaPlayer.beginPlayback();
 
             assert(playerPlugin.Stop.calledOnce);
         });
@@ -1504,6 +1516,40 @@
             assert(playerPlugin.Pause.calledOnce);
         });
     };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppended = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "test/url", "application/vnd.apple.mpegurl");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(playerPlugin.ResumePlay.calledWith("test/url|COMPONENT=HLS", 0));
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppendedWithXMpegUrl = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "test/url", "application/x-mpegURL");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(playerPlugin.ResumePlay.calledWith("test/url|COMPONENT=HLS", 0));
+        });
+    };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testGetSourceDoesNotHaveSpecialHlsFragmentAppended = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "test/url", "application/vnd.apple.mpegurl");
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            assert(this._mediaPlayer.getSource().indexOf("|COMPONENT=HLS") === -1);
+        });
+    };
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier

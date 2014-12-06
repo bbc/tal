@@ -83,7 +83,7 @@ require.def('antie/widgets/image',
 				}
 			},
 			/**
-			 * Sets the image source URL.
+			 * Gets the image source URL.
 			 * @returns The current image source URL.
 			 */
 			getSrc: function() {

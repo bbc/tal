@@ -8,5 +8,8 @@
     	"grunt-contrib-jshint": "~0.10.0",
         "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-jasmine": "~0.5.2"
+    },
+    "dependencies": {
+        "grunt-complexity": "^0.2.0"
     }
 }
