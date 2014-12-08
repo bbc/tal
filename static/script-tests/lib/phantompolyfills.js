@@ -43,7 +43,7 @@
     Function.prototype.bind = Function.prototype.bind || function (thisObj) {
         var self = this;
         return function() {
-            return self.apply(thisObj, arguments);
+            return self.apply(thisObj);
         };
     };
 
