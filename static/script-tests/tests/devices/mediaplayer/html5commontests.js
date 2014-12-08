@@ -1352,9 +1352,63 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // Retire playbeforeseekyaddayadda sub modifier
-    // Test live stream playback: make sure sentinels dont interfere!
-    // Test some of the bugs
+    mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
+        expectAsserts(4);
+
+        function resetAdvanceTimeThenRunSentinels(self) {
+            clearEvents(self);
+            stubCreateElementResults.video.pause.reset();
+            advancePlayTime(self);
+            fireSentinels(self);
+        }
+
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetAdvanceTimeThenRunSentinels(self);
+            resetAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEvent(self, MediaPlayer.EVENT.PAUSED);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+    mixins.testPauseSentinelEmitsFailureEventAndGivesUpAfterTwoAttempts = function(queue) {
+        expectAsserts(5);
+
+        function resetAdvanceTimeThenRunSentinels(self) {
+            clearEvents(self);
+            stubCreateElementResults.video.pause.reset();
+            advancePlayTime(self);
+            fireSentinels(self);
+        }
+
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetAdvanceTimeThenRunSentinels(self);
+            resetAdvanceTimeThenRunSentinels(self);
+            resetAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
+
+            resetAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+        });
+    };
+
+    // Pause sentinel clock is reset by another call to pause()
+    // Similar tests for seek sentinel and playFrom()
 
     // *******************************************
     // ********* Mixin the functions *************

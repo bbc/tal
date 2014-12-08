@@ -34,6 +34,8 @@ require.def(
     function(RuntimeContext, Device, MediaPlayer) {
         "use strict";
 
+        var PAUSE_SENTINEL_MAX_ATTEMPTS = 2;
+
         /**
          * Main MediaPlayer implementation for HTML5 devices.
          * Use this device modifier if a device implements the HTML5 media playback standard.
@@ -157,6 +159,7 @@ require.def(
             */
             pause: function() {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                this._pauseSentinelAttempts = 0;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PAUSED:
                         break;
@@ -518,13 +521,20 @@ require.def(
             },
 
             _shouldBePausedSentinel: function() {
-                if (this._hasSentinelTimeAdvanced) {
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
-                    this._emitEvent(MediaPlayer.EVENT.PAUSED);
-                    this._mediaElement.pause();
-                    return true;
+                var sentinelRequired = this._hasSentinelTimeAdvanced;
+
+                if (sentinelRequired) {
+                    this._pauseSentinelAttempts += 1;
+                    if (this._pauseSentinelAttempts <= PAUSE_SENTINEL_MAX_ATTEMPTS) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                        this._emitEvent(MediaPlayer.EVENT.PAUSED);
+                        this._mediaElement.pause();
+                    } else if (this._pauseSentinelAttempts === PAUSE_SENTINEL_MAX_ATTEMPTS + 1) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+                    }
                 }
-                return false;
+
+                return sentinelRequired;
             },
 
             _endOfMediaSentinel: function() {
