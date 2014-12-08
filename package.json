@@ -1,6 +1,10 @@
 {
     "name": "bbc-fmtvp-tal",
     "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fmtvp/tal.git"
+    },
     "description": "Library for building applications for Connected TV devices",
     "devDependencies": {
         "grunt": "~0.4.1",
