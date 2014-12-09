@@ -1540,7 +1540,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // TODO: Consider whether getting a standard PAUSED event from the pause sentinel is valid
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
 
     // *******************************************
