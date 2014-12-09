@@ -1202,7 +1202,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1214,7 +1214,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
-            assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assert(stubCreateElementResults.video.pause.calledOnce);
             assertState(self, MediaPlayer.STATE.PAUSED);
         });
@@ -1360,7 +1359,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     }
 
     mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
 
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1371,7 +1370,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             resetThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
-            assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assertState(self, MediaPlayer.STATE.PAUSED);
             assert(stubCreateElementResults.video.pause.calledOnce);
         });
@@ -1402,7 +1400,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPauseSentinelAttemptCountIsResetByCallingPause = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1418,7 +1416,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             resetThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
-            assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assertState(self, MediaPlayer.STATE.PAUSED);
             assert(stubCreateElementResults.video.pause.calledOnce);
         });
@@ -1498,7 +1495,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelGivingUpDoesNotPreventPauseSentinelActivation = function(queue) {
-        expectAsserts(5);
+        expectAsserts(4);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 50);
@@ -1517,7 +1514,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             resetThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
-            assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assert(stubCreateElementResults.video.pause.calledOnce);
         });
     };

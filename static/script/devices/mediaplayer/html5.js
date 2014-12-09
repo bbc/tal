@@ -537,7 +537,6 @@ require.def(
                     this._pauseSentinelAttemptCount += 1;
                     if (this._pauseSentinelAttemptCount <= PAUSE_SENTINEL_MAX_ATTEMPTS) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
-                        this._emitEvent(MediaPlayer.EVENT.PAUSED);
                         this._mediaElement.pause();
                         sentinelActionTaken = true;
                     } else if (this._pauseSentinelAttemptCount === PAUSE_SENTINEL_MAX_ATTEMPTS + 1) {
