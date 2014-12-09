@@ -1491,9 +1491,33 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelAttemptCountIsResetByCallingPlayFrom = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            this._mediaPlayer.playFrom(50);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+
     // TODO: Ensure seek sentinel attempt count is reset appropriately
     // TODO: Add seek sentinel retry test to simulate device actually seeking, but to wrong place
     // TODO: Consider whether getting a standard PAUSED event from the pause sentinel is valid
+    // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
 
     // *******************************************
     // ********* Mixin the functions *************
