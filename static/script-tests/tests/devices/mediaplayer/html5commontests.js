@@ -1400,7 +1400,29 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // Pause sentinel clock is reset by another call to pause()
+    mixins.testPauseSentinelAttemptCountIsResetByCallingPause = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetThenAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            self._mediaPlayer.resume();
+            self._mediaPlayer.pause();
+
+            resetThenAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEvent(self, MediaPlayer.EVENT.PAUSED);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
     // Similar tests for seek sentinel and playFrom()
 
     // *******************************************
