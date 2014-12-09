@@ -656,6 +656,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             clearIntervalSpy.reset();
 
             assert(clearIntervalSpy.notCalled);
+            this._mediaPlayer.stop();
             this._mediaPlayer.reset();
             assert(clearIntervalSpy.calledWith(this._mediaPlayer._sentinelInterval));
         });
@@ -893,7 +894,9 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assert(seekSpy.calledOnce);
 
             // Transition to error state via invalid API call
-            this._mediaPlayer.beginPlayback();
+            try {
+                this._mediaPlayer.beginPlayback();
+            } catch (e) {}
 
             this._mediaPlayer.reset();
             // Some (possibly all) CEHTML devices will reset their playPosition upon reset

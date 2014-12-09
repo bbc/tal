@@ -478,6 +478,7 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
+                throw "ApiError: " + errorMessage;
             },
 
             _enterBufferingSentinel: function() {

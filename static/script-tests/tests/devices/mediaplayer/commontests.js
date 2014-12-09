@@ -145,10 +145,16 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     var makeApiCallCausesErrorTest = function (setup, apiCall) {
         var test = function (queue) {
-            expectAsserts(10);
+            expectAsserts(11);
             doTest(this, queue, function (MediaPlayer) {
                 setup.call(this, MediaPlayer);
-                this._mediaPlayer[apiCall]();
+                var err;
+                try {
+                    this._mediaPlayer[apiCall]();
+                } catch (e) {
+                    err = e;
+                }
+                assertEquals("ApiError", err.substring(0, 8));
                 assertMediaPlayerError(this, MediaPlayer);
             });
         };
@@ -769,7 +775,9 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     // *******************************************
 
     var getToErrorState = function (MediaPlayer) {
-        this._mediaPlayer.stop();
+        try {
+            this._mediaPlayer.stop();
+        } catch (e) {}
         assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
     };
 
@@ -796,10 +804,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testWhenBufferingFinishesDuringErrorWeContinueToBeInError = function (queue) {
-        expectAsserts(3);
+        expectAsserts(2);
         doTest(this, queue, function (MediaPlayer) {
-            getToBufferingState.call(this, MediaPlayer);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "myURL", "mime/type");
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            try {
+                this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            } catch (e) {}
             assertEquals(MediaPlayer.STATE.ERROR, this._mediaPlayer.getState());
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -818,9 +828,13 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             doTest(this, queue, function (MediaPlayer) {
                 var errorStub = this.sandbox.stub();
                 this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
-                this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                try {
+                    this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                } catch (e) {}
                 assert(errorStub.calledWith("Cannot " + method + " while in the 'EMPTY' state"));
-                this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                try {
+                    this._mediaPlayer[method].apply(this._mediaPlayer, args);
+                } catch (e) {}
                 assert(errorStub.calledWith("Cannot " + method + " while in the 'ERROR' state"));
             });
         };
@@ -840,7 +854,9 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            try {
+                this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            } catch (e) {}
             assert(errorStub.calledWith("Cannot set source unless in the 'EMPTY' state"));
         });
     };
@@ -850,7 +866,9 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         doTest(this, queue, function (MediaPlayer) {
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
-            this._mediaPlayer.reset();
+            try {
+                this._mediaPlayer.reset();
+            } catch (e) {}
             assert(errorStub.calledWith("Cannot reset while in the 'EMPTY' state"));
         });
     };
