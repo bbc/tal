@@ -520,7 +520,6 @@ require.def(
                     if (this._sentinelSeekAttemptCount <= SEEK_SENTINEL_MAX_ATTEMPTS) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
                         this._mediaElement.currentTime = this._sentinelSeekTime;
-                        this._lastSentinelTime = this._sentinelSeekTime;
                         sentinelActionTaken = true;
                     }
                 } else {

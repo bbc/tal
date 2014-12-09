@@ -1466,10 +1466,34 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelGivingUpDoesNotPreventPauseSentinelActivation = function(queue) {
+        expectAsserts(5);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            self._mediaPlayer.pause();
 
-    // TODO: Ensure that seek sentinel giving up does not prevent pause sentinel from firing
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+
+            setPlayTimeToZero(self);
+            advancePlayTime(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEvent(self, MediaPlayer.EVENT.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
     // TODO: Ensure seek sentinel attempt count is reset appropriately
     // TODO: Add seek sentinel retry test to simulate device actually seeking, but to wrong place
+    // TODO: Consider whether getting a standard PAUSED event from the pause sentinel is valid
 
     // *******************************************
     // ********* Mixin the functions *************
