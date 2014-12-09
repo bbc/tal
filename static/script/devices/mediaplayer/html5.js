@@ -109,6 +109,7 @@ require.def(
             playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
+                this._sentinelSeekAttemptCount = 0;
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -565,7 +566,6 @@ require.def(
                 this._clearSentinels();
                 this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
-                this._sentinelSeekAttemptCount = 0;
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);

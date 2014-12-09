@@ -1441,7 +1441,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttempt = function(queue) {
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceDoesNotEnterBufferingUponSeek = function(queue) {
         expectAsserts(4);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1455,6 +1455,37 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             setPlayTimeToZero(self);
             resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(2, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceEntersBufferingUponSeek = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
             assertEquals(1, stubCreateElementResults.video.currentTime);
@@ -1513,9 +1544,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-
-    // TODO: Ensure seek sentinel attempt count is reset appropriately
-    // TODO: Add seek sentinel retry test to simulate device actually seeking, but to wrong place
     // TODO: Consider whether getting a standard PAUSED event from the pause sentinel is valid
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
 
