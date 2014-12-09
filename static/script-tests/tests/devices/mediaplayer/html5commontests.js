@@ -286,15 +286,29 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedVideoElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
+                deviceMockingHooks.mockTime(self._mediaPlayer);
 
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.video, body.firstChild);
-        });
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+
+                self._eventCallback = self.sandbox.stub();
+                self._mediaPlayer.addEventCallback(null, self._eventCallback);
+
+                try {
+                    self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+                    var appElement = application.getRootWidget().outputElement;
+                    assertSame(stubCreateElementResults.video, appElement.firstChild);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime(self._mediaPlayer);
+                }
+            }, config);
     };
 
     mixins.testVideoElementIsRemovedFromDOMOnReset = function(queue) {
@@ -310,15 +324,29 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedAudioElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
+                deviceMockingHooks.mockTime(self._mediaPlayer);
 
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.audio, body.firstChild);
-        });
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+
+                self._eventCallback = self.sandbox.stub();
+                self._mediaPlayer.addEventCallback(null, self._eventCallback);
+
+                try {
+                    self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+                    var appElement = application.getRootWidget().outputElement;
+                    assertSame(stubCreateElementResults.audio, appElement.firstChild);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime(self._mediaPlayer);
+                }
+            }, config);
     };
 
     mixins.testAudioElementIsRemovedFromDOMOnReset = function(queue) {
