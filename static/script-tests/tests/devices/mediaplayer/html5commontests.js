@@ -1352,23 +1352,23 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    function resetThenAdvanceTimeThenRunSentinels(self) {
+        clearEvents(self);
+        stubCreateElementResults.video.pause.reset();
+        advancePlayTime(self);
+        fireSentinels(self);
+    }
+
     mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
         expectAsserts(4);
-
-        function resetAdvanceTimeThenRunSentinels(self) {
-            clearEvents(self);
-            stubCreateElementResults.video.pause.reset();
-            advancePlayTime(self);
-            fireSentinels(self);
-        }
 
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             self._mediaPlayer.pause();
 
-            resetAdvanceTimeThenRunSentinels(self);
-            resetAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertEvent(self, MediaPlayer.EVENT.PAUSED);
@@ -1380,27 +1380,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     mixins.testPauseSentinelEmitsFailureEventAndGivesUpAfterTwoAttempts = function(queue) {
         expectAsserts(5);
 
-        function resetAdvanceTimeThenRunSentinels(self) {
-            clearEvents(self);
-            stubCreateElementResults.video.pause.reset();
-            advancePlayTime(self);
-            fireSentinels(self);
-        }
-
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             self._mediaPlayer.pause();
 
-            resetAdvanceTimeThenRunSentinels(self);
-            resetAdvanceTimeThenRunSentinels(self);
-            resetAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
             assertState(self, MediaPlayer.STATE.PAUSED);
             assert(stubCreateElementResults.video.pause.notCalled);
 
-            resetAdvanceTimeThenRunSentinels(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
 
             assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.PAUSED);
