@@ -1377,8 +1377,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testPauseSentinelEmitsFailureEventAndGivesUpAfterTwoAttempts = function(queue) {
-        expectAsserts(5);
+    mixins.testPauseSentinelEmitsFailureEventAndGivesUpOnThirdAttempt = function(queue) {
+        expectAsserts(6);
 
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1397,6 +1397,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
         });
     };
 
@@ -1423,7 +1424,52 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // Similar tests for seek sentinel and playFrom()
+    mixins.testSeekSentinelRetriesSeekTwice = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttempt = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+
+            resetThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(2, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+
+    // TODO: Ensure that seek sentinel giving up does not prevent pause sentinel from firing
+    // TODO: Ensure seek sentinel attempt count is reset appropriately
+    // TODO: Add seek sentinel retry test to simulate device actually seeking, but to wrong place
 
     // *******************************************
     // ********* Mixin the functions *************

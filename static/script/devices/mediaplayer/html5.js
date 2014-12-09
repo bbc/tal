@@ -35,6 +35,7 @@ require.def(
         "use strict";
 
         var PAUSE_SENTINEL_MAX_ATTEMPTS = 2;
+        var SEEK_SENTINEL_MAX_ATTEMPTS = 2;
 
         /**
          * Main MediaPlayer implementation for HTML5 devices.
@@ -159,7 +160,7 @@ require.def(
             */
             pause: function() {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                this._pauseSentinelAttempts = 0;
+                this._pauseSentinelAttemptCount = 0;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PAUSED:
                         break;
@@ -504,37 +505,47 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
-                if (this._sentinelSeekTime !== undefined) {
-                    var currentTime = this.getCurrentTime();
+                if (this._sentinelSeekTime === undefined) {
+                    return false;
+                }
 
-                    if(Math.abs(currentTime - this._sentinelSeekTime) > 15) {
+                var currentTime = this.getCurrentTime();
+                var sentinelActionTaken = false;
+
+                if (Math.abs(currentTime - this._sentinelSeekTime) > 15) {
+                    this._sentinelSeekAttemptCount += 1;
+                    if (this._sentinelSeekAttemptCount === SEEK_SENTINEL_MAX_ATTEMPTS + 1) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+                    }
+                    if (this._sentinelSeekAttemptCount <= SEEK_SENTINEL_MAX_ATTEMPTS) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
-                        //this._mediaElement.play();
                         this._mediaElement.currentTime = this._sentinelSeekTime;
                         this._lastSentinelTime = this._sentinelSeekTime;
-                        return true;
-                    } else {
-                        this._sentinelSeekTime = currentTime;
+                        sentinelActionTaken = true;
                     }
+                } else {
+                    this._sentinelSeekTime = currentTime;
                 }
-                return false;
+
+                return sentinelActionTaken;
             },
 
             _shouldBePausedSentinel: function() {
-                var sentinelRequired = this._hasSentinelTimeAdvanced;
+                var sentinelActionTaken = false;
 
-                if (sentinelRequired) {
-                    this._pauseSentinelAttempts += 1;
-                    if (this._pauseSentinelAttempts <= PAUSE_SENTINEL_MAX_ATTEMPTS) {
+                if (this._hasSentinelTimeAdvanced) {
+                    this._pauseSentinelAttemptCount += 1;
+                    if (this._pauseSentinelAttemptCount <= PAUSE_SENTINEL_MAX_ATTEMPTS) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
                         this._emitEvent(MediaPlayer.EVENT.PAUSED);
                         this._mediaElement.pause();
-                    } else if (this._pauseSentinelAttempts === PAUSE_SENTINEL_MAX_ATTEMPTS + 1) {
+                        sentinelActionTaken = true;
+                    } else if (this._pauseSentinelAttemptCount === PAUSE_SENTINEL_MAX_ATTEMPTS + 1) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
                     }
                 }
 
-                return sentinelRequired;
+                return sentinelActionTaken;
             },
 
             _endOfMediaSentinel: function() {
@@ -555,6 +566,7 @@ require.def(
                 this._clearSentinels();
                 this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
+                this._sentinelSeekAttemptCount = 0;
                 this._sentinelInterval = setInterval(function() {
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
