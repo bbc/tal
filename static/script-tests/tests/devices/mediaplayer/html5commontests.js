@@ -1503,7 +1503,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelGivingUpDoesNotPreventPauseSentinelActivation = function(queue) {
-        expectAsserts(4);
+        expectAsserts(6);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 50);
@@ -1521,6 +1521,15 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             advancePlayTime(self);
             resetStubsThenAdvanceTimeThenRunSentinels(self);
 
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+
+            setPlayTimeToZero(self);
+            advancePlayTime(self);
+            advancePlayTime(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            // Ensure that pause has a second attempt (rather than seek returning, etc)
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assert(stubCreateElementResults.video.pause.calledOnce);
         });
