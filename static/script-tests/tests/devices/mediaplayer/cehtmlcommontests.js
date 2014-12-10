@@ -1239,6 +1239,29 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelAttemptCountIsResetByCallingPlayFrom = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 50);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assert(seekSpy.calledOnce);
+            assertEquals(50000, seekSpy.getCall(0).args[0]);
+        });
+    };
+
     // TODO: Consider ensuring that calling pause() from the PAUSED state does not reset the pause sentinel attempt count, as this is no different to what the sentinel is doing
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
 

@@ -1546,10 +1546,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             setPlayTimeToZero(self);
             resetStubsThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
 
             this._mediaPlayer.playFrom(50);
-
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
             setPlayTimeToZero(self);
+
             resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
