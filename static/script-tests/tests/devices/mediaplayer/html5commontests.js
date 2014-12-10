@@ -186,12 +186,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._application = application;
 
                 self._eventCallback = self.sandbox.stub();
                 self._mediaPlayer.addEventCallback(null, self._eventCallback);
 
                 try {
-                    action.call(self, MediaPlayer, application);
+                    action.call(self, MediaPlayer);
                 }
                 finally {
                     deviceMockingHooks.unmockTime(self._mediaPlayer);
@@ -289,9 +290,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer, application) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            var appElement = application.getRootWidget().outputElement;
+            var appElement = self._application.getRootWidget().outputElement;
             assertSame(stubCreateElementResults.video, appElement.firstChild);
         });
     };
@@ -312,9 +313,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer, application) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-            var appElement = application.getRootWidget().outputElement;
+            var appElement = self._application.getRootWidget().outputElement;
             assertSame(stubCreateElementResults.audio, appElement.firstChild);
         });
     };
