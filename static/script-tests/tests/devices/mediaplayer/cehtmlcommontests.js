@@ -1134,6 +1134,34 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceDoesNotEnterBufferingUponSeek = function(queue) {
+        expectAsserts(5);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek'); // Required by device mocking hooks
+            getToPlaying(self, MediaPlayer, 50);
+
+            resetThenAdvanceTimeThenRunSentinels();
+            resetThenAdvanceTimeThenRunSentinels();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            seekSpy.reset();
+            resetThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assert(seekSpy.notCalled);
+
+            resetThenAdvanceTimeThenRunSentinels(eventHandler);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assert(seekSpy.notCalled);
+        });
+    };
+
     // TODO: Consider ensuring that calling pause() from the PAUSED state does not reset the pause sentinel attempt count, as this is no different to what the sentinel is doing
 
     // *******************************************

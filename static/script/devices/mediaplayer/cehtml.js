@@ -491,6 +491,7 @@ require.def(
 
             _setSentinels: function(sentinels) {
                 this._pauseSentinelAttemptCount = 0;
+                this._seekSentinelAttemptCount = 0;
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
                 this._clearSentinels();
@@ -542,8 +543,14 @@ require.def(
                 var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
 
                 if (sentinelSeekRequired) {
-                    this._mediaElement.seek(clampedSentinelSeekTime * 1000);
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                    this._seekSentinelAttemptCount += 1;
+                    if (this._seekSentinelAttemptCount <= 2) {
+                        this._mediaElement.seek(clampedSentinelSeekTime * 1000);
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                    }
+                    if (this._seekSentinelAttemptCount === 3) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+                    }
                 } else {
                     this._sentinelSeekTime = currentTime;
                 }
