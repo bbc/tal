@@ -490,6 +490,7 @@ require.def(
             },
 
             _setSentinels: function(sentinels) {
+                this._pauseSentinelAttemptCount = 0;
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
                 this._clearSentinels();
@@ -553,8 +554,14 @@ require.def(
             _shouldBePausedSentinel: function() {
                 var sentinelPauseRequired = this._timeHasAdvanced;
                 if(sentinelPauseRequired) {
-                    this._mediaElement.play(0);
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                    this._pauseSentinelAttemptCount += 1;
+                    if (this._pauseSentinelAttemptCount <= 2) {
+                        this._mediaElement.play(0);
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                    }
+                    if (this._pauseSentinelAttemptCount === 3) {
+                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+                    }
                 }
                 return sentinelPauseRequired;
             },
