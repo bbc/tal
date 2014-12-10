@@ -212,6 +212,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         };
     };
 
+    var advancePlayTime = function() {
+        fakeCEHTMLObject.playPosition += 1000;
+    };
+
     var assertEventTypeHasFired = function (eventHandler, eventType) {
         assert(eventTypeHasFired(eventHandler, eventType));
     };
@@ -1026,6 +1030,29 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_COMPLETE);
+        });
+    };
+
+    mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
+        expectAsserts(3);
+
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            advancePlayTime();
+            fireSentinels();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            fakeCEHTMLObject.play.reset();
+            advancePlayTime();
+            fireSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
         });
     };
 
