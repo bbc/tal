@@ -644,6 +644,18 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testCallingStopFromStoppedStateDoesNotCallDeviceStop = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.stop();
+            fakeCEHTMLObject.stop.reset();
+
+            this._mediaPlayer.stop();
+            assert(fakeCEHTMLObject.stop.notCalled);
+        });
+    };
+
     mixins.testSentinelTimerCleanedUpOnReset = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
