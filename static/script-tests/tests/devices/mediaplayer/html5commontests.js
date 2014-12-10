@@ -191,7 +191,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._mediaPlayer.addEventCallback(null, self._eventCallback);
 
                 try {
-                    action.call(self, MediaPlayer);
+                    action.call(self, MediaPlayer, application);
                 }
                 finally {
                     deviceMockingHooks.unmockTime(self._mediaPlayer);
@@ -289,26 +289,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayer) {
-                deviceMockingHooks.mockTime(self._mediaPlayer);
-
-                self._createElementStub = stubCreateElement(self.sandbox, application);
-                self._device = application.getDevice();
-                self._mediaPlayer = self._device.getMediaPlayer();
-
-                self._eventCallback = self.sandbox.stub();
-                self._mediaPlayer.addEventCallback(null, self._eventCallback);
-
-                try {
-                    self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-                    var appElement = application.getRootWidget().outputElement;
-                    assertSame(stubCreateElementResults.video, appElement.firstChild);
-                }
-                finally {
-                    deviceMockingHooks.unmockTime(self._mediaPlayer);
-                }
-            }, config);
+        runMediaPlayerTest(this, queue, function (MediaPlayer, application) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            var appElement = application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.video, appElement.firstChild);
+        });
     };
 
     mixins.testVideoElementIsRemovedFromDOMOnReset = function(queue) {
@@ -327,26 +312,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
-            function(application, MediaPlayer) {
-                deviceMockingHooks.mockTime(self._mediaPlayer);
-
-                self._createElementStub = stubCreateElement(self.sandbox, application);
-                self._device = application.getDevice();
-                self._mediaPlayer = self._device.getMediaPlayer();
-
-                self._eventCallback = self.sandbox.stub();
-                self._mediaPlayer.addEventCallback(null, self._eventCallback);
-
-                try {
-                    self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-                    var appElement = application.getRootWidget().outputElement;
-                    assertSame(stubCreateElementResults.audio, appElement.firstChild);
-                }
-                finally {
-                    deviceMockingHooks.unmockTime(self._mediaPlayer);
-                }
-            }, config);
+        runMediaPlayerTest(this, queue, function (MediaPlayer, application) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+            var appElement = application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.audio, appElement.firstChild);
+        });
     };
 
     mixins.testAudioElementIsRemovedFromDOMOnReset = function(queue) {
