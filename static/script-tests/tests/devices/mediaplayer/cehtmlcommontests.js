@@ -1089,6 +1089,33 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testPauseSentinelAttemptCountIsResetByCallingPause = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer, 0);
+            this._mediaPlayer.pause();
+
+            resetThenAdvanceTimeThenRunSentinels();
+            resetThenAdvanceTimeThenRunSentinels();
+
+            this._mediaPlayer.resume();
+            this._mediaPlayer.pause();
+
+            resetThenAdvanceTimeThenRunSentinels();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+        });
+    };
+
+    // TODO: Consider ensuring that calling pause() from the PAUSED state does not reset the pause sentinel attempt count, as this is no different to what the sentinel is doing
+
     // *******************************************
     // ********* Mixin the functions *************
     // *******************************************
