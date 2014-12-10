@@ -227,6 +227,9 @@ require.def(
             */
             reset: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.EMPTY:
+                        break;
+
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
                         this._toEmpty();

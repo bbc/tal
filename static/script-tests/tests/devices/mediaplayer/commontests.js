@@ -253,7 +253,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     mixins.testCallingPauseInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "pause");
     mixins.testCallingResumeInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "resume");
     mixins.testCallingStopInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "stop");
-    mixins.testCallingResetInEmptyStateIsAnError = makeApiCallCausesErrorTest(getToEmptyState, "reset");
 
     mixins.testCallingSetSourceInEmptyStateGoesToStoppedState = function (queue) {
         expectAsserts(10);
@@ -273,6 +272,16 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
+    mixins.testCallingResetInEmptyStateStaysInEmptyState = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToEmptyState.call(this, MediaPlayer);
+
+            this._mediaPlayer.reset();
+
+            assertEquals(MediaPlayer.STATE.EMPTY, this._mediaPlayer.getState());
+        });
+    };
 
     // *******************************************
     // ********* STOPPED state tests *************
@@ -872,14 +881,15 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testErrorWhileResettingInInvalidStateIsLogged = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         doTest(this, queue, function (MediaPlayer) {
+            getToPlayingState.call(this, MediaPlayer);
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
             try {
                 this._mediaPlayer.reset();
             } catch (e) {}
-            assert(errorStub.calledWith("Cannot reset while in the 'EMPTY' state"));
+            assert(errorStub.calledWith("Cannot reset while in the 'PLAYING' state"));
         });
     };
 
