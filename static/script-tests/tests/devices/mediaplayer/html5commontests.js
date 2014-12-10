@@ -964,8 +964,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlaying(self, MediaPlayer);
-            self._mediaPlayer.stop();
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
             stubCreateElementResults.video.pause.reset();
             self._mediaPlayer.stop();

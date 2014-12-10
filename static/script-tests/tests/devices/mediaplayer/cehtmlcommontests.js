@@ -648,7 +648,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.stop();
             fakeCEHTMLObject.stop.reset();
 
             this._mediaPlayer.stop();
