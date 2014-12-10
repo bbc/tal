@@ -292,7 +292,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
     mixins.testCallingSetSourceInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "setSource");
     mixins.testCallingPauseInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "pause");
-    mixins.testCallingStopInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "stop");
     mixins.testCallingResumeInStoppedStateIsAnError = makeApiCallCausesErrorTest(getToStoppedState, "resume");
 
     mixins.testSendMetaDataInStoppedStateStaysInStoppedState = makeDeviceEventStaysInSameStateTest(getToStoppedState, 'sendMetadata');
@@ -340,6 +339,15 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             getToStoppedState.call(this, MediaPlayer);
             this._mediaPlayer.beginPlayback();
             assertBufferingAndNextState(this, MediaPlayer, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
+    mixins.testCallingStopInStoppedStateStaysInStoppedState = function (queue) {
+        expectAsserts(2);
+        doTest(this, queue, function (MediaPlayer) {
+            getToStoppedState.call(this, MediaPlayer);
+            this._mediaPlayer.stop();
+            assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
         });
     };
 

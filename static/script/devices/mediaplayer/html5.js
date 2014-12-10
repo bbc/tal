@@ -205,6 +205,9 @@ require.def(
             */
             stop: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
