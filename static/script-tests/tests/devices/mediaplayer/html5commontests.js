@@ -1351,7 +1351,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    function resetThenAdvanceTimeThenRunSentinels(self) {
+    function resetStubsThenAdvanceTimeThenRunSentinels(self) {
         clearEvents(self);
         stubCreateElementResults.video.pause.reset();
         advancePlayTime(self);
@@ -1359,15 +1359,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     }
 
     mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
-        expectAsserts(3);
+        expectAsserts(6);
 
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             self._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertState(self, MediaPlayer.STATE.PAUSED);
@@ -1383,15 +1388,15 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer, 0);
             self._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
             assertState(self, MediaPlayer.STATE.PAUSED);
             assert(stubCreateElementResults.video.pause.notCalled);
 
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.PAUSED);
@@ -1406,14 +1411,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer, 0);
             self._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             self._mediaPlayer.resume();
             self._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertState(self, MediaPlayer.STATE.PAUSED);
@@ -1422,16 +1427,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelRetriesSeekTwice = function(queue) {
-        expectAsserts(2);
+        expectAsserts(4);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 50);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEquals(50, stubCreateElementResults.video.currentTime);
@@ -1445,18 +1453,18 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer, 50);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
             assertEquals(1, stubCreateElementResults.video.currentTime);
 
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertNoEvents(self);
             assertEquals(2, stubCreateElementResults.video.currentTime);
@@ -1470,24 +1478,24 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer, 50);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
             deviceMockingHooks.startBuffering(this._mediaPlayer);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
             deviceMockingHooks.startBuffering(this._mediaPlayer);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
             deviceMockingHooks.startBuffering(this._mediaPlayer);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
             assertEquals(1, stubCreateElementResults.video.currentTime);
 
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertNoEvents(self);
             assertEquals(2, stubCreateElementResults.video.currentTime);
@@ -1502,16 +1510,16 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.pause();
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertState(self, MediaPlayer.STATE.PAUSED);
 
             setPlayTimeToZero(self);
             advancePlayTime(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assert(stubCreateElementResults.video.pause.calledOnce);
@@ -1525,15 +1533,15 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer, 50);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             this._mediaPlayer.playFrom(50);
 
             setPlayTimeToZero(self);
-            resetThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEquals(50, stubCreateElementResults.video.currentTime);

@@ -1036,16 +1036,20 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
-        expectAsserts(3);
+        expectAsserts(6);
 
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(this, MediaPlayer, 0);
             this._mediaPlayer.pause();
 
-            resetStubsThenAdvanceTimeThenRunSentinels();
-
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
+            assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
 
             resetStubsThenAdvanceTimeThenRunSentinels();
 
