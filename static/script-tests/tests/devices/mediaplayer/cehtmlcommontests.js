@@ -858,7 +858,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testUnsuccessfulPauseIsRetriedAndSentinelSeekEventIsFired = function(queue) {
+    mixins.testUnsuccessfulPauseIsRetriedAndSentinelPauseEventIsFired = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(this, MediaPlayer, 0);
@@ -1136,10 +1136,9 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceDoesNotEnterBufferingUponSeek = function(queue) {
         expectAsserts(5);
-        var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            getToPlaying(self, MediaPlayer, 50);
+            getToPlaying(this, MediaPlayer, 50);
 
             resetStubsThenAdvanceTimeThenRunSentinels();
             resetStubsThenAdvanceTimeThenRunSentinels();
@@ -1160,7 +1159,88 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceEntersBufferingUponSeek = function(queue) {
+        function enterExitBuffering(mediaPlayer) {
+            deviceMockingHooks.startBuffering(mediaPlayer);
+            deviceMockingHooks.finishBuffering(mediaPlayer);
+        }
+
+        expectAsserts(5);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 50);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            enterExitBuffering(this._mediaPlayer);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            enterExitBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            enterExitBuffering(this._mediaPlayer);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assert(seekSpy.notCalled);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assert(seekSpy.notCalled);
+        });
+    };
+
+    mixins.testFirstSentinelGivingUpDoesNotPreventSecondSentinelActivation = function(queue) {
+        function xor(a, b) {
+            return a !== b;
+        }
+
+        expectAsserts(5);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 50);
+            this._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            var pauseSentinelFiredOne = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            var seekSentinelFiredOne = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+
+            // Expect either pause or seek sentinel to fire (last attempt before giving up)
+            assert(xor(pauseSentinelFiredOne, seekSentinelFiredOne));
+
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
+
+            var pauseSentinelFiredTwo = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            var seekSentinelFiredTwo = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+
+            // Sentinel A has given up, so sentinel B should now fire
+            assert(xor(pauseSentinelFiredTwo, seekSentinelFiredTwo));
+
+            // If sentinel A was fired first time, expect sentinel B this time (and vice versa)
+            assert(pauseSentinelFiredOne === seekSentinelFiredTwo);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
+
+            var pauseSentinelFiredThree = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            var seekSentinelFiredThree = eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+
+            // Sentinel A should not come back to life, but sentinel B should still be retrying
+            assert(pauseSentinelFiredTwo === pauseSentinelFiredThree);
+            assert(seekSentinelFiredTwo === seekSentinelFiredThree);
+        });
+    };
+
     // TODO: Consider ensuring that calling pause() from the PAUSED state does not reset the pause sentinel attempt count, as this is no different to what the sentinel is doing
+    // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
 
     // *******************************************
     // ********* Mixin the functions *************

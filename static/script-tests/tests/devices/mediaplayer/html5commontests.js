@@ -1550,6 +1550,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
     // TODO: Consider ensuring that calling pause() from the PAUSED state does not reset the pause sentinel attempt count, as this is no different to what the sentinel is doing
+    // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
 
     // *******************************************
     // ********* Mixin the functions *************

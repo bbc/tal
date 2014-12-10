@@ -96,6 +96,7 @@ require.def(
             playFrom: function (seconds) {
                 this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                this._seekSentinelAttemptCount = 0;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                         this._deferSeekingTo = seconds;
@@ -491,7 +492,6 @@ require.def(
 
             _setSentinels: function(sentinels) {
                 this._pauseSentinelAttemptCount = 0;
-                this._seekSentinelAttemptCount = 0;
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
                 this._clearSentinels();
@@ -541,12 +541,14 @@ require.def(
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
 
                 var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
+                var sentinelActionTaken = false;
 
                 if (sentinelSeekRequired) {
                     this._seekSentinelAttemptCount += 1;
                     if (this._seekSentinelAttemptCount <= 2) {
                         this._mediaElement.seek(clampedSentinelSeekTime * 1000);
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
+                        sentinelActionTaken = true;
                     }
                     if (this._seekSentinelAttemptCount === 3) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
@@ -555,22 +557,24 @@ require.def(
                     this._sentinelSeekTime = currentTime;
                 }
 
-                return sentinelSeekRequired;
+                return sentinelActionTaken;
             },
 
             _shouldBePausedSentinel: function() {
                 var sentinelPauseRequired = this._timeHasAdvanced;
+                var sentinelActionTaken = false;
                 if(sentinelPauseRequired) {
                     this._pauseSentinelAttemptCount += 1;
                     if (this._pauseSentinelAttemptCount <= 2) {
                         this._mediaElement.play(0);
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+                        sentinelActionTaken = true;
                     }
                     if (this._pauseSentinelAttemptCount === 3) {
                         this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
                     }
                 }
-                return sentinelPauseRequired;
+                return sentinelActionTaken;
             },
 
             _enterCompleteSentinel: function() {
