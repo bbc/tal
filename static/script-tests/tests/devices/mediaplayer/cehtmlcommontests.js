@@ -207,9 +207,9 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var configureSeekToFail = function() {
-        fakeCEHTMLObject.seek = function(/* milliseconds */) {
-            return true;
-        };
+        fakeCEHTMLObject.seek = sinon.stub();
+        fakeCEHTMLObject.seek.returns(true);
+        seekSpy = fakeCEHTMLObject.seek;
     };
 
     var advancePlayTime = function() {
@@ -690,8 +690,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
-
             getToPlaying(this, MediaPlayer, 30);
 
             assertEquals(0, this._mediaPlayer.getCurrentTime());
@@ -712,7 +710,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(30);
@@ -739,8 +736,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
-
             getToPlaying(this, MediaPlayer, 110);
 
             assertEquals(0, this._mediaPlayer.getCurrentTime());
@@ -971,7 +966,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(30);
@@ -996,7 +990,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
             getToPlaying(this, MediaPlayer, 30);
 
             var eventHandler = this.sandbox.stub();
@@ -1018,8 +1011,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(this, MediaPlayer, 99);
             configureSeekToFail();
 
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
-
             this._mediaPlayer.playFrom(30);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
@@ -1033,11 +1024,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    var resetThenAdvanceTimeThenRunSentinels = function(eventHandler) {
+    var resetStubsThenAdvanceTimeThenRunSentinels = function(eventHandler) {
         if (eventHandler) {
             eventHandler.reset();
         }
         fakeCEHTMLObject.play.reset();
+        seekSpy.reset();
+
         advancePlayTime();
         fireSentinels();
     };
@@ -1049,12 +1042,12 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(this, MediaPlayer, 0);
             this._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
@@ -1069,19 +1062,19 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(this, MediaPlayer, 0);
             this._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels();
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
             assert(fakeCEHTMLObject.play.withArgs(0).notCalled);
 
-            resetThenAdvanceTimeThenRunSentinels(eventHandler);
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
 
             assert(eventHandler.notCalled);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
@@ -1095,18 +1088,18 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(this, MediaPlayer, 0);
             this._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels();
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             this._mediaPlayer.resume();
             this._mediaPlayer.pause();
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
@@ -1115,18 +1108,21 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     mixins.testSeekSentinelRetriesSeekTwice = function(queue) {
-        expectAsserts(3);
+        expectAsserts(6);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
             getToPlaying(this, MediaPlayer, 50);
 
-            resetThenAdvanceTimeThenRunSentinels();
-
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assert(seekSpy.calledOnce);
+            assertEquals(50000, seekSpy.getCall(0).args[0]);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
             assert(seekSpy.calledOnce);
@@ -1139,22 +1135,20 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             configureSeekToFail();
-            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek'); // Required by device mocking hooks
             getToPlaying(self, MediaPlayer, 50);
 
-            resetThenAdvanceTimeThenRunSentinels();
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            seekSpy.reset();
-            resetThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
             assert(seekSpy.notCalled);
 
-            resetThenAdvanceTimeThenRunSentinels(eventHandler);
+            resetStubsThenAdvanceTimeThenRunSentinels(eventHandler);
 
             assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
