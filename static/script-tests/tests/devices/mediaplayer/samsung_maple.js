@@ -1558,6 +1558,19 @@
         });
     };
 
+    this.SamsungMapleMediaPlayerTests.prototype.testCallingStopFromStoppedStateDoesNotCallDeviceStop = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.stop();
+            playerPlugin.Stop.reset();
+
+            this._mediaPlayer.stop();
+            assert(playerPlugin.Stop.notCalled);
+        });
+    };
+
+
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Investigate if we should keep a reference to the original player plugin and restore on tear-down in the same way media/samsung_maple modifier
