@@ -90,8 +90,8 @@ require.def(
                     this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata, false);
 
-                    var body = document.getElementsByTagName("body")[0];
-                    device.prependChildElement(body, this._mediaElement);
+                    var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
+                    device.prependChildElement(appElement, this._mediaElement);
 
                     this._mediaElement.preload = "auto";
                     this._mediaElement.src = url;
