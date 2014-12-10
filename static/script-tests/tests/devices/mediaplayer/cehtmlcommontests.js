@@ -202,6 +202,10 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
+    var fireSentinels = function () {
+        clock.tick(1100);
+    };
+
     var assertEventTypeHasFired = function (eventHandler, eventType) {
         assert(eventTypeHasFired(eventHandler, eventType));
     };
@@ -643,11 +647,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            clock.tick(1100);
+            fireSentinels();
             assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
 
-            clock.tick(1100);
+            fireSentinels();
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
         });
@@ -890,7 +894,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
             assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
 
-            clock.tick(1100);
+            fireSentinels();
 
             assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
         });
@@ -904,7 +908,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            clock.tick(1100);
+            fireSentinels();
 
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.COMPLETE);
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_COMPLETE);
@@ -947,7 +951,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            clock.tick(1100);
+            fireSentinels();
 
             assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_COMPLETE);
         });
@@ -959,7 +963,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(this, MediaPlayer, 0);
             this._mediaPlayer.stop();
 
-            clock.tick(1100);
+            fireSentinels();
 
             assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
         });
