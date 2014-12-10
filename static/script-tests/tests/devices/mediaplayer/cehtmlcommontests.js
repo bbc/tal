@@ -225,8 +225,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var eventTypeHasFired = function(eventHandler, eventType) {
-        for(var i = 0; i < eventHandler.args.length; i++) {
-            if(eventHandler.args[i][0].type === eventType) {
+        for(var i = 0; i < eventHandler.callCount; i++) {
+            if(eventHandler.getCall(i).args[0].type === eventType) {
                 return true;
             }
         }
