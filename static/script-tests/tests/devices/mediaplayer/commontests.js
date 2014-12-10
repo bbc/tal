@@ -343,10 +343,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     };
 
     mixins.testCallingStopInStoppedStateStaysInStoppedState = function (queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         doTest(this, queue, function (MediaPlayer) {
             getToStoppedState.call(this, MediaPlayer);
+            var callCount = this.eventCallback.callCount;
             this._mediaPlayer.stop();
+            assertEquals(callCount, this.eventCallback.callCount);
             assertEquals(MediaPlayer.STATE.STOPPED, this._mediaPlayer.getState());
         });
     };
