@@ -206,6 +206,12 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         clock.tick(1100);
     };
 
+    var configureSeekToFail = function() {
+        fakeCEHTMLObject.seek = function(/* milliseconds */) {
+            return true;
+        };
+    };
+
     var assertEventTypeHasFired = function (eventHandler, eventType) {
         assert(eventTypeHasFired(eventHandler, eventType));
     };
@@ -679,11 +685,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     mixins.testUnsuccessfulSeekIsRetriedAndSentinelSeekEventIsFiredFromPlayingState = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
+            configureSeekToFail();
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             getToPlaying(this, MediaPlayer, 30);
@@ -705,11 +707,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     mixins.testUnsuccessfulSeekIsRetriedAndSentinelSeekEventIsFiredFromPausedState = function(queue) {
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
+            configureSeekToFail();
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -736,11 +734,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     mixins.testRetriedSeekIsClamped = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
+            configureSeekToFail();
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             getToPlaying(this, MediaPlayer, 110);
@@ -972,11 +966,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     mixins.testUnsuccessfulSeekAndUnsuccessfulPauseFiresOneSentineEventOnInterval = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
-
+            configureSeekToFail();
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -1001,11 +991,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     mixins.testUnsuccessfulSeekAndBufferingWithoutBufferingEventFiresOneSentinelEventOnInterval = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
-
+            configureSeekToFail();
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
             getToPlaying(this, MediaPlayer, 30);
 
@@ -1026,11 +1012,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(this, MediaPlayer, 99);
-
-            // Override mock seek function to be unsuccessful
-            fakeCEHTMLObject.seek = function(/* milliseconds */) {
-                return true;
-            };
+            configureSeekToFail();
 
             seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
 
