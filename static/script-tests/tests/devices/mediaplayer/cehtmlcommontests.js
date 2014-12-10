@@ -1040,7 +1040,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         fakeCEHTMLObject.play.reset();
         advancePlayTime();
         fireSentinels();
-    }
+    };
 
     mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
         expectAsserts(3);
@@ -1111,6 +1111,26 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_PAUSE);
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
             assert(fakeCEHTMLObject.play.withArgs(0).calledOnce);
+        });
+    };
+
+    mixins.testSeekSentinelRetriesSeekTwice = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 50);
+
+            resetThenAdvanceTimeThenRunSentinels();
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+            seekSpy = this.sandbox.spy(fakeCEHTMLObject, 'seek');
+
+            resetThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assert(seekSpy.calledOnce);
+            assertEquals(50000, seekSpy.getCall(0).args[0]);
         });
     };
 
