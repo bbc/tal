@@ -186,6 +186,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._application = application;
 
                 self._eventCallback = self.sandbox.stub();
                 self._mediaPlayer.addEventCallback(null, self._eventCallback);
@@ -286,14 +287,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedVideoElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.video, body.firstChild);
+            var appElement = self._application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.video, appElement.firstChild);
         });
     };
 
@@ -310,14 +310,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedAudioElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.audio, body.firstChild);
+            var appElement = self._application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.audio, appElement.firstChild);
         });
     };
 
