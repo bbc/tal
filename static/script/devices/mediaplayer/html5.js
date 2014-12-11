@@ -161,12 +161,12 @@ require.def(
             */
             pause: function() {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                this._pauseSentinelAttemptCount = 0;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PAUSED:
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
+                        this._pauseSentinelAttemptCount = 0;
                         if (this._readyToPlayFrom) {
                             // If we are not ready to playFrom, then calling pause would seek to the start of media, which we might not want.
                             this._mediaElement.pause();
@@ -174,6 +174,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._pauseSentinelAttemptCount = 0;
                         this._mediaElement.pause();
                         this._toPaused();
                         break;

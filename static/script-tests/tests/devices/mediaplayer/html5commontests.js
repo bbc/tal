@@ -1403,7 +1403,26 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testPauseSentinelAttemptCountIsResetByCallingPause = function(queue) {
+    mixins.testPauseSentinelAttemptCountIsNotResetByCallingPauseWhenAlreadyPaused = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+
+            self._mediaPlayer.pause();
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
+        });
+    };
+
+    mixins.testPauseSentinelAttemptCountIsResetByCallingPauseWhenNotPaused = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
