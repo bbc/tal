@@ -170,7 +170,9 @@
                 assertFunction("Expecting " + func + " to be a function", window[func]);
             }
 
-            this._mediaPlayer.pause();
+            try {
+                this._mediaPlayer.pause();
+            } catch (e) {}
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -242,7 +244,9 @@
                 assertEquals(func, playerPlugin[hook]);
             }
 
-            this._mediaPlayer.pause();
+            try {
+                this._mediaPlayer.pause();
+            } catch (e) {}
 
             for (i = 0; i < listenerFunctions.length; i++){
                 func = listenerFunctions[i];
@@ -645,7 +649,9 @@
 
             assert(playerPlugin.Stop.notCalled);
 
-            this._mediaPlayer.beginPlayback();
+            try {
+                this._mediaPlayer.beginPlayback();
+            } catch (e) {}
 
             assert(playerPlugin.Stop.calledOnce);
         });
@@ -1083,6 +1089,7 @@
             var addStub = this.sandbox.stub(window, "addEventListener");
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.beginPlayback();
 
             var filtered = addStub.withArgs("hide", sinon.match.func, false);
             assert(filtered.calledOnce);
@@ -1127,6 +1134,7 @@
             var addStub = this.sandbox.stub(window, "addEventListener");
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "testUrl", "testMimeType");
+            this._mediaPlayer.beginPlayback();
 
             var filtered = addStub.withArgs("unload", sinon.match.func, false);
             assert(filtered.calledOnce);
@@ -1549,6 +1557,18 @@
             assert(this._mediaPlayer.getSource().indexOf("|COMPONENT=HLS") === -1);
         });
     };
+
+    this.SamsungMapleMediaPlayerTests.prototype.testCallingStopFromStoppedStateDoesNotCallDeviceStop = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            playerPlugin.Stop.reset();
+
+            this._mediaPlayer.stop();
+            assert(playerPlugin.Stop.notCalled);
+        });
+    };
+
 
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive

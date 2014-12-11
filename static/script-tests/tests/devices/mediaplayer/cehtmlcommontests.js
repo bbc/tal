@@ -644,6 +644,17 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testCallingStopFromStoppedStateDoesNotCallDeviceStop = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            fakeCEHTMLObject.stop.reset();
+
+            this._mediaPlayer.stop();
+            assert(fakeCEHTMLObject.stop.notCalled);
+        });
+    };
+
     mixins.testSentinelTimerCleanedUpOnReset = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -656,6 +667,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             clearIntervalSpy.reset();
 
             assert(clearIntervalSpy.notCalled);
+            this._mediaPlayer.stop();
             this._mediaPlayer.reset();
             assert(clearIntervalSpy.calledWith(this._mediaPlayer._sentinelInterval));
         });
@@ -893,7 +905,9 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assert(seekSpy.calledOnce);
 
             // Transition to error state via invalid API call
-            this._mediaPlayer.beginPlayback();
+            try {
+                this._mediaPlayer.beginPlayback();
+            } catch (e) {}
 
             this._mediaPlayer.reset();
             // Some (possibly all) CEHTML devices will reset their playPosition upon reset

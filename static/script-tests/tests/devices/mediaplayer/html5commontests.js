@@ -959,6 +959,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testCallingStopInStoppedStateDoesNotCallPauseOnTheDevice = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            stubCreateElementResults.video.pause.reset();
+            self._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.notCalled);
+        });
+    };
+
     // Sentinels
     mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHaltsOutsideTimeToleranceOfStateChanged = function(queue) {
         expectAsserts(3);

@@ -205,6 +205,9 @@ require.def(
             */
             stop: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
@@ -224,6 +227,9 @@ require.def(
             */
             reset: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.EMPTY:
+                        break;
+
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
                         this._toEmpty();
@@ -478,6 +484,7 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
+                throw "ApiError: " + errorMessage;
             },
 
             _enterBufferingSentinel: function() {
