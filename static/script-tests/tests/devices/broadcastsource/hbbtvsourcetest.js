@@ -863,7 +863,7 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelListError",
                 message : "Channel list is not available"
             }));
@@ -888,7 +888,7 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelListError",
                 message : "Channel list is empty or not available"
             }));
@@ -913,7 +913,7 @@
             broadcastSource.getChannelList(params);
 
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelListError",
                 message : "Channel list is empty or not available"
             }));
@@ -1050,7 +1050,7 @@
         doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelError",
                 message: "NonExistentChannel not found in channel list"
             }));
@@ -1065,7 +1065,7 @@
         doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelError",
                 message: "NonExistentChannel not found in channel list"
             }));
@@ -1080,7 +1080,7 @@
         doChannelTuningTest(this, queue, "NonExistentChannel", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelError",
                 message: "NonExistentChannel not found in channel list"
             }));
@@ -1183,7 +1183,7 @@
         doChannelTuningTest(this, queue, "BBC Three", function (params) {
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
+            assert(params.onError.calledWithMatch({
                 name : "ChannelListError",
                 message : "Channel list is empty or not available"
             }));

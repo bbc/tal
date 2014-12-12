@@ -1,14 +1,22 @@
 {
-  "name": "bbc-fmtvp-tal",
-  "version": "0.0.0",
-  "description": "Library for building applications for Connected TV devices",
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-cli": "~0.1.6",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-watch": "~0.6.1"
-  },
-  "dependencies": {
-    "grunt-complexity": "^0.2.0"
-  }
+    "name": "bbc-fmtvp-tal",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/fmtvp/tal.git"
+    },
+    "description": "Library for building applications for Connected TV devices",
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-cli": "~0.1.6",
+    	"grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-watch": "~0.6.1",
+        "grunt-contrib-jasmine": "~0.5.2"
+    },
+    "dependencies": {
+        "grunt-complexity": "^0.2.0"
+    },
+    "scripts": {
+       "test": "grunt test --verbose"
+    }
 }
