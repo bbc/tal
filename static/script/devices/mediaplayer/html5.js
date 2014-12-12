@@ -47,9 +47,9 @@ require.def(
 
             init: function() {
                 this._super();
+                this._setSentinelLimits();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
-
 
             /**
             * @inheritDoc
@@ -87,8 +87,8 @@ require.def(
                     this._mediaElement.addEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.addEventListener("loadedmetadata", this._wrapOnMetadata, false);
 
-                    var body = document.getElementsByTagName("body")[0];
-                    device.prependChildElement(body, this._mediaElement);
+                    var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
+                    device.prependChildElement(appElement, this._mediaElement);
 
                     this._mediaElement.preload = "auto";
                     this._mediaElement.src = url;
@@ -106,6 +106,7 @@ require.def(
             playFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
+                this._sentinelLimits.seek.currentAttemptCount = 0;
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -162,6 +163,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
+                        this._sentinelLimits.pause.currentAttemptCount = 0;
                         if (this._readyToPlayFrom) {
                             // If we are not ready to playFrom, then calling pause would seek to the start of media, which we might not want.
                             this._mediaElement.pause();
@@ -169,6 +171,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._sentinelLimits.pause.currentAttemptCount = 0;
                         this._mediaElement.pause();
                         this._toPaused();
                         break;
@@ -205,6 +208,9 @@ require.def(
             */
             stop: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PLAYING:
                     case MediaPlayer.STATE.PAUSED:
@@ -224,6 +230,9 @@ require.def(
             */
             reset: function() {
                 switch (this.getState()) {
+                    case MediaPlayer.STATE.EMPTY:
+                        break;
+
                     case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.ERROR:
                         this._toEmpty();
@@ -478,6 +487,24 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
+                throw "ApiError: " + errorMessage;
+            },
+
+            _setSentinelLimits: function() {
+                this._sentinelLimits = {
+                    pause: {
+                        maximumAttempts: 2,
+                        successEvent: MediaPlayer.EVENT.SENTINEL_PAUSE,
+                        failureEvent: MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE,
+                        currentAttemptCount: 0
+                    },
+                    seek: {
+                        maximumAttempts: 2,
+                        successEvent: MediaPlayer.EVENT.SENTINEL_SEEK,
+                        failureEvent: MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE,
+                        currentAttemptCount: 0
+                    }
+                };
             },
 
             _enterBufferingSentinel: function() {
@@ -501,29 +528,54 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
-                if (this._sentinelSeekTime !== undefined) {
-                    var currentTime = this.getCurrentTime();
-
-                    if(Math.abs(currentTime - this._sentinelSeekTime) > 15) {
-                        this._emitEvent(MediaPlayer.EVENT.SENTINEL_SEEK);
-                        //this._mediaElement.play();
-                        this._mediaElement.currentTime = this._sentinelSeekTime;
-                        this._lastSentinelTime = this._sentinelSeekTime;
-                        return true;
-                    } else {
-                        this._sentinelSeekTime = currentTime;
-                    }
+                if (this._sentinelSeekTime === undefined) {
+                    return false;
                 }
-                return false;
+
+                var self = this;
+                var currentTime = this.getCurrentTime();
+                var sentinelActionTaken = false;
+
+                if (Math.abs(currentTime - this._sentinelSeekTime) > 15) {
+                    sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function() {
+                        self._mediaElement.currentTime = self._sentinelSeekTime;
+                    });
+                } else {
+                    this._sentinelSeekTime = currentTime;
+                }
+
+                return sentinelActionTaken;
             },
 
             _shouldBePausedSentinel: function() {
+                var sentinelActionTaken = false;
                 if (this._hasSentinelTimeAdvanced) {
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
-                    this._emitEvent(MediaPlayer.EVENT.PAUSED);
-                    this._mediaElement.pause();
+                    var mediaElement = this._mediaElement;
+                    sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.pause, function() {
+                        mediaElement.pause();
+                    });
+                }
+
+                return sentinelActionTaken;
+            },
+
+            _nextSentinelAttempt: function(sentinelInfo, attemptFn) {
+                var currentAttemptCount, maxAttemptCount;
+
+                sentinelInfo.currentAttemptCount += 1;
+                currentAttemptCount = sentinelInfo.currentAttemptCount;
+                maxAttemptCount = sentinelInfo.maximumAttempts;
+
+                if (currentAttemptCount === maxAttemptCount + 1) {
+                    this._emitEvent(sentinelInfo.failureEvent);
+                }
+
+                if (currentAttemptCount <= maxAttemptCount) {
+                    attemptFn();
+                    this._emitEvent(sentinelInfo.successEvent);
                     return true;
                 }
+
                 return false;
             },
 

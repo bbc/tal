@@ -186,6 +186,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._application = application;
 
                 self._eventCallback = self.sandbox.stub();
                 self._mediaPlayer.addEventCallback(null, self._eventCallback);
@@ -286,14 +287,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedVideoElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.video, body.firstChild);
+            var appElement = self._application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.video, appElement.firstChild);
         });
     };
 
@@ -310,14 +310,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testCreatedAudioElementIsPutAtBackOfDOM = function(queue) {
+    mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
-		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
-
-            var body = document.getElementsByTagName("body")[0];
-            assertSame(stubCreateElementResults.audio, body.firstChild);
+            var appElement = self._application.getRootWidget().outputElement;
+            assertSame(stubCreateElementResults.audio, appElement.firstChild);
         });
     };
 
@@ -960,6 +959,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testCallingStopInStoppedStateDoesNotCallPauseOnTheDevice = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            stubCreateElementResults.video.pause.reset();
+            self._mediaPlayer.stop();
+
+            assert(stubCreateElementResults.video.pause.notCalled);
+        });
+    };
+
     // Sentinels
     mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHaltsOutsideTimeToleranceOfStateChanged = function(queue) {
         expectAsserts(3);
@@ -1202,7 +1214,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
-        expectAsserts(4);
+        expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1214,7 +1226,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
-            assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assert(stubCreateElementResults.video.pause.calledOnce);
             assertState(self, MediaPlayer.STATE.PAUSED);
         });
@@ -1352,9 +1363,235 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    // Retire playbeforeseekyaddayadda sub modifier
-    // Test live stream playback: make sure sentinels dont interfere!
-    // Test some of the bugs
+    function resetStubsThenAdvanceTimeThenRunSentinels(self) {
+        clearEvents(self);
+        stubCreateElementResults.video.pause.reset();
+        advancePlayTime(self);
+        fireSentinels(self);
+    }
+
+    mixins.testPauseSentinelRetriesPauseTwice = function(queue) {
+        expectAsserts(6);
+
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+    mixins.testPauseSentinelEmitsFailureEventAndGivesUpOnThirdAttempt = function(queue) {
+        expectAsserts(6);
+
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
+        });
+    };
+
+    mixins.testPauseSentinelAttemptCountIsNotResetByCallingPauseWhenAlreadyPaused = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+
+            self._mediaPlayer.pause();
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE_FAILURE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.notCalled);
+        });
+    };
+
+    mixins.testPauseSentinelAttemptCountIsResetByCallingPauseWhenNotPaused = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            self._mediaPlayer.resume();
+            self._mediaPlayer.pause();
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+    mixins.testSeekSentinelRetriesSeekTwice = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceDoesNotEnterBufferingUponSeek = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(2, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceEntersBufferingUponSeek = function(queue) {
+        expectAsserts(4);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            deviceMockingHooks.startBuffering(this._mediaPlayer);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
+            assertEquals(1, stubCreateElementResults.video.currentTime);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvents(self);
+            assertEquals(2, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelGivingUpDoesNotPreventPauseSentinelActivation = function(queue) {
+        expectAsserts(6);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            self._mediaPlayer.pause();
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assertState(self, MediaPlayer.STATE.PAUSED);
+
+            setPlayTimeToZero(self);
+            advancePlayTime(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+
+            setPlayTimeToZero(self);
+            advancePlayTime(self);
+            advancePlayTime(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            // Ensure that pause has a second attempt (rather than seek returning, etc)
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+            assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+    mixins.testSeekSentinelAttemptCountIsResetByCallingPlayFrom = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
+
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            setPlayTimeToZero(self);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
+    // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
 
     // *******************************************
     // ********* Mixin the functions *************
