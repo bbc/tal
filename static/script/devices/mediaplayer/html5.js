@@ -405,8 +405,10 @@ require.def(
                 var clampedTime = this._getClampedTime(seconds);
                 this._mediaElement.currentTime = clampedTime;
                 this._sentinelSeekTime = clampedTime;
-                var range = this._getSeekableRange();
-                RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
+                if (seconds !== clampedTime) {
+                    var range = this._getSeekableRange();
+                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
+                }
             },
 
             _wipe: function() {
