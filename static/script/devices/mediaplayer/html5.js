@@ -122,12 +122,8 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        var clampedTime = this._getClampedTime(seconds);
-                        if (clampedTime !== seconds) {
-                            var range = this._getSeekableRange();
-                            RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
-                        }
-                        if (this._isNearToCurrentTime(clampedTime)) {
+                        this._targetSeekTime = this._getClampedTimeForPlayFrom(seconds);
+                        if (this._isNearToCurrentTime(this._targetSeekTime)) {
                             this._toPlaying();
                         } else {
                             this._playFromIfReady();
@@ -407,13 +403,18 @@ require.def(
             },
 
             _seekTo: function(seconds) {
-                var clampedTime = this._getClampedTime(seconds);
+                var clampedTime = this._getClampedTimeForPlayFrom(seconds);
                 this._mediaElement.currentTime = clampedTime;
                 this._sentinelSeekTime = clampedTime;
-                if (seconds !== clampedTime) {
+            },
+
+            _getClampedTimeForPlayFrom: function(seconds) {
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
                     var range = this._getSeekableRange();
                     RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
                 }
+                return clampedTime;
             },
 
             _wipe: function() {

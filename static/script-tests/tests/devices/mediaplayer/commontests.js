@@ -944,6 +944,26 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         });
     };
 
+    mixins.testWhenPlayFromGetsClampedFromPlayingStateWithNonZeroEndOfRangeADebugMessageIsLoggedOnce = function(queue) {
+        expectAsserts(1);
+        doTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.playFrom(110);
+
+            assert(debugStub.withArgs("playFrom 110 clamped to 99.9 - seekable range is { start: 0, end: 100 }").calledOnce);
+        });
+    };
+
     mixins.testWhenPlayFromGetsClampedFromPausedStateADebugMessageIsLogged = function(queue) {
         expectAsserts(1);
         doTest(this, queue, function (MediaPlayer) {
