@@ -1298,6 +1298,25 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testWhenPlayFromGetsClampedFromStoppedADebugMessageIsLogged = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this._device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(debugStub.withArgs("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }").calledOnce);
+        });
+    };
+
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
 
     // *******************************************

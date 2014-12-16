@@ -917,7 +917,6 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             this._mediaPlayer.playFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            debugger;
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
 
             assert(debugStub.withArgs("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }").calledOnce);
