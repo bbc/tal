@@ -766,7 +766,7 @@
             this._mediaPlayer.playFrom(100);
 
             assert(playerPlugin.JumpForward.calledOnce);
-            assert(playerPlugin.JumpForward.calledWith(59.9));
+            assert(playerPlugin.JumpForward.calledWith(58.9));
         });
     };
 
@@ -787,7 +787,7 @@
             window.SamsungMapleOnCurrentPlayTime(0);
 
             assert(playerPlugin.JumpForward.calledOnce);
-            assertEquals(59.9, playerPlugin.JumpForward.args[0][0]);
+            assertEquals(58.9, playerPlugin.JumpForward.args[0][0]);
         });
     };
 
@@ -808,7 +808,7 @@
             window.SamsungMapleOnCurrentPlayTime(0);
 
             assert(playerPlugin.JumpForward.calledOnce);
-            assertEquals(59.9, playerPlugin.JumpForward.args[0][0]);
+            assertEquals(58.9, playerPlugin.JumpForward.args[0][0]);
         });
     };
 
@@ -827,7 +827,7 @@
             this._mediaPlayer.playFrom(100);
 
             assert(playerPlugin.JumpForward.calledOnce);
-            assert(playerPlugin.JumpForward.calledWith(59.9));
+            assert(playerPlugin.JumpForward.calledWith(58.9));
         });
     };
 
@@ -842,7 +842,7 @@
             this._mediaPlayer.playFrom(100);
 
             assert(playerPlugin.ResumePlay.calledTwice);
-            assertEquals(59.9, playerPlugin.ResumePlay.args[1][1]);
+            assertEquals(58.9, playerPlugin.ResumePlay.args[1][1]);
         });
     };
 
