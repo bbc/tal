@@ -219,6 +219,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
+    var getToPlayingAtEnd = function (self, MediaPlayer) {
+        getToPlaying(self, MediaPlayer);
+        stubCreateElementResults.video.currentTime = 100;
+        fireSentinels(self);
+    };
+
     var getToPlayingWithBeginPlayback = function (self, MediaPlayer, time) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
         self._mediaPlayer.beginPlayback();
@@ -262,6 +268,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     var setPlayTimeToZero = function (self) {
         stubCreateElementResults.video.currentTime = 0;
     };
+
 
     //---------------------
     // HTML5 specific tests
@@ -550,7 +557,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             getToPlaying(self, MediaPlayer);
             self._mediaPlayer.playFrom(110);
 
-            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+            assertEquals(98.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -631,7 +638,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.playFrom(110);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
-            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+            assertEquals(98.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -699,7 +706,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+            assertEquals(98.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -732,7 +739,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(110);
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+            assertEquals(98.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -1110,7 +1117,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
-            assertEquals(99.9, stubCreateElementResults.video.currentTime);
+            assertEquals(98.9, stubCreateElementResults.video.currentTime);
         });
     };
 
@@ -1250,22 +1257,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlaying(self, MediaPlayer, 100);
-
-            clearEvents(self);
-            fireSentinels(self);
-
-            assertEvent(self, MediaPlayer.EVENT.SENTINEL_COMPLETE);
-            assertEvent(self, MediaPlayer.EVENT.COMPLETE);
-            assertState(self, MediaPlayer.STATE.COMPLETE);
-        });
-    };
-
-    mixins.testEndOfMediaSentinelGoesToCompleteIfTimeIsNotAdvancingWhenWithinASecondOfEndAndNoCompleteEventFired = function(queue) {
-        expectAsserts(3);
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlaying(self, MediaPlayer, 99);
+            getToPlayingAtEnd(self, MediaPlayer);
 
             clearEvents(self);
             fireSentinels(self);

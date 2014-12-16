@@ -103,7 +103,7 @@ require.def(
             /**
              * @constant {Number}
              */
-            CLAMP_OFFSET_FROM_END_OF_RANGE: 0.1,
+            CLAMP_OFFSET_FROM_END_OF_RANGE: 1.1,
 
             /**
              * Clamp a time value so it does not exceed the current range.
