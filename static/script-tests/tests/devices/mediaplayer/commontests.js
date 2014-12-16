@@ -902,7 +902,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     // *********** clamped playFrom  *************
     // *******************************************
 
-    mixins.testWhenPlayFromGetsClampedADebugMessageIsLogged = function(queue) {
+    mixins.testWhenPlayFromGetsClampedFromBufferingADebugMessageIsLogged = function(queue) {
         expectAsserts(1);
         doTest(this, queue, function (MediaPlayer) {
             var debugStub = this.sandbox.stub();
@@ -913,9 +913,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             });
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
             this._mediaPlayer.playFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            debugger;
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
 
             assert(debugStub.calledWith("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }"));
         });
