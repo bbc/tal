@@ -920,7 +920,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             debugger;
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
 
-            assert(debugStub.calledWith("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }"));
+            assert(debugStub.withArgs("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }").calledOnce);
         });
     };
 
@@ -940,7 +940,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             this._mediaPlayer.playFrom(110);
 
-            assert(debugStub.calledWith("playFrom 110 clamped to 0 - seekable range is { start: 0, end: 0 }"));
+            assert(debugStub.withArgs("playFrom 110 clamped to 0 - seekable range is { start: 0, end: 0 }").calledOnce);
         });
     };
 
@@ -981,7 +981,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             this._mediaPlayer.pause();
             this._mediaPlayer.playFrom(80);
 
-            assert(debugStub.calledWith("playFrom 80 clamped to 59.9 - seekable range is { start: 0, end: 60 }"));
+            assert(debugStub.withArgs("playFrom 80 clamped to 59.9 - seekable range is { start: 0, end: 60 }").calledOnce);
         });
     };
 
