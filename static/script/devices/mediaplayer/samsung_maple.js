@@ -103,10 +103,7 @@ require.def(
             */
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                var seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
-                if (seekingTo !== seconds) {
-                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + seekingTo + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
-                }
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
@@ -356,11 +353,7 @@ require.def(
             },
 
             _deferredSeek: function() {
-                var clampedTime = this._getClampedTime(this._deferSeekingTo);
-                if (clampedTime !== this._deferSeekingTo) {
-                    RuntimeContext.getDevice().getLogger().debug("playFrom " + this._deferSeekingTo + " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
-                }
-
+                var clampedTime = this._getClampedTimeForPlayFrom(this._deferSeekingTo);
                 var isNearCurrentTime = this._isNearToCurrentTime(clampedTime);
 
                 if (isNearCurrentTime) {
@@ -372,6 +365,14 @@ require.def(
                         this._deferSeekingTo = null;
                     }
                 }
+            },
+
+            _getClampedTimeForPlayFrom: function (seconds) {
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
+                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds+ " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
+                }
+                return clampedTime;
             },
 
             _registerEventHandlers: function() {
