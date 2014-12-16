@@ -936,11 +936,11 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.playFrom(0);
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             this._mediaPlayer.playFrom(110);
 
-            assert(debugStub.calledWith("playFrom 110 clamped to 99.9 - seekable range is { start: 0, end: 100 }"));
+            assert(debugStub.calledWith("playFrom 110 clamped to 0 - seekable range is { start: 0, end: 0 }"));
         });
     };
 

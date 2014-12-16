@@ -122,7 +122,12 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (this._isNearToCurrentTime(seconds)) {
+                        var clampedTime = this._getClampedTime(seconds);
+                        if (clampedTime !== seconds) {
+                            var range = this._getSeekableRange();
+                            RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
+                        }
+                        if (this._isNearToCurrentTime(clampedTime)) {
                             this._toPlaying();
                         } else {
                             this._playFromIfReady();
