@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch native external media players
+ * @fileOverview Requirejs module containing device modifier for CEHTML media playback
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -117,16 +117,16 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        var seekResult = this._mediaElement.seek(this._getClampedTime(seconds) * 1000);
+                        var seekResult = this._seekTo(seconds);
                         if(seekResult === false) {
                             this._toPlaying();
                         }
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
-                        // TODO: consider always deferring play(1) until playStateChange to 2 OR deferring seek until playStateChange to 3, 4, or 1
                         this._toBuffering();
-                        this._seekAndPlayFromPaused(this._getClampedTime(seconds) * 1000);
+                        this._seekTo(seconds);
+                        this._mediaElement.play(1);
                         break;
 
                     default:
@@ -157,7 +157,6 @@ require.def(
             */
             pause: function () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
-                // TODO: Spec says we can pause from buffering. Will this help observed device issues?
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
                     case MediaPlayer.STATE.PAUSED:
@@ -393,11 +392,6 @@ require.def(
                 }
             },
 
-            _seekAndPlayFromPaused: function(seconds) {
-                this._mediaElement.seek(seconds);
-                this._mediaElement.play(1);
-            },
-
             _playAndSetDeferredSeek: function(seconds) {
                 this._mediaElement.play(1);
                 if (seconds > 0) {
@@ -410,8 +404,16 @@ require.def(
             },
 
             _performDeferredSeek: function() {
-                this._mediaElement.seek(this._getClampedTime(this._deferSeekingTo) * 1000);
+                this._seekTo(this._deferSeekingTo);
                 this._deferSeekingTo = undefined;
+            },
+
+            _seekTo: function(seconds) {
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
+                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
+                }
+                return this._mediaElement.seek(clampedTime * 1000);
             },
 
             _waitingToPause: function() {

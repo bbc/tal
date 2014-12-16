@@ -85,8 +85,12 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 self.eventCallback = self.sandbox.stub();
                 self._mediaPlayer.addEventCallback(null, self.eventCallback);
 
-                test.call(self, MediaPlayer);
-                deviceMockingHooks.unmockTime();
+                try {
+                    test.call(self, MediaPlayer);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime();
+                }
             }, config);
     };
 
@@ -890,6 +894,90 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
                 this._mediaPlayer.reset();
             } catch (e) {}
             assert(errorStub.calledWith("Cannot reset while in the 'PLAYING' state"));
+        });
+    };
+
+    // *******************************************
+    // ***** Debug message logged for ************
+    // *********** clamped playFrom  *************
+    // *******************************************
+
+    mixins.testWhenPlayFromGetsClampedADebugMessageIsLogged = function(queue) {
+        expectAsserts(1);
+        doTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(debugStub.calledWith("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }"));
+        });
+    };
+
+    mixins.testWhenPlayFromGetsClampedFromPlayingStateADebugMessageIsLogged = function(queue) {
+        expectAsserts(1);
+        doTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.playFrom(110);
+
+            assert(debugStub.calledWith("playFrom 110 clamped to 99.9 - seekable range is { start: 0, end: 100 }"));
+        });
+    };
+
+    mixins.testWhenPlayFromGetsClampedFromPausedStateADebugMessageIsLogged = function(queue) {
+        expectAsserts(1);
+        doTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.beginPlayback();
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+            this._mediaPlayer.pause();
+            this._mediaPlayer.playFrom(80);
+
+            assert(debugStub.calledWith("playFrom 80 clamped to 59.9 - seekable range is { start: 0, end: 60 }"));
+        });
+    };
+
+    mixins.testWhenPlayFromDoesNotGetClampedADebugMessageIsNotLogged = function(queue) {
+        expectAsserts(1);
+        doTest(this, queue, function (MediaPlayer) {
+            var debugStub = this.sandbox.stub();
+            var warnStub = this.sandbox.stub();
+            this.sandbox.stub(this.device, "getLogger").returns({
+                debug: debugStub,
+                warn: warnStub
+            });
+
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assert(debugStub.notCalled);
         });
     };
 
