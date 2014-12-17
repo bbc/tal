@@ -103,7 +103,7 @@ require.def(
             */
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                var seekingTo = this._range ? this._getClampedTime(seconds) : seconds;
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
@@ -353,16 +353,26 @@ require.def(
             },
 
             _deferredSeek: function() {
-                var isNearCurrentTime = this._isNearToCurrentTime(this._deferSeekingTo);
+                var clampedTime = this._getClampedTimeForPlayFrom(this._deferSeekingTo);
+                var isNearCurrentTime = this._isNearToCurrentTime(clampedTime);
+
                 if (isNearCurrentTime) {
                     this._toPlaying();
                     this._deferSeekingTo = null;
                 } else {
-                    var seekResult = this._seekTo(this._getClampedTime(this._deferSeekingTo));
+                    var seekResult = this._seekTo(clampedTime);
                     if (seekResult) {
                         this._deferSeekingTo = null;
                     }
                 }
+            },
+
+            _getClampedTimeForPlayFrom: function (seconds) {
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
+                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds+ " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
+                }
+                return clampedTime;
             },
 
             _registerEventHandlers: function() {
