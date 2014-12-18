@@ -193,7 +193,10 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        this._mediaElement.play();
+                        if (this._readyToPlayFrom) {
+                            // If we are not ready to playFrom, then calling play would seek to the start of media, which we might not want.
+                            this._mediaElement.play();
+                        }
                         break;
 
                     case MediaPlayer.STATE.PAUSED:

@@ -522,6 +522,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testPlayNotCalledOnMediaElementWhenResumeInBufferingStateBeforeMetadata = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.playFrom(0);
+            self._mediaPlayer.pause();
+
+            stubCreateElementResults.video.play.reset();
+
+            self._mediaPlayer.resume();
+
+            assert(stubCreateElementResults.video.play.notCalled);
+        });
+    };
+
     mixins.testPausePassedThroughToMediaElementWhenInBufferedState = function(queue) {
         expectAsserts(1);
         var self = this;
