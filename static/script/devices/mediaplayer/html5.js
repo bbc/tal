@@ -190,7 +190,10 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
+                        this._mediaElement.play();
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
