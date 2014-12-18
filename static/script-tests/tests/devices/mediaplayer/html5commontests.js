@@ -997,7 +997,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     // Sentinels
-    mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHaltsOutsideTimeToleranceOfStateChanged = function(queue) {
+    mixins.testEnterBufferingSentinelCausesTransitionToBufferingWhenPlaybackHaltsForMoreThanOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1015,7 +1015,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWithinTimeToleranceOfStateChanged = function(queue) {
+    mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWhenOnlyOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1023,7 +1023,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             advancePlayTime(self);
 
             clearEvents(self);
-            fireSentinels(self);
             fireSentinels(self);
 
             assertNoEvents(self);
@@ -1487,7 +1486,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testSeekSentinelEmitsFailureEventAndGivesUpOnThirdAttemptWhenDeviceDoesNotEnterBufferingUponSeek = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 50);
@@ -1506,7 +1505,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             resetStubsThenAdvanceTimeThenRunSentinels(self);
 
-            assertNoEvents(self);
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK_FAILURE);
             assertEquals(2, stubCreateElementResults.video.currentTime);
         });
     };
