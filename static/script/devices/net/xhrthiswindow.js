@@ -44,13 +44,13 @@ require.def(
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					xhr.onreadystatechange = null;
-					if (xhr.status === 200) {
+					if (xhr.status >= 200 && xhr.status < 300) {
 						if (opts.onLoad) {
-							opts.onLoad(xhr.responseText);
+							opts.onLoad(xhr.responseText, xhr.status);
 						}
 					} else {
 						if (opts.onError) {
-							opts.onError(xhr.responseText);
+							opts.onError(xhr.responseText, xhr.status);
 						}
 					}
 				}
