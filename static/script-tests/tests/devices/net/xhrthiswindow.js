@@ -52,8 +52,9 @@
         "modules": {
             "base": "antie/devices/browserdevice",
             "modifiers": [
-                'antie/devices/net/default',
-                'antie/devices/net/xhrthiswindow'
+                "antie/devices/net/default",
+                "antie/devices/net/xhrthiswindow",
+                "antie/devices/data/json2"
             ]
         },
         "input": {
