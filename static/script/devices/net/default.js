@@ -218,7 +218,8 @@ require.def(
          * the device, falling back to a JSON-P call otherwise.
          * @param {String} url The URL to load. A callback GET parameter will be appended if JSON-P is used.
          * @param {Object} callbacks Object containing onSuccess and onError callbacks. onSuccess will be called
-         * with the decoded JSON object if the call is successful.
+         * with the decoded JSON object if the call is successful. This object may also contain a headers property,
+         * which should be an object containing custom HTTP headers to add to the request.
          * @param {Object} [options] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
          * @param {Number} [options.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
          * @param {String} [options.id] Used in the callback function name for the JSON-P call. Default: a random string.
@@ -226,26 +227,32 @@ require.def(
          * for JSON-P call. Default: callback
          */
         Device.prototype.executeCrossDomainGet = function(url, callbacks, options) {
-           var self, callbackKey, callbackQuery;
-           self = this;
-           options = options || {};
-           if (configSupportsCORS(this.getConfig())) {
-               this.loadURL(url, {
-                   onLoad: function(jsonResponse) {
-                       callbacks.onSuccess(self.decodeJson(jsonResponse));
-                   },
-                   onError: callbacks.onError
-               });
-           } else {
-               callbackKey = options.callbackKey || 'callback';
-               callbackQuery = '?' + callbackKey + '=%callback%';
-               if(url.indexOf('?') === -1) {
-                   url = url + callbackQuery;
-               } else {
-                   url = url.replace('?', callbackQuery + '&');
-               }
-               this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
-           }
+            var self, callbackKey, callbackQuery, opts;
+            self = this;
+            options = options || {};
+            if (configSupportsCORS(this.getConfig())) {
+                opts = {
+                    onLoad: function(jsonResponse) {
+                        callbacks.onSuccess(self.decodeJson(jsonResponse));
+                    },
+                    onError: callbacks.onError
+                };
+
+                if (callbacks.headers) {
+                    opts.headers = callbacks.headers;
+                }
+
+                this.loadURL(url, opts);
+            } else {
+                callbackKey = options.callbackKey || 'callback';
+                callbackQuery = '?' + callbackKey + '=%callback%';
+                if(url.indexOf('?') === -1) {
+                    url = url + callbackQuery;
+                } else {
+                    url = url.replace('?', callbackQuery + '&');
+                }
+                this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
+            }
         };
 
         /**
@@ -253,13 +260,14 @@ require.def(
          * @param {String} url The URL to post to.
          * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
          * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
-         * used for the name of the form filed if the iframe hack is used
+         * used for the name of the form filed if the iframe hack is used. This object may also contain a headers property,
+         * which should be an object containing custom HTTP headers to add to the request.
          */
         Device.prototype.executeCrossDomainPost = function(url, data, opts) {
-           var payload, modifiedOpts, formData;
-           payload = this.encodeJson(data);
-           if (configSupportsCORS(this.getConfig())) {
-               modifiedOpts = {
+            var payload, modifiedOpts, formData, header;
+            payload = this.encodeJson(data);
+            if (configSupportsCORS(this.getConfig())) {
+                modifiedOpts = {
                     onLoad: opts.onLoad,
                     onError: opts.onError,
                     headers: {
@@ -267,9 +275,19 @@ require.def(
                     },
                     data: payload,
                     method: "POST"
-               };
+                };
+
+                // Merge caller-supplied headers
+                if (opts.headers) {
+                    for (header in opts.headers) {
+                        if (opts.headers.hasOwnProperty(header)) {
+                            modifiedOpts.headers[header] = opts.headers[header];
+                        }
+                    }
+                }
+
                this.loadURL(url, modifiedOpts);
-           } else {
+            } else {
                formData = {};
                formData[opts.fieldName] = payload;
                this.crossDomainPost(url, formData, {
@@ -277,7 +295,7 @@ require.def(
                    onError: opts.onError,
                    blankUrl: opts.blankUrl
                });
-           }
+            }
         };
 
         function configSupportsCORS(config) {

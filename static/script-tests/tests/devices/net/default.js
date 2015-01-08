@@ -705,6 +705,76 @@
 		});
 	};
 
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetWithCustomHeadersWhenCorsIsSupported = function(queue) {
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice({"networking": { "supportsCORS": true }});
+
+            var message = { test : "myValue" };
+            var payload = JSON.stringify(message);
+
+            var successSpy = this.sandbox.spy();
+            var errorSpy = this.sandbox.spy();
+
+            var testUrl = "http://test";
+            var callbacks = {
+                    onSuccess : successSpy,
+                    onError : errorSpy,
+                    headers : {
+                        "Authorization": "Bearer: abc123"
+                    }
+            };
+            device.executeCrossDomainGet(testUrl, callbacks);
+
+            assertEquals(1, this.requests.length);
+
+            assertEquals("http://test", this.requests[0].url);
+            assertEquals("GET", this.requests[0].method);
+            assertEquals(null, this.requests[0].requestBody);
+            assertEquals("Bearer: abc123", this.requests[0].requestHeaders["Authorization"]);
+
+            this.requests[0].respond(200, { "Content-Type": "application/json;charset=utf-8" }, payload);
+            assert(errorSpy.notCalled);
+            assert(successSpy.calledOnce);
+            assert(successSpy.calledWith(message));
+        });
+    };
+
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostWithCustomHeadersWhenCorsIsSupported = function(queue) {
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice({"networking": { "supportsCORS": true }});
+
+            var message = { test : "myValue" };
+            var payload = JSON.stringify(message);
+
+            var successSpy = this.sandbox.spy();
+            var errorSpy = this.sandbox.spy();
+
+            var testUrl = "http://test";
+            var callbacks = {
+                    onLoad : successSpy,
+                    onError : errorSpy,
+                    headers : {
+                        "Authorization": "Bearer: abc123"
+                    }
+            };
+            device.executeCrossDomainPost(testUrl, message, callbacks);
+
+            assertEquals(1, this.requests.length);
+
+            assertEquals("http://test", this.requests[0].url);
+            assertEquals("POST", this.requests[0].method);
+            assertEquals(payload, this.requests[0].requestBody);
+            assertEquals("Bearer: abc123", this.requests[0].requestHeaders["Authorization"]);
+            assertEquals("application/json;charset=utf-8", this.requests[0].requestHeaders["Content-Type"]);
+
+            this.requests[0].respond(200);
+
+            assert(errorSpy.notCalled);
+            assert(successSpy.calledOnce);
+            assert(successSpy.calledWith(""));
+        });
+    };
+
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostCallsCrossDomainPostWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
