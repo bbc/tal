@@ -41,7 +41,7 @@ require.def(
          * API in accordance with the HTML5 media specification.
          * @name antie.devices.mediaplayer.html5
          * @class
-         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         * @extends antie.devices.mediaplayer.MediaPlayer
          */
         var Player = MediaPlayer.extend({
 

@@ -43,7 +43,7 @@ require.def(
          * API in accordance with the HTML5 media specification.
          * @name antie.devices.mediaplayer.html5memoryleakunfix
          * @class
-         * @extends antie.devices.mediaplayer.html5.prototype
+         * @extends antie.devices.mediaplayer.html5
          */
         var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.html5memoryleakunfix.prototype */ {
             init: function() {

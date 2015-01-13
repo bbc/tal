@@ -41,7 +41,7 @@ require.def(
          * API in accordance with the CEHTML specification.
          * @name antie.devices.mediaplayer.cehtml
          * @class
-         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         * @extends antie.devices.mediaplayer.MediaPlayer
          */
         var Player = MediaPlayer.extend({
 
