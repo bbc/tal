@@ -310,6 +310,8 @@ require.def(
 
         /**
         * Media Player event names
+        * @name antie.devices.mediaplayer.MediaPlayer.EVENT
+        * @enum {String}
         */
         MediaPlayer.EVENT = {
             STOPPED:   "stopped",   // Event fired when playback is stopped
