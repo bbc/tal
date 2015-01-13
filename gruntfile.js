@@ -41,11 +41,27 @@ module.exports = function (grunt) {
                     broadcast: false                 // broadcast data over event-bus
                 }
             }
+        },
+        replace: {
+            jsdoctidy: {
+                src: ['jsdoc/**/*.html'],
+                overwrite: true,
+                replacements: [{
+                    from: '../symbols/',
+                    to: ''
+                },
+                {
+                    from: "</body>",
+                    to: grunt.file.read('jsdoc/footer.txt') + "</body>"
+                }]
+            }
         }
     });
 
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks('grunt-complexity');
+    grunt.loadNpmTasks('grunt-text-replace');
     grunt.registerTask('default', 'complexity');
+    grunt.registerTask('jsdoc', ['replace:jsdoctidy']);
 };
