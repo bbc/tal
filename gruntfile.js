@@ -43,7 +43,7 @@ module.exports = function (grunt) {
             }
         },
         replace: {
-            jsdoctidy: {
+            'jsdoc-tidy': {
                 src: ['jsdoc/**/*.html'],
                 overwrite: true,
                 replacements: [{
@@ -58,10 +58,26 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('generate-jsdoc', 'Generate JsDoc for TAL', function() {
+        var path = require('path');
+        var execSync = require('exec-sync');
+
+        if (grunt.file.exists('jsdoc/symbols')) {
+            grunt.file.delete('jsdoc/symbols');
+        }
+        grunt.file.recurse('static/script', function(absPath, rootDir, subDir, fileName) {
+            subDir = subDir || '';
+            grunt.file.copy(absPath, path.join('antie', 'static', 'script', subDir, fileName));
+        });
+
+        execSync('node_modules/jsdoc-toolkit/app/run.js -r=10 -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=jsdoc antie/static/script');
+        grunt.file.delete('antie');
+    });
+
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.registerTask('default', 'complexity');
-    grunt.registerTask('jsdoc', ['replace:jsdoctidy']);
+    grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
 };
