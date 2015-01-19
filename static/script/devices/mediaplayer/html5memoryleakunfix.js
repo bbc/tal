@@ -1,6 +1,6 @@
 /**
  * @fileOverview Requirejs module containing device modifier for HTML5 media playback
- * on devices clearing src on teardown causes problems.
+ * on devices where clearing src on teardown causes problems.
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -39,13 +39,13 @@ require.def(
          * causes problems.
          * Use this device modifier if a device implements the HTML5 media playback standard but
          * crashes or becomes unresponsive on teardown.
-         * It must support creation of <video> and <audio> elements, and those objects must expose an
+         * It must support creation of &lt;video&gt; and &lt;audio&gt; elements, and those objects must expose an
          * API in accordance with the HTML5 media specification.
-         * @name antie.devices.mediaplayer.html5memoryleakunfix
+         * @name antie.devices.mediaplayer.HTML5MemoryLeakUnfix
          * @class
-         * @extends antie.devices.mediaplayer.html5
+         * @extends antie.devices.mediaplayer.HTML5
          */
-        var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.html5memoryleakunfix.prototype */ {
+        var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.HTML5MemoryLeakUnfix.prototype */ {
             init: function() {
                 this._super();
             },

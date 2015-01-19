@@ -37,9 +37,9 @@ require.def(
         /**
          * Main MediaPlayer implementation for HTML5 devices.
          * Use this device modifier if a device implements the HTML5 media playback standard.
-         * It must support creation of <video> and <audio> elements, and those objects must expose an
+         * It must support creation of &lt;video&gt; and &lt;audio&gt; elements, and those objects must expose an
          * API in accordance with the HTML5 media specification.
-         * @name antie.devices.mediaplayer.html5
+         * @name antie.devices.mediaplayer.HTML5
          * @class
          * @extends antie.devices.mediaplayer.MediaPlayer
          */
