@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                 },
                 {
                     from: "</body>",
-                    to: grunt.file.read('jsdoc/footer.txt') + "</body>"
+                    to: grunt.file.read('jsdoc/footer.txt').trim() + "</body>"
                 }]
             }
         }
