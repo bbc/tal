@@ -1,5 +1,6 @@
 /**
- * @fileOverview Requirejs module containing CE-HTML media wrapper
+ * @fileOverview Requirejs module containing a helper to track seek state for
+ * CEHTML media modifier.
  *
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
