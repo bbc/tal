@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
 	.KEYW {color: #933;}
 	.COMM {color: #bbb; font-style: italic;}
 	.NUMB {color: #393;}
@@ -35,34 +35,44 @@
 <span class='line'> 28</span> </span><span class="NAME">require.def</span><span class="PUNC">(</span><span class="STRN">'antie/events/componentevent'</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 29</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="STRN">'antie/events/event'</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 30</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">Event</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">		</span><span class="STRN">'use strict'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 32</span> 
-<span class='line'> 33</span> </span><span class="WHIT">		</span><span class="COMM">/**
-<span class='line'> 34</span> 		 * Class of events raised when a {@link antie.widgets.Component} is being loaded/shown/hidden.
-<span class='line'> 35</span> 		 * @name antie.events.ComponentEvent
-<span class='line'> 36</span> 		 * @class
-<span class='line'> 37</span> 		 * @extends antie.events.Event
-<span class='line'> 38</span> 		 * @param {String} type The type of event.
-<span class='line'> 39</span> 		 * @param {antie.widgets.ComponentContainer} container The container of the component that fired the event.
-<span class='line'> 40</span> 		 * @param {antie.widgets.Component} component The component that fired the event.
-<span class='line'> 41</span> 		 * @param {Object} args Any arguments that were passed into the component when loaded.
-<span class='line'> 42</span> 		 * @param {Object} state Any state information that was stored on the component history stack for this component.
-<span class='line'> 43</span> 		 * @param {Boolean} fromBack True if the event was raised as a result of the user navigating 'back' in the component history.
-<span class='line'> 44</span> 		 */</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Event.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends antie.events.ComponentEvent.prototype */</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'> 47</span> 			 * @constructor
-<span class='line'> 48</span> 			 * @ignore
-<span class='line'> 49</span> 			 */</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">			</span><span class="NAME">init</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">state</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fromBack</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 51</span> </span><span class="WHIT">				</span><span class="NAME">this.container</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 52</span> </span><span class="WHIT">				</span><span class="NAME">this.component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">				</span><span class="NAME">this.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">				</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">state</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">				</span><span class="NAME">this.fromBack</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fromBack</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 56</span> </span><span class="WHIT">				</span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 61</span> </span></pre><!-- Insert an arbitrary footer here, e.g. Google Analytics --></body></html>
+<span class='line'> 31</span> </span><span class="WHIT">		</span><span class="COMM">/**
+<span class='line'> 32</span> 		 * Class of events raised when a {@link antie.widgets.Component} is being loaded/shown/hidden.
+<span class='line'> 33</span> 		 * @name antie.events.ComponentEvent
+<span class='line'> 34</span> 		 * @class
+<span class='line'> 35</span> 		 * @extends antie.events.Event
+<span class='line'> 36</span> 		 * @param {String} type The type of event.
+<span class='line'> 37</span> 		 * @param {antie.widgets.ComponentContainer} container The container of the component that fired the event.
+<span class='line'> 38</span> 		 * @param {antie.widgets.Component} component The component that fired the event.
+<span class='line'> 39</span> 		 * @param {Object} args Any arguments that were passed into the component when loaded.
+<span class='line'> 40</span> 		 * @param {Object} state Any state information that was stored on the component history stack for this component.
+<span class='line'> 41</span> 		 * @param {Boolean} fromBack True if the event was raised as a result of the user navigating 'back' in the component history.
+<span class='line'> 42</span> 		 */</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Event.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends antie.events.ComponentEvent.prototype */</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'> 45</span> 			 * @constructor
+<span class='line'> 46</span> 			 * @ignore
+<span class='line'> 47</span> 			 */</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">			</span><span class="NAME">init</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">state</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fromBack</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">				</span><span class="NAME">this.container</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">container</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">				</span><span class="NAME">this.component</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">component</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">				</span><span class="NAME">this.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">args</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">				</span><span class="NAME">this.state</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">state</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">				</span><span class="NAME">this.fromBack</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fromBack</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">				</span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span></pre><script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script></body></html>
