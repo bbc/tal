@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
 	.KEYW {color: #933;}
 	.COMM {color: #bbb; font-style: italic;}
 	.NUMB {color: #393;}
@@ -130,246 +130,248 @@
 <span class='line'>123</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>124</span> 
 <span class='line'>125</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>126</span>              * Manually sets length of te Mask. Normally this is measured from the DOM, but if the first alignment happens before
-<span class='line'>127</span>              * the DOM is ready, then culling strips may not get populated. In this case, call this first with the size in pixels of
-<span class='line'>128</span>              * the mask.
-<span class='line'>129</span>              * @param length {number} The length in pixels to use in Mask calculations.
-<span class='line'>130</span>              */</span><span class="WHIT">
-<span class='line'>131</span> </span><span class="WHIT">            </span><span class="NAME">setMaskLength</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">length</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>132</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setLength</span><span class="PUNC">(</span><span class="NAME">length</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>133</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>134</span> 
-<span class='line'>135</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>136</span>              * Removes a widget from the carousel
-<span class='line'>137</span>              * @param {antie.widgets.Widget} widget. Widget to remove from the DOM
+<span class='line'>126</span>              * Removes a widget from the carousel
+<span class='line'>127</span>              * @param {antie.widgets.Widget} widget. Widget to remove from the DOM
+<span class='line'>128</span>              */</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">            </span><span class="NAME">remove</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">retainElement</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.hasChildWidget</span><span class="PUNC">(</span><span class="NAME">widget.id</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">                    </span><span class="NAME">widget.removeClass</span><span class="PUNC">(</span><span class="STRN">'carouselItem'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.remove</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">retainElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>135</span> 
+<span class='line'>136</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>137</span>              * Removes all widgets from the carousel
 <span class='line'>138</span>              */</span><span class="WHIT">
-<span class='line'>139</span> </span><span class="WHIT">            </span><span class="NAME">remove</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">retainElement</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>140</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.hasChildWidget</span><span class="PUNC">(</span><span class="NAME">widget.id</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">                    </span><span class="NAME">widget.removeClass</span><span class="PUNC">(</span><span class="STRN">'carouselItem'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.remove</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">retainElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>145</span> 
-<span class='line'>146</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>147</span>              * Removes all widgets from the carousel
-<span class='line'>148</span>              */</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">            </span><span class="NAME">removeAll</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>150</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.removeAll</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>151</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>152</span> 
-<span class='line'>153</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>154</span>              * Aligns the carousel to the next enabled widget after that currently aligned.
-<span class='line'>155</span>              * If no alignment has been performed previously it will align to the next enabled widget after that at index 0
-<span class='line'>156</span>              * If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
-<span class='line'>157</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
-<span class='line'>158</span>              * @param {Object} [options] An animation options object
-<span class='line'>159</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
-<span class='line'>160</span>              * @param {Number} [options.duration] The duration of the alignment in ms
-<span class='line'>161</span>              * @param {String} [options.easing] The alignment easing function
-<span class='line'>162</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
-<span class='line'>163</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
-<span class='line'>164</span>              */</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">			</span><span class="NAME">alignNext</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignNext</span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>168</span> 
-<span class='line'>169</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>170</span>              * Aligns the carousel to the enabled widget before that currently aligned.
-<span class='line'>171</span>              * If no alignment has been performed previously it will align to the first enabled widget before that at index 0
-<span class='line'>172</span>              * If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
-<span class='line'>173</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
-<span class='line'>174</span>              * @param {Object} [options] An animation options object
-<span class='line'>175</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
-<span class='line'>176</span>              * @param {Number} [options.duration] The duration of the alignment in ms
-<span class='line'>177</span>              * @param {String} [options.easing] The alignment easing function
-<span class='line'>178</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
-<span class='line'>179</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
-<span class='line'>180</span>              */</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">            </span><span class="NAME">alignPrevious</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>182</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignPrevious</span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>183</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>184</span> 
-<span class='line'>185</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>186</span>              * Aligns the carousel to the widget at the specified index
-<span class='line'>187</span>              * Will always move forward if the index is after that currently aligned and backwards if index is before
-<span class='line'>188</span>              * that currently aligned.
-<span class='line'>189</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
-<span class='line'>190</span>              * @param {Number} index The index of the widget to align on.
-<span class='line'>191</span>              * @param {Object} [options] An animation options object
-<span class='line'>192</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
-<span class='line'>193</span>              * @param {Number} [options.duration] The duration of the alignment in ms
-<span class='line'>194</span>              * @param {String} [options.easing] The alignment easing function
-<span class='line'>195</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
-<span class='line'>196</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
-<span class='line'>197</span>              */</span><span class="WHIT">
-<span class='line'>198</span> </span><span class="WHIT">            </span><span class="NAME">alignToIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>199</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignToIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>201</span> 
-<span class='line'>202</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>203</span>              * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
-<span class='line'>204</span>              * If several alignments have been queued, all will complete in order.
-<span class='line'>205</span>              */</span><span class="WHIT">
-<span class='line'>206</span> </span><span class="WHIT">            </span><span class="NAME">completeAlignment</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>207</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.complete</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>208</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>209</span> 
-<span class='line'>210</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>211</span>              * Sets the point along the Mask at which alignments are made
-<span class='line'>212</span>              * @param pixelsFromEdgeToWidgetEdge A value in pixels from the primary edge (top or left for Vertical/Horizontal)
-<span class='line'>213</span>              * at which widgets are aligned.
-<span class='line'>214</span>              */</span><span class="WHIT">
-<span class='line'>215</span> </span><span class="WHIT">            </span><span class="NAME">setAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pixelsFromEdgeToWidgetEdge</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>216</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setAlignPoint</span><span class="PUNC">(</span><span class="NAME">pixelsFromEdgeToWidgetEdge</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>217</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>218</span> 
-<span class='line'>219</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>220</span>              * Sets the point along the Mask at which alignments are made
-<span class='line'>221</span>              * @param fractionOfMaskLength a value between 0 and 1 specifying how far along the mask a widget should
-<span class='line'>222</span>              * be aligned. i.e. 0.5 is the centre of the mask.
+<span class='line'>139</span> </span><span class="WHIT">            </span><span class="NAME">removeAll</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.removeAll</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>142</span> 
+<span class='line'>143</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>144</span>              * Aligns the carousel to the next enabled widget after that currently aligned.
+<span class='line'>145</span>              * If no alignment has been performed previously it will align to the next enabled widget after that at index 0
+<span class='line'>146</span>              * If a wrapping strip and navigator are used the alignment will wrap to the start after the last widget is reached.
+<span class='line'>147</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+<span class='line'>148</span>              * @param {Object} [options] An animation options object
+<span class='line'>149</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+<span class='line'>150</span>              * @param {Number} [options.duration] The duration of the alignment in ms
+<span class='line'>151</span>              * @param {String} [options.easing] The alignment easing function
+<span class='line'>152</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+<span class='line'>153</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+<span class='line'>154</span>              */</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">			</span><span class="NAME">alignNext</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignNext</span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>158</span> 
+<span class='line'>159</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>160</span>              * Aligns the carousel to the enabled widget before that currently aligned.
+<span class='line'>161</span>              * If no alignment has been performed previously it will align to the first enabled widget before that at index 0
+<span class='line'>162</span>              * If a wrapping strip and navigator are used the alignment will wrap to the end after the first widget is reached.
+<span class='line'>163</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+<span class='line'>164</span>              * @param {Object} [options] An animation options object
+<span class='line'>165</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+<span class='line'>166</span>              * @param {Number} [options.duration] The duration of the alignment in ms
+<span class='line'>167</span>              * @param {String} [options.easing] The alignment easing function
+<span class='line'>168</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+<span class='line'>169</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+<span class='line'>170</span>              */</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">            </span><span class="NAME">alignPrevious</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignPrevious</span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>174</span> 
+<span class='line'>175</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>176</span>              * Aligns the carousel to the widget at the specified index
+<span class='line'>177</span>              * Will always move forward if the index is after that currently aligned and backwards if index is before
+<span class='line'>178</span>              * that currently aligned.
+<span class='line'>179</span>              * If an alignment is in progress, the new alignment will be queued to start after the current alignment completes.
+<span class='line'>180</span>              * @param {Number} index The index of the widget to align on.
+<span class='line'>181</span>              * @param {Object} [options] An animation options object
+<span class='line'>182</span>              * @param {Number} [options.fps] The frames per second of the alignment, if using styletopleft animation
+<span class='line'>183</span>              * @param {Number} [options.duration] The duration of the alignment in ms
+<span class='line'>184</span>              * @param {String} [options.easing] The alignment easing function
+<span class='line'>185</span>              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
+<span class='line'>186</span>              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
+<span class='line'>187</span>              */</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">            </span><span class="NAME">alignToIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.alignToIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>191</span> 
+<span class='line'>192</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>193</span>              * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
+<span class='line'>194</span>              * If several alignments have been queued, all will complete in order.
+<span class='line'>195</span>              */</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">            </span><span class="NAME">completeAlignment</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">                </span><span class="NAME">this._aligner.complete</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>199</span> 
+<span class='line'>200</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>201</span>              * Sets the point along the Mask at which alignments are made
+<span class='line'>202</span>              * @param pixelsFromEdgeToWidgetEdge A value in pixels from the primary edge (top or left for Vertical/Horizontal)
+<span class='line'>203</span>              * at which widgets are aligned.
+<span class='line'>204</span>              */</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">            </span><span class="NAME">setAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pixelsFromEdgeToWidgetEdge</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setAlignPoint</span><span class="PUNC">(</span><span class="NAME">pixelsFromEdgeToWidgetEdge</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>208</span> 
+<span class='line'>209</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>210</span>              * Sets the point along the Mask at which alignments are made
+<span class='line'>211</span>              * @param fractionOfMaskLength a value between 0 and 1 specifying how far along the mask a widget should
+<span class='line'>212</span>              * be aligned. i.e. 0.5 is the centre of the mask.
+<span class='line'>213</span>              */</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">            </span><span class="NAME">setNormalisedAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fractionOfMaskLength</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setNormalisedAlignPoint</span><span class="PUNC">(</span><span class="NAME">fractionOfMaskLength</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>217</span> 
+<span class='line'>218</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>219</span>              * Sets the point along the aligned widget at which alignments are made
+<span class='line'>220</span>              * @param fractionOfWidgetLength a value between 0 and 1 specifying the point along the widget which will be
+<span class='line'>221</span>              * aligned with the mask alignment point. i.e. in a horizontal Carousel, 0.5 is the centre of the widget,
+<span class='line'>222</span>              * 0 is the left edge, 1 is the right edge
 <span class='line'>223</span>              */</span><span class="WHIT">
-<span class='line'>224</span> </span><span class="WHIT">            </span><span class="NAME">setNormalisedAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fractionOfMaskLength</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>225</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setNormalisedAlignPoint</span><span class="PUNC">(</span><span class="NAME">fractionOfMaskLength</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">            </span><span class="NAME">setNormalisedWidgetAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fractionOfWidgetLength</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setNormalisedWidgetAlignPoint</span><span class="PUNC">(</span><span class="NAME">fractionOfWidgetLength</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>226</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>227</span> 
 <span class='line'>228</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>229</span>              * Sets the point along the aligned widget at which alignments are made
-<span class='line'>230</span>              * @param fractionOfWidgetLength a value between 0 and 1 specifying the point along the widget which will be
-<span class='line'>231</span>              * aligned with the mask alignment point. i.e. in a horizontal Carousel, 0.5 is the centre of the widget,
-<span class='line'>232</span>              * 0 is the left edge, 1 is the right edge
-<span class='line'>233</span>              */</span><span class="WHIT">
-<span class='line'>234</span> </span><span class="WHIT">            </span><span class="NAME">setNormalisedWidgetAlignPoint</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fractionOfWidgetLength</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>235</span> </span><span class="WHIT">                </span><span class="NAME">this._mask.setNormalisedWidgetAlignPoint</span><span class="PUNC">(</span><span class="NAME">fractionOfWidgetLength</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>236</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>237</span> 
-<span class='line'>238</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>239</span>              * Some widget strips peform calculations which require elements to be present in the document.
-<span class='line'>240</span>              * This method manually performs those recalculations.
-<span class='line'>241</span>              */</span><span class="WHIT">
-<span class='line'>242</span> </span><span class="WHIT">            </span><span class="NAME">recalculate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>243</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.recalculate</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>244</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>245</span> 
-<span class='line'>246</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>247</span>              * Some widget strips peform calculations which require elements to be present in the document.
-<span class='line'>248</span>              * By default these calculations are performed whenever their values might be invalidated (after appending elements
-<span class='line'>249</span>              * for instance) This method can be used to be disable/enable this behaviour for performance optimisation.
-<span class='line'>250</span>              */</span><span class="WHIT">
-<span class='line'>251</span> </span><span class="WHIT">            </span><span class="NAME">autoCalculate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">on</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>252</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.autoCalculate</span><span class="PUNC">(</span><span class="NAME">on</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>253</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>254</span> 
-<span class='line'>255</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>256</span>              * @returns the index of the currently active widget
-<span class='line'>257</span>              */</span><span class="WHIT">
-<span class='line'>258</span> </span><span class="WHIT">            </span><span class="NAME">getActiveIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>259</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.currentIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>260</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>261</span> 
-<span class='line'>262</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>263</span>              * Sets the currently active index
-<span class='line'>264</span>              * @param {Number} index the index of the widget to be made active.
-<span class='line'>265</span>              * If this is invalid or corresponds to a disabled widget the active index will not change
-<span class='line'>266</span>              */</span><span class="WHIT">
-<span class='line'>267</span> </span><span class="WHIT">            </span><span class="NAME">setActiveIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>268</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator.setIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>269</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>270</span> 
-<span class='line'>271</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>272</span>              * @returns the index first focussable index after the index of the active widget
-<span class='line'>273</span>              */</span><span class="WHIT">
-<span class='line'>274</span> </span><span class="WHIT">            </span><span class="NAME">nextIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>275</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.nextIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>276</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>277</span> 
-<span class='line'>278</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>279</span>              * @returns the index first focussable index before the index of the active widget
-<span class='line'>280</span>              */</span><span class="WHIT">
-<span class='line'>281</span> </span><span class="WHIT">            </span><span class="NAME">previousIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>282</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.previousIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>283</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>284</span> 
-<span class='line'>285</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>286</span>              * Sets the currently active widget
-<span class='line'>287</span>              * @param {antie.widgets.Widget} widget the widget to be made active.
-<span class='line'>288</span>              * If the widget is not in the Carousel or corresponds to a disabled widget the active widget will not change
-<span class='line'>289</span>              */</span><span class="WHIT">
-<span class='line'>290</span> </span><span class="WHIT">            </span><span class="NAME">setActiveWidget</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">index</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>292</span> </span><span class="WHIT">                </span><span class="NAME">index</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.getIndexOfChildWidget</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>293</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator.setIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span>              * Some widget strips peform calculations which require elements to be present in the document.
+<span class='line'>230</span>              * This method manually performs those recalculations.
+<span class='line'>231</span>              */</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">            </span><span class="NAME">recalculate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.recalculate</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>235</span> 
+<span class='line'>236</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>237</span>              * Some widget strips peform calculations which require elements to be present in the document.
+<span class='line'>238</span>              * By default these calculations are performed whenever their values might be invalidated (after appending elements
+<span class='line'>239</span>              * for instance) This method can be used to be disable/enable this behaviour for performance optimisation.
+<span class='line'>240</span>              */</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">            </span><span class="NAME">autoCalculate</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">on</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip.autoCalculate</span><span class="PUNC">(</span><span class="NAME">on</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>244</span> 
+<span class='line'>245</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>246</span>              * @returns the index of the currently active widget
+<span class='line'>247</span>              */</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">            </span><span class="NAME">getActiveIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.currentIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>251</span> 
+<span class='line'>252</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>253</span>              * Sets the currently active index
+<span class='line'>254</span>              * @param {Number} index the index of the widget to be made active.
+<span class='line'>255</span>              * If this is invalid or corresponds to a disabled widget the active index will not change
+<span class='line'>256</span>              */</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">            </span><span class="NAME">setActiveIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator.setIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>260</span> 
+<span class='line'>261</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>262</span>              * @returns the index first focussable index after the index of the active widget
+<span class='line'>263</span>              */</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">            </span><span class="NAME">nextIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.nextIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>267</span> 
+<span class='line'>268</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>269</span>              * @returns the index first focussable index before the index of the active widget
+<span class='line'>270</span>              */</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">            </span><span class="NAME">previousIndex</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._navigator.previousIndex</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>274</span> 
+<span class='line'>275</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>276</span>              * Sets the currently active widget
+<span class='line'>277</span>              * @param {antie.widgets.Widget} widget the widget to be made active.
+<span class='line'>278</span>              * If the widget is not in the Carousel or corresponds to a disabled widget the active widget will not change
+<span class='line'>279</span>              */</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">            </span><span class="NAME">setActiveWidget</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">index</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">                </span><span class="NAME">index</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.getIndexOfChildWidget</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator.setIndex</span><span class="PUNC">(</span><span class="NAME">index</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>285</span> 
+<span class='line'>286</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>287</span>              * Sets the navigator class used to determine focus position
+<span class='line'>288</span>              * @param {Function} Navigator the constructor function of the type of navigator the carousel should use, e.g.
+<span class='line'>289</span>              * antie.widgets.carousel.navigators.BookendedNavigator or antie.widgets.carousel.navigators.WrappingNavigator
+<span class='line'>290</span>              * On construction, the carousel uses antie.widgets.carousel.navigators.BookendedNavigator by default
+<span class='line'>291</span>              */</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">            </span><span class="NAME">setNavigator</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Navigator</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Navigator</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>294</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>295</span> 
 <span class='line'>296</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>297</span>              * Sets the navigator class used to determine focus position
-<span class='line'>298</span>              * @param {Function} Navigator the constructor function of the type of navigator the carousel should use, e.g.
-<span class='line'>299</span>              * antie.widgets.carousel.navigators.BookendedNavigator or antie.widgets.carousel.navigators.WrappingNavigator
-<span class='line'>300</span>              * On construction, the carousel uses antie.widgets.carousel.navigators.BookendedNavigator by default
+<span class='line'>297</span>              * Sets the widget strip class used to manage widgets and elements within the carousel
+<span class='line'>298</span>              * @param {Function} WidgetStrip the constructor function of the type of Widget strip the carousel should use, e.g.
+<span class='line'>299</span>              * antie.widgets.carousel.navigators.WidgetStrip, antie.widgets.carousel.navigators.WrappingStrip
+<span class='line'>300</span>              * On construction, the carousel uses antie.widgets.carousel.navigators.WidgetStrip by default
 <span class='line'>301</span>              */</span><span class="WHIT">
-<span class='line'>302</span> </span><span class="WHIT">            </span><span class="NAME">setNavigator</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">Navigator</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>303</span> </span><span class="WHIT">                </span><span class="NAME">this._navigator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Navigator</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>304</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>305</span> 
-<span class='line'>306</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>307</span>              * Sets the widget strip class used to manage widgets and elements within the carousel
-<span class='line'>308</span>              * @param {Function} WidgetStrip the constructor function of the type of Widget strip the carousel should use, e.g.
-<span class='line'>309</span>              * antie.widgets.carousel.navigators.WidgetStrip, antie.widgets.carousel.navigators.WrappingStrip
-<span class='line'>310</span>              * On construction, the carousel uses antie.widgets.carousel.navigators.WidgetStrip by default
-<span class='line'>311</span>              */</span><span class="WHIT">
-<span class='line'>312</span> </span><span class="WHIT">            </span><span class="NAME">setWidgetStrip</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">WidgetStrip</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>313</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">WidgetStrip</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'_WidgetStrip'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._orientation</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>314</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>315</span> </span><span class="WHIT">                    </span><span class="NAME">this._navigator.setContainer</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>316</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>317</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._mask</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>318</span> </span><span class="WHIT">                    </span><span class="NAME">this._mask.setWidgetStrip</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>319</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>320</span> 
-<span class='line'>321</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>322</span> 
-<span class='line'>323</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>324</span>              * @returns {Array} The widgets currently in the carousel
-<span class='line'>325</span>              */</span><span class="WHIT">
-<span class='line'>326</span> </span><span class="WHIT">            </span><span class="NAME">items</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>327</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.widgets</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>328</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>329</span> 
-<span class='line'>330</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>331</span>              * @returns {Object} The orientation object associated with the carousel
-<span class='line'>332</span>              */</span><span class="WHIT">
-<span class='line'>333</span> </span><span class="WHIT">            </span><span class="NAME">orientation</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>334</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._orientation</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>335</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>336</span> 
-<span class='line'>337</span> </span><span class="WHIT">            </span><span class="NAME">_setOrientation</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">orientation</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>338</span> </span><span class="WHIT">                </span><span class="NAME">this._orientation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">orientation</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>339</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>340</span> 
-<span class='line'>341</span> </span><span class="WHIT">            </span><span class="NAME">_setAlignEventsFromStripToHaveCarouselAsTarget</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>342</span> </span><span class="WHIT">                </span><span class="NAME">this._remapWidgetStripEventToCarousel</span><span class="PUNC">(</span><span class="STRN">'beforealign'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>343</span> </span><span class="WHIT">                </span><span class="NAME">this._remapWidgetStripEventToCarousel</span><span class="PUNC">(</span><span class="STRN">'afteralign'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">            </span><span class="NAME">setWidgetStrip</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">WidgetStrip</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">                </span><span class="NAME">this._widgetStrip</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">WidgetStrip</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'_WidgetStrip'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._orientation</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._navigator</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">                    </span><span class="NAME">this._navigator.setContainer</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this._mask</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">                    </span><span class="NAME">this._mask.setWidgetStrip</span><span class="PUNC">(</span><span class="NAME">this._widgetStrip</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>310</span> 
+<span class='line'>311</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>312</span> 
+<span class='line'>313</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>314</span>              * @returns {Array} The widgets currently in the carousel
+<span class='line'>315</span>              */</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">            </span><span class="NAME">items</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._widgetStrip.widgets</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>319</span> 
+<span class='line'>320</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>321</span>              * @returns {Object} The orientation object associated with the carousel
+<span class='line'>322</span>              */</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">            </span><span class="NAME">orientation</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._orientation</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>326</span> 
+<span class='line'>327</span> </span><span class="WHIT">            </span><span class="NAME">_setOrientation</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">orientation</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">                </span><span class="NAME">this._orientation</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">orientation</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>330</span> 
+<span class='line'>331</span> </span><span class="WHIT">            </span><span class="NAME">_setAlignEventsFromStripToHaveCarouselAsTarget</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">                </span><span class="NAME">this._remapWidgetStripEventToCarousel</span><span class="PUNC">(</span><span class="STRN">'beforealign'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">                </span><span class="NAME">this._remapWidgetStripEventToCarousel</span><span class="PUNC">(</span><span class="STRN">'afteralign'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>335</span> 
+<span class='line'>336</span> </span><span class="WHIT">            </span><span class="NAME">_remapWidgetStripEventToCarousel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">eventName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">                </span><span class="NAME">this._remapEvent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._remapEvent</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">evt.target</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">self._widgetStrip</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">                        </span><span class="NAME">evt.target</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">self</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">                </span><span class="NAME">this.addEventListener</span><span class="PUNC">(</span><span class="NAME">eventName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._remapEvent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>344</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>345</span> 
-<span class='line'>346</span> </span><span class="WHIT">            </span><span class="NAME">_remapWidgetStripEventToCarousel</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">eventName</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>347</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>348</span> </span><span class="WHIT">                </span><span class="NAME">this._remapEvent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._remapEvent</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">evt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>349</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">evt.target</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">self._widgetStrip</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>350</span> </span><span class="WHIT">                        </span><span class="NAME">evt.target</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">self</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>351</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>352</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>353</span> </span><span class="WHIT">                </span><span class="NAME">this.addEventListener</span><span class="PUNC">(</span><span class="NAME">eventName</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._remapEvent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>354</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>355</span> 
-<span class='line'>356</span> </span><span class="WHIT">            </span><span class="NAME">_directAppend</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>357</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.appendChildWidget</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>358</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>359</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>360</span> 
-<span class='line'>361</span> </span><span class="WHIT">        </span><span class="NAME">Carousel.orientations</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>362</span> </span><span class="WHIT">            </span><span class="NAME">VERTICAL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">verticalOrientation</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>363</span> </span><span class="WHIT">            </span><span class="NAME">HORIZONTAL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">horizontalOrientation</span><span class="WHIT">
-<span class='line'>364</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>365</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Carousel</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>366</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>367</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>368</span> </span></pre><!-- Insert an arbitrary footer here, e.g. Google Analytics --></body></html>
+<span class='line'>346</span> </span><span class="WHIT">            </span><span class="NAME">_directAppend</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">                </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.appendChildWidget</span><span class="PUNC">(</span><span class="NAME">widget</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> 
+<span class='line'>351</span> </span><span class="WHIT">        </span><span class="NAME">Carousel.orientations</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">            </span><span class="NAME">VERTICAL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">verticalOrientation</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>353</span> </span><span class="WHIT">            </span><span class="NAME">HORIZONTAL</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">horizontalOrientation</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Carousel</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>358</span> </span></pre><script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38709464-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script></body></html>

@@ -6,7 +6,7 @@
 	.REGX {color: #339;}
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
-<span class='line'>  2</span>  * @fileOverview Requirejs module containing device modifier to launch native external media players
+<span class='line'>  2</span>  * @fileOverview Requirejs module containing the antie.BrowserDevice subclass for LG NetCast devices.
 <span class='line'>  3</span>  *
 <span class='line'>  4</span>  * @preserve Copyright (c) 2013 British Broadcasting Corporation
 <span class='line'>  5</span>  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -31,16 +31,16 @@
 <span class='line'> 24</span>  * Please contact us for an alternative licence
 <span class='line'> 25</span>  */</span><span class="WHIT">
 <span class='line'> 26</span> 
-<span class='line'> 27</span> </span><span class="NAME">require.def</span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="WHIT">	</span><span class="STRN">'antie/devices/media/native'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="WHIT">
-<span class='line'> 30</span> </span><span class="WHIT">		</span><span class="STRN">'antie/devices/device'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">		</span><span class="STRN">'antie/widgets/media'</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="WHIT">	</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">Device</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Media</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="WHIT">		</span><span class="NAME">Device.prototype.getPlayerEmbedMode</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">mediaType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 35</span> </span><span class="WHIT">			</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Media.EMBED_MODE_EXTERNAL</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 36</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="NAME">require.def</span><span class="PUNC">(</span><span class="STRN">'antie/devices/netcast'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">		</span><span class="STRN">'antie/devices/browserdevice'</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">	</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">BrowserDevice</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">BrowserDevice.extend</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">			</span><span class="NAME">exit</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">				</span><span class="NAME">window.NetCastBack</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 37</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 38</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 39</span> </span></pre><script type="text/javascript">
