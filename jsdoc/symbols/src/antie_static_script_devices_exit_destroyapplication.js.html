@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
 	.KEYW {color: #933;}
 	.COMM {color: #bbb; font-style: italic;}
 	.NUMB {color: #393;}
@@ -39,46 +39,35 @@
 <span class='line'> 32</span> </span><span class="WHIT">	</span><span class="STRN">'antie/devices/exit/destroyapplication'</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 33</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="STRN">'antie/devices/browserdevice'</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 34</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">Device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 35</span> 
-<span class='line'> 36</span> </span><span class="WHIT">		</span><span class="COMM">// MIME type for the OIPF application manager, as defined by the spec (v1.2)</span><span class="WHIT">
-<span class='line'> 37</span> </span><span class="WHIT">		</span><span class="COMM">// Spec: http://www.oipf.tv/specifications/root/volume-5-declarative-application-environment-r112/download</span><span class="WHIT">
-<span class='line'> 38</span> </span><span class="WHIT">    	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">APPMANAGER_MIME_TYPE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'application/oipfApplicationManager'</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 39</span> </span><span class="WHIT">		
-<span class='line'> 40</span>         </span><span class="COMM">/**
-<span class='line'> 41</span> 	     * Exits the application by invoking Application.destroyApplication()
-<span class='line'> 42</span> 	     * after getting the OIPF application manager. In theory, according to
-<span class='line'> 43</span> 	     * the spec, this has the same effect as calling window.close().
-<span class='line'> 44</span> 	    */</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">        </span><span class="NAME">Device.prototype.exit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">        	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">factory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">window.oipfObjectFactory</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> 
-<span class='line'> 48</span> </span><span class="WHIT">        	</span><span class="COMM">// Check that the OIPF factory is implemented and supports the application manager</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">factory</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">factory.isObjectSupported</span><span class="PUNC">(</span><span class="NAME">APPMANAGER_MIME_TYPE</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">        		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">appManager</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">factory.createApplicationManagerObject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 51</span> 
-<span class='line'> 52</span> </span><span class="WHIT">        		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">appManager</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">        			</span><span class="COMM">// Ask the application manager for an Application object for this app</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">        			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ownerApp</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">appManager.getOwnerApplication</span><span class="PUNC">(</span><span class="NAME">window.document</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 55</span> 
-<span class='line'> 56</span> </span><span class="WHIT">        			</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">ownerApp</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">        				</span><span class="COMM">// Destroy this app and finish</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">        				</span><span class="NAME">ownerApp.destroyApplication</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">        			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">        		</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> </span></pre><script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-38709464-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script></body></html>
+<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="STRN">'use strict'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> 
+<span class='line'> 37</span> </span><span class="WHIT">		</span><span class="COMM">// MIME type for the OIPF application manager, as defined by the spec (v1.2)</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">		</span><span class="COMM">// Spec: http://www.oipf.tv/specifications/root/volume-5-declarative-application-environment-r112/download</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">    	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">APPMANAGER_MIME_TYPE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'application/oipfApplicationManager'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">		
+<span class='line'> 41</span>         </span><span class="COMM">/**
+<span class='line'> 42</span> 	     * Exits the application by invoking Application.destroyApplication()
+<span class='line'> 43</span> 	     * after getting the OIPF application manager. In theory, according to
+<span class='line'> 44</span> 	     * the spec, this has the same effect as calling window.close().
+<span class='line'> 45</span> 	    */</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">        </span><span class="NAME">Device.prototype.exit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">        	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">factory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">window.oipfObjectFactory</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> 
+<span class='line'> 49</span> </span><span class="WHIT">        	</span><span class="COMM">// Check that the OIPF factory is implemented and supports the application manager</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">factory</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">factory.isObjectSupported</span><span class="PUNC">(</span><span class="NAME">APPMANAGER_MIME_TYPE</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">        		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">appManager</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">factory.createApplicationManagerObject</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> 
+<span class='line'> 53</span> </span><span class="WHIT">        		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">appManager</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">        			</span><span class="COMM">// Ask the application manager for an Application object for this app</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">        			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ownerApp</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">appManager.getOwnerApplication</span><span class="PUNC">(</span><span class="NAME">window.document</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> 
+<span class='line'> 57</span> </span><span class="WHIT">        			</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">ownerApp</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">        				</span><span class="COMM">// Destroy this app and finish</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">        				</span><span class="NAME">ownerApp.destroyApplication</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">        			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">        		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span></pre><!-- Insert an arbitrary footer here, e.g. Google Analytics --></body></html>
