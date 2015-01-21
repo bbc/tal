@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing device modifier to launch native external media players
+ * @fileOverview Requirejs module containing device modifier for media playback on Samsung devices.
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -37,11 +37,11 @@ require.def(
         /**
          * Main MediaPlayer implementation for Samsung devices implementing the Maple API.
          * Use this device modifier if a device implements the Samsung Maple media playback standard.
-         * It must support creation of <object> elements with appropriate SAMSUNG_INFOLINK classids.
+         * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
          * Those objects must expose an API in accordance with the Samsung Maple media specification.
-         * @name antie.devices.mediaplayer.samsung_maple
+         * @name antie.devices.mediaplayer.SamsungMaple
          * @class
-         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         * @extends antie.devices.mediaplayer.MediaPlayer
          */
         var Player = MediaPlayer.extend({
 

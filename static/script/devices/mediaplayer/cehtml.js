@@ -37,11 +37,11 @@ require.def(
         /**
          * Main MediaPlayer implementation for CEHTML devices.
          * Use this device modifier if a device implements the CEHTML media playback standard.
-         * It must support creation of <object> elements for media mime types, and those objects must expose an
+         * It must support creation of &lt;object&gt; elements for media mime types, and those objects must expose an
          * API in accordance with the CEHTML specification.
-         * @name antie.devices.mediaplayer.cehtml
+         * @name antie.devices.mediaplayer.CEHTML
          * @class
-         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         * @extends antie.devices.mediaplayer.MediaPlayer
          */
         var Player = MediaPlayer.extend({
 

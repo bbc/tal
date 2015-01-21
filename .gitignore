@@ -9,3 +9,6 @@ libpeerconnection.log
 *.iml
 node_modules
 .idea
+jsdoc/index.html
+jsdoc/files.html
+jsdoc/symbols

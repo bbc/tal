@@ -34,15 +34,17 @@ require.def('antie/devices/broadcastsource/channel',
         /**
          * Class representing information about a channel.
          * @class
+         * @name antie.devices.broadcastsource.Channel
          * @extends antie.Class
+         * @param props.name Channel name (as appears in the broadcast stream / EPG)
+         * @param [props.onid] Original Network ID
+         * @param [props.tsid] Transport Stream ID
+         * @param [props.sid] Service ID (program number)
          */
-        return Class.extend(/** @lends antie.class.prototype */{
+        return Class.extend(/** @lends antie.devices.broadcastsource.Channel.prototype */{
             /**
              * @constructor
-             * @param props.name Channel name (as appears in the broacast stream / EPG)
-             * @param props.onid Original Network ID
-             * @param props.tsid Transport Stream ID
-             * @param props.sid Service ID (program number)
+             * @ignore
              */
             init : function(props) {
                 this.name = props.name;
