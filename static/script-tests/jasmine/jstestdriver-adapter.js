@@ -189,8 +189,11 @@ function runAsyncTest(testFn) {
             var ApplicationClass = loadedModules[0];
 
             var onReady = function () {
-                testToRun.apply(window.jasmineTestThisContext, loadedModules);
-                testHasRun = true;
+                try {
+                    testToRun.apply(window.jasmineTestThisContext, loadedModules);
+                } finally {
+                    testHasRun = true;
+                }
             };
 
             window.fakeApplication = new ApplicationClass(div, null, null, onReady, configOverride);
@@ -202,8 +205,11 @@ function runAsyncTest(testFn) {
 
     queuedRequire = function(queue, deps, testToRun) {
         var wrappedTestToRun = function () {
-            testToRun.apply(window.jasmineTestThisContext, arguments);
-            testHasRun = true;
+            try {
+                testToRun.apply(window.jasmineTestThisContext, arguments);
+            } finally {
+                testHasRun = true;
+            }
         };
 
         require(deps, wrappedTestToRun);
@@ -213,7 +219,7 @@ function runAsyncTest(testFn) {
 
     waitsFor(function () {
         return testHasRun;
-    });
+    }, 30000);
 }
 
 
