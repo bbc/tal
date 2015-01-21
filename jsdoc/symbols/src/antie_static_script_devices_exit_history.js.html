@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
 	.KEYW {color: #933;}
 	.COMM {color: #bbb; font-style: italic;}
 	.NUMB {color: #393;}
@@ -35,27 +35,25 @@
 <span class='line'> 28</span> </span><span class="WHIT">	</span><span class="STRN">'antie/devices/exit/history'</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 29</span> </span><span class="WHIT">	</span><span class="PUNC">[</span><span class="STRN">'antie/devices/browserdevice'</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 30</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">Device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 31</span> 
-<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 33</span> 	     * Exits the application by navigating to the first page in the browsers history.
-<span class='line'> 34</span> 	    */</span><span class="WHIT">
-<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">Device.prototype.exit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 36</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">startPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">history.length</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 37</span> </span><span class="WHIT">            </span><span class="NAME">history.go</span><span class="PUNC">(</span><span class="PUNC">-</span><span class="NAME">startPage</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
-<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 39</span> 
-<span class='line'> 40</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 42</span> </span></pre><script type="text/javascript">
-
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="STRN">'use strict'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> 
+<span class='line'> 33</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 34</span> 	     * Exits the application by navigating to the first page in the browsers history.
+<span class='line'> 35</span> 	    */</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">        </span><span class="NAME">Device.prototype.exit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">startPage</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">history.length</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">            </span><span class="NAME">history.go</span><span class="PUNC">(</span><span class="PUNC">-</span><span class="NAME">startPage</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 40</span> 
+<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span></pre><script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-38709464-1']);
       _gaq.push(['_trackPageview']);
-
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script></body></html>

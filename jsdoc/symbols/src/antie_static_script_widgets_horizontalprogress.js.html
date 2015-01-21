@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf8"> <style>
 	.KEYW {color: #933;}
 	.COMM {color: #bbb; font-style: italic;}
 	.NUMB {color: #393;}
@@ -37,118 +37,117 @@
 <span class='line'> 30</span> </span><span class="WHIT">	 	</span><span class="STRN">'antie/widgets/label'</span><span class="WHIT">
 <span class='line'> 31</span> </span><span class="WHIT">	</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'> 32</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">Container</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Label</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">		</span><span class="COMM">/**
-<span class='line'> 34</span> 		 * The horizontal progress widget provides a UI control for showing progress (with associated label)
-<span class='line'> 35</span> 		 * @name antie.widgets.HorizontalProgress
-<span class='line'> 36</span> 		 * @class
-<span class='line'> 37</span> 		 * @extends antie.widgets.Container
-<span class='line'> 38</span> 		 * @requires antie.widgets.Label
-<span class='line'> 39</span> 		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
-<span class='line'> 40</span> 		 * @param {Boolean} [showLabel] Pass &lt;code>true&lt;/code> to show a label that indicates the value of the progress shown.
-<span class='line'> 41</span> 		 * @param {Float} [initialValue] The initial value (default 0).
-<span class='line'> 42</span> 		 */</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Container.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends antie.widgets.HorizontalProgress.prototype */</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 44</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'> 45</span> 			 * @constructor
-<span class='line'> 46</span> 			 * @ignore
-<span class='line'> 47</span> 			 */</span><span class="WHIT">
-<span class='line'> 48</span> </span><span class="WHIT">			</span><span class="NAME">init</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">showLabel</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 49</span> </span><span class="WHIT">				</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">				</span><span class="NAME">this._moveHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 51</span> </span><span class="WHIT">				</span><span class="NAME">this._lastLeft</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 52</span> 
-<span class='line'> 53</span> </span><span class="WHIT">				</span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">				</span><span class="NAME">this.addClass</span><span class="PUNC">(</span><span class="STRN">'horizontalprogress'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 55</span> 
-<span class='line'> 56</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">showLabel</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">					</span><span class="NAME">this._label</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Label</span><span class="PUNC">(</span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"_label"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">					</span><span class="NAME">this.addClass</span><span class="PUNC">(</span><span class="STRN">'haslabel'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'> 62</span> 			 * Renders the widget and any child widgets to device-specific output.
-<span class='line'> 63</span> 			 * @param {antie.devices.Device} device The device to render to.
-<span class='line'> 64</span> 			 * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
-<span class='line'> 65</span> 			 */</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">			</span><span class="NAME">render</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 67</span> </span><span class="WHIT">				</span><span class="NAME">this.outputElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.getClasses</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">				</span><span class="NAME">this._leftElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">+</span><span class="STRN">'_left'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">				</span><span class="NAME">this._innerElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">+</span><span class="STRN">'_inner'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">				</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this._leftElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._innerElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">				</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this.outputElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._leftElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 72</span> 
-<span class='line'> 73</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._label</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 74</span> </span><span class="WHIT">					</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this.outputElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._label.render</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 75</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 76</span> 
-<span class='line'> 77</span> </span><span class="WHIT">				</span><span class="NAME">this._moveInner</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">		</span><span class="STRN">'use strict'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> 
+<span class='line'> 35</span> </span><span class="WHIT">		</span><span class="COMM">/**
+<span class='line'> 36</span> 		 * The horizontal progress widget provides a UI control for showing progress (with associated label)
+<span class='line'> 37</span> 		 * @name antie.widgets.HorizontalProgress
+<span class='line'> 38</span> 		 * @class
+<span class='line'> 39</span> 		 * @extends antie.widgets.Container
+<span class='line'> 40</span> 		 * @requires antie.widgets.Label
+<span class='line'> 41</span> 		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+<span class='line'> 42</span> 		 * @param {Boolean} [showLabel] Pass &lt;code>true&lt;/code> to show a label that indicates the value of the progress shown.
+<span class='line'> 43</span> 		 * @param {Float} [initialValue] The initial value (default 0).
+<span class='line'> 44</span> 		 */</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">Container.extend</span><span class="PUNC">(</span><span class="COMM">/** @lends antie.widgets.HorizontalProgress.prototype */</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'> 47</span> 			 * @constructor
+<span class='line'> 48</span> 			 * @ignore
+<span class='line'> 49</span> 			 */</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">			</span><span class="NAME">init</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">showLabel</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">				</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">initialValue</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">				</span><span class="NAME">this._moveHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">				</span><span class="NAME">this._lastLeft</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> 
+<span class='line'> 55</span> </span><span class="WHIT">				</span><span class="NAME">this._super</span><span class="PUNC">(</span><span class="NAME">id</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">				</span><span class="NAME">this.addClass</span><span class="PUNC">(</span><span class="STRN">'horizontalprogress'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> 
+<span class='line'> 58</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">showLabel</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">					</span><span class="NAME">this._label</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Label</span><span class="PUNC">(</span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"_label"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">					</span><span class="NAME">this.addClass</span><span class="PUNC">(</span><span class="STRN">'haslabel'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'> 64</span> 			 * Renders the widget and any child widgets to device-specific output.
+<span class='line'> 65</span> 			 * @param {antie.devices.Device} device The device to render to.
+<span class='line'> 66</span> 			 * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+<span class='line'> 67</span> 			 */</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">			</span><span class="NAME">render</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">				</span><span class="NAME">this.outputElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.getClasses</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">				</span><span class="NAME">this._leftElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">+</span><span class="STRN">'_left'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">				</span><span class="NAME">this._innerElement</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.createContainer</span><span class="PUNC">(</span><span class="NAME">this.id</span><span class="PUNC">+</span><span class="STRN">'_inner'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">				</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this._leftElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._innerElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">				</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this.outputElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._leftElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> 
+<span class='line'> 75</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._label</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">					</span><span class="NAME">device.appendChildElement</span><span class="PUNC">(</span><span class="NAME">this.outputElement</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this._label.render</span><span class="PUNC">(</span><span class="NAME">device</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 78</span> 
-<span class='line'> 79</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.outputElement</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'> 82</span> 			 * Moves the inner element to show the current value.
-<span class='line'> 83</span> 			 * @private
-<span class='line'> 84</span> 			 */</span><span class="WHIT">
-<span class='line'> 85</span> </span><span class="WHIT">			</span><span class="NAME">_moveInner</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">	
-<span class='line'> 86</span> 				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getCurrentApplication</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getDevice</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 87</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">elsize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getElementSize</span><span class="PUNC">(</span><span class="NAME">this._leftElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">handleSize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getElementSize</span><span class="PUNC">(</span><span class="NAME">this._innerElement</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.floor</span><span class="PUNC">(</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">elsize.width</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">handleSize.width</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 90</span> 
-<span class='line'> 91</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">left</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">this._lastLeft</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">					</span><span class="NAME">this._lastLeft</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">left</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 93</span> 
-<span class='line'> 94</span> </span><span class="WHIT">					</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._moveHandle</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 95</span> </span><span class="WHIT">						</span><span class="NAME">device.stopAnimation</span><span class="PUNC">(</span><span class="NAME">this._moveHandle</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 96</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 97</span> </span><span class="WHIT">	
-<span class='line'> 98</span> 					</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getConfig</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="WHIT">					</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">animate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">config.widgets</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">config.widgets.horizontalprogress</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">config.widgets.horizontalprogress.animate</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>100</span> </span><span class="WHIT">					</span><span class="NAME">this._moveHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.moveElementTo</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>101</span> </span><span class="WHIT">						</span><span class="NAME">el</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._innerElement</span><span class="PUNC">,</span><span class="WHIT"> 
-<span class='line'>102</span> 						</span><span class="NAME">to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="WHIT">							</span><span class="NAME">left</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">left</span><span class="WHIT"> 
-<span class='line'>104</span> 						</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>105</span> </span><span class="WHIT">						</span><span class="NAME">skipAnim</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">animate</span><span class="WHIT">
-<span class='line'>106</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>107</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>108</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>109</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'>110</span> 			 * Returns the current value shown by the progress indicator.
-<span class='line'>111</span> 			 */</span><span class="WHIT">
-<span class='line'>112</span> </span><span class="WHIT">			</span><span class="NAME">getValue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._value</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>114</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>115</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'>116</span> 			 * Sets the current value to be shown by the progress indicator.
-<span class='line'>117</span> 			 * @param {Float} val The value to show (between 0.0 and 1.0 inclusive).
-<span class='line'>118</span> 			 */</span><span class="WHIT">
-<span class='line'>119</span> </span><span class="WHIT">			</span><span class="NAME">setValue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>120</span> </span><span class="WHIT">				</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">val</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>121</span> </span><span class="WHIT">				</span><span class="NAME">this._moveInner</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>122</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>123</span> </span><span class="WHIT">			</span><span class="COMM">/**
-<span class='line'>124</span> 			 * Sets the text to show in the label.
-<span class='line'>125</span> 			 * @param {String} val The text to show.
-<span class='line'>126</span> 			 */</span><span class="WHIT">
-<span class='line'>127</span> </span><span class="WHIT">			</span><span class="NAME">setText</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>128</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._label</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>129</span> </span><span class="WHIT">					</span><span class="NAME">this._label.setText</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>130</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>131</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>132</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>133</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>134</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>135</span> </span></pre><script type="text/javascript">
-
+<span class='line'> 79</span> </span><span class="WHIT">				</span><span class="NAME">this._moveInner</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 80</span> 
+<span class='line'> 81</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.outputElement</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'> 84</span> 			 * Moves the inner element to show the current value.
+<span class='line'> 85</span> 			 * @private
+<span class='line'> 86</span> 			 */</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">			</span><span class="NAME">_moveInner</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">	
+<span class='line'> 88</span> 				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">device</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getCurrentApplication</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getDevice</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">elsize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getElementSize</span><span class="PUNC">(</span><span class="NAME">this._leftElement</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">handleSize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getElementSize</span><span class="PUNC">(</span><span class="NAME">this._innerElement</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">				</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.floor</span><span class="PUNC">(</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">elsize.width</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">handleSize.width</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 92</span> 
+<span class='line'> 93</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">left</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">this._lastLeft</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">					</span><span class="NAME">this._lastLeft</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">left</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> 
+<span class='line'> 96</span> </span><span class="WHIT">					</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._moveHandle</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">						</span><span class="NAME">device.stopAnimation</span><span class="PUNC">(</span><span class="NAME">this._moveHandle</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">	
+<span class='line'>100</span> 					</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.getConfig</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">					</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">animate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">config.widgets</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">config.widgets.horizontalprogress</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">config.widgets.horizontalprogress.animate</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">					</span><span class="NAME">this._moveHandle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">device.moveElementTo</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">						</span><span class="NAME">el</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this._innerElement</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'>104</span> 						</span><span class="NAME">to</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">							</span><span class="NAME">left</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">left</span><span class="WHIT"> 
+<span class='line'>106</span> 						</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">						</span><span class="NAME">skipAnim</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">!</span><span class="NAME">animate</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">					</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'>112</span> 			 * Returns the current value shown by the progress indicator.
+<span class='line'>113</span> 			 */</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">			</span><span class="NAME">getValue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">				</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this._value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'>118</span> 			 * Sets the current value to be shown by the progress indicator.
+<span class='line'>119</span> 			 * @param {Float} val The value to show (between 0.0 and 1.0 inclusive).
+<span class='line'>120</span> 			 */</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">			</span><span class="NAME">setValue</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">				</span><span class="NAME">this._value</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">val</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">				</span><span class="NAME">this._moveInner</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">			</span><span class="COMM">/**
+<span class='line'>126</span> 			 * Sets the text to show in the label.
+<span class='line'>127</span> 			 * @param {String} val The text to show.
+<span class='line'>128</span> 			 */</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">			</span><span class="NAME">setText</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">				</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">this._label</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">					</span><span class="NAME">this._label.setText</span><span class="PUNC">(</span><span class="NAME">val</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">				</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> </span></pre><script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-38709464-1']);
       _gaq.push(['_trackPageview']);
-
       (function() {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script></body></html>
