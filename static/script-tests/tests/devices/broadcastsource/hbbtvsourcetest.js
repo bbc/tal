@@ -648,28 +648,6 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testSetChannelCallsHBBTVSetChannelWithCorrectArgs = function(queue) {
-        expectAsserts(1);
-
-	var self = this;
-        var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "createChannelObject");
-            var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
-            broadcastSource.setChannel({
-                onid : 0x233A,
-                tsid : 4169,
-                sid  : 6009,
-                onSuccess : function() {
-                },
-                onError : function() {
-                }
-            });
-            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, 0x233A, 4169, 6009));
-        }, config);
-    };
-
     this.hbbtvSource.prototype.testSetChannelFallsBackToDVBT = function(queue) {
         expectAsserts(1);
 
