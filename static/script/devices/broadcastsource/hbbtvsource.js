@@ -186,7 +186,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                             };
                         }
 
-                        this._tuneToChannelByTriplet(channel.idType, channel.onid, channel.tsid, channel.sid, params.onSuccess, params.onError);
+                        this._tuneToChannelObject(channel, params.onSuccess, params.onError);
 
                     } catch(e) {
                         params.onError(e);

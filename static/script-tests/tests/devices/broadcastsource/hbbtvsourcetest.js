@@ -648,28 +648,6 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testSetChannelCallsHBBTVSetChannelWithCorrectArgs = function(queue) {
-        expectAsserts(1);
-
-	var self = this;
-        var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var hbbtvApiSpy = self.sandbox.spy(self.hbbtvPlugin, "createChannelObject");
-            var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
-            broadcastSource.setChannel({
-                onid : 0x233A,
-                tsid : 4169,
-                sid  : 6009,
-                onSuccess : function() {
-                },
-                onError : function() {
-                }
-            });
-            assertTrue("HBBTV createChannelObject function called", hbbtvApiSpy.calledWith(10, 0x233A, 4169, 6009));
-        }, config);
-    };
-
     this.hbbtvSource.prototype.testSetChannelFallsBackToDVBT = function(queue) {
         expectAsserts(1);
 
@@ -1156,23 +1134,12 @@
         });
     };
 
-    this.hbbtvSource.prototype.testTuningToChannelByNameCreatesChannelObjectForNewChannel = function (queue) {
-        expectAsserts(2);
+    this.hbbtvSource.prototype.testTuningToChannelByNameDoesNotCreateNewChannelObjectForNewChannel = function (queue) {
+        expectAsserts(1);
 
         var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
         doChannelTuningTest(this, queue, "BBC Two", function () {
-            assert(createChannelObjectStub.calledOnce);
-            assert(createChannelObjectStub.calledWith(8,5,6,7));
-        });
-    };
-
-    this.hbbtvSource.prototype.testTuningToChannelInChannelListByNameCreatesChannelObjectForNewChannel = function (queue) {
-        expectAsserts(2);
-
-        var createChannelObjectStub = this.sandbox.stub(this.hbbtvPlugin, "createChannelObject");
-        doChannelTuningTest(this, queue, "BBC Three", function () {
-            assert(createChannelObjectStub.calledOnce);
-            assert(createChannelObjectStub.calledWith(12,9,10,11));
+            assert(createChannelObjectStub.notCalled);
         });
     };
 
@@ -1190,31 +1157,19 @@
         });
     };
 
-    this.hbbtvSource.prototype.testTuningToChannelByNameWhenCreateChannelObjectFailsCausesOnError = function (queue) {
-        expectAsserts(3);
+    this.hbbtvSource.prototype.testTuningToChannelByNameUsesCorrectChannelObjectFromChannelListToSetChannel = function (queue) {
+        expectAsserts(6);
 
-        this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(null);
-        doChannelTuningTest(this, queue, "BBC Three", function (params) {
-            assert(params.onSuccess.notCalled);
-            assert(params.onError.calledOnce);
-            assert(params.onError.calledWith({
-                name : "ChannelError",
-                message : "Channel could not be found"
-            }));
-        });
-    };
-
-    this.hbbtvSource.prototype.testTuningToChannelByNameUsesChannelObjectToSetChannel = function (queue) {
-        expectAsserts(2);
-
-        var channelObj = { foo: "bar" };
-        this.sandbox.stub(this.hbbtvPlugin, "createChannelObject").returns(channelObj);
         var setChannelStub = this.sandbox.stub(this.hbbtvPlugin, "setChannel");
 
         doChannelTuningTest(this, queue, "BBC Three", function () {
+            var channel = setChannelStub.args[0][0];
             assert(setChannelStub.calledOnce);
-            // Use assertSame to ensure the object references are the same! setChannelStub.calledWith({}) only checks equality.
-            assertSame(channelObj, setChannelStub.args[0][0]);
+            assertEquals("BBC Three", channel.name);
+            assertEquals(9, channel.onid);
+            assertEquals(10, channel.tsid);
+            assertEquals(11, channel.sid);
+            assertEquals(12, channel.idType);
         });
     };
 
