@@ -1,8 +1,10 @@
 ---
 layout: default
-title: Media Playback
+title: Media Playback (Deprecated)
 ---
-# Media Playback
+# Media Playback (Deprecated)
+
+This has been Deprecated from TAL 2.1.0 onwards
 
 The framework abstracts device specific media players to a common API based on the html5 MediaElement.
 
