@@ -191,6 +191,7 @@ function runAsyncTest(testFn) {
             var onReady = function () {
                 try {
                     testToRun.apply(window.jasmineTestThisContext, loadedModules);
+                    rootWidget.innerHTML = "";
                 } finally {
                     testHasRun = true;
                 }
