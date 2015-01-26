@@ -179,9 +179,9 @@ function runAsyncTest(testFn) {
     var testHasRun = false;
 
     queuedApplicationInit = function(queue, applicationModuleName, otherDeps, testToRun, configOverride) {
-        var div = document.createElement("div");
-        div.id = "rootWidget";
-        document.body.appendChild(div);
+        var rootWidget = document.createElement("div");
+        rootWidget.id = "rootWidget";
+        document.body.appendChild(rootWidget);
 
         var wrappedTestToRun = function () {
             var loadedModules = arguments;
@@ -196,7 +196,7 @@ function runAsyncTest(testFn) {
                 }
             };
 
-            window.fakeApplication = new ApplicationClass(div, null, null, onReady, configOverride);
+            window.fakeApplication = new ApplicationClass(rootWidget, null, null, onReady, configOverride);
             loadedModules[0] = window.fakeApplication;
         };
 
