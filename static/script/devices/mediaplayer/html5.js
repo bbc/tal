@@ -37,11 +37,11 @@ require.def(
         /**
          * Main MediaPlayer implementation for HTML5 devices.
          * Use this device modifier if a device implements the HTML5 media playback standard.
-         * It must support creation of <video> and <audio> elements, and those objects must expose an
+         * It must support creation of &lt;video&gt; and &lt;audio&gt; elements, and those objects must expose an
          * API in accordance with the HTML5 media specification.
-         * @name antie.devices.mediaplayer.html5
+         * @name antie.devices.mediaplayer.HTML5
          * @class
-         * @extends antie.devices.mediaplayer.MediaPlayer.prototype
+         * @extends antie.devices.mediaplayer.MediaPlayer
          */
         var Player = MediaPlayer.extend({
 
@@ -122,7 +122,8 @@ require.def(
 
                     case MediaPlayer.STATE.PLAYING:
                         this._toBuffering();
-                        if (this._isNearToCurrentTime(seconds)) {
+                        this._targetSeekTime = this._getClampedTimeForPlayFrom(seconds);
+                        if (this._isNearToCurrentTime(this._targetSeekTime)) {
                             this._toPlaying();
                         } else {
                             this._playFromIfReady();
@@ -189,7 +190,13 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PLAYING:
+                        break;
+
                     case MediaPlayer.STATE.BUFFERING:
+                        if (this._readyToPlayFrom) {
+                            // If we are not ready to playFrom, then calling play would seek to the start of media, which we might not want.
+                            this._mediaElement.play();
+                        }
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
@@ -402,9 +409,18 @@ require.def(
             },
 
             _seekTo: function(seconds) {
-                var clampedTime = this._getClampedTime(seconds);
+                var clampedTime = this._getClampedTimeForPlayFrom(seconds);
                 this._mediaElement.currentTime = clampedTime;
                 this._sentinelSeekTime = clampedTime;
+            },
+
+            _getClampedTimeForPlayFrom: function(seconds) {
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
+                    var range = this._getSeekableRange();
+                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + range.start + ", end: " + range.end + " }");
+                }
+                return clampedTime;
             },
 
             _wipe: function() {
@@ -508,9 +524,8 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var TIME_TOLERANCE_SECS = 2;
-                var sentinelSetOutsideOfTolerance = this._lastSentinelTime - this._sentinelSetTime >= TIME_TOLERANCE_SECS;
-                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia && sentinelSetOutsideOfTolerance) {
+                var notFirstSentinelActivationSinceStateChange = this._sentinelIntervalNumber > 1;
+                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     return true;
@@ -595,9 +610,11 @@ require.def(
             _setSentinels: function(sentinels) {
                 var self = this;
                 this._clearSentinels();
+                this._sentinelIntervalNumber = 0;
                 this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
                 this._sentinelInterval = setInterval(function() {
+                    self._sentinelIntervalNumber += 1;
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
                     self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;

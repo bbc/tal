@@ -39,6 +39,9 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 
         /**
          * Contains a HBBTV implementation of the antie broadcast TV source.
+         * @class
+         * @name antie.devices.broadcastsource.HbbTVSource
+         * @extends antie.devices.broadcastsource.BaseTVSource
          */
         var DOM_ELEMENT_ID = 'broadcastVideoObject';
         var ID_DVB_T = 12;
@@ -183,7 +186,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                             };
                         }
 
-                        this._tuneToChannelByTriplet(channel.idType, channel.onid, channel.tsid, channel.sid, params.onSuccess, params.onError);
+                        this._tuneToChannelObject(channel, params.onSuccess, params.onError);
 
                     } catch(e) {
                         params.onError(e);

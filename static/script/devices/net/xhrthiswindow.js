@@ -34,6 +34,8 @@ require.def(
 
 		/**
 		 * Loads a resource from a URL.
+         * This for devices where the activation object (i.e. 'this') within an event listener on an XMLHttpRequest instance
+         * is a reference to the window object, not the XMLHttpRequest instance.
 		 * @param {String} url The URL to load.
 		 * @param {Object} opts Object containing onLoad and onError callback functions.
 		 * @returns The request object used to load the resource.
@@ -44,13 +46,13 @@ require.def(
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					xhr.onreadystatechange = null;
-					if (xhr.status === 200) {
+					if (xhr.status >= 200 && xhr.status < 300) {
 						if (opts.onLoad) {
-							opts.onLoad(xhr.responseText);
+							opts.onLoad(xhr.responseText, xhr.status);
 						}
 					} else {
 						if (opts.onError) {
-							opts.onError(xhr.responseText);
+							opts.onError(xhr.responseText, xhr.status);
 						}
 					}
 				}

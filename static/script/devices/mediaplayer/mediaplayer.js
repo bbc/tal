@@ -101,9 +101,10 @@ require.def(
             },
 
             /**
+             * Offset used when attempting to playFrom() the end of media. This allows the media to play briefly before completing.
              * @constant {Number}
              */
-            CLAMP_OFFSET_FROM_END_OF_RANGE: 0.1,
+            CLAMP_OFFSET_FROM_END_OF_RANGE: 1.1,
 
             /**
              * Clamp a time value so it does not exceed the current range.
@@ -125,7 +126,8 @@ require.def(
             },
 
             /**
-             * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
+             * Time (in seconds) compared to current time within which seeking has no effect.
+             * @constant {Number}
              */
             CURRENT_TIME_TOLERANCE: 1,
 
@@ -310,6 +312,8 @@ require.def(
 
         /**
         * Media Player event names
+        * @name antie.devices.mediaplayer.MediaPlayer.EVENT
+        * @enum {String}
         */
         MediaPlayer.EVENT = {
             STOPPED:   "stopped",   // Event fired when playback is stopped
