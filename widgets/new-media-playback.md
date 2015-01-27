@@ -226,15 +226,17 @@ function(Component, HorizontalList, Button, Label, KeyEvent, MediaPlayer) {
             this._buttons.appendChildWidget(playPause);
             playPause.addEventListener('select', function() {
                 if(self._player.getState() == MediaPlayer.STATE.PAUSED){
-                    
+                    self._player.resume();
+                }
+                else if(self._player.getState() == MediaPlayer.STATE.STOPPED){
+                    self._player.playFrom(0);
+                }
+                else if(self._player.getState() == MediaPlayer.STATE.COMPLETE){
+                    self._player.playFrom(0);
                 }
                 else if(self._player.getState() == MediaPlayer.STATE.PLAYING){
-                
-                }
-                try {
                     self._player.pause();
                 }
-                catch(e) {}
             });
 
             var stop = new Button('stop');
@@ -247,10 +249,10 @@ function(Component, HorizontalList, Button, Label, KeyEvent, MediaPlayer) {
                 catch(e) {}
             });
 
-            var playFromStart = new Button('playFromStart');
-            playFromStart.appendChildWidget(new Label('playFrom start'));
-            this._buttons.appendChildWidget(playFromStart);
-            playFromStart.addEventListener('select', function() {
+            var restart = new Button('restart');
+            restart.appendChildWidget(new Label('|<'));
+            this._buttons.appendChildWidget(restart);
+            restart.addEventListener('select', function() {
                 try {
                     self._player.playFrom(0);
                 }
@@ -340,7 +342,7 @@ function(Component, HorizontalList, Button, Label, KeyEvent, MediaPlayer) {
             });
         },
         
-        /*call this from an 
+        /*call this from an
         requestPlay: function(url, mimeType, autoplay, mediaType) {
 
             this._player.setSource(mediaType, url, mimeType);
