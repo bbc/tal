@@ -430,9 +430,9 @@ require.def("antie/devices/browserdevice",
                     this.clearElement(el);
                     return;
                 }
-                
+
                 var sanitiser = new Sanitiser(content);
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
             },
             /**
              * Clones an element.

@@ -31,7 +31,7 @@
         this._string = string;
     }
 
-    Sanitiser.prototype.appendToElement = function (el) {
+    Sanitiser.prototype.setElementContent = function (el) {
         el.innerHTML = this._string;
     }
 

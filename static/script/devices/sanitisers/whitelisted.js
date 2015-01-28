@@ -55,7 +55,7 @@
 
         _whitelist: ['p', 'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'br'],
 
-        appendToElement: function (el) {
+        setElementContent: function (el) {
             var dom = this._createDom();
             this._clearElement(el);
             this._processDomElement(dom.firstChild, el);

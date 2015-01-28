@@ -40,14 +40,14 @@
             it('returns the text string when no dom elements are present', function() {
                 var string = "my string",
                     sanitiser = new Sanitiser(string);
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.data).toEqual(string);
             });
 
             it('clears all child nodes', function() {
                 var string = "",
                     sanitiser = new Sanitiser(string);
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.childNodes.length).toEqual(0);
             });
 
@@ -55,7 +55,7 @@
                  var string = "<script>my string</script>",
                      sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild).toEqual(null);
             });
 
@@ -63,7 +63,7 @@
                 var string = "<p>my string</p>",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.tagName.toUpperCase()).toEqual('P');
                 expect(el.firstChild.firstChild.data).toEqual('my string');
             });
@@ -72,7 +72,7 @@
                 var string = "my <br /> string",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.data).toEqual('my ');
                 expect(el.childNodes[1].tagName.toUpperCase()).toEqual('BR');
             });
@@ -82,7 +82,7 @@
                 var string = "my <br> string",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.data).toEqual('my ');
                 expect(el.childNodes[1].tagName.toUpperCase()).toEqual('BR');
             });
@@ -92,7 +92,7 @@
                 var string = "<p>P1</p><p>P2</p>",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.firstChild.data).toEqual('P1');
                 expect(el.childNodes[1].firstChild.data).toEqual('P2');
             });
@@ -101,7 +101,7 @@
                 var string = "&bull;&bull;&bull;",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.data).toEqual('•••');
             });
 
@@ -109,7 +109,7 @@
                 var string = "<p>my & string</p>",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.firstChild.data).toEqual('my & string');
             });
 
@@ -117,7 +117,7 @@
                 var string = "<p><p>my string</p></p>",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.firstChild.tagName.toUpperCase()).toEqual('P');
                 expect(el.firstChild.firstChild.firstChild.data).toEqual('my string');
             });
@@ -128,7 +128,7 @@
                     sanitiser = new Sanitiser(string);
 
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.tagName.toUpperCase()).toEqual('P');
                 expect(el.firstChild.firstChild.data).toEqual('a string');
                 expect(el.firstChild.childNodes[1].tagName.toUpperCase()).toEqual('P');
@@ -145,7 +145,7 @@
                     result = "<h1>Title</h1><ul><li>list 1</li><li>OK</li></ul>",
                     sanitiser = new Sanitiser(string);
 
-                sanitiser.appendToElement(el);
+                sanitiser.setElementContent(el);
                 expect(el.firstChild.innerHTML).toEqual(result);
             });
 
