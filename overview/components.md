@@ -14,7 +14,7 @@ Components act as singletons - the framework only allows one instance of a compo
 
 ComponentContainers are most often found at the top-level of an application, however they may be placed anywhere in the UI graph, including within other Components.
 
-Note: You should NEVER load a component via the dependency list of a RequireJS module (other than when subclassing a Component), doing so will prevent the component from loading correctly. You should instead use the methods provided on the ComponentContainer widget (see [Showing a Component](#showing_a_component)).
+Note: You should NEVER load a component via the dependency list of a RequireJS module (other than when subclassing a Component), doing so will prevent the component from loading correctly. You should instead use the methods provided on the ComponentContainer widget (see [Showing a Component](#showing-a-component)).
 
 ## Defining a Component
 
@@ -74,11 +74,12 @@ require.def("<APPNAME>/appui/components/<COMPONENT>",
 
 ## Showing a Component
 
-You can show a component using the ComponentContainer.showComponent(...) method or pushComponent(...) method (see below about [Using ComponentContainer History](#using_componentcontainer_history)).
+You can show a component using the `ComponentContainer.showComponent(...)` method or `pushComponent(...)` methods (see below about [Using ComponentContainer History](#using-componentcontainer-history)).
 
 For example, to load a component defined in "helloworld/appui/components/hellocomponent.js" you would first create a ComponentContainer into which to load it.
 
 There are 2 methods to do this:
+
 - manually:
 {% highlight javascript %}
 var container = new ComponentContainer("topleftContainer");
@@ -92,17 +93,17 @@ var container = application.addComponentContainer("topLeftContainer");
 You then tell your ComponentContainer to load and show the hellocomponent:
 
 {% highlight javascript %}
-container.showComponent("helloworld/appui/components/hellocomponent");
+container.show("helloworld/appui/components/hellocomponent");
 {% endhighlight %}
 
-The showComponent method takes an optional second argument. This argument can be any arbitrary object and is passed as the "args" property of the beforerender, beforeshow and aftershow events on the loaded Container. This allows you to reuse your component, initialising the UI with different data depending on different arguments (see [Using ComponentEvents](#using_componentevents)).
+The `show` method takes an optional second argument. This argument can be any arbitrary object and is passed as the "args" property of the beforerender, beforeshow and aftershow events on the loaded Container. This allows you to reuse your component, initialising the UI with different data depending on different arguments (see [Using ComponentEvents](#using-componentevents)).
 
 An example would be to have a dialog component that has a different title and text:
 {% highlight javascript %}
-container.showComponent("helloworld/appui/components/dialogcomponent",
+container.show("helloworld/appui/components/dialogcomponent",
                                 {title: "Do you want to continue?", text: "Yes/OK"});
 
-container.showComponent("helloworld/appui/components/dialogcomponent",
+container.show("helloworld/appui/components/dialogcomponent",
                                 {title: "Warning: Hull breach in progress", text: "Sound the alarm"});
 {% endhighlight %}
 
