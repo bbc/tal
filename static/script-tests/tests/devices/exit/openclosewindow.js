@@ -28,6 +28,7 @@
 
     this.ExitOpenCloseWindowTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
+        this._windowCloseStub = this.sandbox.stub(window, "close");
     };
 
     this.ExitOpenCloseWindowTest.prototype.tearDown = function() {
@@ -43,7 +44,7 @@
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
             // Stub out window.open() to do nothing
             var windowOpenStub = this.sandbox.stub(window, "open");
-            
+
             // Call exit strategy and ensure window.open() was called
             application.getDevice().exit();
             assertEquals("window.open call count", windowOpenStub.callCount, 1);
@@ -78,11 +79,10 @@
         queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
             // Stub out window.open() and window.close()
             var windowOpenStub = this.sandbox.stub(window, "open");
-            var windowCloseStub = this.sandbox.stub(window, "close");
-            
+
             // Call exit strategy and assert call sequence
             application.getDevice().exit();
-            assert("window.close() called after window.open()", windowCloseStub.calledAfter(windowOpenStub));
+            assert("window.close() called after window.open()", this._windowCloseStub.calledAfter(windowOpenStub));
         }, config);
     };
 

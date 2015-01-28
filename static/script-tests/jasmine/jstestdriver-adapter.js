@@ -179,9 +179,9 @@ function runAsyncTest(testFn) {
     var testHasRun = false;
 
     queuedApplicationInit = function(queue, applicationModuleName, otherDeps, testToRun, configOverride) {
-        var div = document.createElement("div");
-        div.id = "rootWidget";
-        document.body.appendChild(div);
+        var rootWidget = document.createElement("div");
+        rootWidget.id = "rootWidget";
+        document.body.appendChild(rootWidget);
 
         var wrappedTestToRun = function () {
             var loadedModules = arguments;
@@ -189,11 +189,15 @@ function runAsyncTest(testFn) {
             var ApplicationClass = loadedModules[0];
 
             var onReady = function () {
-                testToRun.apply(window.jasmineTestThisContext, loadedModules);
-                testHasRun = true;
+                try {
+                    testToRun.apply(window.jasmineTestThisContext, loadedModules);
+                    rootWidget.innerHTML = "";
+                } finally {
+                    testHasRun = true;
+                }
             };
 
-            window.fakeApplication = new ApplicationClass(div, null, null, onReady, configOverride);
+            window.fakeApplication = new ApplicationClass(rootWidget, null, null, onReady, configOverride);
             loadedModules[0] = window.fakeApplication;
         };
 
@@ -202,8 +206,11 @@ function runAsyncTest(testFn) {
 
     queuedRequire = function(queue, deps, testToRun) {
         var wrappedTestToRun = function () {
-            testToRun.apply(window.jasmineTestThisContext, arguments);
-            testHasRun = true;
+            try {
+                testToRun.apply(window.jasmineTestThisContext, arguments);
+            } finally {
+                testHasRun = true;
+            }
         };
 
         require(deps, wrappedTestToRun);
@@ -213,7 +220,7 @@ function runAsyncTest(testFn) {
 
     waitsFor(function () {
         return testHasRun;
-    });
+    }, 30000);
 }
 
 
@@ -399,4 +406,21 @@ assertBoolean = function (msg, thing) {
     }
 
     expect(typeof thing).toBe("boolean");
+};
+
+jstestdriver = {
+    console: {
+        log: function( msg ){
+            console.log( msg )
+        },
+        warn: function(msg) {
+            console.warn(msg)
+        },
+        error: function(msg) {
+            console.error(msg);
+        },
+        debug: function(msg) {
+            console.debug(msg);
+        }
+    }
 };

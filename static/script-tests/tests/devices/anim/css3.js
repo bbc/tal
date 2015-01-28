@@ -96,8 +96,29 @@
 			};
 		}
 
-		return false;
+		return getTransitionWithoutCssShorthandProperty(el);
+	};
 
+	var getTransitionWithoutCssShorthandProperty = function(el) {
+		var cssText = el.style.cssText;
+		var propertyRegexp = /transition-property: (\w+)/;
+		var easingRegexp = /transition-timing-function: (\w+)/;
+		var durationRegexp = /transition-duration: (\d+)(m?)s/;
+
+		var propertyMatch = propertyRegexp.exec(cssText);
+		var easingMatch = easingRegexp.exec(cssText);
+		var durationMatch = durationRegexp.exec(cssText);
+
+		if (propertyMatch && easingMatch && durationMatch) {
+			var durationMultiplier = durationMatch[2] === "m" ? 1 : 1000;
+			return {
+				property: propertyMatch[1],
+				duration: durationMatch[1] * durationMultiplier,
+				easing: easingMatch[1]
+			};
+		}
+
+		return false;
 	};
 
 	this.CSS3AnimationTest.prototype.testScrollElementTo = function(queue) {
