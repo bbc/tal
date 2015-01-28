@@ -742,6 +742,19 @@
 			assertEquals("HELLO WORLD!", el.innerHTML);
 		});
 	};
+
+	this.BrowserDeviceTest.prototype.testSetElementContentCallsSanitiser = function(queue) {
+		expectAsserts(1);
+
+		queuedRequire(queue, ["antie/devices/browserdevice", "antie/devices/sanitiser"], function(BrowserDevice, Sanitiser) {
+			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+			var el = device.createContainer();
+			var sanitiserStub = this.sandbox.stub(Sanitiser.prototype, "setElementContent");
+			device.setElementContent(el, "SANITISE ME!");
+			assert(sanitiserStub.calledOnce);
+		});
+	};
+
 	this.BrowserDeviceTest.prototype.testCloneElement = function(queue) {
 		expectAsserts(2);
 

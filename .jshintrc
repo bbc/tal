@@ -18,7 +18,9 @@
         "alert": true,
         "antie": true,
         "history": true,
-        "unescape": true
+        "unescape": true,
+        "ActiveXObject": true,
+        "DOMParser": true
     },
     "asi": true,
     "laxbreak": true,

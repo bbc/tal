@@ -29,9 +29,10 @@ require.def("antie/devices/browserdevice",
     [
         "antie/devices/device",
         "antie/events/keyevent",
-        "antie/historian"
+        "antie/historian",
+        "antie/devices/sanitiser"
     ],
-    function(Device, KeyEvent, Historian) {
+    function(Device, KeyEvent, Historian, Sanitiser) {
         'use strict';
 
         function trim(str) {
@@ -429,7 +430,9 @@ require.def("antie/devices/browserdevice",
                     this.clearElement(el);
                     return;
                 }
-                el.innerHTML = content;
+
+                var sanitiser = new Sanitiser(content);
+                sanitiser.setElementContent(el);
             },
             /**
              * Clones an element.
