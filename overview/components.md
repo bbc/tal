@@ -74,7 +74,7 @@ require.def("<APPNAME>/appui/components/<COMPONENT>",
 
 ## Showing a Component
 
-You can show a component using the `ComponentContainer.showComponent(...)` method or `pushComponent(...)` methods (see below about [Using ComponentContainer History](#using-componentcontainer-history)).
+You can show a component using the `ComponentContainer.show(...)` method or `pushComponent(...)` methods (see below about [Using ComponentContainer History](#using-componentcontainer-history)).
 
 For example, to load a component defined in "helloworld/appui/components/hellocomponent.js" you would first create a ComponentContainer into which to load it.
 
@@ -85,7 +85,7 @@ There are 2 methods to do this:
 var container = new ComponentContainer("topleftContainer");
 application.getRootWidget().appendChildWidget(container);
 {% endhighlight %}
-- via the Applications addComponentContainer shortcut:
+- via the Application's addComponentContainer shortcut, which adds a ComponentContainer to the root of the application:
 {% highlight javascript %}
 var container = application.addComponentContainer("topLeftContainer");
 {% endhighlight %}
@@ -145,7 +145,7 @@ Note: After calling `hide()` the ComponentContainer will be empty. If you wish t
 
 ## Using ComponentContainer History
 
-ComponentContainers have the ability to maintain a history stack of loaded Components along with the arguments passed to them when they were shown. To maintain history, instead of calling showComponent, call pushComponent (with the same arguments), e.g.
+ComponentContainers have the ability to maintain a history stack of loaded Components along with the arguments passed to them when they were shown. To maintain history, instead of calling `show()`, call `pushComponent()` (with the same arguments), e.g.
 {% highlight javascript %}
 container.pushComponent("helloworld/appui/components/hellocomponent", {text: "Hello World!"});
 container.pushComponent("helloworld/appui/components/hellocomponent", {text: "Hello Universe!"});
@@ -211,7 +211,7 @@ This event is fired each time a Component is hidden. The Component will  be in t
 
 ## Component Lifecycle
 
-The following sequence diagram illustrates loading Component A (defined in Module A) into a ComponentContainer using `ComponentContainer.showComponent(...)`. The application then uses `showComponent(...)` again to show Component B within the same ComponentContainer. Later the application then shows Component A again.
+The following sequence diagram illustrates loading Component A (defined in Module A) into a ComponentContainer using the `Application.showComponent(...)` shortcut. The application then uses `showComponent(...)` again to show Component B within the same ComponentContainer. Later the application shows Component A again.
 
 Note how `ComponentContainer.showComponent(...)` is asynchronous. If the module has not yet been loaded, it calls RequireJS which loads the module asynchronously. If the module has already been loaded, `showComponent(...)` begins the process of showing the component asynchronously and returns instantly.
 
