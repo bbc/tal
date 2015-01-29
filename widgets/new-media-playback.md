@@ -4,7 +4,7 @@ title: Media Playback (Improved)
 ---
 # Media Playback (Improved)
 
-TAL provides an device-agnostic media playback API via the [`MediaPlayer`](http://fmtvp.github.io/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
+TAL provides an device-agnostic [media playback API via the `MediaPlayer`](http://fmtvp.github.io/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
 
 > This deprecates the [old media playback API](media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
 
@@ -58,11 +58,70 @@ MediaPlayer.STATE = {
 };
 {% endhighlight %}
 
-The media playback state changes as API methods are called. Different API methods have different effect depending on the playback state. Transitions to the `STOPPED` and `ERROR` state have been limited in the state diagram below for clarity. Transitions occur synchronously in response to API methods, expect those marked by an asterisk (*) which result from asynchronous behaviour such as buffering or at the end of media.
+The media playback state changes as API methods are called. Different API methods have different effects depending on the playback state. Transitions to the `STOPPED` and `ERROR` state have been limited in the state diagram below for clarity. Transitions occur synchronously in response to API methods, except those marked by an asterisk (*) which result from asynchronous behaviour such as buffering or at the end of media.
  
 ![MediaPlayer playback states](/tal/img/widgets/new_media_states.png)
 
 The playback state can be accessed using `getState()`.
+
+#### In state `EMPTY`
+* On entry to state: clear source url
+* Call `setSource(url)` : store the url and transition to `STOPPED`
+* Call `playFrom(), beginPlayback(), pause(), resume() or stop()`: transition to `ERROR`
+
+#### In state `STOPPED`
+* On entry to state: Cancel all playback and fire event type `MediaPlayer.EVENT.STOPPED`
+* Call `playFrom(time)` : request playback from 'time' (clamped to the available range), transition to `BUFFERING`
+* Call `reset()` : transition to `EMPTY`
+* Call `beginPlayback()` : begin playback from wherever the device can (could be anywhere for Live, usually media start for VOD), transition to `BUFFERING`
+* Call `setSource(), pause(), resume() or stop()`: transition to `ERROR`
+* Device metadata/start-buffering/finish-buffering : stay in `STOPPED`
+* On network error : transition to `ERROR`
+
+#### In state `BUFFERING`
+* On entry to state: fire event type `MediaPlayer.EVENT.BUFFERING`
+* Call `playFrom(time)`: seek to time (clamped to the available range), and remember to resume playback and transition to `PLAYING` when sufficient data is available
+* Call `stop()` : transition to `STOPPED`
+* Call `pause()` : When buffering is complete, remember to pause playback and transition to `PAUSED` when sufficient data is available
+* Call `resume()` : When buffering is complete, remember to resume playback and transition to `PLAYING` when sufficient data is available
+* Call `beginPlayback(), reset() or setSource()`: transition to `ERROR`
+* If sufficient data is available for playback, transition to either `PLAYING` or `PAUSED` as required
+* If the implementation can determine the duration before it's ready to play, then it should fire event type `MediaPlayer.EVENT.STATUS`
+* On network/playback error : transition to `ERROR`
+
+#### In state `PLAYING`
+* On entry to state: fire event type `MediaPlayer.EVENT.PLAYING`
+* Call `pause()` : pause playback and transition to PAUSED
+* Call `playFrom(time)` : seek to time (clamped to the available range) and transition to BUFFERING
+* Call `stop()` : transition to `STOPPED`
+* Call `resume()` : do nothing
+* Call `beginPlayback(), reset() or setSource`: transition to `ERROR`
+* On playback/network error: transition to `ERROR`
+* At regular intervals (< 1s): fire `MediaPlayer.EVENT.STATUS`
+* On media completion: transition to `COMPLETE`
+* If buffering starts, transition to `BUFFERING`
+
+#### In state `PAUSED`
+* On entry to state: fire event type `MediaPlayer.EVENT.PAUSED`
+* Call `resume()` : resume playback from current time and transition to `PLAYING`
+* Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
+* Call `stop()` : transition to `STOPPED`
+* Call `pause()` : do nothing
+* Call `beginPlayback(), reset() or setSource()`: transition to `ERROR`
+
+#### In state `COMPLETE`
+* On entry to state: fire event type `MediaPlayer.EVENT.COMPLETE`
+* Call `stop()` : transition to `STOPPED`
+* Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
+* Call `beginPlayback(), reset(), setSource(), pause() or resume()` : transition to `ERROR`
+* Device metadata/start-buffering/finish-buffering : stay in `COMPLETE`
+* On network/playback error : stay in `COMPLETE`
+
+#### In state `ERROR`
+* On entry to state: fire event type `MediaPlayer.EVENT.ERROR`
+* Call `reset()` : transition to `EMPTY`
+* Call `setSource(), beginPlayback(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
+* Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
 ## Setting the media (audio or video) source
 
@@ -94,11 +153,13 @@ this._mediaPlayer.playFrom(0);
 
 This will cause the playback state to change to `BUFFERING` and an event emitted of type `MediaPlayer.EVENT.BUFFERING`.
 
+`beginPlayback()` can also be used. This is sometimes useful when `playFrom(seconds)` fails to work because it cannot determine the duration of the media, for example, on a live stream.
+
 When the device has loaded enough of the video to begin playback, the MediaPlayer will transition to the `PLAYING` state and an event of type `MediaPlayer.EVENT.PLAYING` emitted.
 
 The device may be connected to a slow network connection, meaning the rate of video download is slower than the playback speed.
 When this occurs, the MediaPlayer will enter the `BUFFERING` state asynchronously and an event emitted of type `MediaPlayer.EVENT.BUFFERING` (as above).
-By adding an event callback to listen to these events, you can update your application's interface to ...see later
+By [adding an event callback](#media-playback-events) to listen to these events, you can update your application's interface to, for example, show a buffering spinner.
 
 `playFrom(seconds)` can be used to seek to different points in the media. If the seconds parameter is larger than the duration of the media, the value will be clamped and playback will begin from just before the end. Requests to seek within one second of the correct time will be ignored to ensure consistent behaviour across devices.
 
@@ -134,9 +195,9 @@ this._mediaPlayer.addEventCallback(this, function(event) {
 });
 {% endhighlight %}
 
-These are all the lifecycle events fired by a media player that client applications can listen for. These are prefixed with MediaPlayer.EVENT, so you will need to include the MediaPlayer class in your class definition.
+The `event` object has the following properties: `{ type, currentTime, range, url, mimeType, state}` where `type` is a string specified in the `MediaPlayer.EVENT` enum:
 
-| Event | Description |
+| MediaPlayer.EVENT.* | Description |
 | ----- | ----------- |
 | STOPPED | Event fired when playback is stopped |
 | BUFFERING | Event fired when playback has to suspend due to buffering |
@@ -145,11 +206,11 @@ These are all the lifecycle events fired by a media player that client applicati
 | COMPLETE | Event fired when media playback has reached the end of the media |
 | ERROR | Event fired when an error condition occurs |
 | STATUS | Event fired regularly during play - use this to update the current playback time |
-| SENTINEL_ENTER_BUFFERING | Event fired when a sentinel has to act because the device has started buffering but not reported it |
-| SENTINEL_EXIT_BUFFERING | Event fired when a sentinel has to act because the device has finished buffering but not reported it
-| SENTINEL_PAUSE | Event fired when a sentinel has to act because the device has failed to pause when expected
-| SENTINEL_SEEK | Event fired when a sentinel has to act because the device has failed to seek to the correct location
-| SENTINEL_COMPLETE | Event fired when a sentinel has to act because the device has completed the media but not reported it
+| SENTINEL_ENTER_BUFFERING | Event fired when a [sentinel](#sentinels) has to act because the device has started buffering but not reported it |
+| SENTINEL_EXIT_BUFFERING | Event fired when a [sentinel](#sentinels) has to act because the device has finished buffering but not reported it
+| SENTINEL_PAUSE | Event fired when a [sentinel](#sentinels) has to act because the device has failed to pause when expected
+| SENTINEL_SEEK | Event fired when a [sentinel](#sentinels) has to act because the device has failed to seek to the correct location
+| SENTINEL_COMPLETE | Event fired when a [sentinel](#sentinels) has to act because the device has completed the media but not reported it
 
 An example application snippet using media playback events to display the type of event in a label
 
@@ -177,6 +238,10 @@ To get the available range in the media that can be seeked in, use `getSeekableR
 {% endhighlight %}
 
 `getSeekableRange()` is especially useful for live streams, on which the seekable window changes as the live stream progresses.
+
+## Errors
+API errors (e.g. calling `pause()` while in the `STOPPED` state) are treated as fatal errors and the media player transitions to the `ERROR` state and stops all playback. After this, the player must be `reset()`.
+However, device errors (network errors, playback errors, media incompatibility etc) are raised as error events in the API, but they do not cause a transition to the error state. This is because many device errors are non fatal, and playback can continue normally afterwards. It is recommended that apps similarly treat these error events as notifications, and do not display modal dialogs or end playback just because of a device error event.
 
 ## Example media player component
 

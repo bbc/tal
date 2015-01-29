@@ -1,0 +1,20 @@
+@startuml
+[*] --> EMPTY
+EMPTY --> STOPPED : setSource()
+STOPPED --> EMPTY : reset()
+STOPPED --> BUFFERING : playFrom()
+STOPPED --> BUFFERING : beginPlayback()
+BUFFERING --> BUFFERING : playFrom()
+BUFFERING --> BUFFERING :resume()
+BUFFERING --> BUFFERING : pause()
+BUFFERING --> PLAYING : *buffered
+BUFFERING --> PAUSED : *buffered
+PLAYING --> PAUSED : pause()
+PLAYING --> BUFFERING : *buffering
+PLAYING --> BUFFERING : playFrom()
+PLAYING --> COMPLETE : *complete
+PAUSED --> PLAYING : resume()
+PAUSED --> BUFFERING : playFrom()
+COMPLETE --> BUFFERING : playFrom()
+ERROR --> EMPTY : reset()
+@enduml
