@@ -6,7 +6,7 @@ title: Media Playback (improved)
 
 TAL provides an device-agnostic [media playback API via the `MediaPlayer`](http://fmtvp.github.io/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
 
-> This deprecates the [old media playback API](media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
+> This deprecates the [old media playback API](../widgets/media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
 
 The framework only supports the the playback of one item of media at a time.
 Video can be only be played in full screen.
@@ -29,12 +29,12 @@ require.def(
     [
         "antie/widgets/component",
         "antie/runtimecontext",
-        'antie/devices/mediaplayer/mediaplayer'
+        "antie/devices/mediaplayer/mediaplayer"
     ],
     function(Component, RuntimeContext, MediaPlayer) {
         var ExampleMediaPlayer = Component.extend({
             init : function() {
-                this._super('ExampleMediaPlayer');
+                this._super("ExampleMediaPlayer");
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             }
         });
@@ -132,7 +132,7 @@ It takes a mediaType (`MediaPlayer.TYPE.VIDEO` or `MediaPlayer.TYPE.AUDIO`), a u
 For example, to load a video:
 
 {% highlight javascript %}
-this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "http://my.madeupvideo.com/somevid.mp4","video/mp4");
+this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "http://example.com/video.mp4","video/mp4");
 {% endhighlight %}
 
 If setting the source is successful, the playback state will change to `STOPPED` and an event will be emitted of type `MediaPlayer.EVENT.STOPPED`.
@@ -206,29 +206,37 @@ The `event` object has the following properties: `{ type, currentTime, range, ur
 | COMPLETE | Event fired when media playback has reached the end of the media |
 | ERROR | Event fired when an error condition occurs |
 | STATUS | Event fired regularly during play - use this to update the current playback time |
-| SENTINEL_ENTER_BUFFERING | Event fired when a [sentinel](#sentinels) has to act because the device has started buffering but not reported it |
-| SENTINEL_EXIT_BUFFERING | Event fired when a [sentinel](#sentinels) has to act because the device has finished buffering but not reported it
-| SENTINEL_PAUSE | Event fired when a [sentinel](#sentinels) has to act because the device has failed to pause when expected
-| SENTINEL_SEEK | Event fired when a [sentinel](#sentinels) has to act because the device has failed to seek to the correct location
-| SENTINEL_COMPLETE | Event fired when a [sentinel](#sentinels) has to act because the device has completed the media but not reported it
+
+### Sentinels
+
+Some devices do not respond immediately to requests to play, pause or seek through media or do not emit expected events, such as entering buffering. To solve this problem, MediaPlayer will monitor the state of the device to keep it in sync with the API's state. As a result, the API will fire one of the sentinel events listed below. By listening to for these events in your callback, you can detect deviant media playback behaviour on the device.
+
+| MediaPlayer.EVENT.* | Description |
+| ---- | --------- |
+| SENTINEL_ENTER_BUFFERING | Event fired when a sentinel has to act because the device has started buffering but not reported it |
+| SENTINEL_EXIT_BUFFERING | Event fired when a sentinel has to act because the device has finished buffering but not reported it |
+| SENTINEL_PAUSE | Event fired when a sentinel has to act because the device has failed to pause when expected |
+| SENTINEL_SEEK | Event fired when a sentinel has to act because the device has failed to seek to the correct location |
+| SENTINEL_COMPLETE | Event fired when a sentinel has to act because the device has completed the media but not reported it |
 
 An example application snippet using media playback events to display the type of event in a label
 
 {% highlight javascript %}
 this._mediaPlayer.addEventCallback(this, function(event) {
-   this._stateLabel.setText("Event type: " + event.type);
+    if(event.type === MediaPlayer.EVENT.BUFFERING) {
+        this._showBufferingIcon();
+    }
+    else if(event.type === MediaPlayer.EVENT.PLAYING) {
+        this._hideBufferingIcon();
+    }
 });
 {% endhighlight %}
-
-## Sentinels
-
-Some devices do not respond immediately to requests to play, pause or seek through media or do not emit expected events, such as entering buffering. To solve this problem, MediaPlayer will monitor the state of the device to keep it in sync with the API's state. As a result, the API will fire one of the sentinel events listed above.
 
 ## Getting the length of the media
 
 To get the duration of the media, in seconds, use `getDuration()`.
 
-To get the available range in the media that can be seeked in, use `getSeekableRange()', this will return the following object for a non-live video:
+To get the available range in the media that can be seeked in, use `getSeekableRange()`, this will return the following object for a non-live video:
 
 {% highlight javascript %}
 {
@@ -241,4 +249,5 @@ To get the available range in the media that can be seeked in, use `getSeekableR
 
 ## Errors
 API errors (e.g. calling `pause()` while in the `STOPPED` state) are treated as fatal errors and the media player transitions to the `ERROR` state and stops all playback. After this, the player must be `reset()`.
+
 However, device errors (network errors, playback errors, media incompatibility etc) are raised as error events in the API, but they do not cause a transition to the error state. This is because many device errors are non fatal, and playback can continue normally afterwards. It is recommended that apps similarly treat these error events as notifications, and do not display modal dialogs or end playback just because of a device error event.
