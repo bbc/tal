@@ -176,6 +176,7 @@ The framework applies a wide range of IDs and class names to rendered DOM elemen
 ## Important CSS Considerations
 
 There are a number of important rules to keep in mind when styling:
+
 *   `.horizontallistmask` elements are block elements with `overflow: hidden` therefore must be given a width and height for their content to be visible.
 *   You can add classes to the entire app via page strategies if you need to target styles at a particular family of device
 *   The framework adds an `.animating` and `.notanimating` class name to the top-level element when animations are occurring or are idle.
@@ -199,6 +200,7 @@ Then for each `background-image:` property that you wish to include into this sp
 background-image: url('../../img/carousel/carousel_content_normal_720.png'); /** sprite-ref: carousel720; */
 {% endhighlight %}
 Notes:
+
 * All `background-*:` properties must be included separately. Do NOT use the compound `background: <image> <repeat> <position>;` syntax.
 * The `sprite-ref` must be unique across the whole application. For example you must not use 'carousel' in multiple CSS files for different layouts, or all images will be placed into one sprite.
 * Smart Sprites has been modified to allow pixel and percentage values in the `sprite-alignment:` property.

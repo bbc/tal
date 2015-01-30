@@ -12,6 +12,7 @@ whilst increasing the reach of BBC TV applications such as *iPlayer*. Today all 
 TV applications are built using *TAL*.
 
 There are a number of reasons we've decided to share TAL as an open source project:
+
 * Sharing the code allows other parties to contribute. Hopefully making the product better for everyone who uses it
 * Sharing TAL should make building applications on TV easier for others, helping to drive the uptake 
 of this nascent technology. The BBC has a history of doing this and we are always looking at new 
