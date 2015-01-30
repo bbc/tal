@@ -64,6 +64,7 @@ On devices that support CORS, this will GET data from `url` and parse it from JS
 On devices that do not support CORS, TAL will add a callback parameter to the URL (e.g. `?callback=antie_callback`) before making the request. The remote server is expected to use this parameter and wrap the returned JSON in the named callback method to produce a JSONP response. Your `onSuccess` callback will receive the result.
 
 The fallback JSONP behaviour can be configured via the optional third argument on `executeCrossDomainGet()`. The argument is a JavaScript object with the following properties, all of which have sensible defaults:
+
 * timeout (in ms. Default: 5000)
 * id (name of the callback function to use in the JSONP response. Default: random string)
 * callbackKey (name of the `callback` parameter to pass in the HTTP query string. Default: callback)
