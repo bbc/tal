@@ -60,7 +60,7 @@ MediaPlayer.STATE = {
 
 The media playback state changes as API methods are called. Different API methods have different effects depending on the playback state. Transitions to the `STOPPED` and `ERROR` state have been limited in the state diagram below for clarity. Transitions occur synchronously in response to API methods, except those marked by an asterisk (*) which result from asynchronous behaviour such as buffering or at the end of media.
  
-![MediaPlayer playback states](/tal/img/widgets/new_media_states.png)
+![MediaPlayer playback states](/tal/img/overview/new_media_states.png)
 
 The playback state can be accessed using `getState()`.
 
