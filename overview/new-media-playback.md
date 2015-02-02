@@ -11,7 +11,7 @@ TAL provides an device-agnostic [media playback API via the `MediaPlayer`](http:
 The framework only supports the the playback of one item of media at a time.
 Video can be only be played in full screen.
 
-## Creating a media player
+## Accessing the media playback API
 
 This can be done in a device-agnostic way through the application's `Device` object.
 
@@ -161,7 +161,7 @@ The device may be connected to a slow network connection, meaning the rate of vi
 When this occurs, the MediaPlayer will enter the `BUFFERING` state asynchronously and an event emitted of type `MediaPlayer.EVENT.BUFFERING` (as above).
 By [adding an event callback](#media-playback-events) to listen to these events, you can update your application's interface to, for example, show a buffering spinner.
 
-`playFrom(seconds)` can be used to seek to different points in the media. If the seconds parameter is larger than the duration of the media, the value will be clamped and playback will begin from just before the end. Requests to seek within one second of the correct time will be ignored to ensure consistent behaviour across devices.
+`playFrom(seconds)` can be used to seek to different points in the media. If the seconds parameter is larger than the duration of the media, the value will be clamped and playback will begin from just before the end. Requests to seek within one second of the current time will be ignored to ensure consistent behaviour across devices.
 
 ## Stopping media
 
