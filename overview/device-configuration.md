@@ -37,7 +37,8 @@ The module on which the device is based. This will usually be antie/devices/brow
 Mix-in modules to support common implementations of the abstraction layer. This must contain one module from each of the following namespaces
 
 * `antie/devices/anim/*` -- Animation
-* `antie/devices/media/*` -- Media playback
+* `antie/devices/media/*` -- Media playback (deprecated)
+* `antie/devices/mediaplayer/*` -- Media playback
 * `antie/devices/data/*` -- JSON parsing
 * `antie/devices/net/*` -- Network implementation
 * `antie/devices/storage/*` -- Persistent storage implementation
@@ -56,13 +57,21 @@ It should also include all of the supported modules from
 | `antie/devices/anim/styletopleft`        | Animation via tweening style.top and style.left with JavaScript. For reasonably quick devices which do not support css3. |
 | `antie/devices/anim/scrolloffset`        | Deprecated |
 
-#####Media modifiers
+#####Media playback modifiers (deprecated)
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
 | `antie/devices/media/html5`             | The html5 `<video>` element is used for media playback. |
 | `antie/devices/media/cehtml`            | CE-HTML is used for media playback |
 | `antie/devices/media/samsung_maple`     | Samsung's Device API and Player object are used for media playback |
+
+#####Media playback modifiers
+
+| Module name                             | Description |
+| --------------------------------------- | ----------- |
+| `antie/devices/mediaplayer/html5`             | The html5 `<video>` element is used for media playback. |
+| `antie/devices/mediaplayer/cehtml`            | CE-HTML is used for media playback |
+| `antie/devices/mediaplayer/samsung_maple`     | Samsung's Device API and Player object are used for media playback |
 
 #####Data modifiers
 
