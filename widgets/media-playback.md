@@ -4,7 +4,7 @@ title: Media Playback (Deprecated)
 ---
 # Media Playback (Deprecated)
 
-> This has been replaced by the [Media Playback (Improved)](new-media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
+> This has been replaced by the [Media Playback (Improved)](../overview/new-media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
 
 The framework abstracts device specific media players to a common API based on the html5 MediaElement.
 

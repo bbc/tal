@@ -15,7 +15,7 @@ Video can be only be played in full screen.
 
 This can be done in a device-agnostic way through the application's `Device` object.
 
-Create a media player using:
+Access the media player using:
 
 {% highlight javascript %}
 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
