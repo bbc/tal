@@ -13,9 +13,9 @@ Video can be only be played in full screen.
 
 ## Accessing the media playback API
 
-This can be done in a device-agnostic way through the application's `Device` object.
+You will need to use the [correct media player modifier](device-configuration.html) in the device's configuration file.
 
-Access the media player using:
+Access the media player through the application's `Device` object.:
 
 {% highlight javascript %}
 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
@@ -162,6 +162,42 @@ When this occurs, the MediaPlayer will enter the `BUFFERING` state asynchronousl
 By [adding an event callback](#media-playback-events) to listen to these events, you can update your application's interface to, for example, show a buffering spinner.
 
 `playFrom(seconds)` can be used to seek to different points in the media. If the seconds parameter is larger than the duration of the media, the value will be clamped and playback will begin from just before the end. Requests to seek within one second of the current time will be ignored to ensure consistent behaviour across devices.
+
+## Hiding the background
+
+Some devices always composite html on top of video playback, so if you use any sort of non-transparent background, playback will not be visible.
+
+If this is the case, you will need to remove the background just before playback, then restore on stop.
+
+One way to do this is via a `background-none` css class:
+
+{% highlight css %}
+.background-none {
+    background-image: none !important;
+    background-color: transparent !important;
+}
+{% endhighlight %}
+
+{% highlight javascript %}
+_removeBackground: function () {
+    if (this._haveRemovedBackground === undefined &&
+     this._mediaType !== MediaPlayer.TYPE.AUDIO) {
+        var application = this.getCurrentApplication();
+        var device = application.getDevice();
+        device.addClassToElement(document.body, 'background-none');
+        application.getRootWidget().addClass('background-none');
+        this._haveRemovedBackground = true;
+    }
+},
+
+_restoreBackground: function () {
+    var application = this.getCurrentApplication();
+    var device = application.getDevice();
+    device.removeClassFromElement(document.body, 'background-none');
+    application.getRootWidget().removeClass('background-none');
+    this._haveRemovedBackground = undefined;
+}
+{% endhighlight %}
 
 ## Stopping media
 
