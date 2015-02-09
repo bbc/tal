@@ -10,8 +10,6 @@ java -jar jscover-1.0.13/JSCover-all.jar -ws --port=4466 --save-json-only --docu
 
 sleep 1
 open http://localhost:4466/jscoverage.html?/static/script-tests/jasmine/WebRunner.html
-phantomjs ../lib/run-jscover-jasmine.js http://localhost:4466/webapp/static-versioned/script-tests/jasmine/WebRunner.html
-java -cp jscover-1.0.13/JSCover-all.jar jscover.report.Main --format=COBERTURAXML report/phantom ../..
 
 if [[ ! $* == *-p* ]]; then
 		curl http://localhost:4466/stop
