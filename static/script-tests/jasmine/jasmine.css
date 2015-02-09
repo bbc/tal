@@ -1,0 +1,4 @@
+.jasmine_html-reporter .symbol-summary li { height: 14px; }
+.jasmine_html-reporter .symbol-summary li.passed:before { color: #7ca74f; content: "\02022"; }
+.jasmine_html-reporter .bar.passed { background-color: #7ca74f; }
+.jasmine_html-reporter .summary li.passed a { color: #7ca74f; }
