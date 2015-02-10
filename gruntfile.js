@@ -85,6 +85,11 @@ module.exports = function (grunt) {
                     to: grunt.file.read('jsdoc/footer.txt').trim() + "</body>"
                 }]
             }
+        },
+        shell: {
+            coverage: {
+                command: 'cd static/script-tests/jasmine; pwd; ./coverage.sh -p;'
+            }
         }
     });
 
@@ -109,6 +114,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks("grunt-shell");
 
     grunt.registerTask("hint", ["jshint"]);
     grunt.registerTask("test", ["jasmine"]);
@@ -116,8 +122,9 @@ module.exports = function (grunt) {
     grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
     grunt.registerTask("full", ["jshint", "jasmine"]);
     grunt.registerTask('default', 'full');
-
+    grunt.registerTask("coverage", "Produce a coverage report of the main source files", ["jasmine:src:build", "shell:coverage"]);
     grunt.registerTask("spec", ["jasmine:src:build", "openspec"]);
+    
     grunt.registerTask("openspec", "Open the generated Jasmine spec file", function() {
         var childProcess = require('child_process');
         var outfile = grunt.config("jasmine.options.outfile");
