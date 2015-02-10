@@ -6,7 +6,7 @@ if [ ! -z "$PID" ]; then
 		kill -9 $PID
 fi
 # Set up the JSCover java server
-java -jar jscover-1.0.13/JSCover-all.jar -ws --port=4466 --save-json-only --document-root=../../.. --report-dir=report --only-instrument-reg=.*static/script/.* &
+java -Dfile.encoding=UTF-8 -jar jscover-1.0.13/JSCover-all.jar -ws --port=4466 --save-json-only --document-root=../../.. --report-dir=report --only-instrument-reg=.*static/script/.* &
 
 sleep 1
 open http://localhost:4466/jscoverage.html?/static/script-tests/jasmine/WebRunner.html
