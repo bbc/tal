@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/styletopleft",
       "antie/devices/media/html5",
-	  "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/html5",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/logging/default",
@@ -54,16 +54,15 @@
     }
   },
   "input": {
-    "map": {
-	  "38": "UP",
-	  "40": "DOWN",
-	  "37": "LEFT",
+    "map":    {
+	  "38":     UP",
+	  "40":    "DOWN",
+	  "3    ": "LEFT",
 	  "39": "RIGHT",
-      "13": "ENTER",
-	  "45": "PLAY",
+          13": "ENTER",    	  "45": "PLAY",
 	  "46": "PAUSE",
       "118": "PLAY_PAUSE",
-      "117": "STOP",
+         "117": "STOP"
 	  "119": "FAST_FWD",
 	  "116": "REWIND",
       "48": "0",
@@ -75,13 +74,12 @@
       "54": "6",
       "55": "7",
       "56": "8",
-      "57": "9",
-      "32": "SPACE",
-	  "8":   "BACKSPACE",
-	  "36": "BACK",
-	  "33": "SUBTITLE",
-	  "34": "INFO",
-	  "112": "RED",
+      "57":    "9",
+      "32": "S    ACE",
+	  "8":      "BACKSPACE",
+	     "36": "BACK",    	  "33": "SUB    ITLE",
+	  "34":    "INFO",
+	  "112"     "RED",
 	  "113": "GREEN",
 	  "114": "YELLOW",
 	  "115": "BLUE"
