@@ -5,6 +5,7 @@
     "modifiers": [
       "antie/devices/anim/css3",
       "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",

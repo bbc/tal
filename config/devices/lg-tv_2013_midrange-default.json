@@ -5,6 +5,7 @@
         "modifiers": [
             "antie/devices/anim/styletopleft",
             "antie/devices/media/html5",
+            "antie/devices/mediaplayer/html5",
             "antie/devices/broadcastsource/hbbtvsource",
             "antie/devices/net/default",
             "antie/devices/data/nativejson",
