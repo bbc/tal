@@ -8,6 +8,16 @@ title: Networking
 
 Same origin GET requests (where the resource being fetched is on the same host as the application) are straightforward. Due to [browser security](http://en.wikipedia.org/wiki/Same_origin_policy), cross-domain GETs and POSTs place certain requirements on the backend and on the device.
 
+
+<div class="alert alert-info">
+        <p><strong>Note</strong> you will need to obtain a reference to the device abstraction layer in order to use the networking methods:</p>
+        <ol>
+            <li>Include the RunTime context in your require.js dependancies: <code>"antie/runtimecontext"</code></li>
+            <li>Get a reference to the device: <code>device = RuntimeContext.getDevice();</code></li>
+        </ol>
+</div>
+
+
 ## Performing a Same Origin GET Request
 
 To perform a GET request to the same origin as the application, obtain a reference to the device, then use the `loadUrl()` function:
