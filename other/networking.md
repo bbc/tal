@@ -10,7 +10,7 @@ Same origin GET requests (where the resource being fetched is on the same host a
 
 ## Performing a Same Origin GET Request
 
-To perform a GET request to the same origin as the application, obtain a reference to the device, then use the `loadUrl()` function:
+To perform a GET request to the same origin as the application, [obtain a reference to the device](/tal/faq.html#question-how-do-i-get-a-refernce-the-device-abstraction-layer-in-the-code), then use the `loadUrl()` function:
 {% highlight javascript %}
 device.loadURL(url, {
         onLoad: function(responseText) {
