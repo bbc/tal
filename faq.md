@@ -87,8 +87,8 @@ parameter, but its up to you how you do it.
 ### **Question:** What gets specified in a device configuration file?  
 **Answer:** See the [device configuration](overview/device-configuration.html) page for specific details.
 
-### **Question** How do I get a reference the device abstraction layer in the code?
-**Answer** To get a reference to the device, include RunTime context in your require.js dependancies (`"antie/runtimecontext"`), then in your code get a reference with `var device = RuntimeContext.getDevice();`.
+### **Question:** How do I get a reference the device abstraction layer in the code?
+**Answer:** To get a reference to the device, include RuntimeContext in your require.js dependencies (`"antie/runtimecontext"`), then in your code get a reference with `var device = RuntimeContext.getDevice();`.
 
 ### **Question:** Does TAL support any DRM solutions?  
 **Answer:** Currently it doesn't, but the TAL project has talked to several DRM providers who are interested 
