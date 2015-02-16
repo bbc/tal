@@ -543,7 +543,13 @@ require.def('antie/devices/device',
              * Get the media player.
              * This will return the correct implementation for the current device.
              */
-            getMediaPlayer: function() {
+            getMediaPlayer: function () {
+            },
+            /**
+             * Get the live media player.
+             * This will return the correct implementation for the current device.
+             */
+            getLivePlayer: function () {
             },
             /**
              * Gets the player embed mode for the current device
