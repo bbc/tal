@@ -552,6 +552,12 @@ require.def('antie/devices/device',
             getLivePlayer: function () {
             },
             /**
+             * Get the level of live support.
+             * This will return the correct level of support for the current device.
+             */
+            getLiveSupport: function () {
+            },
+            /**
              * Gets the player embed mode for the current device
              * @param {String} mediaType "video" or "radio".
              * @returns The embed mode of the current player

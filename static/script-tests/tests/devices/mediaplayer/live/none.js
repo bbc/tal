@@ -44,4 +44,17 @@
             assertEquals(null, mediaPlayer);
         });
     };
+
+    this.LivePlayerSupportLevelNoneTest.prototype.testGetLiveSuppoertReturnsNoneWithSupportLevelNone = function (queue) {
+        expectAsserts(1);
+
+        queuedRequire(queue, ["antie/devices/device", "antie/devices/mediaplayer/live/none"], function (Device) {
+
+            var device = new Device(antie.framework.deviceConfiguration);
+            var liveSupportLevel = device.getLiveSupport();
+
+            assertEquals("none", liveSupportLevel);
+        });
+    };
+
 })();
