@@ -58,6 +58,18 @@ require.def(
 
             getState: function() {
                 this._mediaPlayer.getState();
+            },
+
+            getSource: function() {
+                this._mediaPlayer.getSource();
+            },
+
+            getMimeType: function() {
+                this._mediaPlayer.getMimeType();
+            },
+
+            addEventCallback: function(callback) {
+                this._mediaPlayer.addEventCallback(callback);
             }
         });
 
