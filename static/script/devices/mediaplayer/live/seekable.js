@@ -42,6 +42,38 @@ require.def(
 
             setSource: function(mediaType, sourceUrl, mimeType) {
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
+            },
+
+            beginPlayback: function() {
+                this._mediaPlayer.beginPlayback();
+            },
+
+            stop: function() {
+                this._mediaPlayer.stop();
+            },
+
+            reset: function() {
+                this._mediaPlayer.reset();
+            },
+
+            getState: function() {
+                this._mediaPlayer.getState();
+            },
+
+            getSource: function() {
+                this._mediaPlayer.getSource();
+            },
+
+            getMimeType: function() {
+                this._mediaPlayer.getMimeType();
+            },
+
+            addEventCallback: function(callback) {
+                this._mediaPlayer.addEventCallback(callback);
+            },
+
+            removeEventCallback: function(callback) {
+                this._mediaPlayer.removeEventCallback(callback);
             }
         });
 
