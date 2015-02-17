@@ -56,6 +56,10 @@ require.def(
                 this._mediaPlayer.pause();
             },
 
+            resume: function() {
+                this._mediaPlayer.resume();
+            },
+
             stop: function() {
                 this._mediaPlayer.stop();
             },
@@ -70,6 +74,10 @@ require.def(
 
             getSource: function() {
                 this._mediaPlayer.getSource();
+            },
+
+            getCurrentTime: function() {
+                this._mediaPlayer.getCurrentTime();
             },
 
             getMimeType: function() {

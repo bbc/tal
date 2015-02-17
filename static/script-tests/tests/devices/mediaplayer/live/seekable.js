@@ -81,4 +81,8 @@
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPlayFromCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('playFrom');
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPauseCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('pause');
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerResumeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('resume');
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetCurrentTimeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('getCurrentTime');
 })();
