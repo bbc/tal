@@ -29,7 +29,7 @@
 require.def(
     'antie/devices/media/html5',
     [
-        'antie/devices/device',
+    	'antie/devices/device',
         'antie/devices/media/mediainterface',
         'antie/events/mediaevent',
         'antie/events/mediaerrorevent',
@@ -41,13 +41,15 @@ require.def(
         'use strict';
 
         var currentPlayer = null;
+        var playerInit = null;
         var isMuted = null;
         var currentVolume = -1;
 
         var HTML5Player = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
-				console.log('brightcove player');
+				console.log('brightcove player init ' + id);
+				playerInit = false;
                 this._eventHandlingCallback = eventHandlingCallback;
 
                 if (mediaType == "audio") {
@@ -83,7 +85,7 @@ require.def(
                 vidTag.setAttributeNode(embdAtt);
                 
                 var vididAtt = document.createAttribute('data-video-id');
-                vididAtt.value = '3813416170001';
+                //vididAtt.value = 2699095591001;
                 vidTag.setAttributeNode(vididAtt);
                 
                 var clsAtt = document.createAttribute('class');
@@ -91,7 +93,8 @@ require.def(
                 vidTag.setAttributeNode(clsAtt);
                 
                 var ctrlAtt = document.createAttribute('controls');
-                //vidTag.setAttributeNode(ctrlAtt);
+                ctrlAtt.value = 'false';
+                vidTag.setAttributeNode(ctrlAtt);
                 
                 var wdthAtt = document.createAttribute('width');
                 wdthAtt.value = sizes['width'] + 'px';
@@ -114,7 +117,7 @@ require.def(
                 this._mediaElement.appendChild(vidTag);
                 this._mediaElement.appendChild(srptTag);
 
-                if (currentVolume != -1) {
+                /*if (currentVolume != -1) {
                     this._mediaElement.volume = currentVolume;
                 } else {
                     currentVolume = this._mediaElement.volume;
@@ -123,13 +126,14 @@ require.def(
                     this._mediaElement.muted = isMuted;
                 } else {
                     isMuted = this._mediaElement.muted;
-                }
+                }*/
 
                 this._eventWrapper = null;
                 this._errorEventWrapper = null;
             },
             render: function(device) {
                 if (!this._renderCalled) {
+                	console.log('bcove render func');
                     this._renderCalled = true;
 
                     // Convert all media events into our internal representation and bubble them through
@@ -146,17 +150,16 @@ require.def(
                         this._mediaElement.addEventListener(MediaEvent.TYPES[i], this._eventWrapper, true);
                     }
                     this._mediaElement.addEventListener("error", this._errorEventWrapper, true);
+                    
+                    this._waitfor(this._isVideoJSDefined, true, 200, 0, 'waited for video js to be defined', function(){
+                    	videojs("myPlayerID").ready(function() {
+		                	console.log('setting player');
+	                    	currentPlayer = this;
+					        playerInit = true;
+				        });
+                    });
                 }
                 
-                setTimeout(function() {
-                	console.log('waiting');
-                	console.log(videojs);
-                	videojs("myPlayerID").ready(function() {
-                		console.log('setting player');
-			            currentPlayer = this;			
-			        });
-                }, 500);
-
                 return this._mediaElement;
             },
             // (not part of HTML5 media)
@@ -179,40 +182,45 @@ require.def(
             _requiresWebkitMemoryLeakFix: function() {
                 return false;
             },
+            _isPlayerInited: function(){
+            	return playerInit;
+            },
+            _isVideoJSDefined: function(){
+            	return typeof videojs !== 'undefined';
+            },
+            _waitfor: function(test, expectedValue, msec, count, source, callback) {
+			    // Check if condition met. If not, re-check later (msec).
+			    var self = this;
+			    while (test() !== expectedValue) {
+			        count++;
+			        setTimeout(function() {
+			            self._waitfor(test, expectedValue, msec, count, source, callback);
+			        }, msec);
+			        return;
+			    }
+			    // Condition finally met. callback() can be executed.
+			    console.log(source + ': ' + test() + ', expected: ' + expectedValue + ', ' + count + ' loops.');
+			    callback();
+			},
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
-            setSources: function(sources, tags) {
+            setSources: function(source, tags) {
+            	console.log('source setting');
+            	
                 var self = this;
                 var device = Application.getCurrentApplication().getDevice();
-                var oldSources = this._mediaElement.getElementsByTagName('source');
-                var supportsTypeAttribute = this._supportsTypeAttribute();
-
-                /*while (oldSources.length) {
-                    device.removeElement(oldSources[0]);
-                }
-                for (var i = 0; i < sources.length; i++) {
-                    var source = document.createElement('source');
-                    if (supportsTypeAttribute) {
-                        source.type = sources[i].getContentType();
-                    }
-                    source.src = sources[i].getURL(tags);
-
-                    //device.appendChildElement(this._mediaElement, source);
-
-                    (function(source) {
-                        source._errorEventListener = function(evt) {
-                            var errCode = self._mediaElement.error ? self._mediaElement.error.code : MediaInterface.MEDIA_ERR_UNKNOWN;
-                            self._eventHandlingCallback(new MediaSourceErrorEvent(
-                                self,
-                                errCode,
-                                source.src,
-                                self._mediaElement.networkState === HTMLMediaElement.NETWORK_NO_SOURCE
-                            ));
-                            evt.stopPropagation();
-                        };
-                        source.addEventListener("error", source._errorEventListener, true);
-                    })(source);
-                }*/
+                var vid_id = source;
+                console.log(vid_id);
+                
+                this._waitfor(this._isPlayerInited, true, 200, 0, 'wait for source set', function(){
+                	currentPlayer.catalog.getVideo(vid_id, function(error, video) {
+				    	//deal with error
+				    	console.log('vid found:');
+				    	console.log(video);
+				    	currentPlayer.catalog.load(video);
+				    	currentPlayer.play();
+				    });
+                });
             },
             getSources: function() {
                 var sources = [];
@@ -349,7 +357,13 @@ require.def(
             },
             // attribute boolean controls;
             setNativeControls: function(controls) {
-                currentPlayer.controls(controls);
+            	console.log('setting controls');
+            	console.log('player init: ' + this._isPlayerInited());
+            	this._waitfor(this._isPlayerInited, true, 300, 0, 'player init for set control', function(){
+            		console.log('made it in');
+            		currentPlayer.controls(controls);
+                	currentPlayer.options().inactivityTimeout = 1;
+            	});                
             },
             getNativeControls: function() {
                 return currentPlayer.controls();

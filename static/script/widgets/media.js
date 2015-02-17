@@ -56,6 +56,8 @@ require.def('antie/widgets/media',
 			 */
 			init: function(id, mediaType) {
 				this._super(id);
+				
+				console.log('media obj init');
 
                 var self = this;
 
@@ -73,7 +75,9 @@ require.def('antie/widgets/media',
 				this.addClass('media');
 			},
             render: function(device) {
+            	console.log('media render');
 	            this.outputElement = this._mediaInterface.render(device);
+	            console.log(this.outputElement);
 	            return this.outputElement;
             },
             show: function(options) {
@@ -92,6 +96,7 @@ require.def('antie/widgets/media',
                 return this._mediaInterface.getError();
             },
             setSources: function(sources, tags) {
+            	console.log('media set sources pass through');
                 this._mediaInterface.setSources(sources, tags);
             },
             getSources: function() {
@@ -173,6 +178,7 @@ require.def('antie/widgets/media',
                 this._mediaInterface.setLoop(loop);
             },
             play: function() {
+            	console.log('media play pass through');
                 this._mediaInterface.play();
             },
             stop: function() {
