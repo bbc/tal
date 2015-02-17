@@ -61,4 +61,6 @@
     };
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback');
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource');
 })();
