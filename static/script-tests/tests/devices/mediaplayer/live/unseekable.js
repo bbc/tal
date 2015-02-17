@@ -67,4 +67,6 @@
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerStopCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop');
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerResetCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('reset');
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetStateCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('getState');
 })();

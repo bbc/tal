@@ -54,6 +54,10 @@ require.def(
 
             reset: function() {
                 this._mediaPlayer.reset();
+            },
+
+            getState: function() {
+                this._mediaPlayer.getState();
             }
         });
 
