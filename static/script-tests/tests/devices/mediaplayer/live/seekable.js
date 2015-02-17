@@ -77,4 +77,8 @@
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerAddEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback');
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerRemoveEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback');
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPlayFromCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('playFrom');
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPauseCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('pause');
 })();

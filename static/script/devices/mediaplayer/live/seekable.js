@@ -48,6 +48,14 @@ require.def(
                 this._mediaPlayer.beginPlayback();
             },
 
+            playFrom: function(offset) {
+                this._mediaPlayer.playFrom(offset);
+            },
+
+            pause: function() {
+                this._mediaPlayer.pause();
+            },
+
             stop: function() {
                 this._mediaPlayer.stop();
             },
