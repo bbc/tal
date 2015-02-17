@@ -212,46 +212,55 @@ require.def(
 			timeoutHandle = setTimeout(iframeLoadTimeoutCallback, (opts.timeout || 10) * 1000); /* 10 second default */
 			createIframe();
 		};
-		
+
         /**
          * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
          * the device, falling back to a JSON-P call otherwise.
          * @param {String} url The URL to load. A callback GET parameter will be appended if JSON-P is used.
-         * @param {Object} callbacks Object containing onSuccess and onError callbacks. onSuccess will be called
-         * with the decoded JSON object if the call is successful. This object may also contain a headers property,
-         * which should be an object containing custom HTTP headers to add to the request.
-         * @param {Object} [options] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
-         * @param {Number} [options.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
-         * @param {String} [options.id] Used in the callback function name for the JSON-P call. Default: a random string.
-         * @param {String} [options.callbackKey=callback] Key to use in query string when passing callback function name
+         * @param {Object} opts Object containing onSuccess and onError callbacks. onSuccess will be called
+         * with the decoded JSON object if the call is successful. This object may also include an optional token value,
+         * used when making requests for resources that require authentication. For CORS requests, the token is used as
+         * a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for JSON-P requests the token is
+         * included as a query string parameter. If not specified, no token is included in the request.
+         * @param {Object} [jsonPOptions] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
+         * @param {Number} [jsonPOptions.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
+         * @param {String} [jsonPOptions.id] Used in the callback function name for the JSON-P call. Default: a random string.
+         * @param {String} [jsonPOptions.callbackKey=callback] Key to use in query string when passing callback function name
          * for JSON-P call. Default: callback
          */
-        Device.prototype.executeCrossDomainGet = function(url, callbacks, options) {
-            var self, callbackKey, callbackQuery, opts;
+        Device.prototype.executeCrossDomainGet = function(url, opts, jsonPOptions) {
+            var self, callbackKey, callbackQuery, modifiedOpts;
             self = this;
-            options = options || {};
+            jsonPOptions = jsonPOptions || {};
             if (configSupportsCORS(this.getConfig())) {
-                opts = {
+                modifiedOpts = {
                     onLoad: function(jsonResponse) {
-                        callbacks.onSuccess(self.decodeJson(jsonResponse));
+                        opts.onSuccess(self.decodeJson(jsonResponse));
                     },
-                    onError: callbacks.onError
+                    onError: opts.onError
                 };
 
-                if (callbacks.headers) {
-                    opts.headers = callbacks.headers;
+                if (opts.token) {
+                    modifiedOpts.headers = {
+                        Authorization : "Bearer " + opts.token
+                    };
                 }
 
-                this.loadURL(url, opts);
+                this.loadURL(url, modifiedOpts);
             } else {
-                callbackKey = options.callbackKey || 'callback';
+                callbackKey = jsonPOptions.callbackKey || 'callback';
                 callbackQuery = '?' + callbackKey + '=%callback%';
                 if(url.indexOf('?') === -1) {
                     url = url + callbackQuery;
                 } else {
                     url = url.replace('?', callbackQuery + '&');
                 }
-                this.loadScript(url, /%callback%/, callbacks, options.timeout, options.id);
+
+                if (opts.token) {
+                    url = url + "&token=" + opts.token;
+                }
+
+                this.loadScript(url, /%callback%/, opts, jsonPOptions.timeout, jsonPOptions.id);
             }
         };
 
@@ -260,8 +269,10 @@ require.def(
          * @param {String} url The URL to post to.
          * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
          * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
-         * used for the name of the form filed if the iframe hack is used. This object may also contain a headers property,
-         * which should be an object containing custom HTTP headers to add to the request.
+         * used for the name of the form filed if the iframe hack is used. This object may also include an optional token value,
+         * used when making requests for resources that require authentication. For CORS requests, the token is used as
+         * a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for form requests the token is
+         * included as a token form field value. If not specified, no token is included in the request.
          */
         Device.prototype.executeCrossDomainPost = function(url, data, opts) {
             var payload, modifiedOpts, formData, header;
@@ -277,24 +288,24 @@ require.def(
                     method: "POST"
                 };
 
-                // Merge caller-supplied headers
-                if (opts.headers) {
-                    for (header in opts.headers) {
-                        if (opts.headers.hasOwnProperty(header)) {
-                            modifiedOpts.headers[header] = opts.headers[header];
-                        }
-                    }
+                if (opts.token) {
+                    modifiedOpts.headers.Authorization = "Bearer " + opts.token;
                 }
 
-               this.loadURL(url, modifiedOpts);
+                this.loadURL(url, modifiedOpts);
             } else {
-               formData = {};
-               formData[opts.fieldName] = payload;
-               this.crossDomainPost(url, formData, {
-                   onLoad: opts.onLoad,
-                   onError: opts.onError,
-                   blankUrl: opts.blankUrl
-               });
+                formData = {};
+                formData[opts.fieldName] = payload;
+
+                if (opts.token) {
+                   formData.token = opts.token;
+                }
+
+                this.crossDomainPost(url, formData, {
+                    onLoad: opts.onLoad,
+                    onError: opts.onError,
+                    blankUrl: opts.blankUrl
+                });
             }
         };
 
