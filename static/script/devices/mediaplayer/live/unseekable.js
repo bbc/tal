@@ -37,8 +37,11 @@ require.def(
 
         var LivePlayer = Class.extend({
             init: function() {
-                var mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
-                this.beginPlayback = mediaPlayer.beginPlayback;
+                this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
+            },
+
+            beginPlayback: function() {
+                this._mediaPlayer.beginPlayback();
             }
         });
 
