@@ -47,19 +47,18 @@
         });
     };
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaElement = function (queue) {
-        expectAsserts(1);
-
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
-
-            var device = new Device(antie.framework.deviceConfiguration);
-            var livePlayer = device.getLivePlayer();
-
-            device.getMediaPlayer().beginPlayback = this.sandbox.stub();
-            livePlayer.beginPlayback();
-
-            assert(device.getMediaPlayer().beginPlayback.calledOnce);
-        }, config);
+    var testFunctionsInLivePlayerCallMediaPlayerFunctions = function(action) {
+        return function (queue) {
+            expectAsserts(1);
+            queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
+                var device = new Device(antie.framework.deviceConfiguration);
+                var livePlayer = device.getLivePlayer();
+                device.getMediaPlayer()[action] = this.sandbox.stub();
+                livePlayer[action]();
+                assert(device.getMediaPlayer()[action].calledOnce);
+            }, config);
+        }
     };
 
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback');
 })();
