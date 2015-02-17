@@ -85,4 +85,6 @@
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerResumeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('resume');
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetCurrentTimeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('getCurrentTime');
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetSeekableRangeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('getSeekableRange');
 })();

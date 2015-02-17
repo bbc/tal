@@ -80,6 +80,10 @@ require.def(
                 this._mediaPlayer.getCurrentTime();
             },
 
+            getSeekableRange: function() {
+                this._mediaPlayer.getSeekableRange();
+            },
+
             getMimeType: function() {
                 this._mediaPlayer.getMimeType();
             },
