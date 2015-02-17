@@ -70,6 +70,10 @@ require.def(
 
             addEventCallback: function(callback) {
                 this._mediaPlayer.addEventCallback(callback);
+            },
+
+            removeEventCallback: function(callback) {
+                this._mediaPlayer.removeEventCallback(callback);
             }
         });
 

@@ -75,4 +75,6 @@
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetMimeTypeCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('getMimeType');
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerAddEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback');
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback');
 })();
