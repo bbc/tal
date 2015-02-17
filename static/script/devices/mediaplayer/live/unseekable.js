@@ -46,6 +46,14 @@ require.def(
 
             setSource: function(mediaType, sourceUrl, mimeType) {
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
+            },
+
+            stop: function() {
+                this._mediaPlayer.stop();
+            },
+
+            reset: function() {
+                this._mediaPlayer.reset();
             }
         });
 
