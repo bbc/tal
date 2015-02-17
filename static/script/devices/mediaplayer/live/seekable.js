@@ -35,6 +35,25 @@ require.def(
     ],
     function (Class, RuntimeContext, Device, MediaPlayer) {
 
+        var LivePlayer = Class.extend({
+            init: function() {
+                this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
+            },
+
+            setSource: function(mediaType, sourceUrl, mimeType) {
+                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
+            }
+        });
+
+        var instance;
+
+        Device.prototype.getLivePlayer = function () {
+            if(!instance) {
+                instance = new LivePlayer();
+            }
+            return instance;
+        };
+
         Device.prototype.getLiveSupport = function () {
             return MediaPlayer.LIVE_SUPPORT.SEEKABLE;
         };
