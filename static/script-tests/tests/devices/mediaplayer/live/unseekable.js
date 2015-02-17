@@ -77,4 +77,20 @@
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerAddEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback');
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback');
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInUnseekableLive = function (queue) {
+        expectAsserts(5);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
+
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            assertUndefined(livePlayer.playFrom);
+            assertUndefined(livePlayer.pause);
+            assertUndefined(livePlayer.resume);
+            assertUndefined(livePlayer.getCurrentTime);
+            assertUndefined(livePlayer.getSeekableRange);
+        });
+    };
 })();
