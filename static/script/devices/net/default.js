@@ -275,7 +275,7 @@ require.def(
          * included as a token form field value. If not specified, no token is included in the request.
          */
         Device.prototype.executeCrossDomainPost = function(url, data, opts) {
-            var payload, modifiedOpts, formData, header;
+            var payload, modifiedOpts, formData;
             payload = this.encodeJson(data);
             if (configSupportsCORS(this.getConfig())) {
                 modifiedOpts = {
