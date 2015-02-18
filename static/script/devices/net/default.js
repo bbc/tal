@@ -217,11 +217,12 @@ require.def(
          * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
          * the device, falling back to a JSON-P call otherwise.
          * @param {String} url The URL to load. A callback GET parameter will be appended if JSON-P is used.
-         * @param {Object} opts Object containing onSuccess and onError callbacks. onSuccess will be called
-         * with the decoded JSON object if the call is successful. This object may also include an optional bearerToken value,
-         * used when making requests for resources that require authentication. For CORS requests, the token is used as
-         * a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for JSON-P requests the token is
-         * included as a query string parameter. If not specified, no token is included in the request.
+         * @param {Object} opts Object containing callbacks and an optional bearer token.
+         * @param {Function} [opts.onSuccess] Will be called with the decoded JSON object if the call is successful.
+         * @param {Function} [opts.onError] Will be called with error text, and HTTP status for CORS requests, if the calls fails.
+         * @param {String} [opts.bearerToken] Used when making requests for resources that require authentication.
+         * For CORS requests, the token is used as a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for
+         * JSON-P requests the token is included as a query string parameter. If not specified, no token is included in the request.
          * @param {Object} [jsonpOptions] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
          * @param {Number} [jsonpOptions.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
          * @param {String} [jsonpOptions.id] Used in the callback function name for the JSON-P call. Default: a random string.
@@ -268,11 +269,14 @@ require.def(
          * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
          * @param {String} url The URL to post to.
          * @param {Object} data JavaScript object to be JSON encoded and delivered as payload.
-         * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
-         * used for the name of the form filed if the iframe hack is used. This object may also include an optional bearerToken value,
-         * used when making requests for resources that require authentication. For CORS requests, the token is used as
-         * a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for form requests the token is
-         * included as a token form field value. If not specified, no token is included in the request.
+         * @param {Object} opts Object containing callback functions, a form field name and an optional bearer token.
+         * @param {String} opts.fieldName Name to be used for the POST form field for form based (non-CORS) requests.
+         * @param {Function} [opts.onLoad] Will be called with the decoded JSON response if the POST is successful.
+         * @param {Function} [opts.onError} Will be called with error text or an Exception object if the POST fails.
+         * @param {String} [opts.bearerToken] Used when making POST requests for resources that require authentication. For
+         * CORS requests, the token is used as a Bearer token in an Authorization header (see RFC 6750, section 2.1), and
+         * for form requests the token is included as a bearerToken form field value. If not specified, no token is included
+         * in the request.
          */
         Device.prototype.executeCrossDomainPost = function(url, data, opts) {
             var payload, modifiedOpts, formData;
