@@ -222,16 +222,16 @@ require.def(
          * used when making requests for resources that require authentication. For CORS requests, the token is used as
          * a Bearer token in an Authorization header (see RFC 6750, section 2.1), and for JSON-P requests the token is
          * included as a query string parameter. If not specified, no token is included in the request.
-         * @param {Object} [jsonPOptions] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
-         * @param {Number} [jsonPOptions.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
-         * @param {String} [jsonPOptions.id] Used in the callback function name for the JSON-P call. Default: a random string.
-         * @param {String} [jsonPOptions.callbackKey=callback] Key to use in query string when passing callback function name
+         * @param {Object} [jsonpOptions] Options for the JSON-P fallback behaviour. All optional with sensible defaults.
+         * @param {Number} [jsonpOptions.timeout=5000] Timeout for the JSON-P call in ms. Default: 5000.
+         * @param {String} [jsonpOptions.id] Used in the callback function name for the JSON-P call. Default: a random string.
+         * @param {String} [jsonpOptions.callbackKey=callback] Key to use in query string when passing callback function name
          * for JSON-P call. Default: callback
          */
-        Device.prototype.executeCrossDomainGet = function(url, opts, jsonPOptions) {
+        Device.prototype.executeCrossDomainGet = function(url, opts, jsonpOptions) {
             var self, callbackKey, callbackQuery, modifiedOpts;
             self = this;
-            jsonPOptions = jsonPOptions || {};
+            jsonpOptions = jsonpOptions || {};
             if (configSupportsCORS(this.getConfig())) {
                 modifiedOpts = {
                     onLoad: function(jsonResponse) {
@@ -248,7 +248,7 @@ require.def(
 
                 this.loadURL(url, modifiedOpts);
             } else {
-                callbackKey = jsonPOptions.callbackKey || 'callback';
+                callbackKey = jsonpOptions.callbackKey || 'callback';
                 callbackQuery = '?' + callbackKey + '=%callback%';
                 if(url.indexOf('?') === -1) {
                     url = url + callbackQuery;
@@ -260,7 +260,7 @@ require.def(
                     url = url + "&token=" + opts.token;
                 }
 
-                this.loadScript(url, /%callback%/, opts, jsonPOptions.timeout, jsonPOptions.id);
+                this.loadScript(url, /%callback%/, opts, jsonpOptions.timeout, jsonpOptions.id);
             }
         };
 
