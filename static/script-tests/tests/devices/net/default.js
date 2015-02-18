@@ -705,7 +705,7 @@
 		});
 	};
 
-    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetWithTokenOptionWhenCorsIsSupported = function(queue) {
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetWithBearerTokenOptionWhenCorsIsSupported = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": true }});
 
@@ -719,7 +719,7 @@
             var opts = {
                     onSuccess : successSpy,
                     onError : errorSpy,
-                    token : "abc123"
+                    bearerToken : "abc123"
             };
             device.executeCrossDomainGet(testUrl, opts);
 
@@ -737,17 +737,17 @@
         });
     };
 
-    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetWithTokenOptionWhenCorsIsNotSupported = function(queue) {
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetWithBearerTokenOptionWhenCorsIsNotSupported = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": false }});
             var testUrl = "http://test?existingQueryString=blah";
             var loadScriptStub = this.sandbox.stub(BrowserDevice.prototype, 'loadScript', function(){});
-            device.executeCrossDomainGet(testUrl, { token: "abc123" });
-            assertEquals("http://test?callback=%callback%&existingQueryString=blah&token=abc123", loadScriptStub.getCall(0).args[0]);
+            device.executeCrossDomainGet(testUrl, { bearerToken: "abc123" });
+            assertEquals("http://test?callback=%callback%&existingQueryString=blah&bearerToken=abc123", loadScriptStub.getCall(0).args[0]);
         });
     };
 
-    this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostWithTokenOptionWhenCorsIsSupported = function(queue) {
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostWithBearerTokenOptionWhenCorsIsSupported = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": true }});
 
@@ -761,7 +761,7 @@
             var callbacks = {
                     onLoad : successSpy,
                     onError : errorSpy,
-                    token : "abc123"
+                    bearerToken : "abc123"
             };
             device.executeCrossDomainPost(testUrl, message, callbacks);
 
@@ -781,7 +781,7 @@
         });
     };
 
-    this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostWithTokenOptionWhenCorsIsNotSupported = function(queue) {
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainPostWithBearerTokenOptionWhenCorsIsNotSupported = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
             var device = new BrowserDevice({"networking": { "supportsCORS": false }});
 
@@ -794,13 +794,13 @@
                 onLoad : successSpy,
                 onError : errorSpy,
                 fieldName : "myField",
-                token : "abc123"
+                bearerToken : "abc123"
             };
 
             var crossDomainPostStub = this.sandbox.stub(BrowserDevice.prototype, 'crossDomainPost');
 
             device.executeCrossDomainPost(testUrl, message, opts);
-            assert(crossDomainPostStub.calledWith(testUrl, { "myField" : payload, "token" : "abc123" }, { onLoad : successSpy, onError : errorSpy, blankUrl: undefined } ) );
+            assert(crossDomainPostStub.calledWith(testUrl, { "myField" : payload, "bearerToken" : "abc123" }, { onLoad : successSpy, onError : errorSpy, blankUrl: undefined } ) );
         });
     };
 
