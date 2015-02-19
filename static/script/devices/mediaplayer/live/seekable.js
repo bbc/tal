@@ -1,8 +1,8 @@
 /**
  * @fileOverview Requirejs module containing device modifier for live playback
- * with support level none
+ * with support level Seekable
  *
- * @preserve Copyright (c) 2014 British Broadcasting Corporation
+ * @preserve Copyright (c) 2015 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
@@ -36,7 +36,15 @@ require.def(
     function (Class, RuntimeContext, Device, MediaPlayer) {
         "use strict";
 
-        var LivePlayer = Class.extend({
+        /**
+         * Live player for devices that have full support for playing and seeking live streams.
+         * Implements all functions of the underlying {antie.devices.mediaplayer.MediaPlayer}.
+         * See the documentation for that class for API details.
+         * @name antie.devices.mediaplayer.live.Seekable
+         * @class
+         * @extends antie.Class
+         */
+        var SeekableLivePlayer = Class.extend({
             init: function() {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             },
@@ -102,7 +110,7 @@ require.def(
 
         Device.prototype.getLivePlayer = function () {
             if(!instance) {
-                instance = new LivePlayer();
+                instance = new SeekableLivePlayer();
             }
             return instance;
         };

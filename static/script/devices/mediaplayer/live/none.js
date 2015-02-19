@@ -2,7 +2,7 @@
  * @fileOverview Requirejs module containing device modifier for live playback
  * with support level none
  *
- * @preserve Copyright (c) 2014 British Broadcasting Corporation
+ * @preserve Copyright (c) 2015 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
  *
  * (1) TAL Contributors are listed in the AUTHORS file and at
