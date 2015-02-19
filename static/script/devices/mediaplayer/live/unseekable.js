@@ -34,6 +34,7 @@ require.def(
         "antie/devices/mediaplayer/mediaplayer"
     ],
     function (Class, RuntimeContext, Device, MediaPlayer) {
+        "use strict";
 
         var LivePlayer = Class.extend({
             init: function() {
