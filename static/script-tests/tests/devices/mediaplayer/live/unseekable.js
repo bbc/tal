@@ -48,38 +48,40 @@
         });
     };
 
-    var testFunctionsInLivePlayerCallMediaPlayerFunctions = function(action) {
+    var testFunctionsInLivePlayerCallMediaPlayerFunctions = function(action, expectedArgCount) {
         return function (queue) {
-            expectAsserts(1);
+            expectAsserts(2);
             queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 var livePlayer = device.getLivePlayer();
-                device.getMediaPlayer()[action] = this.sandbox.stub();
+                var mediaPlayerFuncStub = this.sandbox.stub();
+                device.getMediaPlayer()[action] = mediaPlayerFuncStub;
                 livePlayer[action]();
-                assert(device.getMediaPlayer()[action].calledOnce);
+                assert(mediaPlayerFuncStub.calledOnce);
+                assertEquals(expectedArgCount, mediaPlayerFuncStub.getCall(0).args.length);
             }, config);
         };
     };
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 3);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerStopCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerStopCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerResetCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('reset');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerResetCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('reset', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetStateCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getState');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetStateCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getState', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getSource');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getSource', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetMimeTypeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getMimeType');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerGetMimeTypeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getMimeType', 0);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerAddEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerAddEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback', 2);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback', 2);
 
-    this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks');
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInUnseekableLive = function (queue) {
         expectAsserts(5);

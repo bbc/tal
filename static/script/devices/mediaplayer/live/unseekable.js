@@ -82,16 +82,16 @@ require.def(
                 this._mediaPlayer.getMimeType();
             },
 
-            addEventCallback: function(callback) {
-                this._mediaPlayer.addEventCallback(callback);
+            addEventCallback: function(thisArg, callback) {
+                this._mediaPlayer.addEventCallback(thisArg, callback);
             },
 
-            removeEventCallback: function(callback) {
-                this._mediaPlayer.removeEventCallback(callback);
+            removeEventCallback: function(thisArg, callback) {
+                this._mediaPlayer.removeEventCallback(thisArg, callback);
             },
 
-            removeAllEventCallbacks: function(callback) {
-                this._mediaPlayer.removeAllEventCallbacks(callback);
+            removeAllEventCallbacks: function() {
+                this._mediaPlayer.removeAllEventCallbacks();
             }
         });
 
