@@ -343,6 +343,17 @@ require.def(
             AUDIO: "audio"
         };
 
+        /**
+         * Levels of support for the live media player
+         * @name antie.devices.mediaplayer.MediaPlayer.LIVE_SUPPORT
+         * @enum {String}
+         */
+        MediaPlayer.LIVE_SUPPORT = {
+            NONE: "none",
+            UNSEEKABLE: "unseekable",
+            SEEKABLE: "seekable"
+        };
+
         return MediaPlayer;
     }
 );
