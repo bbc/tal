@@ -542,18 +542,21 @@ require.def('antie/devices/device',
             /**
              * Get the media player.
              * This will return the correct implementation for the current device.
+             * @returns {antie.devices.mediaplayer.MediaPlayer} Media player for the current device.
              */
             getMediaPlayer: function () {
             },
             /**
              * Get the live media player.
              * This will return the correct implementation for the current device.
+             * @returns {antie.devices.mediaplayer.MediaPlayer} Live media player for the current device.
              */
             getLivePlayer: function () {
             },
             /**
              * Get the level of live support.
              * This will return the correct level of support for the current device.
+             * @returns {String} Live support level matching a value in {antie.devices.mediaplayer.MediaPlayer.LIVE_SUPPORT}.
              */
             getLiveSupport: function () {
             },
