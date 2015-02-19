@@ -44,6 +44,7 @@ require.def(
         var playerInit = null;
         var isMuted = null;
         var currentVolume = -1;
+        var srcDuration = 0;
 
         var HTML5Player = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
@@ -82,6 +83,10 @@ require.def(
                 
                 var embdAtt = document.createAttribute('data-embed');
                 embdAtt.value = 'default';
+                vidTag.setAttributeNode(embdAtt);
+                
+                var embdAtt = document.createAttribute('data-setup');
+                embdAtt.value = '{"techOrder": ["html5", "flash"]}';
                 vidTag.setAttributeNode(embdAtt);
                 
                 var vididAtt = document.createAttribute('data-video-id');
@@ -219,6 +224,7 @@ require.def(
 				    	console.log(video);
 				    	currentPlayer.catalog.load(video);
 				    	currentPlayer.play();
+				    	srcDuration = video.duration;
 				    });
                 });
             },
@@ -282,14 +288,19 @@ require.def(
             },
             // readonly attribute boolean seeking;
             getSeeking: function() {
-                return this._mediaElement.seeking;
+                return currentPlayer.seeking();
             },
             // attribute double currentTime;
             setCurrentTime: function(currentTime) {
-                this._mediaElement.currentTime = currentTime;
+            	console.log('player set time called ' + currentTime);
+                this._waitfor(this._isPlayerInited, true, 100, 0, 'waited for player set time', function(){
+	                var plyr = currentPlayer.currentTime(currentTime);
+	                console.log('done set time');
+	                console.log(plyr);
+	            });
             },
             getCurrentTime: function() {
-                return this._mediaElement.currentTime;
+                return currentPlayer.currentTime();
             },
             // readonly attribute double initialTime;
             getInitialTime: function() {
@@ -297,7 +308,18 @@ require.def(
             },
             // readonly attribute double duration;
             getDuration: function() {
-                return this._mediaElement.duration;
+            	console.log('get dur called 1');
+            	var duration = currentPlayer.duration();
+            	console.log('get dur called 2');
+            	console.log(duration);
+            	console.log(srcDuration);
+            	if (this._isPlayerInited && duration == 0 && srcDuration > 0){
+            		console.log('used vid obj dur');
+            		return srcDuration/1000;
+            	}else{
+            		return duration;
+            	}
+                //return currentPlayer.duration();
             },
             // readonly attribute Date startOffsetTime;
             getStartOffsetTime: function() {
@@ -305,7 +327,7 @@ require.def(
             },
             // readonly attribute boolean paused;
             getPaused: function() {
-                return this._mediaElement.paused;
+                return currentPlayer.paused();
             },
             // attribute double defaultPlaybackRate;
             getDefaultPlaybackRate: function() {
@@ -313,10 +335,10 @@ require.def(
             },
             // attribute double playbackRate;
             getPlaybackRate: function() {
-                return this._mediaElement.playbackRate;
+                return currentPlayer.playbackRate();
             },
             setPlaybackRate: function(playbackRate) {
-                this._mediaElement.playbackRate = playbackRate;
+                currentPlayer.playbackRate(playbackRate);
             },
             // readonly attribute TimeRanges played;
             getPlayed: function() {
