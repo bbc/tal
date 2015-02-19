@@ -58,7 +58,7 @@
                 livePlayer[action]();
                 assert(device.getMediaPlayer()[action].calledOnce);
             }, config);
-        }
+        };
     };
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback');
@@ -78,6 +78,8 @@
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerAddEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('addEventCallback');
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback');
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaElement = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks');
 
     this.LivePlayerSupportLevelUnseekableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInUnseekableLive = function (queue) {
         expectAsserts(5);

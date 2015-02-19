@@ -103,6 +103,10 @@ require.def(
 
             removeEventCallback: function(callback) {
                 this._mediaPlayer.removeEventCallback(callback);
+            },
+
+            removeAllEventCallbacks: function(callback) {
+                this._mediaPlayer.removeAllEventCallbacks(callback);
             }
         });
 
