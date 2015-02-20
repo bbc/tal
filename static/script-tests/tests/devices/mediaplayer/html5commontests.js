@@ -1035,6 +1035,25 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelDoesNotActivateWhenNewTimeIsBeforeThePreviousTime = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 30);
+            advancePlayTime(self);
+            advancePlayTime(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+            stubCreateElementResults.video.currentTime = 10;
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertNoEvent(self, MediaPlayer.EVENT.BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
     mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWhenOnlyOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(1);
         var self = this;
