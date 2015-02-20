@@ -46,6 +46,10 @@ The framework uses device configuration files to determine whether a device supp
 * CORS: Understands CORS pre-flight requests via the `OPTIONS` method and sends the `Access-Control-Allow-Origin` header in response - [see this article for more details](http://www.html5rocks.com/en/tutorials/cors/#toc-types-of-cors-requests)
 * CORS: Responds to the CORS pre-flight request with HTTP status 200
 * JSONP: The server-side application honours a `?callback=<name>` query string parameter, which wraps the returned JSON in a JavaScript function callback of `<name>`
+* For requests to [OAuth 2.0](https://tools.ietf.org/html/rfc6749) protected resource endpoints:
+  * CORS: Accepts a bearer token in an `Authorization` request header, as described in [RFC 6750, section 2.1](https://tools.ietf.org/html/rfc6750#section-2.1)
+  * JSONP: Accepts a bearer token in a `?bearerToken=<token>` query string parameter
+  * The server should use HTTPS for these endpoints
 
 ### Cross-Domain GET Request via CORS
 
@@ -68,6 +72,28 @@ The fallback JSONP behaviour can be configured via the optional third argument o
 * timeout (in ms. Default: 5000)
 * id (name of the callback function to use in the JSONP response. Default: random string)
 * callbackKey (name of the `callback` parameter to pass in the HTTP query string. Default: callback)
+
+#### Cross-Domain GET Requests to OAuth 2.0 Protected Resources
+
+To make a cross-domain GET request to an OAuth 2.0 protected resource you can include an [OAuth 2.0](https://tools.ietf.org/html/rfc6749) access token in the request as follows:
+
+{% highlight javascript %}
+device.executeCrossDomainGet(url, {
+        onSuccess: function(responseObject) {
+        },
+        onError: function(response) {
+        },
+        bearerToken: "6a9f3f1bbd8843beb08a56e239c1449f"
+});
+{% endhighlight %}
+
+On devices that support CORS, the token will be included as a bearer token in an `Authorization` header:
+
+    Authorization: Bearer 6a9f3f1bbd8843beb08a56e239c1449f
+
+On devices that do not support CORS, TAL will add a `bearerToken` parameter to the URL:
+
+    ?callback=antie_callback&bearerToken=6a9f3f1bbd8843beb08a56e239c1449f
 
 ### Cross-Domain GET Request via JSONP
 
@@ -109,10 +135,14 @@ Note that the window.name transport method is essentially a hack exploiting a br
 * CORS: Understands CORS pre-flight requests via the `OPTIONS` method and sends the `Access-Control-Allow-Origin` header in response - [see this article](http://www.html5rocks.com/en/tutorials/cors/#toc-types-of-cors-requests) for more details
 * CORS: Responds to the CORS pre-flight request with HTTP status 200
 * CORS: Accepts JSON payload with `application/json` MIME type
-* window.name fallback: Accept form POST (`application/x-www-form-urlencoded`) with single field containing JSON-encoded request payload (the field name is arbitrary)
+* window.name fallback: Accept form POST (`application/x-www-form-urlencoded`) with a field containing JSON-encoded request payload (the field name is arbitrary)
 * window.name fallback: Server-side application sets `window.name` property on an iframe to the response payload (JSON-encoded)
 * window.name fallback: Server-side application redirects the iframe back to a URL on your client application's origin after setting the `window.name` property
 * window.name fallback: [More details here](http://www.sitepen.com/blog/2008/07/22/windowname-transport/)
+* For requests to [OAuth 2.0](https://tools.ietf.org/html/rfc6749) protected resource endpoints:
+  * CORS: Accepts an access token in an `Authorization` request header, as described in [RFC 6750, section 2.1](https://tools.ietf.org/html/rfc6750#section-2.1)
+  * window.name fallback: Accepts an access token in a `bearerToken` form field
+  * The server should use HTTPS for these endpoints
 
 ### Cross-Domain POST - with CORS
 
@@ -143,6 +173,34 @@ device.executeCrossDomainPost(url,
 This will package up the `data` as JSON and POST it via CORS with a Content-Type of `application/json`.
 
 If the device is configured as not supporting CORS, the JSON payload will be delivered via the window.name transport method, as a single form field named by the `fieldName` property in the `options` argument. Your server endpoint must therefore accept JSON-encoded data in either form, unless you know every target device will support CORS.
+
+#### Cross-Domain POST Requests to OAuth 2.0 Protected Resources
+
+To make a cross-domain POST request to an OAuth 2.0 protected resource you can include an [OAuth 2.0](https://tools.ietf.org/html/rfc6749) access token in the request as follows:
+
+{% highlight javascript %}
+device.executeCrossDomainPost(url,
+        {
+                "postKey1": "postValue1",
+                "postKey2": "postValue2",
+                "postKey3": "postValue3"
+        },
+        {
+                onLoad: function(responseText) {
+                },
+                onError: function(ex) {
+                },
+                fieldName: "payload",
+                bearerToken: "6a9f3f1bbd8843beb08a56e239c1449f"
+        }
+);
+{% endhighlight %}
+
+On devices that support CORS, the token will be included as a bearer token in an `Authorization` header:
+
+    Authorization: Bearer 6a9f3f1bbd8843beb08a56e239c1449f
+
+On devices that do not support CORS, TAL will add a `bearerToken` form field containing the bearer token.
 
 ### Cross-Domain POST - window.name transport method
 
