@@ -220,7 +220,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     var getToPlayingAtEnd = function (self, MediaPlayer) {
-        getToPlaying(self, MediaPlayer);
+        getToPlaying(self, MediaPlayer, 98);
+
+        stubCreateElementResults.video.currentTime = 99;
+        fireSentinels(self);
+
         stubCreateElementResults.video.currentTime = 100;
         fireSentinels(self);
     };
