@@ -161,6 +161,10 @@ require.def(
 		                	console.log('setting player');
 	                    	currentPlayer = this;
 					        playerInit = true;
+					        /*currentPlayer.on('timeupdate', function(e){
+					        	console.log('time update');
+					        	console.log(e);
+					        });*/
 				        });
                     });
                 }
@@ -427,6 +431,7 @@ require.def(
                 delete this._mediaElement;
                 this._mediaElement = null;
                 currentPlayer = null;
+                videojs = null;
             },
             webkitMemoryLeakFix : function() {
                 // http://stackoverflow.com/questions/5170398/ios-safari-memory-leak-when-loading-unloading-html5-video
