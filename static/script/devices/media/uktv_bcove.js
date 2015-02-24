@@ -27,7 +27,7 @@
  */
 
 require.def(
-    'antie/devices/media/html5',
+    'antie/devices/media/uktv_bcove',
     [
     	'antie/devices/device',
         'antie/devices/media/mediainterface',
@@ -47,7 +47,7 @@ require.def(
         var srcDuration = 0;
         var usedId = '';
 
-        var HTML5Player = MediaInterface.extend({
+        var UKTVBCovePlayer = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
 				console.log('brightcove player init ' + id);
@@ -124,23 +124,11 @@ require.def(
                 this._mediaElement.appendChild(vidTag);
                 this._mediaElement.appendChild(srptTag);
 
-                /*if (currentVolume != -1) {
-                    this._mediaElement.volume = currentVolume;
-                } else {
-                    currentVolume = this._mediaElement.volume;
-                }
-                if (isMuted !== null) {
-                    this._mediaElement.muted = isMuted;
-                } else {
-                    isMuted = this._mediaElement.muted;
-                }*/
-
                 this._eventWrapper = null;
                 this._errorEventWrapper = null;
             },
             render: function(device) {
                 if (!this._renderCalled) {
-                	console.log('bcove render func');
                     this._renderCalled = true;
 
                     // Convert all media events into our internal representation and bubble them through
@@ -159,30 +147,16 @@ require.def(
                     this._mediaElement.addEventListener("error", this._errorEventWrapper, true);
                     
                     this._waitfor(this._isVideoJSDefined, true, 200, 0, 'waited for video js to be defined', function(){
-                    	//console.log('vid js DEFiNED');
-                    	// Some times videojs is already defined before render has completed and needs to wait
-                    	setTimeout(function() {
-	                    	videojs(usedId).ready(function() {
-			                	console.log('setting player');
-		                    	currentPlayer = this;
-						        playerInit = true;
-					        });
-					    }, 1000);
+                    	videojs(usedId).ready(function() {
+		                	console.log('setting player');
+	                    	currentPlayer = this;
+					        playerInit = true;
+				        });
                     });
                 }
                 
                 return this._mediaElement;
             },
-            // (not part of HTML5 media)
-            /*setWindow: function(left, top, width, height) {
-                console.log('setwin ' + left + ' ' + top + ' ' + width + ' ' + height + ':');
-                if (this._mediaType == "audio") {
-                    throw new Error('Unable to set window size for HTML5 audio.');
-                }
-                var device = Application.getCurrentApplication().getDevice();
-                device.setElementSize(this._mediaElement, {width:width, height:height});
-                device.setElementPosition(this._mediaElement, {left:left, top:top});
-            },*/
             // readonly attribute MediaError error;
             getError: function() {
                 return this._mediaElement.error;
@@ -197,7 +171,7 @@ require.def(
             	return playerInit;
             },
             _isVideoJSDefined: function(){
-            	return typeof videojs !== 'undefined';
+            	return typeof videojs !== 'undefined' && document.getElementById(usedId) !== null;
             },
             _waitfor: function(test, expectedValue, msec, count, source, callback) {
 			    // Check if condition met. If not, re-check later (msec).
@@ -216,18 +190,12 @@ require.def(
             // Similar to src attribute or 'source' child elements:
             // attribute DOMString src;
             setSources: function(source, tags) {
-            	console.log('source setting');
-            	
-                var self = this;
+            	var self = this;
                 var device = Application.getCurrentApplication().getDevice();
-                var vid_id = source;
-                console.log(vid_id);
                 
                 this._waitfor(this._isPlayerInited, true, 200, 0, 'wait for source set', function(){
-                	currentPlayer.catalog.getVideo(vid_id, function(error, video) {
+                	currentPlayer.catalog.getVideo(source, function(error, video) {
 				    	//deal with error
-				    	console.log('vid found:');
-				    	console.log(video);
 				    	currentPlayer.catalog.load(video);
 				    	currentPlayer.play();
 				    	srcDuration = video.duration;
@@ -236,14 +204,7 @@ require.def(
             },
             getSources: function() {
                 var sources = [];
-                if (this._mediaElement.src) {
-                    sources.push(new MediaSource(this._mediaElement.src, this._mediaElement.type));
-                } else {
-                    var sourceElements = this._mediaElement.getElementsByTagName('source');
-                    for (var i = 0; i < sourceElements.length; i++) {
-                        sources.push(new MediaSource(sourceElements[i].src, sourceElements[i].type));
-                    }
-                }
+				// Brightcove player doesn't really have these
                 return sources;
             },
             // readonly attribute DOMString currentSrc;
@@ -264,22 +225,23 @@ require.def(
             // attribute DOMString preload;
             // @returns "none", "metadata" or "auto"
             getPreload: function() {
-                return this._mediaElement.preload;
+                return currentPlayer.preload();
             },
             setPreload: function(preload) {
-                this._mediaElement.preload = preload;
+                currentPlayer.preload(preload);
             },
             // readonly attribute TimeRanges buffered;
             getBuffered: function() {
-                return this._mediaElement.buffered;
+                return currentPlayer.buffered();
             },
             // void load();
             load: function() {
-                return this._mediaElement.load();
+                return currentPlayer.load();
             },
             // DOMString canPlayType(in DOMString type);
             canPlayType: function(type) {
-                return this._mediaElement.canPlayType(type);
+                // Default to true as bcove doesn't support
+                return true;
             },
             /*
              const unsigned short HAVE_NOTHING = 0;
@@ -298,34 +260,27 @@ require.def(
             },
             // attribute double currentTime;
             setCurrentTime: function(currentTime) {
-            	console.log('player set time called ' + currentTime);
+            	//console.log('player set time called ' + currentTime);
                 this._waitfor(this._isPlayerInited, true, 100, 0, 'waited for player set time', function(){
 	                var plyr = currentPlayer.currentTime(currentTime);
-	                console.log('done set time');
-	                console.log(plyr);
 	            });
             },
             getCurrentTime: function() {
                 return currentPlayer.currentTime();
             },
-            // readonly attribute double initialTime;
+            // NOT SUPPORTED
             getInitialTime: function() {
                 return this._mediaElement.initialTime;
             },
             // readonly attribute double duration;
             getDuration: function() {
-            	console.log('get dur called 1');
             	var duration = currentPlayer.duration();
-            	console.log('get dur called 2');
-            	console.log(duration);
-            	console.log(srcDuration);
+            	// Fall back to source duration if set, sometimes the get fails
             	if (this._isPlayerInited && duration == 0 && srcDuration > 0){
-            		console.log('used vid obj dur');
             		return srcDuration/1000;
             	}else{
             		return duration;
             	}
-                //return currentPlayer.duration();
             },
             // readonly attribute Date startOffsetTime;
             getStartOffsetTime: function() {
@@ -337,40 +292,43 @@ require.def(
             },
             // attribute double defaultPlaybackRate;
             getDefaultPlaybackRate: function() {
-                return this._mediaElement.defaultPlaybackRate;
+                return 1;
             },
             // attribute double playbackRate;
             getPlaybackRate: function() {
                 return currentPlayer.playbackRate();
             },
             setPlaybackRate: function(playbackRate) {
+            	// This is VERY unlikely to work
                 currentPlayer.playbackRate(playbackRate);
             },
             // readonly attribute TimeRanges played;
             getPlayed: function() {
+            	// Not supported
                 return this._mediaElement.played;
             },
             // readonly attribute TimeRanges seekable;
             getSeekable: function() {
+            	// Not supported
                 return this._mediaElement.seekable;
             },
             // readonly attribute boolean ended;
             getEnded: function() {
-                return this._mediaElement.ended;
+                return currentPlayer.ended();
             },
             // attribute boolean autoplay;
             getAutoPlay: function() {
-                return this._mediaElement.autoplay;
+                return currentPlayer.autoplay();
             },
             setAutoPlay: function(autoplay) {
-                this._mediaElement.autoplay = autoplay;
+                currentPlayer.autoplay(autoplay);
             },
             // attribute boolean loop;
             getLoop: function() {
-                return this._mediaElement.loop;
+                return currentPlayer.loop();
             },
             setLoop: function(loop) {
-                this._mediaElement.loop = loop;
+                currentPlayer.loop(loop);
             },
             // void play();
             play: function() {
@@ -385,10 +343,7 @@ require.def(
             },
             // attribute boolean controls;
             setNativeControls: function(controls) {
-            	console.log('setting controls');
-            	console.log('player init: ' + this._isPlayerInited());
-            	this._waitfor(this._isPlayerInited, true, 300, 0, 'player init for set control', function(){
-            		console.log('made it in');
+            	this._waitfor(this._isPlayerInited, true, 200, 0, 'player init for set control', function(){
             		currentPlayer.controls(controls);
                 	currentPlayer.options().inactivityTimeout = 1;
             	});                
@@ -402,22 +357,6 @@ require.def(
 
                 var device = Application.getCurrentApplication().getDevice();
                 device.removeElement(this._mediaElement);
-
-                // Remove error event listeners from each source element
-                //var sourceElements = this._mediaElement.getElementsByTagName("source");
-
-                // Loop through the array backwards as we remove array elements inside the loop body
-                /*var sourceElementsLength = sourceElements.length;
-                for (var sourceElementIndex = sourceElementsLength - 1; sourceElementIndex >= 0; sourceElementIndex--) {
-                    var sourceElement = sourceElements[sourceElementIndex];
-                    sourceElement.removeEventListener('error', sourceElement._errorEventListener, true);
-                    device.removeElement(sourceElement);
-
-                    delete sourceElements[sourceElementIndex];
-                }
-
-                sourceElements = null;*/
-
 
                 // Remove event listeners
                 for (var i = 0; i < MediaEvent.TYPES.length; i++) {
@@ -433,7 +372,6 @@ require.def(
                 delete this._mediaElement;
                 this._mediaElement = null;
                 currentPlayer = null;
-                videojs = null;
             },
             webkitMemoryLeakFix : function() {
                 // http://stackoverflow.com/questions/5170398/ios-safari-memory-leak-when-loading-unloading-html5-video
@@ -443,7 +381,7 @@ require.def(
         });
 
         Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
-            currentPlayer = new HTML5Player(id, mediaType, eventCallback);
+            currentPlayer = new UKTVBCovePlayer(id, mediaType, eventCallback);
             return currentPlayer;
         };
         Device.prototype.getPlayerEmbedMode = function(mediaType) {
@@ -462,7 +400,7 @@ require.def(
          */
         Device.prototype.getVolume = function() {
             if (currentPlayer) {
-                return currentPlayer._mediaElement.volume;
+                return currentPlayer.volume();
             }
             return currentVolume;
         };
@@ -480,7 +418,7 @@ require.def(
             }
             currentVolume = volume;
             if (currentPlayer) {
-                currentPlayer._mediaElement.volume = volume;
+                currentPlayer.volume(volume);
             }
         };
         /**
@@ -489,7 +427,7 @@ require.def(
          */
         Device.prototype.getMuted = function() {
             if (currentPlayer) {
-                return currentPlayer._mediaElement.muted;
+                return currentPlayer.muted();
             }
             return isMuted;
         };
@@ -500,9 +438,9 @@ require.def(
         Device.prototype.setMuted = function(muted) {
             isMuted = muted;
             if (currentPlayer) {
-                currentPlayer._mediaElement.muted = muted;
+                currentPlayer.muted(muted);
             }
         };
-        return HTML5Player;
+        return UKTVBCovePlayer;
     }
 );
