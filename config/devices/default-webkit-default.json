@@ -4,7 +4,7 @@
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/styletopleft",
-      "antie/devices/media/uktv_bcove",
+      "sampleapp/appui/media/uktv_bcove",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
