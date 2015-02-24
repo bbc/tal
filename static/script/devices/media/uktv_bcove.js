@@ -45,11 +45,13 @@ require.def(
         var isMuted = null;
         var currentVolume = -1;
         var srcDuration = 0;
+        var usedId = '';
 
         var HTML5Player = MediaInterface.extend({
             init: function(id, mediaType, eventHandlingCallback) {
                 this._super(id);
 				console.log('brightcove player init ' + id);
+				usedId = 'player_' + id;
 				playerInit = false;
                 this._eventHandlingCallback = eventHandlingCallback;
 
@@ -70,7 +72,7 @@ require.def(
                 var vidTag = document.createElement('video');
                 
                 var idAtt = document.createAttribute('id');
-                idAtt.value = 'myPlayerID';
+                idAtt.value = usedId;
                 vidTag.setAttributeNode(idAtt);
                 
                 var accAtt = document.createAttribute('data-account');
@@ -102,11 +104,11 @@ require.def(
                 vidTag.setAttributeNode(ctrlAtt);
                 
                 var wdthAtt = document.createAttribute('width');
-                wdthAtt.value = sizes['width'] + 'px';
+                wdthAtt.value = sizes['width'];
                 vidTag.setAttributeNode(wdthAtt);
                 
                 var hghtAtt = document.createAttribute('height');
-                hghtAtt.value = sizes['height'] + 'px';
+                hghtAtt.value = sizes['height'];
                 vidTag.setAttributeNode(hghtAtt);
                 
                 var stylAtt = document.createAttribute('style');
@@ -157,15 +159,15 @@ require.def(
                     this._mediaElement.addEventListener("error", this._errorEventWrapper, true);
                     
                     this._waitfor(this._isVideoJSDefined, true, 200, 0, 'waited for video js to be defined', function(){
-                    	videojs("myPlayerID").ready(function() {
-		                	console.log('setting player');
-	                    	currentPlayer = this;
-					        playerInit = true;
-					        /*currentPlayer.on('timeupdate', function(e){
-					        	console.log('time update');
-					        	console.log(e);
-					        });*/
-				        });
+                    	//console.log('vid js DEFiNED');
+                    	// Some times videojs is already defined before render has completed and needs to wait
+                    	setTimeout(function() {
+	                    	videojs(usedId).ready(function() {
+			                	console.log('setting player');
+		                    	currentPlayer = this;
+						        playerInit = true;
+					        });
+					    }, 1000);
                     });
                 }
                 
