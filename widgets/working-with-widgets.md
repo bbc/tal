@@ -189,7 +189,9 @@ See [scrubbar.js]({{site.baseurl}}/jsdoc/symbols/antie.widgets.ScrubBar.html) fo
 
 ## KeyBoard
 
-Versatile on-screen keyboard.
+Versatile on-screen keyboard. To enable focus on the keyboard keys, you must first set the active child key, for example:
+
+`myVirtualKeyBoard.setActiveChildKey('A')`
 
 ![Key Board]({{site.baseurl}}/img/widgets/keyboard.png)
 
