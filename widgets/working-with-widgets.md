@@ -189,11 +189,13 @@ See [scrubbar.js]({{site.baseurl}}/jsdoc/symbols/antie.widgets.ScrubBar.html) fo
 
 ## KeyBoard
 
-Versatile on-screen keyboard.
+Versatile on-screen keyboard, with keys laid out on a grid. Note that to enable focus on the keyboard keys, you must first set the active child key, for example:
+
+`myVirtualKeyBoard.setActiveChildKey('A')`
 
 ![Key Board]({{site.baseurl}}/img/widgets/keyboard.png)
 
-See [keyboard.js]({{site.baseurl}}/jsdoc/symbols/antie.widgets.Keyboard.html) for the javascript documentation.
+See [keyboard.js]({{site.baseurl}}/jsdoc/symbols/antie.widgets.Keyboard.html) for the Javascript documentation.
 
 ## TextPager
 
