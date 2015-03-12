@@ -98,4 +98,13 @@
             assertUndefined(livePlayer.getSeekableRange);
         });
     };
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testGetStateReturnsState = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            assertEquals("EMPTY", livePlayer.getState());
+        }, config);
+    };
 })();
