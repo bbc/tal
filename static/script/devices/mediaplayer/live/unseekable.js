@@ -75,7 +75,7 @@ require.def(
             },
 
             getSource: function() {
-                this._mediaPlayer.getSource();
+                return this._mediaPlayer.getSource();
             },
 
             getMimeType: function() {

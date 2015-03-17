@@ -107,4 +107,16 @@
             assertEquals("EMPTY", livePlayer.getState());
         }, config);
     };
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testGetSourceReturnsSource = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer._source = "http://test.mp4";
+
+            assertEquals("http://test.mp4", livePlayer.getSource());
+        }, config);
+    };
 })();
