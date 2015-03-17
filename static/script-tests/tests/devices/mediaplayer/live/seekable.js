@@ -108,7 +108,7 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._source = "http://test.mp4";
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
 
             assertEquals("http://test.mp4", livePlayer.getSource());
         }, config);
@@ -120,7 +120,7 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._mimeType = "video/mp4";
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
 
             assertEquals("video/mp4", livePlayer.getMimeType());
         }, config);
@@ -132,9 +132,7 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._state = "PLAYING";
-            livePlayer._mediaPlayer._mediaElement = {};
-            livePlayer._mediaPlayer._mediaElement.currentTime = 30;
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
 
             assertEquals(30, livePlayer.getCurrentTime());
         }, config);
@@ -146,14 +144,12 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._state = "BUFFERING";
-            livePlayer._mediaPlayer._mediaElement = {};
-            livePlayer._mediaPlayer._mediaElement.duration = 30;
-
             var expectedRange = {
                 "start": 0,
                 "end": 30
-            }
+            };
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
 
             assertEquals(expectedRange, livePlayer.getSeekableRange());
         }, config);
