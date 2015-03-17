@@ -114,7 +114,7 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._source = "http://test.mp4";
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
 
             assertEquals("http://test.mp4", livePlayer.getSource());
         }, config);
@@ -126,7 +126,7 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            livePlayer._mediaPlayer._mimeType = "video/mp4";
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
 
             assertEquals("video/mp4", livePlayer.getMimeType());
         }, config);
