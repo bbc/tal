@@ -79,7 +79,7 @@ require.def(
             },
 
             getMimeType: function() {
-                this._mediaPlayer.getMimeType();
+                return this._mediaPlayer.getMimeType();
             },
 
             addEventCallback: function(thisArg, callback) {

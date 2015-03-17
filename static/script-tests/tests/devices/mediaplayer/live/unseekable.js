@@ -119,4 +119,16 @@
             assertEquals("http://test.mp4", livePlayer.getSource());
         }, config);
     };
+
+    this.LivePlayerSupportLevelUnseekableTest.prototype.testGetMimeTypeReturnsMimeType = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/unseekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer._mimeType = "video/mp4";
+
+            assertEquals("video/mp4", livePlayer.getMimeType());
+        }, config);
+    };
 })();
