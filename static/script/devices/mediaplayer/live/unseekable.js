@@ -71,15 +71,15 @@ require.def(
             },
 
             getState: function() {
-                this._mediaPlayer.getState();
+                return this._mediaPlayer.getState();
             },
 
             getSource: function() {
-                this._mediaPlayer.getSource();
+                return this._mediaPlayer.getSource();
             },
 
             getMimeType: function() {
-                this._mediaPlayer.getMimeType();
+                return this._mediaPlayer.getMimeType();
             },
 
             addEventCallback: function(thisArg, callback) {

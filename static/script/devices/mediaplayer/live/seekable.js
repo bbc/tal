@@ -78,23 +78,23 @@ require.def(
             },
 
             getState: function() {
-                this._mediaPlayer.getState();
+                return this._mediaPlayer.getState();
             },
 
             getSource: function() {
-                this._mediaPlayer.getSource();
+                return this._mediaPlayer.getSource();
             },
 
             getCurrentTime: function() {
-                this._mediaPlayer.getCurrentTime();
+                return this._mediaPlayer.getCurrentTime();
             },
 
             getSeekableRange: function() {
-                this._mediaPlayer.getSeekableRange();
+                return this._mediaPlayer.getSeekableRange();
             },
 
             getMimeType: function() {
-                this._mediaPlayer.getMimeType();
+                return this._mediaPlayer.getMimeType();
             },
 
             addEventCallback: function(thisArg, callback) {
