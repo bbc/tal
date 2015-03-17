@@ -86,7 +86,7 @@ require.def(
             },
 
             getCurrentTime: function() {
-                this._mediaPlayer.getCurrentTime();
+                return this._mediaPlayer.getCurrentTime();
             },
 
             getSeekableRange: function() {
