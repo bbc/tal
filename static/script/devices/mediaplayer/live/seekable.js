@@ -78,7 +78,7 @@ require.def(
             },
 
             getState: function() {
-                this._mediaPlayer.getState();
+                return this._mediaPlayer.getState();
             },
 
             getSource: function() {
