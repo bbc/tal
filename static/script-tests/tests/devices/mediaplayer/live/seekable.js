@@ -139,4 +139,23 @@
             assertEquals(30, livePlayer.getCurrentTime());
         }, config);
     };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetSeekableRangeReturnsSeekableRange = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer._state = "BUFFERING";
+            livePlayer._mediaPlayer._mediaElement = {};
+            livePlayer._mediaPlayer._mediaElement.duration = 30;
+
+            var expectedRange = {
+                "start": 0,
+                "end": 30
+            }
+
+            assertEquals(expectedRange, livePlayer.getSeekableRange());
+        }, config);
+    };
 })();

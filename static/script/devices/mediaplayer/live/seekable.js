@@ -90,7 +90,7 @@ require.def(
             },
 
             getSeekableRange: function() {
-                this._mediaPlayer.getSeekableRange();
+                return this._mediaPlayer.getSeekableRange();
             },
 
             getMimeType: function() {
