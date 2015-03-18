@@ -91,7 +91,7 @@ require.def(
                     device.prependChildElement(appElement, this._mediaElement);
 
                     this._mediaElement.preload = "auto";
-                    this._mediaElement.src = url;
+                    this._setSourceOnMediaElement(url, mimeType);
                     this._mediaElement.load();
 
                     this._toStopped();
@@ -457,6 +457,14 @@ require.def(
             _unloadMediaSrc: function() {
                 this._mediaElement.removeAttribute('src');
                 this._mediaElement.load();
+            },
+
+            _setSourceOnMediaElement: function(url, mimeType) {
+                var device = RuntimeContext.getCurrentApplication().getDevice();
+                var sourceElement = device._createElement('source');
+                sourceElement.src = url;
+                sourceElement.type = mimeType;
+                device.appendChildElement(this._mediaElement, sourceElement);
             },
 
             _reportError: function(errorMessage) {

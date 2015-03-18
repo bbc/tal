@@ -138,6 +138,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         stubCreateElementResults = {
             video: document.createElement("div"),
             audio: document.createElement("div"),
+            source: document.createElement("source")
         };
         mediaEventListeners = {};
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
@@ -344,13 +345,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testSourceURLSetOnSetSource = function(queue) {
-        expectAsserts(1);
+    mixins.testSourceURLSetAsChildElementOnSetSource = function(queue) {
+        expectAsserts(5);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            assertEquals(0, stubCreateElementResults.video.children.length);
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assertEquals('http://testurl/', stubCreateElementResults.video.src);
+            assertEquals(1, stubCreateElementResults.video.children.length);
+            var childElement = stubCreateElementResults.video.firstChild;
+            assertEquals('source', childElement.nodeName.toLowerCase());
+            assertEquals('http://testurl/', childElement.src);
+            assertEquals('video/mp4', childElement.type);
         });
     };
 
