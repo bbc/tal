@@ -33,6 +33,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     var clock;
     var stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
+    var sourceEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -124,6 +125,16 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.setUp = function() {
+        function mediaAddEventListener(event, callback) {
+            if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
+            mediaEventListeners[event] = callback;
+        }
+
+        function sourceAddEventListener(event, callback) {
+            if (sourceEventListeners[event]) { throw "Listener already registered on media source mock for event: " + event; }
+            sourceEventListeners[event] = callback;
+        }
+
         this.sandbox = sinon.sandbox.create();
 
         // We will use a div to provide fake elements for video and audio elements. This is to get around browser
@@ -136,6 +147,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             source: document.createElement("source")
         };
         mediaEventListeners = {};
+        sourceEventListeners = {};
+
+        stubCreateElementResults.source.addEventListener = sourceAddEventListener;
+        stubCreateElementResults.source.removeEventListener = this.sandbox.stub();
+
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
             var media = mediaElements[i];
@@ -148,11 +164,10 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             media.seekable.start = this.sandbox.stub();
             media.seekable.end = this.sandbox.stub();
 
-            media.addEventListener = function (event, callback) {
-                if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
-                mediaEventListeners[event] = callback;
-            };
+            media.addEventListener = mediaAddEventListener;
             media.removeEventListener = this.sandbox.stub();
+
+            media.source = stubCreateElementResults.source;
         }
 
         this.stubCreateElementResults = stubCreateElementResults;
@@ -269,6 +284,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         stubCreateElementResults.video.currentTime = 0;
     };
 
+    var emitSourceElementError = function() {
+        sourceEventListeners.error();
+    };
 
     //---------------------
     // HTML5 specific tests
@@ -474,6 +492,23 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.emitPlaybackError(self._mediaPlayer, 3); // MEDIA_ERR_DECODE - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
 
             assert(errorStub.calledWith("Media element emitted error with code: 3"));
+        });
+    };
+
+    mixins.testErrorEventFromSourceElementCausesErrorLogWithCode = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            var errorStub = self.sandbox.stub();
+            self.sandbox.stub(self._device, "getLogger").returns({error: errorStub});
+
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+
+            emitSourceElementError();
+
+            assert(errorStub.calledWith("Media source element emitted an error"));
+            assertEvent(self, MediaPlayer.EVENT.ERROR);
         });
     };
 
