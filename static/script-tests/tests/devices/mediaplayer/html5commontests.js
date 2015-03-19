@@ -68,11 +68,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             mediaEventListeners.canplay();
         },
         emitPlaybackError: function(mediaPlayer, errorCode) {
-
-            // MEDIA_ERR_NETWORK == 2
-            errorCode = errorCode !== undefined ? errorCode : 2;
-            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
-            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
             stubCreateElementResults.video.error =  { code: errorCode };
             stubCreateElementResults.audio.error =  { code: errorCode };
 
@@ -476,11 +471,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertFunction(mediaEventListeners.error);
 
-            stubCreateElementResults.video.error =  { code: 2 }; // MEDIA_ERR_NETWORK - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
+            deviceMockingHooks.emitPlaybackError(self._mediaPlayer, 3); // MEDIA_ERR_DECODE - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
 
-            deviceMockingHooks.emitPlaybackError(self._mediaPlayer);
-
-            assert(errorStub.calledWith("Media element emitted error with code: 2"));
+            assert(errorStub.calledWith("Media element emitted error with code: 3"));
         });
     };
 
