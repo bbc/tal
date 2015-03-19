@@ -504,6 +504,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self.sandbox.stub(self._device, "getLogger").returns({error: errorStub});
 
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertFunction(sourceEventListeners.error);
 
             emitSourceElementError();
 
