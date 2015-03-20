@@ -457,6 +457,7 @@ require.def(
                     this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering, false);
                     this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
+                    this._mediaElement.source.removeEventListener("error", this._wrapOnSourceError, false);
 
                     this._unloadMediaSrc();
 

@@ -896,6 +896,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testResetRemovesEventListenerFromTheSourceElement = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            assert(stubCreateElementResults.source.removeEventListener.withArgs("error").notCalled);
+
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.reset();
+
+            assert(stubCreateElementResults.source.removeEventListener.withArgs("error").called);
+        });
+    };
+
     mixins.testPlayFromCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         var currentAndTargetTime = 50;
         doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(this, queue, currentAndTargetTime, currentAndTargetTime);
