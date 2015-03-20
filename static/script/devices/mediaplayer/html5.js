@@ -369,13 +369,11 @@ require.def(
             },
 
             _onMetadata: function() {
-                this._readyToPlayFrom = true;
-                if (this._waitingToPlayFrom()) {
-                    this._deferredPlayFrom();
-                }
+                this._metadataLoaded();
             },
 
             _exitBuffering: function () {
+                this._metadataLoaded();
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
 
@@ -384,6 +382,13 @@ require.def(
 
                 } else {
                     this._toPlaying();
+                }
+            },
+            
+            _metadataLoaded: function () {
+                this._readyToPlayFrom = true;
+                if (this._waitingToPlayFrom()) {
+                    this._deferredPlayFrom();
                 }
             },
 
