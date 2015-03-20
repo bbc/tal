@@ -335,6 +335,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSourceElementIsRemovedFromMediaElementOnReset = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            self._mediaPlayer.reset();
+
+            assertNull(stubCreateElementResults.video.firstChild);
+        });
+    };
+
     mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;

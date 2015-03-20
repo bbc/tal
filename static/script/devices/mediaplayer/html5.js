@@ -462,6 +462,7 @@ require.def(
                     this._unloadMediaSrc();
 
                     var device = RuntimeContext.getDevice();
+                    device.removeElement(this._mediaElement.source);
                     device.removeElement(this._mediaElement);
 
                     delete this._mediaElement;
