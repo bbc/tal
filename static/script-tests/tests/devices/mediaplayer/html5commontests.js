@@ -1066,17 +1066,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testResetUnloadsMediaElementSourceAsPerGuidelines = function(queue) {
-        expectAsserts(2);
+        // Guidelines in HTML5 video spec, section 4.8.10.15:
+        // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
+        expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             stubCreateElementResults.video.load.reset();
             self.sandbox.stub(stubCreateElementResults.video, 'removeAttribute');
+            self.sandbox.spy(self._device, 'removeElement');
 
             self._mediaPlayer.reset();
 
             assert(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
             assert(stubCreateElementResults.video.load.calledOnce);
+            assert(self._device.removeElement.withArgs(stubCreateElementResults.video.source).calledBefore(stubCreateElementResults.video.load));
         });
     };
 

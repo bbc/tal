@@ -459,17 +459,19 @@ require.def(
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
                     this._mediaElement.source.removeEventListener("error", this._wrapOnSourceError, false);
 
-                    this._unloadMediaSrc();
-
                     var device = RuntimeContext.getDevice();
                     device.removeElement(this._mediaElement.source);
-                    device.removeElement(this._mediaElement);
 
+                    this._unloadMediaSrc();
+
+                    device.removeElement(this._mediaElement);
                     delete this._mediaElement;
                 }
             },
 
             _unloadMediaSrc: function() {
+                // Reset source as advised by HTML5 video spec, section 4.8.10.15:
+                // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
                 this._mediaElement.removeAttribute('src');
                 this._mediaElement.load();
             },
