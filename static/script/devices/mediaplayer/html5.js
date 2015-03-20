@@ -354,7 +354,12 @@ require.def(
             },
 
             _onSourceError: function() {
-                this._reportError("Media source element emitted an error");
+                var error = this._mediaElement.error;
+                if (error && error.code !== undefined) {
+                    this._reportError("Media source element emitted an error. Media error code: " + error.code);
+                } else {
+                    this._reportError("Media source element emitted an error");
+                }
             },
 
             /**
