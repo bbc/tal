@@ -78,6 +78,7 @@ require.def(
                     this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(); };
                     this._wrapOnStatus = function(event) { self._onStatus(); };
                     this._wrapOnMetadata = function(event) { self._onMetadata(); };
+                    this._wrapOnSourceError = function(event) { self._onSourceError(); };
                     this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener("playing", this._wrapOnFinishedBuffering, false);
@@ -90,8 +91,11 @@ require.def(
                     var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
                     device.prependChildElement(appElement, this._mediaElement);
 
+                    var sourceElement = this._generateSourceElement(url, mimeType);
+                    sourceElement.addEventListener("error", this._wrapOnSourceError, false);
+
                     this._mediaElement.preload = "auto";
-                    this._setSourceOnMediaElement(url, mimeType);
+                    device.appendChildElement(this._mediaElement, sourceElement);
                     this._mediaElement.load();
 
                     this._toStopped();
@@ -349,6 +353,10 @@ require.def(
                 this._reportError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
+            _onSourceError: function() {
+                this._reportError("Media source element emitted an error");
+            },
+
             /**
              * @protected
              */
@@ -459,12 +467,12 @@ require.def(
                 this._mediaElement.load();
             },
 
-            _setSourceOnMediaElement: function(url, mimeType) {
-                var device = RuntimeContext.getCurrentApplication().getDevice();
+            _generateSourceElement: function(url, mimeType) {
+                var device = RuntimeContext.getDevice();
                 var sourceElement = device._createElement('source');
                 sourceElement.src = url;
                 sourceElement.type = mimeType;
-                device.appendChildElement(this._mediaElement, sourceElement);
+                return sourceElement;
             },
 
             _reportError: function(errorMessage) {

@@ -495,7 +495,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testErrorEventFromSourceElementCausesErrorLogWithCode = function(queue) {
+    mixins.testErrorEventFromSourceElementCausesErrorLogWithNoCodeWhereUnavailable = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
