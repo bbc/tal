@@ -124,6 +124,7 @@ require.def(
                         this._toBuffering();
                         this._targetSeekTime = this._getClampedTimeForPlayFrom(seconds);
                         if (this._isNearToCurrentTime(this._targetSeekTime)) {
+                            this._targetSeekTime = undefined;
                             this._toPlaying();
                         } else {
                             this._playFromIfReady();

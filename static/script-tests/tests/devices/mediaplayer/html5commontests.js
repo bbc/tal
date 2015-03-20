@@ -1668,6 +1668,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testPlayFromNearCurrentTimeWillNotCauseFinishBufferingToPerformSeekLater = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer);
+            stubCreateElementResults.video.currentTime = 50;
+            this._mediaPlayer.playFrom(50.999);
+
+            stubCreateElementResults.video.currentTime = 70;
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(70, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
 
