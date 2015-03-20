@@ -332,6 +332,8 @@ require.def(
             },
             webkitMemoryLeakFix : function() {
                 // http://stackoverflow.com/questions/5170398/ios-safari-memory-leak-when-loading-unloading-html5-video
+                // Resetting source is also advised by HTML5 video spec, section 4.8.10.15:
+                // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
 				this._mediaElement.removeAttribute("src");
                 this._mediaElement.load();
             }
