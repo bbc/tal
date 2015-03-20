@@ -54,14 +54,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             stubCreateElement(sandbox,application);
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-            for (var i = 0; i < mediaElements.length; i++) {
-                var media = mediaElements[i];
-                media.duration = range.end;
-                media.currentTime = currentTime;
-                media.seekable.start.returns(range.start);
-                media.seekable.end.returns(range.end);
-            }
+            setMetaData(mediaPlayer, currentTime, range);
             mediaEventListeners.loadedmetadata();
         },
         finishBuffering: function(mediaPlayer) {
@@ -271,6 +264,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var setPlayTimeToZero = function (self) {
         stubCreateElementResults.video.currentTime = 0;
+    };
+
+    var setMetaData = function (mediaPlayer, currentTime, range) {
+        var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+        for (var i = 0; i < mediaElements.length; i++) {
+            var media = mediaElements[i];
+            media.duration = range.end;
+            media.currentTime = currentTime;
+            media.seekable.start.returns(range.start);
+            media.seekable.end.returns(range.end);
+        }
     };
 
 
