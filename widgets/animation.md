@@ -8,6 +8,8 @@ title: Animation
 
 These methods are primarily intended for widget developers.
 
+Note that to use the animations methods you will first need to [obtain a reference to the device](/tal/faq.html#question-how-do-i-get-a-reference-the-device-abstraction-layer-in-the-code).
+
 ## Animation methods
 
 The following methods control animation:
