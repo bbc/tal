@@ -91,11 +91,12 @@ require.def(
                     var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
                     device.prependChildElement(appElement, this._mediaElement);
 
-                    var sourceElement = this._generateSourceElement(url, mimeType);
-                    sourceElement.addEventListener("error", this._wrapOnSourceError, false);
+                    this._sourceElement = this._generateSourceElement(url, mimeType);
+                    this._sourceElement.addEventListener("error", this._wrapOnSourceError, false);
 
                     this._mediaElement.preload = "auto";
-                    device.appendChildElement(this._mediaElement, sourceElement);
+                    device.appendChildElement(this._mediaElement, this._sourceElement);
+
                     this._mediaElement.load();
 
                     this._toStopped();
@@ -457,15 +458,16 @@ require.def(
                     this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering, false);
                     this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
-                    this._mediaElement.source.removeEventListener("error", this._wrapOnSourceError, false);
+                    this._sourceElement.removeEventListener("error", this._wrapOnSourceError, false);
 
                     var device = RuntimeContext.getDevice();
-                    device.removeElement(this._mediaElement.source);
+                    device.removeElement(this._sourceElement);
 
                     this._unloadMediaSrc();
 
                     device.removeElement(this._mediaElement);
                     delete this._mediaElement;
+                    delete this._sourceElement;
                 }
             },
 

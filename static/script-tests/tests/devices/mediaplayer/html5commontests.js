@@ -166,8 +166,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             media.addEventListener = mediaAddEventListener;
             media.removeEventListener = this.sandbox.stub();
-
-            media.source = stubCreateElementResults.source;
         }
 
         this.stubCreateElementResults = stubCreateElementResults;
@@ -1080,7 +1078,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assert(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
             assert(stubCreateElementResults.video.load.calledOnce);
-            assert(self._device.removeElement.withArgs(stubCreateElementResults.video.source).calledBefore(stubCreateElementResults.video.load));
+            assert(self._device.removeElement.withArgs(stubCreateElementResults.source).calledBefore(stubCreateElementResults.video.load));
         });
     };
 
