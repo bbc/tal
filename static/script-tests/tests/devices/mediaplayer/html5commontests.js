@@ -504,7 +504,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testErrorEventFromSourceElementCausesErrorLogWithNoCodeWhereUnavailable = function(queue) {
+    mixins.testErrorEventFromSourceElementCausesErrorLog = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -518,25 +518,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             emitSourceElementError();
 
             assert(errorStub.calledWith("Media source element emitted an error"));
-            assertEvent(self, MediaPlayer.EVENT.ERROR);
-        });
-    };
-
-    mixins.testErrorEventFromSourceElementCausesErrorLogWithCodeWhereAvailable = function(queue) {
-        expectAsserts(3);
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-
-            var errorStub = self.sandbox.stub();
-            self.sandbox.stub(self._device, "getLogger").returns({error: errorStub});
-
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assertFunction(sourceEventListeners.error);
-
-            stubCreateElementResults.video.error =  { code: 4 };
-            emitSourceElementError();
-
-            assert(errorStub.calledWith("Media source element emitted an error. Media error code: 4"));
             assertEvent(self, MediaPlayer.EVENT.ERROR);
         });
     };
