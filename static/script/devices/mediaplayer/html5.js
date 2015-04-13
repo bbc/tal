@@ -78,6 +78,7 @@ require.def(
                     this._wrapOnDeviceBuffering = function(event) { self._onDeviceBuffering(); };
                     this._wrapOnStatus = function(event) { self._onStatus(); };
                     this._wrapOnMetadata = function(event) { self._onMetadata(); };
+                    this._wrapOnSourceError = function(event) { self._onSourceError(); };
                     this._mediaElement.addEventListener("canplay", this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener("seeked", this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener("playing", this._wrapOnFinishedBuffering, false);
@@ -90,8 +91,12 @@ require.def(
                     var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
                     device.prependChildElement(appElement, this._mediaElement);
 
+                    this._sourceElement = this._generateSourceElement(url, mimeType);
+                    this._sourceElement.addEventListener("error", this._wrapOnSourceError, false);
+
                     this._mediaElement.preload = "auto";
-                    this._mediaElement.src = url;
+                    device.appendChildElement(this._mediaElement, this._sourceElement);
+
                     this._mediaElement.load();
 
                     this._toStopped();
@@ -350,6 +355,10 @@ require.def(
                 this._reportError("Media element emitted error with code: " + this._mediaElement.error.code);
             },
 
+            _onSourceError: function() {
+                this._reportError("Media source element emitted an error");
+            },
+
             /**
              * @protected
              */
@@ -450,19 +459,35 @@ require.def(
                     this._mediaElement.removeEventListener("waiting", this._wrapOnDeviceBuffering, false);
                     this._mediaElement.removeEventListener("timeupdate", this._wrapOnStatus, false);
                     this._mediaElement.removeEventListener("loadedmetadata", this._wrapOnMetadata, false);
+                    this._sourceElement.removeEventListener("error", this._wrapOnSourceError, false);
+
+                    var device = RuntimeContext.getDevice();
+                    device.removeElement(this._sourceElement);
 
                     this._unloadMediaSrc();
 
-                    var device = RuntimeContext.getDevice();
                     device.removeElement(this._mediaElement);
-
                     delete this._mediaElement;
+                    delete this._sourceElement;
                 }
             },
 
             _unloadMediaSrc: function() {
+                // Reset source as advised by HTML5 video spec, section 4.8.10.15:
+                // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
                 this._mediaElement.removeAttribute('src');
                 this._mediaElement.load();
+            },
+
+            /**
+             * @protected
+             */
+            _generateSourceElement: function(url, mimeType) {
+                var device = RuntimeContext.getDevice();
+                var sourceElement = device._createElement('source');
+                sourceElement.src = url;
+                sourceElement.type = mimeType;
+                return sourceElement;
             },
 
             _reportError: function(errorMessage) {
