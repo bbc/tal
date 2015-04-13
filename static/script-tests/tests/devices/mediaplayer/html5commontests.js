@@ -55,14 +55,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             stubCreateElement(sandbox,application);
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-            for (var i = 0; i < mediaElements.length; i++) {
-                var media = mediaElements[i];
-                media.duration = range.end;
-                media.currentTime = currentTime;
-                media.seekable.start.returns(range.start);
-                media.seekable.end.returns(range.end);
-            }
+            setMetadata(mediaPlayer, currentTime, range);
             mediaEventListeners.loadedmetadata();
         },
         finishBuffering: function(mediaPlayer) {
@@ -284,6 +277,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var emitSourceElementError = function() {
         sourceEventListeners.error();
+    };
+
+    var setMetadata = function (mediaPlayer, currentTime, range) {
+        var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+        for (var i = 0; i < mediaElements.length; i++) {
+            var media = mediaElements[i];
+            media.duration = range.end;
+            media.currentTime = currentTime;
+            media.seekable.start.returns(range.start);
+            media.seekable.end.returns(range.end);
+        }
     };
 
     //---------------------
@@ -1695,6 +1699,46 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(debugStub.withArgs("playFrom 50 clamped to 60 - seekable range is { start: 60, end: 100 }").calledOnce);
+        });
+    };
+
+    mixins.testPlayFromSetsCurrentTimeAfterFinishBufferingButNoMetadata = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            setMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testExitBufferingSentinelPerformsDeferredSeekIfNoLoadedMetadataEvent = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            setMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testPlayFromNearCurrentTimeWillNotCauseFinishBufferingToPerformSeekLater = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer);
+            stubCreateElementResults.video.currentTime = 50;
+            this._mediaPlayer.playFrom(50.999);
+
+            stubCreateElementResults.video.currentTime = 70;
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(70, stubCreateElementResults.video.currentTime);
         });
     };
 
