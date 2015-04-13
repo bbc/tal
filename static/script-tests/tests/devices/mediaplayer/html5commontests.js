@@ -385,6 +385,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSetSourceUsesGenerateSourceElementExtensionPoint = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self.sandbox.spy(self._mediaPlayer, "_generateSourceElement");
+            assert(self._mediaPlayer._generateSourceElement.notCalled);
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assert(self._mediaPlayer._generateSourceElement.calledWith('http://testurl/', 'video/mp4'));
+        });
+    };
+
     mixins.testIfDurationAndSeekableRangeIsMissingGetSeekableRangeReturnsUndefinedAndLogsAWarning = function(queue) {
         expectAsserts(2);
         var self = this;
