@@ -473,6 +473,9 @@ require.def(
                 this._mediaElement.load();
             },
 
+            /**
+             * @protected
+             */
             _generateSourceElement: function(url, mimeType) {
                 var device = RuntimeContext.getDevice();
                 var sourceElement = device._createElement('source');
