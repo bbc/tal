@@ -51,7 +51,7 @@
             var childElement = self.stubCreateElementResults.video.firstChild;
             assertEquals('source', childElement.nodeName.toLowerCase());
             assertEquals('http://testurl/', childElement.src);
-            assertEquals('', childElement.type);
+            assertFalse(!!childElement.type);
         });
     };
 
