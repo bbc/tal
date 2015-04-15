@@ -65,6 +65,8 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerBeginPlaybackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback', 0);
 
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerBeginPlaybackFromCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlaybackFrom', 1);
+
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 3);
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerStopCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop', 0);
@@ -81,7 +83,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback', 2);
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInRestartableLive = function (queue) {
         expectAsserts(5);
