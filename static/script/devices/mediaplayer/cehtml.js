@@ -153,6 +153,27 @@ require.def(
             },
 
             /**
+             * @inheritDoc
+             */
+            beginPlaybackFrom: function(seconds) {
+                this._sentinelSeekTime = seconds;
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                this._sentinelLimits.seek.currentAttemptCount = 0;
+
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        // Seeking past 0 requires calling play first when media has not been loaded
+                        this._toBuffering();
+                        this._playAndSetDeferredSeek(seconds);
+                        break;
+
+                    default:
+                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
             * @inheritDoc
             */
             pause: function () {
