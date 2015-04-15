@@ -726,6 +726,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testBeginPlaybackFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            self._mediaPlayer.beginPlaybackFrom(10);
+
+            assert(stubCreateElementResults.video.play.called);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testPlayFromClampsWhenCalledInStoppedState = function(queue) {
         expectAsserts(1);
         var self = this;
