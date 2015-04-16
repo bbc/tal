@@ -135,12 +135,6 @@ require.def(
                         }
                         break;
 
-                    case MediaPlayer.STATE.STOPPED:
-                        this._setDisplayFullScreenForVideo();
-                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
-                        this._toBuffering();
-                        break;
-
                     case MediaPlayer.STATE.COMPLETE:
                         this._playerPlugin.Stop();
                         this._setDisplayFullScreenForVideo();
