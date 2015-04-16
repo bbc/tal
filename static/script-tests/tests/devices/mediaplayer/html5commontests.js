@@ -33,6 +33,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     var clock;
     var stubCreateElementResults = undefined;
     var mediaEventListeners = undefined;
+    var sourceEventListeners = undefined;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -54,25 +55,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             stubCreateElement(sandbox,application);
         },
         sendMetadata: function(mediaPlayer, currentTime, range) {
-            var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
-            for (var i = 0; i < mediaElements.length; i++) {
-                var media = mediaElements[i];
-                media.duration = range.end;
-                media.currentTime = currentTime;
-                media.seekable.start.returns(range.start);
-                media.seekable.end.returns(range.end);
-            }
+            setMetadata(mediaPlayer, currentTime, range);
             mediaEventListeners.loadedmetadata();
         },
         finishBuffering: function(mediaPlayer) {
             mediaEventListeners.canplay();
         },
         emitPlaybackError: function(mediaPlayer, errorCode) {
-
-            // MEDIA_ERR_NETWORK == 2
-            errorCode = errorCode !== undefined ? errorCode : 2;
-            // This code, or higher, is needed for the error event. A value of 1 should result in an abort event.
-            // See http://www.w3.org/TR/2011/WD-html5-20110405/video.html
             stubCreateElementResults.video.error =  { code: errorCode };
             stubCreateElementResults.audio.error =  { code: errorCode };
 
@@ -129,6 +118,16 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.setUp = function() {
+        function mediaAddEventListener(event, callback) {
+            if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
+            mediaEventListeners[event] = callback;
+        }
+
+        function sourceAddEventListener(event, callback) {
+            if (sourceEventListeners[event]) { throw "Listener already registered on media source mock for event: " + event; }
+            sourceEventListeners[event] = callback;
+        }
+
         this.sandbox = sinon.sandbox.create();
 
         // We will use a div to provide fake elements for video and audio elements. This is to get around browser
@@ -138,8 +137,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         stubCreateElementResults = {
             video: document.createElement("div"),
             audio: document.createElement("div"),
+            source: document.createElement("source")
         };
         mediaEventListeners = {};
+        sourceEventListeners = {};
+
+        stubCreateElementResults.source.addEventListener = sourceAddEventListener;
+        stubCreateElementResults.source.removeEventListener = this.sandbox.stub();
+
         var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
         for (var i = 0; i < mediaElements.length; i++) {
             var media = mediaElements[i];
@@ -152,10 +157,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             media.seekable.start = this.sandbox.stub();
             media.seekable.end = this.sandbox.stub();
 
-            media.addEventListener = function (event, callback) {
-                if (mediaEventListeners[event]) { throw "Listener already registered on media mock for event: " + event; }
-                mediaEventListeners[event] = callback;
-            };
+            media.addEventListener = mediaAddEventListener;
             media.removeEventListener = this.sandbox.stub();
         }
 
@@ -273,6 +275,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         stubCreateElementResults.video.currentTime = 0;
     };
 
+    var emitSourceElementError = function() {
+        sourceEventListeners.error();
+    };
+
+    var setMetadata = function (mediaPlayer, currentTime, range) {
+        var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
+        for (var i = 0; i < mediaElements.length; i++) {
+            var media = mediaElements[i];
+            media.duration = range.end;
+            media.currentTime = currentTime;
+            media.seekable.start.returns(range.start);
+            media.seekable.end.returns(range.end);
+        }
+    };
 
     //---------------------
     // HTML5 specific tests
@@ -321,6 +337,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSourceElementIsRemovedFromMediaElementOnReset = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            self._mediaPlayer.reset();
+
+            assertNull(stubCreateElementResults.video.firstChild);
+        });
+    };
+
     mixins.testCreatedAudioElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -344,13 +371,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testSourceURLSetOnSetSource = function(queue) {
-        expectAsserts(1);
+    mixins.testSourceURLSetAsChildElementOnSetSource = function(queue) {
+        expectAsserts(5);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            assertEquals(0, stubCreateElementResults.video.children.length);
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-
-            assertEquals('http://testurl/', stubCreateElementResults.video.src);
+            assertEquals(1, stubCreateElementResults.video.children.length);
+            var childElement = stubCreateElementResults.video.firstChild;
+            assertEquals('source', childElement.nodeName.toLowerCase());
+            assertEquals('http://testurl/', childElement.src);
+            assertEquals('video/mp4', childElement.type);
         });
     };
 
@@ -471,11 +502,27 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertFunction(mediaEventListeners.error);
 
-            stubCreateElementResults.video.error =  { code: 2 }; // MEDIA_ERR_NETWORK - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
+            deviceMockingHooks.emitPlaybackError(self._mediaPlayer, 3); // MEDIA_ERR_DECODE - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
 
-            deviceMockingHooks.emitPlaybackError(self._mediaPlayer);
+            assert(errorStub.calledWith("Media element emitted error with code: 3"));
+        });
+    };
 
-            assert(errorStub.calledWith("Media element emitted error with code: 2"));
+    mixins.testErrorEventFromSourceElementCausesErrorLog = function(queue) {
+        expectAsserts(3);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            var errorStub = self.sandbox.stub();
+            self.sandbox.stub(self._device, "getLogger").returns({error: errorStub});
+
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            assertFunction(sourceEventListeners.error);
+
+            emitSourceElementError();
+
+            assert(errorStub.calledWith("Media source element emitted an error"));
+            assertEvent(self, MediaPlayer.EVENT.ERROR);
         });
     };
 
@@ -843,6 +890,19 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testResetRemovesEventListenerFromTheSourceElement = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            assert(stubCreateElementResults.source.removeEventListener.withArgs("error").notCalled);
+
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.reset();
+
+            assert(stubCreateElementResults.source.removeEventListener.withArgs("error").called);
+        });
+    };
+
     mixins.testPlayFromCurrentTimeWhenPlayingGoesToBufferingThenToPlaying = function(queue) {
         var currentAndTargetTime = 50;
         doTestPlayFromNearCurrentTimeWhenPlayingGoesToBufferingThenToPlaying(this, queue, currentAndTargetTime, currentAndTargetTime);
@@ -989,17 +1049,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testResetUnloadsMediaElementSourceAsPerGuidelines = function(queue) {
-        expectAsserts(2);
+        // Guidelines in HTML5 video spec, section 4.8.10.15:
+        // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
+        expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             stubCreateElementResults.video.load.reset();
             self.sandbox.stub(stubCreateElementResults.video, 'removeAttribute');
+            self.sandbox.spy(self._device, 'removeElement');
 
             self._mediaPlayer.reset();
 
             assert(stubCreateElementResults.video.removeAttribute.withArgs('src').calledOnce);
             assert(stubCreateElementResults.video.load.calledOnce);
+            assert(self._device.removeElement.withArgs(stubCreateElementResults.source).calledBefore(stubCreateElementResults.video.load));
         });
     };
 
@@ -1657,6 +1721,46 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
             assert(debugStub.withArgs("playFrom 50 clamped to 60 - seekable range is { start: 60, end: 100 }").calledOnce);
+        });
+    };
+
+    mixins.testPlayFromSetsCurrentTimeAfterFinishBufferingButNoMetadata = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            setMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testExitBufferingSentinelPerformsDeferredSeekIfNoLoadedMetadataEvent = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.playFrom(50);
+            setMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testPlayFromNearCurrentTimeWillNotCauseFinishBufferingToPerformSeekLater = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer);
+            stubCreateElementResults.video.currentTime = 50;
+            this._mediaPlayer.playFrom(50.999);
+
+            stubCreateElementResults.video.currentTime = 70;
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(70, stubCreateElementResults.video.currentTime);
         });
     };
 

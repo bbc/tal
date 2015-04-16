@@ -92,4 +92,66 @@
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetCurrentTimeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getCurrentTime', 0);
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetSeekableRangeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getSeekableRange', 0);
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetStateReturnsState = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            assertEquals("EMPTY", livePlayer.getState());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetSourceReturnsSource = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
+
+            assertEquals("http://test.mp4", livePlayer.getSource());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetMimeTypeReturnsMimeType = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
+
+            assertEquals("video/mp4", livePlayer.getMimeType());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetCurrentTimeReturnsCurrentTime = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
+
+            assertEquals(30, livePlayer.getCurrentTime());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetSeekableRangeReturnsSeekableRange = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            var expectedRange = {
+                "start": 0,
+                "end": 30
+            };
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
+
+            assertEquals(expectedRange, livePlayer.getSeekableRange());
+        }, config);
+    };
 })();
