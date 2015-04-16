@@ -1035,21 +1035,24 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEnterBufferingSentinelDoesNotActivateWhenNewTimeIsBeforeThePreviousTime = function(queue) {
-        expectAsserts(3);
+    mixins.testNoSentinelsActivateWhenCurrentTimeGoesBackwards = function(queue) {
+        expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlaying(self, MediaPlayer, 30);
+            var START_TIME = 30;
+            var SEEK_SENTINEL_TOLERANCE = 15;
+            var END_TIME = START_TIME - (SEEK_SENTINEL_TOLERANCE + 5);
+
+            getToPlaying(self, MediaPlayer, START_TIME);
             advancePlayTime(self);
             advancePlayTime(self);
 
             clearEvents(self);
             fireSentinels(self);
-            stubCreateElementResults.video.currentTime = 10;
+            stubCreateElementResults.video.currentTime = END_TIME;
             fireSentinels(self);
 
-            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertNoEvent(self, MediaPlayer.EVENT.BUFFERING);
+            assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.PLAYING);
         });
     };
