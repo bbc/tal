@@ -1,6 +1,6 @@
 /**
  * @fileOverview Requirejs module containing device modifier for live playback
- * with support level Unseekable
+ * with support level Playable
  *
  * @preserve Copyright (c) 2015 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -26,7 +26,7 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/live/unseekable",
+    "antie/devices/mediaplayer/live/playable",
     [
         "antie/class",
         "antie/runtimecontext",
@@ -45,11 +45,11 @@ require.def(
          * Does NOT implement the following functions:
          * - playFrom, pause, resume, getCurrentTime, getSeekableRange
          * See the documentation on {antie.devices.mediaplayer.MediaPlayer} for API details.
-         * @name antie.devices.mediaplayer.live.Unseekable
+         * @name antie.devices.mediaplayer.live.Playable
          * @class
          * @extends antie.Class
          */
-        var UnseekableLivePlayer = Class.extend({
+        var PlayableLivePlayer = Class.extend({
             init: function() {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             },
@@ -99,13 +99,13 @@ require.def(
 
         Device.prototype.getLivePlayer = function () {
             if(!instance) {
-                instance = new UnseekableLivePlayer();
+                instance = new PlayableLivePlayer();
             }
             return instance;
         };
 
         Device.prototype.getLiveSupport = function () {
-            return MediaPlayer.LIVE_SUPPORT.UNSEEKABLE;
+            return MediaPlayer.LIVE_SUPPORT.PLAYABLE;
         };
     }
 );
