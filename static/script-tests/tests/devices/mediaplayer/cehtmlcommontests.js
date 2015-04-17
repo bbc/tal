@@ -1318,6 +1318,30 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelAttemptCountIsResetByCallingBeginPlaybackFrom = function(queue) {
+        expectAsserts(3);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 50);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            this._mediaPlayer.stop();
+            this._mediaPlayer.beginPlaybackFrom(50);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            resetStubsThenAdvanceTimeThenRunSentinels();
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assert(seekSpy.calledOnce);
+            assertEquals(50000, seekSpy.getCall(0).args[0]);
+        });
+    };
+
     mixins.testWhenBeginPlaybackFromGetsClampedFromStoppedADebugMessageIsLogged = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {

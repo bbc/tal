@@ -1697,6 +1697,31 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelAttemptCountIsResetByCallingBeginPlaybackFrom = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
+
+            this._mediaPlayer.stop();
+            this._mediaPlayer.beginPlaybackFrom(50);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            setPlayTimeToZero(self);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testWhenPlayFromGetsClampedFromStoppedADebugMessageIsLogged = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
