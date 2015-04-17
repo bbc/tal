@@ -587,7 +587,7 @@ require.def(
                         self._mediaElement.currentTime = self._sentinelSeekTime;
                     });
                 } else {
-                    this._sentinelSeekTime = undefined;
+                    this._sentinelSeekTime = currentTime;
                 }
 
                 return sentinelActionTaken;

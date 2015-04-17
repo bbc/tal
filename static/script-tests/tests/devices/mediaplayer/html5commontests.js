@@ -1342,6 +1342,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testSeekSentinelActivatesWhenDeviceReportsNewPositionThenRevertsToOldPosition = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            fireSentinels(self);
+            setPlayTimeToZero(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testPauseSentinelRetriesPauseIfPauseFails = function(queue) {
         expectAsserts(3);
         var self = this;
