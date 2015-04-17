@@ -1099,21 +1099,27 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testNoSentinelsActivateWhenCurrentTimeGoesBackwards = function(queue) {
+    mixins.testNoSentinelsActivateWhenCurrentTimeRunsNormallyThenJumpsBackwards = function(queue) {
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            var START_TIME = 30;
+            var INITIAL_TIME = 30;
             var SEEK_SENTINEL_TOLERANCE = 15;
-            var END_TIME = START_TIME - (SEEK_SENTINEL_TOLERANCE + 5);
+            var AFTER_JUMP_TIME = INITIAL_TIME - (SEEK_SENTINEL_TOLERANCE + 5);
 
-            getToPlaying(self, MediaPlayer, START_TIME);
-            advancePlayTime(self);
-            advancePlayTime(self);
-
+            getToPlaying(self, MediaPlayer, INITIAL_TIME);
             clearEvents(self);
+
+            advancePlayTime(self);
             fireSentinels(self);
-            stubCreateElementResults.video.currentTime = END_TIME;
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            stubCreateElementResults.video.currentTime = AFTER_JUMP_TIME;
             fireSentinels(self);
 
             assertNoEvents(self);

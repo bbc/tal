@@ -586,8 +586,10 @@ require.def(
                     sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function() {
                         self._mediaElement.currentTime = self._sentinelSeekTime;
                     });
-                } else {
+                } else if (this._sentinelIntervalNumber < 3) {
                     this._sentinelSeekTime = currentTime;
+                } else {
+                    this._sentinelSeekTime = undefined;
                 }
 
                 return sentinelActionTaken;
