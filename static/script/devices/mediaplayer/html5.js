@@ -145,7 +145,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function(seconds) {
+            beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelSeekTime = undefined;
                 switch (this.getState()) {
