@@ -644,7 +644,6 @@ require.def(
                 var self = this;
                 this._clearSentinels();
                 this._sentinelIntervalNumber = 0;
-                this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
                 this._sentinelInterval = setInterval(function() {
                     self._sentinelIntervalNumber += 1;
