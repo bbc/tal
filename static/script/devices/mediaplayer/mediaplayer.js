@@ -351,6 +351,7 @@ require.def(
         MediaPlayer.LIVE_SUPPORT = {
             NONE: "none",
             PLAYABLE: "playable",
+            RESTARTABLE: "restartable",
             SEEKABLE: "seekable"
         };
 

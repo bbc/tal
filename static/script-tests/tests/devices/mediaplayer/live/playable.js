@@ -84,13 +84,14 @@
     this.LivePlayerSupportLevelPlayableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInPlayableLive = function (queue) {
-        expectAsserts(5);
+        expectAsserts(6);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
+            assertUndefined(livePlayer.beginPlaybackFrom);
             assertUndefined(livePlayer.playFrom);
             assertUndefined(livePlayer.pause);
             assertUndefined(livePlayer.resume);

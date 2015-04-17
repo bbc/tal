@@ -1,6 +1,6 @@
 /**
  * @fileOverview Requirejs module containing device modifier for live playback
- * with support level Seekable
+ * with support level Restartable
  *
  * @preserve Copyright (c) 2015 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
@@ -26,7 +26,7 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/live/seekable",
+    "antie/devices/mediaplayer/live/restartable",
     [
         "antie/class",
         "antie/runtimecontext",
@@ -37,20 +37,22 @@ require.def(
         "use strict";
 
         /**
-         * Live player for devices that have full support for playing and seeking live streams.
-         * Implements all functions of the underlying {antie.devices.mediaplayer.MediaPlayer}.
-         * See the documentation for that class for API details.
-         * @name antie.devices.mediaplayer.live.Seekable
+         * Live player for devices that support restarting while playing live streams, but cannot seek within them.
+         * Implements only a subset of functions in the underlying {antie.devices.mediaplayer.MediaPlayer}:
+         * - beginPlayback (start playing from the live point, or wherever the device feels like)
+         * - setSource, stop, reset, getState, getSource, getMimeType, addEventCallback, removeEventCallback,
+         *   removeAllEventCallbacks
+         * - beginPlaybackFrom (start playing from an offset)
+         * Does NOT implement the following functions:
+         * - playFrom, pause, resume, getCurrentTime, getSeekableRange
+         * See the documentation on {antie.devices.mediaplayer.MediaPlayer} for API details.
+         * @name antie.devices.mediaplayer.live.Restartable
          * @class
          * @extends antie.Class
          */
-        var SeekableLivePlayer = Class.extend({
+        var RestartableLivePlayer = Class.extend({
             init: function() {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
-            },
-
-            setSource: function(mediaType, sourceUrl, mimeType) {
-                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
             beginPlayback: function() {
@@ -61,16 +63,8 @@ require.def(
                 this._mediaPlayer.beginPlaybackFrom(offset);
             },
 
-            playFrom: function(offset) {
-                this._mediaPlayer.playFrom(offset);
-            },
-
-            pause: function() {
-                this._mediaPlayer.pause();
-            },
-
-            resume: function() {
-                this._mediaPlayer.resume();
+            setSource: function(mediaType, sourceUrl, mimeType) {
+                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
             stop: function() {
@@ -87,14 +81,6 @@ require.def(
 
             getSource: function() {
                 return this._mediaPlayer.getSource();
-            },
-
-            getCurrentTime: function() {
-                return this._mediaPlayer.getCurrentTime();
-            },
-
-            getSeekableRange: function() {
-                return this._mediaPlayer.getSeekableRange();
             },
 
             getMimeType: function() {
@@ -118,13 +104,13 @@ require.def(
 
         Device.prototype.getLivePlayer = function () {
             if(!instance) {
-                instance = new SeekableLivePlayer();
+                instance = new RestartableLivePlayer();
             }
             return instance;
         };
 
         Device.prototype.getLiveSupport = function () {
-            return MediaPlayer.LIVE_SUPPORT.SEEKABLE;
+            return MediaPlayer.LIVE_SUPPORT.RESTARTABLE;
         };
     }
 );

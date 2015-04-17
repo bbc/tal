@@ -173,6 +173,26 @@ require.def(
             },
 
             /**
+             * @inheritDoc
+             */
+            beginPlaybackFrom: function(seconds) {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                        this._setDisplayFullScreenForVideo();
+                        this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
+                        this._toBuffering();
+                        break;
+
+                    default:
+                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
+                        break;
+                }
+            },
+
+            /**
             * @inheritDoc
             */
             pause: function () {

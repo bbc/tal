@@ -715,6 +715,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testBeginPlaybackFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(10);
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            assert(stubCreateElementResults.video.play.called);
+            assertEquals(10, stubCreateElementResults.video.currentTime);
+        });
+    };
+
     mixins.testPlayFromClampsWhenCalledInStoppedState = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -1673,6 +1687,31 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             setPlayTimeToZero(self);
 
             this._mediaPlayer.playFrom(50);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            setPlayTimeToZero(self);
+
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelAttemptCountIsResetByCallingBeginPlaybackFrom = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+
+            setPlayTimeToZero(self);
+            resetStubsThenAdvanceTimeThenRunSentinels(self);
+            setPlayTimeToZero(self);
+
+            this._mediaPlayer.stop();
+            this._mediaPlayer.beginPlaybackFrom(50);
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
             setPlayTimeToZero(self);
 
