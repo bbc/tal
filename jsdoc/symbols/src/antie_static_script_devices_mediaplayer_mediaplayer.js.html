@@ -161,199 +161,223 @@
 <span class='line'>154</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>155</span> 
 <span class='line'>156</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>157</span>              * Request that the media start playing from Time.
+<span class='line'>157</span>              * Request that the media seeks to and starts playing from Time.
 <span class='line'>158</span>              * A media source must have been set with setSource before calling this.
-<span class='line'>159</span>              * This can be used to resume media after changing source.
-<span class='line'>160</span>              * This may transition to the buffering state if enough media data is not yet available to play.
-<span class='line'>161</span>              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-<span class='line'>162</span>              * Calling this in state EMPTY is an error.
-<span class='line'>163</span>              * Clamps the time to the seekable range of the media.
-<span class='line'>164</span>              * If trying to play at (or past) the very end of the media, this will actually begin playback just before the end.
-<span class='line'>165</span>              * This allows the media playback to complete normally.
-<span class='line'>166</span>              * @param {Number} seconds Time to play from in seconds from the start of the media
-<span class='line'>167</span>              */</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">            </span><span class="NAME">playFrom</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">seconds</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>169</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"playFrom method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>171</span> 
-<span class='line'>172</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>173</span>              * Begin playback of the media resource from wherever the device chooses.
-<span class='line'>174</span>              * For On Demand assets, this will normally be the start, for Live stream assets it should be the live point
-<span class='line'>175</span>              * but could be the start of the stream window on some devices.
-<span class='line'>176</span>              * This function can only be called from the STOPPED state; calling it from any other state is an error.
-<span class='line'>177</span>              * To begin playback from a specified time offset, use the playFrom function instead.
-<span class='line'>178</span>              */</span><span class="WHIT">
-<span class='line'>179</span> </span><span class="WHIT">            </span><span class="NAME">beginPlayback</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>180</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"beginPlayback method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>181</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>182</span> 
-<span class='line'>183</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>184</span>              * Request that the media be paused.
-<span class='line'>185</span>              * If the Media is playing, call this to pause it.
-<span class='line'>186</span>              * If the media is buffering, call this to resume playback in a paused state once buffering ends.
-<span class='line'>187</span>              * Calling this in state EMPTY or STOPPED is an error.
-<span class='line'>188</span>              */</span><span class="WHIT">
-<span class='line'>189</span> </span><span class="WHIT">            </span><span class="NAME">pause</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>190</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"pause method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>191</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>192</span> 
-<span class='line'>193</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>194</span>              * Request that the media resume playing after being paused.
-<span class='line'>195</span>              * If the Media is paused, call this to resume playing it.
-<span class='line'>196</span>              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-<span class='line'>197</span>              * Calling this in state EMPTY or STOPPED is an error.
-<span class='line'>198</span>              */</span><span class="WHIT">
-<span class='line'>199</span> </span><span class="WHIT">            </span><span class="NAME">resume</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>200</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"resume method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>201</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>202</span> 
-<span class='line'>203</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>204</span>              * Request that the media be stopped.
-<span class='line'>205</span>              * If the Media is playing, call this to stop the media.
-<span class='line'>206</span>              * Note that the source is still set after calling stop.
-<span class='line'>207</span>              * Call reset after stop to unset the source.
-<span class='line'>208</span>              * Calling this in state EMPTY is an error.
-<span class='line'>209</span>              */</span><span class="WHIT">
-<span class='line'>210</span> </span><span class="WHIT">            </span><span class="NAME">stop</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>211</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"stop method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>212</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>213</span> 
-<span class='line'>214</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>215</span>              * Reset the Media Player.
-<span class='line'>216</span>              * When the media is stopped, calling reset will reset the player to a clean state with no source set.
-<span class='line'>217</span>              * Calling this in any state other than STOPPED or ERROR is an error.
-<span class='line'>218</span>              */</span><span class="WHIT">
-<span class='line'>219</span> </span><span class="WHIT">            </span><span class="NAME">reset</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>220</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"reset method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>221</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>222</span> 
-<span class='line'>223</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>224</span>              * Get the source URL.
-<span class='line'>225</span>              * If no source is set (in state EMPTY for example), then this returns undefined.
-<span class='line'>226</span>              * @return {String} The URL
-<span class='line'>227</span>              */</span><span class="WHIT">
-<span class='line'>228</span> </span><span class="WHIT">            </span><span class="NAME">getSource</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>229</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getSource method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>230</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>231</span> 
-<span class='line'>232</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>233</span>             * Get the source MIME type.
-<span class='line'>234</span>             * If no source is set (in state EMPTY for example), then this returns undefined.
-<span class='line'>235</span>             * @return {String} The MIME type
-<span class='line'>236</span>             */</span><span class="WHIT">
-<span class='line'>237</span> </span><span class="WHIT">            </span><span class="NAME">getMimeType</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>238</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getMimeType method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>239</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>240</span> 
-<span class='line'>241</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>242</span>             * Get the current play time.
-<span class='line'>243</span>             * If no current time is available, then this returns undefined.
-<span class='line'>244</span>             * @return {Number} The current play time in seconds from the start of the media.
-<span class='line'>245</span>             */</span><span class="WHIT">
-<span class='line'>246</span> </span><span class="WHIT">            </span><span class="NAME">getCurrentTime</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>247</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getCurrentTime method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>248</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>249</span> 
-<span class='line'>250</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>251</span>             * Get the available seekable range of media.
-<span class='line'>252</span>             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
-<span class='line'>253</span>             * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
-<span class='line'>254</span>             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
-<span class='line'>255</span>             * For live playback, 'end' is the current live time.
-<span class='line'>256</span>             * For live playback, both 'start' and 'end' may advance over time.
-<span class='line'>257</span>             * If no range is available, this returns undefined.
-<span class='line'>258</span>             * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
-<span class='line'>259</span>             */</span><span class="WHIT">
-<span class='line'>260</span> </span><span class="WHIT">            </span><span class="NAME">getSeekableRange</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>261</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getSeekableRange method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>262</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>263</span> 
-<span class='line'>264</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>265</span>              * Get the duration of the media in seconds.
-<span class='line'>266</span>              * For VOD playback, this is the duration of the media.
-<span class='line'>267</span>              * For Live playback, this is positive Infinity.
-<span class='line'>268</span>              * If no duration is available, this returns undefined.
-<span class='line'>269</span>              * @return {Number} Duration of media in seconds, or Infinity, or undefined.
-<span class='line'>270</span>              */</span><span class="WHIT">
-<span class='line'>271</span> </span><span class="WHIT">            </span><span class="NAME">getDuration</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>272</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getDuration method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>273</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>274</span> 
-<span class='line'>275</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'>276</span>             * Get the current state of the Media PLayer state machine.
-<span class='line'>277</span>             * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
-<span class='line'>278</span>             */</span><span class="WHIT">
-<span class='line'>279</span> </span><span class="WHIT">            </span><span class="NAME">getState</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>280</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getState method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>281</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>282</span> 
-<span class='line'>283</span> </span><span class="WHIT">            </span><span class="NAME">_getClampOffsetFromConfig</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>284</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>285</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RuntimeContext.getDevice</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getConfig</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>286</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">config.streaming</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">config.streaming.overrides</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>287</span> </span><span class="WHIT">                    </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.streaming.overrides.clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>288</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>289</span> 
-<span class='line'>290</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">clampOffsetFromEndOfRange</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>291</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>292</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>293</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.CLAMP_OFFSET_FROM_END_OF_RANGE</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>294</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>295</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>296</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>297</span> 
-<span class='line'>298</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>299</span>         * An enumeration of possible media player states.
-<span class='line'>300</span>         * @name antie.devices.mediaplayer.MediaPlayer.STATE
-<span class='line'>301</span>         * @enum {String}
-<span class='line'>302</span>         */</span><span class="WHIT">
-<span class='line'>303</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.STATE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>304</span> </span><span class="WHIT">            </span><span class="NAME">EMPTY</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"EMPTY"</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="COMM">// No source set</span><span class="WHIT">
-<span class='line'>305</span> </span><span class="WHIT">            </span><span class="NAME">STOPPED</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"STOPPED"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Source set but no playback</span><span class="WHIT">
-<span class='line'>306</span> </span><span class="WHIT">            </span><span class="NAME">BUFFERING</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"BUFFERING"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Not enough data to play, waiting to download more</span><span class="WHIT">
-<span class='line'>307</span> </span><span class="WHIT">            </span><span class="NAME">PLAYING</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"PLAYING"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Media is playing</span><span class="WHIT">
-<span class='line'>308</span> </span><span class="WHIT">            </span><span class="NAME">PAUSED</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"PAUSED"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Media is paused</span><span class="WHIT">
-<span class='line'>309</span> </span><span class="WHIT">            </span><span class="NAME">COMPLETE</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"COMPLETE"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Media has reached its end point</span><span class="WHIT">
-<span class='line'>310</span> </span><span class="WHIT">            </span><span class="NAME">ERROR</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"ERROR"</span><span class="WHIT">      </span><span class="COMM">// An error occurred</span><span class="WHIT">
-<span class='line'>311</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>312</span> 
-<span class='line'>313</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>314</span>         * Media Player event names
-<span class='line'>315</span>         * @name antie.devices.mediaplayer.MediaPlayer.EVENT
-<span class='line'>316</span>         * @enum {String}
-<span class='line'>317</span>         */</span><span class="WHIT">
-<span class='line'>318</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.EVENT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>319</span> </span><span class="WHIT">            </span><span class="NAME">STOPPED</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"stopped"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when playback is stopped</span><span class="WHIT">
-<span class='line'>320</span> </span><span class="WHIT">            </span><span class="NAME">BUFFERING</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"buffering"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Event fired when playback has to suspend due to buffering</span><span class="WHIT">
-<span class='line'>321</span> </span><span class="WHIT">            </span><span class="NAME">PLAYING</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"playing"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when starting (or resuming) playing of the media</span><span class="WHIT">
-<span class='line'>322</span> </span><span class="WHIT">            </span><span class="NAME">PAUSED</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"paused"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Event fired when media playback pauses</span><span class="WHIT">
-<span class='line'>323</span> </span><span class="WHIT">            </span><span class="NAME">COMPLETE</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"complete"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Event fired when media playback has reached the end of the media</span><span class="WHIT">
-<span class='line'>324</span> </span><span class="WHIT">            </span><span class="NAME">ERROR</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"error"</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="COMM">// Event fired when an error condition occurs</span><span class="WHIT">
-<span class='line'>325</span> </span><span class="WHIT">            </span><span class="NAME">STATUS</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"status"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Event fired regularly during play</span><span class="WHIT">
-<span class='line'>326</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_ENTER_BUFFERING</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"sentinel-enter-buffering"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Event fired when a sentinel has to act because the device has started buffering but not reported it</span><span class="WHIT">
-<span class='line'>327</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_EXIT_BUFFERING</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"sentinel-exit-buffering"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Event fired when a sentinel has to act because the device has finished buffering but not reported it</span><span class="WHIT">
-<span class='line'>328</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PAUSE</span><span class="PUNC">:</span><span class="WHIT">            </span><span class="STRN">"sentinel-pause"</span><span class="PUNC">,</span><span class="WHIT">           </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to pause when expected</span><span class="WHIT">
-<span class='line'>329</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PLAY</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"sentinel-play"</span><span class="PUNC">,</span><span class="WHIT">            </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to play when expected</span><span class="WHIT">
-<span class='line'>330</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_SEEK</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"sentinel-seek"</span><span class="PUNC">,</span><span class="WHIT">            </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to seek to the correct location</span><span class="WHIT">
-<span class='line'>331</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_COMPLETE</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="STRN">"sentinel-complete"</span><span class="PUNC">,</span><span class="WHIT">        </span><span class="COMM">// Event fired when a sentinel has to act because the device has completed the media but not reported it</span><span class="WHIT">
-<span class='line'>332</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PAUSE_FAILURE</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"sentinel-pause-failure"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when the pause sentinel has failed twice, so it is giving up</span><span class="WHIT">
-<span class='line'>333</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_SEEK_FAILURE</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"sentinel-seek-failure"</span><span class="WHIT">     </span><span class="COMM">// Event fired when the seek sentinel has failed twice, so it is giving up</span><span class="WHIT">
-<span class='line'>334</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>335</span> 
-<span class='line'>336</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'>337</span>          * An enumeration of valid Media Types.
-<span class='line'>338</span>          * @name antie.devices.mediaplayer.MediaPlayer.TYPE
-<span class='line'>339</span>          * @enum {String}
-<span class='line'>340</span>          */</span><span class="WHIT">
-<span class='line'>341</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.TYPE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>342</span> </span><span class="WHIT">            </span><span class="NAME">VIDEO</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"video"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>343</span> </span><span class="WHIT">            </span><span class="NAME">AUDIO</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"audio"</span><span class="WHIT">
-<span class='line'>344</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>345</span> 
-<span class='line'>346</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">MediaPlayer</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>347</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>348</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>349</span> </span></pre><script type="text/javascript">
+<span class='line'>159</span>              * This may transition to the buffering state if enough media data is not yet available to play.
+<span class='line'>160</span>              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
+<span class='line'>161</span>              * Calling this in state EMPTY or STOPPED is an error.
+<span class='line'>162</span>              * Clamps the time to the seekable range of the media.
+<span class='line'>163</span>              * If trying to seek to (or past) the very end of the media, this will actually seek to before the end.
+<span class='line'>164</span>              * This allows the media playback to complete normally.
+<span class='line'>165</span>              * @param {Number} seconds Time to play from in seconds from the start of the media
+<span class='line'>166</span>              */</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">            </span><span class="NAME">playFrom</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">seconds</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"playFrom method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>170</span> 
+<span class='line'>171</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>172</span>              * Begin playback of the media resource from wherever the device chooses.
+<span class='line'>173</span>              * For On Demand assets, this will normally be the start, for Live stream assets it should be the live point
+<span class='line'>174</span>              * but could be the start of the stream window on some devices.
+<span class='line'>175</span>              * This function can only be called from the STOPPED state; calling it from any other state is an error.
+<span class='line'>176</span>              * To begin playback from a specified time offset, use the playFrom function instead.
+<span class='line'>177</span>              */</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">            </span><span class="NAME">beginPlayback</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"beginPlayback method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>181</span> 
+<span class='line'>182</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>183</span>              * Begin playback of the media resource from Time.
+<span class='line'>184</span>              * A media source must have been set with setSource before calling this.
+<span class='line'>185</span>              * This can be used to resume media after changing source.
+<span class='line'>186</span>              * This function can only be called from the STOPPED state; calling it from any other state is an error.
+<span class='line'>187</span>              * Clamps the time to the seekable range of the media.
+<span class='line'>188</span>              * If trying to play at (or past) the very end of the media, this will actually begin playback before the end.
+<span class='line'>189</span>              * @param {Number} seconds Time to play from in seconds from the start of the media
+<span class='line'>190</span>              */</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">            </span><span class="NAME">beginPlaybackFrom</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">seconds</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"beginPlaybackFrom method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>194</span> 
+<span class='line'>195</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>196</span>              * Request that the media be paused.
+<span class='line'>197</span>              * If the Media is playing, call this to pause it.
+<span class='line'>198</span>              * If the media is buffering, call this to resume playback in a paused state once buffering ends.
+<span class='line'>199</span>              * Calling this in state EMPTY or STOPPED is an error.
+<span class='line'>200</span>              */</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">            </span><span class="NAME">pause</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"pause method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>204</span> 
+<span class='line'>205</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>206</span>              * Request that the media resume playing after being paused.
+<span class='line'>207</span>              * If the Media is paused, call this to resume playing it.
+<span class='line'>208</span>              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
+<span class='line'>209</span>              * Calling this in state EMPTY or STOPPED is an error.
+<span class='line'>210</span>              */</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">            </span><span class="NAME">resume</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"resume method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>214</span> 
+<span class='line'>215</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>216</span>              * Request that the media be stopped.
+<span class='line'>217</span>              * If the Media is playing, call this to stop the media.
+<span class='line'>218</span>              * Note that the source is still set after calling stop.
+<span class='line'>219</span>              * Call reset after stop to unset the source.
+<span class='line'>220</span>              * Calling this in state EMPTY is an error.
+<span class='line'>221</span>              */</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">            </span><span class="NAME">stop</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"stop method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>225</span> 
+<span class='line'>226</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>227</span>              * Reset the Media Player.
+<span class='line'>228</span>              * When the media is stopped, calling reset will reset the player to a clean state with no source set.
+<span class='line'>229</span>              * Calling this in any state other than STOPPED or ERROR is an error.
+<span class='line'>230</span>              */</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">            </span><span class="NAME">reset</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"reset method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>234</span> 
+<span class='line'>235</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>236</span>              * Get the source URL.
+<span class='line'>237</span>              * If no source is set (in state EMPTY for example), then this returns undefined.
+<span class='line'>238</span>              * @return {String} The URL
+<span class='line'>239</span>              */</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">            </span><span class="NAME">getSource</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getSource method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>243</span> 
+<span class='line'>244</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>245</span>             * Get the source MIME type.
+<span class='line'>246</span>             * If no source is set (in state EMPTY for example), then this returns undefined.
+<span class='line'>247</span>             * @return {String} The MIME type
+<span class='line'>248</span>             */</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">            </span><span class="NAME">getMimeType</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getMimeType method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>252</span> 
+<span class='line'>253</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>254</span>             * Get the current play time.
+<span class='line'>255</span>             * If no current time is available, then this returns undefined.
+<span class='line'>256</span>             * @return {Number} The current play time in seconds from the start of the media.
+<span class='line'>257</span>             */</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">            </span><span class="NAME">getCurrentTime</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getCurrentTime method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>261</span> 
+<span class='line'>262</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>263</span>             * Get the available seekable range of media.
+<span class='line'>264</span>             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
+<span class='line'>265</span>             * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
+<span class='line'>266</span>             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
+<span class='line'>267</span>             * For live playback, 'end' is the current live time.
+<span class='line'>268</span>             * For live playback, both 'start' and 'end' may advance over time.
+<span class='line'>269</span>             * If no range is available, this returns undefined.
+<span class='line'>270</span>             * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
+<span class='line'>271</span>             */</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">            </span><span class="NAME">getSeekableRange</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getSeekableRange method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>275</span> 
+<span class='line'>276</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>277</span>              * Get the duration of the media in seconds.
+<span class='line'>278</span>              * For VOD playback, this is the duration of the media.
+<span class='line'>279</span>              * For Live playback, this is positive Infinity.
+<span class='line'>280</span>              * If no duration is available, this returns undefined.
+<span class='line'>281</span>              * @return {Number} Duration of media in seconds, or Infinity, or undefined.
+<span class='line'>282</span>              */</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">            </span><span class="NAME">getDuration</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getDuration method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>286</span> 
+<span class='line'>287</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>288</span>             * Get the current state of the Media PLayer state machine.
+<span class='line'>289</span>             * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
+<span class='line'>290</span>             */</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">            </span><span class="NAME">getState</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">"getState method has not been implemented"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>294</span> 
+<span class='line'>295</span> </span><span class="WHIT">            </span><span class="NAME">_getClampOffsetFromConfig</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">RuntimeContext.getDevice</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">getConfig</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">config</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">config.streaming</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">config.streaming.overrides</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">                    </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.streaming.overrides.clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>301</span> 
+<span class='line'>302</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">clampOffsetFromEndOfRange</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">clampOffsetFromEndOfRange</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">                    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.CLAMP_OFFSET_FROM_END_OF_RANGE</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> 
+<span class='line'>310</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>311</span>         * An enumeration of possible media player states.
+<span class='line'>312</span>         * @name antie.devices.mediaplayer.MediaPlayer.STATE
+<span class='line'>313</span>         * @enum {String}
+<span class='line'>314</span>         */</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.STATE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">            </span><span class="NAME">EMPTY</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"EMPTY"</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="COMM">// No source set</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">            </span><span class="NAME">STOPPED</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"STOPPED"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Source set but no playback</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">            </span><span class="NAME">BUFFERING</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"BUFFERING"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Not enough data to play, waiting to download more</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">            </span><span class="NAME">PLAYING</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"PLAYING"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Media is playing</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">            </span><span class="NAME">PAUSED</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"PAUSED"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Media is paused</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">            </span><span class="NAME">COMPLETE</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"COMPLETE"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Media has reached its end point</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">            </span><span class="NAME">ERROR</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"ERROR"</span><span class="WHIT">      </span><span class="COMM">// An error occurred</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>324</span> 
+<span class='line'>325</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>326</span>         * Media Player event names
+<span class='line'>327</span>         * @name antie.devices.mediaplayer.MediaPlayer.EVENT
+<span class='line'>328</span>         * @enum {String}
+<span class='line'>329</span>         */</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.EVENT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">            </span><span class="NAME">STOPPED</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"stopped"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when playback is stopped</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">            </span><span class="NAME">BUFFERING</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"buffering"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Event fired when playback has to suspend due to buffering</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">            </span><span class="NAME">PLAYING</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"playing"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when starting (or resuming) playing of the media</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">            </span><span class="NAME">PAUSED</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"paused"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Event fired when media playback pauses</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">            </span><span class="NAME">COMPLETE</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"complete"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Event fired when media playback has reached the end of the media</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">            </span><span class="NAME">ERROR</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"error"</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="COMM">// Event fired when an error condition occurs</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">            </span><span class="NAME">STATUS</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"status"</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="COMM">// Event fired regularly during play</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_ENTER_BUFFERING</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"sentinel-enter-buffering"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// Event fired when a sentinel has to act because the device has started buffering but not reported it</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_EXIT_BUFFERING</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="STRN">"sentinel-exit-buffering"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// Event fired when a sentinel has to act because the device has finished buffering but not reported it</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PAUSE</span><span class="PUNC">:</span><span class="WHIT">            </span><span class="STRN">"sentinel-pause"</span><span class="PUNC">,</span><span class="WHIT">           </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to pause when expected</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PLAY</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"sentinel-play"</span><span class="PUNC">,</span><span class="WHIT">            </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to play when expected</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_SEEK</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"sentinel-seek"</span><span class="PUNC">,</span><span class="WHIT">            </span><span class="COMM">// Event fired when a sentinel has to act because the device has failed to seek to the correct location</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_COMPLETE</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="STRN">"sentinel-complete"</span><span class="PUNC">,</span><span class="WHIT">        </span><span class="COMM">// Event fired when a sentinel has to act because the device has completed the media but not reported it</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_PAUSE_FAILURE</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">"sentinel-pause-failure"</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// Event fired when the pause sentinel has failed twice, so it is giving up</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">            </span><span class="NAME">SENTINEL_SEEK_FAILURE</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="STRN">"sentinel-seek-failure"</span><span class="WHIT">     </span><span class="COMM">// Event fired when the seek sentinel has failed twice, so it is giving up</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> 
+<span class='line'>348</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>349</span>          * An enumeration of valid Media Types.
+<span class='line'>350</span>          * @name antie.devices.mediaplayer.MediaPlayer.TYPE
+<span class='line'>351</span>          * @enum {String}
+<span class='line'>352</span>          */</span><span class="WHIT">
+<span class='line'>353</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.TYPE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">            </span><span class="NAME">VIDEO</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"video"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">            </span><span class="NAME">AUDIO</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"audio"</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>357</span> 
+<span class='line'>358</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>359</span>          * Levels of support for the live media player
+<span class='line'>360</span>          * @name antie.devices.mediaplayer.MediaPlayer.LIVE_SUPPORT
+<span class='line'>361</span>          * @enum {String}
+<span class='line'>362</span>          */</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">        </span><span class="NAME">MediaPlayer.LIVE_SUPPORT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">            </span><span class="NAME">NONE</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"none"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">            </span><span class="NAME">PLAYABLE</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"playable"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">            </span><span class="NAME">RESTARTABLE</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"restartable"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="WHIT">            </span><span class="NAME">SEEKABLE</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"seekable"</span><span class="WHIT">
+<span class='line'>368</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>369</span> 
+<span class='line'>370</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">MediaPlayer</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>371</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>373</span> </span></pre><script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-38709464-1']);
       _gaq.push(['_trackPageview']);
