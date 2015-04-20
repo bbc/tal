@@ -154,14 +154,13 @@ require.def(
             },
 
             /**
-             * Request that the media start playing from Time.
+             * Request that the media seeks to and starts playing from Time.
              * A media source must have been set with setSource before calling this.
-             * This can be used to resume media after changing source.
              * This may transition to the buffering state if enough media data is not yet available to play.
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-             * Calling this in state EMPTY is an error.
+             * Calling this in state EMPTY or STOPPED is an error.
              * Clamps the time to the seekable range of the media.
-             * If trying to play at (or past) the very end of the media, this will actually begin playback just before the end.
+             * If trying to seek to (or past) the very end of the media, this will actually seek to before the end.
              * This allows the media playback to complete normally.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
@@ -178,6 +177,19 @@ require.def(
              */
             beginPlayback: function () {
                 throw new Error("beginPlayback method has not been implemented");
+            },
+
+            /**
+             * Begin playback of the media resource from Time.
+             * A media source must have been set with setSource before calling this.
+             * This can be used to resume media after changing source.
+             * This function can only be called from the STOPPED state; calling it from any other state is an error.
+             * Clamps the time to the seekable range of the media.
+             * If trying to play at (or past) the very end of the media, this will actually begin playback before the end.
+             * @param {Number} seconds Time to play from in seconds from the start of the media
+             */
+            beginPlaybackFrom: function (seconds) {
+                throw new Error("beginPlaybackFrom method has not been implemented");
             },
 
             /**
