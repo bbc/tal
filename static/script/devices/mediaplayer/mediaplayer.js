@@ -154,7 +154,7 @@ require.def(
             },
 
             /**
-             * Request that the media seeks to Time.
+             * Request that the media seeks to and starts playing from Time.
              * A media source must have been set with setSource before calling this.
              * This may transition to the buffering state if enough media data is not yet available to play.
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
