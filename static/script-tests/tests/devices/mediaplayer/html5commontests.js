@@ -1113,6 +1113,34 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testNoSentinelsActivateWhenCurrentTimeRunsNormallyThenJumpsBackwards = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var INITIAL_TIME = 30;
+            var SEEK_SENTINEL_TOLERANCE = 15;
+            var AFTER_JUMP_TIME = INITIAL_TIME - (SEEK_SENTINEL_TOLERANCE + 5);
+
+            getToPlaying(self, MediaPlayer, INITIAL_TIME);
+            clearEvents(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            stubCreateElementResults.video.currentTime = AFTER_JUMP_TIME;
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
     mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWhenOnlyOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -1331,6 +1359,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertNoEvents(self);
             assertEquals(1, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelActivatesWhenDeviceReportsNewPositionThenRevertsToOldPosition = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 50);
+            fireSentinels(self);
+            setPlayTimeToZero(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(50, stubCreateElementResults.video.currentTime);
         });
     };
 

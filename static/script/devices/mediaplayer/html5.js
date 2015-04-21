@@ -576,7 +576,7 @@ require.def(
 
             _enterBufferingSentinel: function() {
                 var notFirstSentinelActivationSinceStateChange = this._sentinelIntervalNumber > 1;
-                if(!this._hasSentinelTimeAdvanced && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange) {
+                if(!this._hasSentinelTimeChanged && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     return true;
@@ -585,7 +585,7 @@ require.def(
             },
 
             _exitBufferingSentinel: function() {
-                if(this._hasSentinelTimeAdvanced || this._mediaElement.paused) {
+                if(this._hasSentinelTimeChanged || this._mediaElement.paused) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     this._exitBuffering();
                     return true;
@@ -606,8 +606,10 @@ require.def(
                     sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function() {
                         self._mediaElement.currentTime = self._sentinelSeekTime;
                     });
-                } else {
+                } else if (this._sentinelIntervalNumber < 3) {
                     this._sentinelSeekTime = currentTime;
+                } else {
+                    this._sentinelSeekTime = undefined;
                 }
 
                 return sentinelActionTaken;
@@ -662,12 +664,12 @@ require.def(
                 var self = this;
                 this._clearSentinels();
                 this._sentinelIntervalNumber = 0;
-                this._sentinelSetTime = this.getCurrentTime();
                 this._lastSentinelTime = this.getCurrentTime();
                 this._sentinelInterval = setInterval(function() {
                     self._sentinelIntervalNumber += 1;
                     var newTime = self.getCurrentTime();
                     self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
+                    self._hasSentinelTimeChanged = (Math.abs(newTime - self._lastSentinelTime) > 0.2);
                     self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
                     for (var i = 0; i < sentinels.length; i++) {
