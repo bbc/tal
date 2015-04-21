@@ -67,14 +67,14 @@ The playback state can be accessed using `getState()`.
 #### In state `EMPTY`
 * On entry to state: clear source url
 * Call `setSource(url)` : store the url and transition to `STOPPED`
-* Call `playFrom(), beginPlayback(), pause(), resume() or stop()`: transition to `ERROR`
+* Call `playFrom(), beginPlayback(), beginPlaybackFrom(), pause(), resume() or stop()`: transition to `ERROR`
 
 #### In state `STOPPED`
 * On entry to state: Cancel all playback and fire event type `MediaPlayer.EVENT.STOPPED`
-* Call `playFrom(time)` : request playback from 'time' (clamped to the available range), transition to `BUFFERING`
+* Call `beginPlaybackFrom(time)` : request playback from 'time' (clamped to the available range), transition to `BUFFERING`
 * Call `reset()` : transition to `EMPTY`
 * Call `beginPlayback()` : begin playback from wherever the device can (could be anywhere for Live, usually media start for VOD), transition to `BUFFERING`
-* Call `setSource(), pause(), resume() or stop()`: transition to `ERROR`
+* Call `setSource(), playFrom() pause(), resume() or stop()`: transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `STOPPED`
 * On network error : transition to `ERROR`
 
@@ -84,7 +84,7 @@ The playback state can be accessed using `getState()`.
 * Call `stop()` : transition to `STOPPED`
 * Call `pause()` : When buffering is complete, remember to pause playback and transition to `PAUSED` when sufficient data is available
 * Call `resume()` : When buffering is complete, remember to resume playback and transition to `PLAYING` when sufficient data is available
-* Call `beginPlayback(), reset() or setSource()`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource()`: transition to `ERROR`
 * If sufficient data is available for playback, transition to either `PLAYING` or `PAUSED` as required
 * If the implementation can determine the duration before it's ready to play, then it should fire event type `MediaPlayer.EVENT.STATUS`
 * On network/playback error : transition to `ERROR`
@@ -95,7 +95,7 @@ The playback state can be accessed using `getState()`.
 * Call `playFrom(time)` : seek to time (clamped to the available range) and transition to BUFFERING
 * Call `stop()` : transition to `STOPPED`
 * Call `resume()` : do nothing
-* Call `beginPlayback(), reset() or setSource`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource`: transition to `ERROR`
 * On playback/network error: transition to `ERROR`
 * At regular intervals (< 1s): fire `MediaPlayer.EVENT.STATUS`
 * On media completion: transition to `COMPLETE`
@@ -107,20 +107,20 @@ The playback state can be accessed using `getState()`.
 * Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
 * Call `stop()` : transition to `STOPPED`
 * Call `pause()` : do nothing
-* Call `beginPlayback(), reset() or setSource()`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource()`: transition to `ERROR`
 
 #### In state `COMPLETE`
 * On entry to state: fire event type `MediaPlayer.EVENT.COMPLETE`
 * Call `stop()` : transition to `STOPPED`
 * Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
-* Call `beginPlayback(), reset(), setSource(), pause() or resume()` : transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset(), setSource(), pause() or resume()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `COMPLETE`
 * On network/playback error : stay in `COMPLETE`
 
 #### In state `ERROR`
 * On entry to state: fire event type `MediaPlayer.EVENT.ERROR`
 * Call `reset()` : transition to `EMPTY`
-* Call `setSource(), beginPlayback(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
+* Call `setSource(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
 ## Setting the media (audio or video) source
@@ -143,17 +143,17 @@ To change the media source, applications must ensure the MediaPlayer is in the `
 
 ## Playing and seeking through media
 
-The `playFrom(seconds)` method will attempt to play the media from the provided time (in seconds).
+The `beginPlaybackFrom(seconds)` method will attempt to play the media from the provided time (in seconds).
 
 For example, to play media from the start: 
 
 {% highlight javascript %}
-this._mediaPlayer.playFrom(0);
+this._mediaPlayer.beginPlaybackFrom(0);
 {% endhighlight %}
 
 This will cause the playback state to change to `BUFFERING` and an event emitted of type `MediaPlayer.EVENT.BUFFERING`.
 
-`beginPlayback()` can also be used. This is sometimes useful when `playFrom(seconds)` fails to work because it cannot determine the duration of the media, for example, on a live stream.
+`beginPlayback()` can also be used. This is sometimes useful when `beginPlaybackFrom(seconds)` fails to work because it cannot determine the duration of the media, for example, on a live stream.
 
 When the device has loaded enough of the video to begin playback, the MediaPlayer will transition to the `PLAYING` state and an event of type `MediaPlayer.EVENT.PLAYING` emitted.
 
