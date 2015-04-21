@@ -186,7 +186,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     var getToBuffering = function(self, MediaPlayer, startTime) {
         self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-        self._mediaPlayer.playFrom(startTime || 0);
+        self._mediaPlayer.beginPlaybackFrom(startTime || 0);
         deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
     };
 
@@ -326,11 +326,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testPlayFromWhenStoppedCallsPlay = function(queue) {
+    mixins.testBeginPlaybackFromWhenStoppedCallsPlay = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.beginPlaybackFrom(0);
 
             assert(playSpy.calledWith(1));
         });
@@ -508,11 +508,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testPlayFromWhenStoppedDefersSeekUntilFinishedBuffering = function(queue) {
+    mixins.testBeginPlaybackFromWhenStoppedDefersSeekUntilFinishedBuffering = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(10);
+            this._mediaPlayer.beginPlaybackFrom(10);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 
             assert(seekSpy.notCalled);
@@ -545,7 +545,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(10);
+            this._mediaPlayer.beginPlaybackFrom(10);
             this._mediaPlayer.playFrom(20);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 
@@ -570,7 +570,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.playFrom(10);
+            this._mediaPlayer.beginPlaybackFrom(10);
             this._mediaPlayer.playFrom(20);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
@@ -594,7 +594,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
             assert(playSpy.calledOnce);
             assert(playSpy.calledWith(1));
@@ -623,7 +623,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(0);
+            this._mediaPlayer.beginPlaybackFrom(0);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -744,7 +744,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             configureSeekToFail();
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.beginPlaybackFrom(30);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -865,7 +865,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.beginPlaybackFrom(30);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
@@ -1002,7 +1002,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             configureSeekToFail();
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(30);
+            this._mediaPlayer.beginPlaybackFrom(30);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1342,7 +1342,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    mixins.testWhenPlayFromGetsClampedFromStoppedADebugMessageIsLogged = function(queue) {
+    mixins.testWhenBeginPlaybackFromGetsClampedFromStoppedADebugMessageIsLogged = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var debugStub = this.sandbox.stub();
@@ -1353,7 +1353,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             });
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            this._mediaPlayer.playFrom(50);
+            this._mediaPlayer.beginPlaybackFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 

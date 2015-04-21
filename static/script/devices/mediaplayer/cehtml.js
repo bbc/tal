@@ -103,12 +103,6 @@ require.def(
                         this._deferSeekingTo = seconds;
                         break;
 
-                    case MediaPlayer.STATE.STOPPED:
-                        // Seeking past 0 requires calling play first when media has not been loaded
-                        this._toBuffering();
-                        this._playAndSetDeferredSeek(seconds);
-                        break;
-
                     case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
                         this._mediaElement.stop();
