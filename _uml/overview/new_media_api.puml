@@ -2,7 +2,7 @@
 [*] --> EMPTY
 EMPTY --> STOPPED : setSource()
 STOPPED --> EMPTY : reset()
-STOPPED --> BUFFERING : playFrom()
+STOPPED --> BUFFERING : beginPlaybackFrom()
 STOPPED --> BUFFERING : beginPlayback()
 BUFFERING --> BUFFERING : playFrom()
 BUFFERING --> BUFFERING :resume()
