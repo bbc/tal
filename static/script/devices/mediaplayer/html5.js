@@ -114,7 +114,6 @@ require.def(
                 this._sentinelLimits.seek.currentAttemptCount = 0;
 
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
                         this._toBuffering();
