@@ -334,7 +334,7 @@ require.def(
                         break;
 
                     default:
-                        if (this._mediaElement) {
+                        if (this._mediaElement && this._readyToPlayFrom) {
                             return this._mediaElement.duration;
                         }
                 }
@@ -414,7 +414,7 @@ require.def(
                     this._toPlaying();
                 }
             },
-            
+
             _metadataLoaded: function () {
                 this._readyToPlayFrom = true;
                 if (this._waitingToPlayFrom()) {

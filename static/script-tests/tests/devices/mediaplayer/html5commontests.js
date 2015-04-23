@@ -428,7 +428,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testGetSeekableRangeGetsEndTimeFromDurationWhenNoSeekableProperty = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -436,7 +436,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             delete stubCreateElementResults.video.seekable;
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getSeekableRange());
-            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
@@ -1824,6 +1823,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEquals(70, stubCreateElementResults.video.currentTime);
         });
     };
+
+    mixins.testGetDurationReturnsUndefinedBeforeMetadataIsSet = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(0);
+            stubCreateElementResults.video.duration = 60;
+            assertUndefined(self._mediaPlayer.getDuration());
+
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            assertEquals(100, self._mediaPlayer.getDuration());
+        });
+    }
 
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
