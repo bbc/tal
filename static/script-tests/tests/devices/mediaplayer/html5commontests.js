@@ -1838,6 +1838,33 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testGetDurationReturnsInfinityWhenDeviceReportsAFalsyDuration = function(queue) {
+        expectAsserts(5);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(0);
+
+            // Need to set metadata otherwise getDuration will be undefined
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 0 });
+
+            stubCreateElementResults.video.duration = 0;
+            assertEquals(Infinity, self._mediaPlayer.getDuration());
+
+            stubCreateElementResults.video.duration = 'foo';
+            assertEquals(Infinity, self._mediaPlayer.getDuration());
+
+            stubCreateElementResults.video.duration = undefined;
+            assertEquals(Infinity, self._mediaPlayer.getDuration());
+
+            stubCreateElementResults.video.duration = null;
+            assertEquals(Infinity, self._mediaPlayer.getDuration());
+
+            stubCreateElementResults.video.duration = Infinity;
+            assertEquals(Infinity, self._mediaPlayer.getDuration());
+        });
+    };
+
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
 

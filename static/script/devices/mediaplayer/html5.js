@@ -334,6 +334,9 @@ require.def(
 
                     default:
                         if (this._mediaElement && this._isReadyToPlayFrom()) {
+                            if (this._mediaElement.duration === 0 || isNaN(this._mediaElement.duration) || this._mediaElement.duration === null) {
+                                return Infinity;
+                            }
                             return this._mediaElement.duration;
                         }
                 }
