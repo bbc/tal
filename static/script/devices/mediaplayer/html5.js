@@ -191,7 +191,7 @@ require.def(
 
                     case MediaPlayer.STATE.BUFFERING:
                         this._sentinelLimits.pause.currentAttemptCount = 0;
-                        if (this._readyToPlayFrom) {
+                        if (this._isReadyToPlayFrom()) {
                             // If we are not ready to playFrom, then calling pause would seek to the start of media, which we might not want.
                             this._mediaElement.pause();
                         }
@@ -219,7 +219,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (this._readyToPlayFrom) {
+                        if (this._isReadyToPlayFrom()) {
                             // If we are not ready to playFrom, then calling play would seek to the start of media, which we might not want.
                             this._mediaElement.play();
                         }
@@ -334,7 +334,7 @@ require.def(
                         break;
 
                     default:
-                        if (this._mediaElement && this._readyToPlayFrom) {
+                        if (this._mediaElement && this._isReadyToPlayFrom()) {
                             return this._mediaElement.duration;
                         }
                 }
@@ -343,7 +343,7 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    if (this._readyToPlayFrom && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
+                    if (this._isReadyToPlayFrom() && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
                         return {
                             start: this._mediaElement.seekable.start(0),
                             end: this._mediaElement.seekable.end(0)
@@ -423,7 +423,7 @@ require.def(
             },
 
             _playFromIfReady: function() {
-                if (this._readyToPlayFrom) {
+                if (this._isReadyToPlayFrom()) {
                     if (this._waitingToPlayFrom()) {
                         this._deferredPlayFrom();
                     }
@@ -679,6 +679,13 @@ require.def(
                         }
                     }
                 }, 1100);
+            },
+
+            _isReadyToPlayFrom: function() {
+                if (this._readyToPlayFrom !== undefined) {
+                    return this._readyToPlayFrom;
+                }
+                return false;
             }
         });
 
