@@ -1141,6 +1141,43 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testNoSentinelsActivateWhenCurrentTimeRunsNormallyThenJumpsBackwardsNearEndOfMedia = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingAtEnd(self, MediaPlayer)
+            clearEvents(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            stubCreateElementResults.video.currentTime = 100;
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
+    mixins.testPauseSentinelActivatesWhenCurrentTimeRunsNormallyThenJumpsBackwardsWhenPaused = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            this._mediaPlayer.pause();
+            clearEvents(self);
+
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
     mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWhenOnlyOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(1);
         var self = this;
