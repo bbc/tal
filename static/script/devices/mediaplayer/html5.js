@@ -647,7 +647,7 @@ require.def(
             },
 
             _endOfMediaSentinel: function() {
-                if (!this._hasSentinelTimeAdvanced && this._nearEndOfMedia) {
+                if (!this._hasSentinelTimeChanged && this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
                     return true;
