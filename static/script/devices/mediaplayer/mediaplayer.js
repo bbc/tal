@@ -293,7 +293,7 @@ require.def(
             },
 
             /**
-             * Get the underlying DOM element used for media playback. Its type and signature will vary by device. In general this should not be used by client applications.
+             * Get the underlying DOM element used for media playback. Its type and signature will vary by device. On devices that do not use HTML5 media playback this will not be a media element. In general this should not be used by client applications.
              * @return {Element} Underlying DOM element used for media playback on this device.
              */
             getPlayerElement: function() {
