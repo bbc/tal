@@ -292,6 +292,14 @@ require.def(
                 throw new Error("getState method has not been implemented");
             },
 
+            /**
+             * Get the underlying DOM element used for media playback. Its type and signature will vary by device. In general this should not be used by client applications.
+             * @return {Element} Underlying DOM element used for media playback on this device.
+             */ 
+            getPlayerElement: function() {
+                throw new Error("getPlayerElement method has not been implemented");
+            },
+
             _getClampOffsetFromConfig: function() {
                 var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
