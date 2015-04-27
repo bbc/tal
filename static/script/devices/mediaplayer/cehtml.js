@@ -307,6 +307,13 @@ require.def(
                 return this._state;
             },
 
+            /**
+             * @inheritDoc
+             */
+            getPlayerElement: function() {
+                return this._mediaElement;
+            },
+
             _onFinishedBuffering: function() {
                 this._cacheRange();
 

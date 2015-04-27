@@ -328,4 +328,8 @@
         mediaPlayer.getState();
     });
 
+    this.MediaPlayerTest.prototype.testMediaPlayerGetPlayerElementThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
+        mediaPlayer.getPlayerElement();
+    });
+
 })();

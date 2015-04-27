@@ -81,7 +81,9 @@
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testLivePlayerRemoveEventCallbackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeEventCallback', 2);
 
-    this.LivePlayerSupportLevelPlayableTest.prototype.testSeekableLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
+    this.LivePlayerSupportLevelPlayableTest.prototype.testLivePlayerRemoveAllEventCallbacksCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('removeAllEventCallbacks', 0);
+
+    this.LivePlayerSupportLevelPlayableTest.prototype.testLivePlayerGetPlayerElementCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getPlayerElement', 0);
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInPlayableLive = function (queue) {
         expectAsserts(6);
@@ -130,6 +132,19 @@
             this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
 
             assertEquals("video/mp4", livePlayer.getMimeType());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelPlayableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            var playerElement = "player element";
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
+
+            assertEquals(playerElement, livePlayer.getPlayerElement());
         }, config);
     };
 })();

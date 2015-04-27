@@ -242,33 +242,33 @@ require.def(
             },
 
             /**
-            * Get the source MIME type.
-            * If no source is set (in state EMPTY for example), then this returns undefined.
-            * @return {String} The MIME type
-            */
+             * Get the source MIME type.
+             * If no source is set (in state EMPTY for example), then this returns undefined.
+             * @return {String} The MIME type
+             */
             getMimeType: function () {
                 throw new Error("getMimeType method has not been implemented");
             },
 
             /**
-            * Get the current play time.
-            * If no current time is available, then this returns undefined.
-            * @return {Number} The current play time in seconds from the start of the media.
-            */
+             * Get the current play time.
+             * If no current time is available, then this returns undefined.
+             * @return {Number} The current play time in seconds from the start of the media.
+             */
             getCurrentTime: function () {
                 throw new Error("getCurrentTime method has not been implemented");
             },
 
             /**
-            * Get the available seekable range of media.
-            * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
-            * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
-            * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
-            * For live playback, 'end' is the current live time.
-            * For live playback, both 'start' and 'end' may advance over time.
-            * If no range is available, this returns undefined.
-            * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
-            */
+             * Get the available seekable range of media.
+             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
+             * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
+             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
+             * For live playback, 'end' is the current live time.
+             * For live playback, both 'start' and 'end' may advance over time.
+             * If no range is available, this returns undefined.
+             * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
+             */
             getSeekableRange: function () {
                 throw new Error("getSeekableRange method has not been implemented");
             },
@@ -285,11 +285,19 @@ require.def(
             },
 
             /**
-            * Get the current state of the Media PLayer state machine.
-            * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
-            */
+             * Get the current state of the Media PLayer state machine.
+             * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
+             */
             getState: function () {
                 throw new Error("getState method has not been implemented");
+            },
+
+            /**
+             * Get the underlying DOM element used for media playback. Its type and signature will vary by device. On devices that do not use HTML5 media playback this will not be a media element. In general this should not be used by client applications.
+             * @return {Element} Underlying DOM element used for media playback on this device.
+             */
+            getPlayerElement: function() {
+                throw new Error("getPlayerElement method has not been implemented");
             },
 
             _getClampOffsetFromConfig: function() {
@@ -308,10 +316,10 @@ require.def(
         });
 
         /**
-        * An enumeration of possible media player states.
-        * @name antie.devices.mediaplayer.MediaPlayer.STATE
-        * @enum {String}
-        */
+         * An enumeration of possible media player states.
+         * @name antie.devices.mediaplayer.MediaPlayer.STATE
+         * @enum {String}
+         */
         MediaPlayer.STATE = {
             EMPTY:      "EMPTY",     // No source set
             STOPPED:    "STOPPED",   // Source set but no playback
@@ -323,10 +331,10 @@ require.def(
         };
 
         /**
-        * Media Player event names
-        * @name antie.devices.mediaplayer.MediaPlayer.EVENT
-        * @enum {String}
-        */
+         * Media Player event names
+         * @name antie.devices.mediaplayer.MediaPlayer.EVENT
+         * @enum {String}
+         */
         MediaPlayer.EVENT = {
             STOPPED:   "stopped",   // Event fired when playback is stopped
             BUFFERING: "buffering", // Event fired when playback has to suspend due to buffering

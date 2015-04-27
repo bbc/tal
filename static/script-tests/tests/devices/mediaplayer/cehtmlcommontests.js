@@ -1361,7 +1361,15 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
-    // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
+    mixins.testGetPlayerElement = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertEquals(fakeCEHTMLObject, this._mediaPlayer.getPlayerElement());
+        });
+    };
+
+   // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
 
     // *******************************************
     // ********* Mixin the functions *************

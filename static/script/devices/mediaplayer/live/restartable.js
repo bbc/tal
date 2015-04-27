@@ -97,6 +97,10 @@ require.def(
 
             removeAllEventCallbacks: function() {
                 this._mediaPlayer.removeAllEventCallbacks();
+            },
+
+            getPlayerElement: function() {
+                return this._mediaPlayer.getPlayerElement();
             }
         });
 
