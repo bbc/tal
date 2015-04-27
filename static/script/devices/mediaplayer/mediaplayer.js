@@ -352,7 +352,9 @@ require.def(
          */
         MediaPlayer.TYPE = {
             VIDEO: "video",
-            AUDIO: "audio"
+            AUDIO: "audio",
+            LIVE_VIDEO: "live-video",
+            LIVE_AUDIO: "live-audio"
         };
 
         /**

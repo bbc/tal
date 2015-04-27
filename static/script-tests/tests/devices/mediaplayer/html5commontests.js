@@ -1838,30 +1838,78 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testGetDurationReturnsInfinityWhenDeviceReportsAFalsyDuration = function(queue) {
-        expectAsserts(5);
+    var assertMediaPlayerDurationMatchesExpectedDuration = function(mediaPlayer, mediaType, actualDurations, expectedDurations){
+        expectAsserts(6);
+
+        mediaPlayer.setSource(mediaType, 'http://testurl/', 'video/mp4');
+        mediaPlayer.beginPlaybackFrom(0);
+
+        // Need to set metadata otherwise getDuration will be undefined
+        deviceMockingHooks.sendMetadata(mediaPlayer, 0, { start: 0, end: 0 });
+
+        for(var i = 0; i < actualDurations.length;i++) {
+            if(mediaType === ("audio" || "live-audio"))
+                stubCreateElementResults.audio.duration = actualDurations[i];
+            else
+                stubCreateElementResults.video.duration = actualDurations[i];
+
+            assertEquals(expectedDurations[i], mediaPlayer.getDuration());
+        }
+      };
+
+    mixins.testGetDurationReturnsInfinityWithALiveVideoStream = function(queue) {
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            self._mediaPlayer.beginPlaybackFrom(0);
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_VIDEO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
 
-            // Need to set metadata otherwise getDuration will be undefined
-            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 0 });
+    mixins.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_AUDIO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
 
-            stubCreateElementResults.video.duration = 0;
-            assertEquals(Infinity, self._mediaPlayer.getDuration());
+    mixins.testGetDurationReturnsDeviceDurationWithAnOnDemandVideoStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = actualDurations;
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.VIDEO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
 
-            stubCreateElementResults.video.duration = 'foo';
-            assertEquals(Infinity, self._mediaPlayer.getDuration());
-
-            stubCreateElementResults.video.duration = undefined;
-            assertEquals(Infinity, self._mediaPlayer.getDuration());
-
-            stubCreateElementResults.video.duration = null;
-            assertEquals(Infinity, self._mediaPlayer.getDuration());
-
-            stubCreateElementResults.video.duration = Infinity;
-            assertEquals(Infinity, self._mediaPlayer.getDuration());
+    mixins.testGetDurationReturnsDeviceDurationWithAnOnDemandAudioStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = actualDurations;
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.AUDIO,
+                actualDurations,
+                expectedDurations
+            );
         });
     };
 
