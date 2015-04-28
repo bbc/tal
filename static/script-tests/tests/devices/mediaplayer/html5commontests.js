@@ -1847,11 +1847,12 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         // Need to set metadata otherwise getDuration will be undefined
         deviceMockingHooks.sendMetadata(mediaPlayer, 0, { start: 0, end: 0 });
 
-        for(var i = 0; i < actualDurations.length;i++) {
-            if(mediaType === ("audio" || "live-audio"))
+        for (var i = 0; i < actualDurations.length; i++) {
+            if (mediaType === "audio" || mediaType === "live-audio") {
                 stubCreateElementResults.audio.duration = actualDurations[i];
-            else
+            } else {
                 stubCreateElementResults.video.duration = actualDurations[i];
+            }
 
             assertEquals(expectedDurations[i], mediaPlayer.getDuration());
         }

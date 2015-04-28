@@ -61,7 +61,11 @@ require.def(
                     this._mimeType = mimeType;
                     var device = RuntimeContext.getDevice();
 
-                    var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
+                    var idSuffix = "Video";
+                    if (mediaType == MediaPlayer.TYPE.AUDIO || mediaType === MediaPlayer.TYPE.LIVE_AUDIO) {
+                        idSuffix = "Audio";
+                    }
+
                     var tagName;
                     switch(mediaType) {
                       case MediaPlayer.TYPE.AUDIO:

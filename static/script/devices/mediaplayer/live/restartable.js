@@ -64,10 +64,11 @@ require.def(
             },
 
             setSource: function(mediaType, sourceUrl, mimeType) {
-                if(mediaType === MediaPlayer.TYPE.AUDIO)
+                if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
-                else
+                } else {
                     mediaType = MediaPlayer.TYPE.LIVE_VIDEO;
+                }
 
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
