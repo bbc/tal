@@ -62,20 +62,11 @@ require.def(
                     var device = RuntimeContext.getDevice();
 
                     var idSuffix = "Video";
-                    if (mediaType == MediaPlayer.TYPE.AUDIO || mediaType === MediaPlayer.TYPE.LIVE_AUDIO) {
+                    if (mediaType === MediaPlayer.TYPE.AUDIO || mediaType === MediaPlayer.TYPE.LIVE_AUDIO) {
                         idSuffix = "Audio";
                     }
 
-                    var tagName;
-                    switch(mediaType) {
-                      case MediaPlayer.TYPE.AUDIO:
-                      case MediaPlayer.TYPE.LIVE_AUDIO:
-                        tagName = 'audio';
-                        break;
-                      default:
-                        tagName = 'video';
-                    }
-                    this._mediaElement = device._createElement(tagName, "mediaPlayer" + idSuffix);
+                    this._mediaElement = device._createElement(idSuffix.toLowerCase(), "mediaPlayer" + idSuffix);
                     this._mediaElement.autoplay = false;
                     this._mediaElement.style.position = "absolute";
                     this._mediaElement.style.top = "0px";

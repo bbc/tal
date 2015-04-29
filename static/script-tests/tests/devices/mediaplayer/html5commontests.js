@@ -314,6 +314,26 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testVideoElementCreatedWhenSettingSourceWithLiveVideoType = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4');
+
+            assert(self._createElementStub.calledWith("video", "mediaPlayerVideo"));
+        });
+    };
+
+    mixins.testAudioElementCreatedWhenSettingSourceWithLiveAudioType = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, 'testURL', 'audio/mp4');
+
+            assert(self._createElementStub.calledWith("audio", "mediaPlayerAudio"));
+        });
+    };
+
     mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
