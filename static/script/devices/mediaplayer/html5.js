@@ -375,6 +375,13 @@ require.def(
                 return this._state;
             },
 
+            /**
+             * @inheritDoc
+             */
+            getPlayerElement: function() {
+                return this._mediaElement;
+            },
+
             _onFinishedBuffering: function() {
                 this._exitBuffering();
             },
@@ -625,7 +632,7 @@ require.def(
 
             _shouldBePausedSentinel: function() {
                 var sentinelActionTaken = false;
-                if (this._hasSentinelTimeAdvanced) {
+                if (this._hasSentinelTimeChanged) {
                     var mediaElement = this._mediaElement;
                     sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.pause, function() {
                         mediaElement.pause();
@@ -656,7 +663,7 @@ require.def(
             },
 
             _endOfMediaSentinel: function() {
-                if (!this._hasSentinelTimeAdvanced && this._nearEndOfMedia) {
+                if (!this._hasSentinelTimeChanged && this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
                     return true;
@@ -676,7 +683,6 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     self._sentinelIntervalNumber += 1;
                     var newTime = self.getCurrentTime();
-                    self._hasSentinelTimeAdvanced = (newTime > self._lastSentinelTime + 0.2);
                     self._hasSentinelTimeChanged = (Math.abs(newTime - self._lastSentinelTime) > 0.2);
                     self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;

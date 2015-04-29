@@ -296,6 +296,13 @@ require.def(
                 return this._state;
             },
 
+            /**
+             * @inheritDoc
+             */
+            getPlayerElement: function() {
+                return this._playerPlugin;
+            },
+
             _onFinishedBuffering: function() {
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;

@@ -95,6 +95,8 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetSeekableRangeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getSeekableRange', 0);
 
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerGetPlayerElementCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getPlayerElement', 0);
+
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetStateReturnsState = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
@@ -156,26 +158,39 @@
             assertEquals(expectedRange, livePlayer.getSeekableRange());
         }, config);
     };
-    
+
     this.LivePlayerSupportLevelSeekableTest.prototype.testMediaTypeIsMutatedToLive = function(queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "","");
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "", "");
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "","");
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "", "");
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "","");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "", "");
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "","");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "", "");
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            var playerElement = "player element";
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
+
+            assertEquals(playerElement, livePlayer.getPlayerElement());
         }, config);
     };
 })();

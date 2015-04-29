@@ -1160,6 +1160,43 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testNoSentinelsActivateWhenCurrentTimeRunsNormallyThenJumpsBackwardsNearEndOfMedia = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingAtEnd(self, MediaPlayer)
+            clearEvents(self);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            stubCreateElementResults.video.currentTime = 100;
+            fireSentinels(self);
+
+            assertNoEvents(self);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
+    mixins.testPauseSentinelActivatesWhenCurrentTimeRunsNormallyThenJumpsBackwardsWhenPaused = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+
+            advancePlayTime(self);
+            fireSentinels(self);
+
+            this._mediaPlayer.pause();
+            clearEvents(self);
+
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
     mixins.testEnterBufferingSentinelDoesNotActivateWhenPlaybackHaltsWhenOnlyOneSentinelIterationSinceStateChanged = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -1934,6 +1971,22 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testGetPlayerElementReturnsVideoElementForVideo = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            assertEquals(stubCreateElementResults.video, this._mediaPlayer.getPlayerElement());
+        });
+    };
+
+    mixins.testGetPlayerElementReturnsAudioElementForAudio = function(queue) {
+        expectAsserts(1);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.AUDIO, 'testURL', 'audio/mp4');
+            assertEquals(stubCreateElementResults.audio, this._mediaPlayer.getPlayerElement());
+        });
+    };
+
     // TODO: Remove references to 'self' that are unecessary due to the use of '.call' in runMediaPlayerTest
     // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if not we should not assert the order in the tests.
 
@@ -1952,7 +2005,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             }
             testCase.prototype[name] = mixins[name];
         }
-    };
+    }
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
     window.commonTests.mediaPlayer.all.mixinTests(testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks);
