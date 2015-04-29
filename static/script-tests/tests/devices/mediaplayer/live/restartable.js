@@ -136,6 +136,28 @@
         }, config);
     };
 
+    this.LivePlayerSupportLevelRestartableTest.prototype.testMediaTypeIsMutatedToLive = function(queue) {
+        expectAsserts(4);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
+
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "", "");
+            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
+
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "", "");
+            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
+
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "", "");
+            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
+
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "", "");
+            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
+        }, config);
+    };
+
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {

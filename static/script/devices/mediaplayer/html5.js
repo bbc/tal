@@ -61,9 +61,12 @@ require.def(
                     this._mimeType = mimeType;
                     var device = RuntimeContext.getDevice();
 
-                    var idSuffix = mediaType === MediaPlayer.TYPE.AUDIO ? "Audio" : "Video";
+                    var idSuffix = "Video";
+                    if (mediaType === MediaPlayer.TYPE.AUDIO || mediaType === MediaPlayer.TYPE.LIVE_AUDIO) {
+                        idSuffix = "Audio";
+                    }
 
-                    this._mediaElement = device._createElement(this._type, "mediaPlayer" + idSuffix);
+                    this._mediaElement = device._createElement(idSuffix.toLowerCase(), "mediaPlayer" + idSuffix);
                     this._mediaElement.autoplay = false;
                     this._mediaElement.style.position = "absolute";
                     this._mediaElement.style.top = "0px";
@@ -190,7 +193,7 @@ require.def(
 
                     case MediaPlayer.STATE.BUFFERING:
                         this._sentinelLimits.pause.currentAttemptCount = 0;
-                        if (this._readyToPlayFrom) {
+                        if (this._isReadyToPlayFrom()) {
                             // If we are not ready to playFrom, then calling pause would seek to the start of media, which we might not want.
                             this._mediaElement.pause();
                         }
@@ -218,7 +221,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.BUFFERING:
-                        if (this._readyToPlayFrom) {
+                        if (this._isReadyToPlayFrom()) {
                             // If we are not ready to playFrom, then calling play would seek to the start of media, which we might not want.
                             this._mediaElement.play();
                         }
@@ -333,8 +336,14 @@ require.def(
                         break;
 
                     default:
-                        if (this._mediaElement) {
-                            return this._mediaElement.duration;
+                        if (this._mediaElement && this._isReadyToPlayFrom()) {
+                          switch(this._type) {
+                            case MediaPlayer.TYPE.LIVE_VIDEO:
+                            case MediaPlayer.TYPE.LIVE_AUDIO:
+                              return Infinity;
+                            default:
+                              return this._mediaElement.duration;
+                          }
                         }
                 }
                 return undefined;
@@ -342,7 +351,7 @@ require.def(
 
             _getSeekableRange: function() {
                 if (this._mediaElement) {
-                    if (this._readyToPlayFrom && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
+                    if (this._isReadyToPlayFrom() && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
                         return {
                             start: this._mediaElement.seekable.start(0),
                             end: this._mediaElement.seekable.end(0)
@@ -420,7 +429,7 @@ require.def(
                     this._toPlaying();
                 }
             },
-            
+
             _metadataLoaded: function () {
                 this._readyToPlayFrom = true;
                 if (this._waitingToPlayFrom()) {
@@ -429,7 +438,7 @@ require.def(
             },
 
             _playFromIfReady: function() {
-                if (this._readyToPlayFrom) {
+                if (this._isReadyToPlayFrom()) {
                     if (this._waitingToPlayFrom()) {
                         this._deferredPlayFrom();
                     }
@@ -684,6 +693,13 @@ require.def(
                         }
                     }
                 }, 1100);
+            },
+
+            _isReadyToPlayFrom: function() {
+                if (this._readyToPlayFrom !== undefined) {
+                    return this._readyToPlayFrom;
+                }
+                return false;
             }
         });
 

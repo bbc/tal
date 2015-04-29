@@ -314,6 +314,26 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testVideoElementCreatedWhenSettingSourceWithLiveVideoType = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4');
+
+            assert(self._createElementStub.calledWith("video", "mediaPlayerVideo"));
+        });
+    };
+
+    mixins.testAudioElementCreatedWhenSettingSourceWithLiveAudioType = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, 'testURL', 'audio/mp4');
+
+            assert(self._createElementStub.calledWith("audio", "mediaPlayerAudio"));
+        });
+    };
+
     mixins.testCreatedVideoElementIsPutInRootWidget = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -428,7 +448,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     mixins.testGetSeekableRangeGetsEndTimeFromDurationWhenNoSeekableProperty = function(queue) {
-        expectAsserts(2);
+        expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
@@ -436,7 +456,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             delete stubCreateElementResults.video.seekable;
             stubCreateElementResults.video.duration = 60;
             assertEquals({ start: 0, end: 60 }, self._mediaPlayer.getSeekableRange());
-            assertEquals(60, self._mediaPlayer.getDuration());
         });
     };
 
@@ -1862,6 +1881,96 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testGetDurationReturnsUndefinedBeforeMetadataIsSet = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(0);
+            stubCreateElementResults.video.duration = 60;
+            assertUndefined(self._mediaPlayer.getDuration());
+
+            deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            assertEquals(100, self._mediaPlayer.getDuration());
+        });
+    };
+
+    var assertMediaPlayerDurationMatchesExpectedDuration = function(mediaPlayer, mediaType, actualDurations, expectedDurations){
+        expectAsserts(6);
+
+        mediaPlayer.setSource(mediaType, 'http://testurl/', 'video/mp4');
+        mediaPlayer.beginPlaybackFrom(0);
+
+        // Need to set metadata otherwise getDuration will be undefined
+        deviceMockingHooks.sendMetadata(mediaPlayer, 0, { start: 0, end: 0 });
+
+        for (var i = 0; i < actualDurations.length; i++) {
+            if (mediaType === "audio" || mediaType === "live-audio") {
+                stubCreateElementResults.audio.duration = actualDurations[i];
+            } else {
+                stubCreateElementResults.video.duration = actualDurations[i];
+            }
+
+            assertEquals(expectedDurations[i], mediaPlayer.getDuration());
+        }
+      };
+
+    mixins.testGetDurationReturnsInfinityWithALiveVideoStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_VIDEO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
+    mixins.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_AUDIO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
+    mixins.testGetDurationReturnsDeviceDurationWithAnOnDemandVideoStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = actualDurations;
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.VIDEO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
+    mixins.testGetDurationReturnsDeviceDurationWithAnOnDemandAudioStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = actualDurations;
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.AUDIO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
     mixins.testGetPlayerElementReturnsVideoElementForVideo = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1896,7 +2005,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             }
             testCase.prototype[name] = mixins[name];
         }
-    };
+    }
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
     window.commonTests.mediaPlayer.all.mixinTests(testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks);
