@@ -7,6 +7,7 @@ define("antie/packages/core",[
 	"antie/iterator",
 	"antie/formatter",
 	"antie/widgets/widget",
+    "antie/widgets/carousel",
 	"antie/widgets/component",
 	"antie/widgets/container",
 	"antie/widgets/image",
