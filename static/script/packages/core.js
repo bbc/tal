@@ -18,5 +18,4 @@ define("antie/packages/core",[
 	"antie/widgets/media",
 	"antie/widgets/verticallist",
 	"antie/widgets/horizontallist"
-	
 ], function() {});
