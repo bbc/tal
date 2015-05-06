@@ -8,6 +8,8 @@ define("antie/packages/core",[
 	"antie/formatter",
 	"antie/widgets/widget",
 	"antie/widgets/carousel",
+	"antie/widgets/carousel/keyhandlers/activatefirsthandler",
+	"antie/widgets/carousel/keyhandlers/alignfirsthandler",
 	"antie/widgets/component",
 	"antie/widgets/container",
 	"antie/widgets/image",
@@ -16,4 +18,5 @@ define("antie/packages/core",[
 	"antie/widgets/media",
 	"antie/widgets/verticallist",
 	"antie/widgets/horizontallist"
+	
 ], function() {});
