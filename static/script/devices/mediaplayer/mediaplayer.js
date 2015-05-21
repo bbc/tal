@@ -329,11 +329,6 @@ require.def(
                 }
             },
 
-            inErrorState: function () {
-               return (this.getState() === MediaPlayer.STATE.STOPPED)
-                || (this.getState() === MediaPlayer.STATE.ERROR);
-            },
-
             _isLiveMedia: function () {
                 return (this._type === MediaPlayer.TYPE.LIVE_VIDEO)
                     || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
