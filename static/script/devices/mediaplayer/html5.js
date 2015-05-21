@@ -337,13 +337,13 @@ require.def(
 
                     default:
                         if (this._mediaElement && this._isReadyToPlayFrom()) {
-                          switch(this._type) {
-                            case MediaPlayer.TYPE.LIVE_VIDEO:
-                            case MediaPlayer.TYPE.LIVE_AUDIO:
-                              return Infinity;
-                            default:
-                              return this._mediaElement.duration;
-                          }
+                            switch(this._type) {
+                                case MediaPlayer.TYPE.LIVE_VIDEO:
+                                case MediaPlayer.TYPE.LIVE_AUDIO:
+                                    return Infinity;
+                                default:
+                                    return this._mediaElement.duration;
+                            }
                         }
                 }
                 return undefined;
