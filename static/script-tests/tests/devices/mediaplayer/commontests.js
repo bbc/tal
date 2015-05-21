@@ -27,7 +27,7 @@ window.commonTests.mediaPlayer = window.commonTests.mediaPlayer || { };
 window.commonTests.mediaPlayer.all = window.commonTests.mediaPlayer.all || { };
 
 // Mix-in a set of common MediaPlayer tests. These tests test the common API behaviour, and so are valid for ALL implementations.
-// It isup to the device implementation test code that pulls these in to make sure that sufficient mocking is in place to allow these tests to run.
+// It is up to the device implementation test code that pulls these in to make sure that sufficient mocking is in place to allow these tests to run.
 window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks) {
     var mixins = {};
 
