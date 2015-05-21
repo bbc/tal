@@ -1369,6 +1369,46 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testGetDurationReturnsInfinityWithALiveVideoStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_VIDEO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
+    mixins.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
+            assertMediaPlayerDurationMatchesExpectedDuration(
+                self._mediaPlayer,
+                MediaPlayer.TYPE.LIVE_AUDIO,
+                actualDurations,
+                expectedDurations
+            );
+        });
+    };
+
+    var assertMediaPlayerDurationMatchesExpectedDuration = function(mediaPlayer, mediaType, actualDurations, expectedDurations){
+        expectAsserts(6);
+
+        mediaPlayer.setSource(mediaType, 'http://testurl/', 'video/mp4');
+        mediaPlayer.beginPlaybackFrom(0);
+
+        for (var i = 0; i < actualDurations.length; i++) {
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: actualDurations[i] });
+            assertEquals(expectedDurations[i], mediaPlayer.getDuration());
+        }
+    };
+
    // TODO: Consider whether the ordering of the pause and seek sentinels is important, and if so we need to assert the order in the tests.
 
     // *******************************************

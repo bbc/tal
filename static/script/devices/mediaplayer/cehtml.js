@@ -286,18 +286,10 @@ require.def(
             /**
              * @inheritDoc
              */
-            getDuration: function() {
-                switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                    case MediaPlayer.STATE.ERROR:
-                        break;
-
-                    default:
-                        if (this._range) {
-                            return this._range.end;
-                        }
+            _getMediaDuration: function() {
+                if (this._range) {
+                    return this._range.end;
                 }
-                return undefined;
             },
 
             /**
