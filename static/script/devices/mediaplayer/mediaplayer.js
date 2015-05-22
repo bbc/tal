@@ -329,8 +329,7 @@ require.def(
             },
 
             _isLiveMedia: function () {
-                return (this._type === MediaPlayer.TYPE.LIVE_VIDEO)
-                    || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
+                return (this._type === MediaPlayer.TYPE.LIVE_VIDEO) || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
             }
         });
 
