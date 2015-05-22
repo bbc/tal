@@ -294,7 +294,6 @@ require.def(
                 }
             },
 
-
             _getMediaDuration: function() {
                 throw new Error("getMediaDuration method has not been implemented");
             },
