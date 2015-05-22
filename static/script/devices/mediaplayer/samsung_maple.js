@@ -282,7 +282,7 @@ require.def(
             /**
              * @inheritDoc
              */
-            getDuration: function() {
+            _getMediaDuration: function() {
                 if (this._range) {
                     return this._range.end;
                 }
