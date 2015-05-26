@@ -290,6 +290,7 @@ require.def(
                 if (this._range) {
                     return this._range.end;
                 }
+                return undefined;
             },
 
             /**
