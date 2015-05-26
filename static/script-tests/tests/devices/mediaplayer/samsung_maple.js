@@ -860,46 +860,6 @@
         });
     };
 
-    this.SamsungMapleMediaPlayerTests.prototype.testGetDurationReturnsInfintyWithALiveVideoStream = function(queue) {
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
-            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
-            assertMediaPlayerDurationMatchesExpectedDuration(
-                self._mediaPlayer,
-                MediaPlayer.TYPE.LIVE_VIDEO,
-                actualDurations,
-                expectedDurations
-            );
-        });
-    };
-
-    this.SamsungMapleMediaPlayerTests.prototype.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
-            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
-            assertMediaPlayerDurationMatchesExpectedDuration(
-                self._mediaPlayer,
-                MediaPlayer.TYPE.LIVE_AUDIO,
-                actualDurations,
-                expectedDurations
-            );
-        });
-    };
-
-    var assertMediaPlayerDurationMatchesExpectedDuration = function(mediaPlayer, mediaType, actualDurations, expectedDurations){
-        expectAsserts(6);
-
-        mediaPlayer.setSource(mediaType, 'http://testurl/', 'video/mp4');
-        mediaPlayer.beginPlaybackFrom(0);
-
-        for (var i = 0; i < actualDurations.length; i++) {
-            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: actualDurations[i] });
-            assertEquals(expectedDurations[i], mediaPlayer.getDuration());
-        }
-    };
-
     this.SamsungMapleMediaPlayerTests.prototype.testPlayFromAfterMediaCompletedCallsStopBeforeResumePlay = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
