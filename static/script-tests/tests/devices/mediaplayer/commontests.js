@@ -529,6 +529,14 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
     };
 
+    var getToPlayingStateWithLiveMediaType = function (MediaPlayer, mediaType) {
+        this._mediaPlayer.setSource(mediaType, "testUrl", "testMimeType");
+        this._mediaPlayer.beginPlaybackFrom(0);
+        deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(this._mediaPlayer);
+        assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+    };
+
     mixins.testGetSourceReturnsExpectedValueInPlayingState = makeGetMethodReturnsExpectedValueTest(getToPlayingState, "getSource", "testUrl");
     mixins.testCallingBeginPlaybackInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "beginPlayback");
     mixins.testCallingBeginPlaybackFromInPlayingStateIsAnError = makeApiCallCausesErrorTest(getToPlayingState, "beginPlaybackFrom");
@@ -658,6 +666,31 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
             deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
             assert(this.eventCallback.callCount - originalCount >= 3); // Three seconds so must have had at least three status messages
+        });
+    };
+
+    mixins.testGetDurationReturnsInfinityWithALiveVideoStream = function(queue) {
+        expectAsserts(7);
+        doTest(this, queue, function (MediaPlayer) {
+            getToPlayingStateWithLiveMediaType.call(this, MediaPlayer, MediaPlayer.TYPE.LIVE_VIDEO);
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+            for (var i = 0; i < actualDurations.length; i++) {
+                deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: actualDurations[i] });
+                assertEquals(Infinity, this._mediaPlayer.getDuration());
+            }
+        });
+    };
+
+    mixins.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
+        expectAsserts(7);
+        doTest(this, queue, function (MediaPlayer) {
+            getToPlayingStateWithLiveMediaType.call(this, MediaPlayer, MediaPlayer.TYPE.LIVE_AUDIO);
+            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
+
+            for (var i = 0; i < actualDurations.length; i++) {
+                deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: actualDurations[i] });
+                assertEquals(Infinity, this._mediaPlayer.getDuration());
+            }
         });
     };
 

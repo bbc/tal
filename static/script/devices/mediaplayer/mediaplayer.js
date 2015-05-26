@@ -281,7 +281,21 @@ require.def(
              * @return {Number} Duration of media in seconds, or Infinity, or undefined.
              */
             getDuration: function() {
-                throw new Error("getDuration method has not been implemented");
+
+                switch (this.getState()) {
+                    case MediaPlayer.STATE.STOPPED:
+                    case MediaPlayer.STATE.ERROR:
+                        return undefined;
+                    default :
+                        if(this._isLiveMedia()){
+                            return Infinity;
+                        }
+                        return this._getMediaDuration();
+                }
+            },
+
+            _getMediaDuration: function() {
+                throw new Error("getMediaDuration method has not been implemented");
             },
 
             /**
@@ -312,6 +326,10 @@ require.def(
                 } else {
                     return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
                 }
+            },
+
+            _isLiveMedia: function () {
+                return (this._type === MediaPlayer.TYPE.LIVE_VIDEO) || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
             }
         });
 

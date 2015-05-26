@@ -177,7 +177,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 element.parentNode.removeChild(element);
             }
         }
-
     };
 
     var runMediaPlayerTest = function (self, queue, action) {
@@ -1914,34 +1913,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEquals(expectedDurations[i], mediaPlayer.getDuration());
         }
       };
-
-    mixins.testGetDurationReturnsInfinityWithALiveVideoStream = function(queue) {
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
-            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
-            assertMediaPlayerDurationMatchesExpectedDuration(
-                self._mediaPlayer,
-                MediaPlayer.TYPE.LIVE_VIDEO,
-                actualDurations,
-                expectedDurations
-            );
-        });
-    };
-
-    mixins.testGetDurationReturnsInfinityWithALiveAudioStream = function(queue) {
-        var self = this;
-        runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            var actualDurations = [0, 'foo', undefined, null, Infinity, 360];
-            var expectedDurations = [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity];
-            assertMediaPlayerDurationMatchesExpectedDuration(
-                self._mediaPlayer,
-                MediaPlayer.TYPE.LIVE_AUDIO,
-                actualDurations,
-                expectedDurations
-            );
-        });
-    };
 
     mixins.testGetDurationReturnsDeviceDurationWithAnOnDemandVideoStream = function(queue) {
         var self = this;
