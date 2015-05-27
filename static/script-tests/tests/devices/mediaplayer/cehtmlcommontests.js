@@ -174,6 +174,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._eventCallback = self.sandbox.stub();
+                self._mediaPlayer.addEventCallback(null, self._eventCallback);
                 try {
                     action.call(self, MediaPlayer);
                 }
@@ -1339,6 +1341,25 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
             assert(seekSpy.calledOnce);
             assertEquals(50000, seekSpy.getCall(0).args[0]);
+        });
+    };
+
+    mixins.testNoSeekSentinelActivatedWhenCurrentTimeIsReportedAsZeroDuringPlayback = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            configureSeekToFail();
+            getToPlaying(this, MediaPlayer, 0);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(self);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
         });
     };
 

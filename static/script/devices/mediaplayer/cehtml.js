@@ -134,6 +134,7 @@ require.def(
             */
             beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                this._sentinelSeekTime = undefined;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                         this._toBuffering();
@@ -150,7 +151,7 @@ require.def(
              * @inheritDoc
              */
             beginPlaybackFrom: function(seconds) {
-                this._sentinelSeekTime = seconds;
+                this._sentinelSeekTime = undefined;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
 
@@ -429,6 +430,7 @@ require.def(
                 if (clampedTime !== seconds) {
                     RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
                 }
+                this._sentinelSeekTime = clampedTime;
                 return this._mediaElement.seek(clampedTime * 1000);
             },
 
@@ -581,6 +583,10 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
+                if (this._sentinelSeekTime === undefined) {
+                    return false;
+                }
+
                 var SEEK_TOLERANCE = 15;
                 var currentTime = this.getCurrentTime();
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
@@ -593,8 +599,10 @@ require.def(
                       sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function () {
                           mediaElement.seek(clampedSentinelSeekTime * 1000);
                       });
-                } else {
+                } else if (this._sentinelIntervalNumber < 3) {
                     this._sentinelSeekTime = currentTime;
+                } else {
+                    this._sentinelSeekTime = undefined;
                 }
 
                 return sentinelActionTaken;
