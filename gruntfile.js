@@ -5,16 +5,15 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         jshint: {
-            files: ['static/script/**/*.js'],
+            files: ['static/script/**/*.js',
+                'static/script-tests/**/*.js'],
             options: {
                 jshintrc: '.jshintrc',
                 // options here to override JSHint defaults
                 ignores: [
                     'static/script/lib/*',
                     'static/script/devices/googletv.js',
-                    'static/script/devices/data/json2.js',
-                    'static/script/widgets/horizontalcarousel.js'
-
+                    'static/script/devices/data/json2.js'
                 ]
             }
         },
