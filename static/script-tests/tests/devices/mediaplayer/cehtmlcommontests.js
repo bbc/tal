@@ -1262,6 +1262,23 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelFiresWhenDeviceReportsPlaybackTimeAsZeroAfterReportingSuccessfulSeek = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            getToPlaying(this, MediaPlayer, 30);
+            fireSentinels();
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(this);
+            assertEventTypeHasBeenFiredASpecificNumberOfTimes(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK, 1);
+        });
+    };
+
     mixins.testFirstSentinelGivingUpDoesNotPreventSecondSentinelActivation = function(queue) {
         function xor(a, b) {
             return a !== b;
