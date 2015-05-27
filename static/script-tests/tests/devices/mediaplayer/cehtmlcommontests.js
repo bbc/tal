@@ -232,6 +232,17 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         assertFalse(eventTypeHasFired(eventHandler, eventType));
     };
 
+    var assertEventTypeHasBeenFiredASpecificNumberOfTimes = function (eventHandler, eventType, expectedNumberOfCalls) {
+        var numberOfCalls = 0;
+
+        for(var i = 0; i < eventHandler.callCount; i++) {
+            if(eventHandler.getCall(i).args[0].type === eventType) {
+                numberOfCalls++;
+            }
+        }
+        assertEquals(expectedNumberOfCalls, numberOfCalls);
+    };
+
     var eventTypeHasFired = function(eventHandler, eventType) {
         for(var i = 0; i < eventHandler.callCount; i++) {
             if(eventHandler.getCall(i).args[0].type === eventType) {
@@ -1348,18 +1359,17 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            configureSeekToFail();
-            getToPlaying(this, MediaPlayer, 0);
+            var SEEK_SENTINEL_TOLERANCE = 15;
+            getToPlaying(this, MediaPlayer, SEEK_SENTINEL_TOLERANCE + 20);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            deviceMockingHooks.makeOneSecondPass(this._mediaPlayer);
-
-            fakeCEHTMLObject.playPosition = 0;
-            fireSentinels(self);
-
-            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            for (var i=0; i<4; i++) {
+                fakeCEHTMLObject.playPosition = 0;
+                fireSentinels(self);
+            }
+            assertEventTypeHasBeenFiredASpecificNumberOfTimes(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK, 2);
         });
     };
 

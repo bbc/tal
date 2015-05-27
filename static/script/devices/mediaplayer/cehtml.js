@@ -589,6 +589,7 @@ require.def(
 
                 var SEEK_TOLERANCE = 15;
                 var currentTime = this.getCurrentTime();
+                
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
 
                 var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
@@ -596,15 +597,14 @@ require.def(
 
                 if (sentinelSeekRequired) {
                     var mediaElement = this._mediaElement;
-                      sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function () {
-                          mediaElement.seek(clampedSentinelSeekTime * 1000);
-                      });
+                    sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function () {
+                        mediaElement.seek(clampedSentinelSeekTime * 1000);
+                    });
                 } else if (this._sentinelIntervalNumber < 3) {
                     this._sentinelSeekTime = currentTime;
                 } else {
                     this._sentinelSeekTime = undefined;
                 }
-
                 return sentinelActionTaken;
             },
 
