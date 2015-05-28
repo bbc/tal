@@ -151,7 +151,6 @@ require.def(
              * @inheritDoc
              */
             beginPlaybackFrom: function(seconds) {
-                this._sentinelSeekTime = undefined;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
 

@@ -1370,6 +1370,25 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelClampsTargetSeekTimeWhenRequired = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer, 110);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            fakeCEHTMLObject.playPosition = 0;
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            advancePlayTime();
+            fireSentinels(self);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(98900, fakeCEHTMLObject.playPosition);
+        });
+    };
+
     mixins.testNoSeekSentinelActivatedWhenCurrentTimeIsReportedAsZeroDuringPlayback = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -1380,7 +1399,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            for (var i=0; i<4; i++) {
+            for (var i=0; i<3; i++) {
                 fireSentinels(self);
             }
 
