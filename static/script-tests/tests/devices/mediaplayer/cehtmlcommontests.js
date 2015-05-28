@@ -1389,6 +1389,25 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelClampsTargetSeekTimeWhenPlayFromIsCalled = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+
+            this._mediaPlayer.playFrom(200);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            advancePlayTime();
+            fireSentinels(self);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(99900, fakeCEHTMLObject.playPosition);
+        });
+    };
+
     mixins.testNoSeekSentinelActivatedWhenCurrentTimeIsReportedAsZeroDuringPlayback = function(queue) {
         expectAsserts(1);
         var self = this;
