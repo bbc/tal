@@ -26,8 +26,8 @@ var CORDOVA_JS_BUILD_LABEL = '3.6.3';
 /*jshint -W079 */
 /*jshint -W020 */
 
-var cv_require,
-    cv_define;
+var require,
+    define;
 
 (function () {
     var modules = {},
@@ -47,7 +47,7 @@ var cv_require,
                 if (id.charAt(0) === ".") {
                     resultantId = module.id.slice(0, module.id.lastIndexOf(SEPARATOR)) + SEPARATOR + id.slice(2);
                 }
-                return cv_require(resultantId);
+                return require(resultantId);
             };
         module.exports = {};
         delete module.factory;
@@ -55,7 +55,7 @@ var cv_require,
         return module.exports;
     }
 
-    cv_require = function (id) {
+    require = function (id) {
         if (!modules[id]) {
             throw "module " + id + " not found";
         } else if (id in inProgressModules) {
@@ -75,7 +75,7 @@ var cv_require,
         return modules[id].exports;
     };
 
-    cv_define = function (id, factory) {
+    define = function (id, factory) {
         if (modules[id]) {
             throw "module " + id + " already defined";
         }
@@ -86,25 +86,25 @@ var cv_require,
         };
     };
 
-    cv_define.remove = function (id) {
+    define.remove = function (id) {
         delete modules[id];
     };
 
-    cv_define.moduleMap = modules;
+    define.moduleMap = modules;
 })();
 
 //Export for use in node
-if (typeof module === "object" && typeof cv_require === "function") {
-    module.exports.cv_require = cv_require;
-    module.exports.cv_define = cv_define;
+if (typeof module === "object" && typeof require === "function") {
+    module.exports.require = require;
+    module.exports.define = define;
 }
 
 // file: src/cordova.js
-cv_define("cordova", function(cv_require, exports, module) {
+define("cordova", function(require, exports, module) {
 
 
-var channel = cv_require('cordova/channel');
-var platform = cv_require('cordova/platform');
+var channel = require('cordova/channel');
+var platform = require('cordova/platform');
 
 /**
  * Intercept calls to addEventListener + removeEventListener and handle deviceready,
@@ -174,8 +174,8 @@ function createEvent(type, data) {
 
 
 var cordova = {
-    define:cv_define,
-    require:cv_require,
+    define:define,
+    require:require,
     version:CORDOVA_JS_BUILD_LABEL,
     platformId:platform.id,
     /**
@@ -318,19 +318,19 @@ module.exports = cordova;
 });
 
 // file: src/amazon-fireos/android/nativeapiprovider.js
-cv_define("cordova/android/nativeapiprovider", function(cv_require, exports, module) {
+define("cordova/android/nativeapiprovider", function(require, exports, module) {
 
 /**
  * Exports the ExposedJsApi.java object if available, otherwise exports the PromptBasedNativeApi.
  */
 
-var nativeApi = this._cordovaNative || cv_require('cordova/android/promptbasednativeapi');
+var nativeApi = this._cordovaNative || require('cordova/android/promptbasednativeapi');
 var currentApi = nativeApi;
 
 module.exports = {
     get: function() { return currentApi; },
     setPreferPrompt: function(value) {
-        currentApi = value ? cv_require('cordova/android/promptbasednativeapi') : nativeApi;
+        currentApi = value ? require('cordova/android/promptbasednativeapi') : nativeApi;
     },
     // Used only by tests.
     set: function(value) {
@@ -341,7 +341,7 @@ module.exports = {
 });
 
 // file: src/amazon-fireos/android/promptbasednativeapi.js
-cv_define("cordova/android/promptbasednativeapi", function(cv_require, exports, module) {
+define("cordova/android/promptbasednativeapi", function(require, exports, module) {
 
 /**
  * Implements the API of ExposedJsApi.java, but uses prompt() to communicate.
@@ -363,10 +363,10 @@ module.exports = {
 });
 
 // file: src/common/argscheck.js
-cv_define("cordova/argscheck", function(cv_require, exports, module) {
+define("cordova/argscheck", function(require, exports, module) {
 
-var exec = cv_require('cordova/exec');
-var utils = cv_require('cordova/utils');
+var exec = require('cordova/exec');
+var utils = require('cordova/utils');
 
 var moduleExports = module.exports;
 
@@ -429,7 +429,7 @@ moduleExports.enableChecks = true;
 });
 
 // file: src/common/base64.js
-cv_define("cordova/base64", function(cv_require, exports, module) {
+define("cordova/base64", function(require, exports, module) {
 
 var base64 = exports;
 
@@ -495,9 +495,9 @@ function uint8ToBase64(rawData) {
 });
 
 // file: src/common/builder.js
-cv_define("cordova/builder", function(cv_require, exports, module) {
+define("cordova/builder", function(require, exports, module) {
 
-var utils = cv_require('cordova/utils');
+var utils = require('cordova/utils');
 
 function each(objects, func, context) {
     for (var prop in objects) {
@@ -534,7 +534,7 @@ function assignOrWrapInDeprecateGetter(obj, key, value, message) {
 function include(parent, objects, clobber, merge) {
     each(objects, function (obj, key) {
         try {
-            var result = obj.path ? cv_require(obj.path) : {};
+            var result = obj.path ? require(obj.path) : {};
 
             if (clobber) {
                 // Clobber if it doesn't exist.
@@ -608,9 +608,9 @@ exports.replaceHookForTesting = function() {};
 });
 
 // file: src/common/channel.js
-cv_define("cordova/channel", function(cv_require, exports, module) {
+define("cordova/channel", function(require, exports, module) {
 
-var utils = cv_require('cordova/utils'),
+var utils = require('cordova/utils'),
     nextGuid = 1;
 
 /**
@@ -850,7 +850,7 @@ module.exports = channel;
 });
 
 // file: src/amazon-fireos/exec.js
-cv_define("cordova/exec", function(cv_require, exports, module) {
+define("cordova/exec", function(require, exports, module) {
 
 /**
  * Execute a cordova command.  It is up to the native side whether this action
@@ -866,11 +866,11 @@ cv_define("cordova/exec", function(cv_require, exports, module) {
  * @param {String} action       Action to be run in cordova
  * @param {String[]} [args]     Zero or more arguments to pass to the method
  */
-var cordova = cv_require('cordova'),
-    nativeApiProvider = cv_require('cordova/android/nativeapiprovider'),
-    utils = cv_require('cordova/utils'),
-    base64 = cv_require('cordova/base64'),
-    channel = cv_require('cordova/channel'),
+var cordova = require('cordova'),
+    nativeApiProvider = require('cordova/android/nativeapiprovider'),
+    utils = require('cordova/utils'),
+    base64 = require('cordova/base64'),
+    channel = require('cordova/channel'),
     jsToNativeModes = {
         PROMPT: 0,
         JS_OBJECT: 1
@@ -1081,6 +1081,7 @@ androidExec.processMessages = function(messages, opt_useTimeout) {
     try {
         // TODO: add setImmediate polyfill and process only one message at a time.
         while (messagesFromNative.length) {
+            console.log('messagesFromNative.length ' + messagesFromNative.length);
             var msg = popMessageFromQueue();
             // The Java side can send a * message to indicate that it
             // still has messages waiting to be retrieved.
@@ -1116,7 +1117,7 @@ module.exports = androidExec;
 });
 
 // file: src/common/exec/proxy.js
-cv_define("cordova/exec/proxy", function(cv_require, exports, module) {
+define("cordova/exec/proxy", function(require, exports, module) {
 
 
 // internal map of proxy function
@@ -1146,13 +1147,13 @@ module.exports = {
 });
 
 // file: src/common/init.js
-cv_define("cordova/init", function(cv_require, exports, module) {
+define("cordova/init", function(require, exports, module) {
 
-var channel = cv_require('cordova/channel');
-var cordova = cv_require('cordova');
-var modulemapper = cv_require('cordova/modulemapper');
-var platform = cv_require('cordova/platform');
-var pluginloader = cv_require('cordova/pluginloader');
+var channel = require('cordova/channel');
+var cordova = require('cordova');
+var modulemapper = require('cordova/modulemapper');
+var platform = require('cordova/platform');
+var pluginloader = require('cordova/pluginloader');
 
 var platformInitChannelsArray = [channel.onNativeReady, channel.onPluginsReady];
 
@@ -1255,7 +1256,7 @@ channel.join(function() {
     // constructors have run and cordova info has been received from native
     // side.
     channel.join(function() {
-        cv_require('cordova').fireDocumentEvent('deviceready');
+        require('cordova').fireDocumentEvent('deviceready');
     }, channel.deviceReadyChannelsArray);
 
 }, platformInitChannelsArray);
@@ -1264,16 +1265,16 @@ channel.join(function() {
 });
 
 // file: src/common/init_b.js
-cv_define("cordova/init_b", function(cv_require, exports, module) {
+define("cordova/init_b", function(require, exports, module) {
 
-var channel = cv_require('cordova/channel');
-var cordova = cv_require('cordova');
-var platform = cv_require('cordova/platform');
+var channel = require('cordova/channel');
+var cordova = require('cordova');
+var platform = require('cordova/platform');
 
 var platformInitChannelsArray = [channel.onDOMContentLoaded, channel.onNativeReady];
 
 // setting exec
-cordova.exec = cv_require('cordova/exec');
+cordova.exec = require('cordova/exec');
 
 function logUnfiredChannels(arr) {
     for (var i = 0; i < arr.length; ++i) {
@@ -1361,7 +1362,7 @@ channel.join(function() {
     // constructors have run and cordova info has been received from native
     // side.
     channel.join(function() {
-        cv_require('cordova').fireDocumentEvent('deviceready');
+        require('cordova').fireDocumentEvent('deviceready');
     }, channel.deviceReadyChannelsArray);
 
 }, platformInitChannelsArray);
@@ -1369,10 +1370,10 @@ channel.join(function() {
 });
 
 // file: src/common/modulemapper.js
-cv_define("cordova/modulemapper", function(cv_require, exports, module) {
+define("cordova/modulemapper", function(require, exports, module) {
 
-var builder = cv_require('cordova/builder'),
-    moduleMap = cv_define.moduleMap,
+var builder = require('cordova/builder'),
+    moduleMap = define.moduleMap,
     symbolList,
     deprecationMap;
 
@@ -1426,7 +1427,7 @@ exports.mapModules = function(context) {
     for (var i = 0, len = symbolList.length; i < len; i += 3) {
         var strategy = symbolList[i];
         var moduleName = symbolList[i + 1];
-        var module = cv_require(moduleName);
+        var module = require(moduleName);
         // <runs/>
         if (strategy == 'r') {
             continue;
@@ -1470,15 +1471,15 @@ exports.reset();
 });
 
 // file: src/amazon-fireos/platform.js
-cv_define("cordova/platform", function(cv_require, exports, module) {
+define("cordova/platform", function(require, exports, module) {
 
 module.exports = {
     id: 'amazon-fireos',
     bootstrap: function() {
-        var channel = cv_require('cordova/channel'),
-            cordova = cv_require('cordova'),
-            exec = cv_require('cordova/exec'),
-            modulemapper = cv_require('cordova/modulemapper');
+        var channel = require('cordova/channel'),
+            cordova = require('cordova'),
+            exec = require('cordova/exec'),
+            modulemapper = require('cordova/modulemapper');
 
         // Get the shared secret needed to use the bridge.
         exec.init();
@@ -1509,9 +1510,9 @@ module.exports = {
 });
 
 // file: src/amazon-fireos/plugin/android/app.js
-cv_define("cordova/plugin/android/app", function(cv_require, exports, module) {
+define("cordova/plugin/android/app", function(require, exports, module) {
 
-var exec = cv_require('cordova/exec');
+var exec = require('cordova/exec');
 
 module.exports = {
     /**
@@ -1586,10 +1587,10 @@ module.exports = {
 });
 
 // file: src/common/pluginloader.js
-cv_define("cordova/pluginloader", function(cv_require, exports, module) {
+define("cordova/pluginloader", function(require, exports, module) {
 
-var modulemapper = cv_require('cordova/modulemapper');
-var urlutil = cv_require('cordova/urlutil');
+var modulemapper = require('cordova/modulemapper');
+var urlutil = require('cordova/urlutil');
 
 // Helper function to inject a <script> tag.
 // Exported for testing.
@@ -1605,11 +1606,11 @@ exports.injectScript = function(url, onload, onerror) {
 
 function injectIfNecessary(id, url, onload, onerror) {
     onerror = onerror || onload;
-    if (id in cv_define.moduleMap) {
+    if (id in define.moduleMap) {
         onload();
     } else {
         exports.injectScript(url, function() {
-            if (id in cv_define.moduleMap) {
+            if (id in define.moduleMap) {
                 onload();
             } else {
                 onerror();
@@ -1633,7 +1634,7 @@ function onScriptLoadingComplete(moduleList, finishPluginLoading) {
             }
         }
 
-        // Finally, if runs is truthy we want to simply cv_require() the module.
+        // Finally, if runs is truthy we want to simply require() the module.
         if (module.runs) {
             modulemapper.runs(module.id);
         }
@@ -1689,7 +1690,7 @@ exports.load = function(callback) {
         pathPrefix = '';
     }
     injectIfNecessary('cordova/plugin_list', pathPrefix + 'cordova_plugins.js', function() {
-        var moduleList = cv_require("cordova/plugin_list");
+        var moduleList = require("cordova/plugin_list");
         handlePluginsObject(pathPrefix, moduleList, callback);
     }, callback);
 };
@@ -1698,7 +1699,7 @@ exports.load = function(callback) {
 });
 
 // file: src/common/urlutil.js
-cv_define("cordova/urlutil", function(cv_require, exports, module) {
+define("cordova/urlutil", function(require, exports, module) {
 
 
 /**
@@ -1715,7 +1716,7 @@ exports.makeAbsolute = function makeAbsolute(url) {
 });
 
 // file: src/common/utils.js
-cv_define("cordova/utils", function(cv_require, exports, module) {
+define("cordova/utils", function(require, exports, module) {
 
 var utils = exports;
 
@@ -1884,10 +1885,45 @@ function UUIDcreatePart(length) {
 
 });
 
-window.cordova = cv_require('cordova');
+window.cordova = require('cordova');
 // file: src/scripts/bootstrap.js
 
-cv_require('cordova/init');
+require('cordova/init');
 
+var cvExec = require('cordova/exec');
+
+var VisualOnPlayerPlugin = function () {
+    console.log('Creating new instance of VisualOnPlayerPlugin');
+};
+
+VisualOnPlayerPlugin.launch = function (content, adData) {
+    content = content || "No content defined";
+    adData = adData || {};
+    cvExec(success, error, 'VisualOnPlayerPlugin', 'launch', [content, adData]);
+
+};
+
+VisualOnPlayerPlugin.setListener = function(callback, scope) {
+    cvExec(function () {
+        callback.apply(scope, Array.prototype.slice.call(arguments));
+    }, null, 'VisualOnPlayerPlugin', 'setListener', []);
+};
+
+
+
+function success() {
+    console.log('Success: ' + Array.prototype.join.call(arguments));
+}
+
+
+function error() {
+    console.warn('Error: ' + Array.prototype.join.call(arguments));
+}
+
+window.VisualOnPlayerPlugin = VisualOnPlayerPlugin;
 })();
+
+
+
+
 </script>
