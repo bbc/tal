@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ChannelTest = AsyncTestCase("Channel");
+    this.ChannelTest = new AsyncTestCase("Channel");
 
     this.ChannelTest.prototype.setUp = function() {
     };

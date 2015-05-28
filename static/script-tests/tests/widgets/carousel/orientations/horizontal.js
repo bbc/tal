@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.HorizontalOrientationTest = AsyncTestCase("HorizontalOrientation");
+    this.HorizontalOrientationTest = new AsyncTestCase("HorizontalOrientation");
 
     this.HorizontalOrientationTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

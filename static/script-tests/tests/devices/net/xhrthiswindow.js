@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.XHRThisWindowNetworkTest = AsyncTestCase("Network (xhrthiswindow)");
+	this.XHRThisWindowNetworkTest = new AsyncTestCase("Network (xhrthiswindow)");
 
 	this.XHRThisWindowNetworkTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

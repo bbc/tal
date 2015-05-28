@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WrappingStripTest = AsyncTestCase("WrappingStrip");
+    this.WrappingStripTest = new AsyncTestCase("WrappingStrip");
 
     this.WrappingStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

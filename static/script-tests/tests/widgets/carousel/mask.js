@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.MaskTest = AsyncTestCase("Mask");
+    this.MaskTest = new AsyncTestCase("Mask");
 
     this.MaskTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

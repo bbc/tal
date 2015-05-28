@@ -95,7 +95,7 @@
         return transEl;
     }
     
-    this.TransitionElementTest = AsyncTestCase("TransitionElement");
+    this.TransitionElementTest = new AsyncTestCase("TransitionElement");
     
     this.TransitionElementTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

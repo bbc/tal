@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.CallbackManagerTest = AsyncTestCase("CallbackManagerTest");
+    this.CallbackManagerTest = new AsyncTestCase("CallbackManagerTest");
 
     this.CallbackManagerTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

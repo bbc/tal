@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.SeekStateTest = AsyncTestCase("Devices.Media.SeekState");
+    this.SeekStateTest = new AsyncTestCase("Devices.Media.SeekState");
 
     this.SeekStateTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

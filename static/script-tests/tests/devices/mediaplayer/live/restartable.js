@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelRestartableTest = AsyncTestCase("LivePlayerSupportLevelRestartableTest");
+    this.LivePlayerSupportLevelRestartableTest = new AsyncTestCase("LivePlayerSupportLevelRestartableTest");
 
     this.LivePlayerSupportLevelRestartableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

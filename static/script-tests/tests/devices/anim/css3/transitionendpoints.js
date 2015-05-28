@@ -24,7 +24,7 @@
 
 (function() {
     /* jshint newcap: false */
-    this.TransitionEndPointsTest = AsyncTestCase("TransitionEndPoints");
+    this.TransitionEndPointsTest = new AsyncTestCase("TransitionEndPoints");
 
     this.TransitionEndPointsTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

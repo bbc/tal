@@ -26,7 +26,7 @@
     /* jshint newcap: false */
     var mockTransElement, properties, durations, delays, timingFns;
     
-    this.ExistingTransitionDefinitionTest = AsyncTestCase("ExistingTransitionDefinition");
+    this.ExistingTransitionDefinitionTest = new AsyncTestCase("ExistingTransitionDefinition");
     
     function loadETD(queue, fn) {
         queuedRequire(queue,

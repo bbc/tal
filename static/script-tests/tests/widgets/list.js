@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ListTest = AsyncTestCase("List");
+	this.ListTest = new AsyncTestCase("List");
 
 	this.ListTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

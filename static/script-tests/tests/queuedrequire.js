@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.QueuedRequireTest = AsyncTestCase("QueuedRequire Unit Testing Utilities");
+	this.QueuedRequireTest = new AsyncTestCase("QueuedRequire Unit Testing Utilities");
 
 	this.QueuedRequireTest.prototype.setUp = function() {
 	};

@@ -1,6 +1,6 @@
 (function() {
     /* jshint newcap: false */
-    this.HistorianTest = AsyncTestCase("Historian");
+    this.HistorianTest = new AsyncTestCase("Historian");
 
     this.HistorianTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

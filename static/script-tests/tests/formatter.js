@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.FormatterTest = AsyncTestCase("Formatter");
+	this.FormatterTest = new AsyncTestCase("Formatter");
 
 	this.FormatterTest.prototype.setUp = function() {
 	};

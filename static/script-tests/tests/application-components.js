@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationComponentsTest = AsyncTestCase("Application_Components");
+	this.ApplicationComponentsTest = new AsyncTestCase("Application_Components");
 
 	this.ApplicationComponentsTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

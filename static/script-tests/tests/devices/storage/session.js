@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.SessionStorageProviderTest = AsyncTestCase("Storage_Session");
+	this.SessionStorageProviderTest = new AsyncTestCase("Storage_Session");
 
 	var stores;
 

@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.RenderedStateTest = AsyncTestCase("RenderedState");
+    this.RenderedStateTest = new AsyncTestCase("RenderedState");
 
     this.RenderedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

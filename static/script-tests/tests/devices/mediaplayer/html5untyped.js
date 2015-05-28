@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.HTML5UntypedMediaPlayerTests = AsyncTestCase("HTML5UntypedMediaPlayer");
+    this.HTML5UntypedMediaPlayerTests = new AsyncTestCase("HTML5UntypedMediaPlayer");
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5untyped"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ImageTest = AsyncTestCase("Image");
+	this.ImageTest = new AsyncTestCase("Image");
 
 	this.ImageTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.HTML5MemoryLeakUnfixMediaPlayerTests = AsyncTestCase("HTML5MemoryLeakUnfixMediaPlayer");
+    this.HTML5MemoryLeakUnfixMediaPlayerTests = new AsyncTestCase("HTML5MemoryLeakUnfixMediaPlayer");
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5memoryleakunfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.VideoSourceTest = AsyncTestCase("VideoSource");
+	this.VideoSourceTest = new AsyncTestCase("VideoSource");
 
 	this.VideoSourceTest.prototype.setUp = function() {
 	};

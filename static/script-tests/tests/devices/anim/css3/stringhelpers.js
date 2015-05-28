@@ -31,7 +31,7 @@
         );
     }
     
-    this.StringHelpersTest = AsyncTestCase("StringHelpers");
+    this.StringHelpersTest = new AsyncTestCase("StringHelpers");
 
     this.StringHelpersTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

@@ -35,7 +35,7 @@
 
 
     // jshint newcap: false
-    this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation");
+    this.StyleTopLeftAnimationTest = new AsyncTestCase("StyleTopLeftAnimation");
 
     this.StyleTopLeftAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

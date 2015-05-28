@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.DefaultNetworkTest = AsyncTestCase("Network (Default)");
+	this.DefaultNetworkTest = new AsyncTestCase("Network (Default)");
 
 	this.DefaultNetworkTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

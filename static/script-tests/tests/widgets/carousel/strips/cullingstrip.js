@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.CullingStripTest = AsyncTestCase("CullingStrip");
+    this.CullingStripTest = new AsyncTestCase("CullingStrip");
 
     this.CullingStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

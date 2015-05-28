@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.MediaSourceTest = AsyncTestCase("MediaSource");
+	this.MediaSourceTest = new AsyncTestCase("MediaSource");
 
 	this.MediaSourceTest.prototype.setUp = function() {
 	};

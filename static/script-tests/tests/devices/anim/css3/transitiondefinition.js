@@ -31,7 +31,7 @@
         );
     }
     
-    this.TransitionDefinitionTest = AsyncTestCase("TransitionDefinition");
+    this.TransitionDefinitionTest = new AsyncTestCase("TransitionDefinition");
 
     this.TransitionDefinitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

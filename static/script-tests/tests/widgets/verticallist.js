@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.VerticalListTest = AsyncTestCase("VerticalList");
+	this.VerticalListTest = new AsyncTestCase("VerticalList");
 
 	this.VerticalListTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
