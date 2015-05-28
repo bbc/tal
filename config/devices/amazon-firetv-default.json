@@ -1,10 +1,10 @@
 {
-  "pageStrategy": "html5",
+  "pageStrategy": "cordova",
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/styletopleft",
-      "uktvplay/appui/media/uktv_bcove",
+      "uktvplay/appui/media/visualon",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
