@@ -1396,15 +1396,16 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             getToPlaying(self, MediaPlayer, 0);
 
             this._mediaPlayer.playFrom(200);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            advancePlayTime();
+            fakeCEHTMLObject.playPosition = 0;
             fireSentinels(self);
 
-            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
-            assertEquals(99900, fakeCEHTMLObject.playPosition);
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(98900, fakeCEHTMLObject.playPosition);
         });
     };
 
