@@ -174,8 +174,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
-                self._eventCallback = self.sandbox.stub();
-                self._mediaPlayer.addEventCallback(null, self._eventCallback);
                 try {
                     action.call(self, MediaPlayer);
                 }
@@ -1383,10 +1381,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
             for (var i=0; i<4; i++) {
-                fakeCEHTMLObject.playPosition = 0;
                 fireSentinels(self);
             }
-            assertEventTypeHasBeenFiredASpecificNumberOfTimes(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK, 2);
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(self);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
         });
     };
 
