@@ -1081,7 +1081,6 @@ androidExec.processMessages = function(messages, opt_useTimeout) {
     try {
         // TODO: add setImmediate polyfill and process only one message at a time.
         while (messagesFromNative.length) {
-            console.log('messagesFromNative.length ' + messagesFromNative.length);
             var msg = popMessageFromQueue();
             // The Java side can send a * message to indicate that it
             // still has messages waiting to be retrieved.
@@ -1889,39 +1888,6 @@ window.cordova = require('cordova');
 // file: src/scripts/bootstrap.js
 
 require('cordova/init');
-
-var cvExec = require('cordova/exec');
-
-var VisualOnPlayerPlugin = function () {
-    console.log('Creating new instance of VisualOnPlayerPlugin');
-};
-
-VisualOnPlayerPlugin.launch = function (content, adData) {
-    content = content || "No content defined";
-    adData = adData || {};
-    cvExec(success, error, 'VisualOnPlayerPlugin', 'launch', [content, adData]);
-
-};
-
-VisualOnPlayerPlugin.setListener = function(callback, scope) {
-    cvExec(function () {
-        callback.apply(scope, Array.prototype.slice.call(arguments));
-    }, null, 'VisualOnPlayerPlugin', 'setListener', []);
-};
-
-
-
-function success() {
-    console.log('Success: ' + Array.prototype.join.call(arguments));
-}
-
-
-function error() {
-    console.warn('Error: ' + Array.prototype.join.call(arguments));
-}
-
-window.VisualOnPlayerPlugin = VisualOnPlayerPlugin;
-})();
 
 
 
