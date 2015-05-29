@@ -358,7 +358,7 @@
 				function(application, Container) {
 					var widget = new Container("id");
 					var inner = new Container("inner");
-					var inner2 = new Container("inner2");
+					new Container("inner2");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(inner);
 					assert(widget.hasChildWidget("inner"));
@@ -376,7 +376,7 @@
 				function(application, Container) {
 					var widget = new Container("id");
 					var inner = new Container("inner");
-					var inner2 = new Container("inner2");
+					new Container("inner2");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(inner);
 					assertSame(inner, widget.getChildWidget("inner"));
@@ -573,7 +573,7 @@
 				["antie/widgets/container"],
 				function(application, Container) {
 					var widget = new Container("id");
-					var inner = new Container("inner");
+					new Container("inner");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(new Container());
 					assertEquals(1, widget.getChildWidgetCount());
@@ -596,7 +596,7 @@
 				function(application, Container) {
 					var widget = new Container("id");
 					widget.appendChildWidget(new Container());
-					assertFalse(widget.isFocusable())
+					assertFalse(widget.isFocusable());
 				}
 		);
 	};
@@ -611,7 +611,7 @@
 				function(application, Container, Button) {
 					var widget = new Container("id");
 					widget.appendChildWidget(new Button());
-					assert(widget.isFocusable())
+					assert(widget.isFocusable());
 				}
 		);
 	};
@@ -628,7 +628,7 @@
 					var innerContainer = new Container("inner");
 					innerContainer.appendChildWidget(new Button());
 					widget.appendChildWidget(innerContainer);
-					assert(widget.isFocusable())
+					assert(widget.isFocusable());
 				}
 		);
 	};

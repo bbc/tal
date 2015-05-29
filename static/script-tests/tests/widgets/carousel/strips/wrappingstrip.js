@@ -306,7 +306,7 @@
                 assertEquals('getLengthToIndex with -1 index returns length up to last pre-clone', 0, strip.getLengthToIndex(-1));
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testGetLengthToIndexOneGreaterThenWidgetLengthReturnsLengthToFirstPostClone = function (queue) {
 	var self = this;
@@ -332,7 +332,7 @@
                 assertEquals('getLengthToIndex with index = widgets.length +1 returns length up to first post-clone', 40, strip.getLengthToIndex(1));
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testLengthOfWidgetAtIndexReturnsHeightIfVertical = function (queue) {
 	var self = this;
@@ -394,7 +394,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, Button, verticalOrientation) {
-                var strip, item, disabledItem, items, device;
+                var strip, device;
                 device = application.getDevice();
                 device.cloneElement = self.sandbox.stub();
                 strip = new WrappingStrip('testStrip', verticalOrientation);
@@ -613,7 +613,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, Button, verticalOrientation) {
-                var strip, items, device;
+                var strip, device;
 
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -644,7 +644,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, Button, verticalOrientation) {
-                var strip, item, i, device, maskLength, clones;
+                var strip, device, maskLength;
 
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -770,7 +770,7 @@
 
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesCreatesRearClones = function (queue) {
 	var self = this;
@@ -798,7 +798,7 @@
 
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesAppendsFrontClones = function (queue) {
 	var self = this;
@@ -854,7 +854,7 @@
                 assertEquals("First clone prepended Last", "one",  device.prependChildElement.secondCall.args[1]);
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesStoresPrependedClones = function (queue) {
 	var self = this;
@@ -881,7 +881,7 @@
                 assertEquals("Prepended clones stored", fakeElements, strip._getPrependedClones());
             }
         );
-    },
+    };
 
     this.WrappingStripTest.prototype.testCreateClonesStoresAppendedClones = function (queue) {
 	var self = this;
@@ -919,7 +919,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, verticalOrientation) {
-                var fakeWidget1, fakeWidget2, fakeWidget3, strip, fakeWidgets, maskLength, firstHiddenIndex, cloneElementsBetweenCall;
+                var fakeWidget1, fakeWidget2, fakeWidget3, strip, fakeWidgets, maskLength;
                 maskLength = 100;
                 fakeWidget1 = {isFocusable: function () { return true; } };
                 fakeWidget2 = {isFocusable: function () { return true; } };
@@ -980,7 +980,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, verticalOrientation) {
-                var strip, fakeWidget1, fakeWidget2, fakeWidget3, fakeWidgets, maskLength, lastHiddenIndex, cloneElementsBetweenCall;
+                var strip, fakeWidget1, fakeWidget2, fakeWidget3, fakeWidgets, maskLength;
                 maskLength = 100;
                 fakeWidget1 = {isFocusable: function () { return true; } };
                 fakeWidget2 = {isFocusable: function () { return true; } };
@@ -1040,7 +1040,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, verticalOrientation) {
-                var device, strip, FakeWidget, fakeWidgets, firstIndex, onePastEndIndex;
+                var device, strip, FakeWidget;
                 FakeWidget = function (id) {
                     this.outputElement = id;
                 };
@@ -1232,7 +1232,7 @@
                 "antie/widgets/carousel/mask"
             ],
             function (application, WidgetStrip, Button, verticalOrientation, Mask) {
-                var strip, device;
+                var strip;
                 self.sandbox.stub(application.getDevice(), "getElementSize").returns({width: 70, height: 50});
                 strip = new WidgetStrip('strip', verticalOrientation);
                 strip.autoCalculate(false);
@@ -1280,7 +1280,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WrappingStrip, Button, verticalOrientation) {
-                var strip, items, device, initialCallCount, finalCallCount;
+                var strip, device, initialCallCount, finalCallCount;
 
                 device = application.getDevice();
                 self.sandbox.stub(device);
