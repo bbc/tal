@@ -25,39 +25,39 @@
  */
 
 require.def(
-	'antie/devices/net/xhrthiswindow',
-	[
-		'antie/devices/browserdevice'
-	],
-	function (Device) {
-		'use strict';
+    'antie/devices/net/xhrthiswindow',
+    [
+        'antie/devices/browserdevice'
+    ],
+    function (Device) {
+        'use strict';
 
-		/**
-		 * Loads a resource from a URL.
+        /**
+         * Loads a resource from a URL.
          * This for devices where the activation object (i.e. 'this') within an event listener on an XMLHttpRequest instance
          * is a reference to the window object, not the XMLHttpRequest instance.
-		 * @param {String} url The URL to load.
-		 * @param {Object} opts Object containing onLoad and onError callback functions.
-		 * @returns The request object used to load the resource.
-		 */
-		Device.prototype.loadURL = function (url, opts) {
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState === 4) {
-					xhr.onreadystatechange = null;
-					if (xhr.status >= 200 && xhr.status < 300) {
-						if (opts.onLoad) {
-							opts.onLoad(xhr.responseText, xhr.status);
-						}
-					} else {
-						if (opts.onError) {
-							opts.onError(xhr.responseText, xhr.status);
-						}
-					}
-				}
-			};
+         * @param {String} url The URL to load.
+         * @param {Object} opts Object containing onLoad and onError callback functions.
+         * @returns The request object used to load the resource.
+         */
+        Device.prototype.loadURL = function (url, opts) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    xhr.onreadystatechange = null;
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        if (opts.onLoad) {
+                            opts.onLoad(xhr.responseText, xhr.status);
+                        }
+                    } else {
+                        if (opts.onError) {
+                            opts.onError(xhr.responseText, xhr.status);
+                        }
+                    }
+                }
+            };
 
-			try {
+            try {
                 xhr.open(opts.method || 'GET', url, true);
                 if (opts && opts.headers) {
                     for (var header in opts.headers) {
@@ -67,12 +67,12 @@ require.def(
                     }
                 }
                 xhr.send(opts.data || null);
-			} catch (ex) {
-				if (opts.onError) {
-					opts.onError(ex);
-				}
-			}
-			return xhr;
-		};
-	}
+            } catch (ex) {
+                if (opts.onError) {
+                    opts.onError(ex);
+                }
+            }
+            return xhr;
+        };
+    }
 );
