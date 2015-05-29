@@ -1081,6 +1081,7 @@ androidExec.processMessages = function(messages, opt_useTimeout) {
     try {
         // TODO: add setImmediate polyfill and process only one message at a time.
         while (messagesFromNative.length) {
+            console.log('messagesFromNative.length ' + messagesFromNative.length);
             var msg = popMessageFromQueue();
             // The Java side can send a * message to indicate that it
             // still has messages waiting to be retrieved.
@@ -1888,6 +1889,7 @@ window.cordova = require('cordova');
 // file: src/scripts/bootstrap.js
 
 require('cordova/init');
+})();
 
 
 
