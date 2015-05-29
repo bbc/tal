@@ -587,10 +587,18 @@ require.def(
             },
 
             _exitBufferingSentinel: function() {
-                if(this._hasSentinelTimeChanged || this._mediaElement.paused) {
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
-                    this._exitBuffering();
+                function fireExitBufferingSentinel(self) {
+                    self._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+                    self._exitBuffering();
                     return true;
+                }
+
+                if (this._readyToPlayFrom  && this._mediaElement.paused) {
+                    return fireExitBufferingSentinel(this);
+                }
+
+                if (this._hasSentinelTimeChanged) {
+                    return fireExitBufferingSentinel(this);
                 }
                 return false;
             },
