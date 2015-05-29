@@ -96,7 +96,6 @@ require.def('antie/widgets/media',
                 return this._mediaInterface.getError();
             },
             setSources: function(sources, tags) {
-            	console.log('media set sources pass through');
                 this._mediaInterface.setSources(sources, tags);
             },
             getSources: function() {
