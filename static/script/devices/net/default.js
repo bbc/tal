@@ -96,7 +96,6 @@ require.def(
 		 */
 		Device.prototype.loadURL = function(url, opts) {
 			var xhr = new XMLHttpRequest();
-			xhr.open(opts.method || 'GET', url, true);
 			xhr.onreadystatechange = function() {
 				if (this.readyState === 4) {
 					this.onreadystatechange = null;
@@ -111,13 +110,14 @@ require.def(
 					}
 				}
 			};
-			if (opts && opts.headers) {
-				for (var header in opts.headers) {
-					xhr.setRequestHeader(header, opts.headers[header]);
-				}
-			}
 
 			try {
+                xhr.open(opts.method || 'GET', url, true);
+                if (opts && opts.headers) {
+                    for (var header in opts.headers) {
+                        xhr.setRequestHeader(header, opts.headers[header]);
+                    }
+                }
 				xhr.send(opts.data || null);
 			} catch(ex) {
 				if (opts.onError) {

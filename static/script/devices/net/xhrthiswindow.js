@@ -42,7 +42,6 @@ require.def(
 		 */
 		Device.prototype.loadURL = function (url, opts) {
 			var xhr = new XMLHttpRequest();
-			xhr.open(opts.method || 'GET', url, true);
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					xhr.onreadystatechange = null;
@@ -57,15 +56,17 @@ require.def(
 					}
 				}
 			};
-			if (opts && opts.headers) {
-				for (var header in opts.headers) {
-					if (opts.headers.hasOwnProperty(header)) {
-						xhr.setRequestHeader(header, opts.headers[header]);
-					}
-				}
-			}
+
 			try {
-				xhr.send(opts.data || null);
+                xhr.open(opts.method || 'GET', url, true);
+                if (opts && opts.headers) {
+                    for (var header in opts.headers) {
+                        if (opts.headers.hasOwnProperty(header)) {
+                            xhr.setRequestHeader(header, opts.headers[header]);
+                        }
+                    }
+                }
+                xhr.send(opts.data || null);
 			} catch (ex) {
 				if (opts.onError) {
 					opts.onError(ex);
