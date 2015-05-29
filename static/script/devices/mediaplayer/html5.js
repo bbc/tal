@@ -401,7 +401,6 @@ require.def(
             },
 
             _onMetadata: function() {
-                this._hasMetaDataBeenLoaded = true;
                 this._metadataLoaded();
             },
 
@@ -588,13 +587,13 @@ require.def(
             },
 
             _exitBufferingSentinel: function() {
-                var fireExitBufferingSentinel = function(self) {
+                function fireExitBufferingSentinel(self) {
                     self._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     self._exitBuffering();
                     return true;
                 }
 
-                if (this._hasMetaDataBeenLoaded && this._mediaElement.paused) {
+                if (this._readyToPlayFrom  && this._mediaElement.paused) {
                     return fireExitBufferingSentinel(this);
                 }
 

@@ -1287,7 +1287,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testExitBufferingSentinelIsFiresWhenDeviceIsPausedAndMetadataHasBeenNotBeenLoaded = function(queue) {
+    mixins.testExitBufferingSentinelIsNotFiredWhenDeviceIsPausedAndMetadataHasBeenNotBeenLoaded = function(queue) {
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
