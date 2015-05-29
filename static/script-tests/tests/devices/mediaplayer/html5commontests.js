@@ -1287,6 +1287,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testExitBufferingSentinelIsFiresWhenDeviceIsPausedAndMetadataHasBeenNotBeenLoaded = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(0);
+            // Meta Data is not loaded at this point
+
+            stubCreateElementResults.video.paused = true;
+            fireSentinels();
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+        });
+    };
+
     mixins.testSeekSentinelSetsCurrentTime = function(queue) {
         expectAsserts(2);
         var self = this;

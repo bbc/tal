@@ -401,6 +401,7 @@ require.def(
             },
 
             _onMetadata: function() {
+                this._hasMetaDataBeenLoaded = true;
                 this._metadataLoaded();
             },
 
@@ -587,10 +588,18 @@ require.def(
             },
 
             _exitBufferingSentinel: function() {
-                if(this._hasSentinelTimeChanged || this._mediaElement.paused) {
-                    this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
-                    this._exitBuffering();
+                var fireExitBufferingSentinel = function(self) {
+                    self._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
+                    self._exitBuffering();
                     return true;
+                }
+
+                if (this._hasMetaDataBeenLoaded && this._mediaElement.paused) {
+                    return fireExitBufferingSentinel(this);
+                }
+
+                if (this._hasSentinelTimeChanged) {
+                    return fireExitBufferingSentinel(this);
                 }
                 return false;
             },
