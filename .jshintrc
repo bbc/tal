@@ -33,6 +33,7 @@
         "assertNotEquals": true,
         "assertException": true,
         "assertFalse": true,
+        "assertFunction": true,
         "assertTrue": true,
         "assertNull": true,
         "assertInstanceOf": true,
