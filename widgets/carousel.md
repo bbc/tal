@@ -155,7 +155,7 @@ both have two properties
 The second argument of alignToIndex is an animation options object, which you can use to configure how each alignment animates, for example:
 
 {% highlight javascript %}
-carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: "false" });
+carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: false });
 {% endhighlight %}
 
 Would align to item 3 over the course of 500ms using a sine easing function. Note that by default animation is skipped, so the skipAnim property needs to be set false if you want animation.
