@@ -65,7 +65,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WidgetStrip, Button, orientation) {
-                var device, strip;
+                var strip;
                 stubElementOffsetToReturn0(self, application);
                 strip = createThreeButtonStrip(WidgetStrip, Button, orientation);
                 assertEquals('Length to first index is 0', 0, strip.getLengthToIndex(0));
@@ -103,7 +103,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WidgetStrip, Button, orientation) {
-                var device, strip;
+                var strip;
                 stubElementOffsetToReturn100(self, application);
                 strip = createThreeButtonStrip(WidgetStrip, Button, orientation);
                 assertEquals('Length of all widgets is same as length to out of bounds index', strip.getLengthToIndex(3), strip.getLengthToIndex(4));

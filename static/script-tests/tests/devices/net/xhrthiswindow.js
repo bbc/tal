@@ -227,7 +227,7 @@
             assert(successSpy.calledOnce);
             assert(successSpy.calledWith({ "test" : "myValue" }));
 		}, config);
-	},
+	};
 
 	this.XHRThisWindowNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
         expectAsserts(2);
@@ -245,5 +245,5 @@
 
             assert(errorSpy.calledOnce);
         }, config);
-	}
+	};
 }());

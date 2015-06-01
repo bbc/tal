@@ -444,7 +444,7 @@
                 device.createContainer.returns("test");
                 var el = {id: 'strip'};
                 strip.outputElement = el;
-                var rendered = strip.render(device);
+                strip.render(device);
                 sinon.assert.calledWith(device.clearElement, el);
             }
         );
@@ -494,7 +494,7 @@
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
                 stubAppAndDevice(self, application, Device, Widget);
-                var i, widgets;
+                var widgets;
 
                 var strip = new CullingStrip('test', vertical);
                 strip.outputElement = {id: 'strip'};
@@ -521,7 +521,7 @@
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
                 stubAppAndDevice(self, application, Device, Widget);
-                var i, widgets;
+                var widgets;
 
                 var strip = new CullingStrip('test', vertical);
                 strip.outputElement = {id: 'strip'};

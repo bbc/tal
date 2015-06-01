@@ -37,9 +37,9 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.isChallengeActive()
+                    basePgHandler.isChallengeActive();
                 }, 'Error');
             });
     };
@@ -48,9 +48,9 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.showChallenge()
+                    basePgHandler.showChallenge();
                 }, 'Error');
             });
     };
@@ -59,9 +59,9 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.supportsMessage()
+                    basePgHandler.supportsMessage();
                 }, 'Error');
             });
     };
@@ -70,9 +70,9 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.isConfigurable()
+                    basePgHandler.isConfigurable();
                 }, 'Error');
             });
     };

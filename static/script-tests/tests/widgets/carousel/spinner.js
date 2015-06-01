@@ -98,7 +98,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (Spinner, verticalOrientation) {
-                var device, animOptions, mask, spinner, dummyStrip, dummyElement, moveArgs;
+                var device, animOptions, mask, spinner, dummyStrip, dummyElement;
 
                 animOptions = {
                     onComplete: function () { return true; },
@@ -214,7 +214,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, stopStub;
+                var device, spinner;
 
                 device = application.getDevice();
                 this.sandbox.stub(device);
@@ -241,7 +241,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, stopStub;
+                var device, spinner;
 
                 device = application.getDevice();
                 this.sandbox.stub(device);
@@ -297,7 +297,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, options;
+                var device, spinner;
                 device = application.getDevice();
                 this.sandbox.stub(device);
                 this.sandbox.stub(Mask.prototype);
@@ -319,7 +319,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, options;
+                var device, spinner;
                 device = application.getDevice();
                 this.sandbox.stub(device);
                 this.sandbox.stub(Mask.prototype);

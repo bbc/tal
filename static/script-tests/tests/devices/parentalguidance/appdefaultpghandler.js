@@ -112,15 +112,15 @@
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 }, 'Error');
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenOnGuidanceChallengeResponseIsNotAFunction = function (queue) {
@@ -137,15 +137,15 @@
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 }, 'Error');
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeCallsAppHandlerWithCorrectArguments = function (queue) {
@@ -159,20 +159,20 @@
                 var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
                 var guidanceChallengeResponseCallBack = {
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
-                }
+                };
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertNoException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 });
                 assertTrue(showChallengeStub.calledWith("Test message", guidanceChallengeResponseCallBack));
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeReturnsValue = function (queue) {
@@ -186,17 +186,17 @@
                 var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
                 var guidanceChallengeResponseCallBack = {
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
-                }
+                };
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
                 var returnValue = device.parentalGuidanceHelper.showChallenge('testing', guidanceChallengeResponseCallBack);
 
                 assertEquals('foo', returnValue);
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveThrowsErrorWhenAppHandlerIsUndefined = function (queue) {
@@ -226,7 +226,7 @@
 
                 var appHandler = {
                     isChallengeActive: isChallengeActiveStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
@@ -235,7 +235,7 @@
                     device.parentalGuidanceHelper.isChallengeActive();
                 });
                 assertTrue(isChallengeActiveStub.calledOnce);
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveReturnsTrueOnlyWhenAppHandlerReturnsTrue = function (queue) {
@@ -249,7 +249,7 @@
 
                 var appHandler = {
                     isChallengeActive: isChallengeActiveStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
@@ -258,7 +258,7 @@
                 isChallengeActiveStub.returns(false);
 
                 assertFalse(device.parentalGuidanceHelper.isChallengeActive());
-            })
+            });
     };
 
 })();

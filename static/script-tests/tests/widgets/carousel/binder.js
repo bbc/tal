@@ -104,7 +104,7 @@
                 "antie/iterator"
             ],
             function (application, Binder, Formatter, Carousel, Iterator) {
-                var binder, dataSource, formatter, carousel, iterator, testObj, callCount;
+                var binder, dataSource, formatter, carousel, callCount;
                 callCount = 0;
                 this.sandbox.stub(Formatter.prototype);
                 this.sandbox.stub(Carousel.prototype);

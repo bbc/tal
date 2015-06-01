@@ -124,7 +124,7 @@
 			'lib/mockapplication',
 			['antie/widgets/carousel/carouselcore'],
 			function (application, CarouselCore) {
-				var carousel, appendChildStub, appendedFromCarouselWidget;
+				var carousel, appendedFromCarouselWidget;
 
 				appendedFromCarouselWidget = {
                     dummy: "dummyWidget",
@@ -275,7 +275,7 @@
             'lib/mockapplication',
             ['antie/widgets/carousel/carouselcore'],
             function (application, CarouselCore) {
-                var carousel, fakeWidget;
+                var carousel;
                 carousel = new CarouselCore('myCarousel');
                 carousel._widgetStrip.widgets = this.sandbox.stub().returns(["test"]);
                 assertEquals("Widget strip widgets returned", ["test"], carousel.items());
@@ -310,7 +310,7 @@
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
             function (application, CarouselCore, Mask, BookendedNavigator) {
-                var carousel, maskStub, navStub, INDEX;
+                var carousel, maskStub, INDEX;
                 INDEX = 3;
                 maskStub = this.sandbox.stub(Mask.prototype, 'alignToIndex').withArgs(INDEX);
 
@@ -332,7 +332,7 @@
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
             function (application, CarouselCore, Button, Mask, BookendedNavigator) {
-                var carousel, maskStub, navStub;
+                var carousel, maskStub;
                 var device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo');
                 maskStub = this.sandbox.stub(Mask.prototype, 'setAlignPoint');
