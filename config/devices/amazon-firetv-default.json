@@ -11,7 +11,7 @@
       "antie/devices/logging/default",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/exit/closewindow"
+      "uktvplay/appui/devices/exit/cordovaexit"
     ]
   },
   "logging": {
