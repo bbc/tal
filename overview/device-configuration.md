@@ -28,7 +28,7 @@ Used in page construction
 | `samsungmaple` | For samsung devices running in maple mode (use html5 instead unless specifically needed) |
   
 ###modules (object)
-The require modules which should be loaded to implement the device abstraction layer.
+The require modules which should be loaded to implement the device abstraction layer. Each module applies platform specific overrides or implementations that run while the app is starting up. For example, including the `antie/devices/anim/noanim` modifier will disable animations for that platform.
 
 ####modules.base (string)
 The module on which the device is based. This will usually be antie/devices/browserdevice.
