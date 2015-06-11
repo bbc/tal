@@ -12,8 +12,7 @@ module.exports = function (grunt) {
                     'static/script/lib/*',
                     'static/script/devices/googletv.js',
                     'static/script/devices/data/json2.js',
-                    'static/script/widgets/horizontalcarousel.js',
-                    'static/script/devices/exit/sagemcom.js'
+                    'static/script/widgets/horizontalcarousel.js'
                 ]
             }
         },
