@@ -3,6 +3,7 @@ layout: default
 title: Installation and Configuration
 ---
 [Creating an index]: createanindex.html
+
 #Installation
 
 <p class="lead">Getting started with the TV Application Layer</p>

@@ -61,7 +61,9 @@ This gives each mask and strip a unique id within the document. In addition ther
 * carouselItem - added to every widget when it is added to a carousel
 
 Some basic styling is required for a carousel to work correctly. These style properties are deliberately not set by default to allow for flexibility in creating style sheets.
+
 #### Mask
+
 The mask needs to have overflow set. In general you'll want this hidden so the strip can flow outside its bounds without visible scroll bars. You might want to set it to something else if modifying animation behaviour or targetting a touch device.
 The mask needs to have a fixed length - this is width for a horizontal carousel and height for vertical carousel. This is so that the carousel can efficiently determine which widgets are outside the mask.
 
@@ -112,6 +114,7 @@ The only essential part of this specific css is the height property, as this is 
 Movement of the carousel is performed by calling its method, alignToIndex. This method takes an integer as it's first argument. This is the index within the carousel of the widget you want to move the carousel toward.
 
 Two points are defined:
+
 * The alignment point, a point along the mask element defined by a distance from the left or top of the mask (horizontal or vertical)
 * The widget alignment point, a point along the widget being aligned, defined by a distance from the left or top of the widget.
 
@@ -143,6 +146,7 @@ By default both alignment points are set to 0, i.e. the left or top edge of the 
 #### Alignment events
 
 Two events are fired:
+
 * beforealign fired immediately before an alignment takes place
 * afteralign fired when an alignment completes
 
