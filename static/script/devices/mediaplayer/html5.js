@@ -582,8 +582,20 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var notFirstSentinelActivationSinceStateChange = this._sentinelIntervalNumber > 1;
-                if(!this._hasSentinelTimeChanged && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange && this._doBuffering) {
+                var currentTime = this.getCurrentTime();
+
+                var enterBufferingSentinelTimeChanged = Math.abs(currentTime - this._lastEnteringBufferingSentinelTime) > 0;
+                var activateEnterBufferingSentinel;
+
+                if (this._lastEnteringBufferingSentinelTime == undefined || enterBufferingSentinelTimeChanged) {
+                    activateEnterBufferingSentinel = false;
+                }
+                else {
+                    activateEnterBufferingSentinel = !this._nearEndOfMedia && this._doBuffering;
+                }
+                this._lastEnteringBufferingSentinelTime = currentTime;
+
+                if(activateEnterBufferingSentinel ) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     return true;

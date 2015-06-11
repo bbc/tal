@@ -1296,6 +1296,37 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelDoesNothingWhenTimeAdvancesByLessThanTheBufferingTolerance = function(queue) {
+        expectAsserts(2);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            clearEvents(self);
+
+            var i;
+            for (i = 0; i<3; i++) {
+                advancePlayTime(self);
+                fireSentinels(self);
+            }
+
+            for (i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+            stubCreateElementResults.video.currentTime = 0.01;
+            fireSentinels(self);
+
+            advancePlayTime();
+            fireSentinels(self);
+
+            advancePlayTime();
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    }
+
      mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
         expectAsserts(3);
         var self = this;
@@ -2005,7 +2036,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEquals(stubCreateElementResults.video, this._mediaPlayer.getPlayerElement());
         });
     };
-    
+
     mixins.testGetPlayerElementReturnsAudioElementForAudio = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
