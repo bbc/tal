@@ -583,7 +583,7 @@ require.def(
 
             _enterBufferingSentinel: function() {
                 var notFirstSentinelActivationSinceStateChange = this._sentinelIntervalNumber > 1;
-                if(!this._hasSentinelTimeChanged && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange && this.doBuffering) {
+                if(!this._hasSentinelTimeChanged && !this._nearEndOfMedia && notFirstSentinelActivationSinceStateChange && this._doBuffering) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     return true;
@@ -683,10 +683,11 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     self._sentinelIntervalNumber += 1;
                     var newTime = self.getCurrentTime();
-                    self.doBuffering = newTime > 0 || self._trustZeroes;
+                    self._doBuffering = newTime > 0 || self._trustZeroes;
                     self._hasSentinelTimeChanged = (Math.abs(newTime - self._lastSentinelTime) > 0.2);
                     self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
+
                     for (var i = 0; i < sentinels.length; i++) {
                         var sentinelActivated = sentinels[i].call(self);
                         if(sentinelActivated) {

@@ -1254,6 +1254,48 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceTimeIsZero = function(queue) {
+        expectAsserts(2);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            clearEvents(self);
+
+            var i;
+            for (i = 0; i<3; i++) {
+                advancePlayTime(self);
+                fireSentinels(self);
+            }
+
+            for (i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelDoesNothingWhenSeekedToZeroAndDeviceTimeIsZero = function(queue) {
+        expectAsserts(1);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 20);
+            clearEvents(self);
+
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            fireSentinels(self);
+
+            for (var i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        });
+    };
+
      mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
         expectAsserts(3);
         var self = this;
@@ -1963,7 +2005,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEquals(stubCreateElementResults.video, this._mediaPlayer.getPlayerElement());
         });
     };
-
+    
     mixins.testGetPlayerElementReturnsAudioElementForAudio = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
