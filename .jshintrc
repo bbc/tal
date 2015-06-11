@@ -20,8 +20,7 @@
         "history": true,
         "unescape": true,
         "ActiveXObject": true,
-        "DOMParser": true,
-        "parent": true
+        "DOMParser": true
     },
     "asi": true,
     "laxbreak": true,
