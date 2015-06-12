@@ -582,22 +582,30 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var currentTime = this.getCurrentTime();
+                var shouldSentinelFire = !this._hasSentinelTimeChanged && !this._nearEndOfMedia && this._doBuffering;
 
-                var enterBufferingSentinelTimeChanged = Math.abs(currentTime - this._lastEnteringBufferingSentinelTime) > 0;
-                var activateEnterBufferingSentinel;
-
-                if (this._lastEnteringBufferingSentinelTime == undefined || enterBufferingSentinelTimeChanged) {
-                    activateEnterBufferingSentinel = false;
+                if (this._enterBufferingSentinelAttemptCount === undefined) {
+                    this._enterBufferingSentinelAttemptCount = 0;
                 }
-                else {
-                    activateEnterBufferingSentinel = !this._nearEndOfMedia && this._doBuffering;
-                }
-                this._lastEnteringBufferingSentinelTime = currentTime;
 
-                if(activateEnterBufferingSentinel ) {
+                if(shouldSentinelFire) {
+                    this._enterBufferingSentinelAttemptCount++;
+                }
+
+                if (this._enterBufferingSentinelAttemptCount == 1) {
+                    shouldSentinelFire = false;
+                }
+
+                if(shouldSentinelFire) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
+                    /* Resetting the sentinel attempt count to zero means that the sentinel will only fire once
+                        even if multiple iterations result in the same conditions.
+                        This should not be needed as the second iteration, when the enter buffering sentinel is fired
+                        will cause the media player to go into the buffering state. The enter buffering sentinel is not fired
+                        when in buffering state
+                    */
+                    this._enterBufferingSentinelAttemptCount = 0;
                     return true;
                 }
                 return false;

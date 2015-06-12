@@ -262,6 +262,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assert(self._eventCallback.notCalled);
     };
 
+    var assertEventTypeHasBeenFiredASpecificNumberOfTimes = function (self, eventType, expectedNumberOfCalls) {
+        var numberOfCalls = 0;
+
+        for( i = 0; i < self._eventCallback.args.length; i++) {
+            if(eventType === self._eventCallback.args[i][0].type) {
+                numberOfCalls++;
+            }
+        }
+        assertEquals(expectedNumberOfCalls, numberOfCalls);
+    };
+
     var clearEvents = function(self) {
         self._eventCallback.reset();
     };
@@ -1124,6 +1135,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             clearEvents(self);
             fireSentinels(self);
             fireSentinels(self);
+            fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEvent(self, MediaPlayer.EVENT.BUFFERING);
@@ -1254,7 +1266,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceTimeIsZero = function(queue) {
+    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceTimeIsReportedAsZeroDuringPlayback = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1296,8 +1308,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEnterBufferingSentinelDoesNothingWhenTimeAdvancesByLessThanTheBufferingTolerance = function(queue) {
-        expectAsserts(2);
+    mixins.testEnterBufferingSentinelOnlyFiresOnSecondAttempt = function(queue) {
+        expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
@@ -1313,17 +1325,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                 stubCreateElementResults.video.currentTime = 0;
                 fireSentinels(self);
             }
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+
             stubCreateElementResults.video.currentTime = 0.01;
             fireSentinels(self);
 
-            advancePlayTime();
-            fireSentinels(self);
-
-            advancePlayTime();
-            fireSentinels(self);
-
             assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertState(self, MediaPlayer.STATE.PLAYING);
+
+            stubCreateElementResults.video.currentTime = 0.01;
+            fireSentinels(self);
+
+            stubCreateElementResults.video.currentTime = 0.01;
+            fireSentinels(self);
+
+            assertEventTypeHasBeenFiredASpecificNumberOfTimes(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, 1);
         });
     }
 
