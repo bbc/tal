@@ -121,6 +121,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.PAUSED:
                     case MediaPlayer.STATE.COMPLETE:
+                        this._trustZeroes = true;
                         this._toBuffering();
                         this._playFromIfReady();
                         break;
@@ -130,6 +131,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
+                        this._trustZeroes = true;
                         this._toBuffering();
                         this._targetSeekTime = this._getClampedTimeForPlayFrom(seconds);
                         if (this._isNearToCurrentTime(this._targetSeekTime)) {
@@ -154,6 +156,7 @@ require.def(
                 this._sentinelSeekTime = undefined;
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
+                        this._trustZeroes = true;
                         this._toBuffering();
                         this._mediaElement.play();
                         break;
@@ -174,6 +177,7 @@ require.def(
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
+                        this._trustZeroes = true;
                         this._toBuffering();
                         this._playFromIfReady();
                         break;
@@ -412,11 +416,8 @@ require.def(
                     return;
 
                 } else if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._trustZeroes = false;
                     this._toPaused();
-
                 } else {
-                    this._trustZeroes = false;
                     this._toPlaying();
                 }
             },
@@ -528,7 +529,6 @@ require.def(
             },
 
             _toBuffering: function() {
-                this._trustZeroes = true;
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
                 this._setSentinels([ this._exitBufferingSentinel ]);
@@ -582,7 +582,11 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var shouldSentinelFire = !this._hasSentinelTimeChanged && !this._nearEndOfMedia && this._doBuffering;
+                var shouldSentinelFire = !this._hasSentinelTimeChangedWithinTolerance && !this._nearEndOfMedia ;
+
+                if (this.getCurrentTime() === 0) {
+                    shouldSentinelFire = this._trustZeroes && shouldSentinelFire;
+                }
 
                 if (this._enterBufferingSentinelAttemptCount === undefined) {
                     this._enterBufferingSentinelAttemptCount = 0;
@@ -622,7 +626,7 @@ require.def(
                     return fireExitBufferingSentinel(this);
                 }
 
-                if (this._hasSentinelTimeChanged) {
+                if (this._hasSentinelTimeChangedWithinTolerance) {
                     return fireExitBufferingSentinel(this);
                 }
                 return false;
@@ -652,7 +656,7 @@ require.def(
 
             _shouldBePausedSentinel: function() {
                 var sentinelActionTaken = false;
-                if (this._hasSentinelTimeChanged) {
+                if (this._hasSentinelTimeChangedWithinTolerance) {
                     var mediaElement = this._mediaElement;
                     sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.pause, function() {
                         mediaElement.pause();
@@ -683,7 +687,7 @@ require.def(
             },
 
             _endOfMediaSentinel: function() {
-                if (!this._hasSentinelTimeChanged && this._nearEndOfMedia) {
+                if (!this._hasSentinelTimeChangedWithinTolerance && this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
                     return true;
@@ -703,18 +707,25 @@ require.def(
                 this._sentinelInterval = setInterval(function() {
                     self._sentinelIntervalNumber += 1;
                     var newTime = self.getCurrentTime();
-                    self._doBuffering = newTime > 0 || self._trustZeroes;
-                    self._hasSentinelTimeChanged = (Math.abs(newTime - self._lastSentinelTime) > 0.2);
+
+                    self._hasSentinelTimeChangedWithinTolerance = (Math.abs(newTime - self._lastSentinelTime) > 0.2);
                     self._nearEndOfMedia = (self.getDuration() - (newTime || self._lastSentinelTime)) <= 1;
                     self._lastSentinelTime = newTime;
 
                     for (var i = 0; i < sentinels.length; i++) {
                         var sentinelActivated = sentinels[i].call(self);
+
+                        if (self.getCurrentTime() > 0) {
+                            self._trustZeroes = false;
+                        }
+
                         if(sentinelActivated) {
                             break;
                         }
                     }
                 }, 1100);
+
+
             },
 
             _isReadyToPlayFrom: function() {

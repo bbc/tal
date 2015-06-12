@@ -1288,7 +1288,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testEnterBufferingSentinelDoesNothingWhenSeekedToZeroAndDeviceTimeIsZero = function(queue) {
+    mixins.testEnterBufferingSentinelFiresWhenSeekedToZeroAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function(queue) {
         expectAsserts(1);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -1299,16 +1299,14 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
             fireSentinels(self);
 
-            for (var i=0; i<2; i++) {
-                stubCreateElementResults.video.currentTime = 0;
-                fireSentinels(self);
-            }
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
 
-            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
         });
     };
 
-    mixins.testEnterBufferingSentinelOnlyFiresOnSecondAttempt = function(queue) {
+    mixins.testEnterBufferingSentinelOnlyFiresOnSecondAttemptWhenDeviceReportsTimeAsNotChangingWithinTolerance = function(queue) {
         expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
