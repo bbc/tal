@@ -34,6 +34,7 @@ require.def(
          * Exits the application by singalling the application iframe can be closed
          */
         Device.prototype.exit = function() {
+            /* global parent: true */
             parent.postMessage("JS_EVENT_QUIT_THIRD_PARTY", "*");
         };
     }
