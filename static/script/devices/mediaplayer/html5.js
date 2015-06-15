@@ -594,6 +594,8 @@ require.def(
 
                 if(sentinelShouldFire) {
                     this._enterBufferingSentinelAttemptCount++;
+                } else {
+                    this._enterBufferingSentinelAttemptCount = 0;
                 }
 
                 if (this._enterBufferingSentinelAttemptCount === 1) {
