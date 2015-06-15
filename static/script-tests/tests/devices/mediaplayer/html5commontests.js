@@ -1266,25 +1266,37 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    var ensureEnterBufferingSentinelIsNotCalled = function(self, MediaPlayer) {
+        var i;
+        for (i = 0; i<3; i++) {
+            advancePlayTime(self);
+            fireSentinels(self);
+        }
+
+        for (i=0; i<2; i++) {
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+        }
+        assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        assertState(self, MediaPlayer.STATE.PLAYING);
+    };
+
+    var ensureEnterBufferingSentinelIsCalled = function(self, MediaPlayer) {
+        for (var i=0; i<2; i++) {
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+        }
+        assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        assertState(self, MediaPlayer.STATE.BUFFERING);
+    };
+
     mixins.testEnterBufferingSentinelDoesNothingWhenDeviceTimeIsReportedAsZeroDuringPlayback = function(queue) {
         expectAsserts(2);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             clearEvents(self);
-
-            var i;
-            for (i = 0; i<3; i++) {
-                advancePlayTime(self);
-                fireSentinels(self);
-            }
-
-            for (i=0; i<2; i++) {
-                stubCreateElementResults.video.currentTime = 0;
-                fireSentinels(self);
-            }
-            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertState(self, MediaPlayer.STATE.PLAYING);
+            ensureEnterBufferingSentinelIsNotCalled(self, MediaPlayer);
         });
     };
 
@@ -1294,20 +1306,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 20);
             clearEvents(self);
-
-            var i;
-            for (i = 0; i<3; i++) {
-                advancePlayTime(self);
-                fireSentinels(self);
-            }
-
-            for (i=0; i<2; i++) {
-                stubCreateElementResults.video.currentTime = 0;
-                fireSentinels(self);
-            }
-
-            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertState(self, MediaPlayer.STATE.PLAYING);
+            ensureEnterBufferingSentinelIsNotCalled(self, MediaPlayer);
         });
     };
 
@@ -1317,13 +1316,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             clearEvents(self);
-
-            for (var i=0; i<2; i++) {
-                stubCreateElementResults.video.currentTime = 0;
-                fireSentinels(self);
-            }
-            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertState(self, MediaPlayer.STATE.BUFFERING);
+            ensureEnterBufferingSentinelIsCalled(self, MediaPlayer);
         });
     };
 
@@ -1333,13 +1326,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
             clearEvents(self);
-
-            for (var i=0; i<2; i++) {
-                stubCreateElementResults.video.currentTime = 0;
-                fireSentinels(self);
-            }
-            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
-            assertState(self, MediaPlayer.STATE.BUFFERING);
+            ensureEnterBufferingSentinelIsCalled(self, MediaPlayer);
         });
     };
 
