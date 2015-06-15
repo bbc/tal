@@ -1288,6 +1288,29 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelFiresWhenBeginPlaybackIsCalledAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function (queue) {
+      expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 20);
+            clearEvents(self);
+
+            var i;
+            for (i = 0; i<3; i++) {
+                advancePlayTime(self);
+                fireSentinels(self);
+            }
+
+            for (i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertState(self, MediaPlayer.STATE.PLAYING);
+        });
+    };
+
     mixins.testEnterBufferingSentinelFiresWhenSeekedToZeroAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function(queue) {
         expectAsserts(1);
         var self = this;
@@ -1339,7 +1362,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertEventTypeHasBeenFiredASpecificNumberOfTimes(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, 1);
         });
-    }
+    };
 
      mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
         expectAsserts(3);
