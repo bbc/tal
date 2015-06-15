@@ -177,7 +177,6 @@ require.def('antie/widgets/media',
                 this._mediaInterface.setLoop(loop);
             },
             play: function() {
-            	console.log('media play pass through');
                 this._mediaInterface.play();
             },
             stop: function() {
