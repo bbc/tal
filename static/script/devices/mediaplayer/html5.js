@@ -582,25 +582,25 @@ require.def(
             },
 
             _enterBufferingSentinel: function() {
-                var shouldSentinelFire = !this._hasSentinelTimeChangedWithinTolerance && !this._nearEndOfMedia ;
+                var sentinelShouldFire = !this._hasSentinelTimeChangedWithinTolerance && !this._nearEndOfMedia ;
 
                 if (this.getCurrentTime() === 0) {
-                    shouldSentinelFire = this._trustZeroes && shouldSentinelFire;
+                    sentinelShouldFire = this._trustZeroes && sentinelShouldFire;
                 }
 
                 if (this._enterBufferingSentinelAttemptCount === undefined) {
                     this._enterBufferingSentinelAttemptCount = 0;
                 }
 
-                if(shouldSentinelFire) {
+                if(sentinelShouldFire) {
                     this._enterBufferingSentinelAttemptCount++;
                 }
 
-                if (this._enterBufferingSentinelAttemptCount == 1) {
-                    shouldSentinelFire = false;
+                if (this._enterBufferingSentinelAttemptCount === 1) {
+                    sentinelShouldFire = false;
                 }
 
-                if(shouldSentinelFire) {
+                if(sentinelShouldFire) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
                     this._toBuffering();
                     /* Resetting the sentinel attempt count to zero means that the sentinel will only fire once
@@ -612,6 +612,7 @@ require.def(
                     this._enterBufferingSentinelAttemptCount = 0;
                     return true;
                 }
+
                 return false;
             },
 
