@@ -1311,6 +1311,38 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testEnterBufferingSentinelFiresWhenBeginPlaybackFromZeroIsCalledAndDeviceTimeDoesNotAdvance = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            clearEvents(self);
+
+            for (var i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertState(self, MediaPlayer.STATE.BUFFERING);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelFiresWhenBeginPlaybackIsCalledAndDeviceTimeDoesNotAdvance = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
+            clearEvents(self);
+
+            for (var i=0; i<2; i++) {
+                stubCreateElementResults.video.currentTime = 0;
+                fireSentinels(self);
+            }
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+            assertState(self, MediaPlayer.STATE.BUFFERING);
+        });
+    };
+
     mixins.testEnterBufferingSentinelFiresWhenSeekedToZeroAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function(queue) {
         expectAsserts(1);
         var self = this;
