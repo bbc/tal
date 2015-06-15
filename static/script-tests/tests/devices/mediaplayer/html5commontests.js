@@ -1266,7 +1266,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    var ensureEnterBufferingSentinelIsNotCalled = function(self, MediaPlayer) {
+    var ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted = function(self, MediaPlayer) {
         var i;
         for (i = 0; i<3; i++) {
             advancePlayTime(self);
@@ -1281,7 +1281,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         assertState(self, MediaPlayer.STATE.PLAYING);
     };
 
-    var ensureEnterBufferingSentinelIsCalled = function(self, MediaPlayer) {
+    var ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted = function(self, MediaPlayer) {
         for (var i=0; i<2; i++) {
             stubCreateElementResults.video.currentTime = 0;
             fireSentinels(self);
@@ -1296,7 +1296,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             clearEvents(self);
-            ensureEnterBufferingSentinelIsNotCalled(self, MediaPlayer);
+            ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted(self, MediaPlayer);
         });
     };
 
@@ -1306,7 +1306,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 20);
             clearEvents(self);
-            ensureEnterBufferingSentinelIsNotCalled(self, MediaPlayer);
+            ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted(self, MediaPlayer);
         });
     };
 
@@ -1316,7 +1316,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlaying(self, MediaPlayer, 0);
             clearEvents(self);
-            ensureEnterBufferingSentinelIsCalled(self, MediaPlayer);
+            ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted(self, MediaPlayer);
         });
     };
 
@@ -1326,7 +1326,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
             clearEvents(self);
-            ensureEnterBufferingSentinelIsCalled(self, MediaPlayer);
+            ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted(self, MediaPlayer);
         });
     };
 
@@ -1340,8 +1340,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.playFrom(0);
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
             fireSentinels(self);
-
-            stubCreateElementResults.video.currentTime = 0;
             fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
