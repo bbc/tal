@@ -2009,6 +2009,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    mixins.testPauseSentinelDoesNotFireWhenDeviceTimeAdvancesByLessThanSentinelTolerance = function(queue) {
+      expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 20);
+            clearEvents(self);
+
+            self._mediaPlayer.pause();
+            stubCreateElementResults.video.currentTime += 0.01;
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
+        });
+    };
+
     mixins.testPlayFromNearCurrentTimeWillNotCauseFinishBufferingToPerformSeekLater = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
