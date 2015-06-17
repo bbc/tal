@@ -1,4 +1,0 @@
-source 'https://rubygems.org'
-
-gem 'tal-test-runner', '>=0.0.1'
-
