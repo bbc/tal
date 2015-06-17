@@ -10,57 +10,67 @@ TAL comes complete with an extensive set of unit tests.
 
 The tests themselves are located in 
 
-    antie/static/script-tests/tests/
+    static/script-tests/tests/
     
-The tests mimic the file structure of antie, with one test file per antie file.
+The tests mimic the file structure of TAL, with one test file per implementation file.
 
-We us *[sinon.js][]* to help write tests and *[JsTestDriver][]* to run them.
+Tests are written in *[JsTestDriver][]* (for older tests) and *[Jasmine][]* (preferred for future development). We use *[sinon.js][]* as a mocking library.
+
+Tests are run in [Jasmine][], with a [custom adaption layer](#jstestdriver-adapter-and-jasmine-13) to run the older JsTestDriver tests under Jasmine.
 
 ### Running the tests
-To use our test runner Ruby gem (tal-test-runner), you will need a working installation of *[Ruby][]*.
 
-The tal-test-runner gem is located in
+Ensure you have `node` and `npm` available on your system by installing [Node.js][].
 
-    antie/static/vendor/cache
+Then ensure that grunt-cli is installed:
 
-You can generate the required configuration files and execute a test run via the TAL test runner.
+    npm install grunt-cli -g
 
-    cd antie/static/
-    
-If you do not have bundler installed
+Automatically install the required Node packages to the root of your TAL working copy. Change to the root of the working copy, then:
 
-    gem install bundler
+    npm install
 
-Then
+You now have the choice of running the tests in the console, or in a browser window.
 
-    bundle
-    ttr
+#### Running tests in the console
 
-This will generate the required configuration and launch a JsTestDriver server on [http://localhost:9876](http://localhost:9876)
+Tests can be run in the console, using [PhantomJS][] (installed as part of `npm install`), with the following command:
 
-To capture a browser and start the tests, navigate to
+    grunt test
 
-    http://localhost:9876/capture/
+#### Running tests in a browser window
 
-To see a list of options
+The following command will generate *SpecRunner.html* and open it in your default browser, running the tests in the Jasmine UI:
 
-    ttr help
+    grunt spec
 
-Some of the more useful command line options provided by JsTestDriver can be set via ttr. Use ttr help to see what is supported. Commonly you will want to run a subset of the tests. This can be achieved by specifying `tests=/your reg ex/` on the command line. eg. `ttr tests="Network"`. The regular expression is being matched against the label given to the test cases in the JavaScript test file. eg. `this.DefaultNetworkTest = AsyncTestCase("Network (Default)")`;
+Note that SpecRunner.html will persist after `grunt spec`, whereas it will be deleted after `grunt test`. Because it is a generated file, it should not be committed to the repository.
 
-Specifying `verbose=1` on the command line will provide a more verbose output - useful for when tests are failing.
+Running the tests in a browser window is useful for debugging, while running them in the console is useful for CI jobs and for sanity checking.
 
-Another useful feature is the browser automation and ability to use a Selenium Grid. Use `webdriverurl=chrome`, on the command line, to have the test launch a Chrome instance, run the tests and exit. The webdriverurl argument can also be a url to a Selenium Grid instance.
+#### Filtering by test name
 
-###Testing On Devices
+You can run a subset of the tests by applying a filename filter to either `grunt spec` or `grunt test`. For example:
 
-TAL test runner does not currently support testing on devices. Please visit the [old testing page](old-testing.html) to see how to run unit tests on devices using the old Rakefile method.
+    grunt test --filter=carousel
 
 ### Writing tests
 
-All TAL tests are defined within JsTestDriver _AsyncTestCase_ instances. Most use [sinon.js][].
+Most TAL tests are defined within JsTestDriver _AsyncTestCase_ instances. Most use [sinon.js][].
 
-In addition to reading the [sinon.js][] and [JsTestDriver][] documentation, there are a few TAL specific points to note:
+Newer TAL tests, particularly ones that can run synchronously, are written directly in Jasmine. This is the desired future direction of the framework.
+
+In addition to reading the [sinon.js][], [Jasmine][] and [JsTestDriver][] documentation as appropriate, there are a few TAL specific points to note:
+
+#### JsTestDriver Adapter and Jasmine 1.3
+
+The JsTestDriver adaption layer we use to run old JsTestDriver tests under Jasmine is located at:
+
+    static/script-tests/jasmine/jstestdriver-adapter.js
+
+Hopefully you will not need to investigate it, but it's useful to know it's there.
+
+We are currently on Jasmine 1.3 rather than the more recent [Jasmine 2.0](http://jasmine.github.io/2.0/introduction.html). This is because the adaption layer is written against Jasmine 1.3 and utilises some of its internals. We hope to update to Jasmine 2.0 at some point in the future.
 
 #### queuedRequire, queuedApplicationInit and queuedComponentInit
 
@@ -143,4 +153,6 @@ this.ExampleTest.prototype.stubExample = function(queue) {
 
 [sinon.js]: http://sinonjs.org/
 [JsTestDriver]: https://code.google.com/p/js-test-driver/
-[Ruby]: http://www.ruby-lang.org/
+[Jasmine]: http://jasmine.github.io/1.3/introduction.html
+[Node.js]: https://nodejs.org/
+[PhantomJS]: http://phantomjs.org/
