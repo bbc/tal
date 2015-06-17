@@ -54,10 +54,6 @@ You can run a subset of the tests by applying a filename filter to either `grunt
 
     grunt test --filter=carousel
 
-###Testing On Devices
-
-See the [old testing page](old-testing.html) to see how to run unit tests on devices using the old Rakefile method. Note that this approach is deprecated and no longer used by us.
-
 ### Writing tests
 
 Most TAL tests are defined within JsTestDriver _AsyncTestCase_ instances. Most use [sinon.js][].
