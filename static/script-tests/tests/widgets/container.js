@@ -358,7 +358,6 @@
 				function(application, Container) {
 					var widget = new Container("id");
 					var inner = new Container("inner");
-					new Container("inner2");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(inner);
 					assert(widget.hasChildWidget("inner"));
@@ -376,7 +375,6 @@
 				function(application, Container) {
 					var widget = new Container("id");
 					var inner = new Container("inner");
-					new Container("inner2");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(inner);
 					assertSame(inner, widget.getChildWidget("inner"));
@@ -573,7 +571,6 @@
 				["antie/widgets/container"],
 				function(application, Container) {
 					var widget = new Container("id");
-					new Container("inner");
 					assertEquals(0, widget.getChildWidgetCount());
 					widget.appendChildWidget(new Container());
 					assertEquals(1, widget.getChildWidgetCount());
@@ -736,7 +733,7 @@
 
 					var container = new Container("container");
 					root.appendChildWidget(container);
-					container.addEventListener("focus", function(evt) {
+					container.addEventListener("focus", function(/* evt */) {
 						root.removeChildWidget(container);
 					});
 
