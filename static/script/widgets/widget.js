@@ -138,7 +138,9 @@ require.def('antie/widgets/widget',
                     listeners = [];
                     this._eventListeners[ev] = listeners;
                 }
-                listeners.push(func);
+                if (!~listeners.indexOf(func)) {
+                    listeners.push(func);
+                }
             },
             /**
              * Removes an event listener function to this widget.
