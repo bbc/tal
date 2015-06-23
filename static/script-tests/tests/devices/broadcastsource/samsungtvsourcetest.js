@@ -327,7 +327,7 @@
     };
 
     this.SamsungTvSource.prototype.testGetCurrentChannelReturnsCurrentChannelFromWebAPI = function(queue) {
-        expectAsserts(10);
+        expectAsserts(2);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
@@ -353,16 +353,6 @@
 
             assertInstanceOf(Channel, result);
             assertEquals("Alpha", result.name);
-            assertEquals(9876, result.onid);
-            assertUndefined(result.idType);
-            assertEquals(8765, result.tsid);
-            assertEquals(7654, result.sid);
-            assertEquals(6543, result.ptc);
-            assertEquals(5432, result.major);
-            assertEquals(4321, result.minor);
-            assertEquals(3210, result.sourceId);
-
-
         }, config);
     };
 
@@ -459,7 +449,7 @@
 
 
     this.SamsungTvSource.prototype.testGetChannelListSuccessCallbackPassedToWebAPIProvidesListOfChannelsToOnSuccess = function(queue) {
-        expectAsserts(13);
+        expectAsserts(5);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
@@ -482,14 +472,7 @@
 
             var data = [
                 {
-                    channelName: "Alpha",
-                    originalNetworkID: 9876,
-                    transportStreamID: 8765,
-                    programNumber: 7654,
-                    ptc: 6543,
-                    major: 5432,
-                    minor: 4321,
-                    sourceID: 3210
+                    channelName: "Alpha"
                 }
             ];
 
@@ -503,15 +486,6 @@
             assertInstanceOf(Channel, channelList[0]);
 
             assertEquals("Alpha", channelList[0].name);
-            assertEquals(9876, channelList[0].onid);
-            assertUndefined(channelList[0].idType);
-            assertEquals(8765, channelList[0].tsid);
-            assertEquals(7654, channelList[0].sid);
-            assertEquals(6543, channelList[0].ptc);
-            assertEquals(5432, channelList[0].major);
-            assertEquals(4321, channelList[0].minor);
-            assertEquals(3210, channelList[0].sourceId);
-
         }, config);
     };
 
@@ -698,14 +672,7 @@
             getChannelListSuccessFunc(
                 [
                     {
-                        channelName: "Alpha",
-                        originalNetworkID: 9876,
-                        transportStreamID: 8765,
-                        programNumber: 7654,
-                        ptc: 6543,
-                        major: 5432,
-                        minor: 4321,
-                        sourceID: 3210
+                        channelName: "Alpha"
                     }
                 ]);
 
@@ -760,7 +727,8 @@
 
             assert(tuneStub.calledOnce);
             var expectedTuneMapleChannelObj = {
-                originalNetworkID: 9876,
+                channelName: "Alpha",
+		originalNetworkID: 9876,
                 transportStreamID: 8765,
                 programNumber: 7654,
                 ptc: 6543,
@@ -977,7 +945,7 @@
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplication = function(queue) {
-        expectAsserts(13);
+        expectAsserts(5);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
@@ -1012,16 +980,7 @@
             assertInstanceOf(Channel, event.channel);
 
             assertEquals("Alpha", event.channel.name);
-            assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.idType);
-            assertEquals(8765, event.channel.tsid);
-            assertEquals(7654, event.channel.sid);
-            assertEquals(6543, event.channel.ptc);
-            assertEquals(5432, event.channel.major);
-            assertEquals(4321, event.channel.minor);
-            assertEquals(3210, event.channel.sourceId);
-
-        }, config);
+         }, config);
     };
 
     this.SamsungTvSource.prototype.testBroadcastEventsAreRequestedDuringConstructionOfBroadcastSource = function(queue) {
@@ -1089,7 +1048,7 @@
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplicationWithStringID = function(queue) {
-        expectAsserts(13);
+        expectAsserts(5);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
@@ -1097,14 +1056,7 @@
 
 
             var apiResult = {
-                channelName: "Alpha",
-                originalNetworkID: 9876,
-                transportStreamID: 8765,
-                programNumber: 7654,
-                ptc: 6543,
-                major: 5432,
-                minor: 4321,
-                sourceID: 3210
+                channelName: "Alpha"
             };
 
             self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").returns(apiResult);
@@ -1123,15 +1075,6 @@
             assertInstanceOf(Channel, event.channel);
 
             assertEquals("Alpha", event.channel.name);
-            assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.idType);
-            assertEquals(8765, event.channel.tsid);
-            assertEquals(7654, event.channel.sid);
-            assertEquals(6543, event.channel.ptc);
-            assertEquals(5432, event.channel.major);
-            assertEquals(4321, event.channel.minor);
-            assertEquals(3210, event.channel.sourceId);
-
         }, config);
     };
 
