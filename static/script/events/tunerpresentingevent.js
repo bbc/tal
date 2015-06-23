@@ -34,15 +34,15 @@ require.def('antie/events/tunerpresentingevent',
          * @class
          * @name antie.events.TunerPresentingEvent
          * @extends antie.events.Event
-         * @param {antie.devices.broadcastsource.Channel} channel The channel which is now playing.
+         * @param {String} channelName The channel name which is now playing.
          */
         return Event.extend(/** @lends antie.events.TunerPresentingEvent.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function(channel) {
-                this.channel = channel;
+            init: function(channelName) {
+                this.channel = channelName;
                 this._super("tunerpresenting");
             }
         });
