@@ -288,7 +288,7 @@
 
 	var self = this;
         var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -760,7 +760,7 @@
 
 	var self = this;
         var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var channels = [
                 {
