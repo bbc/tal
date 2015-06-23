@@ -600,7 +600,7 @@
             var broadcastSource = device.createBroadcastSource();
 	    self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.PRESENTING);
 
-            var playState = broadcastSource.getPlayState();
+            var playState = broadcastSource.getState();
             assertEquals("PRESENTING", playState);
         }, config);
     };
@@ -614,7 +614,7 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 	    self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.CONNECTING);
-            var playState = broadcastSource.getPlayState();
+            var playState = broadcastSource.getState();
             assertEquals("CONNECTING", playState);
         }, config);
     };
@@ -628,7 +628,7 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 	    self.sandbox.stub(self.hbbtvPlugin, "playState", broadcastSource._playStates.UNREALIZED);
-            var playState = broadcastSource.getPlayState();
+            var playState = broadcastSource.getState();
             assertEquals("UNAVAILABLE", playState);
         }, config);
     };

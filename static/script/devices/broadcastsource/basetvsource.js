@@ -91,8 +91,8 @@ require.def('antie/devices/broadcastsource/basetvsource',
               * Indicates the current state of the broadcast source
               * @returns {antie.devices.broadcastsources.BaseTvSource.STATE} current state of the broadcast source
               */             
-            getPlayState : function() {
-                return BaseTvSource.STATE.UNKNOWN;
+            getState : function() {
+		throw new Error("Device broadcast source does not override abstract method getState");
             },
             /**
              * Requests the device switches a tuner to the channel specified by the channel name.

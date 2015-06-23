@@ -919,7 +919,7 @@
 
             assertEquals("BBC One", event.channel);
 
-	    assertEquals(BaseTvSource.STATE.PRESENTING, broadcastSource.getPlayState());
+	    assertEquals(BaseTvSource.STATE.PRESENTING, broadcastSource.getState());
          }, config);
     };
 
@@ -961,7 +961,7 @@
 
             assert(broadcastEventStub.calledOnce);
             assertInstanceOf(TunerUnavailableEvent, broadcastEventStub.args[0][0]);
-            assertEquals(BaseTvSource.STATE.UNAVAILABLE, broadcastSource.getPlayState());
+            assertEquals(BaseTvSource.STATE.UNAVAILABLE, broadcastSource.getState());
         }, config);
     };
 
@@ -983,7 +983,7 @@
 
             assert(broadcastEventStub.calledOnce);
             assertInstanceOf(TunerStoppedEvent, broadcastEventStub.args[0][0]);
-            assertEquals(BaseTvSource.STATE.STOPPED, broadcastSource.getPlayState());
+            assertEquals(BaseTvSource.STATE.STOPPED, broadcastSource.getState());
         }, config);
     };
 

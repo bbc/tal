@@ -103,7 +103,7 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
               * Indicates the current state of the broadcast source
               * @returns {antie.devices.broadcastsources.BaseTvSource.STATE} current state of the broadcast source
               */             
-            getPlayState : function() {
+            getState : function() {
                 return this.playState;
             },
             /**

@@ -129,12 +129,14 @@
         });
     };
 
-    this.baseTvSource.prototype.testBaseBroadcastSourceGetPlayStateThrowsExceptionWhenNotOverridden = function(queue) {
+    this.baseTvSource.prototype.testBaseBroadcastSourceGetStateThrowsExceptionWhenNotOverridden = function(queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
-            assertEquals("Base implementation should return Unknown playstate", BaseTvSource.STATE.UNKNOWN, broadcastSource.getPlayState());
+            assertException("Base implementation throws exception when not overridden", function(){
+		broadcastSource.getState();
+	    });
         });
     };
 

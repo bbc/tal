@@ -188,7 +188,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
                 this._broadcastVideoObject.style.width = width + "px";
                 this._broadcastVideoObject.style.height = height + "px";
             },
-            getPlayState : function() {
+            getState : function() {
 		var state = BaseTvSource.STATE.UNKNOWN;
                 var playState = this._broadcastVideoObject.playState;
 		if (playState === this._playStates.UNREALIZED){
