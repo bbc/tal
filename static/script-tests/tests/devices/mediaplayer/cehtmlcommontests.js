@@ -1441,7 +1441,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlayingInLive(self, MediaPlayer, 20);
+            getToPlayingInLive(self, MediaPlayer, 29.9);
             fakeCEHTMLObject.playPosition = 0;
 
             var eventHandler = this.sandbox.stub();
@@ -1457,7 +1457,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlayingInLive(self, MediaPlayer, 40);
+            getToPlayingInLive(self, MediaPlayer, 30.1);
             fakeCEHTMLObject.playPosition = 0;
 
             var eventHandler = this.sandbox.stub();

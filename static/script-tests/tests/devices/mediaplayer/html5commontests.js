@@ -1600,7 +1600,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlayingInLive(self, MediaPlayer, 20);
+            getToPlayingInLive(self, MediaPlayer, 29.9);
             setPlayTimeToZero(self);
 
             clearEvents(self);
@@ -1614,7 +1614,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(1);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlayingInLive(self, MediaPlayer, 40);
+            getToPlayingInLive(self, MediaPlayer, 30.1);
             setPlayTimeToZero(self);
 
             clearEvents(self);
