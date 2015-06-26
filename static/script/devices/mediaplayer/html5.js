@@ -68,6 +68,8 @@ require.def(
                         idSuffix = "Audio";
                     }
 
+                    this._setSeekSentinelTolerance();
+
                     this._mediaElement = device._createElement(idSuffix.toLowerCase(), "mediaPlayer" + idSuffix);
                     this._mediaElement.autoplay = false;
                     this._mediaElement.style.position = "absolute";
@@ -644,7 +646,7 @@ require.def(
                 var currentTime = this.getCurrentTime();
                 var sentinelActionTaken = false;
 
-                if (Math.abs(currentTime - this._sentinelSeekTime) > 15) {
+                if (Math.abs(currentTime - this._sentinelSeekTime) > this._seekSentinelTolerance) {
                     sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function() {
                         self._mediaElement.currentTime = self._sentinelSeekTime;
                     });
@@ -736,6 +738,16 @@ require.def(
                     return this._readyToPlayFrom;
                 }
                 return false;
+            },
+
+            _setSeekSentinelTolerance: function() {
+                var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
+                var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
+
+                this._seekSentinelTolerance = ON_DEMAND_SEEK_SENTINEL_TOLERANCE;
+                if (this._isLiveMedia()) {
+                    this._seekSentinelTolerance = LIVE_SEEK_SENTINEL_TOLERANCE;
+                }
             }
         });
 
