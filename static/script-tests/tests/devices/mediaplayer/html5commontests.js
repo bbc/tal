@@ -225,7 +225,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._mediaPlayer.beginPlaybackFrom(startTime);
         deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
-    }
+    };
 
     var getToPlayingAtEnd = function (self, MediaPlayer) {
         getToPlaying(self, MediaPlayer, 98);
@@ -1601,7 +1601,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingInLive(self, MediaPlayer, 20);
-            fireSentinels(self);
             setPlayTimeToZero(self);
 
             clearEvents(self);
@@ -1616,7 +1615,6 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             getToPlayingInLive(self, MediaPlayer, 40);
-            fireSentinels(self);
             setPlayTimeToZero(self);
 
             clearEvents(self);

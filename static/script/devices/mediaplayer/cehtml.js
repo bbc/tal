@@ -60,6 +60,7 @@ require.def(
                     this._source = url;
                     this._mimeType = mimeType;
                     this._timeAtLastSenintelInterval = 0;
+                    this._setSeekSentinelTolerance();
                     this._createElement();
                     this._addElementToDOM();
                     this._mediaElement.data = this._source;
@@ -584,12 +585,11 @@ require.def(
                     return false;
                 }
 
-                var SEEK_TOLERANCE = 15;
                 var currentTime = this.getCurrentTime();
                 
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
 
-                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
+                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > this._seekSentinelTolerance;
                 var sentinelActionTaken = false;
 
                 if (sentinelSeekRequired) {
@@ -644,6 +644,16 @@ require.def(
                 }
 
                 return false;
+            },
+
+            _setSeekSentinelTolerance: function() {
+                var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
+                var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
+
+                this._seekSentinelTolerance = ON_DEMAND_SEEK_SENTINEL_TOLERANCE;
+                if (this._isLiveMedia()) {
+                    this._seekSentinelTolerance = LIVE_SEEK_SENTINEL_TOLERANCE;
+                }
             }
         });
 

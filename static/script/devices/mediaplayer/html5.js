@@ -741,12 +741,12 @@ require.def(
             },
 
             _setSeekSentinelTolerance: function() {
-                var onDemandSeekSentinelTolerance = 15;
-                var liveSeekSentinelTolerance = 30;
+                var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
+                var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
 
-                this._seekSentinelTolerance = onDemandSeekSentinelTolerance;
+                this._seekSentinelTolerance = ON_DEMAND_SEEK_SENTINEL_TOLERANCE;
                 if (this._isLiveMedia()) {
-                    this._seekSentinelTolerance = liveSeekSentinelTolerance;
+                    this._seekSentinelTolerance = LIVE_SEEK_SENTINEL_TOLERANCE;
                 }
             }
         });
