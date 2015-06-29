@@ -61,7 +61,7 @@ require.def(
 
             beginPlayback: function() {
                 var config = RuntimeContext.getDevice().getConfig();
-                if (config && config.forceBeginPlaybackToEndOfWindow) {
+                if (config && config.streaming && config.streaming.overrides && config.streaming.overrides.forceBeginPlaybackToEndOfWindow) {
                     this._mediaPlayer.beginPlaybackFrom(Infinity);
                 } else {
                     this._mediaPlayer.beginPlayback();
