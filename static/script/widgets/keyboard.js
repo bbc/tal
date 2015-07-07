@@ -179,11 +179,11 @@ require.def('antie/widgets/keyboard',
 
                         // Fire a text change event, but notify listeners that it may change due to being multitap
                         this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, true));
-
+                        var self = this;
                         this._multiTapTimeout = setTimeout(function() {
-                            this._multiTapTimeout = null;
+                            self._multiTapTimeout = null;
                             // Fire a new text change event to notify listeners that the multi-tap timeout has finished
-                            this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, false));
+                            self.bubbleEvent(new TextChangeEvent(this, self._currentText, null, false));
                         }, 1000);
                     } else {
                         // Select and focus the button on the keyboard for the pressed key
