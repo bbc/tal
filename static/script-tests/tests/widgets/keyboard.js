@@ -64,7 +64,7 @@
 			"lib/mockapplication",
 			["antie/widgets/keyboard", "antie/events/keyevent"],
 			function(application, Keyboard, KeyEvent) {
-				var keyboard = new Keyboard("id", 1, 6, ["a","b","c","A","B","C"]);
+				var keyboard = new Keyboard("id", 1, 6, ["a","b","c"]);
 				keyboard.setMultiTap(true);
 				keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
 
