@@ -169,6 +169,22 @@
         );
     };
 
+    this.WidgetTest.prototype.testRemoveNonexistentEventListener = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/widget", "antie/events/event"],
+            function(application, Widget, Event) {
+                var widget = new Widget();
+                var handler = this.sandbox.stub();
+                var result = widget.removeEventListener('anevent', handler);
+                assertFalse(result);
+            }
+        );
+    };
+
     this.WidgetTest.prototype.testBubbleEvent = function(queue) {
         expectAsserts(3);
 

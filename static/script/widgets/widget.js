@@ -150,7 +150,14 @@ require.def('antie/widgets/widget',
              */
             removeEventListener: function(ev, func) {
                 var listeners = this._eventListeners[ev],
-                    listener = listeners.indexOf(func);
+                    listener;
+
+                if (!listeners) {
+                    RuntimeContext.getDevice().getLogger().error('Attempting to remove non-existent event listener');
+                    return false;
+                }
+
+                listener = listeners.indexOf(func);
                 if (~listener) {
                     listeners.splice(listener, 1);
                 }

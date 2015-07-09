@@ -35,8 +35,8 @@
  */
 
 require.def('antie/events/event',
-	['antie/class'],
-	function(Class) {
+	['antie/class', 'antie/runtimecontext'],
+	function(Class, RuntimeContext) {
 		'use strict';
 
 		var eventCount = 0;
@@ -117,7 +117,14 @@ require.def('antie/events/event',
 			 */
 			removeEventListener: function(ev, func) {
 				var listeners = eventListeners[ev],
-                    listener = listeners.indexOf(func);
+                    listener;
+
+                if (!listeners) {
+                    RuntimeContext.getDevice().getLogger().error('Attempting to remove non-existent event listener');
+                    return false;
+                }
+
+                listener = listeners.indexOf(func);
                 if (~listener) {
                     listeners.splice(listener, 1);
                 }
