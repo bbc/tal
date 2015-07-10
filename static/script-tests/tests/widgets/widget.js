@@ -17,7 +17,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
@@ -132,7 +132,7 @@
     };
 
     this.WidgetTest.prototype.testAddEventListener = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         queuedApplicationInit(
             queue,
@@ -140,10 +140,13 @@
             ["antie/widgets/widget", "antie/events/event"],
             function(application, Widget, Event) {
                 var widget = new Widget();
-                var handler = this.sandbox.stub();
+                var handler = this.sandbox.stub(),
+                    handler2 = this.sandbox.stub();
                 widget.addEventListener('anevent', handler);
+                widget.addEventListener('anevent', handler2);
                 widget.fireEvent(new Event('anevent'));
                 assert(handler.called);
+                assert(handler2.called);
             }
         );
     };
@@ -162,6 +165,22 @@
                 widget.removeEventListener('anevent', handler);
                 widget.fireEvent(new Event('anevent'));
                 assertFalse(handler.called);
+            }
+        );
+    };
+
+    this.WidgetTest.prototype.testRemoveNonexistentEventListener = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            "lib/mockapplication",
+            ["antie/widgets/widget", "antie/events/event"],
+            function(application, Widget, Event) {
+                var widget = new Widget();
+                var handler = this.sandbox.stub();
+                var result = widget.removeEventListener('anevent', handler);
+                assertFalse(result);
             }
         );
     };
