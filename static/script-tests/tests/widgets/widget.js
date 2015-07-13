@@ -132,7 +132,7 @@
     };
 
     this.WidgetTest.prototype.testAddEventListener = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         queuedApplicationInit(
             queue,
@@ -142,19 +142,21 @@
                 var widget = new Widget();
                 var handler = this.sandbox.stub(),
                     handler2 = this.sandbox.stub();
+                var indexOfSpy = this.sandbox.spy(application.getDevice(), 'arrayIndexOf');
+
                 widget.addEventListener('anevent', handler);
                 widget.addEventListener('anevent', handler2);
                 widget.fireEvent(new Event('anevent'));
                 assert(handler.called);
                 assert(handler2.called);
+                assert(indexOfSpy.calledTwice);
             }
         );
     };
 
     this.WidgetTest.prototype.testRemoveEventListener = function(queue) {
         expectAsserts(2);
-        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
-        config.modules.base = "antie/devices/browserdevice";
+
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
@@ -169,7 +171,8 @@
                 widget.fireEvent(new Event('anevent'));
                 assertFalse(handler.called);
                 assert(indexOfSpy.calledOnce);
-            }, config);
+            }
+        );
     };
 
     this.WidgetTest.prototype.testRemoveNonexistentEventListener = function(queue) {

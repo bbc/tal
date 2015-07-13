@@ -138,7 +138,7 @@ require.def('antie/widgets/widget',
                     listeners = [];
                     this._eventListeners[ev] = listeners;
                 }
-                if (!~listeners.indexOf(func)) {
+                if (!~RuntimeContext.getDevice().arrayIndexOf(listeners, func)) {
                     listeners.push(func);
                 }
             },
