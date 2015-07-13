@@ -315,7 +315,7 @@
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, verticalOrientation, Container) {
+            function (application, WidgetStrip, Button, verticalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 this.sandbox.stub(device);
@@ -338,7 +338,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -361,7 +361,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -384,7 +384,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -408,7 +408,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -433,7 +433,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -458,7 +458,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -483,7 +483,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -508,7 +508,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -535,7 +535,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -561,7 +561,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -587,7 +587,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -612,7 +612,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WidgetStrip, Button, horizontalOrientation, Container) {
+            function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip;
                 strip = new WidgetStrip('strip', horizontalOrientation);
                 assertFalse(strip.needsVisibleIndices());
