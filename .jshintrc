@@ -44,7 +44,11 @@
         "assertUndefined": true,
         "assertNotUndefined": true,
         "AsyncTestCase": true,
-        "jstestdriver": true
+        "jstestdriver": true,
+        "describe": true,
+        "beforeEach": true,
+        "it": true,
+        "expect": true
     },
     "browser": true,
     "onevar": false,
