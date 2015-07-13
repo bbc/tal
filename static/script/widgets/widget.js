@@ -157,7 +157,7 @@ require.def('antie/widgets/widget',
                     return false;
                 }
 
-                listener = listeners.indexOf(func);
+                listener = RuntimeContext.getDevice().arrayIndexOf(listeners, func);
                 if (~listener) {
                     listeners.splice(listener, 1);
                 }
