@@ -13,6 +13,7 @@ module.exports = function (grunt) {
                 ignores: [
                     'static/script/lib/*',
                     'static/script/devices/googletv.js',
+                    'static/script-tests/api/jquery.js',
                     'static/script-tests/lib/sinon.js',
                     'static/script-tests/lib/require.js',
                     'static/script/devices/data/json2.js'
