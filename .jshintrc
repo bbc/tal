@@ -42,6 +42,7 @@
         "assertNotNull": true,
         "assertNotSame": true,
         "assertUndefined": true,
+        "assertBoolean": true,
         "assertNotUndefined": true,
         "AsyncTestCase": true,
         "jstestdriver": true,

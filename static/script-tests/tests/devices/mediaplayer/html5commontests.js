@@ -31,9 +31,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var mixins = { };
     var clock;
-    var stubCreateElementResults = undefined;
-    var mediaEventListeners = undefined;
-    var sourceEventListeners = undefined;
+    var stubCreateElementResults;
+    var mediaEventListeners;
+    var sourceEventListeners;
     var stubCreateElement = function (sandbox, application) {
 
         var device = application.getDevice();
@@ -58,7 +58,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             setMetadata(mediaPlayer, currentTime, range);
             mediaEventListeners.loadedmetadata();
         },
-        finishBuffering: function(mediaPlayer) {
+        finishBuffering: function() {
             mediaEventListeners.canplay();
         },
         emitPlaybackError: function(mediaPlayer, errorCode) {
@@ -70,7 +70,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             };
             mediaEventListeners.error(errorEvent);
         },
-        reachEndOfMedia: function(mediaPlayer) {
+        reachEndOfMedia: function() {
             var mediaElements = [stubCreateElementResults.video, stubCreateElementResults.audio];
             for (var i = 0; i < mediaElements.length; i++) {
                 var media = mediaElements[i];
@@ -81,25 +81,25 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             };
             mediaEventListeners.ended(endedEvent);
         },
-        startBuffering: function(mediaPlayer) {
+        startBuffering: function() {
             var waitingEvent = {
                 type: "waiting"
             };
             mediaEventListeners.waiting(waitingEvent);
         },
-        mockTime: function(mediaplayer) {
+        mockTime: function() {
             if(clock !== undefined) {
                 throw "Trying to mock time twice";
             }
             clock = sinon.useFakeTimers();
         },
-        makeOneSecondPass: function(mediaplayer) {
+        makeOneSecondPass: function() {
             var timeUpdateEvent = {
                 type: "timeupdate"
             };
             mediaEventListeners.timeupdate(timeUpdateEvent);
         },
-        unmockTime: function(mediaplayer) {
+        unmockTime: function() {
             if(clock === undefined) {
                 throw "Trying to unmock time twice";
             }
@@ -201,11 +201,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             }, config);
     };
 
-    var fireSentinels = function (self) {
+    var fireSentinels = function () {
         clock.tick(1100);
     };
 
-    var fireAllSentinels = function(self) {
+    var fireAllSentinels = function() {
         clock.tick(5000);
     };
 
@@ -242,13 +242,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     var eventWasFired = function(self, eventType) {
-        for( i = 0; i < self._eventCallback.args.length; i++) {
+        for(var i = 0; i < self._eventCallback.args.length; i++) {
             if(eventType === self._eventCallback.args[i][0].type) {
                 return true;
             }
         }
         return false;
-    }
+    };
 
     var assertEvent = function(self, eventType) {
         assertTrue(eventWasFired(self, eventType));
@@ -256,7 +256,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var assertNoEvent = function(self, eventType) {
         assertFalse(eventWasFired(self, eventType));
-    }
+    };
 
     var assertNoEvents = function(self) {
         assert(self._eventCallback.notCalled);
@@ -266,11 +266,11 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         self._eventCallback.reset();
     };
 
-    var advancePlayTime = function(self) {
+    var advancePlayTime = function() {
         stubCreateElementResults.video.currentTime += 1;
     };
 
-    var setPlayTimeToZero = function (self) {
+    var setPlayTimeToZero = function () {
         stubCreateElementResults.video.currentTime = 0;
     };
 
@@ -1163,7 +1163,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         expectAsserts(2);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            getToPlayingAtEnd(self, MediaPlayer)
+            getToPlayingAtEnd(self, MediaPlayer);
             clearEvents(self);
 
             advancePlayTime(self);
@@ -1859,8 +1859,8 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             this._mediaPlayer.beginPlaybackFrom(50);
             setMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 
-            advancePlayTime(self);
-            fireSentinels(self);
+            advancePlayTime();
+            fireSentinels();
 
             assertEquals(50, stubCreateElementResults.video.currentTime);
         });
@@ -1980,4 +1980,4 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
     window.commonTests.mediaPlayer.all.mixinTests(testCase, mediaPlayerDeviceModifierRequireName, config, deviceMockingHooks);
-}
+};
