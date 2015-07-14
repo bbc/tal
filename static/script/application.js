@@ -86,8 +86,8 @@ require.def('antie/application',
 					_layout.css = _layout.css || [];
 					if (_configuration.css){
 						for ( i = 0; i < _configuration.css.length; i++){
-							if  (  _configuration.css[i].width == _layout.width
-								&& _configuration.css[i].height == _layout.height){
+							if  (  _configuration.css[i].width === _layout.width &&
+                                _configuration.css[i].height === _layout.height) {
 								_layout.css = _layout.css.concat(_configuration.css[i].files);
 							}
 						}
@@ -132,11 +132,14 @@ require.def('antie/application',
 				_layouts.sort(function(a, b) {
 					var	ad = (a.width*a.width) + (a.height*b.height),
 						bd = (b.width*b.width) + (b.height*b.height);
-					if(ad == bd) return 0;
-					else if(ad < bd) return 1;
-					else return -1;
+					if(ad === bd) {
+                        return 0;
+                    } else if(ad < bd) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
 				});
-				var _module;
 				for(i in _layouts) {
 					if((_screenSize.height >= _layouts[i].height) && (_screenSize.width >= _layouts[i].width)) {
 						return _layouts[i];
@@ -192,7 +195,7 @@ require.def('antie/application',
 						} else {
 							callback();
 						}
-					}
+					};
 					cssLoadedCallback();
 				} else {
 					for(i = 0; i !== css.length; i += 1) {
@@ -218,7 +221,7 @@ require.def('antie/application',
 				}
 				this._rootWidget = widget;
 				this._rootWidget._isFocussed = true;
-				if(this._rootWidget.outputElement == null) {
+				if(this._rootWidget.outputElement === null) {
 					var device = this.getDevice();
 					device.appendChildElement(this._rootElement, widget.render(device));
 				}
