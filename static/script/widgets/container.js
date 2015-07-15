@@ -92,7 +92,7 @@ require.def('antie/widgets/container',
 
 					// If there's no active child widget set, try and set it to this
 					// (Will only have an affect if it's focusable (i.e. contains a button))
-					if(this._activeChildWidget === null) {
+					if(this._activeChildWidget == null) {
 						this.setActiveChildWidget(widget);
 					}
 
@@ -144,7 +144,7 @@ require.def('antie/widgets/container',
 
 					// If there's no active child widget set, try and set it to this
 					// (Will only have an affect if it's focusable (i.e. contains a button))
-					if(this._activeChildWidget === null) {
+					if(this._activeChildWidget == null) {
 						this.setActiveChildWidget(widget);
 					}
 
@@ -218,7 +218,7 @@ require.def('antie/widgets/container',
 			 * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
 			 */
 			hasChildWidget: function(id) {
-				return this._childWidgets[id] !== null;
+				return this._childWidgets[id] != null;
 			},
 			/**
 			 * Get a child widget from its unique ID.
@@ -267,9 +267,9 @@ require.def('antie/widgets/container',
 					widget.addClass('active');
 					this._activeChildWidget = widget;
 
-					if(this.getCurrentApplication().getFocussedWidget() === null) {
+					if(this.getCurrentApplication().getFocussedWidget() == null) {
 						var widgetIterator = this;
-						while(widgetIterator.parentWidget !== null) {
+						while(widgetIterator.parentWidget != null) {
 							widgetIterator.parentWidget._activeChildWidget = widgetIterator;
 							widgetIterator._isFocussed = true;
 
@@ -308,7 +308,7 @@ require.def('antie/widgets/container',
 			 * @private
 			 */
 			_setActiveChildFocussed: function(focus) {
-				if(this._activeChildWidget && (this._activeChildWidget._isFocussed !== focus)) {
+				if(this._activeChildWidget && (this._activeChildWidget._isFocussed != focus)) {
 					this._activeChildWidget._isFocussed = focus;
 					if(focus) {
 						this._activeChildWidget.addClass('focus');
@@ -336,7 +336,7 @@ require.def('antie/widgets/container',
 			isFocusable: function() {
 				for(var i=0; i<this._childWidgetOrder.length; i++) {
 					if(this._childWidgetOrder[i].isFocusable()) {
-						if(this._activeChildWidget === null) {
+						if(this._activeChildWidget == null) {
 							//this._activeChildWidget = this._childWidgetOrder[i];
 							this.setActiveChildWidget(this._childWidgetOrder[i]);
 						}
