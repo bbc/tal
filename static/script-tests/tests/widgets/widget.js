@@ -132,7 +132,7 @@
     };
 
     this.WidgetTest.prototype.testAddEventListener = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         queuedApplicationInit(
             queue,
@@ -142,17 +142,20 @@
                 var widget = new Widget();
                 var handler = this.sandbox.stub(),
                     handler2 = this.sandbox.stub();
+                var indexOfSpy = this.sandbox.spy(application.getDevice(), 'arrayIndexOf');
+
                 widget.addEventListener('anevent', handler);
                 widget.addEventListener('anevent', handler2);
                 widget.fireEvent(new Event('anevent'));
                 assert(handler.called);
                 assert(handler2.called);
+                assert(indexOfSpy.calledTwice);
             }
         );
     };
 
     this.WidgetTest.prototype.testRemoveEventListener = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         queuedApplicationInit(
             queue,
@@ -162,9 +165,12 @@
                 var widget = new Widget();
                 var handler = this.sandbox.stub();
                 widget.addEventListener('anevent', handler);
+                var indexOfSpy = this.sandbox.spy(application.getDevice(), 'arrayIndexOf');
+
                 widget.removeEventListener('anevent', handler);
                 widget.fireEvent(new Event('anevent'));
                 assertFalse(handler.called);
+                assert(indexOfSpy.calledOnce);
             }
         );
     };
