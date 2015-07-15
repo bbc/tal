@@ -42,10 +42,10 @@
 				["antie/widgets/container"],
 				function(application, Container) {
 
-					assertException("Passing a non-widget causes an exception", function() {application.setRootWidget("TEST")});
+					assertException("Passing a non-widget causes an exception", function() {application.setRootWidget("TEST");});
 
 					var container = new Container();
-					assertNoException("Passing a widget causes no exception", function() {application.setRootWidget(container)});
+					assertNoException("Passing a widget causes no exception", function() {application.setRootWidget(container);});
 
 					assertSame("getRootWidget returns previously setRootWidget", container, application.getRootWidget());
 				}
