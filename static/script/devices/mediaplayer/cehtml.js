@@ -60,6 +60,7 @@ require.def(
                     this._source = url;
                     this._mimeType = mimeType;
                     this._timeAtLastSenintelInterval = 0;
+                    this._setSeekSentinelTolerance();
                     this._createElement();
                     this._addElementToDOM();
                     this._mediaElement.data = this._source;
@@ -95,7 +96,6 @@ require.def(
             * @inheritDoc
             */
             playFrom: function (seconds) {
-                this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
                 switch (this.getState()) {
@@ -150,7 +150,6 @@ require.def(
              * @inheritDoc
              */
             beginPlaybackFrom: function(seconds) {
-                this._sentinelSeekTime = seconds;
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
 
@@ -429,6 +428,7 @@ require.def(
                 if (clampedTime !== seconds) {
                     RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds + " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
                 }
+                this._sentinelSeekTime = clampedTime;
                 return this._mediaElement.seek(clampedTime * 1000);
             },
 
@@ -581,22 +581,27 @@ require.def(
             },
 
             _shouldBeSeekedSentinel: function() {
-                var SEEK_TOLERANCE = 15;
+                if (this._sentinelSeekTime === undefined) {
+                    return false;
+                }
+
                 var currentTime = this.getCurrentTime();
+                
                 var clampedSentinelSeekTime = this._getClampedTime(this._sentinelSeekTime);
 
-                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > SEEK_TOLERANCE;
+                var sentinelSeekRequired = Math.abs(clampedSentinelSeekTime - currentTime) > this._seekSentinelTolerance;
                 var sentinelActionTaken = false;
 
                 if (sentinelSeekRequired) {
                     var mediaElement = this._mediaElement;
-                      sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function () {
-                          mediaElement.seek(clampedSentinelSeekTime * 1000);
-                      });
-                } else {
+                    sentinelActionTaken = this._nextSentinelAttempt(this._sentinelLimits.seek, function () {
+                        mediaElement.seek(clampedSentinelSeekTime * 1000);
+                    });
+                } else if (this._sentinelIntervalNumber < 3) {
                     this._sentinelSeekTime = currentTime;
+                } else {
+                    this._sentinelSeekTime = undefined;
                 }
-
                 return sentinelActionTaken;
             },
 
@@ -639,6 +644,16 @@ require.def(
                 }
 
                 return false;
+            },
+
+            _setSeekSentinelTolerance: function() {
+                var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
+                var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
+
+                this._seekSentinelTolerance = ON_DEMAND_SEEK_SENTINEL_TOLERANCE;
+                if (this._isLiveMedia()) {
+                    this._seekSentinelTolerance = LIVE_SEEK_SENTINEL_TOLERANCE;
+                }
             }
         });
 

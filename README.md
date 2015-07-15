@@ -26,5 +26,3 @@ help you build your own applications.
 TAL is available to everyone under the terms of the Apache 2.0 open source licence. Take a look at 
 the LICENSE file in the code, and read our [faq](http://fmtvp.github.com/tal/faq.html#question_who_can_use_this) 
 and [documentation](http://fmtvp.github.com/tal/other/contributing.html) to learn how to contribute.
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/81b276db21d339cd95a3198c0aac146f "githalytics.com")](http://githalytics.com/fmtvp/TAL)

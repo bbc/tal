@@ -35,6 +35,8 @@
     };
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var configWithForceBeginPlaybackToEndOfWindowAsTrue = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","streaming":{"overrides":{"forceBeginPlaybackToEndOfWindow":true}}};
+    var configWithForceBeginPlaybackToEndOfWindowAsFalse = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","streaming":{"overrides":{"forceBeginPlaybackToEndOfWindow":false}}};
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetLiveSupportReturnsSeekableWithSupportLevelSeekable = function (queue) {
         expectAsserts(1);
@@ -191,6 +193,51 @@
             this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
 
             assertEquals(playerElement, livePlayer.getPlayerElement());
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackFromIsCalledWithInfinityIfForceBeginPlaybackToEndOfWindowIsTrue = function (queue) {
+        expectAsserts(2);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+
+            livePlayer.beginPlayback();
+            assert(livePlayer._mediaPlayer.beginPlaybackFrom.calledWith(Infinity));
+            assert(livePlayer._mediaPlayer.beginPlayback.notCalled);
+        }, configWithForceBeginPlaybackToEndOfWindowAsTrue);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsFalse = function (queue) {
+        expectAsserts(2);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+
+            livePlayer.beginPlayback();
+            assert(livePlayer._mediaPlayer.beginPlayback.called);
+            assert(livePlayer._mediaPlayer.beginPlaybackFrom.notCalled);
+        }, configWithForceBeginPlaybackToEndOfWindowAsFalse);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsNotPresent = function (queue) {
+        expectAsserts(2);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+
+            livePlayer.beginPlayback();
+            assert(livePlayer._mediaPlayer.beginPlayback.called);
+            assert(livePlayer._mediaPlayer.beginPlaybackFrom.notCalled);
         }, config);
     };
 })();

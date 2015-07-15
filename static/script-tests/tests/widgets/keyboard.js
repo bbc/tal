@@ -57,7 +57,54 @@
 		});
 	
 	};
-	
+
+	this.KeyboardTest.prototype.testStandardMultiTap = function (queue) {
+		// Use JSON.parse/stringify to create a copy of the device config
+		var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+		config.input.multitap = {
+			'2': ['a', 'b', 'c']
+		};
+		queuedApplicationInit(
+			queue,
+			"lib/mockapplication",
+			["antie/widgets/keyboard", "antie/events/keyevent"],
+			function(application, Keyboard, KeyEvent) {
+				var keyboard = new Keyboard("id", 1, 6, ["a","b","c"]);
+				keyboard.setMultiTap(true);
+				keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+				keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+				keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+				assertEquals('b', keyboard.getText());
+		}, config);
+	};
+
+	this.KeyboardTest.prototype.testWaitMultiTap = function (queue) {
+		// Use JSON.parse/stringify to create a copy of the device config
+		var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+		config.input.multitap = {
+			'2': ['a', 'b', 'c']
+		};
+		queuedApplicationInit(
+			queue,
+			"lib/mockapplication",
+			["antie/widgets/keyboard", "antie/events/keyevent"],
+			function(application, Keyboard, KeyEvent) {
+				var clock = sinon.useFakeTimers(),
+					keyboard = new Keyboard("id", 1, 6, ["a","b","c"]);
+				keyboard.setMultiTap(true);
+				keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+				keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+				keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+				clock.tick(1500);
+				keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+				assertEquals('ba', keyboard.getText());
+				clock.restore();
+		}, config);
+	};
+
 	var _verifyButton = function (keyboard, button, expectedCol, expectedRow, expectedCharacter) {
 		var expectedId = "id_" +expectedCharacter+ "_" +expectedCol+ "_" +expectedRow;
 	

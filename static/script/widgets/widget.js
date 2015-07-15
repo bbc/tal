@@ -19,7 +19,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
@@ -134,11 +134,12 @@ require.def('antie/widgets/widget',
              */
             addEventListener: function(ev, func) {
                 var listeners = this._eventListeners[ev];
-                if (!listeners) {
-                    listeners = this._eventListeners[ev] = {};
+                if (typeof listeners === 'undefined') {
+                    listeners = [];
+                    this._eventListeners[ev] = listeners;
                 }
-                if (!listeners[func]) {
-                    listeners[func] = func;
+                if (!~RuntimeContext.getDevice().arrayIndexOf(listeners, func)) {
+                    listeners.push(func);
                 }
             },
             /**
@@ -148,9 +149,17 @@ require.def('antie/widgets/widget',
              * @see antie.events.Event
              */
             removeEventListener: function(ev, func) {
-                var listeners = this._eventListeners[ev];
-                if (listeners && listeners[func]) {
-                    delete(listeners[func]);
+                var listeners = this._eventListeners[ev],
+                    listener;
+
+                if (!listeners) {
+                    RuntimeContext.getDevice().getLogger().error('Attempting to remove non-existent event listener');
+                    return false;
+                }
+
+                listener = RuntimeContext.getDevice().arrayIndexOf(listeners, func);
+                if (~listener) {
+                    listeners.splice(listener, 1);
                 }
             },
             /**

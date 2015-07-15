@@ -56,7 +56,12 @@ require.def(
             },
 
             beginPlayback: function() {
-                this._mediaPlayer.beginPlayback();
+                var config = RuntimeContext.getDevice().getConfig();
+                if (config && config.streaming && config.streaming.overrides && config.streaming.overrides.forceBeginPlaybackToEndOfWindow) {
+                    this._mediaPlayer.beginPlaybackFrom(Infinity);
+                } else {
+                    this._mediaPlayer.beginPlayback();
+                }
             },
 
             beginPlaybackFrom: function(offset) {

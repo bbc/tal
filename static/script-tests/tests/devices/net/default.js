@@ -486,6 +486,29 @@
 		});
 	};
 
+    this.DefaultNetworkTest.prototype.testLoadURLCallsOnErrorWhenXHROpenThrowsException = function(queue) {
+        expectAsserts(3);
+
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            var SECURITY_ERR = {type: "SECURITY_ERR"};
+
+            this.sandbox.stub(this.xhr.prototype, "open").throws(SECURITY_ERR);
+
+            device.loadURL("/test/script-tests/fixtures/doesnotexist.json", opts);
+
+            assert(opts.onLoad.notCalled);
+            assert(opts.onError.calledOnce);
+            assert(opts.onError.calledWith(SECURITY_ERR));
+        });
+    };
+
 	this.DefaultNetworkTest.prototype.testCrossDomainPost = function(queue) {
 		expectAsserts(35);
 

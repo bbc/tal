@@ -21,6 +21,6 @@
     "grunt-complexity": "^0.2.0"
   },
   "scripts": {
-    "test": "grunt test --verbose"
+    "test": "grunt full --verbose"
   }
 }

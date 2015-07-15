@@ -220,6 +220,13 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
+    var getToPlayingInLive = function (self, MediaPlayer, startTime) {
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4');
+        self._mediaPlayer.beginPlaybackFrom(startTime);
+        deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(self._mediaPlayer);
+    };
+
     var getToPlayingAtEnd = function (self, MediaPlayer) {
         getToPlaying(self, MediaPlayer, 98);
 
@@ -260,6 +267,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var assertNoEvents = function(self) {
         assert(self._eventCallback.notCalled);
+    };
+
+    var assertEventTypeHasBeenFiredASpecificNumberOfTimes = function (self, eventType, expectedNumberOfCalls) {
+        var numberOfCalls = 0;
+
+        for( i = 0; i < self._eventCallback.args.length; i++) {
+            if(eventType === self._eventCallback.args[i][0].type) {
+                numberOfCalls++;
+            }
+        }
+        assertEquals(expectedNumberOfCalls, numberOfCalls);
     };
 
     var clearEvents = function(self) {
@@ -1124,6 +1142,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             clearEvents(self);
             fireSentinels(self);
             fireSentinels(self);
+            fireSentinels(self);
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
             assertEvent(self, MediaPlayer.EVENT.BUFFERING);
@@ -1254,6 +1273,136 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
+    var ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted = function(self, MediaPlayer) {
+        var i;
+        for (i = 0; i<3; i++) {
+            advancePlayTime(self);
+            fireSentinels(self);
+        }
+
+        for (i=0; i<2; i++) {
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+        }
+        assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        assertState(self, MediaPlayer.STATE.PLAYING);
+    };
+
+    var ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted = function(self, MediaPlayer) {
+        for (var i=0; i<2; i++) {
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+        }
+        assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        assertState(self, MediaPlayer.STATE.BUFFERING);
+    };
+
+    var testForThreeIntervalsOfNormalPlaybackTwoIntervalsOfZeroesAndOneIntervalOfTimeIncreaseBelowSentinelTolerance = function(self, MediaPlayer) {
+        var i;
+
+        for (i = 0; i<3; i++) {
+            advancePlayTime(self);
+            fireSentinels(self);
+        }
+
+        for (i=0; i<2; i++) {
+            stubCreateElementResults.video.currentTime = 0;
+            fireSentinels(self);
+        }
+
+        assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+
+        stubCreateElementResults.video.currentTime = 0.01;
+        fireSentinels(self);
+
+        assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+    };
+
+    mixins.testEnterBufferingSentinelDoesNothingWhenDeviceTimeIsReportedAsZeroDuringPlayback = function(queue) {
+        expectAsserts(2);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            clearEvents(self);
+            ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted(self, MediaPlayer);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelDoesNothingWhenBeginPlaybackIsCalledAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function (queue) {
+      expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 20);
+            clearEvents(self);
+            ensureEnterBufferingSentinelIsNotCalledWhenZeroesCannotBeTrusted(self, MediaPlayer);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelFiresWhenBeginPlaybackFromZeroIsCalledAndDeviceTimeDoesNotAdvance = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+            clearEvents(self);
+            ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted(self, MediaPlayer);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelFiresWhenBeginPlaybackIsCalledAndDeviceTimeDoesNotAdvance = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingWithBeginPlayback(self, MediaPlayer, 0);
+            clearEvents(self);
+            ensureEnterBufferingSentinelIsCalledWhenZeroesCanBeTrusted(self, MediaPlayer);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelFiresWhenSeekedToZeroAndDeviceTimeIsReportedAsZeroForAtLeastTwoIntervals = function(queue) {
+        expectAsserts(1);
+        var self = this;
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 20);
+            clearEvents(self);
+
+            self._mediaPlayer.playFrom(0);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            fireSentinels(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelOnlyFiresOnSecondAttemptWhenDeviceReportsTimeAsNotChangingWithinTolerance = function(queue) {
+        expectAsserts(3);
+		runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer, 0);
+            clearEvents(this);
+
+            testForThreeIntervalsOfNormalPlaybackTwoIntervalsOfZeroesAndOneIntervalOfTimeIncreaseBelowSentinelTolerance(this, MediaPlayer);
+
+            stubCreateElementResults.video.currentTime = 0.01;
+            fireSentinels(this);
+
+            stubCreateElementResults.video.currentTime = 0.01;
+            fireSentinels(this);
+
+            assertEventTypeHasBeenFiredASpecificNumberOfTimes(this, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING, 1);
+        });
+    };
+
+    mixins.testEnterBufferingSentinelDoesNotFireOnTwoNonConsecutiveOccurrencesOfDeviceReportingTimeAsNotChangingWithinTolerance = function(queue) {
+        expectAsserts(4);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(this, MediaPlayer, 0);
+            clearEvents(this);
+
+            testForThreeIntervalsOfNormalPlaybackTwoIntervalsOfZeroesAndOneIntervalOfTimeIncreaseBelowSentinelTolerance(this, MediaPlayer);
+            testForThreeIntervalsOfNormalPlaybackTwoIntervalsOfZeroesAndOneIntervalOfTimeIncreaseBelowSentinelTolerance(this, MediaPlayer);
+        });
+    };
+
      mixins.testExitBufferingSentinelCausesTransitionToPlayingWhenPlaybackStarts = function(queue) {
         expectAsserts(3);
         var self = this;
@@ -1284,6 +1433,20 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
             assertEvent(self, MediaPlayer.EVENT.PAUSED);
             assertState(self, MediaPlayer.STATE.PAUSED);
+        });
+    };
+
+    mixins.testExitBufferingSentinelIsNotFiredWhenDeviceIsPausedAndMetadataHasBeenNotBeenLoaded = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(self, queue, function(MediaPlayer) {
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(0);
+            // Meta Data is not loaded at this point
+
+            stubCreateElementResults.video.paused = true;
+            fireSentinels();
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
         });
     };
 
@@ -1430,6 +1593,34 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
             assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testSeekSentinelDoesNotFireInLiveWhenDeviceJumpsBackLessThanThirtySeconds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingInLive(self, MediaPlayer, 29.9);
+            setPlayTimeToZero(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
+        });
+    };
+
+    mixins.testSeekSentinelFiresInLiveWhenDeviceJumpsBackMoreThanThirtySeconds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingInLive(self, MediaPlayer, 30.1);
+            setPlayTimeToZero(self);
+
+            clearEvents(self);
+            fireSentinels(self);
+
+            assertEvent(self, MediaPlayer.EVENT.SENTINEL_SEEK);
         });
     };
 
@@ -1863,6 +2054,21 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             fireSentinels();
 
             assertEquals(50, stubCreateElementResults.video.currentTime);
+        });
+    };
+
+    mixins.testPauseSentinelDoesNotFireWhenDeviceTimeAdvancesByLessThanSentinelTolerance = function(queue) {
+      expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 20);
+            clearEvents(self);
+
+            self._mediaPlayer.pause();
+            stubCreateElementResults.video.currentTime += 0.01;
+            fireSentinels(self);
+
+            assertNoEvent(self, MediaPlayer.EVENT.SENTINEL_PAUSE);
         });
     };
 

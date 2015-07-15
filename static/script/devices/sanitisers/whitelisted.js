@@ -24,8 +24,11 @@
  * Please contact us for an alternative licence
  */
  require.def('antie/devices/sanitisers/whitelisted', 
-    ['antie/devices/sanitiser'],
-    function (Sanitiser) {
+    [
+        'antie/devices/sanitiser',
+        'antie/runtimecontext'
+    ],
+    function (Sanitiser, RuntimeContext) {
 
     'use strict';
 
@@ -119,7 +122,7 @@
 
             for (var i = 0; i < content.length; i++) {
                 if (content[i].tagName) {
-                    if (this._whitelist.indexOf(content[i].tagName) !== -1) {
+                    if (RuntimeContext.getDevice().arrayIndexOf(this._whitelist, content[i].tagName) !== -1) {
                         el = document.createElement(content[i].tagName);
                         el = this._processDomElement(content[i], el);
                         originalDom.appendChild(el);

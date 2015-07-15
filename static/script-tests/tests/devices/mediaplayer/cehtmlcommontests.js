@@ -195,6 +195,13 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
     };
 
+    var getToPlayingInLive = function (self, MediaPlayer, startTime) {
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4');
+        self._mediaPlayer.beginPlaybackFrom(startTime);
+        deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+        deviceMockingHooks.finishBuffering(self._mediaPlayer);
+    };
+
     var getToPlayingAtEnd = function (self, MediaPlayer) {
         getToPlaying(self, MediaPlayer);
         fakeCEHTMLObject.playPosition = 100000;
@@ -228,6 +235,17 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     var assertEventTypeHasNotBeenFired = function (eventHandler, eventType) {
         assertFalse(eventTypeHasFired(eventHandler, eventType));
+    };
+
+    var assertEventTypeHasBeenFiredASpecificNumberOfTimes = function (eventHandler, eventType, expectedNumberOfCalls) {
+        var numberOfCalls = 0;
+
+        for(var i = 0; i < eventHandler.callCount; i++) {
+            if(eventHandler.getCall(i).args[0].type === eventType) {
+                numberOfCalls++;
+            }
+        }
+        assertEquals(expectedNumberOfCalls, numberOfCalls);
     };
 
     var eventTypeHasFired = function(eventHandler, eventType) {
@@ -1249,6 +1267,23 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         });
     };
 
+    mixins.testSeekSentinelFiresWhenDeviceReportsPlaybackTimeAsZeroAfterReportingSuccessfulSeek = function(queue) {
+        expectAsserts(2);
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            getToPlaying(this, MediaPlayer, 30);
+            fireSentinels();
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(this);
+            assertEventTypeHasBeenFiredASpecificNumberOfTimes(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK, 1);
+        });
+    };
+
     mixins.testFirstSentinelGivingUpDoesNotPreventSecondSentinelActivation = function(queue) {
         function xor(a, b) {
             return a !== b;
@@ -1339,6 +1374,98 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
             assert(seekSpy.calledOnce);
             assertEquals(50000, seekSpy.getCall(0).args[0]);
+        });
+    };
+
+    mixins.testSeekSentinelClampsTargetSeekTimeWhenRequired = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToBuffering(self, MediaPlayer, 110);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+            fakeCEHTMLObject.playPosition = 0;
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            advancePlayTime();
+            fireSentinels(self);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(98900, fakeCEHTMLObject.playPosition);
+        });
+    };
+
+    mixins.testSeekSentinelClampsTargetSeekTimeWhenPlayFromIsCalled = function(queue) {
+        expectAsserts(2);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer, 0);
+
+            this._mediaPlayer.playFrom(200);
+            deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(self);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+            assertEquals(98900, fakeCEHTMLObject.playPosition);
+        });
+    };
+
+    mixins.testNoSeekSentinelActivatedWhenCurrentTimeIsReportedAsZeroDuringPlayback = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var SEEK_SENTINEL_TOLERANCE = 15;
+            getToPlaying(this, MediaPlayer, SEEK_SENTINEL_TOLERANCE + 20);
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            for (var i=0; i<3; i++) {
+                fireSentinels(self);
+            }
+
+            fakeCEHTMLObject.playPosition = 0;
+            fireSentinels(self);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+        });
+    };
+
+    mixins.testSeekSentinelDoesNotFireInLiveWhenDeviceJumpsBackLessThanThirtySeconds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingInLive(self, MediaPlayer, 29.9);
+            fakeCEHTMLObject.playPosition = 0;
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            fireSentinels(self);
+
+            assertEventTypeHasNotBeenFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
+        });
+    };
+
+    mixins.testSeekSentinelFiresInLiveWhenDeviceJumpsBackMoreThanThirtySeconds = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlayingInLive(self, MediaPlayer, 30.1);
+            fakeCEHTMLObject.playPosition = 0;
+
+            var eventHandler = this.sandbox.stub();
+            this._mediaPlayer.addEventCallback(null, eventHandler);
+
+            fireSentinels(self);
+
+            assertEventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK);
         });
     };
 

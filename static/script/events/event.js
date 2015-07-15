@@ -35,13 +35,13 @@
  */
 
 require.def('antie/events/event',
-	['antie/class'],
-	function(Class) {
+	['antie/class', 'antie/runtimecontext'],
+	function(Class, RuntimeContext) {
 		'use strict';
 
 		var eventCount = 0;
 		var eventListeners = {};
-	
+
 		/**
 	 	 * Abstract base class for events.
 	 	 * @abstract
@@ -100,12 +100,13 @@ require.def('antie/events/event',
 			 */
 			addEventListener: function(ev, func) {
 				var listeners = eventListeners[ev];
-				if(!listeners) {
-					listeners = eventListeners[ev] = {};
-				}
-				if(!listeners[func]) {
-					listeners[func] = func;
-				}
+                if (typeof listeners === 'undefined') {
+                    listeners = [];
+                    eventListeners[ev] = listeners;
+                }
+                if (!~RuntimeContext.getDevice().arrayIndexOf(listeners, func)) {
+                    listeners.push(func);
+                }
 			},
 			/**
 			 * Removes an event listener function to the event stack. Used for 'meta-events'.
@@ -115,10 +116,18 @@ require.def('antie/events/event',
 			 * @param {Function} func The handler to be removed.
 			 */
 			removeEventListener: function(ev, func) {
-				var listeners = eventListeners[ev];
-				if(listeners && listeners[func]) {
-					delete(listeners[func]);
-				}
+				var listeners = eventListeners[ev],
+                    listener;
+
+                if (!listeners) {
+                    RuntimeContext.getDevice().getLogger().error('Attempting to remove non-existent event listener');
+                    return false;
+                }
+
+                listener = RuntimeContext.getDevice().arrayIndexOf(listeners, func);
+                if (~listener) {
+                    listeners.splice(listener, 1);
+                }
 			},
 			/**
 			 * Fires an event on the event stack.
