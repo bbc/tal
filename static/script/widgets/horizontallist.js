@@ -74,21 +74,21 @@ require.def('antie/widgets/horizontallist',
 			 * @param {antie.events.KeyEvent} evt The key event.
 			 */
 			_onKeyDown: function(evt) {
-				if(evt.keyCode != KeyEvent.VK_LEFT && evt.keyCode != KeyEvent.VK_RIGHT) {
+				if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
 					return;
 				}
 
 				var _newSelectedIndex = this._selectedIndex;
 				var _newSelectedWidget = null;
 				do {
-					if(evt.keyCode == KeyEvent.VK_LEFT) {
+					if(evt.keyCode === KeyEvent.VK_LEFT) {
 						_newSelectedIndex--;
-					} else if(evt.keyCode == KeyEvent.VK_RIGHT) {
+					} else if(evt.keyCode === KeyEvent.VK_RIGHT) {
 						_newSelectedIndex++;
 					}
 					
 					//force the index to wrap correctly
-					if(this._wrapMode == HorizontalList.WRAP_MODE_WRAP ) {
+					if(this._wrapMode === HorizontalList.WRAP_MODE_WRAP ) {
 						_newSelectedIndex = ( _newSelectedIndex + this._childWidgetOrder.length ) % this._childWidgetOrder.length;
 					}
 					else
@@ -108,7 +108,7 @@ require.def('antie/widgets/horizontallist',
 					evt.stopPropagation();
 				}
 
-				return (_newSelectedWidget != null);
+				return (_newSelectedWidget !== null);
 			}
 		});
 		
