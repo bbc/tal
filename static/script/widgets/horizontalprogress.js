@@ -87,10 +87,10 @@ require.def('antie/widgets/horizontalprogress',
 			_moveInner: function() {	
 				var device = this.getCurrentApplication().getDevice();
 				var elsize = device.getElementSize(this._leftElement);
-				var handleSize = device.getElementSize(this._innerElement)
+				var handleSize = device.getElementSize(this._innerElement);
 				var left = Math.floor(this._value * (elsize.width - handleSize.width));
 
-				if(left != this._lastLeft) {
+				if(left !== this._lastLeft) {
 					this._lastLeft = left;
 
 					if(this._moveHandle) {
