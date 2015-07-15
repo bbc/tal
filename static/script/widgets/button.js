@@ -74,7 +74,7 @@ require.def('antie/widgets/button',
 				/* if the ENTER key is pressed, translate into into a SelectEvent on this button */
 				var self = this;
 				this.addEventListener('keydown', function(e) {
-					if(e.keyCode == KeyEvent.VK_ENTER) {
+					if(e.keyCode === KeyEvent.VK_ENTER) {
 						self.select();
 						e.stopPropagation();
 					}
