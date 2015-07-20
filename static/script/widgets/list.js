@@ -72,7 +72,7 @@ require.def('antie/widgets/list',
 			 * @param {antie.widgets.Widget} widget The child widget to add.
 			 */
 			appendChildWidget: function(widget) {
-				if ((this._renderMode == List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
+				if ((this._renderMode === List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
 					var li = new ListItem();
 					li.appendChildWidget(widget);
 					li.setDataItem(widget.getDataItem());
@@ -91,7 +91,7 @@ require.def('antie/widgets/list',
 			 */
 			insertChildWidget: function(index, widget) {
 				var w;
-				if ((this._renderMode == List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
+				if ((this._renderMode === List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
 					w = new ListItem();
 					w.appendChildWidget(widget);
 					w.setDataItem(widget.getDataItem());
@@ -115,7 +115,7 @@ require.def('antie/widgets/list',
 			 * @returns Boolean true if the child widget was focusable, otherwise boolean false.
 			 */
 			setActiveChildWidget: function(widget) {
-				var changed = this._activeChildWidget != widget;
+				var changed = this._activeChildWidget !== widget;
 				if (this._super(widget)) {
 					this._selectedIndex = this.getIndexOfChildWidget(widget);
 					if (changed) {
@@ -136,7 +136,7 @@ require.def('antie/widgets/list',
 				if (!this._dataBound && this._dataSource && this._itemFormatter) {
 					this._createDataBoundItems(device);
 				}
-				if (!this.outputElement && (this._renderMode == List.RENDER_MODE_LIST)) {
+				if (!this.outputElement && (this._renderMode === List.RENDER_MODE_LIST)) {
 					this.outputElement = device.createList(this.id, this.getClasses());
 				}
 				return this._super(device);
@@ -146,7 +146,7 @@ require.def('antie/widgets/list',
 			 * @private
 			 * @param {antie.devices.Device} device The device to render to.
 			 */
-			_createDataBoundItems: function(device) {
+			_createDataBoundItems: function(/*device*/) {
 				this._dataBound = true;
 
 				var self = this;
@@ -161,7 +161,7 @@ require.def('antie/widgets/list',
 						var w = self._itemFormatter.format(iterator);
 						w._listIndex = i;
 						if(self._dataBindingOrder === List.DATA_BIND_FORWARD) {
-							self.appendChildWidget(w)
+							self.appendChildWidget(w);
 						} else if(self._dataBindingOrder === List.DATA_BIND_REVERSE){
 							self.insertChildWidget(0, w);
 						}
@@ -237,7 +237,7 @@ require.def('antie/widgets/list',
 						return;
 					}
 
-					if (evt.type == 'beforedatabind') {
+					if (evt.type === 'beforedatabind') {
 						widget.setText("");
 						return;
 					}
@@ -255,9 +255,9 @@ require.def('antie/widgets/list',
 					}
 
 					var activeWidget = self.getActiveChildWidget();
-					var index = (self._dataBound && activeWidget && (activeWidget._listIndex !== undefined))
-						? activeWidget._listIndex
-						: self._selectedIndex - ignore;
+					var index = (self._dataBound && activeWidget && (activeWidget._listIndex !== undefined)) ?
+                        activeWidget._listIndex :
+                        self._selectedIndex - ignore;
 
 					var total = self._childWidgetOrder.length - ignore;
 
@@ -273,7 +273,7 @@ require.def('antie/widgets/list',
 
 					if (formatterCallback) {
 						var val = formatterCallback(index + 1, total);
-						if (typeof(val) == 'string') {
+						if (typeof(val) === 'string') {
 							widget.setText(val);
 						} else {
 							widget.setText(val.text);
@@ -306,10 +306,10 @@ require.def('antie/widgets/list',
 				// TODO: Make this more generic - it will only work if carousel items contain a
 				// TODO: single item of data.
 				if (this._updateProgressHandler && (this._childWidgetOrder.length < this._totalDataItems)) {
-					this.getCurrentApplication().getDevice().getLogger().warn("antie.widgets.List::removeChildWidget - removing"
-						+ " list items where multiple data items are contained within each list item"
-						+ " can cause unintended behaviour within any position indicator attached"
-						+ " to the list.");
+					this.getCurrentApplication().getDevice().getLogger().warn("antie.widgets.List::removeChildWidget - removing" +
+                        " list items where multiple data items are contained within each list item" +
+                        " can cause unintended behaviour within any position indicator attached" +
+                        " to the list.");
 				}
 
 				var ignore = this._childWidgetOrder.length - this._totalDataItems;
