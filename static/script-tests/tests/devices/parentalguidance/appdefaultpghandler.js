@@ -38,7 +38,7 @@
         expectAsserts(1);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler", "antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, BasePgHandler, AppDefaultPgHandler) {
+            function (application, BasePgHandler) {
 
                 var device = application.getDevice();
 
@@ -50,7 +50,7 @@
         expectAsserts(1);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var appHandler = {foo: "bar"};
@@ -64,7 +64,7 @@
         expectAsserts(1);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -76,7 +76,7 @@
         expectAsserts(1);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -88,7 +88,7 @@
         expectAsserts(2);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -104,7 +104,7 @@
         expectAsserts(2);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
@@ -127,7 +127,7 @@
         expectAsserts(2);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
@@ -152,7 +152,7 @@
         expectAsserts(3);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
@@ -179,7 +179,7 @@
         expectAsserts(1);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub().returns('foo');
@@ -203,7 +203,7 @@
         expectAsserts(2);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -219,7 +219,7 @@
         expectAsserts(3);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var isChallengeActiveStub = this.sandbox.stub();
@@ -242,7 +242,7 @@
         expectAsserts(2);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+            function (application) {
 
                 var device = application.getDevice();
                 var isChallengeActiveStub = this.sandbox.stub().returns(true);
