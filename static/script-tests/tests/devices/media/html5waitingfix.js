@@ -52,7 +52,7 @@
             this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
             // t = 0
             eventHandlers.timeupdate("timeupdate");
@@ -81,7 +81,7 @@
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application) {
 
             var clock = sinon.useFakeTimers();
             var mediaElement = document.createElement("div");
@@ -93,7 +93,7 @@
             this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
             eventHandlers.timeupdate("timeupdate");
             eventHandlers.pause("pause");
@@ -114,7 +114,7 @@
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application) {
 
             var clock = sinon.useFakeTimers();
             var mediaElement = document.createElement("div");
@@ -126,7 +126,7 @@
             this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
 
             eventHandlers.timeupdate("timeupdate");
             eventHandlers.ended("ended");
