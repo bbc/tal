@@ -51,7 +51,7 @@ require.def('antie/widgets/horizontalcarousel',
 			 * @constructor
 			 * @ignore
 			 */
-			init: function(id, itemFormatter, dataSource, overrideAnimation, activeWidgetAlignment, BeforeSelectedItemChangeEvent) {
+			init: function(id, itemFormatter, dataSource, overrideAnimation, activeWidgetAlignment) {
 				this._prefixClones = 0;
 				this._wrapMode = HorizontalCarousel.WRAP_MODE_VISUAL;
 				this._viewportMode = HorizontalCarousel.VIEWPORT_MODE_NONE;
@@ -102,14 +102,14 @@ require.def('antie/widgets/horizontalcarousel',
 					this._childWidgetsInDocument = [];
 				}
 
-				if(this._viewportMode != HorizontalCarousel.VIEWPORT_MODE_DOM) {
+				if(this._viewportMode !== HorizontalCarousel.VIEWPORT_MODE_DOM) {
 					device.appendChildElement(this._maskElement, this._super(device));
 				} else {
 					if(!this._dataBound && this._dataSource && this._itemFormatter) {
 						this._createDataBoundItems(device);
 					}
 					if(!this.outputElement) {
-						if(this._renderMode == List.RENDER_MODE_LIST) {
+						if(this._renderMode === List.RENDER_MODE_LIST) {
 							this.outputElement = device.createList(this.id, this.getClasses());
 						} else {
 							this.outputElement = device.createContainer(this.id, this.getClasses());
@@ -141,12 +141,12 @@ require.def('antie/widgets/horizontalcarousel',
 				if(!_centerWidget) {
 					return;
 				}
-
-				if(this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_DOM) {
+                var device = this.getCurrentApplication().getDevice();
+                var i, index, elpos, elsize;
+                if(this._viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
 					this.setAutoRenderChildren(true);
 
-					var device = this.getCurrentApplication().getDevice();
-					var i, index, elpos, elsize;
+
 
 					if(!_centerWidget.outputElement) {
 						_centerWidget.outputElement = _centerWidget.render(device);
@@ -180,7 +180,9 @@ require.def('antie/widgets/horizontalcarousel',
 						this._childWidgetsInDocument.push(this._childWidgetOrder[i]);
 					}
 					this._nodeOffset = this._selectedIndex - this._viewportSize;
-					if(this._nodeOffset < 0) this._nodeOffset = 0;
+					if(this._nodeOffset < 0) {
+                        this._nodeOffset = 0;
+                    }
 
 					// reposition the carousel over the active item
 					elpos = device.getElementOffset(_centerWidget.outputElement);
@@ -189,7 +191,7 @@ require.def('antie/widgets/horizontalcarousel',
 					//device.scrollElementToCenter(this._maskElement, elpos.left + (elsize.width / 2), null, true);
 
 					this.setAutoRenderChildren(false);
-				} else if((this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_CLASSES) && this.outputElement && _centerWidget.outputElement) {
+				} else if((this._viewportMode === HorizontalCarousel.VIEWPORT_MODE_CLASSES) && this.outputElement && _centerWidget.outputElement) {
 					device = this.getCurrentApplication().getDevice();
 					elpos = device.getElementOffset(_centerWidget.outputElement);
 					elsize = device.getElementSize(_centerWidget.outputElement);
@@ -203,12 +205,11 @@ require.def('antie/widgets/horizontalcarousel',
 					var nearViewportLeft = (elpos.left + (elsize.width / 2)) - (maskSize.width * 1.5);
 					var nearViewportRight = (elpos.left + (elsize.width / 2)) + (maskSize.width * 1.5);
 
-					var count = this._childWidgetOrder.length;
-
-					for(var i=0; i<nodes.length; i++) {
-						var node = nodes[i];
+                    var w, node;
+					for(i=0; i<nodes.length; i++) {
+						node = nodes[i];
 						if(!node.cloneOfWidget) {
-							var w = this._childWidgetOrder[i - this._prefixClones];
+							w = this._childWidgetOrder[i - this._prefixClones];
 							if(w) {
 								w.removeClass('inviewport');
 								w.removeClass('nearviewport');
@@ -216,11 +217,11 @@ require.def('antie/widgets/horizontalcarousel',
 						}
 					}
 
-					for(var i=0; i<nodes.length; i++) {
-						var node = nodes[i];
+					for(i=0; i<nodes.length; i++) {
+						node = nodes[i];
 						var nodepos = device.getElementOffset(node);
 						var nodesize = device.getElementSize(node);
-						var w = node.cloneOfWidget || this._childWidgetOrder[i - this._prefixClones];
+						w = node.cloneOfWidget || this._childWidgetOrder[i - this._prefixClones];
 						if(!w) { continue; }
 
 						if(((nodepos.left + nodesize.width) >= viewportLeft) && (nodepos.left < viewportRight)) {
@@ -252,7 +253,8 @@ require.def('antie/widgets/horizontalcarousel',
 			 * @param {Boolean} [reposition] Set to <code>true</code> if you want the carousel to animate
 			 */
 			setAnimationOverride : function( animationOn ) {
-				return this._overrideAnimation = !animationOn; 
+                this._overrideAnimation = !animationOn;
+				return this._overrideAnimation;
 			},
 
 			/**
@@ -265,10 +267,7 @@ require.def('antie/widgets/horizontalcarousel',
 				var moved = this._super(widget);
 
 				if(this._activeChildWidget && this.outputElement && reposition) {
-					if(this._viewportMode != HorizontalCarousel.VIEWPORT_MODE_DOM) {
-						var device = this.getCurrentApplication().getDevice();
-						var elpos = device.getElementOffset(this._activeChildWidget.outputElement);
-						var elsize = device.getElementSize(this._activeChildWidget.outputElement);
+					if(this._viewportMode !== HorizontalCarousel.VIEWPORT_MODE_DOM) {
 						this._alignToElement(this._activeChildWidget.outputElement, true);
 					}
 					this.refreshViewport();
@@ -316,10 +315,10 @@ require.def('antie/widgets/horizontalcarousel',
 
 				// Block all movement if the carousel is scrolling
 				if(this._scrollHandle && (
-					evt.keyCode == KeyEvent.VK_LEFT ||
-					evt.keyCode == KeyEvent.VK_RIGHT ||
-					evt.keyCode == KeyEvent.VK_UP ||
-					evt.keyCode == KeyEvent.VK_DOWN
+					evt.keyCode === KeyEvent.VK_LEFT ||
+					evt.keyCode === KeyEvent.VK_RIGHT ||
+					evt.keyCode === KeyEvent.VK_UP ||
+					evt.keyCode === KeyEvent.VK_DOWN
 				)) {
 					evt.stopPropagation();
 					return;
@@ -345,8 +344,7 @@ require.def('antie/widgets/horizontalcarousel',
 			 * DataBound event handler. Clone carousel items to allow infinite scrolling.
 			 * @private
 			 */
-			_onDataBound: function(evt) {
-				var self = this;
+			_onDataBound: function(/*evt*/) {
 				var application = this.getCurrentApplication();
 				if(!application) {
 					// application has been destroyed, abort
@@ -356,18 +354,6 @@ require.def('antie/widgets/horizontalcarousel',
 
 				if(this._childWidgetOrder.length > 0) {
 					// TODO: tidy up
-					var moveLastToFirst = function() {
-						var last = self._items[self._childWidgetOrder[self._childWidgetOrder.length - 1]];
-						var first = self._items[self._childWidgetOrder[0]];
-						if(last) {
-							device.removeElement(last.outputElement);
-							device.prependElement(self.outputElement, last.outputElement);
-							var lastWidget = self._childWidgetOrder.pop();
-							self._childWidgetOrder.splice(0, 0, lastWidget);
-							self._selectedIndex++;
-						}
-					}
-
 					// How this implements wrap-around infinite scrolling:
 					// * Prepend a copy of the last page of items
 					// * Append a copy of the first page of items
@@ -380,24 +366,24 @@ require.def('antie/widgets/horizontalcarousel',
 
 					var maskSize = device.getElementSize(this._maskElement);
 					var copyWidth = 0;
-					var visibleWidth = 0;
 					var i = 0;
 					var prefixClones = 0;
 				
 					this._nodeOffset = 0;
 					this._childWidgetsInDocument = [];
 
-					if(this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_NONE) {
-						for(var w=0; w<this._childWidgetOrder.length; w++) {
+                    var w, clone;
+					if(this._viewportMode === HorizontalCarousel.VIEWPORT_MODE_NONE) {
+						for(w=0; w<this._childWidgetOrder.length; w++) {
 							this._childWidgetOrder[w].addClass('inviewport');
 						}
 					}
 
-					if(this._wrapMode != HorizontalCarousel.WRAP_MODE_VISUAL) {
+					if(this._wrapMode !== HorizontalCarousel.WRAP_MODE_VISUAL) {
 						if(this._paddingItemsCreated) {
-							var paddingFunction = (this._renderMode == List.RENDER_MODE_LIST)
-													? device.createListItem
-													: device.createContainer;
+							var paddingFunction = (this._renderMode === List.RENDER_MODE_LIST) ?
+                                                    device.createListItem :
+                                                    device.createContainer;
 
 							var leftPadding = paddingFunction.call(device, this.id + 'PaddingLeft', ['viewportPadding', 'viewportPaddingLeft']);
 							device.setElementSize(leftPadding, {width: maskSize.width});
@@ -419,8 +405,8 @@ require.def('antie/widgets/horizontalcarousel',
 						var requiredWidth = this._multiWidthItems ? maskSize.width : Math.ceil(maskSize.width / 2);
 
 						while(copyWidth < requiredWidth) {
-							var w = this._childWidgetOrder[i];
-							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
+							w = this._childWidgetOrder[i];
+							clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
 							clone.cloneOfWidget = w;
 
 							if(w.hasClass('active')) {
@@ -431,20 +417,22 @@ require.def('antie/widgets/horizontalcarousel',
 								device.removeClassFromElement(clone, 'buttonFocussed', true);
 							}
 							device.appendChildElement(this.outputElement, clone);
-							var w = device.getElementSize(w.outputElement).width;
+							w = device.getElementSize(w.outputElement).width;
 							if(i === 0 && this._childWidgetOrder.length !== 1) {
 								requiredWidth += w;
 							}
 							copyWidth += w;
 							i++;
-							if(i == this._childWidgetOrder.length) i = 0;
+							if(i === this._childWidgetOrder.length) {
+                                i = 0;
+                            }
 						}
 
 						copyWidth = 0;
 						i = this._childWidgetOrder.length-1;
 						while(copyWidth < requiredWidth) {
-							var w = this._childWidgetOrder[i];
-							var clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
+							w = this._childWidgetOrder[i];
+							clone = device.cloneElement(w.outputElement, true, "clone", "_clone");
 							clone.cloneOfWidget = w;
 
 							if(w.hasClass('active')) {
@@ -458,7 +446,9 @@ require.def('antie/widgets/horizontalcarousel',
 							copyWidth += device.getElementSize(w.outputElement).width;
 							i--;
 							prefixClones++;
-							if(i == -1) i = this._childWidgetOrder.length-1;
+							if(i === -1) {
+                                i = this._childWidgetOrder.length-1;
+                            }
 						}
 					}
 
@@ -467,9 +457,7 @@ require.def('antie/widgets/horizontalcarousel',
 					// TODO: we shouldn't really do this here - we can't assume the preselected item is at index 0
 					// TODO: or at least support moving to the correct item when the selected index is change
 					// TODO: from an external class
-					if(this._activeChildWidget && (this._viewportMode != HorizontalCarousel.VIEWPORT_MODE_DOM)) {
-						var elpos = device.getElementOffset(this._activeChildWidget.outputElement);
-						var elsize = device.getElementSize(this._activeChildWidget.outputElement);
+					if(this._activeChildWidget && (this._viewportMode !== HorizontalCarousel.VIEWPORT_MODE_DOM)) {
 						this._alignToElement(this._activeChildWidget.outputElement, true);
 					}
 
@@ -517,8 +505,8 @@ require.def('antie/widgets/horizontalcarousel',
 			 * 				Pass <code>HorizontalCarousel.WRAP_MODE_VISUAL</code> to visually wrap the carousel (includes navigation).
 			 */
 			setWrapMode: function(wrapMode) {
-				if(this._viewportMode == HorizontalCarousel.VIEWPORT_MODE_DOM) {
-					if(wrapMode == HorizontalCarousel.WRAP_MODE_VISUAL) {
+				if(this._viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
+					if(wrapMode === HorizontalCarousel.WRAP_MODE_VISUAL) {
 						throw new Error('HorizontalCarousel::setWrapMode - VIEWPORT_MODE_DOM not supported for WRAP_MODE_VISUAL');
 					}
 				}
@@ -532,12 +520,12 @@ require.def('antie/widgets/horizontalcarousel',
 			 * @param {Integer} size		 Number of items in the viewport.
 			 */
 			setViewportMode: function(viewportMode, size) {
-				if(this._wrapMode == HorizontalCarousel.WRAP_MODE_VISUAL) {
-					if(viewportMode == HorizontalCarousel.VIEWPORT_MODE_DOM) {
+				if(this._wrapMode === HorizontalCarousel.WRAP_MODE_VISUAL) {
+					if(viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
 						throw new Error('HorizontalCarousel::setViewportMode - VIEWPORT_MODE_DOM not supported for WRAP_MODE_VISUAL');
 					}
 				}
-				if(viewportMode == HorizontalCarousel.VIEWPORT_MODE_DOM) {
+				if(viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
 					if(!size) {
 						throw new Error('HorizontalCarousel::setViewportMode - You must specify a viewport size when using VIEWPORT_MODE_DOM');
 					}
@@ -723,7 +711,7 @@ require.def('antie/widgets/horizontalcarousel',
 				var _wrapped = false;
 
 				do {
-					if (direction == HorizontalCarousel.SELECTION_DIRECTION_LEFT) {
+					if (direction === HorizontalCarousel.SELECTION_DIRECTION_LEFT) {
 						_nodeIndex--;
 
 						if (_newIndex > 0) {
@@ -734,7 +722,7 @@ require.def('antie/widgets/horizontalcarousel',
 						} else {
 							break;
 						}
-					} else if (direction == HorizontalCarousel.SELECTION_DIRECTION_RIGHT) {
+					} else if (direction === HorizontalCarousel.SELECTION_DIRECTION_RIGHT) {
 						_nodeIndex++;
 
 						if (_newIndex < this._childWidgetOrder.length - 1) {
@@ -783,7 +771,7 @@ require.def('antie/widgets/horizontalcarousel',
 						// Allow the carousel to move again.
 						self.refreshViewport();
 						self._scrollHandle = null;
-					}
+					};
 
 					if(this._activateThenScroll) {
 						this.setActiveChildWidget(_newSelectedWidget);
@@ -793,7 +781,7 @@ require.def('antie/widgets/horizontalcarousel',
 					// If the offset is zero it means the element is not in the DOM, i.e. the other end of the carousel, scroll to 1 pixel
 					// otherwise in CSS3 the scrollDone event will never be called
 					var elpos = device.getElementOffset(_centerElement);
-					if(elpos.left == 0) {
+					if(elpos.left === 0) {
 						elpos.left = 1;
 					}
 
@@ -812,7 +800,7 @@ require.def('antie/widgets/horizontalcarousel',
 				// used in the visual wrapping mode.
 				do {
 					element = (direction === HorizontalCarousel.SELECTION_DIRECTION_RIGHT ? element.nextSibling : element.previousSibling);
-				} while (element && element.nodeType != 1);
+				} while (element && element.nodeType !== 1);
 				return element;
 			},
 
