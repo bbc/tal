@@ -59,19 +59,19 @@ require.def(
 			 * Sets the iterator pointer to the first item
 			 */
 			log: function() {
-					sendXHRLogMessage( "LOG", Array.prototype.join.call(arguments, '\n') )
+					sendXHRLogMessage( "LOG", Array.prototype.join.call(arguments, '\n') );
 			},
 			debug: function() {
-					sendXHRLogMessage( "DEBUG", Array.prototype.join.call(arguments, '\n') )
+					sendXHRLogMessage( "DEBUG", Array.prototype.join.call(arguments, '\n') );
 			},						
 			info: function() {
-					sendXHRLogMessage( "INFO", Array.prototype.join.call(arguments, '\n') )
+					sendXHRLogMessage( "INFO", Array.prototype.join.call(arguments, '\n') );
 			},			
 			warn: function() {
-					sendXHRLogMessage( "WARN", Array.prototype.join.call(arguments, '\n') )
+					sendXHRLogMessage( "WARN", Array.prototype.join.call(arguments, '\n') );
 			},		
 			error: function() {
-					sendXHRLogMessage( "ERROR", Array.prototype.join.call(arguments, '\n') )
+					sendXHRLogMessage( "ERROR", Array.prototype.join.call(arguments, '\n') );
 			}
 		};
 		
@@ -90,9 +90,9 @@ require.def(
 			http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 			
 			http.onreadystatechange = function() {//Call a function when the state changes.
-				if (this.readyState == 4) {
+				if (this.readyState === 4) {
 					this.onreadystatechange = null;
-					if (this.status == 200) {
+					if (this.status === 200) {
 						if (opts.onLoad) {
 							opts.onOkay(this.responseText);
 						}
@@ -102,7 +102,7 @@ require.def(
 						}
 					}
 				}
-			}
+			};
 			http.send( jsonMessage );
 		}
 	}
