@@ -58,7 +58,9 @@ require.def('antie/widgets/grid',
 				this._selectedRow = 0;
 				this._selectedCol = 0;
 
-				for(var i=0; i<cols * rows; i++) this._childWidgetOrder.push(null);
+				for(var i=0; i<cols * rows; i++) {
+                    this._childWidgetOrder.push(null);
+                }
 
 				var self = this;
 				this.addEventListener('keydown', function(e) { self._onKeyDown(e); });
@@ -86,7 +88,7 @@ require.def('antie/widgets/grid',
 
 					// If there's no active child widget set, try and set it to this
 					// (Will only have an affect if it's focusable (i.e. contains a button))
-					if(this._activeChildWidget == null) {
+					if(this._activeChildWidget === null) {
 						this.setActiveChildWidget(widget);
 					}
 
@@ -119,13 +121,21 @@ require.def('antie/widgets/grid',
 					for(var col=0; col<this._cols; col++) {
 						var widget = this.getWidgetAt(col, row);
 						if(widget) {
-							if(col == 0) widget.addClass('firstcol');
-							else if(col == this._cols - 1) widget.addClass('lastcol');
+							if(col === 0) {
+                                widget.addClass('firstcol');
+                            }
+							else if(col === this._cols - 1) {
+                                widget.addClass('lastcol');
+                            }
 							device.appendChildElement(rowElement, this.getWidgetAt(col, row).render(device));
 						} else {
 							var classes = ['spacer'];
-							if(col == 0) classes.push('firstcol');
-							else if(col == this._cols - 1) classes.push('lastcol');
+							if(col === 0) {
+                                classes.push('firstcol');
+                            }
+							else if(col === this._cols - 1) {
+                                classes.push('lastcol');
+                            }
 							device.appendChildElement(rowElement, device.createContainer(this.id + "_" + col + "_" + row, classes));
 						}
 					}
@@ -174,7 +184,7 @@ require.def('antie/widgets/grid',
 			 * @returns Boolean true if the child widget was focusable, otherwise boolean false.
 			 */
 			setActiveChildWidget: function(widget) {
-				var changed = this._activeChildWidget != widget;
+				var changed = this._activeChildWidget !== widget;
 				if(this._super(widget)) {
 					var selectedIndex = this.getIndexOfChildWidget(widget);
 					this._selectedRow = Math.floor(selectedIndex / this._cols);
@@ -195,8 +205,8 @@ require.def('antie/widgets/grid',
 			 * @param {antie.events.KeyEvent} evt The key event.
 			 */
 			_onKeyDown: function(evt) {
-				if(evt.keyCode != KeyEvent.VK_UP && evt.keyCode != KeyEvent.VK_DOWN
-					&& evt.keyCode != KeyEvent.VK_LEFT && evt.keyCode != KeyEvent.VK_RIGHT) {
+				if(evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN &&
+                    evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
 					return;
 				}
 
@@ -204,13 +214,13 @@ require.def('antie/widgets/grid',
 				var _newSelectedRow = this._selectedRow;
 				var _newSelectedWidget = null;
 				do {
-					if(evt.keyCode == KeyEvent.VK_UP) {
+					if(evt.keyCode === KeyEvent.VK_UP) {
 						_newSelectedRow--;
-					} else if(evt.keyCode == KeyEvent.VK_DOWN) {
+					} else if(evt.keyCode === KeyEvent.VK_DOWN) {
 						_newSelectedRow++;
-					} else if(evt.keyCode == KeyEvent.VK_LEFT) {
+					} else if(evt.keyCode === KeyEvent.VK_LEFT) {
 						_newSelectedCol--;
-					} else if(evt.keyCode == KeyEvent.VK_RIGHT) {
+					} else if(evt.keyCode === KeyEvent.VK_RIGHT) {
 						_newSelectedCol++;
 					}
 					if(_newSelectedCol < 0 || _newSelectedCol >= this._cols) {
