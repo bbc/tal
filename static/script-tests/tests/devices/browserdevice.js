@@ -95,7 +95,7 @@
 
 			});
 		};
-	};
+	}
 
 	defineElementCreationTests("createContainer", "div");
 	defineElementCreationTests("createLabel", "span");
@@ -242,7 +242,7 @@
 
             var createElement = document.createElement;
             var link = { };
-            var createElementStub = this.sandbox.stub(document, "createElement", function(tag) {
+            this.sandbox.stub(document, "createElement", function(tag) {
                 if (tag === "style") {
                     return { parentNode: { removeChild: function() {} } };
                 } else if (tag === "link") {
@@ -1003,7 +1003,7 @@
 			});
 			device.preloadImage("http://endpoint.invalid/image");
 			assertNotNull(img);
-			assertEquals("http://endpoint.invalid/image", img.src)
+			assertEquals("http://endpoint.invalid/image", img.src);
 		});
 
 	};

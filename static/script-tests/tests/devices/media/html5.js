@@ -73,7 +73,7 @@
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
-            function(application, HTML5Player) {
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -81,7 +81,7 @@
 
                 var mediaElement = document.createElement("div");
                 var addEventListenerCounts = { };
-                mediaElement.addEventListener = function (type, callback) {
+                mediaElement.addEventListener = function (type/*, callback*/) {
                     if (!addEventListenerCounts[type]) {
                         addEventListenerCounts[type] = 1;
                     } else {
@@ -208,7 +208,7 @@
         expectAsserts(3);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
-            function(application, HTML5Player, MediaErrorEvent, MediaInterface) {
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -216,7 +216,7 @@
 
                 var mediaElement = document.createElement("div");
                 var eventListenerCount = 0;
-                mediaElement.addEventListener = function (type, callback) {
+                mediaElement.addEventListener = function (/*type, callback*/) {
                     eventListenerCount++;
                 };
 
@@ -251,7 +251,7 @@
 
                 var originalCreateElement = document.createElement;
 
-                var sourceAddEventListenerStub = undefined;
+                var sourceAddEventListenerStub;
                 var sourceElementCount = 0;
 
                 this.sandbox.stub(document, "createElement", function(type) {

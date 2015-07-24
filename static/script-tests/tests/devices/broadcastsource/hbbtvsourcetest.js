@@ -258,14 +258,14 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent'], function(application, TunerUnavailableEvent) {
 
             var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
+            device.createBroadcastSource();
 
             var evt = new CustomEvent("PlayStateChange");
 
             self.hbbtvPlugin.playState = 2;
             self.hbbtvPlugin.dispatchEvent(evt);
 
-            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent')
+            var broadcastEventSpy = self.sandbox.spy(application, 'broadcastEvent');
 
             self.hbbtvPlugin.playState = 0;
             self.hbbtvPlugin.dispatchEvent(evt);
@@ -284,7 +284,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
 
             var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
+            device.createBroadcastSource();
 
             var evt = new CustomEvent("PlayStateChange");
 
@@ -307,7 +307,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
 
             var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
+            device.createBroadcastSource();
 
             var evt = new CustomEvent("PlayStateChange");
 
@@ -339,7 +339,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent'], function(application, TunerStoppedEvent) {
 
             var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
+            device.createBroadcastSource();
 
             var evt = new CustomEvent("PlayStateChange");
 

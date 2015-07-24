@@ -77,9 +77,9 @@
 			   function(application, ComponentContainer) {
 				   var root = application.getRootWidget();
 
-				   assertEquals(0, root.getChildWidgetCount())
+				   assertEquals(0, root.getChildWidgetCount());
 				   application.addComponentContainer("test");
-				   assertEquals(1, root.getChildWidgetCount())
+				   assertEquals(1, root.getChildWidgetCount());
 
 				   var firstChild = root.getChildWidgets()[0];
 				   assertInstanceOf(ComponentContainer, firstChild);

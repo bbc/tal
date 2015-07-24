@@ -94,11 +94,10 @@ require.def('antie/widgets/keyboard',
                     return false;
                 }
 
-                if(	(this._capitalisation != Keyboard.CAPITALISATION_LOWER)
-                    && (
-                    (this._capitalisation == Keyboard.CAPITALISATION_UPPER)
-                        || this._currentText.length == 0
-                        || this._currentText[this._currentText.length-1] == ' '
+                if(	(this._capitalisation !== Keyboard.CAPITALISATION_LOWER) && (
+                    (this._capitalisation === Keyboard.CAPITALISATION_UPPER) ||
+                    this._currentText.length == 0 ||
+                        this._currentText[this._currentText.length-1] === ' '
                     )
                     ) {
                     letter = letter.toUpperCase();
@@ -113,7 +112,7 @@ require.def('antie/widgets/keyboard',
             },
 
             _correctTitleCase: function () {
-                if(this._capitalisation == Keyboard.CAPITALISATION_TITLE) {
+                if(this._capitalisation === Keyboard.CAPITALISATION_TITLE) {
                     this._currentText = this._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
                         match = match.substring(0, 1).toUpperCase() + match.substring(1);
                         return match.replace(Keyboard.SHORT_WORD_REGEXP, function(match) { return match.toLowerCase(); });
@@ -157,7 +156,7 @@ require.def('antie/widgets/keyboard',
                         }
 
                         var chars = this._multitapConfig[evt.keyChar];
-                        if((evt.keyChar == this._multiTapLastKey) && this._multiTapTimeout) {
+                        if((evt.keyChar === this._multiTapLastKey) && this._multiTapTimeout) {
                             this._currentText = this._currentText.substring(0, this._currentText.length - 1);
                         } else {
                             this._multiTapLastKeyIndex = -1;
@@ -166,7 +165,9 @@ require.def('antie/widgets/keyboard',
                         // Find the next character for the pressed key that's available on this keyboard
                         do {
                             this._multiTapLastKeyIndex++;
-                            if(this._multiTapLastKeyIndex >= chars.length) this._multiTapLastKeyIndex = 0;
+                            if(this._multiTapLastKeyIndex >= chars.length) {
+                                this._multiTapLastKeyIndex = 0;
+                            }
                         } while(!this._letterButtons[chars[this._multiTapLastKeyIndex]]);
 
                         this._focussedCharacter = chars[this._multiTapLastKeyIndex];
@@ -194,7 +195,7 @@ require.def('antie/widgets/keyboard',
                             button.select();
                         }
                     }
-                } else if(evt.keyCode == KeyEvent.VK_BACK_SPACE) {
+                } else if(evt.keyCode === KeyEvent.VK_BACK_SPACE) {
                     if(this._currentText.length > 0) {
                         this._currentText = this._currentText.substring(0, this._currentText.length - 1);
                         this._correctTitleCase();
@@ -203,7 +204,7 @@ require.def('antie/widgets/keyboard',
 
                         this.bubbleEvent(new TextChangeEvent(this, this._currentText, null, false));
                     }
-                } else if(evt.keyCode == KeyEvent.VK_RIGHT) {
+                } else if(evt.keyCode === KeyEvent.VK_RIGHT) {
                     if(this._multiTapTimeout) {
                         this._multiTapTimeout = null;
                         // Fire a new text change event to notify listeners that the multi-tap timeout has finished
@@ -219,9 +220,9 @@ require.def('antie/widgets/keyboard',
 						var keyIndexId = (row*cols)+col;
 						var letter = this._keys[keyIndexId];
 						
-						if(letter == " ") { letter = "SPACE" }
-						else if(letter == "-") { letter = "DEL" }
-						else if(letter == "_") { continue }
+						if(letter === " ") { letter = "SPACE"; }
+						else if(letter === "-") { letter = "DEL"; }
+						else if(letter === "_") { continue; }
 
 						var button = new Button(this.id + '_' + letter + "_" + col + "_" + row);
 						button.setDataItem(letter);
@@ -311,7 +312,7 @@ require.def('antie/widgets/keyboard',
 			},
 
 			_updateClasses: function() {
-				if((this._maximumLength !== null) && (this._currentText != null) && (this._currentText.length >= this._maximumLength)) {
+				if((this._maximumLength !== null) && (this._currentText !== null) && (this._currentText.length >= this._maximumLength)) {
 					this.addClass('maxlength');
 					// Move focus to the DEL key, as it's
 					// the only one that can be used now.
