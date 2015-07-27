@@ -23,12 +23,9 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
- require.def('antie/devices/sanitisers/whitelisted', 
-    [
-        'antie/devices/sanitiser',
-        'antie/runtimecontext'
-    ],
-    function (Sanitiser, RuntimeContext) {
+ require.def('antie/devices/sanitisers/whitelisted',
+    ['antie/devices/sanitiser'],
+    function (Sanitiser) {
 
     'use strict';
 
@@ -79,7 +76,7 @@
             if (window.DOMParser) {
                 var parser = new DOMParser();
                 xmlDoc = parser.parseFromString(string, "text/xml");
-              
+
             }
             else // Internet Explorer
             {
@@ -91,7 +88,7 @@
         },
 
         _replaceEntities: function (string) {
-            
+
             var replaced = {},
                 regexp,
                 matches = string.match(/&[a-zA-Z0-9]*;/g);
@@ -110,7 +107,7 @@
                     string = string.replace(regexp, this._entities[matches[i]]);
                 }
             }
-            
+
             return string;
 
         },
@@ -122,7 +119,7 @@
 
             for (var i = 0; i < content.length; i++) {
                 if (content[i].tagName) {
-                    if (RuntimeContext.getDevice().arrayIndexOf(this._whitelist, content[i].tagName) !== -1) {
+                    if (this._whitelist.indexOf(content[i].tagName) !== -1) {
                         el = document.createElement(content[i].tagName);
                         el = this._processDomElement(content[i], el);
                         originalDom.appendChild(el);

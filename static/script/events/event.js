@@ -104,7 +104,7 @@ require.def('antie/events/event',
                     listeners = [];
                     eventListeners[ev] = listeners;
                 }
-                if (!~RuntimeContext.getDevice().arrayIndexOf(listeners, func)) {
+                if (!~listeners.indexOf(func)) {
                     listeners.push(func);
                 }
 			},
@@ -124,7 +124,7 @@ require.def('antie/events/event',
                     return false;
                 }
 
-                listener = RuntimeContext.getDevice().arrayIndexOf(listeners, func);
+                listener = listeners.indexOf(func);
                 if (~listener) {
                     listeners.splice(listener, 1);
                 }
