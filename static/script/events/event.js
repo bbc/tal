@@ -35,7 +35,11 @@
  */
 
 require.def('antie/events/event',
-	['antie/class', 'antie/runtimecontext'],
+	[
+		'antie/class',
+		'antie/runtimecontext',
+		'antie/lib/array.indexof' // Adds Array.prototype.indexOf()
+	],
 	function(Class, RuntimeContext) {
 		'use strict';
 

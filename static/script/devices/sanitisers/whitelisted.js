@@ -24,7 +24,10 @@
  * Please contact us for an alternative licence
  */
  require.def('antie/devices/sanitisers/whitelisted',
-    ['antie/devices/sanitiser'],
+    [
+      'antie/devices/sanitiser',
+      'antie/lib/array.indexof' // Adds Array.prototype.indexOf()
+    ],
     function (Sanitiser) {
 
     'use strict';

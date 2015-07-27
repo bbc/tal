@@ -33,7 +33,8 @@
 require.def('antie/widgets/widget',
     [
         'antie/class',
-        'antie/runtimecontext'
+        'antie/runtimecontext',
+        'antie/lib/array.indexof' // Adds Array.prototype.indexOf()
     ],
     function(Class, RuntimeContext) {
         'use strict';
