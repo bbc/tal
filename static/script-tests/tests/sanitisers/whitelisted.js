@@ -24,28 +24,17 @@
  require(
     [
         'antie/devices/sanitiser',
-        'antie/runtimecontext',
-        'antie/devices/browserdevice',
         'antie/devices/sanitisers/whitelisted'
     ],
-    function(Sanitiser, RuntimeContext, BrowserDevice) {
+    function(Sanitiser) {
         "use strict";
 
         describe('Basic Sanitisation', function() {
 
-            var el, mockDevice, mockApp;
+            var el;
 
             beforeEach(function () {
                 el = document.createElement('div');
-                mockDevice = new BrowserDevice({});
-                mockApp = {
-                    getDevice: function() { return mockDevice;}
-                };
-                RuntimeContext.setCurrentApplication(mockApp);
-            });
-
-            afterEach(function () {
-                RuntimeContext.clearCurrentApplication();
             });
 
             it('returns the text string when no dom elements are present', function() {
@@ -146,28 +135,12 @@
                 expect(el.firstChild.childNodes[1].firstChild.data).toEqual('my string');
                 expect(el.firstChild.childNodes[2].data).toEqual('another string');
             });
-
-            it ('uses arrayIndexOf from browserdevice', function () {
-                var string = "<p>my string</p>",
-                    sanitiser = new Sanitiser(string);
-                spyOn(mockDevice, 'arrayIndexOf');
-
-                sanitiser.setElementContent(el);
-
-                expect(mockDevice.arrayIndexOf).toHaveBeenCalled();
-            });
         });
 
         describe('Mixed Type Sanitzation', function() {
 
             var el = document.createElement('div');
             it ('returns mixed string with sanitsation implemented', function () {
-                var mockDevice = new BrowserDevice({});
-                var mockApp = {
-                    getDevice: function() { return mockDevice;}
-                };
-                RuntimeContext.setCurrentApplication(mockApp);
-
                 var string = "<div><h1>Title</h1><ul><li>list 1</li><li><script>nastiness</script>OK</li></ul></div>",
                     result = "<h1>Title</h1><ul><li>list 1</li><li>OK</li></ul>",
                     sanitiser = new Sanitiser(string);

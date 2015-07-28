@@ -33,7 +33,8 @@
 require.def('antie/widgets/widget',
     [
         'antie/class',
-        'antie/runtimecontext'
+        'antie/runtimecontext',
+        'antie/lib/array.indexof' // Adds Array.prototype.indexOf()
     ],
     function(Class, RuntimeContext) {
         'use strict';
@@ -138,7 +139,7 @@ require.def('antie/widgets/widget',
                     listeners = [];
                     this._eventListeners[ev] = listeners;
                 }
-                if (!~RuntimeContext.getDevice().arrayIndexOf(listeners, func)) {
+                if (!~listeners.indexOf(func)) {
                     listeners.push(func);
                 }
             },
@@ -157,7 +158,7 @@ require.def('antie/widgets/widget',
                     return false;
                 }
 
-                listener = RuntimeContext.getDevice().arrayIndexOf(listeners, func);
+                listener = listeners.indexOf(func);
                 if (~listener) {
                     listeners.splice(listener, 1);
                 }
