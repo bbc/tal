@@ -351,7 +351,7 @@
 				queue,
 				"lib/mockapplication",
 				["antie/widgets/componentcontainer", "antie/widgets/component"],
-				function(application, ComponentContainer, Component) {
+				function(application, ComponentContainer /* Component */) {
                     var clock = sinon.useFakeTimers();
 
                     var container = new ComponentContainer("container");
