@@ -182,7 +182,7 @@
             queue,
             "lib/mockapplication",
             ["antie/widgets/widget", "antie/events/event"],
-            function(application, Widget, Event) {
+            function(application, Widget /* Event */) {
                 var widget = new Widget();
                 var handler = this.sandbox.stub();
                 var result = widget.removeEventListener('anevent', handler);
