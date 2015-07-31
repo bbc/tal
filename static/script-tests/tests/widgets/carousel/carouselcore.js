@@ -309,7 +309,7 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, CarouselCore, Mask, BookendedNavigator) {
+            function (application, CarouselCore, Mask /* BookendedNavigator */) {
                 var carousel, maskStub, INDEX;
                 INDEX = 3;
                 maskStub = this.sandbox.stub(Mask.prototype, 'alignToIndex').withArgs(INDEX);
@@ -331,7 +331,7 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, CarouselCore, Button, Mask, BookendedNavigator) {
+            function (application, CarouselCore, Button, Mask /* BookendedNavigator */) {
                 var carousel, maskStub;
                 var device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo');
@@ -522,7 +522,7 @@
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, CarouselCore, verticalOrientation) {
+            function (application, CarouselCore) {
                 var carousel;
 
                 this.sandbox.spy(CarouselCore.prototype, '_setOrientation');
@@ -539,7 +539,7 @@
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, CarouselCore, verticalOrientation) {
+            function (application, CarouselCore) {
                 var carousel;
 
                 this.sandbox.spy(CarouselCore.prototype, '_setOrientation');
