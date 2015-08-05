@@ -5,7 +5,7 @@ title: Testing
 
 #Testing
 
-## Unit Tests
+## Client Unit Tests
 TAL comes complete with an extensive set of unit tests.
 
 The tests themselves are located in 
@@ -156,3 +156,65 @@ this.ExampleTest.prototype.stubExample = function(queue) {
 [Jasmine]: http://jasmine.github.io/1.3/introduction.html
 [Node.js]: https://nodejs.org/
 [PhantomJS]: http://phantomjs.org/
+
+## Server Unit Tests
+
+### PHP Server
+For the TAL server side PHP code, using php-unit.
+
+1\. Install phpunit: https://phpunit.de/
+
+2\. Run the tests:
+```sh
+cd php-test
+phpunit *.php
+```
+
+Expected sample output:
+```sh
+PHPUnit 4.7.7 by Sebastian Bergmann and contributors.
+
+................
+
+Time: 1.02 seconds, Memory: 18.25Mb
+
+OK (16 tests, 16 assertions)
+```
+
+### NodeJS Server
+For the TAL server side NodeJS code, using nodeunit:
+
+1\. Install nodeunit: https://github.com/caolan/nodeunit
+```sh
+npm install -g nodeunit
+```
+
+2\. Run the tests:
+```sh
+cd node-test
+nodeunit .
+```
+
+Expected sample output:
+```sh
+
+antieframeworktest
+✔ Generic TV1 Device has no Headers
+✔ Generic TV1 Device has no body
+✔ Generic TV1 Device has default Mime type
+✔ Generic TV1 Device has default Root element
+✔ Generic TV1 Device has default Doc type
+✔ Generic TV2 Device has expected header
+✔ Generic TV2 Device has expected body
+✔ Generic TV2 Device has expected Mime type
+✔ Generic TV2 Device has expected Root element
+✔ Generic TV2 Device has expected Doc type
+✔ Normalise key names replaces special characters with underscores
+✔ Normalise key names replaces upper case to lower case
+✔ Get generic device config
+✔ Get generic app config
+✔ Get generic app config (Alt)
+✔ App config overrides device config when merged
+
+OK: 16 assertions (23ms)
+```
