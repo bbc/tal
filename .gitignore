@@ -2,3 +2,6 @@ _site
 .DS_Store
 /.project
 *.iml
+static
+.grunt
+node_modules
