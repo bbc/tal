@@ -160,29 +160,31 @@ require.def('antie/devices/device',
                         "9": KeyEvent.VK_9
                     };
                     for (var code in config.input.map) {
-                        switch (code) {
-                            case "alpha":
-                                var A = config.input.map[code][0];
-                                var Z = config.input.map[code][1];
-                                var AcharCode = "A".charCodeAt(0);
-                                for (kc = A; kc <= Z; kc++) {
-                                    this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - A) + AcharCode)];
-                                }
-                                break;
-                            case "numeric":
-                                var zero = config.input.map[code][0];
-                                var nine = config.input.map[code][1];
-                                var zeroCharCode = "0".charCodeAt(0);
-                                for (kc = zero; kc <= nine; kc++) {
-                                    this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - zero) + zeroCharCode)];
-                                }
-                                break;
-                            default:
-                                var symbol = config.input.map[code];
-                                if (symbol) {
-                                    this._keyMap[code.toString()] = symbolMap[symbol];
-                                }
-                                break;
+                        if(config.input.map.hasOwnProperty(code)) {
+                            switch (code) {
+                                case "alpha":
+                                    var A = config.input.map[code][0];
+                                    var Z = config.input.map[code][1];
+                                    var AcharCode = "A".charCodeAt(0);
+                                    for (kc = A; kc <= Z; kc++) {
+                                        this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - A) + AcharCode)];
+                                    }
+                                    break;
+                                case "numeric":
+                                    var zero = config.input.map[code][0];
+                                    var nine = config.input.map[code][1];
+                                    var zeroCharCode = "0".charCodeAt(0);
+                                    for (kc = zero; kc <= nine; kc++) {
+                                        this._keyMap[kc.toString()] = symbolMap[String.fromCharCode((kc - zero) + zeroCharCode)];
+                                    }
+                                    break;
+                                default:
+                                    var symbol = config.input.map[code];
+                                    if (symbol) {
+                                        this._keyMap[code.toString()] = symbolMap[symbol];
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }
@@ -282,7 +284,7 @@ require.def('antie/devices/device',
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A container element within the device's user-agent.
              */
-            createContainer: function(id, classNames) {
+            createContainer: function(id, classNames) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Creates a label (an element that only contains text) in the device's user-agent.
@@ -293,7 +295,7 @@ require.def('antie/devices/device',
              * @param {String} [text] The text within the label.
              * @returns A label within the device's user-agent.
              */
-            createLabel: function(id, classNames, text) {
+            createLabel: function(id, classNames, text) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Creates a button (an element that can be selected by the user to perform an action) in the device's user-agent.
@@ -303,7 +305,7 @@ require.def('antie/devices/device',
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A button within the device's user-agent.
              */
-            createButton: function(id, classNames) {
+            createButton: function(id, classNames) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Creates a list in the device's user-agent.
@@ -313,7 +315,7 @@ require.def('antie/devices/device',
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list within the device's user-agent.
              */
-            createList: function(id, classNames) {
+            createList: function(id, classNames) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Creates a list item in the device's user-agent.
@@ -323,7 +325,7 @@ require.def('antie/devices/device',
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list item within the device's user-agent.
              */
-            createListItem: function(id, classNames) {
+            createListItem: function(id, classNames) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Creates an image in the device's user-agent.
@@ -334,21 +336,21 @@ require.def('antie/devices/device',
              * @param {String} src The source URL of the image.
              * @returns An image within the device's user-agent.
              */
-            createImage: function(id, classNames, src) {
+            createImage: function(id, classNames, src) { //jshint ignore:line
             },
             /**
              * Appends an element as a child of another.
              * @param {Element} to Append as a child of this element.
              * @param {Element} el The new child element.
              */
-            appendChildElement: function(to, el) {
+            appendChildElement: function(to, el) { //jshint ignore:line
             },
             /**
              * Sets the classes of an element.
              * @param {Element} el The element which will receive new class names.
              * @param {Array} classNames An array of class names.
              */
-            setElementClasses: function(el, classNames) {
+            setElementClasses: function(el, classNames) { //jshint ignore:line
             },
             /**
              * Removes a class from an element (and optionally descendants)
@@ -356,14 +358,14 @@ require.def('antie/devices/device',
              * @param {String} className The class to remove.
              * @param {Boolean} [deep] If true, and this element has the given class, remove the class from it's children recursively.
              */
-            removeClassFromElement: function(el, className, deep) {
+            removeClassFromElement: function(el, className, deep) { //jshint ignore:line
             },
             /**
              * Adds a class name to an element
              * @param {Element} el The element which will receive new class name.
              * @param {String} className The new class name to add.
              */
-            addClassToElement: function(el, className) {
+            addClassToElement: function(el, className) { //jshint ignore:line
             },
             /**
              * Adds global key event listener(s) to the user-agent.
@@ -384,40 +386,40 @@ require.def('antie/devices/device',
              * @param {String} tagName The tag name you are looking for.
              * @returns An array of elements having the provided tag name.
              */
-            getChildElementsByTagName: function(el, tagName) {
+            getChildElementsByTagName: function(el, tagName) { //jshint ignore:line
             },
             /**
              * Returns the top-level element. This is the target of layout class names.
              * @return The top-level DOM element.
              */
-            getTopLevelElement: function() {
+            getTopLevelElement: function() { //jshint ignore:line
             },
             /**
              * Returns all the loaded stylesheet elements.
              * @return An array containing all loaded stylesheet elements (link and style elements)
              */
-            getStylesheetElements: function() {
+            getStylesheetElements: function() { //jshint ignore:line
             },
             /**
              * Returns the offset of the element within its offset container.
              * @param {Element} el The element you wish to know the offset of.
              * @return An literal object containing properties, top and left.
              */
-            getElementOffset: function(el) {
+            getElementOffset: function(el) { //jshint ignore:line
             },
             /**
              * Gets the size of an element.
              * @param {Element} el The element of which to return the size.
              * @returns A size object containing the width and height of the element.
              */
-            getElementSize: function(el) {
+            getElementSize: function(el) { //jshint ignore:line
             },
             /**
              * Sets the size of an element.
              * @param {Element} el The element of which to set the size.
              * @param {Size} size The new size of the element.
              */
-            setElementSize: function(el, size) {
+            setElementSize: function(el, size) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Scroll an element (within some masking container) so that its top-left corner is at the given position.
@@ -435,7 +437,7 @@ require.def('antie/devices/device',
              * @returns {Object} A handle to any animation started
              * @see antie.devices.Device#stopAnimation
              */
-            scrollElementTo: function(options) {
+            scrollElementTo: function(options) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Moves an element so that its top-left corner is at the given position.
@@ -453,7 +455,7 @@ require.def('antie/devices/device',
              * @returns {Object} A handle to any animation started
              * @see #stopAnimation
              */
-            moveElementTo: function(options) {
+            moveElementTo: function(options) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Hides an element.
@@ -469,7 +471,7 @@ require.def('antie/devices/device',
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            hideElement: function(options) {
+            hideElement: function(options) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Shows an element.
@@ -485,7 +487,7 @@ require.def('antie/devices/device',
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            showElement: function(options) {
+            showElement: function(options) { //jshint ignore:line
             },
             /**
              * -PROTECTED- Tweens a property (or properties) of an element's style from one value to another.
@@ -502,26 +504,26 @@ require.def('antie/devices/device',
              * @param {Number} [options.fps] Frames per second of animation (styletopleft only)
              * @returns {Object} A handle to animation started. This should only be used for passing to stopAnimation and nothing else should be inferred by its value. If no animation occurs, null may be returned but should not be used as an indicator.
              */
-            tweenElementStyle: function(options){
+            tweenElementStyle: function(options){ //jshint ignore:line
 
             },
             /**
              * Stops the specified animation. The any completeHandler for the animation will be executed.
              * @param {object} anim A handle to the animation you wish to stop.
              */
-            stopAnimation: function(anim) {
+            stopAnimation: function(anim) { //jshint ignore:line
             },
             /**
              * Encodes an object as JSON.
              * @param {object} obj Object to encode.
              */
-            encodeJson: function(obj) {
+            encodeJson: function(obj) { //jshint ignore:line
             },
             /**
              * Decodes JSON.
              * @param {String} json JSON to decode.
              */
-            decodeJson: function(json) {
+            decodeJson: function(json) { //jshint ignore:line
             },
             /**
              * Gets the current key map from the device configuration.
@@ -537,7 +539,7 @@ require.def('antie/devices/device',
              * @param mediaType Type of media. "audio" or "video"
              * @param eventCallback Function that is called to processes media events.
              */
-            createMediaInterface: function(id, mediaType, eventCallback) {
+            createMediaInterface: function(id, mediaType, eventCallback) { //jshint ignore:line
             },
             /**
              * Get the media player.
@@ -565,14 +567,14 @@ require.def('antie/devices/device',
              * @param {String} mediaType "video" or "radio".
              * @returns The embed mode of the current player
              */
-            getPlayerEmbedMode: function(mediaType) {
+            getPlayerEmbedMode: function(mediaType) { //jshint ignore:line
                 // mediaType: video or audio
             },
             /**
              * Sets the current route (a reference pointing to a location within the application).
              * @param {Array} route A route pointing to a location within the application.
              */
-            setCurrentRoute: function(route) {
+            setCurrentRoute: function(route) { //jshint ignore:line
             },
             /**
              * Gets the current route (a reference pointing to a location within the application).
@@ -595,7 +597,7 @@ require.def('antie/devices/device',
              * to manipulate the current location more easily.
              * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            setWindowLocationUrl: function(url) {
+            setWindowLocationUrl: function(url) { //jshint ignore:line
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
@@ -613,7 +615,7 @@ require.def('antie/devices/device',
              * @param {String} [callbackSuffix] Suffix to append to end of callback function name.
              * @returns The script element that will load the script.
              */
-            loadScript: function(url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) {
+            loadScript: function(url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) { //jshint ignore:line
             },
             /**
              * Loads an external style sheet.
@@ -621,7 +623,7 @@ require.def('antie/devices/device',
              * @param {function(String)} [callback] Callback function when style has loaded/failed
              * @returns The link element that will load the style sheet.
              */
-            loadStyleSheet: function(url, callback) {
+            loadStyleSheet: function(url, callback) { //jshint ignore:line
             },
             /**
              * Loads a resource from a URL protected by device authentication.
@@ -629,7 +631,7 @@ require.def('antie/devices/device',
              * @param {Object} opts Object containing onLoad and onError callback functions.
              * @returns The request object used to load the resource.
              */
-            loadAuthenticatedURL: function(url, opts) {
+            loadAuthenticatedURL: function(url, opts) { //jshint ignore:line
             },
             /**
              * Loads a resource from a URL.
@@ -637,7 +639,7 @@ require.def('antie/devices/device',
              * @param {Object} opts Object containing onLoad and onError callback functions.
              * @returns The request object used to load the resource.
              */
-            loadURL: function(url, opts) {
+            loadURL: function(url, opts) { //jshint ignore:line
             },
             /**
              * Performs a POST HTTP request to a URL on a different host/domain.
@@ -645,7 +647,7 @@ require.def('antie/devices/device',
              * @param {Object} data Associative array of fields/values to post.
              * @param {Object} opts Object containing onLoad and onError callback functions.
              */
-            crossDomainPost: function(url, opts) {
+            crossDomainPost: function(url, opts) { //jshint ignore:line
             },
             /**
              * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
@@ -659,7 +661,7 @@ require.def('antie/devices/device',
              * @param {String} [options.callbackKey=callback] Key to use in query string when passing callback function name
              * for JSON-P call. Default: callback
              */
-            executeCrossDomainGet: function(url, callbacks, options) {
+            executeCrossDomainGet: function(url, callbacks, options) { //jshint ignore:line
             },
             /**
              * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
@@ -668,13 +670,13 @@ require.def('antie/devices/device',
              * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
              * used for the name of the form filed if the iframe hack is used
              */
-            executeCrossDomainPost: function(url, data, opts) {
+            executeCrossDomainPost: function(url, data, opts) { //jshint ignore:line
             },
             /**
              * Forces the device to pre-load an image.
              * @param {String} url The URL of the image to preload.
              */
-            preloadImage: function(url) {
+            preloadImage: function(url) { //jshint ignore:line
             },
             /**
              * Checks to see if HD output is currently enabled.
@@ -724,7 +726,7 @@ require.def('antie/devices/device',
              * Set the current volume.
              * @param {Float} volume The new volume level (0.0 to 1.0).
              */
-            setVolume: function(volume) {
+            setVolume: function(volume) { //jshint ignore:line
             },
             /**
              * Check to see if the volume is currently muted.
@@ -736,7 +738,7 @@ require.def('antie/devices/device',
              * Mute or unmute the device.
              * @param {Boolean} muted The new muted state. Boolean true to mute, false to unmute.
              */
-            setMuted: function(muted) {
+            setMuted: function(muted) { //jshint ignore:line
             },
             /**
              * Check to see whether device has disabled animation.
@@ -800,7 +802,7 @@ require.def('antie/devices/device',
 
         Device.addLoggingStrategy = function(moduleID, loggingMethods) {
             Device.prototype.loggingStrategies[ moduleID ] = loggingMethods;
-        }
+        };
 
         Device.prototype.loggingStrategies = [];
         Device.prototype.filteredLoggingMethods = null;
