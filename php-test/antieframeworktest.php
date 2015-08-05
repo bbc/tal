@@ -39,8 +39,8 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
         $this->framework = new AntieFramework();
 
         if (!isset(self::$frameworkDir)) {
-            self::$frameworkDir = realpath(dirname(__FILE__) . "/testconfig/config");
-            self::$testConfigDir = realpath(dirname(__FILE__) . "/testconfig");
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
 
             //include path needs to pick up the test config first
             $includePath = get_include_path();
@@ -50,12 +50,12 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
 
     protected function setUpAltConfig()
     {
-    	$path = realpath(dirname(__FILE__) . "/../php-test/testconfig/");
+    	$path = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
     	$this->framework = new AntieFramework( $path );
 
     	if (!isset(self::$frameworkDir)) {
-    		self::$frameworkDir = realpath(dirname(__FILE__) . "/testconfig/config");
-    		self::$testConfigDir = realpath(dirname(__FILE__) . "/testconfig");
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
 
     		//include path needs to pick up the test config first
     		$includePath = get_include_path();
