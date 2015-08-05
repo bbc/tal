@@ -309,64 +309,7 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testGetCurrentChannelReturnsFalseOnException = function(queue) {
-        expectAsserts(1);
-
-	var self = this;
-        var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-
-            self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").throwsException("Error!");
-
-            var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
-
-            assertFalse(broadcastSource.getCurrentChannel());
-
-        }, config);
-    };
-
-    this.SamsungTvSource.prototype.testGetCurrentChannelReturnsCurrentChannelFromWebAPI = function(queue) {
-        expectAsserts(10);
-
-	var self = this;
-        var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
-
-            var apiResult = {
-                channelName: "Alpha",
-                originalNetworkID: 9876,
-                transportStreamID: 8765,
-                programNumber: 7654,
-                ptc: 6543,
-                major: 5432,
-                minor: 4321,
-                sourceID: 3210
-            };
-
-            self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").returns(apiResult);
-
-            var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
-
-            var result = broadcastSource.getCurrentChannel();
-
-            assertInstanceOf(Channel, result);
-            assertEquals("Alpha", result.name);
-            assertEquals(9876, result.onid);
-            assertUndefined(result.idType);
-            assertEquals(8765, result.tsid);
-            assertEquals(7654, result.sid);
-            assertEquals(6543, result.ptc);
-            assertEquals(5432, result.major);
-            assertEquals(4321, result.minor);
-            assertEquals(3210, result.sourceId);
-
-
-        }, config);
-    };
-
-    this.SamsungTvSource.prototype.testGetChannelListCallsOnErrorWhenExceptionThrownFetchingChannelsFromWebAPI = function(queue) {
+    this.SamsungTvSource.prototype.testGetChannelNameListCallsOnErrorWhenExceptionThrownFetchingChannelsFromWebAPI = function(queue) {
         expectAsserts(3);
 
 	var self = this;
@@ -383,7 +326,7 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.getChannelList(params);
+            broadcastSource.getChannelNameList(params);
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
@@ -395,7 +338,7 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testGetChannelListRequestsAllChannelsFromWebAPI = function(queue) {
+    this.SamsungTvSource.prototype.testGetChannelNameListRequestsAllChannelsFromWebAPI = function(queue) {
         expectAsserts(4);
 
 	var self = this;
@@ -412,7 +355,7 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.getChannelList(params);
+            broadcastSource.getChannelNameList(params);
 
             assert(stub.calledOnce);
             assertSame(window.webapis.tv.channel.NAVIGATOR_MODE_ALL, stub.args[0][2]);
@@ -422,7 +365,7 @@
         }, config);
     };
 
-    this.SamsungTvSource.prototype.testGetChannelListCallsOnErrorWhenWebAPIErrors = function(queue) {
+    this.SamsungTvSource.prototype.testGetChannelNameListCallsOnErrorWhenWebAPIErrors = function(queue) {
         expectAsserts(5);
 
 	var self = this;
@@ -439,7 +382,7 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.getChannelList(params);
+            broadcastSource.getChannelNameList(params);
 
             assert(stub.calledOnce);
 
@@ -458,12 +401,12 @@
     };
 
 
-    this.SamsungTvSource.prototype.testGetChannelListSuccessCallbackPassedToWebAPIProvidesListOfChannelsToOnSuccess = function(queue) {
-        expectAsserts(13);
+    this.SamsungTvSource.prototype.testGetChannelNameListSuccessCallbackPassedToWebAPIProvidesListOfChannelsToOnSuccess = function(queue) {
+        expectAsserts(4);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/channel'], function(application, Channel) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var stub = self.sandbox.stub(window.webapis.tv.channel, "getChannelList");
 
@@ -475,21 +418,14 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.getChannelList(params);
+            broadcastSource.getChannelNameList(params);
 
             assert(stub.calledOnce);
             var successFunc = stub.args[0][0];
 
             var data = [
                 {
-                    channelName: "Alpha",
-                    originalNetworkID: 9876,
-                    transportStreamID: 8765,
-                    programNumber: 7654,
-                    ptc: 6543,
-                    major: 5432,
-                    minor: 4321,
-                    sourceID: 3210
+                    channelName: "Alpha"
                 }
             ];
 
@@ -500,18 +436,7 @@
 
             assertEquals(1, channelList.length);
 
-            assertInstanceOf(Channel, channelList[0]);
-
-            assertEquals("Alpha", channelList[0].name);
-            assertEquals(9876, channelList[0].onid);
-            assertUndefined(channelList[0].idType);
-            assertEquals(8765, channelList[0].tsid);
-            assertEquals(7654, channelList[0].sid);
-            assertEquals(6543, channelList[0].ptc);
-            assertEquals(5432, channelList[0].major);
-            assertEquals(4321, channelList[0].minor);
-            assertEquals(3210, channelList[0].sourceId);
-
+            assertEquals("Alpha", channelList[0]);
         }, config);
     };
 
@@ -572,7 +497,9 @@
         var config = getGenericSamsungBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
-            self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").throwsException("Error!");
+            self.samsungPluginWindow.GetCurrentChannel_Name = function() {
+                return -1;
+            };
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -698,14 +625,7 @@
             getChannelListSuccessFunc(
                 [
                     {
-                        channelName: "Alpha",
-                        originalNetworkID: 9876,
-                        transportStreamID: 8765,
-                        programNumber: 7654,
-                        ptc: 6543,
-                        major: 5432,
-                        minor: 4321,
-                        sourceID: 3210
+                        channelName: "Alpha"
                     }
                 ]);
 
@@ -760,7 +680,8 @@
 
             assert(tuneStub.calledOnce);
             var expectedTuneMapleChannelObj = {
-                originalNetworkID: 9876,
+                channelName: "Alpha",
+		originalNetworkID: 9876,
                 transportStreamID: 8765,
                 programNumber: 7654,
                 ptc: 6543,
@@ -977,29 +898,15 @@
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplication = function(queue) {
-        expectAsserts(13);
+        expectAsserts(5);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
-
-
-            var apiResult = {
-                channelName: "Alpha",
-                originalNetworkID: 9876,
-                transportStreamID: 8765,
-                programNumber: 7654,
-                ptc: 6543,
-                major: 5432,
-                minor: 4321,
-                sourceID: 3210
-            };
-
-            self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").returns(apiResult);
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/basetvsource'], function(application, TunerPresentingEvent, BaseTvSource) {
             var broadcastEventStub = self.sandbox.stub(application, 'broadcastEvent');
 
             var device = application.getDevice();
-            device.createBroadcastSource();
+            var broadcastSource = device.createBroadcastSource();
 
             assertFunction(self.samsungPluginTV.OnEvent);
 
@@ -1009,19 +916,11 @@
             var event = broadcastEventStub.args[0][0];
 
             assertInstanceOf(TunerPresentingEvent, event);
-            assertInstanceOf(Channel, event.channel);
 
-            assertEquals("Alpha", event.channel.name);
-            assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.idType);
-            assertEquals(8765, event.channel.tsid);
-            assertEquals(7654, event.channel.sid);
-            assertEquals(6543, event.channel.ptc);
-            assertEquals(5432, event.channel.major);
-            assertEquals(4321, event.channel.minor);
-            assertEquals(3210, event.channel.sourceId);
+            assertEquals("BBC One", event.channel);
 
-        }, config);
+	    assertEquals(BaseTvSource.STATE.PRESENTING, broadcastSource.getState());
+         }, config);
     };
 
     this.SamsungTvSource.prototype.testBroadcastEventsAreRequestedDuringConstructionOfBroadcastSource = function(queue) {
@@ -1045,16 +944,16 @@
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerUnavailableEventsAreBroadcastToApplicationWithStringID = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent'], function(application, TunerUnavailableEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerunavailableevent', 'antie/devices/broadcastsource/basetvsource'], function(application, TunerUnavailableEvent, BaseTvSource) {
 
             var broadcastEventStub = self.sandbox.stub(application, 'broadcastEvent');
 
             var device = application.getDevice();
-            device.createBroadcastSource();
+            var broadcastSource = device.createBroadcastSource();
 
             assertFunction(self.samsungPluginTV.OnEvent);
 
@@ -1062,21 +961,21 @@
 
             assert(broadcastEventStub.calledOnce);
             assertInstanceOf(TunerUnavailableEvent, broadcastEventStub.args[0][0]);
-
+            assertEquals(BaseTvSource.STATE.UNAVAILABLE, broadcastSource.getState());
         }, config);
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerStoppedEventsAreBroadcastToApplicationWithStringID = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent'], function(application, TunerStoppedEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerstoppedevent', 'antie/devices/broadcastsource/basetvsource'], function(application, TunerStoppedEvent, BaseTvSource) {
 
             var broadcastEventStub = self.sandbox.stub(application, 'broadcastEvent');
 
             var device = application.getDevice();
-            device.createBroadcastSource();
+            var broadcastSource = device.createBroadcastSource();
 
             assertFunction(self.samsungPluginTV.OnEvent);
 
@@ -1084,30 +983,16 @@
 
             assert(broadcastEventStub.calledOnce);
             assertInstanceOf(TunerStoppedEvent, broadcastEventStub.args[0][0]);
-
+            assertEquals(BaseTvSource.STATE.STOPPED, broadcastSource.getState());
         }, config);
     };
 
     this.SamsungTvSource.prototype.testFollowingCreationOfBroadcastSourceBroadcastTunerPresentingEventsAreBroadcastToApplicationWithStringID = function(queue) {
-        expectAsserts(13);
+        expectAsserts(4);
 
 	var self = this;
         var config = getGenericSamsungBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent', 'antie/devices/broadcastsource/channel'], function(application, TunerPresentingEvent, Channel) {
-
-
-            var apiResult = {
-                channelName: "Alpha",
-                originalNetworkID: 9876,
-                transportStreamID: 8765,
-                programNumber: 7654,
-                ptc: 6543,
-                major: 5432,
-                minor: 4321,
-                sourceID: 3210
-            };
-
-            self.sandbox.stub(window.webapis.tv.channel, "getCurrentChannel").returns(apiResult);
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
             var broadcastEventStub = self.sandbox.stub(application, 'broadcastEvent');
 
             var device = application.getDevice();
@@ -1120,18 +1005,8 @@
             assert(broadcastEventStub.calledOnce);
             var event = broadcastEventStub.args[0][0];
             assertInstanceOf(TunerPresentingEvent, event);
-            assertInstanceOf(Channel, event.channel);
 
-            assertEquals("Alpha", event.channel.name);
-            assertEquals(9876, event.channel.onid);
-            assertUndefined(event.channel.idType);
-            assertEquals(8765, event.channel.tsid);
-            assertEquals(7654, event.channel.sid);
-            assertEquals(6543, event.channel.ptc);
-            assertEquals(5432, event.channel.major);
-            assertEquals(4321, event.channel.minor);
-            assertEquals(3210, event.channel.sourceId);
-
+            assertEquals("BBC One", event.channel);
         }, config);
     };
 

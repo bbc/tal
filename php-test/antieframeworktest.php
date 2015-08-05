@@ -39,24 +39,24 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
         $this->framework = new AntieFramework();
 
         if (!isset(self::$frameworkDir)) {
-            self::$frameworkDir = realpath(dirname(__FILE__) . "/testconfig/config");
-            self::$testConfigDir = realpath(dirname(__FILE__) . "/testconfig");
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
 
             //include path needs to pick up the test config first
             $includePath = get_include_path();
             set_include_path(self::$testConfigDir . PATH_SEPARATOR . self::$frameworkDir . PATH_SEPARATOR . $includePath);
         }
     }
-    
+
     protected function setUpAltConfig()
     {
-    	$path = realpath(dirname(__FILE__) . "/../php-test/testconfig/");
+    	$path = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
     	$this->framework = new AntieFramework( $path );
-    	 
+
     	if (!isset(self::$frameworkDir)) {
-    		self::$frameworkDir = realpath(dirname(__FILE__) . "/testconfig/config");
-    		self::$testConfigDir = realpath(dirname(__FILE__) . "/testconfig");
-    
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
+
     		//include path needs to pick up the test config first
     		$includePath = get_include_path();
     		set_include_path(self::$testConfigDir . PATH_SEPARATOR . self::$frameworkDir . PATH_SEPARATOR . $includePath);
@@ -67,73 +67,73 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
     {
     	$this->setUpNormalConfig();
         $headers = $this->framework->getDeviceHeaders( $this->getGenericDevice1Config() );
-        $this->assertEquals( '', $headers );
+        $this->assertEquals( '<!-- sample default header -->', $headers );
     }
-    
+
     function testGenericTV1DeviceHasNoBody()
     {
     	$this->setUpNormalConfig();
         $body = $this->framework->getDeviceBody( $this->getGenericDevice1Config() );
-        $this->assertEquals( '', $body);
+        $this->assertEquals( '<!-- sample default body -->', $body );
     }
-    
+
     function testGenericTV1DeviceHasDefaultMimeType()
     {
     	$this->setUpNormalConfig();
     	$mimeType = $this->framework->getMimeType( $this->getGenericDevice1Config() );
-    	$this->assertEquals( 'text/html', $mimeType);
+    	$this->assertEquals( 'text/html', $mimeType );
     }
-    
+
     function testGenericTV1DeviceHasDefaultRootElement()
     {
     	$this->setUpNormalConfig();
     	$rootElement = $this->framework->getRootHtmlTag( $this->getGenericDevice1Config() );
     	$this->assertEquals( '<html>', $rootElement );
     }
-    
+
     function testGenericTV1DeviceHasDefaultDocType()
     {
     	$this->setUpNormalConfig();
     	$docType = $this->framework->getDocType( $this->getGenericDevice1Config() );
     	$this->assertEquals( '<!DOCTYPE html>', $docType );
     }
-    
+
     function testGenericTV2DeviceHasExpectedHeader()
     {
     	$this->setUpNormalConfig();
-    	
+
     	$headers = $this->framework->getDeviceHeaders( $this->getGenericDevice2Config() );
     	$this->assertEquals( 'expectedheader', $headers );
     }
-    
+
     function testGenericTV2DeviceHasExpectedBody()
     {
     	$this->setUpNormalConfig();
     	$body = $this->framework->getDeviceBody( $this->getGenericDevice2Config() );
     	$this->assertEquals( 'expectedbody', $body);
     }
-    
+
     function testGenericTV2DeviceHasExpectedMimeType()
     {
     	$this->setUpNormalConfig();
     	$mimeType = $this->framework->getMimeType( $this->getGenericDevice2Config() );
     	$this->assertEquals( 'expectedmimetype', $mimeType);
     }
-    
+
     function testGenericTV2DeviceHasExpectedRootElement()
     {
     	$this->setUpNormalConfig();
     	$rootElement = $this->framework->getRootHtmlTag( $this->getGenericDevice2Config() );
     	$this->assertEquals( 'expectedrootelement', $rootElement );
     }
-    
+
     function testGenericTV2DeviceHasExpectedDocType()
     {
     	$this->setUpNormalConfig();
     	$docType = $this->framework->getDocType( $this->getGenericDevice2Config() );
     	$this->assertEquals( 'expecteddoctype', $docType );
     }
-    
+
     function testNormaliseKeyNamesReplacesSpecialCharactersWithUnderscores()
     {
     	$this->setUpNormalConfig();
@@ -159,8 +159,8 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
         $appConfigJSON = json_decode($this->framework->getConfigurationFromFilesystem('generic-tv1', 'applicationconfig'));
         $this->assertEquals('generic-tv1', $appConfigJSON->deviceConfigurationKey);
     }
-    
-    
+
+
     function testGetAppConfigAlt()
     {
     	$this->setUpAltConfig();
@@ -176,7 +176,7 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
         $mergedConfig = AntieFramework::mergeConfigurations( $deviceConfigJSON, $appConfigJSON );
         $this->assertEquals( 'overridetest', $mergedConfig->deviceelements->deviceelement1 );
     }
-    
+
     function getGenericDevice1Config()
     {
         return json_decode($this->framework->getConfigurationFromFilesystem('generic-tv1', 'deviceconfig'));
