@@ -5,3 +5,4 @@ _site
 static
 .grunt
 node_modules
+jsdoc/footer.txt

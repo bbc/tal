@@ -8,6 +8,8 @@ title: Animation
 
 These methods are primarily intended for widget developers.
 
+Note that to use the animations methods you will first need to [obtain a reference to the device](/tal/faq.html#question-how-do-i-get-a-reference-the-device-abstraction-layer-in-the-code).
+
 ## Animation methods
 
 The following methods control animation:
@@ -238,7 +240,7 @@ Three values have now been publicly exposed and are available to be defined on a
 
 Accepts Integer to set frames per second for the carousel
 
-\-\- Default value is 25 fps
+* Default value is 25 fps
 
 #### carousel.getWidgetAnimationFPS()
 
@@ -248,7 +250,7 @@ Returns an Integer that reflects currently set frames per second set for the car
 
 Accepts Integer to set duration of animation for the carousel
 
-\-\- Default value is 750ms
+* Default value is 750ms
 
 #### carousel.getWidgetAnimationDuration()
 
@@ -258,7 +260,7 @@ Returns an Integer that reflects currently set duration of animation for the car
 
 Accepts a String to set easing type for the carousel
 
-\-\- Default value is easeFromTo.
+* Default value is easeFromTo.
 
 #### carousel.getWidgetAnimationEasing()
 

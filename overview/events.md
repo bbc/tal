@@ -2,7 +2,6 @@
 layout: default
 title: Events
 ---
-[Advanced Databinding]: widgets/advanceddatabinding.html
 # Events
 
 <p class="lead">The Framework implements its own event system which isolates the application from event differences across devices and provides additional useful events.</p>

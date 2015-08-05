@@ -28,7 +28,7 @@ Used in page construction
 | `samsungmaple` | For samsung devices running in maple mode (use html5 instead unless specifically needed) |
   
 ###modules (object)
-The require modules which should be loaded to implement the device abstraction layer.
+The require modules which should be loaded to implement the device abstraction layer. Each module applies platform specific overrides or implementations that run while the app is starting up. For example, including the `antie/devices/anim/noanim` modifier will disable animations for that platform.
 
 ####modules.base (string)
 The module on which the device is based. This will usually be antie/devices/browserdevice.
@@ -37,7 +37,8 @@ The module on which the device is based. This will usually be antie/devices/brow
 Mix-in modules to support common implementations of the abstraction layer. This must contain one module from each of the following namespaces
 
 * `antie/devices/anim/*` -- Animation
-* `antie/devices/media/*` -- Media playback
+* `antie/devices/mediaplayer/*` -- Media playback
+* `antie/devices/media/*` -- Media playback (deprecated)
 * `antie/devices/data/*` -- JSON parsing
 * `antie/devices/net/*` -- Network implementation
 * `antie/devices/storage/*` -- Persistent storage implementation
@@ -56,7 +57,15 @@ It should also include all of the supported modules from
 | `antie/devices/anim/styletopleft`        | Animation via tweening style.top and style.left with JavaScript. For reasonably quick devices which do not support css3. |
 | `antie/devices/anim/scrolloffset`        | Deprecated |
 
-#####Media modifiers
+#####Media playback modifiers
+
+| Module name                             | Description |
+| --------------------------------------- | ----------- |
+| `antie/devices/mediaplayer/html5`             | The html5 `<video>` element is used for media playback. |
+| `antie/devices/mediaplayer/cehtml`            | CE-HTML is used for media playback |
+| `antie/devices/mediaplayer/samsung_maple`     | Samsung's Device API and Player object are used for media playback |
+
+#####Media playback modifiers (deprecated)
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |

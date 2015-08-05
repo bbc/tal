@@ -10,7 +10,7 @@ title: Storage
 
 You can obtain a storage provider via the device abstraction layer.
 
-To obtain a storage provider, call `device.getStorage(...)`, e.g, to obtain session storage, call:
+To obtain a storage provider, [get a reference to the device](/tal/faq.html#question-how-do-i-get-a-refernce-the-device-abstraction-layer-in-the-code) and then call `device.getStorage(...)`, e.g, to obtain session storage, call:
 {% highlight javascript %}
 var storage = device.getStorage(StorageProvider.STORAGE_TYPE_SESSION, namespace);
 {% endhighlight %}

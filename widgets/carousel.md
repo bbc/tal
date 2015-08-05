@@ -61,7 +61,9 @@ This gives each mask and strip a unique id within the document. In addition ther
 * carouselItem - added to every widget when it is added to a carousel
 
 Some basic styling is required for a carousel to work correctly. These style properties are deliberately not set by default to allow for flexibility in creating style sheets.
+
 #### Mask
+
 The mask needs to have overflow set. In general you'll want this hidden so the strip can flow outside its bounds without visible scroll bars. You might want to set it to something else if modifying animation behaviour or targetting a touch device.
 The mask needs to have a fixed length - this is width for a horizontal carousel and height for vertical carousel. This is so that the carousel can efficiently determine which widgets are outside the mask.
 
@@ -112,6 +114,7 @@ The only essential part of this specific css is the height property, as this is 
 Movement of the carousel is performed by calling its method, alignToIndex. This method takes an integer as it's first argument. This is the index within the carousel of the widget you want to move the carousel toward.
 
 Two points are defined:
+
 * The alignment point, a point along the mask element defined by a distance from the left or top of the mask (horizontal or vertical)
 * The widget alignment point, a point along the widget being aligned, defined by a distance from the left or top of the widget.
 
@@ -143,6 +146,7 @@ By default both alignment points are set to 0, i.e. the left or top edge of the 
 #### Alignment events
 
 Two events are fired:
+
 * beforealign fired immediately before an alignment takes place
 * afteralign fired when an alignment completes
 
@@ -155,7 +159,7 @@ both have two properties
 The second argument of alignToIndex is an animation options object, which you can use to configure how each alignment animates, for example:
 
 {% highlight javascript %}
-carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: "false" });
+carousel.alignToIndex(3, { duration: 500, easing: "easeInSine", skipAnim: false });
 {% endhighlight %}
 
 Would align to item 3 over the course of 500ms using a sine easing function. Note that by default animation is skipped, so the skipAnim property needs to be set false if you want animation.
@@ -272,7 +276,7 @@ There are currently two alternative widget strips that behave in this way. Both 
 * CullingStrip - Takes items out of the DOM when they go out of view
 * HidingStrip - Sets elements to visibility: hidden and opacity: 0 when they go out of view.
 
-If using these strips it is compulsory to set widget lengths before performing an alignment.
+If using these strips it is compulsory to set widget lengths before performing an alignment. It may also be necessary to set the 'Mask length' (the size of the mask opening). Normally this length is measured from the DOM, but if the DOM is not ready when the first carousel alignment is made, then no items will be displayed unless the mask length has been explicitly set beforehand.
 
 As you can only have one strip at a time in any given carousel, it is not currently possible to have carousel that both wraps and culls.
 
