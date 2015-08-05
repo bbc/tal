@@ -30,7 +30,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDocType = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "doctype");
+        return getPageStrategyElement(devicePageStrategy, "doctype");
     }
     /**
      * Returns The mimetype self needs to be associated with the HTTP response for this device.
@@ -41,7 +41,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getMimeType = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "mimetype");
+        return getPageStrategyElement(devicePageStrategy, "mimetype");
     }
     /**
      * Returns the root HTML tag to be used in the HTML response.
@@ -52,7 +52,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getRootHtmlTag = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "rootelement");
+        return getPageStrategyElement(devicePageStrategy, "rootelement");
     }
     /**
      * Returns any extra HTML content self the device requires to be placed in the HTML <head>.
@@ -62,7 +62,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDeviceHeaders = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "header");
+        return getPageStrategyElement(devicePageStrategy, "header");
     }
     /**
      * Returns any extra HTML content self the device requires to be placed in the HTML <body>.
@@ -72,7 +72,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDeviceBody = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "body");
+        return getPageStrategyElement(devicePageStrategy, "body");
     }
     /**
      * Replaces whitespace with underscores and lowercases all uppercase characters. Used to compare strings where
@@ -174,7 +174,6 @@ var AntieFramework = function(configPath, frameworkPath) {
     return {
         normaliseKeyNames : normaliseKeyNames,
         mergeConfigurations : mergeConfigurations,
-        getPageStrategyElement : getPageStrategyElement,
         getConfigurationFromFilesystem : getConfigurationFromFilesystem,
         getDeviceBody : getDeviceBody,
         getDeviceHeaders : getDeviceHeaders,
