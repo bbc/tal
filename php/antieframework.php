@@ -167,6 +167,9 @@ class AntieFramework {
 
 	/**
 	 * Reads the contents of a file, based on $pageStrategy and $element.
+	 *
+     * @param string $pageStrategy The page strategy used by this device.
+     * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
 	 * @return string or false, if file not found
 	 */
 	private function getValueFromFile($pageStrategy, $element) {
