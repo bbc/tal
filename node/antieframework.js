@@ -8,7 +8,9 @@
  */
 var fs = require("fs");
 var AntieFramework = function(configPath, frameworkPath) {
-    
+
+    var DEFAULT_PAGE_STRATEGY = 'default';
+
     var _configPath;
     var _frameworkPath;
     var self = this;
@@ -19,7 +21,7 @@ var AntieFramework = function(configPath, frameworkPath) {
     if (!(this instanceof AntieFramework)) {
         return new AntieFramework(configPath, frameworkPath);
     }
-    
+
     /**
      * Returns the doctype required by this device. The doctype is used in the returned HTML page.
      *
@@ -28,7 +30,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDocType = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "doctype", "<!DOCTYPE html>");
+        return this.getPageStrategyElement(devicePageStrategy, "doctype");
     }
     /**
      * Returns The mimetype self needs to be associated with the HTTP response for this device.
@@ -39,7 +41,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getMimeType = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "mimetype", "text/html");
+        return this.getPageStrategyElement(devicePageStrategy, "mimetype");
     }
     /**
      * Returns the root HTML tag to be used in the HTML response.
@@ -50,7 +52,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getRootHtmlTag = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "rootelement", "<html>");
+        return this.getPageStrategyElement(devicePageStrategy, "rootelement");
     }
     /**
      * Returns any extra HTML content self the device requires to be placed in the HTML <head>.
@@ -60,7 +62,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDeviceHeaders = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "header", "");
+        return this.getPageStrategyElement(devicePageStrategy, "header");
     }
     /**
      * Returns any extra HTML content self the device requires to be placed in the HTML <body>.
@@ -70,7 +72,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      */
     var getDeviceBody = function(deviceConfig) {
         var devicePageStrategy = deviceConfig.pageStrategy;
-        return this.getPageStrategyElement(devicePageStrategy, "body", "");
+        return this.getPageStrategyElement(devicePageStrategy, "body");
     }
     /**
      * Replaces whitespace with underscores and lowercases all uppercase characters. Used to compare strings where
@@ -109,20 +111,42 @@ var AntieFramework = function(configPath, frameworkPath) {
      * element & HTML body. For example the HTML <head> and <body> may need to contain vendor specific code/markup.
      *
      * @param string pageStrategy The page strategy used by this device.
-     * @param string element The page strategy property to return (Sub-directory of _configpath/pagestrategy
+     * @param string element The page strategy property to return (Sub-directory of {{_configPath}}/config/pagestrategy/{{pageStrategy}}/{{element}}
      * directory).
      * @param string default The default value to return if the page strategy does not contain the requested element.
      * @return string An element (property) of the page strategy or the default value.
      */
-    var getPageStrategyElement = function(pageStrategy, element, defaultValue) {
-        var returnFile = "";
-        try {
-            returnFile = fs.readFileSync([self._frameworkPath, "pagestrategy/", pageStrategy, "/", element].join("")).toString();
-        } catch (e) {
-            returnFile = defaultValue;
+    var getPageStrategyElement = function(pageStrategy, element) {
+        var result = readValueFromFile(pageStrategy, element);
+        if(result === false) {
+            result = readValueFromFile(DEFAULT_PAGE_STRATEGY, element);
         }
-        return returnFile;
+        if(result === false) {
+            var message = 'No page strategy default value found for ' + element;
+            console.error(message);
+            throw message;
+        }
+        return result;
     }
+
+    /**
+     * Reads the contents of a file, based on pageStrategy and element.
+     *
+     * @param string pageStrategy The page strategy used by this device.
+     * @param string element The page strategy property to return (Sub-directory of {{_configPath}}/config/pagestrategy/{{pageStrategy}}/{{element}}
+     * @return string or false, if file not found
+     */
+    var readValueFromFile = function(pageStrategy, element) {
+        var returnValue = '';
+        try {
+            var pageStrategyPath = self._configPath + '/config/pagestrategy/' + pageStrategy + '/' + element;
+            returnValue = fs.readFileSync(pageStrategyPath).toString();
+        } catch (e) {
+            returnValue = false;
+        }
+        return returnValue;
+    }
+
     /**
      * Returns a device configuration self includes any overridden properties defined in the supplied patch object.
      *
