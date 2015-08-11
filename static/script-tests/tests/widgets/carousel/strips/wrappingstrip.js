@@ -344,7 +344,7 @@
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/container'
             ],
-            function (application, WrappingStrip, Button, verticalOrientation /* Container */) {
+            function (application, WrappingStrip, Button, verticalOrientation, Container) { // jshint ignore:line
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
@@ -369,7 +369,7 @@
                 'antie/widgets/carousel/orientations/horizontal',
                 'antie/widgets/container'
             ],
-            function (application, WrappingStrip, Button, horizontalOrientation /* Container */) {
+            function (application, WrappingStrip, Button, horizontalOrientation, Container) { // jshint ignore:line
                 var strip, device;
                 device = application.getDevice();
                 self.sandbox.stub(device);
