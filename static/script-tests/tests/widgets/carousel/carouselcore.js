@@ -309,7 +309,7 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, CarouselCore, Mask /* BookendedNavigator */) {
+            function (application, CarouselCore, Mask, BookendedNavigator) { // jshint ignore:line
                 var carousel, maskStub, INDEX;
                 INDEX = 3;
                 maskStub = this.sandbox.stub(Mask.prototype, 'alignToIndex').withArgs(INDEX);
@@ -331,7 +331,7 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator"
             ],
-            function (application, CarouselCore, Button, Mask /* BookendedNavigator */) {
+            function (application, CarouselCore, Button, Mask, BookendedNavigator) { // jshint ignore:line
                 var carousel, maskStub;
                 var device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo');
