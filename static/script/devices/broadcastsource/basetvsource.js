@@ -73,7 +73,7 @@ require.def('antie/devices/broadcastsource/basetvsource',
              * @param params.onError function called if retrieving the channel list fails.
              * @returns an array of strings, each representing an available channel
              */
-            getChannelNameList : function (params) {
+            getChannelNameList : function (params) { //jshint ignore:line
                 throw new Error("Device broadcast source does not override abstract method getChannelList");
             },
             /**
@@ -84,7 +84,7 @@ require.def('antie/devices/broadcastsource/basetvsource',
              * @param width
              * @param height
              */
-            setPosition : function(top, left, width, height) {
+            setPosition : function(top, left, width, height) { //jshint ignore:line
                 throw new Error("Device broadcast source does not override abstract method setPosition");
             },
 	    /**
@@ -100,7 +100,7 @@ require.def('antie/devices/broadcastsource/basetvsource',
              * @param params.onSuccess function to be called if the tuner was retuned successfully
              * @param params.onError function to be called if the provided channel was unable to be tuned
              */
-            setChannelByName : function(params) {
+            setChannelByName : function(params) { //jshint ignore:line
                 throw new Error("Device broadcast source does not override abstract method setChannelByName");
             },
             /**
