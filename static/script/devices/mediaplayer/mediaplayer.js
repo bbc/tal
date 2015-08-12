@@ -149,7 +149,7 @@ require.def(
              * @param {String} url location of the media resource to play
              * @param {String} mimeType type of media resource
              */
-            setSource: function (mediaType, url, mimeType) {
+            setSource: function (mediaType, url, mimeType) { //jshint ignore:line
                 throw new Error("setSource method has not been implemented");
             },
 
@@ -164,7 +164,7 @@ require.def(
              * This allows the media playback to complete normally.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
-            playFrom: function (seconds) {
+            playFrom: function (seconds) { //jshint ignore:line
                 throw new Error("playFrom method has not been implemented");
             },
 
@@ -188,7 +188,7 @@ require.def(
              * If trying to play at (or past) the very end of the media, this will actually begin playback before the end.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
-            beginPlaybackFrom: function (seconds) {
+            beginPlaybackFrom: function (seconds) { //jshint ignore:line
                 throw new Error("beginPlaybackFrom method has not been implemented");
             },
 
