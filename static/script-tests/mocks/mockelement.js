@@ -64,10 +64,10 @@ require.def(
                 this.style.getPropertyValue = function(prop) {
                     return self.style[prop];       
                 };
-                this.style.setProperty = function(prop, value) {
+                this.style.setProperty = function(prop, value) { //jshint ignore:line
                 };
-                this.addEventListener = function(event, callback) {};
-                this.removeEventListener = function(event, callback) {};
+                this.addEventListener = function(event, callback) {}; //jshint ignore:line
+                this.removeEventListener = function(event, callback) {}; //jshint ignore:line
                 //sinon.spy(this.style, "setProperty");                
             }
         });
