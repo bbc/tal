@@ -41,14 +41,14 @@ var TestResults = {
 
 	passed : function() {
 		var failureMessageContainer = TestResults._createMessageBox("#11D611");
-		failureMessageContainer.innerHTML += "All tests passed"
+		failureMessageContainer.innerHTML += "All tests passed";
 	},
 	failed : function(failures) {
 		var failureMessageContainer = TestResults._createMessageBox("#D61111");
-		failureMessageContainer.innerHTML += "Failed Scenarios : <ol>"
+		failureMessageContainer.innerHTML += "Failed Scenarios : <ol>";
 		for (var i = 0; i < failures.length; i++){
 			failureMessageContainer.innerHTML += "<li>" + failures[i] + "</li>";
 		}
 		failureMessageContainer.innerHTML += "</ol>";
 	}
-}
+};

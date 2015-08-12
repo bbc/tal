@@ -40,7 +40,7 @@ require.def(
 				cleanedData.push(data[i] + '');
 			}
 
-			logItems.push({ 'level': type, 'message': cleanedData })
+			logItems.push({ 'level': type, 'message': cleanedData });
 		};
 
 		var loggingMethods = {

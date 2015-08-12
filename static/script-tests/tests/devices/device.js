@@ -112,7 +112,7 @@
             });
             var application = Application.getCurrentApplication();
             var device = application.getDevice();
-            assertSame(antie.framework.deviceConfiguration, device.getConfig())
+            assertSame(antie.framework.deviceConfiguration, device.getConfig());
         });
     };
 

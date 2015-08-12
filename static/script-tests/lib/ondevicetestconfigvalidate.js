@@ -24,5 +24,5 @@ var onDeviceTestConfigValidation = {
             }
         }
     }
-}
+};
 

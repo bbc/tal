@@ -42,7 +42,7 @@
             assertInstanceOf(Class, seekState);
 
         });
-    }
+    };
 
     this.SeekStateTest.prototype.testSeekToGeneratesSeeking = function (queue) {
         queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {

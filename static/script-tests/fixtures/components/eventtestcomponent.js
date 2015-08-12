@@ -44,7 +44,7 @@ require.def('fixtures/components/eventtestcomponent', ['antie/widgets/component'
 			
 			if (callback && typeof callback === 'function') {
 				callback();
-			};
+			}
 		}
 	});
 });

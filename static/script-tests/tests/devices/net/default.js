@@ -721,7 +721,7 @@
 			var opts = {
 					onLoad : successSpy,
 					onError : errorSpy
-			}
+			};
 			device.executeCrossDomainPost(testUrl, message, opts);
 
 			assert(loadUrlStub.calledWith(testUrl, expectedArgs));

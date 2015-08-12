@@ -73,7 +73,7 @@
 			var device = application.getDevice();
 
 			var getCurrentRouteSpy = this.sandbox.spy(device, 'getCurrentRoute');
-			application.getCurrentRoute()
+			application.getCurrentRoute();
 			assert(getCurrentRouteSpy.called);
 
 		});

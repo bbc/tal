@@ -1064,5 +1064,5 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
             }
             testCase.prototype[name] = mixins[name];
         }
-    };
+    }
  };

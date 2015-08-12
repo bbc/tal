@@ -385,7 +385,7 @@ require.def(
                             // do nothing
                             break;
                     }
-                }
+                };
 
                 this._updateInterval = setInterval(function() {
                     self._onStatus();
