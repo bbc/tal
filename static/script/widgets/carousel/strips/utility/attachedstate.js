@@ -33,11 +33,11 @@ require.def('antie/widgets/carousel/strips/utility/attachedstate',
 
             },
 
-            append: function (context, parent, widget) {
+            append: function (context, parent, widget) { //jshint ignore:line
 
             },
 
-            prepend: function (context, parent, widget) {
+            prepend: function (context, parent, widget) { //jshint ignore:line
 
             },
 
