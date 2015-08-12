@@ -45,6 +45,7 @@
         "assertBoolean": true,
         "assertNotUndefined": true,
         "assertNoMatch": true,
+        "assertObject": true,
         "AsyncTestCase": true,
         "jstestdriver": true,
         "onDeviceTestConfigValidation": true,
