@@ -148,7 +148,7 @@ require.def('antie/widgets/grid',
 			 * Appends a child widget to this widget. Not supported for Grids.
 			 * @param {antie.widgets.Widget} widget The child widget to add.
 			 */
-			appendChildWidget: function(widget) {
+			appendChildWidget: function(widget) { //jshint ignore:line
 				throw new Error("Not supported");
 			},
 			/**
@@ -156,7 +156,7 @@ require.def('antie/widgets/grid',
 			 * @param {Integer} index The index where to insert the child widget.
 			 * @param {antie.widgets.Widget} widget The child widget to add.
 			 */
-			insertChildWidget: function(index, widget) {
+			insertChildWidget: function(index, widget) { //jshint ignore:line
 				throw new Error("Not supported");
 			},
 			/**
@@ -164,7 +164,7 @@ require.def('antie/widgets/grid',
 			 * @param {antie.widgets.Widget} widget The child widget to remove.
 			 * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
 			 */
-			removeChildWidget: function(widget, retainElement) {
+			removeChildWidget: function(widget, retainElement) { //jshint ignore:line
 				throw new Error("Not supported");
 			},
 			/**
