@@ -60,9 +60,9 @@ require.def(
                 this._addExitStrategyEventListener();
 
 
-                if (mediaType == "audio") {
+                if (mediaType === "audio") {
                     this._mediaType = "audio";
-                } else if (mediaType == "video") {
+                } else if (mediaType === "video") {
                     this._mediaType = "video";
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
@@ -138,7 +138,7 @@ require.def(
 
                 window.SamsungMapleOnCurrentPlayTime = function (timeMs) {
                     var seconds = timeMs / 1000.0;
-                    if ((self.mediaSource.isLiveStream() && self.videoPlayerState.ended == false) ||
+                    if ((self.mediaSource.isLiveStream() && self.videoPlayerState.ended === false) ||
                         (seconds >= 0 && seconds < self.videoPlayerState.durationSeconds)) {
                         self.videoPlayerState.currentTime = seconds;
                         if (self.videoPlayerState.seeking) {
@@ -158,12 +158,12 @@ require.def(
                 };
                 this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
 
-                window.SamsungMapleOnTimeUpdate = function(seconds) {
+                window.SamsungMapleOnTimeUpdate = function(seconds) { //jshint ignore:line
                     self._eventHandlingCallback(new MediaEvent("timeupdate", self));
                 };
             },
 
-            render: function(device) {
+            render: function(device) { //jshint ignore:line
                 if (!this.outputElement) {
                     this.outputElement = document.createElement("div");
                 }
@@ -172,7 +172,7 @@ require.def(
 
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType == "audio") {
+                if (this._mediaType === "audio") {
                     throw new Error('Unable to set window size for Samsung audio.');
                 }
                 this.playerPlugin.SetDisplayArea(left, top, width, height);
@@ -229,7 +229,7 @@ require.def(
                 // TODO: Samsung implementation
                 return "none";
             },
-            setPreload: function(preload) {
+            setPreload: function(preload) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges buffered;
@@ -252,7 +252,7 @@ require.def(
                 }
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(type) {
+            canPlayType: function(type) { //jshint ignore:line
                 // TODO: Samsung implementation
                 return true;
             },
@@ -326,7 +326,7 @@ require.def(
                 // TODO: Samsung implementation
                 return 1;
             },
-            setPlaybackRate: function(playbackRate) {
+            setPlaybackRate: function(playbackRate) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges played;
@@ -349,7 +349,7 @@ require.def(
                 // TODO: Samsung implementation
                 return false;
             },
-            setAutoPlay: function(autoplay) {
+            setAutoPlay: function(autoplay) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // attribute boolean loop;
@@ -357,7 +357,7 @@ require.def(
                 // TODO: Samsung implementation
                 return false;
             },
-            setLoop: function(loop) {
+            setLoop: function(loop) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // void play();
@@ -382,7 +382,7 @@ require.def(
                 }, 0);
             },
             // attribute boolean controls;
-            setNativeControls: function(controls) {
+            setNativeControls: function(controls) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             getNativeControls: function() {
@@ -413,7 +413,7 @@ require.def(
             return new SamsungPlayer(id, mediaType, eventCallback);
         };
 
-        Device.prototype.getPlayerEmbedMode = function(mediaType) {
+        Device.prototype.getPlayerEmbedMode = function(mediaType) { //jshint ignore:line
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
         /**
