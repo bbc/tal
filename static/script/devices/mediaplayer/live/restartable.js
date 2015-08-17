@@ -127,5 +127,7 @@ require.def(
         Device.prototype.getLiveSupport = function () {
             return MediaPlayer.LIVE_SUPPORT.RESTARTABLE;
         };
+
+        return RestartableLivePlayer;
     }
 );
