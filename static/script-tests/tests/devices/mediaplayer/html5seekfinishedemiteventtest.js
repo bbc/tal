@@ -24,10 +24,10 @@
 
 (function() {
     // jshint newcap: false
-    this.HTML5TheFixTests = AsyncTestCase("HTML5TheFix");
+    this.HTML5SeekFinishedEmitEventTests = AsyncTestCase("HTML5SeekFinishedEmitEvent");
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5fix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-    var configWithRestartTimeout = {"restartTimeout":10000, "modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5fix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5seekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var configWithRestartTimeout = {"restartTimeout":10000, "modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5seekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
     var eventWasFired = function(self, eventType) {
         for(var i = 0; i < self._eventCallback.args.length; i++) {
@@ -45,7 +45,7 @@
     // ---------------
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
     // ---------------
-    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5TheFixTests, "antie/devices/mediaplayer/html5fix", config);
+    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5SeekFinishedEmitEventTests, "antie/devices/mediaplayer/html5seekfinishedemitevent", config);
 
     // ---------------
     // Remove tests that are irrelevant for this sub-modifier.
@@ -54,7 +54,7 @@
     // ---------------
     // Additional tests for this sub-modifier.
     // ---------------
-    this.HTML5TheFixTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWithNoTimeoutWeFireSeekFinishedEvent = function(queue) {
+    this.HTML5SeekFinishedEmitEventTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWithNoTimeoutWeFireSeekFinishedEvent = function(queue) {
         var self = this;
 
         this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -77,7 +77,7 @@
         });
     };
 
-    this.HTML5TheFixTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWith10SecondTimeoutWeFireSeekFinishedEvent = function(queue) {
+    this.HTML5SeekFinishedEmitEventTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWith10SecondTimeoutWeFireSeekFinishedEvent = function(queue) {
         var self = this;
 
         this.runMediaPlayerTestWithSpecificConfig(this, queue, function (MediaPlayer) {

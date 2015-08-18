@@ -1,5 +1,5 @@
 require.def(
-    "antie/devices/mediaplayer/thefix",
+    "antie/devices/mediaplayer/seekfinishedemitevent",
     ["antie/devices/mediaplayer/mediaplayer",
         "antie/runtimecontext"],
     function (MediaPlayer, RuntimeContext) {
