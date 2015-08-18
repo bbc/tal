@@ -31,37 +31,11 @@ require.def(
         "antie/devices/mediaplayer/html5",
         "antie/devices/device"
     ],
-    function(HTML5MediaPlayer, Device) {
+    function(HTML5MediaPlayer) {
         "use strict";
 
-        /**
-         * Main MediaPlayer implementation for HTML5 devices where unsetting src during teardown
-         * causes problems.
-         * Use this device modifier if a device implements the HTML5 media playback standard but
-         * crashes or becomes unresponsive on teardown.
-         * It must support creation of &lt;video&gt; and &lt;audio&gt; elements, and those objects must expose an
-         * API in accordance with the HTML5 media specification.
-         * @name antie.devices.mediaplayer.HTML5MemoryLeakUnfix
-         * @class
-         * @extends antie.devices.mediaplayer.HTML5
-         */
-        var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.HTML5MemoryLeakUnfix.prototype */ {
-            init: function() {
-                this._super();
-            },
+        HTML5MediaPlayer.prototype._unloadMediaSrc = function(){}
 
-            _unloadMediaSrc: function() {
-                // Do nothing for this sub-modifier.
-            }
-        });
-
-        var instance = new Player();
-
-        // Mixin this MediaPlayer implementation, so that device.getMediaPlayer() returns the correct implementation for the device
-        Device.prototype.getMediaPlayer = function() {
-            return instance;
-        };
-
-        return Player;
+        return HTML5MediaPlayer;
     }
 );

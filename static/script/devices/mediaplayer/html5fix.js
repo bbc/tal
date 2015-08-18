@@ -8,5 +8,7 @@ require.def(
         "use strict";
 
         TheFix(HTML5)
+
+        return HTML5;
     }
 );

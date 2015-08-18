@@ -1,7 +1,8 @@
 require.def(
     "antie/devices/mediaplayer/thefix",
-    ["antie/devices/mediaplayer/mediaplayer"],
-    function (MediaPlayer) {
+    ["antie/devices/mediaplayer/mediaplayer",
+        "antie/runtimecontext"],
+    function (MediaPlayer, RuntimeContext) {
         "use strict";
 
         MediaPlayer.EVENT.RESTART_UNSTABLE = 'restart-unstable';
@@ -15,7 +16,7 @@ require.def(
                     this._emitEvent('restart-unstable');
                 }
 
-                var restartTimeout = window.antie.framework.deviceConfiguration.restartTimeout;
+                var restartTimeout = RuntimeContext.getDevice().getConfig().restartTimeout;
 
                 var self = this;
                 this._timeoutHappened = false;
@@ -33,10 +34,15 @@ require.def(
             OverrideClass.prototype._onStatus = function (evt) {
                 oldOnStatus.call(this, evt);
 
-                var isAtCorrectStartingPoint = true;
+                var isAtCorrectStartingPoint = Math.abs(this.getCurrentTime() - this._sentinelSeekTime) <= this._seekSentinelTolerance;
+
+
+                if(this._sentinelSeekTime === undefined){
+                    isAtCorrectStartingPoint = true;
+                }
+
                 var isPlayingAtCorrectTime = this.getState() === MediaPlayer.STATE.PLAYING && isAtCorrectStartingPoint;
 
-                console.log(isPlayingAtCorrectTime, this._count, this._timeoutHappened);
                 if (isPlayingAtCorrectTime && this._count >= 5 && this._timeoutHappened) {
                     this._emitEvent('restart-stable');
                 } else if (isPlayingAtCorrectTime) {
@@ -44,6 +50,7 @@ require.def(
                 } else {
                     this._count = 0;
                 }
+
             };
         }
     }

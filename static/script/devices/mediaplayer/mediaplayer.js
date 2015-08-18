@@ -368,7 +368,9 @@ require.def(
             SENTINEL_SEEK:             "sentinel-seek",            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
             SENTINEL_COMPLETE:         "sentinel-complete",        // Event fired when a sentinel has to act because the device has completed the media but not reported it
             SENTINEL_PAUSE_FAILURE:    "sentinel-pause-failure",   // Event fired when the pause sentinel has failed twice, so it is giving up
-            SENTINEL_SEEK_FAILURE:     "sentinel-seek-failure"     // Event fired when the seek sentinel has failed twice, so it is giving up
+            SENTINEL_SEEK_FAILURE:     "sentinel-seek-failure",     // Event fired when the seek sentinel has failed twice, so it is giving up
+            RESTART_STABLE: "restart-stable",
+            RESTART_UNSTABLE: "restart-unstable"
         };
 
         /**
