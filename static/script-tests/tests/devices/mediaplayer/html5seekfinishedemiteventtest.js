@@ -63,17 +63,17 @@
             self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assert(eventWasFired(self, MediaPlayer.EVENT.RESTART_UNSTABLE));
+            assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_ATTEMPTED));
             for(var i = 0; i < 5; i++) {
                 self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
-                eventNotFired(self, MediaPlayer.EVENT.RESTART_STABLE);
+                eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED);
                 self._clock.tick(1000);
                 self.stubCreateElementResults.video.currentTime += 1;
                 self._eventCallback.reset();
             }
 
             self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
-            assert(eventWasFired(self, MediaPlayer.EVENT.RESTART_STABLE));
+            assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_FINISHED));
         });
     };
 
@@ -86,18 +86,18 @@
             self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
 
-            assert(eventWasFired(self, MediaPlayer.EVENT.RESTART_UNSTABLE));
+            assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_ATTEMPTED));
             for(var i = 0; i < 10; i++) {
                 self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
                 self._clock.tick(1000);
                 self.stubCreateElementResults.video.currentTime += 1;
-                eventNotFired(self, MediaPlayer.EVENT.RESTART_STABLE);
+                eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED);
                 self._eventCallback.reset();
             }
 
             self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
             self._clock.tick(1000);
-            assert(eventWasFired(self, MediaPlayer.EVENT.RESTART_STABLE));
+            assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_FINISHED));
         }, configWithRestartTimeout);
     };
 
