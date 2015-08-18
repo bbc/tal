@@ -5,15 +5,15 @@ require.def(
     function (MediaPlayer, RuntimeContext) {
         "use strict";
 
-        MediaPlayer.EVENT.RESTART_UNSTABLE = 'restart-unstable';
-        MediaPlayer.EVENT.RESTART_STABLE = 'restart-stable';
+        MediaPlayer.EVENT.SEEK_ATTEMPTED = 'seek-attempted';
+        MediaPlayer.EVENT.SEEK_FINISHED = 'seek-finished';
 
         return function (OverrideClass) {
             var oldSetSource = OverrideClass.prototype.setSource;
             OverrideClass.prototype.setSource = function (mediaType, url, mimeType) {
                 this._count = 0;
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
-                    this._emitEvent('restart-unstable');
+                    this._emitEvent(MediaPlayer.EVENT.SEEK_ATTEMPTED);
                 }
 
                 var restartTimeout = RuntimeContext.getDevice().getConfig().restartTimeout;
@@ -44,7 +44,7 @@ require.def(
                 var isPlayingAtCorrectTime = this.getState() === MediaPlayer.STATE.PLAYING && isAtCorrectStartingPoint;
 
                 if (isPlayingAtCorrectTime && this._count >= 5 && this._timeoutHappened) {
-                    this._emitEvent('restart-stable');
+                    this._emitEvent(MediaPlayer.EVENT.SEEK_FINISHED);
                 } else if (isPlayingAtCorrectTime) {
                     this._count++;
                 } else {
