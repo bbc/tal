@@ -39,7 +39,7 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
         $this->framework = new AntieFramework();
 
         if (!isset(self::$frameworkDir)) {
-            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
             self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
 
             //include path needs to pick up the test config first
@@ -54,7 +54,7 @@ class AntieFrameworkTest extends PHPUnit_Framework_TestCase
     	$this->framework = new AntieFramework( $path );
 
     	if (!isset(self::$frameworkDir)) {
-            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/config");
+            self::$frameworkDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
             self::$testConfigDir = realpath(dirname(__FILE__) . "/../server-tests/fixtures/");
 
     		//include path needs to pick up the test config first
