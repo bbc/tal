@@ -56,7 +56,7 @@
     // ---------------
     this.HTML5SeekFinishedEmitEventTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWithNoTimeoutWeFireSeekFinishedEvent = function(queue) {
         var self = this;
-
+        expectAsserts(7);
         this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.beginPlaybackFrom(0);
@@ -66,7 +66,7 @@
             assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_ATTEMPTED));
             for(var i = 0; i < 5; i++) {
                 self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
-                eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED);
+                assert(eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED));
                 self._clock.tick(1000);
                 self.stubCreateElementResults.video.currentTime += 1;
                 self._eventCallback.reset();
@@ -79,7 +79,7 @@
 
     this.HTML5SeekFinishedEmitEventTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWith10SecondTimeoutWeFireSeekFinishedEvent = function(queue) {
         var self = this;
-
+        expectAsserts(12);
         this.runMediaPlayerTestWithSpecificConfig(this, queue, function (MediaPlayer) {
             self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             self._mediaPlayer.beginPlaybackFrom(0);
@@ -91,7 +91,7 @@
                 self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
                 self._clock.tick(1000);
                 self.stubCreateElementResults.video.currentTime += 1;
-                eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED);
+                assert(eventNotFired(self, MediaPlayer.EVENT.SEEK_FINISHED));
                 self._eventCallback.reset();
             }
 
@@ -100,6 +100,4 @@
             assert(eventWasFired(self, MediaPlayer.EVENT.SEEK_FINISHED));
         }, configWithRestartTimeout);
     };
-
-
 })();

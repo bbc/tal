@@ -152,6 +152,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         fakeCEHTMLObject.PLAY_STATE_ERROR = 6;
 
         this.runMediaPlayerTest = runMediaPlayerTest;
+        this.runMediaPlayerTestWithSpecificConfig = runMediaPlayerTestWithSpecificConfig;
         this.fakeCEHTMLObject = fakeCEHTMLObject;
         this.deviceMockingHooks = deviceMockingHooks;
     };
@@ -174,6 +175,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._clock = clock;
                 try {
                     action.call(self, MediaPlayer);
                 }
@@ -182,6 +184,24 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 }
 
             }, config);
+    };
+
+    var runMediaPlayerTestWithSpecificConfig = function (self, queue, action, newConfig) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
+                deviceMockingHooks.setup.call(self, self.sandbox, application);
+                deviceMockingHooks.mockTime();
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                self._clock = clock;
+                try {
+                    action.call(self, MediaPlayer);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime();
+                }
+
+            }, newConfig);
     };
 
     var getToBuffering = function(self, MediaPlayer, startTime) {
