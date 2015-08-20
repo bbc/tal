@@ -79,9 +79,38 @@
         });
     };
 
+    this.CEHTMLSeekFinishedEmitEventTests.prototype.testIfWeFiredSeekFinishedEventDoNotFireAnother = function(queue) {
+        expectAsserts(8);
+        var self = this;
+        this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            var eventHandler = self.sandbox.stub();
+            self._mediaPlayer.addEventCallback(null, eventHandler);
+
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.beginPlaybackFrom(1000);
+            self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
+            self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
+
+            assert(eventWasFired(eventHandler, MediaPlayer.EVENT.SEEK_ATTEMPTED));
+            for(var i = 0; i < 5; i++) {
+                assert(eventNotFired(eventHandler, MediaPlayer.EVENT.SEEK_FINISHED));
+                self._clock.tick(500);
+                self.fakeCEHTMLObject.playPosition += 500;
+                eventHandler.reset();
+            }
+
+            self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
+            assert(eventWasFired(eventHandler, MediaPlayer.EVENT.SEEK_FINISHED));
+            eventHandler.reset();
+
+            self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
+            assert(eventNotFired(eventHandler, MediaPlayer.EVENT.SEEK_FINISHED));
+        });
+    };
+
     this.CEHTMLSeekFinishedEmitEventTests.prototype.testIfTimeIsInRangeAndHasBeenPlaying5TimesWith10SecondTimeoutWeFireSeekFinishedEvent = function(queue) {
         var self = this;
-        expectAsserts(22);
+        expectAsserts(21);
         this.runMediaPlayerTestWithSpecificConfig(this, queue, function (MediaPlayer) {
             var eventHandler = self.sandbox.stub();
             self._mediaPlayer.addEventCallback(null, eventHandler);
@@ -94,11 +123,10 @@
             assert(eventWasFired(eventHandler, MediaPlayer.EVENT.SEEK_ATTEMPTED));
 
             var numberOfLoops = configWithRestartTimeout.restartTimeout/500;
-            for(var i = 0; i < numberOfLoops; i++) {
-                assert(eventNotFired(eventHandler, MediaPlayer.EVENT.SEEK_FINISHED));
+            for(var i = 0; i < numberOfLoops - 1; i++) {
                 self._clock.tick(500);
                 self.fakeCEHTMLObject.playPosition += 500;
-                eventHandler.reset();
+                assert(eventNotFired(eventHandler, MediaPlayer.EVENT.SEEK_FINISHED));
             }
 
             self.deviceMockingHooks.makeOneSecondPass(self._mediaPlayer);
