@@ -1,7 +1,9 @@
 /**
  * @fileOverview Requirejs module containing device modifier for media playback
- * where devices show some playback before seeking. Fires an extra event to give extra
- * security that have seeked correctly.
+ * where devices show some playback before seeking. Fires a SEEK_ATTEMPTED event,
+ * checks that we have had 5 status events where the time behaves as expected,
+ * waits for an optional timeout and then fires a SEEK_FINISHED event to give
+ * extra security that have seeked correctly.
  *
  * @preserve Copyright (c) 2014 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
