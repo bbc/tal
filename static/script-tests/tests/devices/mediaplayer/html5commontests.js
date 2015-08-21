@@ -164,6 +164,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         this.stubCreateElementResults = stubCreateElementResults;
         this.deviceMockingHooks = deviceMockingHooks;
         this.runMediaPlayerTest = runMediaPlayerTest;
+        this.runMediaPlayerTestWithSpecificConfig = runMediaPlayerTestWithSpecificConfig;
     };
 
     mixins.tearDown = function() {
@@ -183,7 +184,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
             function(application, MediaPlayer) {
                 deviceMockingHooks.mockTime(self._mediaPlayer);
-
+                self._clock = clock;
                 self._createElementStub = stubCreateElement(self.sandbox, application);
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
@@ -199,6 +200,28 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
                     deviceMockingHooks.unmockTime(self._mediaPlayer);
                 }
             }, config);
+    };
+
+    var runMediaPlayerTestWithSpecificConfig = function (self, queue, action, newConfig) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
+                deviceMockingHooks.mockTime(self._mediaPlayer);
+                self._clock = clock;
+                self._createElementStub = stubCreateElement(self.sandbox, application);
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                self._application = application;
+
+                self._eventCallback = self.sandbox.stub();
+                self._mediaPlayer.addEventCallback(null, self._eventCallback);
+
+                try {
+                    action.call(self, MediaPlayer);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime(self._mediaPlayer);
+                }
+            }, newConfig);
     };
 
     var fireSentinels = function (self) {
