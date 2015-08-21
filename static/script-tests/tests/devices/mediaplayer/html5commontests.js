@@ -278,7 +278,17 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             }
         }
         return false;
-    }
+    };
+
+    var eventWasFiredWithPropertyValue = function(self, eventType, property, value) {
+        for( i = 0; i < self._eventCallback.args.length; i++) {
+            var event = self._eventCallback.args[i][0];
+            if(eventType === event.type && value === event[property]) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     var assertEvent = function(self, eventType) {
         assertTrue(eventWasFired(self, eventType));
@@ -286,7 +296,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
     var assertNoEvent = function(self, eventType) {
         assertFalse(eventWasFired(self, eventType));
-    }
+    };
 
     var assertNoEvents = function(self) {
         assert(self._eventCallback.notCalled);
@@ -549,25 +559,27 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
         });
     };
 
-    mixins.testErrorEventFromMediaElementCausesErrorLogWithCode = function(queue) {
-        expectAsserts(2);
+    mixins.testErrorEventFromMediaElementCausesErrorLogWithCodeAndErrorMessageInEvent = function(queue) {
+        expectAsserts(3);
         var self = this;
 		runMediaPlayerTest(this, queue, function (MediaPlayer) {
 
             var errorStub = self.sandbox.stub();
             self.sandbox.stub(self._device, "getLogger").returns({error: errorStub});
 
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "http://testurl/", "video/mp4");
 
             assertFunction(mediaEventListeners.error);
 
             deviceMockingHooks.emitPlaybackError(self._mediaPlayer, 3); // MEDIA_ERR_DECODE - http://www.w3.org/TR/2011/WD-html5-20110405/video.html#dom-media-error
 
-            assert(errorStub.calledWith("Media element emitted error with code: 3"));
+            var errorMessage = "Media element error code: 3";
+            assert(errorStub.calledWith(errorMessage));
+            assert(eventWasFiredWithPropertyValue(self, MediaPlayer.EVENT.ERROR, "errorMessage", errorMessage));
         });
     };
 
-    mixins.testErrorEventFromSourceElementCausesErrorLog = function(queue) {
+    mixins.testErrorEventFromSourceElementCausesErrorLogAndErrorMessageInEvent = function(queue) {
         expectAsserts(3);
         var self = this;
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
@@ -580,8 +592,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
 
             emitSourceElementError();
 
-            assert(errorStub.calledWith("Media source element emitted an error"));
-            assertEvent(self, MediaPlayer.EVENT.ERROR);
+            var errorMessage = "Media source element error";
+            assert(errorStub.calledWith(errorMessage));
+            assert(eventWasFiredWithPropertyValue(self, MediaPlayer.EVENT.ERROR, "errorMessage", errorMessage));
         });
     };
 

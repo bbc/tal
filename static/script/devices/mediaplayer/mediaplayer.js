@@ -83,9 +83,10 @@ require.def(
              * Protected method, for use by subclasses to emit events of any specified type, adding in the
              * standard payload used by all events.
              * @param {String} eventType The type of the event to be emitted.
+             * @param {Object} [eventLabels] Optional additional event labels.
              * @protected
              */
-            _emitEvent: function(eventType) {
+            _emitEvent: function(eventType, eventLabels) {
 
                 var event = {
                     type: eventType,
@@ -96,6 +97,12 @@ require.def(
                     mimeType: this.getMimeType(),
                     state: this.getState()
                 };
+
+                if (eventLabels) {
+                    for (var key in eventLabels) {
+                        event[key] = eventLabels[key];
+                    }
+                }
 
                 this._callbackManager.callAll(event);
             },
