@@ -54,7 +54,7 @@ require.def(
             if (opts.domain){
                 cookieDataArray.push("domain="+opts.domain);
             }
-            document.cookie = cookieDataArray.join('; ')
+            document.cookie = cookieDataArray.join('; ');
         }
 
         function readCookie(namespace) {
@@ -76,7 +76,21 @@ require.def(
             createCookie(namespace, "", -1, opts);
         }
 
-        var CookieStorage = StorageProvider.extend({
+        /**
+         * Class for persistently storing date in cookies
+         * @name antie.devices.storage.CookieStorage
+         * @class
+         * @extends antie.StorageProvider
+         * @param {String} namespace The cookie name to be used for this cookie storage object
+         * @param {Object} [opts]
+         * @param {String} [opts.domain] The domain value of the cookie, if not provided this is not set on the cookie
+         * @param {Boolean} [opts.isPathless] If <code>true</code> sets the path to '/' else retrieves the path from the location
+         */
+        var CookieStorage = StorageProvider.extend(/** @lends antie.devices.storage.CookieStorage.prototype */{
+            /**
+             * @constructor
+             * @ignore
+             */
             init: function(namespace, opts) {
                 this._super();
 
