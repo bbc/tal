@@ -28,7 +28,6 @@ window.commonTests.mediaPlayer.html5 = window.commonTests.mediaPlayer.html5 || {
 
 window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlayerDeviceModifierRequireName, config) {
 
-
     var mixins = { };
     var clock;
     var stubCreateElementResults = undefined;
@@ -272,7 +271,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     var eventWasFired = function(self, eventType) {
-        for( i = 0; i < self._eventCallback.args.length; i++) {
+        for( var i = 0; i < self._eventCallback.args.length; i++) {
             if(eventType === self._eventCallback.args[i][0].type) {
                 return true;
             }
@@ -281,7 +280,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     };
 
     var eventWasFiredWithPropertyValue = function(self, eventType, property, value) {
-        for( i = 0; i < self._eventCallback.args.length; i++) {
+        for( var i = 0; i < self._eventCallback.args.length; i++) {
             var event = self._eventCallback.args[i][0];
             if(eventType === event.type && value === event[property]) {
                 return true;
@@ -305,7 +304,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
     var assertEventTypeHasBeenFiredASpecificNumberOfTimes = function (self, eventType, expectedNumberOfCalls) {
         var numberOfCalls = 0;
 
-        for( i = 0; i < self._eventCallback.args.length; i++) {
+        for( var i = 0; i < self._eventCallback.args.length; i++) {
             if(eventType === self._eventCallback.args[i][0].type) {
                 numberOfCalls++;
             }

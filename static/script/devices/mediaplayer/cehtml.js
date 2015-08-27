@@ -325,7 +325,7 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._reportError('Media element emitted error with code: ' + this._mediaElement.error);
+                this._reportError("Media element error code: " + this._mediaElement.error);
             },
 
             _onDeviceBuffering: function() {
@@ -458,7 +458,7 @@ require.def(
 
             _reportError: function(errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._emitEvent(MediaPlayer.EVENT.ERROR, {"errorMessage": errorMessage});
             },
 
             _toStopped: function () {
