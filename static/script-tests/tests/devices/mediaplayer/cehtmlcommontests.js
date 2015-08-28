@@ -655,7 +655,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     mixins.testDeviceErrorIsReportedWithErrorCode = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
@@ -669,8 +669,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             fakeCEHTMLObject.error = 2;
             deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
+            var expectedErrorMessage = 'Media element error code: 2';
+
             assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
-            assertEquals('Media element emitted error with code: 2', errorStub.lastCall.args[0]);
+            assertEquals(expectedErrorMessage, eventHandler.lastCall.args[0].errorMessage);
+            assertEquals(expectedErrorMessage, errorStub.lastCall.args[0]);
         });
     };
 
