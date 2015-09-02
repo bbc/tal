@@ -54,7 +54,7 @@
 
     };
 
-    this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier");
+    this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier"); //jshint ignore:line
 
     this.CEHTMLTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

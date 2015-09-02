@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.URLBuilderTest = AsyncTestCase("URLBuilder");
+	this.URLBuilderTest = AsyncTestCase("URLBuilder"); //jshint ignore:line
 
 	this.URLBuilderTest.prototype.setUp = function() {
 	};

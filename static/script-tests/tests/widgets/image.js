@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ImageTest = AsyncTestCase("Image");
+	this.ImageTest = AsyncTestCase("Image"); //jshint ignore:line
 
 	this.ImageTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

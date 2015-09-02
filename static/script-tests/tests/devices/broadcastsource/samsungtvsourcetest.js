@@ -31,7 +31,7 @@
         sourceChanged: 114
     };
 
-    this.SamsungTvSource = AsyncTestCase("Samsung Broadcast Source");
+    this.SamsungTvSource = AsyncTestCase("Samsung Broadcast Source"); //jshint ignore:line
 
     /**
      * Helper functions to mock out and use Samsung specific APIs

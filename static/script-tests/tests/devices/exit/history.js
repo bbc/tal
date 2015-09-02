@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HistoryExitTest = AsyncTestCase("Exit_History");
+	this.HistoryExitTest = AsyncTestCase("Exit_History"); //jshint ignore:line
 
 	this.HistoryExitTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

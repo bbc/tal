@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.StorageProviderTest = AsyncTestCase("Storage (Base Provider)");
+	this.StorageProviderTest = AsyncTestCase("Storage (Base Provider)"); //jshint ignore:line
 
 	this.StorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

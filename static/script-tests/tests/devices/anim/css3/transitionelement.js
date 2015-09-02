@@ -95,7 +95,7 @@
         return transEl;
     }
     
-    this.TransitionElementTest = AsyncTestCase("TransitionElement");
+    this.TransitionElementTest = AsyncTestCase("TransitionElement"); //jshint ignore:line
     
     this.TransitionElementTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

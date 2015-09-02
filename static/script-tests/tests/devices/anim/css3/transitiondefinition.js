@@ -31,7 +31,7 @@
         );
     }
     
-    this.TransitionDefinitionTest = AsyncTestCase("TransitionDefinition");
+    this.TransitionDefinitionTest = AsyncTestCase("TransitionDefinition"); //jshint ignore:line
 
     this.TransitionDefinitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

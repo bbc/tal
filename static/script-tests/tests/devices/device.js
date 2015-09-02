@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.DeviceTest = AsyncTestCase("Device");
+    this.DeviceTest = AsyncTestCase("Device"); //jshint ignore:line
 
     this.DeviceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

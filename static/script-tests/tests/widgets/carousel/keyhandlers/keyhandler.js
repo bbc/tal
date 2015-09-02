@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.KeyHandlerTest = AsyncTestCase("KeyHandler");
+    this.KeyHandlerTest = AsyncTestCase("KeyHandler"); //jshint ignore:line
 
     this.KeyHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

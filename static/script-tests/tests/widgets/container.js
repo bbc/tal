@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ContainerTest = AsyncTestCase("Container");
+	this.ContainerTest = AsyncTestCase("Container"); //jshint ignore:line
 
 	this.ContainerTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

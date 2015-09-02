@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.WidgetTest = AsyncTestCase("Widget");
+    this.WidgetTest = AsyncTestCase("Widget"); //jshint ignore:line
 
     this.WidgetTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

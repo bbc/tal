@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WidgetStripTest = AsyncTestCase("WidgetStrip");
+    this.WidgetStripTest = AsyncTestCase("WidgetStrip"); //jshint ignore:line
 
     this.WidgetStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
