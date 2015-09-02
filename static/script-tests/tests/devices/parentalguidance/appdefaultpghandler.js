@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.AppDefaultPgHandlerTest = new AsyncTestCase("App Default PG Handler");
+    this.AppDefaultPgHandlerTest = AsyncTestCase("App Default PG Handler");
 
     this.AppDefaultPgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

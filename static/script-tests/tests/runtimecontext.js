@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.RuntimeContextTest = new AsyncTestCase("RuntimeContext");
+	this.RuntimeContextTest = AsyncTestCase("RuntimeContext");
 
 	this.RuntimeContextTest.prototype.testGetApplicationWhenNoApplicationIsSet = function(queue) {
 		expectAsserts(1);

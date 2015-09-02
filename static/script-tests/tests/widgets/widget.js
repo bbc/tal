@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.WidgetTest = new AsyncTestCase("Widget");
+    this.WidgetTest = AsyncTestCase("Widget");
 
     this.WidgetTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

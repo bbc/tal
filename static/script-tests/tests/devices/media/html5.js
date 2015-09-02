@@ -26,7 +26,7 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    this.HTML5Test = new AsyncTestCase("HTML5 Media Device Modifier");
+    this.HTML5Test = AsyncTestCase("HTML5 Media Device Modifier");
 
     this.HTML5Test.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

@@ -25,7 +25,7 @@
 (function() {
     // jshint newcap: false
     /* global console */
-	this.LoggingTest = new AsyncTestCase("Logging");
+	this.LoggingTest = AsyncTestCase("Logging");
 
    this.LoggingTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

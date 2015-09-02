@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.LabelTest = new AsyncTestCase("Label");
+	this.LabelTest = AsyncTestCase("Label");
 
 	this.LabelTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

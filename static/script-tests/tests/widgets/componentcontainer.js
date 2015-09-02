@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ComponentContainerTest = new AsyncTestCase("ComponentContainer");
+	this.ComponentContainerTest = AsyncTestCase("ComponentContainer");
 
 	this.ComponentContainerTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AlignerTest = new AsyncTestCase("Aligner");
+    this.AlignerTest = AsyncTestCase("Aligner");
 
     this.AlignerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

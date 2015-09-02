@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ClassTest = new AsyncTestCase("Class");
+	this.ClassTest = AsyncTestCase("Class");
 
 	this.ClassTest.prototype.setUp = function() {
 	};

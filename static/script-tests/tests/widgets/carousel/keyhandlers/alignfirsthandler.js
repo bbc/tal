@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AlignFirstHandlerTest = new AsyncTestCase("AlignFirstHandler");
+    this.AlignFirstHandlerTest = AsyncTestCase("AlignFirstHandler");
 
     this.AlignFirstHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

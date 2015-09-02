@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.baseTvSource = new AsyncTestCase("Abstract Base Broadcast Source");
+    this.baseTvSource = AsyncTestCase("Abstract Base Broadcast Source");
 
     var extendBaseTvSourceWithNoOverriddenMethods = function(BaseTvSource) {
         BaseTvSource.prototype.init = function() {

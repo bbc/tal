@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.SpinnerTest = new AsyncTestCase("Spinner");
+    this.SpinnerTest = AsyncTestCase("Spinner");
 
     this.SpinnerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

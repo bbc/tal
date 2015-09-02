@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.CookieStorageProviderTest = new AsyncTestCase("Storage_Cookie");
+    this.CookieStorageProviderTest = AsyncTestCase("Storage_Cookie");
 
 	var stores;
 

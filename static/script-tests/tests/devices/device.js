@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.DeviceTest = new AsyncTestCase("Device");
+    this.DeviceTest = AsyncTestCase("Device");
 
     this.DeviceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

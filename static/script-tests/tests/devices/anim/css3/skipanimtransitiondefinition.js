@@ -25,7 +25,7 @@
 (function() {
     /* jshint newcap: false */
     
-    this.SkipAnimTransitionDefinitionTest = new AsyncTestCase("SkipAnimTransitionDefinition");
+    this.SkipAnimTransitionDefinitionTest = AsyncTestCase("SkipAnimTransitionDefinition");
     
     function loadSATD(queue, fn) {
         queuedRequire(queue,

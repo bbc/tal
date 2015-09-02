@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaPlayerTest = new AsyncTestCase("MediaPlayerTest");
+    this.MediaPlayerTest = AsyncTestCase("MediaPlayerTest");
 
     this.MediaPlayerTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

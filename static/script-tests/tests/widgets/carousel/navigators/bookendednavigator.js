@@ -24,7 +24,7 @@
 
 (function () {
 	/* jshint newcap: false, strict: false */
-	this.BookendedNavigatorTest = new AsyncTestCase("BookendedNavigator");
+	this.BookendedNavigatorTest = AsyncTestCase("BookendedNavigator");
 
 	this.BookendedNavigatorTest.prototype.setUp = function () {
 		this.sandbox = sinon.sandbox.create();

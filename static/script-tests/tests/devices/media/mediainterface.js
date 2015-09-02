@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaInterfaceTest = new AsyncTestCase("MediaInterfaceTest");
+    this.MediaInterfaceTest = AsyncTestCase("MediaInterfaceTest");
 
     this.MediaInterfaceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

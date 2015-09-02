@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.HiddenStateTest = new AsyncTestCase("HiddenState");
+    this.HiddenStateTest = AsyncTestCase("HiddenState");
 
     this.HiddenStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

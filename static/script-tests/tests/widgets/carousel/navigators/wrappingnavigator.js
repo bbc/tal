@@ -24,7 +24,7 @@
 
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WrappingNavigatorTest = new AsyncTestCase("WrappingNavigator");
+    this.WrappingNavigatorTest = AsyncTestCase("WrappingNavigator");
 
     this.WrappingNavigatorTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

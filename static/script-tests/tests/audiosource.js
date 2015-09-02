@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.AudioSourceTest = new AsyncTestCase("AudioSource");
+	this.AudioSourceTest = AsyncTestCase("AudioSource");
 
 	this.AudioSourceTest.prototype.setUp = function() {
 	};

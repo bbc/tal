@@ -33,7 +33,7 @@
     // invokes the callback set up in _tween, which in turn updates the class name.
     var DEFAULT_ON_COMPLETE_TIME = 867;
 
-	this.TweenAnimationTest = new AsyncTestCase("Animation_Tween");
+	this.TweenAnimationTest = AsyncTestCase("Animation_Tween");
 
 	this.TweenAnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
