@@ -671,6 +671,14 @@
         });
     };
 
+    function assert_x3_matchErrorEvent(eventHandler, expectedErrorType, expectedErrorMessage) {
+        var actualEventArgs = eventHandler.args[0][0];
+
+        assert(eventHandler.calledOnce);
+        assertEquals(expectedErrorType, actualEventArgs.type);
+        assertEquals(expectedErrorMessage, actualEventArgs.errorMessage);
+    }
+
     this.SamsungMapleMediaPlayerTests.prototype.testOnRenderErrorCausesErrorEvent = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -682,11 +690,10 @@
 
             window.SamsungMapleOnRenderError();
 
-            assert(eventHandler.calledOnce);
-            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
-            assert(this._errorLog.calledOnce);
-            assert(this._errorLog.calledWith("Media element emitted OnRenderError"));
+            var expectedError = "Media element emitted OnRenderError";
+            assert_x3_matchErrorEvent(eventHandler, MediaPlayer.EVENT.ERROR, expectedError);
 
+            assert(this._errorLog.withArgs(expectedError).calledOnce);
         });
     };
 
@@ -701,11 +708,10 @@
 
             window.SamsungMapleOnConnectionFailed();
 
-            assert(eventHandler.calledOnce);
-            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
-            assert(this._errorLog.calledOnce);
-            assert(this._errorLog.calledWith("Media element emitted OnConnectionFailed"));
+            var expectedError = "Media element emitted OnConnectionFailed";
+            assert_x3_matchErrorEvent(eventHandler, MediaPlayer.EVENT.ERROR, expectedError);
 
+            assert(this._errorLog.withArgs(expectedError).calledOnce);
         });
     };
 
@@ -720,11 +726,10 @@
 
             window.SamsungMapleOnNetworkDisconnected();
 
-            assert(eventHandler.calledOnce);
-            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
-            assert(this._errorLog.calledOnce);
-            assert(this._errorLog.calledWith("Media element emitted OnNetworkDisconnected"));
+            var expectedError = "Media element emitted OnNetworkDisconnected";
+            assert_x3_matchErrorEvent(eventHandler, MediaPlayer.EVENT.ERROR, expectedError);
 
+            assert(this._errorLog.withArgs(expectedError).calledOnce);
         });
     };
 
@@ -739,11 +744,10 @@
 
             window.SamsungMapleOnStreamNotFound();
 
-            assert(eventHandler.calledOnce);
-            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
-            assert(this._errorLog.calledOnce);
-            assert(this._errorLog.calledWith("Media element emitted OnStreamNotFound"));
+            var expectedError = "Media element emitted OnStreamNotFound";
+            assert_x3_matchErrorEvent(eventHandler, MediaPlayer.EVENT.ERROR, expectedError);
 
+            assert(this._errorLog.withArgs(expectedError).calledOnce);
         });
     };
 
@@ -758,11 +762,10 @@
 
             window.SamsungMapleOnAuthenticationFailed();
 
-            assert(eventHandler.calledOnce);
-            assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[0][0].type);
-            assert(this._errorLog.calledOnce);
-            assert(this._errorLog.calledWith("Media element emitted OnAuthenticationFailed"));
+            var expectedError = "Media element emitted OnAuthenticationFailed";
+            assert_x3_matchErrorEvent(eventHandler, MediaPlayer.EVENT.ERROR, expectedError);
 
+            assert(this._errorLog.withArgs(expectedError).calledOnce);
         });
     };
 

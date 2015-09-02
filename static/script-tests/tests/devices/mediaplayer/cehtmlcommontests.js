@@ -152,6 +152,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         fakeCEHTMLObject.PLAY_STATE_ERROR = 6;
 
         this.runMediaPlayerTest = runMediaPlayerTest;
+        this.runMediaPlayerTestWithSpecificConfig = runMediaPlayerTestWithSpecificConfig;
         this.fakeCEHTMLObject = fakeCEHTMLObject;
         this.deviceMockingHooks = deviceMockingHooks;
     };
@@ -174,6 +175,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 deviceMockingHooks.mockTime();
                 self._device = application.getDevice();
                 self._mediaPlayer = self._device.getMediaPlayer();
+                self._clock = clock;
                 try {
                     action.call(self, MediaPlayer);
                 }
@@ -182,6 +184,24 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 }
 
             }, config);
+    };
+
+    var runMediaPlayerTestWithSpecificConfig = function (self, queue, action, newConfig) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+            function(application, MediaPlayer) {
+                deviceMockingHooks.setup.call(self, self.sandbox, application);
+                deviceMockingHooks.mockTime();
+                self._device = application.getDevice();
+                self._mediaPlayer = self._device.getMediaPlayer();
+                self._clock = clock;
+                try {
+                    action.call(self, MediaPlayer);
+                }
+                finally {
+                    deviceMockingHooks.unmockTime();
+                }
+
+            }, newConfig);
     };
 
     var getToBuffering = function(self, MediaPlayer, startTime) {
@@ -635,7 +655,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     mixins.testDeviceErrorIsReportedWithErrorCode = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var errorStub = this.sandbox.stub();
             this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
@@ -649,8 +669,11 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             fakeCEHTMLObject.error = 2;
             deviceMockingHooks.emitPlaybackError(this._mediaPlayer);
 
+            var expectedErrorMessage = 'Media element error code: 2';
+
             assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.lastCall.args[0].type);
-            assertEquals('Media element emitted error with code: 2', errorStub.lastCall.args[0]);
+            assertEquals(expectedErrorMessage, eventHandler.lastCall.args[0].errorMessage);
+            assertEquals(expectedErrorMessage, errorStub.lastCall.args[0]);
         });
     };
 

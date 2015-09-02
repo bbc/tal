@@ -83,9 +83,10 @@ require.def(
              * Protected method, for use by subclasses to emit events of any specified type, adding in the
              * standard payload used by all events.
              * @param {String} eventType The type of the event to be emitted.
+             * @param {Object} [eventLabels] Optional additional event labels.
              * @protected
              */
-            _emitEvent: function(eventType) {
+            _emitEvent: function(eventType, eventLabels) {
 
                 var event = {
                     type: eventType,
@@ -96,6 +97,12 @@ require.def(
                     mimeType: this.getMimeType(),
                     state: this.getState()
                 };
+
+                if (eventLabels) {
+                    for (var key in eventLabels) {
+                        event[key] = eventLabels[key];
+                    }
+                }
 
                 this._callbackManager.callAll(event);
             },
@@ -368,7 +375,9 @@ require.def(
             SENTINEL_SEEK:             "sentinel-seek",            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
             SENTINEL_COMPLETE:         "sentinel-complete",        // Event fired when a sentinel has to act because the device has completed the media but not reported it
             SENTINEL_PAUSE_FAILURE:    "sentinel-pause-failure",   // Event fired when the pause sentinel has failed twice, so it is giving up
-            SENTINEL_SEEK_FAILURE:     "sentinel-seek-failure"     // Event fired when the seek sentinel has failed twice, so it is giving up
+            SENTINEL_SEEK_FAILURE:     "sentinel-seek-failure",     // Event fired when the seek sentinel has failed twice, so it is giving up
+            SEEK_ATTEMPTED: "seek-attempted", // Event fired when a device using a seekfinishedemitevent modifier sets the source
+            SEEK_FINISHED: "seek-finished"    // Event fired when a device using a seekfinishedemitevent modifier has seeked successfully
         };
 
         /**

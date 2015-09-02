@@ -382,11 +382,11 @@ require.def(
             },
 
             _onDeviceError: function() {
-                this._reportError("Media element emitted error with code: " + this._mediaElement.error.code);
+                this._reportError("Media element error code: " + this._mediaElement.error.code);
             },
 
             _onSourceError: function() {
-                this._reportError("Media source element emitted an error");
+                this._reportError("Media source element error");
             },
 
             /**
@@ -521,7 +521,7 @@ require.def(
 
             _reportError: function(errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._emitEvent(MediaPlayer.EVENT.ERROR, {"errorMessage": errorMessage});
             },
 
             _toStopped: function() {

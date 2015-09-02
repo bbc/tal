@@ -537,7 +537,7 @@ require.def(
 
             _reportError: function(errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._emitEvent(MediaPlayer.EVENT.ERROR, {"errorMessage": errorMessage});
             },
 
             _toStopped: function () {
