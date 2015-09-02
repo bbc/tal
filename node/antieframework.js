@@ -139,7 +139,7 @@ var AntieFramework = function(configPath, frameworkPath) {
     var readValueFromFile = function(pageStrategy, element) {
         var returnValue = '';
         try {
-            var pageStrategyPath = self._configPath + '/config/pagestrategy/' + pageStrategy + '/' + element;
+            var pageStrategyPath = self._configPath + '/pagestrategy/' + pageStrategy + '/' + element;
             returnValue = fs.readFileSync(pageStrategyPath).toString();
         } catch (e) {
             returnValue = false;

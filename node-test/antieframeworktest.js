@@ -121,7 +121,7 @@ var AntieFrameworkTest = function() {
 	};
 
     var setUpNormalConfig = function() {
-        framework = new AntieFramework("../server-tests/fixtures/", "../server-tests/fixtures/config/");
+        framework = new AntieFramework("../server-tests/fixtures/", "../server-tests/fixtures/");
     }
 
     function getGenericDevice1Config() {
