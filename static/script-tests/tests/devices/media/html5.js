@@ -81,7 +81,7 @@
 
                 var mediaElement = document.createElement("div");
                 var addEventListenerCounts = { };
-                mediaElement.addEventListener = function (type/*, callback*/) {
+                mediaElement.addEventListener = function (type) {
                     if (!addEventListenerCounts[type]) {
                         addEventListenerCounts[type] = 1;
                     } else {
