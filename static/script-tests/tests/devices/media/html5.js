@@ -72,7 +72,7 @@
     this.HTML5Test.prototype.testRenderCausesErrorEventToBeAdded = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function(application) {
 
                 var callbackStub = self.sandbox.stub();
@@ -207,7 +207,7 @@
     this.HTML5Test.prototype.testRenderOnlyAddsEventListenersTheFirstTimeItIsCalled = function (queue) {
         expectAsserts(3);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function(application) {
 
                 var callbackStub = self.sandbox.stub();
