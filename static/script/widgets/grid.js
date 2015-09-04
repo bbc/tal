@@ -90,7 +90,7 @@ require.def('antie/widgets/grid',
 
                     // If there's no active child widget set, try and set it to this
                     // (Will only have an affect if it's focusable (i.e. contains a button))
-                    if (this._activeChildWidget === null) {
+                    if (!this._activeChildWidget) {
                         this.setActiveChildWidget(widget);
                     }
 
