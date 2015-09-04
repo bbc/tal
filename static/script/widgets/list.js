@@ -134,7 +134,7 @@ require.def('antie/widgets/list',
 			 */
 			render: function(device) {
 				if (!this._dataBound && this._dataSource && this._itemFormatter) {
-					this._createDataBoundItems(device);
+					this._createDataBoundItems();
 				}
 				if (!this.outputElement && (this._renderMode === List.RENDER_MODE_LIST)) {
 					this.outputElement = device.createList(this.id, this.getClasses());
@@ -144,9 +144,8 @@ require.def('antie/widgets/list',
 			/**
 			 * Create list items from the bound data.
 			 * @private
-			 * @param {antie.devices.Device} device The device to render to.
 			 */
-			_createDataBoundItems: function(/*device*/) {
+			_createDataBoundItems: function() {
 				this._dataBound = true;
 
 				var self = this;
@@ -198,7 +197,7 @@ require.def('antie/widgets/list',
 				}
 				this._dataSource = dataSource;
 				if (this.outputElement) {
-					this._createDataBoundItems(this.getCurrentApplication().getDevice());
+					this._createDataBoundItems();
 				}
 			},
 			/**
