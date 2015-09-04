@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelPlayableTest = new AsyncTestCase("LivePlayerSupportLevelPlayableTest");
+    this.LivePlayerSupportLevelPlayableTest = AsyncTestCase("LivePlayerSupportLevelPlayableTest"); //jshint ignore:line
 
     this.LivePlayerSupportLevelPlayableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

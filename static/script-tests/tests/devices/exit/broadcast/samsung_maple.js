@@ -23,7 +23,7 @@
 
 (function() {
     /* jshint newcap: false */
-    this.BroadcastExitSamsungTest = new AsyncTestCase("Broadcast Exit (Samsung)");
+    this.BroadcastExitSamsungTest = AsyncTestCase("Broadcast Exit (Samsung)"); //jshint ignore:line
 
     this.BroadcastExitSamsungTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

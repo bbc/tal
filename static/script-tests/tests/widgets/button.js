@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ButtonTest = new AsyncTestCase("Button");
+	this.ButtonTest = AsyncTestCase("Button"); //jshint ignore:line
 
 	this.ButtonTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

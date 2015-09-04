@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.CSS3AnimationTest = new AsyncTestCase("Css3AnimationTest");
+    this.CSS3AnimationTest = AsyncTestCase("Css3AnimationTest"); //jshint ignore:line
 
 	this.CSS3AnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

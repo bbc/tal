@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HorizontalListTest = new AsyncTestCase("HorizontalList");
+	this.HorizontalListTest = AsyncTestCase("HorizontalList"); //jshint ignore:line
 
 	this.HorizontalListTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

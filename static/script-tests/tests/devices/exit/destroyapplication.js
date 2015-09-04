@@ -24,7 +24,7 @@
 
 
 (function() {
-	this.DestroyApplicationTest = new AsyncTestCase("ExitDestroyApplication");
+	this.DestroyApplicationTest = AsyncTestCase("ExitDestroyApplication"); //jshint ignore:line
 	
 	this.DestroyApplicationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

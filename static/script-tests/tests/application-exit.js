@@ -25,7 +25,7 @@
 
 (function() {
     /* jshint newcap: false */
-    this.ApplicationExitTest = new AsyncTestCase("Application_Exit");
+    this.ApplicationExitTest = AsyncTestCase("Application_Exit"); //jshint ignore:line
 
     this.ApplicationExitTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

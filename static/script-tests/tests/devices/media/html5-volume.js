@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HTML5VolumeTest = new AsyncTestCase("HTML5_Volume");
+	this.HTML5VolumeTest = AsyncTestCase("HTML5_Volume"); //jshint ignore:line
 
 	this.HTML5VolumeTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

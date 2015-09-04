@@ -24,7 +24,7 @@
 
 (function() {
     /* jshint newcap: false, onevar: false */
-	this.BrowserDeviceTest = new AsyncTestCase("BrowserDevice");
+	this.BrowserDeviceTest = AsyncTestCase("BrowserDevice"); //jshint ignore:line
 
 	this.BrowserDeviceTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

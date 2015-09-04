@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WidgetStripTest = new AsyncTestCase("WidgetStrip");
+    this.WidgetStripTest = AsyncTestCase("WidgetStrip"); //jshint ignore:line
 
     this.WidgetStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -312,8 +312,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, WidgetStrip, Button, verticalOrientation) {
                 var strip, device;
@@ -335,8 +334,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -358,8 +356,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -381,8 +378,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -405,8 +401,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -430,8 +425,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -455,8 +449,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -480,8 +473,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -505,8 +497,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -532,8 +523,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -558,8 +548,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -584,8 +573,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip, device;
@@ -609,8 +597,7 @@
             [
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/button',
-                'antie/widgets/carousel/orientations/horizontal',
-                'antie/widgets/container'
+                'antie/widgets/carousel/orientations/horizontal'
             ],
             function (application, WidgetStrip, Button, horizontalOrientation) {
                 var strip;

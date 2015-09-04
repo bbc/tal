@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationRoutingTest = new AsyncTestCase("Application_Routing");
+	this.ApplicationRoutingTest = AsyncTestCase("Application_Routing"); //jshint ignore:line
 
 	this.ApplicationRoutingTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

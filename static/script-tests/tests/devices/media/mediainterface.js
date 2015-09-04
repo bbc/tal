@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaInterfaceTest = new AsyncTestCase("MediaInterfaceTest");
+    this.MediaInterfaceTest = AsyncTestCase("MediaInterfaceTest"); //jshint ignore:line
 
     this.MediaInterfaceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -37,7 +37,7 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
             assertNoException(function() {
-                new MediaInterface('id', 'video', function(/*evt*/){});
+                new MediaInterface('id', 'video', function(){});
             });
         });
     };
@@ -45,7 +45,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceRenderDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockDevice = {};
             assertNoException(function() {
                 mediaInterface.render(mockDevice);
@@ -56,7 +56,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceShowThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockOptions = {};
             assertException(function() {
                 mediaInterface.show(mockOptions);
@@ -67,7 +67,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceHideThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockOptions = {};
             assertException(function() {
                 mediaInterface.hide(mockOptions);
@@ -78,7 +78,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceMoveToThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockOptions = {};
             assertException(function() {
                 mediaInterface.moveTo(mockOptions);
@@ -89,7 +89,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetWindowThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setWindow(1, 2, 3, 4);
             }, "Error");
@@ -99,7 +99,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetErrorThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getError();
             }, "Error");
@@ -109,7 +109,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetSourcesThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockSources = [];
             var mockTags = {};
             assertException(function() {
@@ -121,7 +121,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetSourcesThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getSources();
             }, "Error");
@@ -131,7 +131,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetCurrentSourceThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getCurrentSource();
             }, "Error");
@@ -141,7 +141,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetNetworkStateThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getNetworkState();
             }, "Error");
@@ -151,7 +151,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetPreloadThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getPreload();
             }, "Error");
@@ -161,7 +161,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetPreloadThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setPreload(false);
             }, "Error");
@@ -171,7 +171,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetBufferedThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getBuffered();
             }, "Error");
@@ -181,7 +181,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceLoadThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.load();
             }, "Error");
@@ -191,7 +191,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceCanPlayTypeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.canPlayType('video/mp4');
             }, "Error");
@@ -201,7 +201,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetReadyStateThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getReadyState();
             }, "Error");
@@ -211,7 +211,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetSeekingThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getSeeking();
             }, "Error");
@@ -221,7 +221,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetCurrentTimeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setCurrentTime(0);
             }, "Error");
@@ -231,7 +231,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetCurrentTimeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getCurrentTime();
             }, "Error");
@@ -241,7 +241,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetInitialTimeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getInitialTime();
             }, "Error");
@@ -251,7 +251,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetDurationThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getDuration();
             }, "Error");
@@ -261,7 +261,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetStartOffsetTimeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getStartOffsetTime();
             }, "Error");
@@ -271,7 +271,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetPausedThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getPaused();
             }, "Error");
@@ -281,7 +281,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetDefaultPlaybackRateThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getDefaultPlaybackRate();
             }, "Error");
@@ -291,7 +291,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetPlaybackRateThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getPlaybackRate();
             }, "Error");
@@ -301,7 +301,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetPlaybackRateThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setPlaybackRate(1);
             }, "Error");
@@ -311,7 +311,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetPlayedThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getPlayed();
             }, "Error");
@@ -321,7 +321,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetSeekableThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getSeekable();
             }, "Error");
@@ -331,7 +331,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetEndedThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getEnded();
             }, "Error");
@@ -341,7 +341,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetAutoPlayThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getAutoPlay();
             }, "Error");
@@ -351,7 +351,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetAutoPlayThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setAutoPlay(true);
             }, "Error");
@@ -361,7 +361,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetLoopThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getLoop();
             }, "Error");
@@ -371,7 +371,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetLoopThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.setLoop(false);
             }, "Error");
@@ -381,7 +381,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfacePlayThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.play();
             }, "Error");
@@ -391,7 +391,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceStopThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.stop();
             }, "Error");
@@ -401,7 +401,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfacePauseThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.pause();
             }, "Error");
@@ -411,7 +411,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceSetNativeControlsThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             var mockNativeControls = {};
             assertException(function() {
                 mediaInterface.setNativeControls(mockNativeControls);
@@ -422,7 +422,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceGetNativeControlsThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertException(function() {
                 mediaInterface.getNativeControls();
             }, "Error");
@@ -432,7 +432,7 @@
     this.MediaInterfaceTest.prototype.testMediaInterfaceDestroyDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            var mediaInterface = new MediaInterface('id', 'video', function(/*evt*/){});
+            var mediaInterface = new MediaInterface('id', 'video', function(){});
             assertNoException(function() {
                 mediaInterface.destroy();
             });

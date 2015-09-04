@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.AudioSourceTest = new AsyncTestCase("AudioSource");
+	this.AudioSourceTest = AsyncTestCase("AudioSource"); //jshint ignore:line
 
 	this.AudioSourceTest.prototype.setUp = function() {
 	};

@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.BinderTest = new AsyncTestCase("Binder");
+    this.BinderTest = AsyncTestCase("Binder"); //jshint ignore:line
 
     this.BinderTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

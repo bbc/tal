@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.CEHTMLMediaPlayerTests = new AsyncTestCase("CEHTMLMediaPlayer");
+    this.CEHTMLMediaPlayerTests = AsyncTestCase("CEHTMLMediaPlayer"); //jshint ignore:line
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 

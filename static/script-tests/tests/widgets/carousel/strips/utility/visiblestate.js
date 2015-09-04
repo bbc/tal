@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.VisibleStateTest = new AsyncTestCase("VisibleState");
+    this.VisibleStateTest = AsyncTestCase("VisibleState"); //jshint ignore:line
 
     this.VisibleStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

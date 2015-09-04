@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.AppDefaultPgHandlerTest = new AsyncTestCase("App Default PG Handler");
+    this.AppDefaultPgHandlerTest = AsyncTestCase("App Default PG Handler"); //jshint ignore:line
 
     this.AppDefaultPgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,7 +37,7 @@
     this.AppDefaultPgHandlerTest.prototype.testAppDefaultPgHandlerExtendsBasePgHandler = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler", "antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
             function (application, BasePgHandler) {
 
                 var device = application.getDevice();
@@ -49,7 +49,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatRegisterAppPgHandlerAddsCorrectObjectToDevice = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -63,7 +63,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsConfigurableReturnsTrue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -75,7 +75,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatSupportsMessageReturnsTrue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -87,7 +87,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsErrorWhenAppHandlerIsUndefined = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -103,7 +103,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenCallBackObjectDoesNotContrainOnGuidanceChallengeResponse = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -126,7 +126,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenOnGuidanceChallengeResponseIsNotAFunction = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -151,7 +151,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeCallsAppHandlerWithCorrectArguments = function (queue) {
         expectAsserts(3);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -178,7 +178,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeReturnsValue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -202,7 +202,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveThrowsErrorWhenAppHandlerIsUndefined = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -218,7 +218,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveeCallsAppHandlerIsChallengeActive = function (queue) {
         expectAsserts(3);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();
@@ -241,7 +241,7 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveReturnsTrueOnlyWhenAppHandlerReturnsTrue = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
             function (application) {
 
                 var device = application.getDevice();

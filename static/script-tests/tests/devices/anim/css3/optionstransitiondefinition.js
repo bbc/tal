@@ -25,7 +25,7 @@
 (function() {
     /* jshint newcap: false */
     
-    this.OptionsTransitionDefinitionTest = new AsyncTestCase("OptionsTransitionDefinition");
+    this.OptionsTransitionDefinitionTest = AsyncTestCase("OptionsTransitionDefinition"); //jshint ignore:line
     
     function loadOTD(queue, fn) {
         queuedRequire(queue,

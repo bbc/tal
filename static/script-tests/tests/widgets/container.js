@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ContainerTest = new AsyncTestCase("Container");
+	this.ContainerTest = AsyncTestCase("Container"); //jshint ignore:line
 
 	this.ContainerTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -733,7 +733,7 @@
 
 					var container = new Container("container");
 					root.appendChildWidget(container);
-					container.addEventListener("focus", function(/* evt */) {
+					container.addEventListener("focus", function() {
 						root.removeChildWidget(container);
 					});
 

@@ -138,7 +138,7 @@ require.def(
 
                 window.SamsungMapleOnCurrentPlayTime = function (timeMs) {
                     var seconds = timeMs / 1000.0;
-                    if ((self.mediaSource.isLiveStream() && self.videoPlayerState.ended === false) ||
+                    if ((self.mediaSource.isLiveStream() && !self.videoPlayerState.ended) ||
                         (seconds >= 0 && seconds < self.videoPlayerState.durationSeconds)) {
                         self.videoPlayerState.currentTime = seconds;
                         if (self.videoPlayerState.seeking) {

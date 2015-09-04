@@ -34,7 +34,7 @@
 		}
 	};
 
-	this.DataSourceTest = new AsyncTestCase("DataSource");
+	this.DataSourceTest = AsyncTestCase("DataSource"); //jshint ignore:line
 
 	this.DataSourceTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

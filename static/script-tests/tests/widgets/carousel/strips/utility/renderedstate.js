@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.RenderedStateTest = new AsyncTestCase("RenderedState");
+    this.RenderedStateTest = AsyncTestCase("RenderedState"); //jshint ignore:line
 
     this.RenderedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -212,8 +212,7 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
@@ -233,8 +232,7 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
@@ -255,8 +253,7 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);

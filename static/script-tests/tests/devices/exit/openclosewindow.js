@@ -24,7 +24,7 @@
 (function() {
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/openclosewindow"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
     // jshint newcap: false
-    this.ExitOpenCloseWindowTest = new AsyncTestCase("ExitOpenCloseWindow"); 
+    this.ExitOpenCloseWindowTest = AsyncTestCase("ExitOpenCloseWindow"); //jshint ignore:line 
 
     this.ExitOpenCloseWindowTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

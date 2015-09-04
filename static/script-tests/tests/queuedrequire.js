@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.QueuedRequireTest = new AsyncTestCase("QueuedRequire Unit Testing Utilities");
+	this.QueuedRequireTest = AsyncTestCase("QueuedRequire Unit Testing Utilities"); //jshint ignore:line
 
 	this.QueuedRequireTest.prototype.setUp = function() {
 	};

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ComponentContainerTest = new AsyncTestCase("ComponentContainer");
+	this.ComponentContainerTest = AsyncTestCase("ComponentContainer"); //jshint ignore:line
 
 	this.ComponentContainerTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -350,8 +350,8 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/componentcontainer", "antie/widgets/component"],
-				function(application, ComponentContainer, Component) { // jshint ignore:line
+				["antie/widgets/componentcontainer"],
+				function(application, ComponentContainer) {
                     var clock = sinon.useFakeTimers();
 
                     var container = new ComponentContainer("container");

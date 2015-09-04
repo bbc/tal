@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.SamsungMapleMediaPlayerTests = new AsyncTestCase("SamsungMapleMediaPlayer");
+    this.SamsungMapleMediaPlayerTests = AsyncTestCase("SamsungMapleMediaPlayer"); //jshint ignore:line
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/samsung_maple"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
     var screenSize = {};

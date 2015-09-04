@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.FormatterTest = new AsyncTestCase("Formatter");
+	this.FormatterTest = AsyncTestCase("Formatter"); //jshint ignore:line
 
 	this.FormatterTest.prototype.setUp = function() {
 	};

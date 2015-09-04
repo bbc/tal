@@ -81,7 +81,7 @@
         }  
     }
     
-    this.PropertyMapTest = new AsyncTestCase("PropertyMap");
+    this.PropertyMapTest = AsyncTestCase("PropertyMap"); //jshint ignore:line
 
     this.PropertyMapTest.prototype.setUp = function() {
 

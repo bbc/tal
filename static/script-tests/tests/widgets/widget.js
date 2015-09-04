@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.WidgetTest = new AsyncTestCase("Widget");
+    this.WidgetTest = AsyncTestCase("Widget"); //jshint ignore:line
 
     this.WidgetTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -175,8 +175,8 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/widgets/widget", "antie/events/event"],
-            function(application, Widget, Event) { // jshint ignore:line
+            ["antie/widgets/widget"],
+            function(application, Widget) {
                 var widget = new Widget();
                 var handler = this.sandbox.stub();
                 var result = widget.removeEventListener('anevent', handler);

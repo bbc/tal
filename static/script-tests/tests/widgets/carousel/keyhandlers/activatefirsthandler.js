@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.ActivateFirstHandlerTest = new AsyncTestCase("ActivateFirstHandler");
+    this.ActivateFirstHandlerTest = AsyncTestCase("ActivateFirstHandler"); //jshint ignore:line
 
     this.ActivateFirstHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
