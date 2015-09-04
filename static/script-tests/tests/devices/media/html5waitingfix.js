@@ -81,7 +81,7 @@
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application) {
+		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 
             var clock = sinon.useFakeTimers();
             var mediaElement = document.createElement("div");
@@ -114,7 +114,7 @@
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application) {
+		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 
             var clock = sinon.useFakeTimers();
             var mediaElement = document.createElement("div");
