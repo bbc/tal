@@ -195,8 +195,7 @@
                 'antie/widgets/carousel/strips/utility/initstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, InitState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
@@ -224,8 +223,7 @@
                 'antie/widgets/carousel/strips/utility/initstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, InitState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
@@ -245,8 +243,7 @@
                 'antie/widgets/carousel/strips/utility/initstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, InitState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
@@ -268,8 +265,7 @@
                 'antie/widgets/carousel/strips/utility/initstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
             function (application, InitState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
