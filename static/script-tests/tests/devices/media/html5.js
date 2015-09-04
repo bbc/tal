@@ -216,7 +216,7 @@
 
                 var mediaElement = document.createElement("div");
                 var eventListenerCount = 0;
-                mediaElement.addEventListener = function (/*type, callback*/) {
+                mediaElement.addEventListener = function () {
                     eventListenerCount++;
                 };
 
