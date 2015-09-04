@@ -39,7 +39,7 @@
         var useMediaElementOne = true;
 
         // Can't use calls(0) or onFirstCall - they're Sinon 1.8 and we're on 1.7
-        self.sandbox.stub(device, "_createElement", function (type/*, id*/) {
+        self.sandbox.stub(device, "_createElement", function (type) {
             if (type === "div") {
                 return self.outputElement;
             } else if (type === "object") {
