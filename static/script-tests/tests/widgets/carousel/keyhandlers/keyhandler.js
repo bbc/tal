@@ -34,12 +34,12 @@
     };
 
     var runTest = function (self, queue, fn) {
-        function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent) {
+        function wrapped(application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
             self.sandbox.stub(WidgetStrip.prototype);
             self.sandbox.stub(Mask.prototype);
             self.sandbox.stub(Aligner.prototype);
             self.sandbox.stub(Navigator.prototype);
-            fn.call(self, application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent, Container, BeforeAlignEvent);
+            fn.call(self, application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent);
         }
 
         queuedApplicationInit(queue,
@@ -51,9 +51,7 @@
                 "antie/widgets/carousel/mask",
                 "antie/widgets/carousel/navigators/bookendednavigator",
                 "antie/widgets/carousel/aligners/aligner",
-                "antie/events/keyevent",
-                "antie/widgets/container",
-                "antie/events/beforealignevent"
+                "antie/events/keyevent"
             ],
             wrapped
         );
