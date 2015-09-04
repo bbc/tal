@@ -733,7 +733,7 @@
 
 					var container = new Container("container");
 					root.appendChildWidget(container);
-					container.addEventListener("focus", function(/* evt */) {
+					container.addEventListener("focus", function() {
 						root.removeChildWidget(container);
 					});
 
