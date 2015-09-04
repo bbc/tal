@@ -221,7 +221,7 @@ require.def('antie/application',
                 }
                 this._rootWidget = widget;
                 this._rootWidget._isFocussed = true;
-                if (this._rootWidget.outputElement === null) {
+                if (!this._rootWidget.outputElement) {
                     var device = this.getDevice();
                     device.appendChildElement(this._rootElement, widget.render(device));
                 }
