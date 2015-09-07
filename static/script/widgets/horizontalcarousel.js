@@ -358,7 +358,6 @@ require.def('antie/widgets/horizontalcarousel',
                 var device = application.getDevice();
 
                 if (this._childWidgetOrder.length > 0) {
-                    // TODO: tidy up
                     // How this implements wrap-around infinite scrolling:
                     // * Prepend a copy of the last page of items
                     // * Append a copy of the first page of items
