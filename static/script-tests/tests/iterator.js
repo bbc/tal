@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.IteratorTest = AsyncTestCase("Iterator");
+	this.IteratorTest = AsyncTestCase("Iterator"); //jshint ignore:line
 
 	this.IteratorTest.prototype.setUp = function() {
 	};

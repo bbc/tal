@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.baseTvSource = AsyncTestCase("Abstract Base Broadcast Source");
+    this.baseTvSource = AsyncTestCase("Abstract Base Broadcast Source"); //jshint ignore:line
 
     var extendBaseTvSourceWithNoOverriddenMethods = function(BaseTvSource) {
         BaseTvSource.prototype.init = function() {

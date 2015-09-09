@@ -39,32 +39,32 @@ require.def(
              * @param mediaType "audio" or "video"
              * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
              */
-            init: function(id, mediaType, eventCallback){
+            init: function(id, mediaType, eventCallback){ //jshint ignore:line
 
             },
             /**
              * Hook to allow devices to any necessary rendering steps. By default does nothing.
              * @param device The Device on which we are operating.
              */
-            render: function(device){
+            render: function(device){ //jshint ignore:line
 
             },
             /**
              * @param options See Media.show
              */
-            show: function(options){
+            show: function(options){ //jshint ignore:line
                 throw new Error("Show method has not been implemented.");
             },
             /**
              * @param options See Media.hide
              */
-            hide: function(options){
+            hide: function(options){ //jshint ignore:line
                 throw new Error("Hide method has not been implemented.");
             },
             /**
              * @param options See Media.moveTo
              */
-            moveTo: function(options){
+            moveTo: function(options){ //jshint ignore:line
                 throw new Error("MoveTo method has not been implemented.");
             },
             /**
@@ -73,7 +73,7 @@ require.def(
              * @param width Width
              * @param height Height
              */
-            setWindow: function(left, top, width, height){
+            setWindow: function(left, top, width, height){ //jshint ignore:line
                 throw new Error("SetWindow method has not been implemented.");
             },
             getError: function(){
@@ -83,7 +83,7 @@ require.def(
              * @param sources List of media sources
              * @param tags Associative array of "tags" in the URL that are replaced (when the URL is templated).
              */
-            setSources: function(sources, tags){
+            setSources: function(sources, tags){ //jshint ignore:line
                 throw new Error("SetSources method has not been implemented.");
             },
             getSources: function(){
@@ -98,7 +98,7 @@ require.def(
             getPreload: function(){
                 throw new Error("GetPreload method has not been implemented.");
             },
-            setPreload: function(preload){
+            setPreload: function(preload){ //jshint ignore:line
                 throw new Error("SetPreload method has not been implemented.");
             },
             getBuffered: function(){
@@ -110,7 +110,7 @@ require.def(
             /**
              * @param type Mime type (string)
              */
-            canPlayType: function(type){
+            canPlayType: function(type){ //jshint ignore:line
                 throw new Error("CanPlayType method has not been implemented.");
             },
             getReadyState: function(){
@@ -122,7 +122,7 @@ require.def(
             /**
              * @param currentTime Number of seconds since the start of the media.
              */
-            setCurrentTime: function(currentTime){
+            setCurrentTime: function(currentTime){ //jshint ignore:line
                 throw new Error("SetCurrentTime method has not been implemented.");
             },
             getCurrentTime: function(){
@@ -149,7 +149,7 @@ require.def(
             /**
              * @param playbackRate Number representing the playback rate
              */
-            setPlaybackRate: function(playbackRate){
+            setPlaybackRate: function(playbackRate){ //jshint ignore:line
                 throw new Error("SetPlaybackRate method has not been implemented.");
             },
             getPlayed: function(){
@@ -167,7 +167,7 @@ require.def(
             /**
              * @param autoplay Boolean indicating if media should be automatically played on load.
              */
-            setAutoPlay: function(autoplay){
+            setAutoPlay: function(autoplay){ //jshint ignore:line
                 throw new Error("SetAutoPlay method has not been implemented.");
             },
             getLoop: function(){
@@ -176,7 +176,7 @@ require.def(
             /**
              * @param loop Boolean indicating if the media should loop.
              */
-            setLoop: function(loop){
+            setLoop: function(loop){ //jshint ignore:line
                 throw new Error("SetLoop method has not been implemented.");
             },
             play: function(){
@@ -191,7 +191,7 @@ require.def(
             /**
              * @param controls Boolean indicating if native controls should be used.
              */
-            setNativeControls: function(controls){
+            setNativeControls: function(controls){ //jshint ignore:line
                 throw new Error("SetNativeControls method has not been implemented.");
             },
             getNativeControls: function(){

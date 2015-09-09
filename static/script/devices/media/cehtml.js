@@ -56,13 +56,13 @@ require.def(
 
                 // Create the DOM element now so the wrapped functions can modify attributes
                 // before it is placed in the Document during rendering.
-                this._createCEHTMLObjectElement((mediaType == "audio") ? "audio/mp4" : "video/mp4");
+                this._createCEHTMLObjectElement((mediaType === "audio") ? "audio/mp4" : "video/mp4");
                 this._mediaElement.width = 1280;
                 this._mediaElement.height = 720;
 
-                if (mediaType == "audio") {
+                if (mediaType === "audio") {
                     this._mediaType = "audio";
-                } else if (mediaType == "video") {
+                } else if (mediaType === "video") {
                     this._mediaType = "video";
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
@@ -79,12 +79,12 @@ require.def(
                 this._mediaElement = obj;
                 this._outputElement.appendChild(this._mediaElement);
             },
-            render: function(device) {
+            render: function(device) { //jshint ignore:line
                 return this._outputElement;
             },
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType == "audio") {
+                if (this._mediaType === "audio") {
                     throw new Error('Unable to set window size for CE-HTML audio.');
                 }
                 var device = RunTimeContext.getDevice();
@@ -201,11 +201,11 @@ require.def(
                 // TODO: CE-HTML implementation
                 return "none";
             },
-            setPreload: function(preload) {
+            setPreload: function(preload) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges buffered;
-            getBuffered: function() {
+            getBuffered: function() { //jshint ignore:line
                 // TODO: CE-HTML implementation
                 return [];
             },
@@ -214,7 +214,7 @@ require.def(
                 // TODO: CE-HTML implementation
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(type) {
+            canPlayType: function(type) { //jshint ignore:line
                 // TODO: CE-HTML implementation
                 return true;
             },
@@ -275,7 +275,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return 1;
             },
-            setPlaybackRate: function(playbackRate) {
+            setPlaybackRate: function(playbackRate) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges played;
@@ -297,7 +297,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setAutoPlay: function(autoplay) {
+            setAutoPlay: function(autoplay) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // attribute boolean loop;
@@ -305,7 +305,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setLoop: function(loop) {
+            setLoop: function(loop) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // void play();
@@ -325,7 +325,7 @@ require.def(
                 this._mediaElement.play(0);
             },
             // attribute boolean controls;
-            setNativeControls: function(controls) {
+            setNativeControls: function(controls) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             getNativeControls: function() {
@@ -356,7 +356,7 @@ require.def(
         Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
             return new CEHTMLPlayer(id, mediaType, eventCallback);
         };
-        Device.prototype.getPlayerEmbedMode = function(mediaType) {
+        Device.prototype.getPlayerEmbedMode = function(mediaType) { //jshint ignore:line
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
 

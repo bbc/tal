@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.SeekStateTest = AsyncTestCase("Devices.Media.SeekState");
+    this.SeekStateTest = AsyncTestCase("Devices.Media.SeekState"); //jshint ignore:line
 
     this.SeekStateTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -42,7 +42,7 @@
             assertInstanceOf(Class, seekState);
 
         });
-    }
+    };
 
     this.SeekStateTest.prototype.testSeekToGeneratesSeeking = function (queue) {
         queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {

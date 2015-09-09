@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WidgetContextTest = AsyncTestCase("WidgetContext");
+    this.WidgetContextTest = AsyncTestCase("WidgetContext"); //jshint ignore:line
 
     this.WidgetContextTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

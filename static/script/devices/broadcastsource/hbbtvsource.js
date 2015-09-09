@@ -196,7 +196,7 @@ require.def('antie/devices/broadcastsource/hbbtvsource',
 		} else if (playState === this._playStates.CONNECTING){
                     state = BaseTvSource.STATE.CONNECTING;
 		} else if (playState === this._playStates.PRESENTING){
-                    state = BaseTvSource.STATE.PRESENTING
+                    state = BaseTvSource.STATE.PRESENTING;
 		}
 		return state;
             },

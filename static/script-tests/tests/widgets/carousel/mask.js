@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.MaskTest = AsyncTestCase("Mask");
+    this.MaskTest = AsyncTestCase("Mask"); //jshint ignore:line
 
     this.MaskTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -325,7 +325,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Mask, verticalOrientation) {
-                var moveStub, pixelsMoved, mask, device;
+                var moveStub, pixelsMoved, mask;
 		var mockWidgetStrip = {
 			getLengthToIndex: self.sandbox.stub().returns(50),
 			lengthOfWidgetAtIndex: self.sandbox.stub().returns(50)
@@ -378,7 +378,7 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Mask, Spinner, verticalOrientation) {
-                var moveStub, pixelsMoved, mask;
+                var mask;
                 self.sandbox.stub(Spinner.prototype);
 		var mockWidgetStrip = {
 			getLengthToIndex: self.sandbox.stub().returns(50)
@@ -619,7 +619,7 @@
                 'antie/widgets/carousel/spinner'
             ],
             function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
-                var mask, strip1, device, length;
+                var mask, strip1, device;
 
                 device = application.getDevice();
                 self.sandbox.stub(device);

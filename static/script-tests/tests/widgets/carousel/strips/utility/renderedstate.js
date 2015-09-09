@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.RenderedStateTest = AsyncTestCase("RenderedState");
+    this.RenderedStateTest = AsyncTestCase("RenderedState"); //jshint ignore:line
 
     this.RenderedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -212,10 +212,9 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
                 var state = createState(self, WidgetContext, RenderedState);
                 var child = new Widget();
@@ -233,10 +232,9 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
                 var state = createState(self, WidgetContext, RenderedState);
                 var context = new WidgetContext();
@@ -255,10 +253,9 @@
                 'antie/widgets/carousel/strips/utility/renderedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, RenderedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, RenderedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
                 var state = createState(self, WidgetContext, RenderedState);
                 assertFalse(state.hasLength());

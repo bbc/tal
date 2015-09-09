@@ -35,7 +35,7 @@ require.def(
 	    */
         Device.prototype.exit = function() {
             window.close();
-        }
+        };
 
     }
 );

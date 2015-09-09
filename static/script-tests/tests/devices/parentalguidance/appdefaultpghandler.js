@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.AppDefaultPgHandlerTest = AsyncTestCase("App Default PG Handler");
+    this.AppDefaultPgHandlerTest = AsyncTestCase("App Default PG Handler"); //jshint ignore:line
 
     this.AppDefaultPgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,8 +37,8 @@
     this.AppDefaultPgHandlerTest.prototype.testAppDefaultPgHandlerExtendsBasePgHandler = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler", "antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, BasePgHandler, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+            function (application, BasePgHandler) {
 
                 var device = application.getDevice();
 
@@ -49,8 +49,8 @@
     this.AppDefaultPgHandlerTest.prototype.testThatRegisterAppPgHandlerAddsCorrectObjectToDevice = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var appHandler = {foo: "bar"};
@@ -63,8 +63,8 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsConfigurableReturnsTrue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -75,8 +75,8 @@
     this.AppDefaultPgHandlerTest.prototype.testThatSupportsMessageReturnsTrue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -87,8 +87,8 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsErrorWhenAppHandlerIsUndefined = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -103,8 +103,8 @@
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenCallBackObjectDoesNotContrainOnGuidanceChallengeResponse = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
@@ -112,22 +112,22 @@
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 }, 'Error');
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeThrowsExceptionWhenOnGuidanceChallengeResponseIsNotAFunction = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
@@ -137,73 +137,73 @@
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 }, 'Error');
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeCallsAppHandlerWithCorrectArguments = function (queue) {
         expectAsserts(3);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
                 var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
                 var guidanceChallengeResponseCallBack = {
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
-                }
+                };
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertNoException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack)
+                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
                 });
                 assertTrue(showChallengeStub.calledWith("Test message", guidanceChallengeResponseCallBack));
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatShowChallengeReturnsValue = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub().returns('foo');
                 var onGuidanceChallengeResponseCallBackStub = this.sandbox.stub();
                 var guidanceChallengeResponseCallBack = {
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
-                }
+                };
 
                 var appHandler = {
                     showChallenge: showChallengeStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
                 var returnValue = device.parentalGuidanceHelper.showChallenge('testing', guidanceChallengeResponseCallBack);
 
                 assertEquals('foo', returnValue);
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveThrowsErrorWhenAppHandlerIsUndefined = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
 
@@ -218,15 +218,15 @@
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveeCallsAppHandlerIsChallengeActive = function (queue) {
         expectAsserts(3);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var isChallengeActiveStub = this.sandbox.stub();
 
                 var appHandler = {
                     isChallengeActive: isChallengeActiveStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
@@ -235,21 +235,21 @@
                     device.parentalGuidanceHelper.isChallengeActive();
                 });
                 assertTrue(isChallengeActiveStub.calledOnce);
-            })
+            });
     };
 
     this.AppDefaultPgHandlerTest.prototype.testThatIsChallengeActiveReturnsTrueOnlyWhenAppHandlerReturnsTrue = function (queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/appdefaultpghandler"],
-            function (application, AppDefaultPgHandler) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function (application) {
 
                 var device = application.getDevice();
                 var isChallengeActiveStub = this.sandbox.stub().returns(true);
 
                 var appHandler = {
                     isChallengeActive: isChallengeActiveStub
-                }
+                };
 
                 device.registerAppPgHandler(appHandler);
 
@@ -258,7 +258,7 @@
                 isChallengeActiveStub.returns(false);
 
                 assertFalse(device.parentalGuidanceHelper.isChallengeActive());
-            })
+            });
     };
 
 })();

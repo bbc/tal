@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.SessionStorageProviderTest = AsyncTestCase("Storage_Session");
+	this.SessionStorageProviderTest = AsyncTestCase("Storage_Session"); //jshint ignore:line
 
 	var stores;
 

@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ListItemTest = AsyncTestCase("ListItem");
+	this.ListItemTest = AsyncTestCase("ListItem"); //jshint ignore:line
 
 	this.ListItemTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

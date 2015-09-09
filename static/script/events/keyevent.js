@@ -52,7 +52,7 @@ require.def('antie/events/keyevent',
 				if(keyCode >= KeyEvent.VK_0 && keyCode <= KeyEvent.VK_9) {
 					index = keyCode - KeyEvent.VK_0;
 					this.keyChar = String.fromCharCode("0".charCodeAt(0) + index);
-				} else if(keyCode == KeyEvent.VK_SPACE) {
+				} else if(keyCode === KeyEvent.VK_SPACE) {
 					this.keyChar = " ";
 				} else if(keyCode >= KeyEvent.VK_A && keyCode <= KeyEvent.VK_Z) {
 					index = keyCode - KeyEvent.VK_A;

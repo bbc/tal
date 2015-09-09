@@ -107,13 +107,13 @@ require.def('antie/widgets/horizontalslider',
 					var device = this.getCurrentApplication().getDevice();
 					var elsize = device.getElementSize(this.outputElement);
 					var left = Math.floor(this._value * elsize.width);
-					if(left != this._lastLeft) {
+					if(left !== this._lastLeft) {
 						this._lastLeft = left;
 
-						if(this._value == 0) {
+						if(this._value === 0) {
 							this.addClass('start');
 							this.removeClass('end');
-						} else if(this._value == 1) {
+						} else if(this._value === 1) {
 							this.removeClass('start');
 							this.addClass('end');
 						} else {
@@ -136,9 +136,7 @@ require.def('antie/widgets/horizontalslider',
 			 * @private
 			 */
 			_onKeyDown: function(evt) {
-				var self = this;
-
-				if(evt.keyCode != KeyEvent.VK_LEFT && evt.keyCode != KeyEvent.VK_RIGHT) {
+				if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
 					return;
 				}
 
@@ -146,13 +144,13 @@ require.def('antie/widgets/horizontalslider',
 				this._currentIncrementCount++;
 				var inc = (this._currentIncrementCount > this._largeIncrementAfter) ? this._largeIncrement : this._smallIncrement;
 
-				if(evt.keyCode == KeyEvent.VK_LEFT && this._value > 0) {
+				if(evt.keyCode === KeyEvent.VK_LEFT && this._value > 0) {
 					this._value -= inc;
 					if(this._value < 0) {
 						this._value = 0;
 					}
 					changed = true;
-				} else if(evt.keyCode == KeyEvent.VK_RIGHT && this._value < 1) {
+				} else if(evt.keyCode === KeyEvent.VK_RIGHT && this._value < 1) {
 					this._value += inc;
 					if(this._value > 1) {
 						this._value = 1;
@@ -172,7 +170,7 @@ require.def('antie/widgets/horizontalslider',
 			 * @private
 			 */
 			_onKeyPress: function(evt) {
-				if(evt.keyCode != KeyEvent.VK_LEFT && evt.keyCode != KeyEvent.VK_RIGHT) {
+				if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
 					return;
 				}
 
@@ -186,13 +184,13 @@ require.def('antie/widgets/horizontalslider',
 				this._currentIncrementCount++;
 				var inc = (this._currentIncrementCount > this._largeIncrementAfter) ? this._largeIncrement : this._smallIncrement;
 
-				if(evt.keyCode == KeyEvent.VK_LEFT && this._value > 0) {
+				if(evt.keyCode === KeyEvent.VK_LEFT && this._value > 0) {
 					this._value -= inc;
 					if(this._value < 0) {
 						this._value = 0;
 					}
 					changed = true;
-				} else if(evt.keyCode == KeyEvent.VK_RIGHT && this._value < 1) {
+				} else if(evt.keyCode === KeyEvent.VK_RIGHT && this._value < 1) {
 					this._value += inc;
 					if(this._value > 1) {
 						this._value = 1;
@@ -210,7 +208,7 @@ require.def('antie/widgets/horizontalslider',
 			 * @private
 			 */
 			_onKeyUp: function(evt) {
-				if(evt.keyCode != KeyEvent.VK_LEFT && evt.keyCode != KeyEvent.VK_RIGHT) {
+				if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
 					return;
 				}
 				// If the key is pressed again within 0.8s, keep changing the position

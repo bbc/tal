@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ListTest = AsyncTestCase("List");
+	this.ListTest = AsyncTestCase("List"); //jshint ignore:line
 
 	this.ListTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -199,7 +199,7 @@
 			"lib/mockapplication",
 			["antie/widgets/list", "antie/widgets/container"],
 			function(application, List, Container) {
-				var list, insertedItem, appendedItem, i;
+				var list, insertedItem, appendedItem;
 				function removeAndCheck(item) {
 				    assertTrue(item.hasClass('listitem'));
 				    list.removeChildWidget(item);
@@ -309,7 +309,6 @@
 			"lib/mockapplication",
 			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
 			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
 				var SimpleFormatter = Formatter.extend({
 					format: function(iterator) {
 						return new Label(iterator.next());
@@ -683,7 +682,7 @@
 			"lib/mockapplication",
 			["antie/widgets/list"],
 			function(application, List) {
-				var widget = new List("id")
+				var widget = new List("id");
 				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 
 				widget.setDataBindingOrder(List.DATA_BIND_REVERSE);
@@ -703,7 +702,6 @@
 			"lib/mockapplication",
 			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
 			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
 				var SimpleFormatter = Formatter.extend({
 					format: function(iterator) {
 						return new Label(iterator.next());
@@ -736,7 +734,6 @@
 			"lib/mockapplication",
 			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
 			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
 				var SimpleFormatter = Formatter.extend({
 					format: function(iterator) {
 						return new Label(iterator.next());

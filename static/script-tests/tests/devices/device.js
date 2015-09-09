@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.DeviceTest = AsyncTestCase("Device");
+    this.DeviceTest = AsyncTestCase("Device"); //jshint ignore:line
 
     this.DeviceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -112,7 +112,7 @@
             });
             var application = Application.getCurrentApplication();
             var device = application.getDevice();
-            assertSame(antie.framework.deviceConfiguration, device.getConfig())
+            assertSame(antie.framework.deviceConfiguration, device.getConfig());
         });
     };
 

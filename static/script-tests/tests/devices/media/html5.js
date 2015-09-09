@@ -26,7 +26,7 @@
 
     var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
-    this.HTML5Test = AsyncTestCase("HTML5 Media Device Modifier");
+    this.HTML5Test = AsyncTestCase("HTML5 Media Device Modifier"); //jshint ignore:line
 
     this.HTML5Test.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -72,8 +72,8 @@
     this.HTML5Test.prototype.testRenderCausesErrorEventToBeAdded = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
-            function(application, HTML5Player) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -81,7 +81,7 @@
 
                 var mediaElement = document.createElement("div");
                 var addEventListenerCounts = { };
-                mediaElement.addEventListener = function (type, callback) {
+                mediaElement.addEventListener = function (type) {
                     if (!addEventListenerCounts[type]) {
                         addEventListenerCounts[type] = 1;
                     } else {
@@ -207,8 +207,8 @@
     this.HTML5Test.prototype.testRenderOnlyAddsEventListenersTheFirstTimeItIsCalled = function (queue) {
         expectAsserts(3);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
-            function(application, HTML5Player, MediaErrorEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -216,7 +216,7 @@
 
                 var mediaElement = document.createElement("div");
                 var eventListenerCount = 0;
-                mediaElement.addEventListener = function (type, callback) {
+                mediaElement.addEventListener = function () {
                     eventListenerCount++;
                 };
 
@@ -251,7 +251,7 @@
 
                 var originalCreateElement = document.createElement;
 
-                var sourceAddEventListenerStub = undefined;
+                var sourceAddEventListenerStub;
                 var sourceElementCount = 0;
 
                 this.sandbox.stub(document, "createElement", function(type) {

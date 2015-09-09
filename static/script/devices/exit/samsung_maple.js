@@ -36,7 +36,7 @@ require.def(
 	    */
         Device.prototype.exit = function() {
            new Common.API.Widget().sendReturnEvent();
-        }
+        };
 
     }
 );

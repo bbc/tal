@@ -34,12 +34,12 @@
         self.mediaElement2 = document.createElement("object");
         self.mediaElement2.stop = self.sandbox.stub();
 
-        self.outputElement = document.createElement("div")
+        self.outputElement = document.createElement("div");
 
         var useMediaElementOne = true;
 
         // Can't use calls(0) or onFirstCall - they're Sinon 1.8 and we're on 1.7
-        self.sandbox.stub(device, "_createElement", function (type, id) {
+        self.sandbox.stub(device, "_createElement", function (type) {
             if (type === "div") {
                 return self.outputElement;
             } else if (type === "object") {
@@ -52,9 +52,9 @@
             }
         });
 
-    }
+    };
 
-    this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier");
+    this.CEHTMLTest = AsyncTestCase("CEHTML Media Device Modifier"); //jshint ignore:line
 
     this.CEHTMLTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -127,8 +127,8 @@
     this.CEHTMLTest.prototype.testSetSourcesAddsOnPlayStateChangeFunctionToMediaElement = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
-            function(application, CEHTMLPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -157,8 +157,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesErrorsToEventHandlingCallback = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaErrorEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaerrorevent"],
+            function(application, CEHTMLPlayer, MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -192,8 +192,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesEndedMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -227,8 +227,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesWaitingMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -262,8 +262,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesLoadStartMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -297,8 +297,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesPauseMediaEventToEventHandlingCallback = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -332,8 +332,8 @@
     this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesPlayLifecycleMediaEventsToEventHandlingCallback = function (queue) {
         expectAsserts(11);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -379,7 +379,7 @@
 	this.CEHTMLTest.prototype.testDoesNotSendTimeupdateWhenVideoIsNotPlaying = function (queue) {
 		expectAsserts(3);
 		var self = this;
-		queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
+		queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
 			function(application, CEHTMLPlayer) {
 
 				var callbackStub = self.sandbox.stub();
@@ -422,8 +422,8 @@
 	this.CEHTMLTest.prototype.testOnPlayStateChangeFunctionPassesTimeUpdateMediaEventsToEventHandlingCallbackEvery900MillisecondsAfterPlayEvent = function (queue) {
         expectAsserts(6);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, CEHTMLPlayer, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml", "antie/events/mediaevent"],
+            function(application, CEHTMLPlayer, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -477,8 +477,8 @@
     this.CEHTMLTest.prototype.testMediaElementHasCorrectStyleSet = function (queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
-            function(application, CEHTMLPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -499,7 +499,7 @@
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/seekstate", "antie/devices/media/cehtml"],
-            function(application, SeekState, CEHTML) {
+            function(application, SeekState) {
 
                 var eventHandlingCallbackStub = self.sandbox.stub();
                 var seekStateSpy = self.sandbox.spy(SeekState.prototype, "init");
@@ -539,7 +539,7 @@
         expectAsserts(2);
         var self = this;
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtml"],
-            function(application, CEHTML) {
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -559,8 +559,9 @@
     this.CEHTMLTest.prototype.testOutputElementDoesNotChangeWhenMediaElementDoesWhenUsingMediaTypeFix = function(queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/cehtmlmediatypefix"],
-            function(application, CEHTML) {
+        var mediaTypeFixConfig = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/cehtmlmediatypefix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
@@ -587,7 +588,7 @@
                 assertSame(self.outputElement, self.mediaElement2.parentNode);
                 assertEquals(1, self.outputElement.childNodes.length);
 
-            }, config);
+            }, mediaTypeFixConfig);
     };
 
 

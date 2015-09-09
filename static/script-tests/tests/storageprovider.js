@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.StorageProviderTest = AsyncTestCase("Storage (Base Provider)");
+	this.StorageProviderTest = AsyncTestCase("Storage (Base Provider)"); //jshint ignore:line
 
 	this.StorageProviderTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -38,7 +38,7 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			assertInstanceOf(StorageProvider, application.getDevice().getStorage(StorageProvider.STORAGE_TYPE_SESSION, "test"))
+			assertInstanceOf(StorageProvider, application.getDevice().getStorage(StorageProvider.STORAGE_TYPE_SESSION, "test"));
 		}, config);
 	};
 
@@ -48,7 +48,7 @@
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/storage/cookie']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
 		queuedApplicationInit(queue, "lib/mockapplication", ['antie/storageprovider'], function(application, StorageProvider) {
-			assertInstanceOf(StorageProvider, application.getDevice().getStorage(StorageProvider.STORAGE_TYPE_PERSISTENT, "test"))
+			assertInstanceOf(StorageProvider, application.getDevice().getStorage(StorageProvider.STORAGE_TYPE_PERSISTENT, "test"));
 		}, config);
 	};
 })();

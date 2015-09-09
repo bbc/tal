@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HTML5VolumeTest = AsyncTestCase("HTML5_Volume");
+	this.HTML5VolumeTest = AsyncTestCase("HTML5_Volume"); //jshint ignore:line
 
 	this.HTML5VolumeTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -68,7 +68,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setMuted(true);
-			var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+			device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -88,7 +88,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setMuted(false);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -108,7 +108,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(0);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -128,7 +128,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(0.5);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -148,7 +148,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(1.0);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -167,10 +167,8 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
-
 			device.setVolume(-1);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -208,7 +206,7 @@
             var spy = this.sandbox.spy(device, "_createElement");
 
 			device.setVolume(1.01);
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 
             assertTrue(spy.calledOnce);
             var mediaElement = spy.returnValues[0];
@@ -246,7 +244,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setMuted(true);
 
             assertTrue(spy.calledOnce);
@@ -266,7 +264,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setMuted(false);
 
             assertTrue(spy.calledOnce);
@@ -286,7 +284,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(0);
 
             assertTrue(spy.calledOnce);
@@ -306,7 +304,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(0.5);
 
             assertTrue(spy.calledOnce);
@@ -326,7 +324,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(1.0);
 
             assertTrue(spy.calledOnce);
@@ -346,9 +344,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
-
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(-1);
 
             assertTrue(spy.calledOnce);
@@ -386,9 +382,7 @@
 			var device = application.getDevice();
             var spy = this.sandbox.spy(device, "_createElement");
 
-			var warnSpy = this.sandbox.spy(device.getLogger(), "warn");
-
-            var player = device.createMediaInterface("player", "audio", self.sandbox.stub());
+            device.createMediaInterface("player", "audio", self.sandbox.stub());
 			device.setVolume(1.01);
 
             assertTrue(spy.calledOnce);

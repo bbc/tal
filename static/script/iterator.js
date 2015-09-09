@@ -87,7 +87,7 @@ require.def('antie/iterator',
 				return this._currentIndex;
 			},
 			isEmpty: function() {
-				return this._array.length == 0;
+				return this._array.length === 0;
 			},
 			/**
 			 * Returns the length of the array.

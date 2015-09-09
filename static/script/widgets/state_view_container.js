@@ -29,7 +29,7 @@ require.def ('antie/widgets/state_view_container', [
 ], function(Container, KeyEvent, Button){
     'use strict';
 
-    var keyMapping = { }
+    var keyMapping = { };
     keyMapping[KeyEvent.VK_UP] = 'up';
     keyMapping[KeyEvent.VK_DOWN] = 'down';
     keyMapping[KeyEvent.VK_LEFT] = 'left';
@@ -69,7 +69,7 @@ require.def ('antie/widgets/state_view_container', [
            this._isFocussed = true;
            this.focusButtonHack.focus();
         }
-    } )
+    } );
 
     return StateViewContainer;
 

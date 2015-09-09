@@ -523,9 +523,8 @@ require.def(
             },
 
             _isHlsMimeType: function () {
-                var mime = this._mimeType.toLowerCase()
-                return mime === "application/vnd.apple.mpegurl"
-                    || mime === "application/x-mpegurl";
+                var mime = this._mimeType.toLowerCase();
+                return mime === "application/vnd.apple.mpegurl" || mime === "application/x-mpegurl";
             },
 
             _wrappedSource: function () {

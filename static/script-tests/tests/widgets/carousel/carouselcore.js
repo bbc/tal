@@ -24,7 +24,7 @@
 
 (function () {
 	/* jshint newcap: false, strict: false */
-	this.CarouselCoreTest = AsyncTestCase("CarouselCore");
+	this.CarouselCoreTest = AsyncTestCase("CarouselCore"); //jshint ignore:line
 
 	this.CarouselCoreTest.prototype.setUp = function () {
 		this.sandbox = sinon.sandbox.create();
@@ -124,7 +124,7 @@
 			'lib/mockapplication',
 			['antie/widgets/carousel/carouselcore'],
 			function (application, CarouselCore) {
-				var carousel, appendChildStub, appendedFromCarouselWidget;
+				var carousel, appendedFromCarouselWidget;
 
 				appendedFromCarouselWidget = {
                     dummy: "dummyWidget",
@@ -275,7 +275,7 @@
             'lib/mockapplication',
             ['antie/widgets/carousel/carouselcore'],
             function (application, CarouselCore) {
-                var carousel, fakeWidget;
+                var carousel;
                 carousel = new CarouselCore('myCarousel');
                 carousel._widgetStrip.widgets = this.sandbox.stub().returns(["test"]);
                 assertEquals("Widget strip widgets returned", ["test"], carousel.items());
@@ -306,11 +306,10 @@
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/carouselcore',
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/bookendednavigator"
+                "antie/widgets/carousel/mask"
             ],
-            function (application, CarouselCore, Mask, BookendedNavigator) {
-                var carousel, maskStub, navStub, INDEX;
+            function (application, CarouselCore, Mask) {
+                var carousel, maskStub, INDEX;
                 INDEX = 3;
                 maskStub = this.sandbox.stub(Mask.prototype, 'alignToIndex').withArgs(INDEX);
 
@@ -328,11 +327,10 @@
             [
                 'antie/widgets/carousel/carouselcore',
                 "antie/widgets/button",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/bookendednavigator"
+                "antie/widgets/carousel/mask"
             ],
-            function (application, CarouselCore, Button, Mask, BookendedNavigator) {
-                var carousel, maskStub, navStub;
+            function (application, CarouselCore, Button, Mask) {
+                var carousel, maskStub;
                 var device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo');
                 maskStub = this.sandbox.stub(Mask.prototype, 'setAlignPoint');
@@ -522,7 +520,7 @@
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, CarouselCore, verticalOrientation) {
+            function (application, CarouselCore) {
                 var carousel;
 
                 this.sandbox.spy(CarouselCore.prototype, '_setOrientation');
@@ -539,7 +537,7 @@
             [
                 'antie/widgets/carousel/carouselcore'
             ],
-            function (application, CarouselCore, verticalOrientation) {
+            function (application, CarouselCore) {
                 var carousel;
 
                 this.sandbox.spy(CarouselCore.prototype, '_setOrientation');

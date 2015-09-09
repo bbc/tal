@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AttachedStateTest = AsyncTestCase("AttachedState");
+    this.AttachedStateTest = AsyncTestCase("AttachedState"); //jshint ignore:line
 
     this.AttachedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

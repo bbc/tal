@@ -24,7 +24,7 @@
 
 (function () {
     /* jshint newcap: false, strict: false */
-    this.CarouselTest = AsyncTestCase("Carousel");
+    this.CarouselTest = AsyncTestCase("Carousel"); //jshint ignore:line
 
     this.CarouselTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

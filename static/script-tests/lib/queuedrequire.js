@@ -25,7 +25,7 @@
  */
 
 function call__qr(){
-	if( require.ready == undefined ) {
+	if( require.ready === undefined ) {
 		//require.ready not found - delaying queud require
 		setTimeout( call__qr, 2000 );
 	}
@@ -59,11 +59,11 @@ function __qr(){
 		require.load = function(moduleName, contextName) {
 			var module = requireModules[moduleName];
 			if(module) {
-				require.s.contexts["_"].specified[moduleName] = true;
-				require.s.contexts["_"].loaded[moduleName] = false;
+				require.s.contexts._.specified[moduleName] = true;
+				require.s.contexts._.loaded[moduleName] = false;
 				setTimeout(function() {
 					require.def.apply(require, module);
-					require.completeLoad(moduleName, require.s.contexts["_"]);
+					require.completeLoad(moduleName, require.s.contexts._);
 				}, 0);
 				return;
 			}
@@ -87,14 +87,15 @@ function __qr(){
 				originalTearDown.call(testCase);
 			}
 			for(var name in requireModules) {
-				var module = requireModules[name];
+                if(requireModules.hasOwnProperty(name)) {
+                    //Allow for anonymous functions
+                    if (typeof name === 'string') {
+                        delete require.s.contexts._.specified[name];
+                        delete require.s.contexts._.defined[name];
+                        delete require.s.contexts._.loaded[name];
+                    }
+                }
 
-				//Allow for anonymous functions
-				if (typeof name === 'string') {
-					delete require.s.contexts["_"].specified[name];
-					delete require.s.contexts["_"].defined[name];
-					delete require.s.contexts["_"].loaded[name];
-				}
 			}
 		};
 
@@ -153,4 +154,4 @@ function __qr(){
 		});
 	};
 
-};
+}

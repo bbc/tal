@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationRoutingTest = AsyncTestCase("Application_Routing");
+	this.ApplicationRoutingTest = AsyncTestCase("Application_Routing"); //jshint ignore:line
 
 	this.ApplicationRoutingTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -73,7 +73,7 @@
 			var device = application.getDevice();
 
 			var getCurrentRouteSpy = this.sandbox.spy(device, 'getCurrentRoute');
-			application.getCurrentRoute()
+			application.getCurrentRoute();
 			assert(getCurrentRouteSpy.called);
 
 		});

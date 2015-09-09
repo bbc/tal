@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.DefaultNetworkTest = AsyncTestCase("Network (Default)");
+	this.DefaultNetworkTest = AsyncTestCase("Network (Default)"); //jshint ignore:line
 
 	this.DefaultNetworkTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -641,7 +641,7 @@
             assert(successSpy.calledOnce);
             assert(successSpy.calledWith({ "test" : "myValue" }));
 		});
-	},
+	};
 
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
         expectAsserts(2);
@@ -659,14 +659,13 @@
 
             assert(errorSpy.calledOnce);
 		});
-	},
+	};
 
 	this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetDelegatesToLoadScriptWhenCorsIsNotSupported = function(queue) {
 		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
 			var device = new BrowserDevice({"networking": { "supportsCORS": false }});
 			var successSpy = this.sandbox.spy();
 			var errorSpy = this.sandbox.spy();
-			var loadUrlSpy = this.sandbox.spy();
 			var myId = "test";
 			var testTimeout = 1;
 			var testUrl = "http://test";
@@ -674,7 +673,7 @@
 			device.executeCrossDomainGet(testUrl, {onSuccess: successSpy, onError: errorSpy}, {timeout: testTimeout, id: myId});
 			assert(loadScriptStub.calledWith(testUrl + "?callback=%callback%", /%callback%/, {onSuccess : successSpy, onError : errorSpy}, testTimeout, myId));
 		});
-	},
+	};
 
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainDelegationToLoadScriptWhenCorsIsNotSupportedAllowsCallbackNameChange = function(queue) {
         queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
@@ -721,7 +720,7 @@
 			var opts = {
 					onLoad : successSpy,
 					onError : errorSpy
-			}
+			};
 			device.executeCrossDomainPost(testUrl, message, opts);
 
 			assert(loadUrlStub.calledWith(testUrl, expectedArgs));
@@ -751,7 +750,7 @@
             assertEquals("http://test", this.requests[0].url);
             assertEquals("GET", this.requests[0].method);
             assertEquals(null, this.requests[0].requestBody);
-            assertEquals("Bearer abc123", this.requests[0].requestHeaders["Authorization"]);
+            assertEquals("Bearer abc123", this.requests[0].requestHeaders.Authorization);
 
             this.requests[0].respond(200, { "Content-Type": "application/json;charset=utf-8" }, payload);
             assert(errorSpy.notCalled);
@@ -793,7 +792,7 @@
             assertEquals("http://test", this.requests[0].url);
             assertEquals("POST", this.requests[0].method);
             assertEquals(payload, this.requests[0].requestBody);
-            assertEquals("Bearer abc123", this.requests[0].requestHeaders["Authorization"]);
+            assertEquals("Bearer abc123", this.requests[0].requestHeaders.Authorization);
             assertEquals("application/json;charset=utf-8", this.requests[0].requestHeaders["Content-Type"]);
 
             this.requests[0].respond(200);

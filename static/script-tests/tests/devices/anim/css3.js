@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.CSS3AnimationTest = AsyncTestCase("Css3AnimationTest");
+    this.CSS3AnimationTest = AsyncTestCase("Css3AnimationTest"); //jshint ignore:line
 
 	this.CSS3AnimationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -601,7 +601,6 @@
     this.CSS3AnimationTest.prototype.testSpecificShowAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-	var self = this;
         var config = getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -628,7 +627,6 @@
     this.CSS3AnimationTest.prototype.testSpecificHideAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-	var self = this;
         var config = getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -656,7 +654,6 @@
     this.CSS3AnimationTest.prototype.testDefaultShowAnimationPropertiesPassedToTransiton = function(queue) {
         expectAsserts(2);
 
-	var self = this;
         var config = getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
@@ -683,7 +680,6 @@
     this.CSS3AnimationTest.prototype.testDefaultHideAnimationPropertiesPassedToTransition = function(queue) {
         expectAsserts(2);
 
-	var self = this;
         var config = getDefaultCssConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {

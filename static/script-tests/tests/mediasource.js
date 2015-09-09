@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.MediaSourceTest = AsyncTestCase("MediaSource");
+	this.MediaSourceTest = AsyncTestCase("MediaSource"); //jshint ignore:line
 
 	this.MediaSourceTest.prototype.setUp = function() {
 	};

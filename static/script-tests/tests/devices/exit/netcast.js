@@ -23,7 +23,7 @@
 
 (function() {
     /* jshint newcap: false */
-    this.ExitNetCastTest = AsyncTestCase("Exit (NetCast)");
+    this.ExitNetCastTest = AsyncTestCase("Exit (NetCast)"); //jshint ignore:line
 
     this.ExitNetCastTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

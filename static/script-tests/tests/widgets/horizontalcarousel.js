@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.HorizontalCarouselTest = AsyncTestCase("HorizontalCarousel");
+	this.HorizontalCarouselTest = AsyncTestCase("HorizontalCarousel"); //jshint ignore:line
 
 	var addTestButtons = function(noButtonsReq, widget, Button) {
 		for(var i = 0; i < noButtonsReq; i++) {
@@ -34,7 +34,7 @@
 			button.outputElement.style.height = "100px";
 			button.outputElement.style.outline = "1px solid blue";
 		}
-	}
+	};
 	this.HorizontalCarouselTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
 	};
@@ -69,7 +69,7 @@
 					widget.appendChildWidget(new Button());
 					var device = application.getDevice();
 					var deviceCreateContainerSpy = this.sandbox.spy(device, 'createContainer');
-					var el = widget.render(device);
+					widget.render(device);
 					assert(deviceCreateContainerSpy.called);
 				}
 		);
@@ -88,7 +88,7 @@
 					widget.setRenderMode(List.RENDER_MODE_LIST);
 					var device = application.getDevice();
 					var deviceCreateListSpy = this.sandbox.spy(device, 'createList');
-					var el = widget.render(device);
+					widget.render(device);
 					assert(deviceCreateListSpy.called);
 				}
 		);
@@ -107,16 +107,10 @@
                 widget.setRenderMode(List.RENDER_MODE_LIST);
 
                 var device = application.getDevice();
-                var el = widget.render(device);
-
+                widget.render(device);
 
                 var config = device.getConfig();
                 var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
-
-                var options = {
-                    el : widget._maskElement,
-                    skipAnim : animate
-                };
 
                 var deviceCreateListSpy = this.sandbox.spy(device, 'showElement');
                 widget.show({});
@@ -143,7 +137,7 @@
 					widget._activeWidgetAnimationEasing = 'easeOutBounce';
 					var device = application.getDevice();
 					var deviceCreateListSpy = this.sandbox.spy(device, 'createList');
-					var el = widget.render(device);
+					widget.render(device);
 					assert(deviceCreateListSpy.called);
 					assertEquals(widget._activeWidgetAnimationFPS, 10);
 					assertEquals(widget._activeWidgetAnimationDuration, 300);
@@ -166,7 +160,6 @@
 				   widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 				   widget.appendChildWidget(new Button("buttonID"));
 
-				   var device = application.getDevice();
 				   assertEquals(1, application.getRootWidget().outputElement.childNodes.length);
 				   var el = application.getRootWidget().outputElement.childNodes[0];
 				   assertEquals("id_mask", el.id);
@@ -196,7 +189,6 @@
 					var widget = new HorizontalCarousel("id");
 					widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 					var device = application.getDevice();
-					var deviceCreateContainerSpy = this.sandbox.spy(device, 'createContainer');
 					var el = widget.render(device);
 					var el2 = widget.render(device);
 					assertSame(el, el2);
@@ -523,7 +515,9 @@
 					// Set the width of each button, again usually done via CSS!
 					var childWidgets = widget.getChildWidgets();
 					for(var buttonIndex in childWidgets) {
-						childWidgets[buttonIndex].outputElement.style.width = "100px";
+                        if(childWidgets.hasOwnProperty(buttonIndex)) {
+                            childWidgets[buttonIndex].outputElement.style.width = "100px";
+                        }
 					}
 					
 					// No clones created yet:
@@ -575,7 +569,7 @@
 					assert('Element to the left of B2 is B1!', b1.outputElement === wrappedElementLeft);
 				});
 		
-	}
+	};
 	this.HorizontalCarouselTest.prototype.testGetWrappedElementToRight = function(queue) {
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
 		expectAsserts(1);
@@ -598,12 +592,12 @@
 					widget.appendChildWidget(b1);
 					widget.appendChildWidget(b2);
 					
-					var wrappedElementRight = widget._getWrappedElement(HorizontalCarousel.SELECTION_DIRECTION_RIGHT, b1.outputElement)
+					var wrappedElementRight = widget._getWrappedElement(HorizontalCarousel.SELECTION_DIRECTION_RIGHT, b1.outputElement);
 					
 					assert('Element to the right of B1 is B2', b2.outputElement === wrappedElementRight);
 				});
 		
-	}
+	};
 	this.HorizontalCarouselTest.prototype.testMoveToLeftWrapped = function(queue)
 	{
 		/*:DOC += <link rel="stylesheet" type="text/css" href="/test/script-tests/lib/carousels.css">*/
@@ -640,11 +634,13 @@
                 // Set attributes on each button, usually done via CSS!
                 var childWidgets = widget.getChildWidgets();
                 for(var buttonIndex in childWidgets) {
-                    var style = childWidgets[buttonIndex].outputElement.style;
-                    style.position = "relative";
-                    style.width = "100px";
-                    style.height = "100px";
-                    style.outline = "1px solid blue";
+                    if(childWidgets.hasOwnProperty(buttonIndex)) {
+                        var style = childWidgets[buttonIndex].outputElement.style;
+                        style.position = "relative";
+                        style.width = "100px";
+                        style.height = "100px";
+                        style.outline = "1px solid blue";
+                    }
                 }
 
                 // Wait for cloned items to be created, then attempt to move to the left. Assert that this triggers
@@ -690,7 +686,7 @@
                 // 4 fake items (00, 01, 02, 03) and 3 real items (04, 05, 06) are to the left (700px)
 
                 // Repositioned to right-hand side of carousel: 4 fake items + 3 real ones off the left of the screen
-                assertEquals(700, deviceScrollElementSpy.getCall(0).args[0].to.left)
+                assertEquals(700, deviceScrollElementSpy.getCall(0).args[0].to.left);
                 assert('Animation skipped on second call', deviceScrollElementSpy.getCall(0).args[0].skipAnim);
 
                 clock.restore();
@@ -734,11 +730,13 @@
 					// Set attributes on each button, usually done via CSS!
 					var childWidgets = widget.getChildWidgets();
 					for(var buttonIndex in childWidgets) {
-						var style = childWidgets[buttonIndex].outputElement.style;
-						style.position = "relative";
-						style.width = "100px";
-						style.height = "100px";
-						style.outline = "1px solid blue";
+                        if(childWidgets.hasOwnProperty(buttonIndex)) {
+                            var style = childWidgets[buttonIndex].outputElement.style;
+                            style.position = "relative";
+                            style.width = "100px";
+                            style.height = "100px";
+                            style.outline = "1px solid blue";
+                        }
 					}
 
                     // Wait for cloned items to be created, then attempt to move to the left. Assert that this triggers
@@ -876,8 +874,6 @@
 
 					application.getRootWidget().appendChildWidget(widget);					
 					addTestButtons(2, widget, Button);
-
-					var deviceScrollElementSpy = this.sandbox.spy(device, 'scrollElementTo');
 
                     clock.tick(300);
 

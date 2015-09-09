@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationLayoutsTest = AsyncTestCase("Application_Layouts");
+	this.ApplicationLayoutsTest = AsyncTestCase("Application_Layouts"); //jshint ignore:line
 
 	this.ApplicationLayoutsTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

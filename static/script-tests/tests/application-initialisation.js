@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationInitialisationTest = AsyncTestCase("Application_Initialisation");
+	this.ApplicationInitialisationTest = AsyncTestCase("Application_Initialisation"); //jshint ignore:line
 
 	this.ApplicationInitialisationTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();

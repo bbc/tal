@@ -75,7 +75,7 @@ require.def('antie/mediasource',
 							tags = tags || {};
 
 							var config = RuntimeContext.getCurrentApplication().getDevice().getConfig();
-							var streamingConfig = this.getMediaType() == MediaSource.MEDIA_TYPE_AUDIO ?
+							var streamingConfig = this.getMediaType() === MediaSource.MEDIA_TYPE_AUDIO ?
 									config.streaming.audio : config.streaming.video;
 
 							return new URLBuilder(streamingConfig.mediaURIFormat).getURL(this.src, tags);

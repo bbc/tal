@@ -23,7 +23,7 @@
  */
 
 (function() {
-	this.ApplicationComponentsTest = AsyncTestCase("Application_Components");
+	this.ApplicationComponentsTest = AsyncTestCase("Application_Components"); //jshint ignore:line
 
 	this.ApplicationComponentsTest.prototype.setUp = function() {
 		this.sandbox = sinon.sandbox.create();
@@ -42,10 +42,10 @@
 				["antie/widgets/container"],
 				function(application, Container) {
 
-					assertException("Passing a non-widget causes an exception", function() {application.setRootWidget("TEST")});
+					assertException("Passing a non-widget causes an exception", function() {application.setRootWidget("TEST");});
 
 					var container = new Container();
-					assertNoException("Passing a widget causes no exception", function() {application.setRootWidget(container)});
+					assertNoException("Passing a widget causes no exception", function() {application.setRootWidget(container);});
 
 					assertSame("getRootWidget returns previously setRootWidget", container, application.getRootWidget());
 				}
@@ -77,9 +77,9 @@
 			   function(application, ComponentContainer) {
 				   var root = application.getRootWidget();
 
-				   assertEquals(0, root.getChildWidgetCount())
+				   assertEquals(0, root.getChildWidgetCount());
 				   application.addComponentContainer("test");
-				   assertEquals(1, root.getChildWidgetCount())
+				   assertEquals(1, root.getChildWidgetCount());
 
 				   var firstChild = root.getChildWidgets()[0];
 				   assertInstanceOf(ComponentContainer, firstChild);

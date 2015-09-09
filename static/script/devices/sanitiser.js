@@ -33,7 +33,7 @@
 
     Sanitiser.prototype.setElementContent = function (el) {
         el.innerHTML = this._string;
-    }
+    };
 
     return Sanitiser;
 });

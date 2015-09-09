@@ -36,7 +36,7 @@ require.def(
         Device.prototype.exit = function() {
             var startPage = history.length -1;
             history.go(-startPage); 
-        }
+        };
 
     }
 );
