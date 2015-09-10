@@ -11,7 +11,7 @@
       "antie/devices/data/nativejson",
       "antie/devices/logging/consumelog",
       "antie/devices/storage/cookie",
-      "antie/devices/exit/closewindow",
+      "antie/devices/exit/netcast",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },

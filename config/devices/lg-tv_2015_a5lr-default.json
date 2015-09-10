@@ -5,8 +5,8 @@
         "modifiers": [
             "antie/devices/anim/css3",
             "antie/devices/media/html5",
-      "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/playable",
+            "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
             "antie/devices/broadcastsource/hbbtvsource",
             "antie/devices/net/default",
             "antie/devices/data/nativejson",
@@ -65,11 +65,15 @@
 		  "39": "RIGHT",
 		  "40": "DOWN",
 		  "415": "PLAY",
-		  "19": "PLAY_PAUSE",
+		  "19": "PAUSE",
 		  "413": "STOP",
 		  "417": "FAST_FWD",
 		  "412": "REWIND",
+          "1546": "NEXT",
+          "1545": "PREV",
 		  "461": "BACK",
+          "460": "SUBTITLE",
+          "8": "BACKSPACE",
 		  "457": "INFO",
 		  "48": "0",
 		  "49": "1",
@@ -80,7 +84,13 @@
 		  "54": "6",
 		  "55": "7",
 		  "56": "8",
-		  "57": "9"
+		  "57": "9",
+          "403": "RED",
+          "404": "GREEN",
+          "405": "YELLOW",
+          "406": "BLUE",
+          "156": "HELP",
+          "1028": "AUDIODESCRIPTION"
         }
     },
     "accessibility": {
@@ -106,9 +116,18 @@
         "classes": [
           "browserdevice720p"
         ]
-      }
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "module": "%application%/appui/layouts/1080p",
+        "classes": [
+          "browserdevice1080p"
+        ]
+       }
     ],
     "networking": {
-        "supportsJSONP": true
+        "supportsJSONP": true,
+        "supportsCORS": true
     }
 }
