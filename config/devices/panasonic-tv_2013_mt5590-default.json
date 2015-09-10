@@ -3,8 +3,7 @@
     "modules": {
         "base": "antie/devices/browserdevice",
         "modifiers": [
-            "antie/devices/anim/styletopleft",
-            "antie/devices/media/html5",
+            "antie/devices/anim/css3",
             "antie/devices/media/html5waitingfix",
             "antie/devices/mediaplayer/html5memoryleakunfix",
       "antie/devices/mediaplayer/live/playable",
@@ -59,17 +58,15 @@
     },
     "input": {
         "map": {
-            "13": "ENTER",
-            "37": "LEFT",
             "38": "UP",
-            "39": "RIGHT",
             "40": "DOWN",
-            "112": "SUBTITLE",
+            "37": "LEFT",
+            "39": "RIGHT",
+            "13": "ENTER",
             "113": "PLAY",
             "415": "PLAY",
-            "114": "PLAY_PAUSE",
-            "19": "PLAY_PAUSE",
-            "402": "PLAY_PAUSE",
+            "114": "PAUSE",
+            "19": "PAUSE",
             "115": "STOP",
             "413": "STOP",
             "116": "FAST_FWD",
@@ -77,7 +74,11 @@
             "117": "REWIND",
             "412": "REWIND",
             "166": "BACK",
-            "8": "BACK"
+            "112": "SUBTITLE",
+            "403": "RED",
+            "404": "GREEN",
+            "405": "YELLOW",
+            "406": "BLUE"
         }
     },
     "accessibility": {
@@ -89,19 +90,19 @@
     },
     "layouts": [
         {
-            "width": 960,
-            "height": 540,
-            "module": "%application%/appui/layouts/540p",
-            "classes": [
-                "browserdevice540p"
-            ]
-        },
-        {
             "width": 1280,
             "height": 720,
             "module": "%application%/appui/layouts/720p",
             "classes": [
                 "browserdevice720p"
+            ]
+        },
+        {
+            "width": 1920,
+            "height": 1080,
+            "module": "%application%/appui/layouts/1080p",
+            "classes": [
+                "browserdevice1080p"
             ]
         }
     ],
