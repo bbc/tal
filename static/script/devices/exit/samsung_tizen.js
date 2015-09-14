@@ -37,6 +37,7 @@ require.def(
          */
         Device.prototype.exit = function() {
             // From http://www.samsungdforum.com/tizenapiguide/
+			/* global tizen: true */
             tizen.application.getCurrentApplication().exit();
         };
     }
