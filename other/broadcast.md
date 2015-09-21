@@ -49,15 +49,45 @@ this._broadcastSource.destroy()
 
 ## Broadcast Source API
 
-The following API is available on the `_broadcastSource` object.
+The following API is available on the BroadcastSource object.
 
 | Method | Returns | Description |
 | ------ | ------- | ----------- |
 | `showCurrentChannel()` |N/A | Display the currently tuned channel |
-| `stopCurrentChannel()` | N/A | Stops displaying the current tuned channel, displays blank screen |
-| `getCurrentChannelName()` | String (or exception) | Returns the friendly name of the current tuned channel. Throws an exception if the channel name cannot be retrieved - details in the exception text. |
+| `stopCurrentChannel()` | N/A | Stops the currently playing programme and turns the screen black |
+| `getCurrentChannelName()` | String (or exception) | Get the current channel name from broadcast and return as a string. |
+| `getChannelNameList(params)` | N/A | Get the list of currently available channels names. The params object takes `onError` (function) and `onSuccess` (function) properties.|
 | `setPosition(top, left, width, height)` | N/A | Set the on-screen position and size of the broadcast. By default, the broadcast fills the screen. |
-| `getPlayState()` | Number | Returns current broadcast play state for HbbTV devices:<br/>-1: PLAY_STATE_UNKNOWN; always returned on Samsung devices<br/>0: unrealized; no playback requested yet<br/>1: connecting; tuning, buffering, etc<br/>2: playing<br/>3: stopped |
+| `getState()` | BaseTvSource.STATE | Indicates the current state of the broadcast source:<br/>UNKNOWN: tuner state not known<br/>UNAVAILABLE: no tuner available<br/>CONNECTING: tuner attempting to connect<br/>PRESENTING: tuner is presenting a channel<br/>STOPPED: tuner is stopped |
+| `setChannelByName(params)` | N/A | Takes a parameters object with `channelName` (string), `onError` (function) and `onSuccess` (function) properties. Attempts to tune to the specified channel. |
+| `setChannel(params)` | N/A | Takes a parameters object with `onid` (Original Network ID, number), `tsid` (Transport Stream ID, number) and `sid` (Service ID, number), `onError` (function) and `onSuccess` (function) properties. Attempts to tune to the specified channel. |
+| `destroy()` | N/A | Reverts the current screen settings and performs any clean up required before the user exits the application back to standard broadcast. |
+
+In addition events may be emitted for various state changes in the broadcast object. These are sent to every widget
+currently within the application's widget tree, starting at the application's root widget and working down. The event
+can be prevented from being run on further widgets by using the event's `stopPropagation()` call. Having events sent to
+every widget within a complex application may not be performant, so listening for these events on the root widget and
+stopping propagation may be appropriate.
+
+| Event | Type | Description |
+| ----- | ---- | ----------- |
+| `tunerpresenting` | antie.events.TunerPresentingEvent | Indicates broadcast has started playing. Has a property, `channel`, containing information about the current playing channel. |
+| `tunerstopped` | antie.events.TunerStoppedEvent | Indicates broadcast has stopped playing. |
+| `tunerunavailable` | antie.events.TunerUnavailableEvent | Indicates broadcast has been interrupted, for example because the broadcast signal has stopped. (e.g. the antenna has been removed from the device.) |
+
+### Channel tuning ###
+
+Changing a channel within an application requires an appropriate AIT (Application Information Table) set-up, otherwise
+the device should exit the application on channel change. Details of the AIT, whether in the broadcast signal, or as an
+external AITX (AIT XML) file, are beyond the scope of this document.
+
+At a low level, there are three things required to change channel, sometimes known as the DVB triplet. These are the
+ONID (Original Network ID), TSID (Transport Stream ID) and SID (Service ID). Dependent on the broadcast infrastructure
+it is possible for these to vary by region even for a single channel. While it is therefore possible to tune via the
+DVB triplet using the `setChannel` call, it is possible that you will not know the full triplet in advance.
+
+The `setChannelByName` call works at a slightly higher level, taking the name of the channel (as held in the broadcast
+signal and displayed on the EPG) and determining the required tuning information from the device.
 
 ## Broadcast Source Implementations
 
