@@ -29,8 +29,8 @@
             "h264"
           ],
           "transferFormat": [
-            "hls",
-            "plain"
+            "mpd",
+            "hls"
           ],
           "maximumBitRate": 3600,
           "maximumVideoLines": 1080
