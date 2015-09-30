@@ -1,18 +1,17 @@
 {
-  "pageStrategy": "html5",
+  "pageStrategy": "html5hbbtvhybrid",
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/css3",
-      "antie/devices/media/html5",
-      "antie/devices/mediaplayer/html5",
+      "antie/devices/media/cehtml",
+      "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/playable",
+      "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
+      "antie/devices/logging/consumelog",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -62,24 +61,34 @@
       "38": "UP",
       "39": "RIGHT",
       "40": "DOWN",
+      "460": "SUBTITLE",
       "112": "SUBTITLE",
+      "461": "BACK",
+      "166": "BACK",
+      "415": "PLAY",
       "113": "PLAY",
+      "19": "PAUSE",
       "114": "PAUSE",
+      "413": "STOP",
       "115": "STOP",
       "116": "FAST_FWD",
+      "417": "FAST_FWD",
+      "412": "REWIND",
       "117": "REWIND",
-      "166": "BACK",
-      "48":  "0",
-      "49":  "1",
-      "50":  "2",
-      "51":  "3",
-      "52":  "4",
-      "53":  "5",
-      "54":  "6",
-      "55":  "7",
-      "56":  "8",
-      "57":  "9"
-      
+      "48": "0",
+      "49": "1",
+      "50": "2",
+      "51": "3",
+      "52": "4",
+      "53": "5",
+	  "54": "6",
+      "55": "7",
+	  "56": "8",
+	  "57": "9",
+      "403": "RED",
+      "404": "GREEN",
+      "405": "YELLOW",
+      "406": "BLUE"
     }
   },
   "accessibility": {
@@ -90,6 +99,14 @@
     }
   },
   "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
     {
       "width": 1280,
       "height": 720,

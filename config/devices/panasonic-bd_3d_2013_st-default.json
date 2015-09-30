@@ -3,13 +3,16 @@
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
-      "antie/devices/anim/noanim",
+      "antie/devices/anim/css3",
       "antie/devices/media/html5",
       "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/data/nativejson",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
-      "antie/devices/net/default"
+      "antie/devices/net/default",
+	  "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
@@ -49,7 +52,7 @@
   "input": {
     "map": {
       "13": "ENTER",
-      "37": "LEFT",
+      "37": "LEFT",	
       "38": "UP",
       "39": "RIGHT",
       "40": "DOWN",
