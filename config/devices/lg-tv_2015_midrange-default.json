@@ -3,7 +3,7 @@
     "modules": {
         "base": "antie/devices/browserdevice",
         "modifiers": [
-            "antie/devices/anim/css3",
+            "antie/devices/anim/noanim",
             "antie/devices/media/html5",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/playable",
@@ -59,28 +59,37 @@
     },
     "input": {
         "map": {
-		  "13": "ENTER",
-		  "37": "LEFT",
-		  "38": "UP",
-		  "39": "RIGHT",
-		  "40": "DOWN",
-		  "415": "PLAY",
-		  "19": "PLAY_PAUSE",
-		  "413": "STOP",
-		  "417": "FAST_FWD",
-		  "412": "REWIND",
-		  "461": "BACK",
-		  "457": "INFO",
-		  "48": "0",
-		  "49": "1",
-		  "50": "2",
-		  "51": "3",
-		  "52": "4",
-		  "53": "5",
-		  "54": "6",
-		  "55": "7",
-		  "56": "8",
-		  "57": "9"
+            "13": "ENTER",
+            "37": "LEFT",
+            "38": "UP",
+            "39": "RIGHT",
+            "40": "DOWN",
+            "415": "PLAY",
+            "19": "PAUSE",
+            "413": "STOP",
+            "417": "FAST_FWD",
+            "412": "REWIND",
+            "461": "BACK",
+            "457": "INFO",
+            "460": "SUBTITLE",
+            "1028": "AUDIODESCRIPTION",
+            "156": "HELP",
+            "1546": "NEXT",
+            "1545": "PREV",
+            "403": "RED",
+            "404": "GREEN",
+            "405": "YELLOW",
+            "406": "BLUE",
+            "48": "0",
+            "49": "1",
+            "50": "2",
+            "51": "3",
+            "52": "4",
+            "53": "5",
+            "54": "6",
+            "55": "7",
+            "56": "8",
+            "57": "9"
         }
     },
     "accessibility": {
@@ -91,24 +100,33 @@
         }
     },
     "layouts": [
-      {
-        "width": 960,
-        "height": 540,
-        "module": "%application%/appui/layouts/540p",
-        "classes": [
-          "browserdevice540p"
-        ]
-      },
-      {
-        "width": 1280,
-        "height": 720,
-        "module": "%application%/appui/layouts/720p",
-        "classes": [
-          "browserdevice720p"
-        ]
-      }
-    ],
-    "networking": {
-        "supportsJSONP": true
+        {
+            "width": 960,
+            "height": 540,
+            "module": "%application%/appui/layouts/540p",
+            "classes": [
+                "browserdevice540p"
+            ]
+        },
+        {
+            "width": 1280,
+            "height": 720,
+            "module": "%application%/appui/layouts/720p",
+            "classes": [
+                "browserdevice720p"
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "module": "%application%/appui/layouts/1080p",
+      "classes": [
+        "browserdevice1080p"
+      ]
     }
+  ],
+  "networking": {
+    "supportsJSONP": true,
+    "supportsCORS": true
+ }
 }

@@ -9,9 +9,11 @@
       "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
-      "antie/devices/logging/consumelog",
       "antie/devices/storage/cookie",
-      "antie/devices/exit/closewindow",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/exit/netcast",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
@@ -55,19 +57,28 @@
   },
   "input": {
     "map": {
-      "112": "SUBTITLE",
-      "412": "REWIND",
-      "417": "FAST_FWD",
-      "413": "STOP",
-      "415": "PLAY",
-      "461": "BACK",
-      "40": "DOWN",
-      "19": "PAUSE",
       "13": "ENTER",
-      "457": "INFO",
-      "39": "RIGHT",
+      "37": "LEFT",
       "38": "UP",
-      "37": "LEFT"
+      "39": "RIGHT",
+      "40": "DOWN",
+      "415": "PLAY",
+      "19": "PAUSE",
+      "413": "STOP",
+      "417": "FAST_FWD",
+      "412": "REWIND",
+      "461": "BACK",
+      "457": "INFO",
+      "48": "0",
+      "49": "1",
+      "50": "2",
+      "51": "3",
+      "52": "4",
+      "53": "5",
+      "54": "6",
+      "55": "7",
+      "56": "8",
+      "57": "9"
     }
   },
   "accessibility": {
