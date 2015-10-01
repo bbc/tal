@@ -36,7 +36,7 @@ that it can be deployed to all HTML-based TV devices.
   </li>
 </ul>
 
-*iPlayer*, *BBC News*, and *BBC Sport* are three high profile TV applications built on TAL. Click on the images for larger versions:
+*iPlayer*, *Red Button+*, *BBC News*, and *BBC Sport* are four high profile TV applications built on TAL. Click on the images for larger versions:
 
 <ul class="thumbnails">
   <li class="span8 offset2">
@@ -44,6 +44,16 @@ that it can be deployed to all HTML-based TV devices.
       <a href="{{site.baseurl}}/img/getting-started/iPlayer.jpg"><img src="{{site.baseurl}}/img/getting-started/iPlayer_new.jpg" alt=""></a>
       <p class="lead">TAL originated from iPlayer</p>
       <p>TAL was extracted from iPlayer as a standalone library to enable further app development.</p>
+    </div>
+  </li>
+  </ul>
+
+<ul class="thumbnails">
+  <li class="span8 offset2">
+    <div class="thumbnail">
+      <a href="{{site.baseurl}}/img/getting-started/iPlayer.jpg"><img src="{{site.baseurl}}/img/getting-started/RedButtonPlus.jpg" alt=""></a>
+      <p class="lead">BBC Red Button+</p>
+      <p>Red Button+ was build using TAL.</p>
     </div>
   </li>
 </ul>
