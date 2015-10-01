@@ -41,7 +41,7 @@ that it can be deployed to all HTML-based TV devices.
 <ul class="thumbnails">
   <li class="span8 offset2">
     <div class="thumbnail">
-      <a href="{{site.baseurl}}/img/getting-started/iPlayer.jpg"><img src="{{site.baseurl}}/img/getting-started/iPlayer_50.jpg" alt=""></a>
+      <a href="{{site.baseurl}}/img/getting-started/iPlayer.jpg"><img src="{{site.baseurl}}/img/getting-started/iPlayer_new.jpg" alt=""></a>
       <p class="lead">TAL originated from iPlayer</p>
       <p>TAL was extracted from iPlayer as a standalone library to enable further app development.</p>
     </div>
