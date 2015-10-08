@@ -184,8 +184,8 @@
 		queuedApplicationInit(
 				queue,
 				"lib/mockapplication",
-				["antie/widgets/horizontalcarousel", "antie/widgets/list", "antie/widgets/button"],
-				function(application, HorizontalCarousel, List, Button) {
+				["antie/widgets/horizontalcarousel", "antie/widgets/list"],
+				function(application, HorizontalCarousel, List) {
 					var widget = new HorizontalCarousel("id");
 					widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 					var device = application.getDevice();
