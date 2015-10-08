@@ -40,9 +40,11 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                     var prototype, propertyName, property;
                     prototype = Class.prototype;
                     for (propertyName in prototype) {
-                        property = prototype[propertyName];
-                        if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
-                            self.sandbox.stub(prototype, propertyName);
+                        if (prototype.hasOwnProperty(propertyName)) {
+                            property = prototype[propertyName];
+                            if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
+                                self.sandbox.stub(prototype, propertyName);
+                            }
                         }
                     }
                 }
