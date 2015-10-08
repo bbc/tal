@@ -56,9 +56,11 @@
             var prototype, propertyName, property;
             prototype = Class.prototype;
             for (propertyName in prototype) {
-                property = prototype[propertyName];
-                if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
-                    self.sandbox.stub(prototype, propertyName);
+                if (prototype.hasOwnProperty(propertyName)) {
+                    property = prototype[propertyName];
+                    if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
+                        self.sandbox.stub(prototype, propertyName);
+                    }
                 }
             }
         }
@@ -210,7 +212,7 @@
 
     this.CarouselTest.prototype.testGetChildWidgetWithMaskIdCallsCore = function (queue) {
 	var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) { //jshint ignore:line
             var carousel, widget;
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
             carousel = new Carousel();
@@ -222,7 +224,7 @@
 
     this.CarouselTest.prototype.testGetChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
 	var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) { //jshint ignore:line
             var carousel;
             self.sandbox.stub(WidgetStrip.prototype, 'getChildWidget');
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
