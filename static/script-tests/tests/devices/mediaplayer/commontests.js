@@ -188,7 +188,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
         return test;
     };
 
-    var makeDeviceErrorGetsReported = function (setup, deviceEventName) {
+    var makeDeviceErrorGetsReported = function (setup) {
         var test = function (queue) {
             expectAsserts(4);
             doTest(this, queue, function (MediaPlayer) {
@@ -897,7 +897,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     var makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest = function(method, args) {
         return function(queue) {
             expectAsserts(2);
-            doTest(this, queue, function (MediaPlayer) {
+            doTest(this, queue, function (MediaPlayer) { //jshint ignore:line
                 var errorStub = this.sandbox.stub();
                 this.sandbox.stub(this.device, "getLogger").returns({error: errorStub});
                 try {
