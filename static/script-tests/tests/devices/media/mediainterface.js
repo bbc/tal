@@ -33,15 +33,6 @@
         this.sandbox.restore();
     };
 
-    this.MediaInterfaceTest.prototype.testMediaInterfaceInitDoesNotThrowAnExceptionWhenCalled = function (queue) {
-        expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
-            assertNoException(function() {
-                new MediaInterface('id', 'video', function(){});
-            });
-        });
-    };
-
     this.MediaInterfaceTest.prototype.testMediaInterfaceRenderDoesNotThrowAnExceptionWhenCalled = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface"], function(application, MediaInterface) {
