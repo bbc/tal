@@ -53,8 +53,8 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/devices/device","antie/class"],
-            function(application, Device, Class) {
+            ["antie/devices/device"],
+            function(application, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 assertFalse(device.isBroadcastSourceSupported());
             });
@@ -66,8 +66,8 @@
         queuedApplicationInit(
             queue,
             "lib/mockapplication",
-            ["antie/devices/device","antie/class"],
-            function(application, Device, Class) {
+            ["antie/devices/device"],
+            function(application, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 assertException("Broadcast API not available on this device.", function() {
                     device.createBroadcastSource();
@@ -102,7 +102,7 @@
     this.DeviceTest.prototype.testGetConfig = function(queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/device","antie/application"], function(application, Device, Application) {
+        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/device"], function(application, Device) {
             var callbacks = {
                 onSuccess: this.sandbox.stub(),
                 onError: this.sandbox.stub()
@@ -110,7 +110,6 @@
             assertNoException(function() {
                 Device.load(antie.framework.deviceConfiguration, callbacks);
             });
-            var application = Application.getCurrentApplication();
             var device = application.getDevice();
             assertSame(antie.framework.deviceConfiguration, device.getConfig());
         });
