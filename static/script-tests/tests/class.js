@@ -66,12 +66,6 @@
 
 			assertEquals("Example method returns expected value", "method", obj.returnMethodString());
 			assertEquals("Constructor sets expected value", "value", obj._variable);
-
-			var ExtendedTwiceClass = ExtendedClass.extend({
-				overridableFunction: function() {
-					return "subclass";
-				}
-			});
 		});
 	};
 
