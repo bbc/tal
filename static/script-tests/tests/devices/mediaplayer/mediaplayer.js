@@ -33,15 +33,6 @@
         this.sandbox.restore();
     };
 
-    this.MediaPlayerTest.prototype.testMediaPlayerInitDoesNotThrowAnExceptionWhenCalled = function (queue) {
-        expectAsserts(1);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
-            assertNoException(function() {
-                new MediaPlayer();
-            });
-        });
-    };
-
     var createSubClass = function(MediaPlayer) {
         var range = { start: 0, end: 100 };
         var currentTime = 0;
