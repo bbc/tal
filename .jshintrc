@@ -52,7 +52,8 @@
         "describe": true,
         "beforeEach": true,
         "it": true,
-        "expect": true
+        "expect": true,
+        "fail": true
     },
     "browser": true,
     "onevar": false,
