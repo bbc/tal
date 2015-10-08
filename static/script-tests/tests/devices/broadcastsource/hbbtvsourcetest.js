@@ -288,7 +288,7 @@
 
 	var self = this;
         var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/tunerpresentingevent'], function(application, TunerPresentingEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var device = application.getDevice();
             device.createBroadcastSource();
