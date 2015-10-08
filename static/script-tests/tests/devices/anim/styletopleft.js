@@ -23,9 +23,6 @@
  */
 
 (function() {
-    // How many milliseconds to give a 'no animation' transition to complete
-    var noAnimToleranceMs = 20;
-
     // The default animation duration in tween.js is 840, so it's reasonable to think we should only need to tick for
     // 840 to get the onComplete callback to be fired. However the callback passed to shifty that invokes onComplete
     // doesn't run until tick 866.666666666667. This seems to be because the Shifty timeoutHandler waits for the
