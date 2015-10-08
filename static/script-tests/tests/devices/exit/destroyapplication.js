@@ -39,7 +39,7 @@
 	 * requesting the correct MIME type for the HBBTV application manager.
 	 */
 	this.DestroyApplicationTest.prototype.testGetOipfObjectFactory = function(queue) {
-		expectAsserts(1);
+		expectAsserts(2);
 
 		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/destroyapplication"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
 
@@ -47,11 +47,11 @@
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
 			var expectedMimeType = 'application/oipfApplicationManager';
-			
+
 			// Mimic the object provided by HBBTVs
 			window.oipfObjectFactory = {
 					isObjectSupported: function(mimeType) {
-						//assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
+						assertEquals('Requested MIME type is as expected', expectedMimeType, mimeType);
 						return false;
 					}
 			};
