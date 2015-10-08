@@ -53,7 +53,7 @@ that it can be deployed to all HTML-based TV devices.
     <div class="thumbnail">
       <a href="{{site.baseurl}}/img/getting-started/iPlayer.jpg"><img src="{{site.baseurl}}/img/getting-started/RedButtonPlus.jpg" alt=""></a>
       <p class="lead">BBC Red Button+</p>
-      <p>Red Button+ was build using TAL.</p>
+      <p>Red Button+ was built using TAL.</p>
     </div>
   </li>
 </ul>
