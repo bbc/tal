@@ -39,7 +39,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 function stubUnstubbedFunctions(Class) {
                     var prototype, propertyName, property;
                     prototype = Class.prototype;
-                    for (propertyName in prototype) {
+                    for (propertyName in prototype) { //jshint ignore:line
                         property = prototype[propertyName];
                         if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
                             self.sandbox.stub(prototype, propertyName);

@@ -56,7 +56,7 @@ function __qr(){
 			requireModules[name] = arguments;
 			originalRequireDefine.apply(require, arguments);
 		};
-		require.load = function(moduleName, contextName) {
+		require.load = function(moduleName) {
 			var module = requireModules[moduleName];
 			if(module) {
 				require.s.contexts._.specified[moduleName] = true;

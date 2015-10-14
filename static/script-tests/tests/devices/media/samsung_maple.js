@@ -464,11 +464,11 @@
     this.SamsungMapleTest.prototype.testThatStopIsCalledOnThePlayerPluginWhenAHideEventIsFired = function (queue) {
       expectAsserts(1);
       var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/samsung_maple", "antie/events/mediaevent"],
-            function(application, SamsungPlayer,  MediaErrorEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [],
+            function(application) {
 
               var callbackStub = self.sandbox.stub();
-              var mediaInterface = application.getDevice().createMediaInterface("id", "video", callbackStub);
+              application.getDevice().createMediaInterface("id", "video", callbackStub);
 
               var event = new CustomEvent('hide');
               window.dispatchEvent(event);

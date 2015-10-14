@@ -42,14 +42,6 @@
 		});
 	};
 
-	this.FormatterTest.prototype.testConstructorAcceptsEmptyArguments = function(queue) {
-		expectAsserts(1);
-
-		queuedRequire(queue, ["antie/formatter"], function(Formatter) {
-			assertNoException(function() { new Formatter(); });
-		});
-	};
-
 	this.FormatterTest.prototype.testNonOverriddenFormatThrowsException = function(queue) {
 		expectAsserts(1);
 

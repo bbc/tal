@@ -174,8 +174,8 @@
     this.HTML5Test.prototype.testRenderCausesPlayEventListenerCallbackWithAPlayMediaEvent = function (queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent", "antie/devices/media/mediainterface"],
-            function(application, HTML5Player, MediaEvent, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent"],
+            function(application, HTML5Player, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
