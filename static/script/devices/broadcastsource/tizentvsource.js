@@ -1,4 +1,4 @@
-/* global webapis */
+/* global tizen */
 
 /**
  * @fileOverview Requirejs module containing the antie.devices.broadcastsource.tizentvsource class.
