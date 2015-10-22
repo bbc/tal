@@ -3,7 +3,7 @@ layout: default
 title: Example layout and basic style
 ---
 [layout and styling]: {{site.baseurl}}/overview/layouts.html
-[index.php]: exampleindex.html
+[index.php]: createanindex.html
 [A first component]: firstcomponent.html
 
 # Example layout and basic style
