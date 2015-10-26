@@ -55,8 +55,9 @@
         var projectText = document.createTextNode(project);
         issueRow.insertCell().appendChild(projectText);
 
-        var issueLink  = document.createElement('a').appendChild(document.createTextNode('#' + issue.number));
+        var issueLink = document.createElement('a');
         issueLink.href = issue.html_url;
+        issueLink.appendChild(document.createTextNode('#' + issue.number));
         issueRow.insertCell().appendChild(issueLink);
 
         var descriptionText  = document.createTextNode(issue.title);
