@@ -19,31 +19,25 @@
         talExampleRepo = new Gh3.Repository('talexample', fmtvpOrg);
 
     function talIssuesCallback() {
-        var talIssues = talRepo.issues,
-            issue;
-
-        for (var i = talIssues.length; i--;) {
-            issue = talIssues[i];
-            if (!issue.pull_request && issueLabelledAsBug(issue)) {
-                insertIssue('TAL', talIssues[i]);
-            }
-        }
+        insertIssues('TAL', talRepo.issues);
     }
 
     function talExampleIssuesCallback() {
-        var talExampleIssues = talExampleRepo.issues,
-            issue;
-
-        for (var i = talExampleIssues.length; i--;) {
-            issue = talExampleIssues[i];
-            if (!issue.pull_request && issueLabelledAsBug(issue)) {
-                insertIssue('TAL Example', talExampleIssues[i]);
-            }
-        }
+        insertIssues('TAL Example', talExampleRepo.issues);
     }
 
     talRepo.fetchIssues(talIssuesCallback);
     talExampleRepo.fetchIssues(talExampleIssuesCallback);
+
+    function insertIssues(project, issues) {
+        var issue;
+        for (var i = issues.length; i--;) {
+            issue = issues[i];
+            if (!issue.pull_request && issueLabelledAsBug(issue)) {
+                insertIssue(project, issues[i]);
+            }
+        }
+    }
 
     function issueLabelledAsBug (issue) {
         var labels = issue.labels;
