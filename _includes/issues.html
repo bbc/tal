@@ -52,21 +52,15 @@
     function insertIssue(project, issue) {
         var issueRow = issuesTable.insertRow();
 
-        var issueProject = issueRow.insertCell();
-        var issueNumber = issueRow.insertCell();
-        var issueDescription = issueRow.insertCell();
-
         var projectText = document.createTextNode(project);
+        issueRow.insertCell().appendChild(projectText);
 
-        var issueLink  = document.createElement('a');
-        issueLink.appendChild(document.createTextNode('#' + issue.number));
+        var issueLink  = document.createElement('a').appendChild(document.createTextNode('#' + issue.number));
         issueLink.href = issue.html_url;
+        issueRow.insertCell().appendChild(issueLink);
 
         var descriptionText  = document.createTextNode(issue.title);
-
-        issueProject.appendChild(projectText);
-        issueNumber.appendChild(issueLink);
-        issueDescription.appendChild(descriptionText);
+        issueRow.insertCell().appendChild(descriptionText);
     }
 </script>
 
