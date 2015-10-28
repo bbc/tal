@@ -1,0 +1,67 @@
+<table id="issues">
+    <thead>
+    <tr>
+        <th>Project</th>
+        <th>Issue</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+</table>
+
+<script src="{{site.baseurl}}/js/jquery.min.js"></script>
+<script src="{{site.baseurl}}/js/underscore-min.js"></script>
+<script src="{{site.baseurl}}/js/gh3.min.js"></script>
+
+<script>
+    var issuesTable = document.getElementById("issues"),
+        fmtvpOrg = new Gh3.User('fmtvp'),
+        talRepo = new Gh3.Repository('tal', fmtvpOrg),
+        talExampleRepo = new Gh3.Repository('talexample', fmtvpOrg);
+
+    function talIssuesCallback() {
+        insertIssues('TAL', talRepo.issues);
+    }
+
+    function talExampleIssuesCallback() {
+        insertIssues('TAL Example', talExampleRepo.issues);
+    }
+
+    talRepo.fetchIssues(talIssuesCallback);
+    talExampleRepo.fetchIssues(talExampleIssuesCallback);
+
+    function insertIssues(project, issues) {
+        var issue;
+        for (var i = issues.length; i--;) {
+            issue = issues[i];
+            if (!issue.pull_request && issueLabelledAsBug(issue)) {
+                insertIssue(project, issues[i]);
+            }
+        }
+    }
+
+    function issueLabelledAsBug (issue) {
+        var labels = issue.labels;
+        for (var i = labels.length; i--;) {
+            if (labels[i].name === 'bug') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function insertIssue(project, issue) {
+        var issueRow = issuesTable.insertRow();
+
+        var projectText = document.createTextNode(project);
+        issueRow.insertCell().appendChild(projectText);
+
+        var issueLink = document.createElement('a');
+        issueLink.href = issue.html_url;
+        issueLink.appendChild(document.createTextNode('#' + issue.number));
+        issueRow.insertCell().appendChild(issueLink);
+
+        var descriptionText  = document.createTextNode(issue.title);
+        issueRow.insertCell().appendChild(descriptionText);
+    }
+</script>
+
