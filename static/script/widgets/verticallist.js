@@ -61,16 +61,16 @@ require.def('antie/widgets/verticallist',
 			 * @param {antie.events.KeyEvent} evt The key event.
 			 */
 			_onKeyDown: function(evt) {
-				if(evt.keyCode != KeyEvent.VK_UP && evt.keyCode != KeyEvent.VK_DOWN) {
+				if(evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN) {
 					return;
 				}
 
 				var _newSelectedIndex = this._selectedIndex;
 				var _newSelectedWidget = null;
 				do {
-					if(evt.keyCode == KeyEvent.VK_UP) {
+					if(evt.keyCode === KeyEvent.VK_UP) {
 						_newSelectedIndex--;
-					} else if(evt.keyCode == KeyEvent.VK_DOWN) {
+					} else if(evt.keyCode === KeyEvent.VK_DOWN) {
 						_newSelectedIndex++;
 					}
 					if(_newSelectedIndex < 0 || _newSelectedIndex >= this._childWidgetOrder.length) {
