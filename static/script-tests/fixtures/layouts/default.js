@@ -1,5 +1,5 @@
 /**
- * @fileOverview Test layout - default size for SD TV.Œ
+ * @fileOverview Test layout - default size for SD TV.
  *
  * @preserve Copyright (c) 2013 British Broadcasting Corporation
  * (http://www.bbc.co.uk) and TAL Contributors (1)
