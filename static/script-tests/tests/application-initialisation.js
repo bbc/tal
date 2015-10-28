@@ -94,7 +94,7 @@
 
 			this.application = new MockApplication(document.createElement('div'));
 			assertException(function() {
-				new MockApplication(document.createElement('div'));
+				new MockApplication(document.createElement('div')); // jshint ignore:line
 			});
 		});
 	};
@@ -125,8 +125,7 @@
 
             var runStub = this.sandbox.stub(MockApplication.prototype, "run");
 
-            var app = new MockApplication(document.createElement('div'), null, null, null);
-
+            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];
