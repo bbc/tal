@@ -84,6 +84,24 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json'],
+            updateConfigs: [],
+            commit: true,
+            commitMessage: 'Release v%VERSION%',
+            commitFiles: ['package.json', 'bower.json'],
+            createTag: true,
+            tagName: 'v%VERSION%',
+            tagMessage: 'Version %VERSION%',
+            push: true,
+            pushTo: 'origin',
+            gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+            globalReplace: false,
+            prereleaseName: false,
+            regExp: false
+          }
+        },
         shell: {
             coverage: {
                 command: 'cd static/script-tests/jasmine; pwd; ./coverage.sh -p;'
@@ -113,6 +131,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks("grunt-shell");
+    grunt.loadNpmTasks('grunt-bump');
+
 
     grunt.registerTask("hint", ["jshint"]);
     grunt.registerTask("test", ["jasmine"]);
@@ -122,7 +142,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', 'full');
     grunt.registerTask("coverage", "Produce a coverage report of the main source files", ["jasmine:src:build", "shell:coverage"]);
     grunt.registerTask("spec", ["jasmine:src:build", "openspec"]);
-    
+
     grunt.registerTask("openspec", "Open the generated Jasmine spec file", function() {
         var childProcess = require('child_process');
         var outfile = grunt.config("jasmine.options.outfile");
