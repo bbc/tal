@@ -1,6 +1,6 @@
 {
-  "name": "bbc-fmtvp-tal",
   "version": "3.0.4",
+  "name": "tal",
   "repository": {
     "type": "git",
     "url": "https://github.com/fmtvp/tal.git"
