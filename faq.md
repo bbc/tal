@@ -109,4 +109,4 @@ achieve the common goal of media playback.
 name for the project, before it became TAL.
 
 ### **Question:** I have a query, who can I send it to?  
-**Answer:** Please see the [contributing](other/contributing.html) page to see how to get in touch. Alternatively you can ask questions on the [TAL Google Group](https://groups.google.com/forum/#!forum/talopensource).
+**Answer:** Please see the [contributing](other/contributing.html) page to see how to get in touch.
