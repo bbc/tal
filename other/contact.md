@@ -18,9 +18,6 @@ If you want to contact us about anything else please email our
 Follow us on twitter (@TALOpenSource) for TAL announcements, or look on our
 [Twitter home page](https://twitter.com/TALOpenSource).
 
-Join our Google Group for group discussions 
-[TAL Google Group](https://groups.google.com/forum/#!forum/talopensource).
-
 
 
 
