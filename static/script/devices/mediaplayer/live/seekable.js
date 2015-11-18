@@ -45,11 +45,11 @@ require.def(
          * @extends antie.Class
          */
         var SeekableLivePlayer = Class.extend({
-            init: function() {
+            init: function () {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             },
 
-            setSource: function(mediaType, sourceUrl, mimeType) {
+            setSource: function (mediaType, sourceUrl, mimeType) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
@@ -59,7 +59,7 @@ require.def(
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
-            beginPlayback: function() {
+            beginPlayback: function () {
                 var config = RuntimeContext.getDevice().getConfig();
                 if (config && config.streaming && config.streaming.overrides && config.streaming.overrides.forceBeginPlaybackToEndOfWindow) {
                     this._mediaPlayer.beginPlaybackFrom(Infinity);
@@ -68,63 +68,82 @@ require.def(
                 }
             },
 
-            beginPlaybackFrom: function(offset) {
+            beginPlaybackFrom: function (offset) {
                 this._mediaPlayer.beginPlaybackFrom(offset);
             },
 
-            playFrom: function(offset) {
+            playFrom: function (offset) {
                 this._mediaPlayer.playFrom(offset);
             },
 
-            pause: function() {
+            pause: function () {
                 this._mediaPlayer.pause();
+                this._autoPlayAtStartOfRange();
             },
 
-            resume: function() {
+            _autoPlayAtStartOfRange: function () {
+                var timeUntilStartOfWindow = this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start,
+                    self = this;
+
+                var autoPlayTimer = setTimeout(function () {
+                    self.removeEventCallback(this, detectIfUnpaused);
+                    self.resume();
+                }, timeUntilStartOfWindow * 1000);
+
+                this.addEventCallback(this, detectIfUnpaused);
+                function detectIfUnpaused(event) {
+                    if (event.state !== MediaPlayer.STATE.PAUSE) {
+                        self.removeEventCallback(this, detectIfUnpaused);
+                        clearTimeout(autoPlayTimer);
+                    }
+                }
+            },
+
+            resume: function () {
                 this._mediaPlayer.resume();
             },
 
-            stop: function() {
+            stop: function () {
                 this._mediaPlayer.stop();
             },
 
-            reset: function() {
+            reset: function () {
                 this._mediaPlayer.reset();
             },
 
-            getState: function() {
+            getState: function () {
                 return this._mediaPlayer.getState();
             },
 
-            getSource: function() {
+            getSource: function () {
                 return this._mediaPlayer.getSource();
             },
 
-            getCurrentTime: function() {
+            getCurrentTime: function () {
                 return this._mediaPlayer.getCurrentTime();
             },
 
-            getSeekableRange: function() {
+            getSeekableRange: function () {
                 return this._mediaPlayer.getSeekableRange();
             },
 
-            getMimeType: function() {
+            getMimeType: function () {
                 return this._mediaPlayer.getMimeType();
             },
 
-            addEventCallback: function(thisArg, callback) {
+            addEventCallback: function (thisArg, callback) {
                 this._mediaPlayer.addEventCallback(thisArg, callback);
             },
 
-            removeEventCallback: function(thisArg, callback) {
+            removeEventCallback: function (thisArg, callback) {
                 this._mediaPlayer.removeEventCallback(thisArg, callback);
             },
 
-            removeAllEventCallbacks: function() {
+            removeAllEventCallbacks: function () {
                 this._mediaPlayer.removeAllEventCallbacks();
             },
 
-            getPlayerElement: function() {
+            getPlayerElement: function () {
                 return this._mediaPlayer.getPlayerElement();
             }
         });
@@ -132,7 +151,7 @@ require.def(
         var instance;
 
         Device.prototype.getLivePlayer = function () {
-            if(!instance) {
+            if (!instance) {
                 instance = new SeekableLivePlayer();
             }
             return instance;
