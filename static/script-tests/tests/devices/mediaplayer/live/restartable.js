@@ -89,8 +89,12 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerGetPlayerElementCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getPlayerElement', 0);
 
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerPauseCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('pause', 0);
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerResumeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('resume', 0);
+
     this.LivePlayerSupportLevelRestartableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInRestartableLive = function (queue) {
-        expectAsserts(5);
+        expectAsserts(3);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
 
@@ -98,8 +102,6 @@
             var livePlayer = device.getLivePlayer();
 
             assertUndefined(livePlayer.playFrom);
-            assertUndefined(livePlayer.pause);
-            assertUndefined(livePlayer.resume);
             assertUndefined(livePlayer.getCurrentTime);
             assertUndefined(livePlayer.getSeekableRange);
         });

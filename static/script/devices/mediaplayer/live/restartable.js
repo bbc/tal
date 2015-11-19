@@ -78,6 +78,14 @@ require.def(
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
+            pause: function () {
+                this._mediaPlayer.pause();
+            },
+
+            resume: function () {
+                this._mediaPlayer.resume();
+            },
+
             stop: function() {
                 this._mediaPlayer.stop();
             },
