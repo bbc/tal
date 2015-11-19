@@ -94,14 +94,6 @@
             queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 var livePlayer = device.getLivePlayer();
-                if (action === 'pause') {
-                    var expectedRange = {
-                        "start": 0,
-                        "end": 30
-                    };
-                    this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
-                    this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
-                }
                 var mediaPlayerFuncStub = this.sandbox.stub();
                 device.getMediaPlayer()[action] = mediaPlayerFuncStub;
                 livePlayer[action]();
@@ -148,11 +140,10 @@
             this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
             this.sandbox.stub(livePlayer._mediaPlayer, 'resume');
             var mediaPlayerFuncStub = this.sandbox.stub();
-            device.getMediaPlayer()['pause'] = mediaPlayerFuncStub;
-            //using fake timers to ensure auto play timer fires
+            device.getMediaPlayer().pause = mediaPlayerFuncStub;
+            //using fake timers to ensure auto play timer does not fire
             var clock = sinon.useFakeTimers();
-            livePlayer['pause']();
-            clock.tick(30*1000);
+            livePlayer.pause();
             assert(mediaPlayerFuncStub.calledOnce);
             assertEquals(0, mediaPlayerFuncStub.getCall(0).args.length);
             clock.restore();
@@ -309,7 +300,7 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testResumeIsCalledWhenPausedAndStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoPlayWhenPausedAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
