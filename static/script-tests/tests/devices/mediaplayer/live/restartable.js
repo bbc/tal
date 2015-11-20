@@ -233,12 +233,9 @@
             livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
             livePlayer._mediaPlayer.pause = this.sandbox.stub();
             livePlayer._mediaPlayer.resume = this.sandbox.stub();
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
 
             var clock = sinon.useFakeTimers();
             livePlayer.beginPlaybackFrom(30);
-            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
             livePlayer.pause();
             clock.tick(30 * 1000);
 
@@ -283,12 +280,9 @@
             livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
             livePlayer._mediaPlayer.pause = this.sandbox.stub();
             livePlayer._mediaPlayer.resume = this.sandbox.stub();
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
 
             var clock = sinon.useFakeTimers();
-            livePlayer.beginPlayback();
-            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+            livePlayer.beginPlaybackFrom(30);
             livePlayer.pause();
             clock.tick(15 * 1000);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
@@ -311,13 +305,9 @@
             livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
             livePlayer._mediaPlayer.pause = this.sandbox.stub();
             livePlayer._mediaPlayer.resume = this.sandbox.stub();
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
 
             var clock = sinon.useFakeTimers();
             livePlayer.beginPlaybackFrom(30);
-            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
-
             livePlayer.pause();
 
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
