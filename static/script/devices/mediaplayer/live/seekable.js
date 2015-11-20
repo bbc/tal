@@ -81,24 +81,6 @@ require.def(
                 this._autoPlayAtStartOfRange();
             },
 
-            _autoPlayAtStartOfRange: function () {
-                var timeUntilStartOfWindow = this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start,
-                    self = this;
-
-                var autoPlayTimer = setTimeout(function () {
-                    self.removeEventCallback(this, detectIfUnpaused);
-                    self.resume();
-                }, timeUntilStartOfWindow * 1000);
-
-                this.addEventCallback(this, detectIfUnpaused);
-                function detectIfUnpaused(event) {
-                    if (event.state !== MediaPlayer.STATE.PAUSE) {
-                        self.removeEventCallback(this, detectIfUnpaused);
-                        clearTimeout(autoPlayTimer);
-                    }
-                }
-            },
-
             resume: function () {
                 this._mediaPlayer.resume();
             },
@@ -145,6 +127,24 @@ require.def(
 
             getPlayerElement: function () {
                 return this._mediaPlayer.getPlayerElement();
+            },
+
+            _autoPlayAtStartOfRange: function () {
+                var timeUntilStartOfWindow = this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start,
+                    self = this;
+
+                var autoPlayTimer = setTimeout(function () {
+                    self.removeEventCallback(self, detectIfUnpaused);
+                    self.resume();
+                }, timeUntilStartOfWindow * 1000);
+
+                this.addEventCallback(this, detectIfUnpaused);
+                function detectIfUnpaused(event) {
+                    if (event.state !== MediaPlayer.STATE.PAUSE) {
+                        self.removeEventCallback(self, detectIfUnpaused);
+                        clearTimeout(autoPlayTimer);
+                    }
+                }
             }
         });
 
