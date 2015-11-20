@@ -318,4 +318,31 @@
             clock.restore();
         }, config);
     };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoPlaysImmediatelyIfPausedAfterAlreadyAutoPlaying = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+            clock.tick(30 * 1000);
+
+            livePlayer._mediaPlayer.resume.reset();
+
+            livePlayer.pause();
+            clock.tick(1);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
 })();

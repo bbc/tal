@@ -147,6 +147,7 @@ require.def(
                     var start = new Date().getTime();
                     var autoPlayTimer = setTimeout(function () {
                         self.removeEventCallback(self, detectIfUnpaused);
+                        self._timeUntilStartOfWindow = 0;
                         self.resume();
                     }, self._timeUntilStartOfWindow);
 
