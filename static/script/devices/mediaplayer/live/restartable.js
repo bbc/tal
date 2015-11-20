@@ -43,8 +43,9 @@ require.def(
          * - setSource, stop, reset, getState, getSource, getMimeType, addEventCallback, removeEventCallback,
          *   removeAllEventCallbacks
          * - beginPlaybackFrom (start playing from an offset)
+         * - pause, resume
          * Does NOT implement the following functions:
-         * - playFrom, pause, resume, getCurrentTime, getSeekableRange
+         * - playFrom, getCurrentTime, getSeekableRange
          * See the documentation on {antie.devices.mediaplayer.MediaPlayer} for API details.
          * @name antie.devices.mediaplayer.live.Restartable
          * @class
@@ -53,6 +54,7 @@ require.def(
         var RestartableLivePlayer = Class.extend({
             init: function() {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
+                this._timeUntilStartOfWindow = null;
             },
 
             beginPlayback: function() {
@@ -62,9 +64,12 @@ require.def(
                 } else {
                     this._mediaPlayer.beginPlayback();
                 }
+
+                this._determineTimeUntilStartOfWindow();
             },
 
             beginPlaybackFrom: function(offset) {
+                this._timeUntilStartOfWindow = offset * 1000;
                 this._mediaPlayer.beginPlaybackFrom(offset);
             },
 
@@ -80,6 +85,7 @@ require.def(
 
             pause: function () {
                 this._mediaPlayer.pause();
+                this._autoPlayAtStartOfRange();
             },
 
             resume: function () {
@@ -120,6 +126,40 @@ require.def(
 
             getPlayerElement: function() {
                 return this._mediaPlayer.getPlayerElement();
+            },
+
+            _determineTimeUntilStartOfWindow: function () {
+                var self = this;
+                this.addEventCallback(this, detectCurrentTime);
+                function detectCurrentTime(event) {
+                    if ( event.state === MediaPlayer.STATE.PLAYING && event.currentTime ) {
+                        self.removeEventCallback(self, detectCurrentTime);
+                        self._timeUntilStartOfWindow = event.currentTime * 1000;
+                    }
+                }
+            },
+
+            _autoPlayAtStartOfRange: function () {
+
+                if ( this._timeUntilStartOfWindow !== null ) {
+                    var self = this;
+
+                    var start = new Date().getTime();
+                    var autoPlayTimer = setTimeout(function () {
+                        self.removeEventCallback(self, detectIfUnpaused);
+                        self.resume();
+                    }, self._timeUntilStartOfWindow);
+
+                    this.addEventCallback(this, detectIfUnpaused);
+                }
+
+                function detectIfUnpaused(event) {
+                    if (event.state !== MediaPlayer.STATE.PAUSE) {
+                        self.removeEventCallback(self, detectIfUnpaused);
+                        clearTimeout(autoPlayTimer);
+                        self._timeUntilStartOfWindow -= (new Date().getTime() - start);
+                    }
+                }
             }
         });
 
