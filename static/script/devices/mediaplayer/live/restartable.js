@@ -69,8 +69,8 @@ require.def(
             },
 
             beginPlaybackFrom: function(offset) {
-                this._timeUntilStartOfWindow = offset * 1000;
                 this._mediaPlayer.beginPlaybackFrom(offset);
+                this._determineTimeUntilStartOfWindow();
             },
 
             setSource: function(mediaType, sourceUrl, mimeType) {
