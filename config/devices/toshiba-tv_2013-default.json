@@ -3,16 +3,18 @@
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
-      "antie/devices/anim/styletopleft",
+      "antie/devices/anim/css3",
       "antie/devices/media/html5",
       "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/playable",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/exit/closewindow"
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {

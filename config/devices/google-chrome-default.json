@@ -1,0 +1,144 @@
+{
+    "pageStrategy": "html5",
+    "modules": {
+        "base": "antie/devices/browserdevice",
+        "modifiers": [
+            "antie/devices/anim/styletopleft",
+            "antie/devices/media/html5",
+            "antie/devices/mediaplayer/html5",
+            "antie/devices/mediaplayer/live/none",
+            "antie/devices/net/default",
+            "antie/devices/data/json2",
+            "antie/devices/logging/default",
+            "antie/devices/logging/alert",
+            "antie/devices/logging/xhr",
+            "antie/devices/logging/jstestdriver",
+            "antie/devices/storage/cookie",
+            "antie/devices/exit/history",
+            "antie/devices/parentalguidance/appdefaultpghandler"
+        ]
+    },
+    "logging": {
+        "level": "none"
+    },
+    "streaming": {
+        "video": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "h264"
+                    ],
+                    "transferFormat": [
+                        "plain"
+                    ],
+                    "maximumBitRate": 3600,
+                    "maximumVideoLines": 1080
+                }
+            ]
+        },
+        "audio": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "aac"
+                    ]
+                }
+            ]
+        }
+    },
+    "input": {
+        "map": {
+            "13": "ENTER",
+            "37": "LEFT",
+            "38": "UP",
+            "39": "RIGHT",
+            "40": "DOWN",
+            "48": "0",
+            "49": "1",
+            "50": "2",
+            "51": "3",
+            "52": "4",
+            "53": "5",
+            "54": "6",
+            "55": "7",
+            "56": "8",
+            "57": "9",
+            "8": "BACK",
+            "190": "NEXT",
+            "188": "PREV",
+            "70": "FAST_FWD",
+            "82": "REWIND",
+            "32": "PAUSE",
+            "85": "RED",
+            "73": "GREEN",
+            "79": "YELLOW",
+            "80": "BLUE",
+
+            "415": "PLAY",
+            "19": "PLAY_PAUSE",
+            "402": "PLAY_PAUSE",
+            "413": "STOP",
+            "417": "FAST_FWD",
+            "412": "REWIND",
+            "166": "BACK",
+
+            "112": "INFO",
+            "113": "PLAY",
+            "114": "PAUSE",
+            "115": "STOP",
+            "116": "PREV",
+            "117": "NEXT",
+            "118": "REWIND",
+            "119": "PLAY_PAUSE",
+            "120": "FAST_FWD",
+            "121": "SUBTITLE"
+        }
+    },
+
+    "_comment": "F1 - Info; F2 PLAY; F3 PAUSE; F4 STOP; F5 skipPrev; F6 skipNext; F7 RW; F8 Play/Pause; F9 FF; F10 Subtitles",
+
+    "accessibility": {
+        "captions": {
+            "supported": [
+                "application/ttaf+xml"
+            ]
+        }
+    },
+    "layouts": [
+        {
+            "width": 960,
+            "height": 540,
+            "module": "%application%/appui/layouts/540p",
+            "classes": [
+                "browserdevice540p"
+            ]
+        },
+        {
+            "width": 1280,
+            "height": 720,
+            "module": "%application%/appui/layouts/720p",
+            "classes": [
+                "browserdevice720p"
+            ]
+        },
+        {
+            "width": 1920,
+            "height": 1080,
+            "module": "%application%/appui/layouts/1080p",
+            "classes": [
+                "browserdevice1080p"
+            ]
+        }
+    ],
+    "networking": {
+        "supportsJSONP": true
+    }
+}

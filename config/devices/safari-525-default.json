@@ -6,6 +6,7 @@
       "antie/devices/anim/styletopleft",
       "antie/devices/media/html5",
       "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/playable",
       "antie/devices/net/default",
       "antie/devices/data/json2",
       "antie/devices/logging/default",
@@ -13,7 +14,8 @@
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
-      "antie/devices/exit/history"
+      "antie/devices/exit/history",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
@@ -61,7 +63,13 @@
       "39": "RIGHT",
       "40": "DOWN",
       "83": "SUBTITLE",
-      "73": "INFO"
+      "73": "INFO",
+      "70": "FAST_FWD",
+      "82": "REWIND",
+      "32": "PAUSE",
+      "80": "PLAY",
+      "190": "NEXT",
+      "188": "PREV"
     }
   },
   "accessibility": {

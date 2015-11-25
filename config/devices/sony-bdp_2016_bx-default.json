@@ -1,0 +1,110 @@
+{
+  "pageStrategy": "html5",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/noanim",
+      "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/restartable",
+      "antie/devices/net/default",
+      "antie/devices/data/nativejson",
+      "antie/devices/storage/cookie",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "38": "UP",
+      "40": "DOWN",
+      "37": "LEFT",
+      "39": "RIGHT",
+      "13": "ENTER",
+      "415": "PLAY",
+      "19": "PAUSE",
+      "413": "STOP",
+      "465": "FAST_FWD",
+      "417": "FAST_FWD",
+      "412": "REWIND",
+      "8": "BACK",
+      "469": "INFO",
+      "403": "RED",
+      "404": "GREEN",
+      "502": "YELLOW",
+      "406": "BLUE",
+      "467": "SUBTITLE",
+      "425": "NEXT",
+      "463": "PREV"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    },
+          {
+      "width": 1920,
+      "height": 1080,
+      "module": "%application%/appui/layouts/1080p",
+      "classes": [
+        "browserdevice1080p"
+      ]
+    }
+   ],
+  "networking": {
+    "supportsJSONP": true,
+    "supportsCORS": true
+  }
+}
