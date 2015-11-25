@@ -140,7 +140,7 @@ require.def(
 
                 this.addEventCallback(this, detectIfUnpaused);
                 function detectIfUnpaused(event) {
-                    if (event.state !== MediaPlayer.STATE.PAUSE) {
+                    if (event.state !== MediaPlayer.STATE.PAUSED) {
                         self.removeEventCallback(self, detectIfUnpaused);
                         clearTimeout(autoPlayTimer);
                     }

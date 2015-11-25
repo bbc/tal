@@ -341,6 +341,8 @@
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
             this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
+            livePlayer._mediaPlayer.getState = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
 
             livePlayer._mediaPlayer.resume = this.sandbox.stub();
 
@@ -351,6 +353,38 @@
             clock.tick(30 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAfterPausedAnEventWithPausedStateDoesNotCancelAutoPlay = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
+
+            var expectedRange = {
+                "start": 0,
+                "end": 30
+            };
+
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
+            livePlayer._mediaPlayer.getState = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.pause();
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PAUSED);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
 
             clock.restore();
         }, config);
