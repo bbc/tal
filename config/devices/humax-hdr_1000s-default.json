@@ -1,99 +1,122 @@
 {
-  "pageStrategy": "html5",
-  "modules": {
-    "base": "antie/devices/browserdevice",
-    "modifiers": [
-      "antie/devices/anim/noanim",
-      "antie/devices/media/html5",
-      "antie/devices/mediaplayer/html5",
-      "antie/devices/net/default",
-      "antie/devices/data/nativejson",
-      "antie/devices/logging/default",
-      "antie/devices/storage/cookie",
-      "antie/devices/exit/history"
-    ]
-  },
-  "logging": {
-    "level": "none"
-  },
-  "streaming": {
-    "video": {
-      "mediaURIFormat": "%href%",
-      "supported": [
-        {
-          "protocols": [
-            "http"
-          ],
-          "encodings": [
-            "h264"
-          ],
-          "transferFormat": [
-            "hls",
-            "plain"
-          ],
-          "maximumBitRate": 3600,
-          "maximumVideoLines": 1080
-        }
-      ]
+    "pageStrategy": "html5hbbtvhybrid",
+    "modules": {
+        "base": "antie/devices/browserdevice",
+        "modifiers": [
+            "antie/devices/anim/css3",
+            "antie/devices/media/html5",
+            "antie/devices/media/html5memoryleakfix",
+            "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/playable",
+            "antie/devices/broadcastsource/hbbtvsource",
+            "antie/devices/net/default",
+            "antie/devices/data/nativejson",
+            "antie/devices/logging/default",
+            "antie/devices/logging/onscreen",
+            "antie/devices/logging/xhr",
+            "antie/devices/logging/jstestdriver",
+            "antie/devices/storage/cookie",
+            "antie/devices/exit/closewindow",
+            "antie/devices/parentalguidance/appdefaultpghandler"
+        ]
     },
-    "audio": {
-      "mediaURIFormat": "%href%",
-      "supported": [
-        {
-          "encodings": [
-            "aac"
-          ],
-          "protocols": [
-            "http"
-          ],
-          "maximumBitRate": 192
-        }
-      ]
-    }
-  },
-  "input": {
-    "map": {
-      "473": "FAST_FWD",
-      "412": "REWIND",
-      "413": "STOP",
-      "415": "PLAY",
-      "461": "BACK",
-      "460": "SUBTITLE",
-      "40": "DOWN",
-      "19": "PAUSE",
-      "13": "ENTER",
-      "457": "INFO",
-      "39": "RIGHT",
-      "38": "UP",
-      "37": "LEFT"
-    }
-  },
-  "accessibility": {
-    "captions": {
-      "supported": [
-        "application/ttaf+xml"
-      ]
-    }
-  },
-  "layouts": [
-    {
-      "width": 960,
-      "height": 540,
-      "classes": [
-        "browserdevice540p"
-      ],
-      "module": "%application%/appui/layouts/540p"
+    "logging": {
+        "level": "none"
     },
-    {
-      "width": 1280,
-      "height": 720,
-      "classes": [
-        "browserdevice720p"
-      ],
-      "module": "%application%/appui/layouts/720p"
+    "streaming": {
+        "video": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "h264"
+                    ],
+                    "transferFormat": [
+                        "hls",
+                        "plain"
+                    ],
+                    "maximumBitRate": 3600,
+                    "maximumVideoLines": 1080
+                }
+            ]
+        },
+        "audio": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "encodings": [
+                        "aac"
+                    ],
+                    "protocols": [
+                        "http"
+                    ],
+                    "maximumBitRate": 192
+                }
+            ]
+        }
+    },
+    "input": {
+        "map": {
+            "417": "FAST_FWD",
+            "412": "REWIND",
+            "413": "STOP",
+            "415": "PLAY",
+            "461": "BACK",
+            "460": "SUBTITLE",
+            "40": "DOWN",
+            "19": "PAUSE",
+            "13": "ENTER",
+            "457": "INFO",
+            "39": "RIGHT",
+            "38": "UP",
+            "37": "LEFT",
+            "425": "NEXT",
+            "424": "PREV",
+            "48": "0",
+            "49": "1",
+            "50": "2",
+            "51": "3",
+            "52": "4",
+            "53": "5",
+            "54": "6",
+            "55": "7",
+            "56": "8",
+            "57": "9",
+            "403": "RED",
+            "404": "GREEN",
+            "405": "YELLOW",
+            "406": "BLUE"
+        }
+    },
+    "accessibility": {
+        "captions": {
+            "supported": [
+                "application/ttaf+xml"
+            ]
+        }
+    },
+    "layouts": [
+        {
+            "width": 960,
+            "height": 540,
+            "classes": [
+                "browserdevice540p"
+            ],
+            "module": "%application%/appui/layouts/540p"
+        },
+        {
+            "width": 1280,
+            "height": 720,
+            "classes": [
+                "browserdevice720p"
+            ],
+            "module": "%application%/appui/layouts/720p"
+        }
+    ],
+    "networking": {
+        "supportsJSONP": true
     }
-  ],
-  "networking": {
-    "supportsJSONP": true
-  }
 }

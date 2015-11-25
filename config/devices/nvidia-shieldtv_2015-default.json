@@ -1,0 +1,110 @@
+{
+    "pageStrategy": "html5",
+    "modules": {
+        "base": "antie/devices/browserdevice",
+        "modifiers": [
+            "antie/devices/anim/css3",
+            "antie/devices/media/html5",
+            "antie/devices/mediaplayer/html5",
+            "antie/devices/mediaplayer/live/playable",
+            "antie/devices/net/default",
+            "antie/devices/data/nativejson",
+            "antie/devices/logging/default",
+            "antie/devices/logging/alert",
+            "antie/devices/logging/xhr",
+            "antie/devices/logging/jstestdriver",
+            "antie/devices/storage/cookie",
+            "antie/devices/parentalguidance/appdefaultpghandler"
+        ]
+    },
+    "logging": {
+        "level": "none"
+    },
+    "streaming": {
+        "video": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "h264"
+                    ],
+                    "transferFormat": [
+                        "dash",
+                        "hls",
+                        "plain"
+                    ],
+
+                    "maximumVideoLines": 1080
+                }
+            ]
+        },
+        "audio": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "aac"
+                    ]
+                }
+            ]
+        }
+    },
+    "input": {
+        "map": {
+            "23": "ENTER",
+            "21": "LEFT",
+            "19": "UP",
+            "22": "RIGHT",
+            "20": "DOWN",
+            "48": "0",
+            "49": "1",
+            "50": "2",
+            "51": "3",
+            "52": "4",
+            "53": "5",
+            "54": "6",
+            "55": "7",
+            "56": "8",
+            "57": "9",
+            "4": "BACK",
+            "103": "NEXT",
+            "102": "PREV",
+            "90": "FAST_FWD",
+            "89": "REWIND",
+            "108": "PLAY_PAUSE",
+            "82": "INFO",
+            "100": "SUBTITLES",
+            "127": "PAUSE",
+            "86": "STOP",
+            "99": "BACKSPACE",
+            "84": "SEARCH"
+        }
+    },
+    "accessibility": {
+        "captions": {
+            "supported": [
+                "application/ttaf+xml"
+            ]
+        }
+    },
+    "layouts": [
+        {
+            "width": 1280,
+            "height": 720,
+            "module": "%application%/appui/layouts/720p",
+            "classes": [
+                "browserdevice720p"
+            ]
+        }
+    ],
+    "networking": {
+        "supportsJSONP": true,
+        "supportsCORS": true
+    }
+}

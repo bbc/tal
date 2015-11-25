@@ -6,10 +6,12 @@
       "antie/devices/anim/noanim",
       "antie/devices/media/html5",
       "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/data/nativejson",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
-      "antie/devices/net/default"
+      "antie/devices/net/default",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
