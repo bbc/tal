@@ -130,7 +130,7 @@ require.def(
             },
 
             _autoPlayAtStartOfRange: function () {
-                var timeUntilStartOfWindow = this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start,
+                var timeUntilStartOfWindow = Math.max(0, this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start),
                     self = this;
 
                 var autoPlayTimer = setTimeout(function () {
