@@ -132,7 +132,7 @@ require.def(
                 var self = this;
                 this.addEventCallback(this, detectCurrentTime);
                 function detectCurrentTime(event) {
-                    if ( event.state === MediaPlayer.STATE.PLAYING && event.currentTime ) {
+                    if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
                         self.removeEventCallback(self, detectCurrentTime);
                         self._timeUntilStartOfWindow = event.currentTime * 1000;
                     }
@@ -140,11 +140,9 @@ require.def(
             },
 
             _autoPlayAtStartOfRange: function () {
-
-                if ( this._timeUntilStartOfWindow !== null ) {
-                    var self = this;
-
-                    var start = new Date().getTime();
+                var self = this;
+                if (this._timeUntilStartOfWindow !== null) {
+                    var pauseStarted = new Date().getTime();
                     var autoPlayTimer = setTimeout(function () {
                         self.removeEventCallback(self, detectIfUnpaused);
                         self._timeUntilStartOfWindow = 0;
@@ -158,7 +156,8 @@ require.def(
                     if (event.state !== MediaPlayer.STATE.PAUSED) {
                         self.removeEventCallback(self, detectIfUnpaused);
                         clearTimeout(autoPlayTimer);
-                        self._timeUntilStartOfWindow -= (new Date().getTime() - start);
+                        var timePaused = new Date().getTime() - pauseStarted;
+                        self._timeUntilStartOfWindow -= timePaused;
                     }
                 }
             }
