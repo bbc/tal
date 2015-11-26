@@ -71,6 +71,7 @@ require.def(
             beginPlaybackFrom: function(offset) {
                 this._timeUntilStartOfWindow = offset * 1000;
                 this._mediaPlayer.beginPlaybackFrom(offset);
+                this._determineTimeSpentBuffering();
             },
 
             setSource: function(mediaType, sourceUrl, mimeType) {
@@ -95,6 +96,7 @@ require.def(
             stop: function() {
                 this._mediaPlayer.stop();
                 this._stopDeterminingTimeUntilStartOfWindow();
+                this._stopDeterminingTimeSpentBuffering();
             },
 
             reset: function() {
@@ -141,6 +143,7 @@ require.def(
                 if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
                     this.removeEventCallback(this, this._detectCurrentTimeCallback);
                     this._timeUntilStartOfWindow = event.currentTime * 1000;
+                    this._determineTimeSpentBuffering();
                 }
             },
 
@@ -163,6 +166,29 @@ require.def(
                         clearTimeout(autoPlayTimer);
                         var timePaused = new Date().getTime() - pauseStarted;
                         self._timeUntilStartOfWindow -= timePaused;
+                    }
+                }
+            },
+
+            _determineTimeSpentBuffering: function () {
+                this._bufferingStarted = null;
+                this.addEventCallback(this, this._determineBufferingCallback);
+            },
+
+            _stopDeterminingTimeSpentBuffering: function () {
+                this.removeEventCallback(this, this._determineBufferingCallback);
+            },
+
+            _determineBufferingCallback: function (event) {
+                if (event.state === MediaPlayer.STATE.BUFFERING) {
+                    if (this._bufferingStarted === null) {
+                        this._bufferingStarted = new Date().getTime();
+                    }
+                } else {
+                    if (this._bufferingStarted !== null) {
+                        var timeBuffering = new Date().getTime() - this._bufferingStarted;
+                        this._timeUntilStartOfWindow = Math.max(0, this._timeUntilStartOfWindow - timeBuffering);
+                        this._bufferingStarted = null;
                     }
                 }
             }
