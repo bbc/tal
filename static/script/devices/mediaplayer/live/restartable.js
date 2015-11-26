@@ -94,6 +94,7 @@ require.def(
 
             stop: function() {
                 this._mediaPlayer.stop();
+                this._stopDeterminingTimeUntilStartOfWindow();
             },
 
             reset: function() {
@@ -129,13 +130,17 @@ require.def(
             },
 
             _determineTimeUntilStartOfWindow: function () {
-                var self = this;
-                this.addEventCallback(this, detectCurrentTime);
-                function detectCurrentTime(event) {
-                    if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
-                        self.removeEventCallback(self, detectCurrentTime);
-                        self._timeUntilStartOfWindow = event.currentTime * 1000;
-                    }
+                this.addEventCallback(this, this._detectCurrentTimeCallback);
+            },
+
+            _stopDeterminingTimeUntilStartOfWindow: function () {
+                this.removeEventCallback(this, this._detectCurrentTimeCallback);
+            },
+
+            _detectCurrentTimeCallback: function (event) {
+                if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
+                    this.removeEventCallback(this, this._detectCurrentTimeCallback);
+                    this._timeUntilStartOfWindow = event.currentTime * 1000;
                 }
             },
 
