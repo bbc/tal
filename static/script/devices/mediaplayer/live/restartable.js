@@ -54,7 +54,7 @@ require.def(
         var RestartableLivePlayer = Class.extend({
             init: function() {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
-                this._timeUntilStartOfWindow = null;
+                this._millisecondsUntilStartOfWindow = null;
             },
 
             beginPlayback: function() {
@@ -69,7 +69,7 @@ require.def(
             },
 
             beginPlaybackFrom: function(offset) {
-                this._timeUntilStartOfWindow = offset * 1000;
+                this._millisecondsUntilStartOfWindow = offset * 1000;
                 this._mediaPlayer.beginPlaybackFrom(offset);
                 this._determineTimeSpentBuffering();
             },
@@ -142,20 +142,20 @@ require.def(
             _detectCurrentTimeCallback: function (event) {
                 if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
                     this.removeEventCallback(this, this._detectCurrentTimeCallback);
-                    this._timeUntilStartOfWindow = event.currentTime * 1000;
+                    this._millisecondsUntilStartOfWindow = event.currentTime * 1000;
                     this._determineTimeSpentBuffering();
                 }
             },
 
             _autoResumeAtStartOfRange: function () {
                 var self = this;
-                if (this._timeUntilStartOfWindow !== null) {
+                if (this._millisecondsUntilStartOfWindow !== null) {
                     var pauseStarted = new Date().getTime();
                     var autoResumeTimer = setTimeout(function () {
                         self.removeEventCallback(self, detectIfUnpaused);
-                        self._timeUntilStartOfWindow = 0;
+                        self._millisecondsUntilStartOfWindow = 0;
                         self.resume();
-                    }, self._timeUntilStartOfWindow);
+                    }, self._millisecondsUntilStartOfWindow);
 
                     this.addEventCallback(this, detectIfUnpaused);
                 }
@@ -165,7 +165,7 @@ require.def(
                         self.removeEventCallback(self, detectIfUnpaused);
                         clearTimeout(autoResumeTimer);
                         var timePaused = new Date().getTime() - pauseStarted;
-                        self._timeUntilStartOfWindow -= timePaused;
+                        self._millisecondsUntilStartOfWindow -= timePaused;
                     }
                 }
             },
@@ -184,7 +184,7 @@ require.def(
                     this._bufferingStarted = new Date().getTime();
                 } else if (event.state !== MediaPlayer.STATE.BUFFERING && this._bufferingStarted !== null) {
                     var timeBuffering = new Date().getTime() - this._bufferingStarted;
-                    this._timeUntilStartOfWindow = Math.max(0, this._timeUntilStartOfWindow - timeBuffering);
+                    this._millisecondsUntilStartOfWindow = Math.max(0, this._millisecondsUntilStartOfWindow - timeBuffering);
                     this._bufferingStarted = null;
                 }
             }
