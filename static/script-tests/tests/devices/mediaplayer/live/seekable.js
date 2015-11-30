@@ -139,13 +139,12 @@
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
             this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
             this.sandbox.stub(livePlayer._mediaPlayer, 'resume');
-            var mediaPlayerFuncStub = this.sandbox.stub();
-            device.getMediaPlayer().pause = mediaPlayerFuncStub;
-            //using fake timers to ensure auto play timer does not fire
+            var pauseStub = this.sandbox.stub(device.getMediaPlayer(), 'pause');
+            //using fake timers to ensure auto resume timer does not fire
             var clock = sinon.useFakeTimers();
             livePlayer.pause();
-            assert(mediaPlayerFuncStub.calledOnce);
-            assertEquals(0, mediaPlayerFuncStub.getCall(0).args.length);
+            assert(pauseStub.calledOnce);
+            assertEquals(0, pauseStub.getCall(0).args.length);
             clock.restore();
         }, config);
     };
