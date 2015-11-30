@@ -180,16 +180,12 @@ require.def(
             },
 
             _determineBufferingCallback: function (event) {
-                if (event.state === MediaPlayer.STATE.BUFFERING) {
-                    if (this._bufferingStarted === null) {
-                        this._bufferingStarted = new Date().getTime();
-                    }
-                } else {
-                    if (this._bufferingStarted !== null) {
-                        var timeBuffering = new Date().getTime() - this._bufferingStarted;
-                        this._timeUntilStartOfWindow = Math.max(0, this._timeUntilStartOfWindow - timeBuffering);
-                        this._bufferingStarted = null;
-                    }
+                if (event.state === MediaPlayer.STATE.BUFFERING && this._bufferingStarted === null) {
+                    this._bufferingStarted = new Date().getTime();
+                } else if (event.state !== MediaPlayer.STATE.BUFFERING && this._bufferingStarted !== null) {
+                    var timeBuffering = new Date().getTime() - this._bufferingStarted;
+                    this._timeUntilStartOfWindow = Math.max(0, this._timeUntilStartOfWindow - timeBuffering);
+                    this._bufferingStarted = null;
                 }
             }
         });
