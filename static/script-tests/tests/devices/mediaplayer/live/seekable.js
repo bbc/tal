@@ -300,7 +300,7 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoPlayWhenPausedAndStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeWhenPausedAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
@@ -327,7 +327,7 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testNoAutoPlayWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
@@ -358,7 +358,7 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testAfterPausedAnEventWithPausedStateDoesNotCancelAutoPlay = function (queue) {
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeNotCancelledByEventWithPausedState = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);

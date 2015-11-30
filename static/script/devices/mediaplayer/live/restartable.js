@@ -86,7 +86,7 @@ require.def(
 
             pause: function () {
                 this._mediaPlayer.pause();
-                this._autoPlayAtStartOfRange();
+                this._autoResumeAtStartOfRange();
             },
 
             resume: function () {
@@ -147,11 +147,11 @@ require.def(
                 }
             },
 
-            _autoPlayAtStartOfRange: function () {
+            _autoResumeAtStartOfRange: function () {
                 var self = this;
                 if (this._timeUntilStartOfWindow !== null) {
                     var pauseStarted = new Date().getTime();
-                    var autoPlayTimer = setTimeout(function () {
+                    var autoResumeTimer = setTimeout(function () {
                         self.removeEventCallback(self, detectIfUnpaused);
                         self._timeUntilStartOfWindow = 0;
                         self.resume();
@@ -163,7 +163,7 @@ require.def(
                 function detectIfUnpaused(event) {
                     if (event.state !== MediaPlayer.STATE.PAUSED) {
                         self.removeEventCallback(self, detectIfUnpaused);
-                        clearTimeout(autoPlayTimer);
+                        clearTimeout(autoResumeTimer);
                         var timePaused = new Date().getTime() - pauseStarted;
                         self._timeUntilStartOfWindow -= timePaused;
                     }
