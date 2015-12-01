@@ -5,10 +5,9 @@
 (function () {
     this.tizentvSource = AsyncTestCase("Tizen Broadcast Source"); //jshint ignore:line
 
-    this.registeredKeys = [];
-    this.muted = false;
-    this.volume = 10;
-    var self = this;
+    var registeredKeys = [];
+    var mutedVolume = false;
+    var tizenVolume = 10;
     var stubTizenTVSpecificApis = function() {
         window.tizen = {
             tvchannel : {
@@ -27,19 +26,20 @@
                 }
             },
             tvwindow : {
+                show: function () {},
                 hide: function () {}
             },
             tvaudiocontrol:{
-                getVolume: function() { return self.volume; },
-                setVolume : function (volume){self.volume = volume},
-                setMute : function(muted){self.muted = muted}
+                getVolume: function() { return tizenVolume; },
+                setVolume : function (volume){tizenVolume = volume},
+                setMute : function(muted){mutedVolume = muted}
             },
             tvinputdevice :{
                 registerKey: function (key) {
-                    self.registeredKeys.push(key);
+                    registeredKeys.push(key);
                 },
                 unregisterKey : function(key){
-                    for(var i = self.registeredKeys.length; i--;) {
+                    for(var i = registeredKeys.length; i--;) {
                         if(self.registeredKeys[i] === key) {
                             self.registeredKeys.splice(i, 1);
                         }
@@ -138,8 +138,8 @@
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.showCurrentChannel();
 
-            expect(tizen.tvaudiocontrol.setVolume).toHaveBeenCalledWith(self.volume);
-            assertFalse(self.muted);
+            expect(tizen.tvaudiocontrol.setVolume).toHaveBeenCalledWith(tizenVolume);
+            assertFalse(mutedVolume);
             expect(tizen.tvwindow.hide).toHaveBeenCalled();
         }, config);
     };
@@ -176,6 +176,20 @@
             broadcastSource.getChannelNameList(params);
             assert(channelListStub.calledOnce);
             assertEquals("ALL", channelListStub.args[0][2]);
+        }, config);
+    };
+
+    this.tizentvSource.prototype.testStopCurrentChannelMutesTheChannelAndBroadcastsTunerStoppedEvent = function(queue) {
+        expectAsserts(2);
+
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication',  ["antie/events/tunerstoppedevent"], function(application, TunerStoppedEvent) {
+            var device = application.getDevice();
+            spyOn(application, 'broadcastEvent');
+            var broadcastSource = device.createBroadcastSource();
+            broadcastSource.stopCurrentChannel();
+            assertTrue(mutedVolume);
+            expect(application.broadcastEvent).toHaveBeenCalled();
         }, config);
     };
 
