@@ -1,50 +1,57 @@
 /**
- * @preserve Copyright (c) 2013-2014 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @preserve Copyright (c) 2015 British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
-
 (function () {
     this.tizentvSource = AsyncTestCase("Tizen Broadcast Source"); //jshint ignore:line
 
-    var stubTizenTVSpecificApis = function(self) {
+    this.registeredKeys = [];
+    this.muted = false;
+    this.volume = 10;
+    var self = this;
+    var stubTizenTVSpecificApis = function() {
         window.tizen = {
-            tvchannel : "BBC One",
-            tvwindow : {},
-            tvaudiocontrol:{}
+            tvchannel : {
+                getCurrentChannel: function() {
+                    return {
+                        channelName :"BBC One"
+                    }
+                },
+                getChannelList : function(){
+                    return [
+                        {channelName :"BBC One"},
+                        {channelName :"BBC Two"},
+                        {channelName :"BBC Three"}
+                    ]
+
+                }
+            },
+            tvwindow : {
+                hide: function () {}
+            },
+            tvaudiocontrol:{
+                getVolume: function() { return self.volume; },
+                setVolume : function (volume){self.volume = volume},
+                setMute : function(muted){self.muted = muted}
+            },
+            tvinputdevice :{
+                registerKey: function (key) {
+                    self.registeredKeys.push(key);
+                },
+                unregisterKey : function(key){
+                    for(var i = self.registeredKeys.length; i--;) {
+                        if(self.registeredKeys[i] === key) {
+                            self.registeredKeys.splice(i, 1);
+                        }
+                    }
+                }
+            }
         };
-
-        window.tizen.tvaudiocontrol.getVolume  = function() {
-            return 10;
-        };
-
-        window.tizen.tvwindow.hide = function(){
-
-        }
-
-
     }
 
-    var removeTizenTVSpecificApis = function(self){
+    var removeTizenTVSpecificApis = function(){
         window.tizen = null;
+        this.registeredKeys = [];
     }
 
     var getGenericTizenTVConfig = function () {
@@ -65,7 +72,7 @@
 
     this.tizentvSource.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
-        stubTizenTVSpecificApis(this);
+        stubTizenTVSpecificApis();
     };
 
     this.tizentvSource.prototype.tearDown = function () {
@@ -73,7 +80,7 @@
         this.sandbox.restore();
     };
 
-    this.tizentvSource.prototype.testCreateBroadcastSourceReturnsHBBTVObject = function (queue) {
+    this.tizentvSource.prototype.testCreateBroadcastSourceReturnsTizenTVObject = function (queue) {
         expectAsserts(2);
 
         var config = getGenericTizenTVConfig();
@@ -86,7 +93,6 @@
             // also check that is it of type tizentvSource
         }, config);
     };
-
 
     this.tizentvSource.prototype.testCreateBroadcastSourceReturnsSingletonTizenTVObject = function(queue) {
         expectAsserts(1);
@@ -107,6 +113,70 @@
         }, config);
     };
 
+    this.tizentvSource.prototype.testCreateBroadcastWhenTizenApiIsNotAvailableThrowsException = function(queue) {
+        expectAsserts(1);
 
+        removeTizenTVSpecificApis();
+
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice()
+            assertException("Unable to initialize Tizen broadcast object", function() {
+                device.createBroadcastSource();
+            });
+        }, config);
+    };
+
+    this.tizentvSource.prototype.testShowCurrentChannelSetsVolumeBackSetsMuteToFalseAndSetsBroadcastToFullScreen = function(queue) {
+        expectAsserts(3);
+
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication',  ["antie/devices/broadcastsource/tizentvsource"], function(application) {
+            var device = application.getDevice();
+            spyOn(tizen.tvaudiocontrol, 'setVolume');
+            spyOn(tizen.tvwindow, 'hide');
+            var broadcastSource = device.createBroadcastSource();
+            broadcastSource.showCurrentChannel();
+
+            expect(tizen.tvaudiocontrol.setVolume).toHaveBeenCalledWith(self.volume);
+            assertFalse(self.muted);
+            expect(tizen.tvwindow.hide).toHaveBeenCalled();
+        }, config);
+    };
+
+    this.tizentvSource.prototype.testGetCurrentChannelNameGetsTheCurrentlyTunedChannel = function(queue) {
+        expectAsserts(1);
+
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+            var channelName = broadcastSource.getCurrentChannelName();
+            assertEquals('Channel name should be BBC One', 'BBC One', channelName);
+        }, config);
+    };
+
+    this.tizentvSource.prototype.testGetChannelNameListRequestsChannelsFromTizenWebAPI = function(queue) {
+        expectAsserts(4);
+
+        var self = this;
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function(application, TizenTVSource) {
+
+            var channelListStub = self.sandbox.stub(tizen.tvchannel, "getChannelList");
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                onSuccess: self.sandbox.stub(),
+                onError: self.sandbox.stub()
+            };
+
+            broadcastSource.getChannelNameList(params);
+            assert(channelListStub.calledOnce);
+            assertEquals("ALL", channelListStub.args[0][2]);
+        }, config);
+    };
 
 })();
