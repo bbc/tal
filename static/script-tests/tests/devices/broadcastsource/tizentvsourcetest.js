@@ -157,7 +157,7 @@
     };
 
     this.tizentvSource.prototype.testGetChannelNameListRequestsChannelsFromTizenWebAPI = function(queue) {
-        expectAsserts(4);
+        expectAsserts(2);
 
         var self = this;
         var config = getGenericTizenTVConfig();
