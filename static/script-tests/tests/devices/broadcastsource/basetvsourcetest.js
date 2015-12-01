@@ -140,12 +140,12 @@
         });
     };
 
-    this.baseTvSource.prototype.testBaseBroadcastSourceIsBroadcastSourceSupportedReturnsTrue = function(queue) {
+    this.baseTvSource.prototype.testBaseBroadcastSourceDoesNotModifyIsBroadcastSourceSupportedOnDevice = function(queue) {
         expectAsserts(1);
         var config = getGenericBaseBroadcastConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
-            assertTrue(device.isBroadcastSourceSupported());
+            assertFalse(device.isBroadcastSourceSupported());
         }, config);
     };
 
