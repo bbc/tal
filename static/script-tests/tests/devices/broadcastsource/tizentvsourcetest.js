@@ -190,7 +190,8 @@
             var broadcastSource = device.createBroadcastSource();
             broadcastSource.stopCurrentChannel();
             assertTrue(mutedVolume);
-            expect(application.broadcastEvent).toHaveBeenCalled();
+            expect(application.broadcastEvent).toHaveBeenCalledWith(jasmine.any(TunerStoppedEvent));
+
         }, config);
     };
 
