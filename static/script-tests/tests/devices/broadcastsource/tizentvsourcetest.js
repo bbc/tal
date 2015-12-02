@@ -5,54 +5,55 @@
 (function () {
     this.tizentvSource = AsyncTestCase("Tizen Broadcast Source"); //jshint ignore:line
 
-    var registeredKeys = [];
     var mutedVolume = false;
     var tizenVolume = 10;
-    var stubTizenTVSpecificApis = function() {
+    var stubTizenTVSpecificApis = function () {
         window.tizen = {
-            tvchannel : {
-                getCurrentChannel: function() {
+            tvchannel: {
+                getCurrentChannel: function () {
                     return {
-                        channelName :"BBC One"
+                        channelName: "BBC One"
                     }
                 },
-                getChannelList : function(){
+                getChannelList: function () {
                     return [
-                        {channelName :"BBC One"},
-                        {channelName :"BBC Two"},
-                        {channelName :"BBC Three"}
+                        {channelName: "BBC One"},
+                        {channelName: "BBC Two"},
+                        {channelName: "BBC Three"}
                     ]
 
                 }
             },
-            tvwindow : {
-                show: function () {},
-                hide: function () {}
-            },
-            tvaudiocontrol:{
-                getVolume: function() { return tizenVolume; },
-                setVolume : function (volume){tizenVolume = volume},
-                setMute : function(muted){mutedVolume = muted}
-            },
-            tvinputdevice :{
-                registerKey: function (key) {
-                    registeredKeys.push(key);
+            tvwindow: {
+                show: function () {
                 },
-                unregisterKey : function(key){
-                    for(var i = registeredKeys.length; i--;) {
-                        if(self.registeredKeys[i] === key) {
-                            self.registeredKeys.splice(i, 1);
-                        }
-                    }
+                hide: function () {
+                }
+            },
+            tvaudiocontrol: {
+                getVolume: function () {
+                    return tizenVolume;
+                },
+                setVolume: function (volume) {
+                    tizenVolume = volume;
+                },
+                setMute: function (muted) {
+                    mutedVolume = muted;
+                }
+            },
+            tvinputdevice: {
+                registerKey: function (key) {
+                },
+                unregisterKey: function (key) {
                 }
             }
         };
-    }
+    };
 
-    var removeTizenTVSpecificApis = function(){
+    var removeTizenTVSpecificApis = function () {
         window.tizen = null;
         this.registeredKeys = [];
-    }
+    };
 
     var getGenericTizenTVConfig = function () {
         return {
@@ -94,12 +95,12 @@
         }, config);
     };
 
-    this.tizentvSource.prototype.testCreateBroadcastSourceReturnsSingletonTizenTVObject = function(queue) {
+    this.tizentvSource.prototype.testCreateBroadcastSourceReturnsSingletonTizenTVObject = function (queue) {
         expectAsserts(1);
 
         var config = getGenericTizenTVConfig();
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function(application, TizenTVSource) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function (application, TizenTVSource) {
             var device = application.getDevice();
 
             var tizenTVConstructor = self.sandbox.spy(TizenTVSource.prototype, "init");
@@ -113,25 +114,25 @@
         }, config);
     };
 
-    this.tizentvSource.prototype.testCreateBroadcastWhenTizenApiIsNotAvailableThrowsException = function(queue) {
+    this.tizentvSource.prototype.testCreateBroadcastWhenTizenApiIsNotAvailableThrowsException = function (queue) {
         expectAsserts(1);
 
         removeTizenTVSpecificApis();
 
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var device = application.getDevice()
-            assertException("Unable to initialize Tizen broadcast object", function() {
+            assertException("Unable to initialize Tizen broadcast object", function () {
                 device.createBroadcastSource();
             });
         }, config);
     };
 
-    this.tizentvSource.prototype.testShowCurrentChannelSetsVolumeBackSetsMuteToFalseAndSetsBroadcastToFullScreen = function(queue) {
+    this.tizentvSource.prototype.testShowCurrentChannelSetsVolumeBackSetsMuteToFalseAndSetsBroadcastToFullScreen = function (queue) {
         expectAsserts(3);
 
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication',  ["antie/devices/broadcastsource/tizentvsource"], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function (application) {
             var device = application.getDevice();
             spyOn(tizen.tvaudiocontrol, 'setVolume');
             spyOn(tizen.tvwindow, 'hide');
@@ -144,11 +145,11 @@
         }, config);
     };
 
-    this.tizentvSource.prototype.testGetCurrentChannelNameGetsTheCurrentlyTunedChannel = function(queue) {
+    this.tizentvSource.prototype.testGetCurrentChannelNameGetsTheCurrentlyTunedChannel = function (queue) {
         expectAsserts(1);
 
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
             var channelName = broadcastSource.getCurrentChannelName();
@@ -156,12 +157,12 @@
         }, config);
     };
 
-    this.tizentvSource.prototype.testGetChannelNameListRequestsChannelsFromTizenWebAPI = function(queue) {
+    this.tizentvSource.prototype.testGetChannelNameListRequestsChannelsFromTizenWebAPI = function (queue) {
         expectAsserts(2);
 
         var self = this;
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function(application, TizenTVSource) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/tizentvsource"], function (application, TizenTVSource) {
 
             var channelListStub = self.sandbox.stub(tizen.tvchannel, "getChannelList");
 
@@ -179,11 +180,11 @@
         }, config);
     };
 
-    this.tizentvSource.prototype.testStopCurrentChannelMutesTheChannelAndBroadcastsTunerStoppedEvent = function(queue) {
+    this.tizentvSource.prototype.testStopCurrentChannelMutesTheChannelAndBroadcastsTunerStoppedEvent = function (queue) {
         expectAsserts(2);
 
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication',  ["antie/events/tunerstoppedevent"], function(application, TunerStoppedEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/events/tunerstoppedevent"], function (application, TunerStoppedEvent) {
             var device = application.getDevice();
             spyOn(application, 'broadcastEvent');
             var broadcastSource = device.createBroadcastSource();
