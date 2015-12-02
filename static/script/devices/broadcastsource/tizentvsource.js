@@ -327,6 +327,10 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
 
         });
 
+        Device.prototype.isBroadcastSourceSupported = function() {
+            return true;
+        };
+
         /**
          * Create a new widget giving control over broadcast television. Check
          * whether the broadcast television API is available first with

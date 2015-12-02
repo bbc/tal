@@ -140,16 +140,6 @@
         });
     };
 
-    this.baseTvSource.prototype.testBaseBroadcastSourceIsBroadcastSourceSupportedReturnsTrue = function(queue) {
-        expectAsserts(1);
-        var config = getGenericBaseBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            assertTrue(device.isBroadcastSourceSupported());
-        }, config);
-    };
-
-
     this.baseTvSource.prototype.testBaseBroadcastSourceGetCurrentChannelThrowsExceptionWhenNotOverridden = function(queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
