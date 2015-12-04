@@ -80,7 +80,13 @@ require.def('antie/devices/broadcastsource/stubbedsource',
          * accessed as a singleton to avoid the init being run
          * multiple times
          */
-        Device.prototype.createBroadcastSource = function() {};
+        Device.prototype.createBroadcastSource = function() {
+            if(!this._broadcastSource) {
+                this._broadcastSource= new StubbedSource();
+            }
+
+            return this._broadcastSource;
+        };
 
         // Return the StubbedSource object for testing purposes
         return StubbedSource;
