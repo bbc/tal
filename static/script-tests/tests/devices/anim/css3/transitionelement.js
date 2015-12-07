@@ -194,7 +194,7 @@
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.setCallback(callback);
 
-                assertEquals(4, transEl.mockEl.addEventListener.callCount);
+                assertEquals(transitionEndEvents.length, transEl.mockEl.addEventListener.callCount);
 
                 for (var i = 0; i < transitionEndEvents.length; i += 1) {
                     transitionEvent = transitionEndEvents[i];
