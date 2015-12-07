@@ -96,7 +96,7 @@ require.def('antie/widgets/keyboard',
 
                 if(	(this._capitalisation !== Keyboard.CAPITALISATION_LOWER) && (
                     (this._capitalisation === Keyboard.CAPITALISATION_UPPER) ||
-                    this._currentText.length == 0 ||
+                    this._currentText.length === 0 ||
                         this._currentText[this._currentText.length-1] === ' '
                     )
                     ) {

@@ -60,7 +60,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             assertException("Broadcast API not available on this device.", function() {
-                var broadcastSource = device.createBroadcastSource();
+                device.createBroadcastSource();
             });
         }, config);
     };
@@ -69,7 +69,7 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             assertException("Abstract class constructor should not be called directly", function() {
-                var broadcastSource = new BaseTvSource();
+                new BaseTvSource(); // jshint ignore:line
             });
         });
     };

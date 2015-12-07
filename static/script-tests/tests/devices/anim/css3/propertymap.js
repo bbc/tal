@@ -76,7 +76,7 @@
             case "navOverride":
                 newNav = {};
                 newNav.userAgent = userAgent;
-                navigator = newNav;
+                navigator = newNav; // jshint ignore:line
             break;
         }  
     }
@@ -93,7 +93,7 @@
 
     this.PropertyMapTest.prototype.tearDown = function() {
         restoreUA(this.uaSpoofMode, this.oldUA);
-        navigator = this.oldNav;
+        navigator = this.oldNav; // jshint ignore:line
         delete this.oldNav;
         delete this.oldUA;
         delete this.uaSpoofMode;
