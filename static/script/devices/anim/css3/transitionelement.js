@@ -44,6 +44,7 @@ require.def(
                     this._propMap = new PropertyMap();
                     this._strHelper = new StringHelpers();
                     this._prefixes = ["", "-webkit-", "-moz-", "-o-"];
+                    this._transitionEndEvents = ["webkitTransitionEnd", "oTransitionEnd", "otransitionend", "transitionend"];
                 },
 
                 getProperties: function() {
@@ -78,7 +79,7 @@ require.def(
 
                 setCallback: function(callback) {
                     var endEvents, endEvent, i;
-                    endEvents = this._propMap.transitionEndEvents;
+                    endEvents = this._transitionEndEvents;
                     for(i = 0; i !== endEvents.length; i+= 1) {
                         endEvent = endEvents[i];
                         this._element.addEventListener(endEvent, callback);

@@ -99,6 +99,10 @@
         return ["", "-webkit-", "-moz-", "-o-"];
     }
 
+    function getTransitionEndEvents() {
+        return ["webkitTransitionEnd", "oTransitionEnd", "otransitionend", "transitionend"];
+    }
+
     this.TransitionElementTest = AsyncTestCase("TransitionElement"); //jshint ignore:line
 
     this.TransitionElementTest.prototype.setUp = function() {
@@ -184,12 +188,18 @@
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
+                var transitionEndEvents = getTransitionEndEvents();
+                var transitionEvent;
                 function callback() {}
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.setCallback(callback);
-                assert(transEl.mockEl.addEventListener.calledTwice);
-                assert(transEl.mockEl.addEventListener.calledWith("transitionend1", callback));
-                assert(transEl.mockEl.addEventListener.calledWith("transitionend2", callback));
+
+                assertEquals(4, transEl.mockEl.addEventListener.callCount);
+
+                for (var i = 0; i < transitionEndEvents.length; i += 1) {
+                    transitionEvent = transitionEndEvents[i];
+                    assert(transEl.mockEl.addEventListener.calledWith(transitionEvent, callback));
+                }
             }
         );
     };
