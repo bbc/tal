@@ -838,41 +838,6 @@
         );
     };
 
-    this.CSS3AnimationTest.prototype.testTweenElementStyleFiresOnComplete = function(queue) {
-        expectAsserts(1);
-	var self = this;
-        var config = getDefaultCssConfig();
-
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            ['antie/devices/anim/css3/transitionelement'],
-            function(application, TransitionElement) {
-                var device, el, options, listenSpy;
-                device = application.getDevice();
-                el = getElement();
-
-                options = {
-                    el: el,
-                    from: { width: 60 },
-                    to: { width: 100 },
-                    duration: 50,
-                    onComplete: function(){},
-                    skipAnim: true
-                };
-
-                self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle', function(){});
-
-                listenSpy = self.sandbox.spy(el, 'addEventListener');
-
-                device.tweenElementStyle(options);
-                assertTrue('onComplete callback added', listenSpy.calledOnce);
-
-            },
-            config
-        );
-    };
-
     this.CSS3AnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
         expectAsserts(1);
 	var self = this;
