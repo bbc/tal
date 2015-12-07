@@ -88,7 +88,7 @@ require.def(
 
                 removeCallback: function(callback) {
                     var endEvents, endEvent, i;
-                    endEvents = this._propMap.transitionEndEvents;
+                    endEvents = this._transitionEndEvents;
                     for(i = 0; i !== endEvents.length; i+= 1) {
                         endEvent = endEvents[i];
                         this._element.removeEventListener(endEvent, callback);

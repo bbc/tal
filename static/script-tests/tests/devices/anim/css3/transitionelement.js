@@ -204,17 +204,22 @@
         );
     };
 
-    this.TransitionElementTest.prototype.testRemoveCallbackRemovesEventListeners = function(queue) {
+        this.TransitionElementTest.prototype.testRemoveCallbackRemovesEventListeners = function(queue) {
 	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement) {
                 var transEl;
+                var transitionEndEvents = getTransitionEndEvents();
                 function callback() {}
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.removeCallback(callback);
-                assert(transEl.mockEl.removeEventListener.calledTwice);
-                assert(transEl.mockEl.removeEventListener.calledWith("transitionend1", callback));
-                assert(transEl.mockEl.removeEventListener.calledWith("transitionend2", callback));
+
+                assertEquals(transitionEndEvents.length, transEl.mockEl.removeEventListener.callCount);
+
+                for (var i = 0; i < transitionEndEvents.length; i += 1) {
+                    transitionEvent = transitionEndEvents[i];
+                    assert(transEl.mockEl.removeEventListener.calledWith(transitionEvent, callback));
+                }
             }
         );
     };
