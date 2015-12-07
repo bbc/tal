@@ -34,7 +34,7 @@
             fn
         );
     }
-    
+
     function getMockPropMap(){
         return {
             "transition-property": "transition-property",
@@ -44,7 +44,7 @@
             "transitionEndEvents": ['transitionend1', "transitionend2"]
         };
     }
-    
+
     function getMockTransitionDefinition(TransitionDefinition) {
         var transDef;
         transDef = new TransitionDefinition();
@@ -58,7 +58,7 @@
                 case 'buzz':
                 return 100;
                 case 'beep':
-                return 0;    
+                return 0;
             }
         };
         transDef.getPropertyDuration = function(prop) {
@@ -68,7 +68,7 @@
                 case 'buzz':
                 return 20;
                 case 'beep':
-                return 100;    
+                return 100;
             }
         };
         transDef.getPropertyTimingFn = function(prop) {
@@ -78,12 +78,12 @@
                 case 'buzz':
                 return "beizer(-0.2, 1, 0, 0.5)";
                 case 'beep':
-                return "easeInOut";    
+                return "easeInOut";
             }
         };
         return transDef;
     }
-    
+
     function makeNewTransElAndApplyMocks(self, TransitionElement, MockElement) {
         var transEl, mockEl;
         mockEl = new MockElement();
@@ -94,9 +94,13 @@
 	self.sandbox.spy(transEl.mockEl, "removeEventListener");
         return transEl;
     }
-    
+
+    function getPrefixes() {
+        return ["", "-webkit-", "-moz-", "-o-"];
+    }
+
     this.TransitionElementTest = AsyncTestCase("TransitionElement"); //jshint ignore:line
-    
+
     this.TransitionElementTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
     };
@@ -104,7 +108,7 @@
     this.TransitionElementTest.prototype.tearDown = function() {
         this.sandbox.restore();
     };
-    
+
     this.TransitionElementTest.prototype.testElementsPropertiesReturnedAsArray = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -116,7 +120,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testElementsDurationsReturnedAsMsArray = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -128,7 +132,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testElementsTimingFunctionsReturnedAsArray = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -140,7 +144,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testElementsDelaysReturnedAsArray = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -152,24 +156,29 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testTransisitonDefinitionApplied = function(queue) {
 	var self = this;
         loadTE(queue,
             function(TransitionElement, MockElement, TransitionDefinition) {
                 var transEl, transDef;
+                var prefixes = getPrefixes();
                 transDef = getMockTransitionDefinition(TransitionDefinition);
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
-                self.sandbox.spy(transEl.mockEl.style, "setProperty");  
+                self.sandbox.spy(transEl.mockEl.style, "setProperty");
                 transEl.applyDefinition(transDef);
-                assert(transEl.mockEl.style.setProperty.calledWith("transition-property", "fizz,buzz,beep"));
-                assert(transEl.mockEl.style.setProperty.calledWith("transition-delay", "50ms,100ms,0ms"));
-                assert(transEl.mockEl.style.setProperty.calledWith("transition-duration", "0ms,20ms,100ms"));
-                assert(transEl.mockEl.style.setProperty.calledWith("transition-timing-function", "linear,beizer(-0.2, 1, 0, 0.5),easeInOut"));
+
+                for (var i = 0; i < prefixes.length; i += 1) {
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-property", "fizz,buzz,beep"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-property", "fizz,buzz,beep"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-delay", "50ms,100ms,0ms"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-duration", "0ms,20ms,100ms"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-timing-function", "linear,beizer(-0.2, 1, 0, 0.5),easeInOut"));
+                }
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testSetCallbackAddsFnsAsEventListeners = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -184,7 +193,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testRemoveCallbackRemovesEventListeners = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -212,7 +221,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testGetStylePropertyValueReturnsValue = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -226,7 +235,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testGetStylePropertyOfUndefined = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -240,7 +249,7 @@
             }
         );
     };
-    
+
     this.TransitionElementTest.prototype.testSetStyleProperty = function(queue) {
 	var self = this;
         loadTE(queue,
@@ -251,7 +260,7 @@
                 self.sandbox.stub(transEl.mockEl.style, "setProperty", function(prop, value) {
                     setObj[prop] = value;
                 });
-                
+
                 transEl.setStylePropertyValue('someProperty', 'someValue');
                 assert(transEl.mockEl.style.setProperty.calledOnce);
                 assertEquals('someValue', setObj.someProperty);
@@ -267,7 +276,7 @@
 
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 testEvent = {target: transEl.mockEl};
-                
+
                 assertTrue("isEventTarget returns true when the events target is the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));
 
             }
@@ -282,7 +291,7 @@
 
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 testEvent = {target: new MockElement()};
-                
+
                 assertFalse("isEventTarget returns false when the events target is not the TransitionElements underlying DOM element", transEl.isEventTarget(testEvent));
 
             }
