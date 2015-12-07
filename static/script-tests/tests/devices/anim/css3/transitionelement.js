@@ -35,16 +35,6 @@
         );
     }
 
-    function getMockPropMap(){
-        return {
-            "transition-property": "transition-property",
-            "transition-timing-function": "transition-timing-function",
-            "transition-duration": "transition-duration",
-            "transition-delay": "transition-delay",
-            "transitionEndEvents": ['transitionend1', "transitionend2"]
-        };
-    }
-
     function getMockTransitionDefinition(TransitionDefinition) {
         var transDef;
         transDef = new TransitionDefinition();
@@ -84,23 +74,22 @@
         return transDef;
     }
 
-    function makeNewTransElAndApplyMocks(self, TransitionElement, MockElement) {
-        var transEl, mockEl;
-        mockEl = new MockElement();
-        transEl = new TransitionElement(mockEl);
-        transEl.mockEl = mockEl;
-        transEl._propMap = getMockPropMap();
-	self.sandbox.spy(transEl.mockEl, "addEventListener");
-	self.sandbox.spy(transEl.mockEl, "removeEventListener");
-        return transEl;
-    }
-
     function getPrefixes() {
         return ["", "-webkit-", "-moz-", "-o-"];
     }
 
     function getTransitionEndEvents() {
         return ["webkitTransitionEnd", "oTransitionEnd", "otransitionend", "transitionend"];
+    }
+
+    function makeNewTransElAndApplyMocks(self, TransitionElement, MockElement) {
+        var transEl, mockEl;
+        mockEl = new MockElement();
+        transEl = new TransitionElement(mockEl);
+        transEl.mockEl = mockEl;
+	    self.sandbox.spy(transEl.mockEl, "addEventListener");
+	    self.sandbox.spy(transEl.mockEl, "removeEventListener");
+        return transEl;
     }
 
     this.TransitionElementTest = AsyncTestCase("TransitionElement"); //jshint ignore:line
