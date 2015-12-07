@@ -161,13 +161,13 @@
                 self.sandbox.spy(transEl.mockEl.style, "setProperty");
                 transEl.applyDefinition(transDef);
 
-                for (var i = 0; i < prefixes.length; i += 1) {
-                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-property", "fizz,buzz,beep"));
-                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-property", "fizz,buzz,beep"));
-                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-delay", "50ms,100ms,0ms"));
-                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-duration", "0ms,20ms,100ms"));
-                    assert(transEl.mockEl.style.setProperty.calledWith(prefixes[i] + "transition-timing-function", "linear,beizer(-0.2, 1, 0, 0.5),easeInOut"));
-                }
+                prefixes.forEach(function (prefix) {
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefix + "transition-property", "fizz,buzz,beep"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefix + "transition-property", "fizz,buzz,beep"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefix + "transition-delay", "50ms,100ms,0ms"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefix + "transition-duration", "0ms,20ms,100ms"));
+                    assert(transEl.mockEl.style.setProperty.calledWith(prefix + "transition-timing-function", "linear,beizer(-0.2, 1, 0, 0.5),easeInOut"));
+                });
             }
         );
     };
@@ -178,17 +178,15 @@
             function(TransitionElement, MockElement) {
                 var transEl;
                 var transitionEndEvents = getTransitionEndEvents();
-                var transitionEvent;
                 function callback() {}
                 transEl = makeNewTransElAndApplyMocks(self, TransitionElement, MockElement);
                 transEl.setCallback(callback);
 
                 assertEquals(transitionEndEvents.length, transEl.mockEl.addEventListener.callCount);
 
-                for (var i = 0; i < transitionEndEvents.length; i += 1) {
-                    transitionEvent = transitionEndEvents[i];
+                transitionEndEvents.forEach(function (transitionEvent) {
                     assert(transEl.mockEl.addEventListener.calledWith(transitionEvent, callback));
-                }
+                });
             }
         );
     };
@@ -205,10 +203,9 @@
 
                 assertEquals(transitionEndEvents.length, transEl.mockEl.removeEventListener.callCount);
 
-                for (var i = 0; i < transitionEndEvents.length; i += 1) {
-                    transitionEvent = transitionEndEvents[i];
+                transitionEndEvents.forEach(function (transitionEvent) {
                     assert(transEl.mockEl.removeEventListener.calledWith(transitionEvent, callback));
-                }
+                });
             }
         );
     };
