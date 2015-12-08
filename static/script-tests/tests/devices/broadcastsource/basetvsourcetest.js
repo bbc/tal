@@ -60,7 +60,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             assertException("Broadcast API not available on this device.", function() {
-                var broadcastSource = device.createBroadcastSource();
+                device.createBroadcastSource();
             });
         }, config);
     };
@@ -69,7 +69,7 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             assertException("Abstract class constructor should not be called directly", function() {
-                var broadcastSource = new BaseTvSource();
+                new BaseTvSource(); // jshint ignore:line
             });
         });
     };
@@ -135,18 +135,7 @@
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
             assertException("Base implementation throws exception when not overridden", function(){
-		broadcastSource.getState();
-	    });
-        });
-    };
-
-    this.baseTvSource.prototype.testBaseBroadcastSourceGetCurrentChannelThrowsExceptionWhenNotOverridden = function(queue) {
-        expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
-            extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
-            var broadcastSource = new BaseTvSource();
-            assertException("Device broadcast source does not override abstract method getCurrentChannel", function() {
-                broadcastSource.getCurrentChannel();
+                broadcastSource.getState();
             });
         });
     };
@@ -162,13 +151,13 @@
         });
     };
 
-    this.baseTvSource.prototype.testBaseBroadcastSourceGetChannelListThrowsExceptionWhenNotOverridden = function(queue) {
+    this.baseTvSource.prototype.testBaseBroadcastSourceGetChannelNameListThrowsExceptionWhenNotOverridden = function(queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
             assertException("Device broadcast source does not override abstract method getChannelList", function() {
-                broadcastSource.getChannelList();
+                broadcastSource.getChannelNameList();
             });
         });
     };
