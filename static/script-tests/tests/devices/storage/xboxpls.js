@@ -1,4 +1,9 @@
-require(
+/**
+ * @preserve Copyright (c) 2015 British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+ 
+ require(
     [
         'antie/devices/storage/xboxpls',
         'antie/devices/data/nativejson',
