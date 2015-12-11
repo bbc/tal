@@ -140,7 +140,7 @@ require.def(
             },
 
             _detectCurrentTimeCallback: function (event) {
-                if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime) {
+                if (event.state === MediaPlayer.STATE.PLAYING && event.currentTime > 0) {
                     this.removeEventCallback(this, this._detectCurrentTimeCallback);
                     this._millisecondsUntilStartOfWindow = event.currentTime * 1000;
                     this._determineTimeSpentBuffering();
