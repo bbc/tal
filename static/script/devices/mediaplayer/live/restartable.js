@@ -84,9 +84,12 @@ require.def(
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
-            pause: function () {
+            pause: function (opts) {
                 this._mediaPlayer.pause();
-                this._autoResumeAtStartOfRange();
+                opts = opts || {};
+                if(opts.disableAutoResume !== true){
+                    this._autoResumeAtStartOfRange();
+                }
             },
 
             resume: function () {
