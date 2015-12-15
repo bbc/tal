@@ -76,9 +76,11 @@ require.def(
                 this._mediaPlayer.playFrom(offset);
             },
 
-            pause: function () {
+            pause: function (disableAutoResume) {
                 this._mediaPlayer.pause();
-                this._autoResumeAtStartOfRange();
+                if(!disableAutoResume){
+                    this._autoResumeAtStartOfRange();
+                }
             },
 
             resume: function () {
