@@ -344,7 +344,7 @@
             livePlayer._mediaPlayer.resume = this.sandbox.stub();
 
             var clock = sinon.useFakeTimers();
-            livePlayer.pause(true);
+            livePlayer.pause({disableAutoResume: true});
             clock.tick(30 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.notCalled);
