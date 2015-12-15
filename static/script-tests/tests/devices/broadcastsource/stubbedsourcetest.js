@@ -122,7 +122,6 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             var broadcastStub = device.createBroadcastSource();
-            debugger;
             assertNoException(function() {
                 broadcastStub.getChannelNameList();
             });
