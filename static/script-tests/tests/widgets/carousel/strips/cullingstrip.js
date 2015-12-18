@@ -150,7 +150,9 @@
             ],
             function (application, CullingStrip, vertical, WidgetStrip) {
                 this.sandbox.spy(WidgetStrip.prototype, 'init');
-                var strip = new CullingStrip('test', vertical);
+
+                new CullingStrip('test', vertical); // jshint ignore:line
+
                 sinon.assert.calledWith(
                     WidgetStrip.prototype.init,
                     'test',

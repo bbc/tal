@@ -56,7 +56,7 @@ require.def ('antie/widgets/state_view_container', [
                }
             });
 
-            this.addEventListener("afterhide", function(evt) {
+            this.addEventListener("afterhide", function() {
                   self.focusHack();
             });
 

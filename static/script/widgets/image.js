@@ -60,7 +60,7 @@ require.def('antie/widgets/image',
 			 */
 			render: function(device) {
 				this._imageElement = device.createImage(this.id + "_img", null, this._src, this._size);
-				if(this._renderMode == Image.RENDER_MODE_CONTAINER) {
+				if(this._renderMode === Image.RENDER_MODE_CONTAINER) {
 					this.outputElement = this._super(device);
 					if(this._size) {
 						device.setElementSize(this.outputElement, this._size);

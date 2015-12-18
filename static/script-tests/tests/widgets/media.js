@@ -80,7 +80,7 @@
 
             this.sandbox.stub(Device.prototype, "createMediaInterface");
 
-            new Media("id", "audio");
+            new Media("id", "audio"); // jshint ignore:line
 
             var stub = Device.prototype.createMediaInterface;
 

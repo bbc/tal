@@ -72,8 +72,7 @@
 
             var setLayoutStub = this.sandbox.stub(MockApplication.prototype, "setLayout");
 
-            var app = new MockApplication(document.createElement('div'), null, null, null);
-
+            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];

@@ -43,8 +43,6 @@
 		expectAsserts(1);
 
 		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			var device = application.getDevice();
-
 			application.setCurrentRoute(["a","b","c"]);
 			assertEquals(["a","b","c"], application.getCurrentRoute());
 
@@ -100,8 +98,7 @@
 
             var routeStub = this.sandbox.stub(MockApplication.prototype, "route");
 
-            var app = new MockApplication(document.createElement('div'), null, null, null);
-
+            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];

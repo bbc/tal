@@ -27,8 +27,8 @@
 // Saves the logs for access later
 require.def(
 	'antie/devices/logging/saving',
-	[ 'module', 'antie/devices/device', 'antie/application' ],
-	function(Module, Device, Application)
+	[ 'module', 'antie/devices/device' ],
+	function(Module, Device)
 	{
 		'use strict';
 

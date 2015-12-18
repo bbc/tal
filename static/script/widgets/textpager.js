@@ -69,7 +69,6 @@ require.def('antie/widgets/textpager',
 			},
 			getPageCount: function () {
 				if (!this._paddingFudge) {
-					var el = this.outputElement;
 					this._paddingFudge = true;
 					this.textHeight = this.innerElement.clientHeight;
 					this.boxHeight = this.outputElement.clientHeight;
