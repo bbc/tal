@@ -1,6 +1,7 @@
 {
-  "name": "bbc-fmtvp-tal",
-  "version": "0.0.0",
+  "name": "tal",
+  "license": "Apache-2.0",
+  "version": "3.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/fmtvp/tal.git"
@@ -8,7 +9,8 @@
   "description": "Library for building applications for Connected TV devices",
   "devDependencies": {
     "exec-sync": "latest",
-    "grunt": "~0.4.1",
+    "grunt": "^0.4.5",
+    "grunt-bump": "^0.6.0",
     "grunt-cli": "~0.1.6",
     "grunt-contrib-jasmine": "~0.5.2",
     "grunt-contrib-jshint": "~0.10.0",

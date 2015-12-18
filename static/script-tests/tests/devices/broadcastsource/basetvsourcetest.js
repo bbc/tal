@@ -135,28 +135,7 @@
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
             assertException("Base implementation throws exception when not overridden", function(){
-		broadcastSource.getState();
-	    });
-        });
-    };
-
-    this.baseTvSource.prototype.testBaseBroadcastSourceIsBroadcastSourceSupportedReturnsTrue = function(queue) {
-        expectAsserts(1);
-        var config = getGenericBaseBroadcastConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device = application.getDevice();
-            assertTrue(device.isBroadcastSourceSupported());
-        }, config);
-    };
-
-
-    this.baseTvSource.prototype.testBaseBroadcastSourceGetCurrentChannelThrowsExceptionWhenNotOverridden = function(queue) {
-        expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
-            extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
-            var broadcastSource = new BaseTvSource();
-            assertException("Device broadcast source does not override abstract method getCurrentChannel", function() {
-                broadcastSource.getCurrentChannel();
+                broadcastSource.getState();
             });
         });
     };
@@ -172,13 +151,13 @@
         });
     };
 
-    this.baseTvSource.prototype.testBaseBroadcastSourceGetChannelListThrowsExceptionWhenNotOverridden = function(queue) {
+    this.baseTvSource.prototype.testBaseBroadcastSourceGetChannelNameListThrowsExceptionWhenNotOverridden = function(queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/broadcastsource/basetvsource"], function(application, BaseTvSource) {
             extendBaseTvSourceWithNoOverriddenMethods(BaseTvSource);
             var broadcastSource = new BaseTvSource();
             assertException("Device broadcast source does not override abstract method getChannelList", function() {
-                broadcastSource.getChannelList();
+                broadcastSource.getChannelNameList();
             });
         });
     };

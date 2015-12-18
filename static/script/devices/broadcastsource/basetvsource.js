@@ -119,14 +119,10 @@ require.def('antie/devices/broadcastsource/basetvsource',
          */
         BaseTvSource.STATE = {
             UNKNOWN: "UNKNOWN", // tuner state not known
-	    UNAVAILABLE:    "UNAVAILABLE",     // No tuner available
-            CONNECTING:    "CONNECTING",   // tuner attempting to connect
-            PRESENTING:    "PRESENTING",   // tuner is presenting a channel
-	    STOPPED: "STOPPED" // tuner is stopped
-        };
-
-        Device.prototype.isBroadcastSourceSupported = function() {
-            return true;
+            UNAVAILABLE: "UNAVAILABLE", // No tuner available
+            CONNECTING: "CONNECTING", // tuner attempting to connect
+            PRESENTING: "PRESENTING", // tuner is presenting a channel
+            STOPPED: "STOPPED" // tuner is stopped
         };
 
         return BaseTvSource;

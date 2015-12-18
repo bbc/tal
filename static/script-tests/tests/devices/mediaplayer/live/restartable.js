@@ -58,9 +58,12 @@
                 var livePlayer = device.getLivePlayer();
                 var mediaPlayerFuncStub = this.sandbox.stub();
                 device.getMediaPlayer()[action] = mediaPlayerFuncStub;
+                //using fake timers to ensure auto play timer does not fire
+                var clock = sinon.useFakeTimers();
                 livePlayer[action]();
                 assert(mediaPlayerFuncStub.calledOnce);
                 assertEquals(expectedArgCount, mediaPlayerFuncStub.getCall(0).args.length);
+                clock.restore();
             }, config);
         };
     };
@@ -89,8 +92,12 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerGetPlayerElementCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('getPlayerElement', 0);
 
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerPauseCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('pause', 0);
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerResumeCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('resume', 0);
+
     this.LivePlayerSupportLevelRestartableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInRestartableLive = function (queue) {
-        expectAsserts(5);
+        expectAsserts(3);
 
         queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
 
@@ -98,8 +105,6 @@
             var livePlayer = device.getLivePlayer();
 
             assertUndefined(livePlayer.playFrom);
-            assertUndefined(livePlayer.pause);
-            assertUndefined(livePlayer.resume);
             assertUndefined(livePlayer.getCurrentTime);
             assertUndefined(livePlayer.getSeekableRange);
         });
@@ -217,4 +222,252 @@
             assert(livePlayer._mediaPlayer.beginPlaybackFrom.notCalled);
         }, config);
     };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromThenPausedAndStartOfRangeIsReached = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackThenPausedAndStartOfRangeIsReached = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlayback();
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+            livePlayer.pause();
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenPausedMultipleTimesAndStartOfRangeIsReached = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+            clock.tick(15 * 1000);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+            livePlayer.pause();
+            clock.tick(15 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getState').returns(MediaPlayer.STATE.PLAYING);
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumesImmediatelyIfPausedAfterAlreadyAutoResumeing = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+            clock.tick(30 * 1000);
+
+            livePlayer._mediaPlayer.resume.reset();
+
+            livePlayer.pause();
+            clock.tick(1);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testDoesNotAutoResumeWhenItIsDisabled = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause({disableAutoResume: true});
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.restore();
+        }, config);
+
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeNotCancelledByEventWithPausedState = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+            livePlayer.pause();
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PAUSED);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
+            clock.tick(30 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromTimeSpentBufferingIsDeducted = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlaybackFrom(30);
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.BUFFERING);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.BUFFERING);
+
+            clock.tick(10 * 1000);
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+
+            livePlayer.pause();
+
+            clock.tick(20 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackTimeSpentBufferingIsDeducted = function (queue) {
+        expectAsserts(1);
+        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+
+            livePlayer._mediaPlayer.beginPlaybackFrom = this.sandbox.stub();
+            livePlayer._mediaPlayer.beginPlayback = this.sandbox.stub();
+            livePlayer._mediaPlayer.pause = this.sandbox.stub();
+            livePlayer._mediaPlayer.resume = this.sandbox.stub();
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
+            livePlayer._mediaPlayer.getState = this.sandbox.stub();
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+
+            var clock = sinon.useFakeTimers();
+            livePlayer.beginPlayback();
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.BUFFERING);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.BUFFERING);
+
+            clock.tick(10 * 1000);
+
+            livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
+            livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
+
+            livePlayer.pause();
+
+            clock.tick(20 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.called);
+
+            clock.restore();
+        }, config);
+    };
+
 })();

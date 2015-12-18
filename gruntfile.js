@@ -5,18 +5,14 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         jshint: {
-            files: ['static/script/**/*.js',
-                'static/script-tests/**/*.js'],
+            files: ['static/script/**/*.js'],
             options: {
                 jshintrc: '.jshintrc',
-                // options here to override JSHint defaults
                 ignores: [
                     'static/script/lib/*',
                     'static/script/devices/googletv.js',
-                    'static/script-tests/api/jquery.js',
-                    'static/script-tests/lib/sinon.js',
-                    'static/script-tests/lib/require.js',
-                    'static/script/devices/data/json2.js'
+                    'static/script/devices/data/json2.js',
+                    'static/script/widgets/horizontalcarousel.js'
                 ]
             }
         },
@@ -88,6 +84,24 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json'],
+            updateConfigs: [],
+            commit: true,
+            commitMessage: 'Release v%VERSION%',
+            commitFiles: ['package.json', 'bower.json'],
+            createTag: true,
+            tagName: '%VERSION%',
+            tagMessage: 'Version %VERSION%',
+            push: true,
+            pushTo: 'origin',
+            gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+            globalReplace: false,
+            prereleaseName: false,
+            regExp: false
+          }
+        },
         shell: {
             coverage: {
                 command: 'cd static/script-tests/jasmine; pwd; ./coverage.sh -p;'
@@ -117,6 +131,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks("grunt-shell");
+    grunt.loadNpmTasks('grunt-bump');
+
 
     grunt.registerTask("hint", ["jshint"]);
     grunt.registerTask("test", ["jasmine"]);
@@ -126,7 +142,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', 'full');
     grunt.registerTask("coverage", "Produce a coverage report of the main source files", ["jasmine:src:build", "shell:coverage"]);
     grunt.registerTask("spec", ["jasmine:src:build", "openspec"]);
-    
+
     grunt.registerTask("openspec", "Open the generated Jasmine spec file", function() {
         var childProcess = require('child_process');
         var outfile = grunt.config("jasmine.options.outfile");

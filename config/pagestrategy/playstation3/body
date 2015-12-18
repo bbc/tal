@@ -1,0 +1,5 @@
+<script type='text/javascript'>
+  function accessfunction(json) {
+    require('antie/application').getCurrentApplication().getDevice().nativeCallback(json);
+  }
+</script>

@@ -4,14 +4,17 @@
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/noanim",
-      "antie/devices/media/cehtml",
-      "antie/devices/mediaplayer/cehtml",
+      "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/playable",
       "antie/devices/net/default",
       "antie/devices/data/json2",
+	  "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/exit/history"
+      "antie/devices/exit/history",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {

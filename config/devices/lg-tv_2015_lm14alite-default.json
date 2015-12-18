@@ -37,7 +37,6 @@
                         "hls",
                         "plain"
                     ],
-                    "maximumBitRate": 3600,
                     "maximumVideoLines": 1080
                 }
             ]

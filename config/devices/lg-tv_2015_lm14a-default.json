@@ -6,7 +6,7 @@
             "antie/devices/anim/css3",
             "antie/devices/media/html5",
             "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/playable",
+            "antie/devices/mediaplayer/live/restartable",
             "antie/devices/broadcastsource/hbbtvsource",
             "antie/devices/net/default",
             "antie/devices/data/nativejson",
@@ -37,7 +37,6 @@
                         "hls",
                         "plain"
                     ],
-                    "maximumBitRate": 3600,
                     "maximumVideoLines": 1080
                 }
             ]
