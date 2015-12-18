@@ -59,7 +59,7 @@ Secondly, it could be that the manufacturer hasn't granted permission for the fi
 **Answer:** TAL is technically able to run on most Sony devices from 2011 onwards, please contact them for more detailed information.
 
 ### **Question:** Does the TV Application Layer work on Samsung TVs and Blu-ray players?
-**Answer:** TAL is technically able to run on most Samsung devices from 2010 onwards, please contact <k.chu@samsung.com> for more detailed information.
+**Answer:** TAL is technically able to run on most Samsung devices from 2010 onwards, please go to <http://www.samsungdforum.com/> for more detailed information.
 
 ### **Question:** How do I submit a device configuration file for the 'ACME 2013' device?
 **Answer:** Using one of the existing device configuration files as a guide:
