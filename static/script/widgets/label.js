@@ -45,7 +45,7 @@ require.def('antie/widgets/label',
 			init: function(id, text) {
                 // The current API states that if only one parameter is passed to
                 // use that value as the text and auto generate an internal id
-				if(arguments.length == 1) {
+				if(arguments.length === 1) {
 					this._text = id;
 					this._super();
 				} else {
@@ -65,7 +65,7 @@ require.def('antie/widgets/label',
 			render: function(device) {
 				// TODO: is there a more efficient way of doing this?
 				var s;
-				if(this._width && this._maxLines && this._text && (this._truncationMode == Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
+				if(this._width && this._maxLines && this._text && (this._truncationMode === Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
 					var h = device.getTextHeight("fW", this._width, this.getClasses());
 					var allowedHeight = h * this._maxLines;
 					var currentHeight = device.getTextHeight(this._text, this._width, this.getClasses());

@@ -68,7 +68,7 @@ require.def('antie/widgets/scrubbar',
 					var left = Math.floor(this._bufferedRange.start * elsize.width);
 					var width = Math.floor((this._bufferedRange.end - this._bufferedRange.start) * elsize.width);
 
-					if(this._lastBufferLeft != left) {
+					if(this._lastBufferLeft !== left) {
 						this._lastBufferLeft = left;
 						device.moveElementTo({
 							el: this._buffer,
@@ -79,7 +79,7 @@ require.def('antie/widgets/scrubbar',
 							skipAnim: true
 						});
 					}
-					if(this._lastBufferWidth != width) {
+					if(this._lastBufferWidth !== width) {
 						this._lastBufferWidth = width;
 						device.setElementSize(this._buffer, {width: width});
 					}
