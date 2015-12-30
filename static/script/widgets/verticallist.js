@@ -53,7 +53,9 @@ require.def(
                 this.addClass('verticallist');
 
                 var self = this;
-                this.addEventListener('keydown', function(e) { self._onKeyDown(e); });
+                this.addEventListener('keydown', function(e) {
+                    self._onKeyDown(e);
+                });
             },
             /**
              * Key handler for vertical lists. Processes KeyEvent.VK_UP and KeyEvent.VK_DOWN keys and stops propagation

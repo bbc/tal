@@ -149,8 +149,7 @@ require.def(
                             self._eventHandlingCallback(new MediaEvent('play', self));
                             self._eventHandlingCallback(new MediaEvent('playing', self));
                             self.videoPlayerState.playing = true;
-                        }
-                        else {
+                        } else {
                             // don't throw a timeupdate on the first event
                             window.SamsungMapleOnTimeUpdate(seconds);
                         }
@@ -246,8 +245,7 @@ require.def(
 
                 if (this.videoPlayerState.currentTime > 0) {
                     this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
-                }
-                else {
+                } else {
                     this.playerPlugin.Play(this._getSamsungFormattedUrl);
                 }
             },

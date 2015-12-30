@@ -77,13 +77,11 @@ require.def(
 
                 string = this._replaceEntities(string);
 
-                if (window.DOMParser) {
+                if(window.DOMParser) {
                     var parser = new DOMParser();
                     xmlDoc = parser.parseFromString(string, 'text/xml');
 
-                }
-                else // Internet Explorer
-                {
+                } else {// Internet Explorer
                     xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
                     xmlDoc.async = false;
                     xmlDoc.loadXML(string);

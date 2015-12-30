@@ -143,7 +143,9 @@ require.def(
 
             function iframeLoadTimeoutCallback() {
                 iframe.onload = null;
-                if (opts.onError) { opts.onError('timeout'); }
+                if (opts.onError) {
+                    opts.onError('timeout');
+                }
             }
 
             function iframeLoadedCallback() {
@@ -172,8 +174,7 @@ require.def(
                         }
                     }
                     form.submit();
-                }
-                else {
+                } else {
                     if (timeoutHandle) {
                         clearTimeout(timeoutHandle);
                     }
@@ -186,7 +187,9 @@ require.def(
                             opts.onLoad(responseData);
                         }
                     } catch (exception) {
-                        if (opts.onError) { opts.onError(exception); }
+                        if (opts.onError) {
+                            opts.onError(exception);
+                        }
                     }
                 }
             }

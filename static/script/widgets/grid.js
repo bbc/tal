@@ -126,8 +126,7 @@ require.def(
                         if (widget) {
                             if (col === 0) {
                                 widget.addClass('firstcol');
-                            }
-                            else if (col === this._cols - 1) {
+                            } else if (col === this._cols - 1) {
                                 widget.addClass('lastcol');
                             }
                             device.appendChildElement(rowElement, this.getWidgetAt(col, row).render(device));
@@ -135,8 +134,7 @@ require.def(
                             var classes = ['spacer'];
                             if (col === 0) {
                                 classes.push('firstcol');
-                            }
-                            else if (col === this._cols - 1) {
+                            } else if (col === this._cols - 1) {
                                 classes.push('lastcol');
                             }
                             device.appendChildElement(rowElement, device.createContainer(this.id + '_' + col + '_' + row, classes));

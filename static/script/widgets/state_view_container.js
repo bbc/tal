@@ -49,7 +49,9 @@ require.def (
                 this.focusButtonHack = new Button();
                 this.appendChildWidget(this.focusButtonHack);
 
-                this.addEventListener('select',  function() { controller.select(); });
+                this.addEventListener('select',  function() {
+                    controller.select();
+                });
 
                 this.addEventListener('keydown', function(evt){
                     var mappedFunctionName = keyMapping[evt.keyCode];

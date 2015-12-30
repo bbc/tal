@@ -146,8 +146,12 @@ require.def(
 
             _getIndexIncrementFunction: function (direction) {
                 var nextFn;
-                function forwardFn(index) { return index + 1; }
-                function backFn(index) { return index - 1; }
+                function forwardFn(index) {
+                    return index + 1;
+                }
+                function backFn(index) {
+                    return index - 1;
+                }
 
                 switch (direction) {
                 case Navigator.directions.FORWARD:

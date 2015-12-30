@@ -115,7 +115,9 @@ require.def(
                 if(this._capitalisation === Keyboard.CAPITALISATION_TITLE) {
                     this._currentText = this._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
                         match = match.substring(0, 1).toUpperCase() + match.substring(1);
-                        return match.replace(Keyboard.SHORT_WORD_REGEXP, function(match) { return match.toLowerCase(); });
+                        return match.replace(Keyboard.SHORT_WORD_REGEXP, function(match) {
+                            return match.toLowerCase();
+                        });
                     });
                     this._currentText = this._currentText.substring(0, 1).toUpperCase() + this._currentText.substring(1);
                 }
@@ -220,9 +222,13 @@ require.def(
                         var keyIndexId = (row*cols)+col;
                         var letter = this._keys[keyIndexId];
 
-                        if(letter === ' ') { letter = 'SPACE'; }
-                        else if(letter === '-') { letter = 'DEL'; }
-                        else if(letter === '_') { continue; }
+                        if(letter === ' ') {
+                            letter = 'SPACE';
+                        } else if(letter === '-') {
+                            letter = 'DEL';
+                        } else if(letter === '_') {
+                            continue;
+                        }
 
                         var button = new Button(this.id + '_' + letter + '_' + col + '_' + row);
                         button.setDataItem(letter);

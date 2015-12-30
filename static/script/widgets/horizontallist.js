@@ -56,7 +56,9 @@ require.def(
                 this.addClass('horizontallist');
 
                 var self = this;
-                this.addEventListener('keydown', function(e) { self._onKeyDown(e); });
+                this.addEventListener('keydown', function(e) {
+                    self._onKeyDown(e);
+                });
             },
 
             /**
@@ -91,12 +93,10 @@ require.def(
                     //force the index to wrap correctly
                     if(this._wrapMode === HorizontalList.WRAP_MODE_WRAP ) {
                         _newSelectedIndex = ( _newSelectedIndex + this._childWidgetOrder.length ) % this._childWidgetOrder.length;
-                    }
-                    else
-                        if(_newSelectedIndex < 0 || _newSelectedIndex >= this._childWidgetOrder.length) {
+                    } else if(_newSelectedIndex < 0 || _newSelectedIndex >= this._childWidgetOrder.length) {
 
-                            break;
-                        }
+                        break;
+                    }
                     var _widget = this._childWidgetOrder[_newSelectedIndex];
                     if(_widget.isFocusable()) {
                         _newSelectedWidget = _widget;

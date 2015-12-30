@@ -65,10 +65,9 @@ require.def(
                 this._disabled = false;
 
                 /* Reduce the focusDelayTimeout for devices that don't have animation enabled */
-                if(typeof animationEnabled === 'boolean' && !animationEnabled){
+                if(typeof animationEnabled === 'boolean' && !animationEnabled) {
                     this._focusDelayTimeout = 500;
-                }
-                else{
+                } else {
                     this._focusDelayTimeout = 1500;
                 }
 

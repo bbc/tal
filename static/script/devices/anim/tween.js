@@ -60,12 +60,13 @@ require.def(
             // the same frame rate a chance to come in.
             if (!queue.isProcessing) {
                 queue.isProcessing = true;
-                setTimeout(function() { startIntervalTimer(queue, frameIntervalMs); }, frameIntervalMs / 2);
+                setTimeout(function() {
+                    startIntervalTimer(queue, frameIntervalMs);
+                }, frameIntervalMs / 2);
 
                 // First tween in a cycle should be applied immediately. It contains initial values.
                 step(options, tweenValues);
-            }
-            else {
+            } else {
                 // Queue is already being processed. Add the new entry to the queue.
                 queue.push({options: options, values: tweenValues});
             }
@@ -98,7 +99,9 @@ require.def(
          */
         function startIntervalTimer(queue, period) {
             // Store timer ID with the queue to allow it to be stopped later.
-            queue.intervalId = setInterval(function() { processQueue(queue); }, period);
+            queue.intervalId = setInterval(function() {
+                processQueue(queue);
+            }, period);
         }
 
         /**
@@ -112,16 +115,14 @@ require.def(
                 clearInterval(queue.intervalId);
                 queue.isProcessing = false;
                 queue.intervalId = null;
-            }
-            else {
+            } else {
                 // We have some DOM updates to do. Do each one in sequence, then clear the queue ready for the next round.
                 try {
                     for (var i = 0; i < queue.length; i++) {
                         var q = queue[i];
                         step(q.options, q.values);
                     }
-                }
-                finally {
+                } finally {
                     // Truncating the array length to zero clears it.
                     queue.length = 0;
                 }
