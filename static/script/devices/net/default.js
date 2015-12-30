@@ -116,7 +116,9 @@ require.def(
                 xhr.open(opts.method || 'GET', url, true);
                 if (opts && opts.headers) {
                     for (var header in opts.headers) {
-                        xhr.setRequestHeader(header, opts.headers[header]);
+                        if(opts.headers.hasOwnProperty(header)) {
+                            xhr.setRequestHeader(header, opts.headers[header]);
+                        }
                     }
                 }
                 xhr.send(opts.data || null);
@@ -165,7 +167,9 @@ require.def(
 
                     createForm();
                     for (var name in data) {
-                        createField(name, data[name]);
+                        if(data.hasOwnProperty(name)){
+                            createField(name, data[name]);
+                        }
                     }
                     form.submit();
                 }

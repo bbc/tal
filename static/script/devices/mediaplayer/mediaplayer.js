@@ -100,7 +100,9 @@ require.def(
 
                 if (eventLabels) {
                     for (var key in eventLabels) {
-                        event[key] = eventLabels[key];
+                        if(eventLabels.hasOwnProperty(key)) {
+                            event[key] = eventLabels[key];
+                        }
                     }
                 }
 

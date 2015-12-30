@@ -261,7 +261,9 @@ require.def('antie/widgets/componentcontainer',
         });
         ComponentContainer.destroy = function () {
             for (var module in _knownComponents) {
-                delete _knownComponents[module];
+                if(_knownComponents.hasOwnProperty(module)) {
+                    delete _knownComponents[module];
+                }
             }
         };
         return ComponentContainer;

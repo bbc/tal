@@ -124,7 +124,9 @@ require.def(
             getClasses: function() {
                 var _names = [];
                 for (var i in this._classNames) {
-                    _names.push(i);
+                    if(this._classNames.hasOwnProperty(i)) {
+                        _names.push(i);
+                    }
                 }
                 return _names;
             },
@@ -175,11 +177,13 @@ require.def(
                 var listeners = this._eventListeners[ev.type];
                 if (listeners) {
                     for (var func in listeners) {
-                        try {
-                            listeners[func](ev);
-                        } catch (exception) {
-                            var logger = this.getCurrentApplication().getDevice().getLogger();
-                            logger.error('Error in ' + ev.type + ' event listener on widget ' + this.id + ': ' + exception.message, exception, listeners[func]);
+                        if(listeners.hasOwnProperty(func)) {
+                            try {
+                                listeners[func](ev);
+                            } catch (exception) {
+                                var logger = this.getCurrentApplication().getDevice().getLogger();
+                                logger.error('Error in ' + ev.type + ' event listener on widget ' + this.id + ': ' + exception.message, exception, listeners[func]);
+                            }
                         }
                     }
                 }

@@ -147,7 +147,9 @@ require.def(
                 var listeners = eventListeners[ev];
                 if(listeners) {
                     for(var func in listeners) {
-                        listeners[func]();
+                        if(listeners.hasOwnProperty(func)) {
+                            listeners[func]();
+                        }
                     }
                 }
             }
