@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/devices/parentalguidance/youviewpghandler',
+require.def(
+    'antie/devices/parentalguidance/youviewpghandler',
     [
         'antie/devices/browserdevice',
         'antie/devices/parentalguidance/basepghandler',
@@ -51,15 +52,15 @@ require.def('antie/devices/parentalguidance/youviewpghandler',
                 youview.parentalControls.showPinPrompt().then(
                     function (responseCode) {
                         switch (responseCode) {
-                            case responseValues.CORRECT:
-                                onGuidanceChallengeResponse(PgChallengeResponse.AUTHORISED);
-                                break;
-                            case responseValues.INCORRECT:
-                            case responseValues.CANCELLED_BY_USER:
-                                onGuidanceChallengeResponse(PgChallengeResponse.NOT_AUTHORISED);
-                                break;
-                            default:
-                                onGuidanceChallengeResponse(PgChallengeResponse.ERROR);
+                        case responseValues.CORRECT:
+                            onGuidanceChallengeResponse(PgChallengeResponse.AUTHORISED);
+                            break;
+                        case responseValues.INCORRECT:
+                        case responseValues.CANCELLED_BY_USER:
+                            onGuidanceChallengeResponse(PgChallengeResponse.NOT_AUTHORISED);
+                            break;
+                        default:
+                            onGuidanceChallengeResponse(PgChallengeResponse.ERROR);
                         }
                     },
                     function () {
@@ -73,7 +74,7 @@ require.def('antie/devices/parentalguidance/youviewpghandler',
             isConfigurable: function () {
                 return false;
             }
-        })
+        });
 
         Device.prototype.parentalGuidanceHelper = new youViewPgHandler;
 

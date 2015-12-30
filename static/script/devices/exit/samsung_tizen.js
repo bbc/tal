@@ -27,9 +27,9 @@
  */
 
 require.def(
-	'antie/devices/exit/samsung_tizen',
-	['antie/devices/browserdevice'],
-	function(Device) {
+    'antie/devices/exit/samsung_tizen',
+    ['antie/devices/browserdevice'],
+    function(Device) {
         'use strict';
 
         /**
@@ -37,7 +37,7 @@ require.def(
          */
         Device.prototype.exit = function() {
             // From http://www.samsungdforum.com/tizenapiguide/
-			/* global tizen: true */
+            /* global tizen: true */
             tizen.application.getCurrentApplication().exit();
         };
     }

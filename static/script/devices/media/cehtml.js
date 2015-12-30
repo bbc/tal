@@ -52,39 +52,39 @@ require.def(
                 this._eventsBound = false;
 
                 var device = RunTimeContext.getDevice();
-                this._outputElement = device._createElement("div");
+                this._outputElement = device._createElement('div');
 
                 // Create the DOM element now so the wrapped functions can modify attributes
                 // before it is placed in the Document during rendering.
-                this._createCEHTMLObjectElement((mediaType === "audio") ? "audio/mp4" : "video/mp4");
+                this._createCEHTMLObjectElement((mediaType === 'audio') ? 'audio/mp4' : 'video/mp4');
                 this._mediaElement.width = 1280;
                 this._mediaElement.height = 720;
 
-                if (mediaType === "audio") {
-                    this._mediaType = "audio";
-                } else if (mediaType === "video") {
-                    this._mediaType = "video";
+                if (mediaType === 'audio') {
+                    this._mediaType = 'audio';
+                } else if (mediaType === 'video') {
+                    this._mediaType = 'video';
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
                 }
             },
             _createCEHTMLObjectElement: function(contentType) {
                 var device = RunTimeContext.getDevice();
-                var obj = device._createElement("object", this.id);
-                obj.setAttribute("type", contentType);
-                obj.style.width = "100%";
-                obj.style.height = "100%";
-                obj.style.position = "absolute";
-                obj.style.zIndex = "-1";
+                var obj = device._createElement('object', this.id);
+                obj.setAttribute('type', contentType);
+                obj.style.width = '100%';
+                obj.style.height = '100%';
+                obj.style.position = 'absolute';
+                obj.style.zIndex = '-1';
                 this._mediaElement = obj;
                 this._outputElement.appendChild(this._mediaElement);
             },
-            render: function(device) { //jshint ignore:line
+            render: function(/*device*/) { //jshint ignore:line
                 return this._outputElement;
             },
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType === "audio") {
+                if (this._mediaType === 'audio') {
                     throw new Error('Unable to set window size for CE-HTML audio.');
                 }
                 var device = RunTimeContext.getDevice();
@@ -129,52 +129,52 @@ require.def(
                     // Handle CE-HTML playstate change events
                     // Note: this has to be bound after setting player.data
                     this._mediaElement.onPlayStateChange = function() {
-	                if (self._updateInterval) {
-		            window.clearInterval(self._updateInterval);
-		            self._updateInterval = false;
-	                }
+                        if (self._updateInterval) {
+                            window.clearInterval(self._updateInterval);
+                            self._updateInterval = false;
+                        }
                         switch (self._mediaElement.playState) {
-                            case CEHTMLPlayer.PLAY_STATE_STOPPED:
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_PLAYING:
-                                self._seekState.playing();
-                                if (!self._loaded) {
-                                    self._eventHandlingCallback(new MediaEvent("loadedmetadata", self));
-                                    self._eventHandlingCallback(new MediaEvent("canplaythrough", self));
-                                    self._loaded = true;
-                                }
-                                self._eventHandlingCallback(new MediaEvent("play", self));
-                                self._eventHandlingCallback(new MediaEvent("playing", self));
-                                if (!self._updateInterval) {
-                                    self._updateInterval = window.setInterval(function() {
-                                        self._eventHandlingCallback(new MediaEvent("timeupdate", self));
-                                    }, 900);
-                                }
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_PAUSED:
-                                self._eventHandlingCallback(new MediaEvent("pause", self));
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_CONNECTING:
-                                self._eventHandlingCallback(new MediaEvent("loadstart", self));
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_BUFFERING:
-                                self._eventHandlingCallback(new MediaEvent("waiting", self));
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_FINISHED:
-                                self._eventHandlingCallback(new MediaEvent("ended", self));
-                                break;
-                            case CEHTMLPlayer.PLAY_STATE_ERROR:
-                                self._eventHandlingCallback(new MediaErrorEvent(self, 0));
-                                break;
-                            default:
-                                // do nothing
-                                break;
+                        case CEHTMLPlayer.PLAY_STATE_STOPPED:
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_PLAYING:
+                            self._seekState.playing();
+                            if (!self._loaded) {
+                                self._eventHandlingCallback(new MediaEvent('loadedmetadata', self));
+                                self._eventHandlingCallback(new MediaEvent('canplaythrough', self));
+                                self._loaded = true;
+                            }
+                            self._eventHandlingCallback(new MediaEvent('play', self));
+                            self._eventHandlingCallback(new MediaEvent('playing', self));
+                            if (!self._updateInterval) {
+                                self._updateInterval = window.setInterval(function() {
+                                    self._eventHandlingCallback(new MediaEvent('timeupdate', self));
+                                }, 900);
+                            }
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_PAUSED:
+                            self._eventHandlingCallback(new MediaEvent('pause', self));
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_CONNECTING:
+                            self._eventHandlingCallback(new MediaEvent('loadstart', self));
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_BUFFERING:
+                            self._eventHandlingCallback(new MediaEvent('waiting', self));
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_FINISHED:
+                            self._eventHandlingCallback(new MediaEvent('ended', self));
+                            break;
+                        case CEHTMLPlayer.PLAY_STATE_ERROR:
+                            self._eventHandlingCallback(new MediaErrorEvent(self, 0));
+                            break;
+                        default:
+                            // do nothing
+                            break;
                         }
                     };
 
                     this._eventsBound = true;
                 }
-                this._eventHandlingCallback(new MediaEvent("canplay", this));
+                this._eventHandlingCallback(new MediaEvent('canplay', this));
             },
             getSources: function() {
                 return [new MediaSource(this._mediaElement.data, this._mediaElement.type)];
@@ -199,9 +199,9 @@ require.def(
             // @returns "none", "metadata" or "auto"
             getPreload: function() {
                 // TODO: CE-HTML implementation
-                return "none";
+                return 'none';
             },
-            setPreload: function(preload) { //jshint ignore:line
+            setPreload: function(/*preload*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges buffered;
@@ -214,7 +214,7 @@ require.def(
                 // TODO: CE-HTML implementation
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(type) { //jshint ignore:line
+            canPlayType: function(/*type*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
                 return true;
             },
@@ -275,7 +275,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return 1;
             },
-            setPlaybackRate: function(playbackRate) { //jshint ignore:line
+            setPlaybackRate: function(/*playbackRate*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges played;
@@ -297,7 +297,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setAutoPlay: function(autoplay) { //jshint ignore:line
+            setAutoPlay: function(/*autoplay*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // attribute boolean loop;
@@ -305,7 +305,7 @@ require.def(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setLoop: function(loop) { //jshint ignore:line
+            setLoop: function(/*loop*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             // void play();
@@ -325,7 +325,7 @@ require.def(
                 this._mediaElement.play(0);
             },
             // attribute boolean controls;
-            setNativeControls: function(controls) { //jshint ignore:line
+            setNativeControls: function(/*controls*/) { //jshint ignore:line
                 // TODO: CE-HTML implementation
             },
             getNativeControls: function() {
@@ -356,7 +356,7 @@ require.def(
         Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
             return new CEHTMLPlayer(id, mediaType, eventCallback);
         };
-        Device.prototype.getPlayerEmbedMode = function(mediaType) { //jshint ignore:line
+        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) { //jshint ignore:line
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
 

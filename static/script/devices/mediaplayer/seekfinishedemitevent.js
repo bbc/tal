@@ -28,11 +28,13 @@
  * Please contact us for an alternative licence
  */
 require.def(
-    "antie/devices/mediaplayer/seekfinishedemitevent",
-    ["antie/devices/mediaplayer/mediaplayer",
-        "antie/runtimecontext"],
+    'antie/devices/mediaplayer/seekfinishedemitevent',
+    [
+        'antie/devices/mediaplayer/mediaplayer',
+        'antie/runtimecontext'
+    ],
     function (MediaPlayer, RuntimeContext) {
-        "use strict";
+        'use strict';
 
         return function (OverrideClass) {
             var oldSetSource = OverrideClass.prototype.setSource;
@@ -80,6 +82,6 @@ require.def(
                 }
 
             };
-        }
+        };
     }
 );

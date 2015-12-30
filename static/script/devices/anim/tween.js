@@ -27,10 +27,10 @@
 require.def(
     'antie/devices/anim/tween',
     [
-     'antie/devices/browserdevice',
-     'antie/lib/shifty'
-     ],
-     function(Device, Tweenable) {
+        'antie/devices/browserdevice',
+        'antie/lib/shifty'
+    ],
+    function(Device, Tweenable) {
         'use strict';
 
         // A set of queues of DOM updates to perform. Each animation framerate gets its own queue
@@ -148,44 +148,44 @@ require.def(
             var self = this;
 
             var opts = {
-                    el: options.el,
-                    initialState: options.from || {},
-                    from: options.from || {},
-                    to: options.to || {},
-                    duration: options.duration || 840,
-                    easing: options.easing || 'easeFromTo',
-                    fps: options.fps || 25,
-                    start: function() {
-                        if (options.className) {
-                            self.removeClassFromElement(options.el, "not" + options.className);
-                            self.addClassToElement(options.el,  options.className);
-                        }
-                        self.removeClassFromElement(self.getTopLevelElement(), "notanimating");
-                        self.addClassToElement(self.getTopLevelElement(), "animating");
-                        if (options.onStart) {
-                            options.onStart();
-                        }
-                    },
-                    step: function () {
-                        addTweenToQueue(opts, this);
-                    },
-                    callback: function () {
-                        if(options.className) {
-                            self.removeClassFromElement(options.el, options.className);
-                            self.addClassToElement(options.el, "not" + options.className);
-                        }
-                        self.removeClassFromElement(self.getTopLevelElement(), "animating");
-                        self.addClassToElement(self.getTopLevelElement(), "notanimating");
-                        // Send this animation to its final state immediately.
-                        drainTweensFromQueue(opts);
-                        if (this) {
-                            step(opts, this);
-                        }
-                        // Fire client callback if it exists
-                        if (typeof options.onComplete === 'function') {
-                            options.onComplete();
-                        }
+                el: options.el,
+                initialState: options.from || {},
+                from: options.from || {},
+                to: options.to || {},
+                duration: options.duration || 840,
+                easing: options.easing || 'easeFromTo',
+                fps: options.fps || 25,
+                start: function() {
+                    if (options.className) {
+                        self.removeClassFromElement(options.el, 'not' + options.className);
+                        self.addClassToElement(options.el,  options.className);
                     }
+                    self.removeClassFromElement(self.getTopLevelElement(), 'notanimating');
+                    self.addClassToElement(self.getTopLevelElement(), 'animating');
+                    if (options.onStart) {
+                        options.onStart();
+                    }
+                },
+                step: function () {
+                    addTweenToQueue(opts, this);
+                },
+                callback: function () {
+                    if(options.className) {
+                        self.removeClassFromElement(options.el, options.className);
+                        self.addClassToElement(options.el, 'not' + options.className);
+                    }
+                    self.removeClassFromElement(self.getTopLevelElement(), 'animating');
+                    self.addClassToElement(self.getTopLevelElement(), 'notanimating');
+                    // Send this animation to its final state immediately.
+                    drainTweensFromQueue(opts);
+                    if (this) {
+                        step(opts, this);
+                    }
+                    // Fire client callback if it exists
+                    if (typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
+                }
             };
 
             anim.tween(opts);

@@ -43,10 +43,11 @@ require.def(
         Device.prototype.loadScript = function (url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) {
             var self = this;
             var script = null;
-            var funcName = "_antie_callback_" + (callbackSuffix || ((new Date() * 1) + "_" + Math.floor(Math.random() * 10000000)));
+            var funcName = '_antie_callback_' + (callbackSuffix || ((new Date() * 1) + '_' + Math.floor(Math.random() * 10000000)));
 
-            if (window[funcName])
-                throw "A request with the name " + funcName + " is already in flight";
+            if (window[funcName]) {
+                throw 'A request with the name ' + funcName + ' is already in flight';
+            }
 
             var timeoutHandle = window.setTimeout(function () {
                 if (window[funcName]) {
@@ -71,9 +72,9 @@ require.def(
                 delete window[funcName];
             };
 
-            script = this._createElement("script");
+            script = this._createElement('script');
             script.src = url.replace(callbackFunctionRegExp, funcName);
-            var head = document.getElementsByTagName("head")[0];
+            var head = document.getElementsByTagName('head')[0];
             head.appendChild(script);
             return script;
         };
@@ -135,12 +136,12 @@ require.def(
         Device.prototype.crossDomainPost = function (url, data, opts) {
             var iframe, form;
             var postRequestHasBeenSent = false;
-            var blankPageToLoad = opts.blankUrl || "blank.html";
+            var blankPageToLoad = opts.blankUrl || 'blank.html';
             var timeoutHandle;
 
             function iframeLoadTimeoutCallback() {
                 iframe.onload = null;
-                if (opts.onError) opts.onError("timeout");
+                if (opts.onError) { opts.onError('timeout'); }
             }
 
             function iframeLoadedCallback() {
@@ -154,7 +155,7 @@ require.def(
                 if (errorGettingIFrameLocation || !urlLoadedIntoInvisibleIFrame) {
                     // we didn't load the page - give the browser a second chance to load the iframe
                     setTimeout(function () {
-                        iframe.src = blankPageToLoad + "#2";
+                        iframe.src = blankPageToLoad + '#2';
                     }, 500);
                     return;
                 }
@@ -181,7 +182,7 @@ require.def(
                             opts.onLoad(responseData);
                         }
                     } catch (exception) {
-                        if (opts.onError) opts.onError(exception);
+                        if (opts.onError) { opts.onError(exception); }
                     }
                 }
             }
@@ -196,7 +197,7 @@ require.def(
 
             function createField(name, value) {
                 var input = document.createElement('input');
-                input.type = "hidden";
+                input.type = 'hidden';
                 input.name = name;
                 input.value = value;
                 form.appendChild(input);
@@ -204,9 +205,9 @@ require.def(
 
             function createIframe() {
                 iframe = document.createElement('iframe');
-                iframe.style.width = "0";
-                iframe.style.height = "0";
-                iframe.src = blankPageToLoad + "#1";
+                iframe.style.width = '0';
+                iframe.style.height = '0';
+                iframe.src = blankPageToLoad + '#1';
                 iframe.onload = iframeLoadedCallback;
                 document.body.appendChild(iframe);
             }
@@ -246,7 +247,7 @@ require.def(
 
                 if (opts.bearerToken) {
                     modifiedOpts.headers = {
-                        Authorization: "Bearer " + opts.bearerToken
+                        Authorization: 'Bearer ' + opts.bearerToken
                     };
                 }
 
@@ -261,7 +262,7 @@ require.def(
                 }
 
                 if (opts.bearerToken) {
-                    url = url + "&bearerToken=" + opts.bearerToken;
+                    url = url + '&bearerToken=' + opts.bearerToken;
                 }
 
                 this.loadScript(url, /%callback%/, opts, jsonpOptions.timeout, jsonpOptions.id);
@@ -289,14 +290,14 @@ require.def(
                     onLoad: opts.onLoad,
                     onError: opts.onError,
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
                     data: payload,
-                    method: "POST"
+                    method: 'POST'
                 };
 
                 if (opts.bearerToken) {
-                    modifiedOpts.headers.Authorization = "Bearer " + opts.bearerToken;
+                    modifiedOpts.headers.Authorization = 'Bearer ' + opts.bearerToken;
                 }
 
                 this.loadURL(url, modifiedOpts);
@@ -321,4 +322,3 @@ require.def(
         }
     }
 );
-

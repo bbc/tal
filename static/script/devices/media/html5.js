@@ -50,10 +50,10 @@ require.def(
 
                 this._eventHandlingCallback = eventHandlingCallback;
 
-                if (mediaType == "audio") {
-                    this._mediaType = "audio";
-                } else if (mediaType == "video") {
-                    this._mediaType = "video";
+                if (mediaType == 'audio') {
+                    this._mediaType = 'audio';
+                } else if (mediaType == 'video') {
+                    this._mediaType = 'video';
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
                 }
@@ -77,7 +77,7 @@ require.def(
                 this._eventWrapper = null;
                 this._errorEventWrapper = null;
             },
-            render: function(device) {
+            render: function(/*device*/) {
                 if (!this._renderCalled) {
                     this._renderCalled = true;
 
@@ -87,21 +87,21 @@ require.def(
                     this._eventWrapper = function(evt) {
                         self._eventHandlingCallback(new MediaEvent(evt.type, self));
                     };
-                    this._errorEventWrapper = function(evt) {
+                    this._errorEventWrapper = function() {
                         var errCode = self._mediaElement.error ? self._mediaElement.error.code : MediaInterface.MEDIA_ERR_UNKNOWN;
                         self._eventHandlingCallback(new MediaErrorEvent(self, errCode));
                     };
                     for (var i = 0; i < MediaEvent.TYPES.length; i++) {
                         this._mediaElement.addEventListener(MediaEvent.TYPES[i], this._eventWrapper, true);
                     }
-                    this._mediaElement.addEventListener("error", this._errorEventWrapper, true);
+                    this._mediaElement.addEventListener('error', this._errorEventWrapper, true);
                 }
 
                 return this._mediaElement;
             },
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType == "audio") {
+                if (this._mediaType == 'audio') {
                     throw new Error('Unable to set window size for HTML5 audio.');
                 }
                 var device = Application.getCurrentApplication().getDevice();
@@ -149,7 +149,7 @@ require.def(
                             ));
                             evt.stopPropagation();
                         };
-                        source.addEventListener("error", source._errorEventListener, true);
+                        source.addEventListener('error', source._errorEventListener, true);
                     })(source);
                 }
             },
@@ -168,7 +168,7 @@ require.def(
             // readonly attribute DOMString currentSrc;
             getCurrentSource: function() {
                 // Some browsers URI encode apostrophes, others don't. Make sure they're all URI encoded.
-                return this._mediaElement.currentSrc.replace(/'/g, "%27");
+                return this._mediaElement.currentSrc.replace(/'/g, '%27');
             },
             /*
              const unsigned short NETWORK_EMPTY = 0;
@@ -284,7 +284,7 @@ require.def(
             },
             // void pause();
             pause: function() {
-				this._mediaElement.pause();
+                this._mediaElement.pause();
             },
             // attribute boolean controls;
             setNativeControls: function(controls) {
@@ -300,7 +300,7 @@ require.def(
                 device.removeElement(this._mediaElement);
 
                 // Remove error event listeners from each source element
-                var sourceElements = this._mediaElement.getElementsByTagName("source");
+                var sourceElements = this._mediaElement.getElementsByTagName('source');
 
                 // Loop through the array backwards as we remove array elements inside the loop body
                 var sourceElementsLength = sourceElements.length;
@@ -319,7 +319,7 @@ require.def(
                 for (var i = 0; i < MediaEvent.TYPES.length; i++) {
                     this._mediaElement.removeEventListener(MediaEvent.TYPES[i], this._eventWrapper, true);
                 }
-                this._mediaElement.removeEventListener("error", this._errorEventWrapper, true);
+                this._mediaElement.removeEventListener('error', this._errorEventWrapper, true);
 
                 // Trick to abort browser loading threads on certain webkit devices
                 if(this._requiresWebkitMemoryLeakFix()) {
@@ -334,7 +334,7 @@ require.def(
                 // http://stackoverflow.com/questions/5170398/ios-safari-memory-leak-when-loading-unloading-html5-video
                 // Resetting source is also advised by HTML5 video spec, section 4.8.10.15:
                 // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
-				this._mediaElement.removeAttribute("src");
+                this._mediaElement.removeAttribute('src');
                 this._mediaElement.load();
             }
         });
@@ -343,7 +343,7 @@ require.def(
             currentPlayer = new HTML5Player(id, mediaType, eventCallback);
             return currentPlayer;
         };
-        Device.prototype.getPlayerEmbedMode = function(mediaType) {
+        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) {
             return MediaInterface.EMBED_MODE_EMBEDDED;
         };
         /**
@@ -369,10 +369,10 @@ require.def(
          */
         Device.prototype.setVolume = function(volume) {
             if (volume > 1.0) {
-                this.getLogger().warn("HTML5 setVolume - Invalid volume specified (" + volume + " > 1.0). Clipped to 1.0");
+                this.getLogger().warn('HTML5 setVolume - Invalid volume specified (' + volume + ' > 1.0). Clipped to 1.0');
                 volume = 1.0;
             } else if (volume < 0.0) {
-                this.getLogger().warn("HTML5 setVolume - Invalid volume specified (" + volume + " < 0.0). Clipped to 0.0");
+                this.getLogger().warn('HTML5 setVolume - Invalid volume specified (' + volume + ' < 0.0). Clipped to 0.0');
                 volume = 0;
             }
             currentVolume = volume;

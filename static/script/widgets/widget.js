@@ -30,7 +30,8 @@
  * @namespace
  */
 
-require.def('antie/widgets/widget',
+require.def(
+    'antie/widgets/widget',
     [
         'antie/class',
         'antie/runtimecontext',
@@ -60,7 +61,7 @@ require.def('antie/widgets/widget',
              * @ignore
              */
             init: function(id) {
-                this._classNames = {"widget":true};
+                this._classNames = {'widget':true};
                 this.parentWidget = null;
                 this.outputElement = null;
                 this._eventListeners = {};
@@ -68,7 +69,7 @@ require.def('antie/widgets/widget',
                 this._isFocussed = false;
 
                 function createUniqueID() {
-                    return "#" + (new Date() * 1) + "_" + (widgetUniqueIDIndex++);
+                    return '#' + (new Date() * 1) + '_' + (widgetUniqueIDIndex++);
                 }
 
                 // ensure all widgets have an ID
@@ -79,8 +80,8 @@ require.def('antie/widgets/widget',
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
-                throw new Error("Widget::render called - the subclass for widget '" + this.id + "' must have not overridden the render method.");
+            render: function(/*device*/) {
+                throw new Error('Widget::render called - the subclass for widget \'' + this.id + '\' must have not overridden the render method.');
             },
             /**
              * Adds a CSS class to the widget if not already present.
@@ -178,7 +179,7 @@ require.def('antie/widgets/widget',
                             listeners[func](ev);
                         } catch (exception) {
                             var logger = this.getCurrentApplication().getDevice().getLogger();
-                            logger.error("Error in " + ev.type + " event listener on widget " + this.id + ": " + exception.message, exception, listeners[func]);
+                            logger.error('Error in ' + ev.type + ' event listener on widget ' + this.id + ': ' + exception.message, exception, listeners[func]);
                         }
                     }
                 }
@@ -293,7 +294,7 @@ require.def('antie/widgets/widget',
                     var device = this.getCurrentApplication().getDevice();
                     device.showElement(options);
                 } else {
-                    throw new Error("Widget::show called - the current widget has not yet been rendered.");
+                    throw new Error('Widget::show called - the current widget has not yet been rendered.');
                 }
             },
             /**
@@ -312,7 +313,7 @@ require.def('antie/widgets/widget',
                     var device = this.getCurrentApplication().getDevice();
                     device.hideElement(options);
                 } else {
-                    throw new Error("Widget::hide called - the current widget has not yet been rendered.");
+                    throw new Error('Widget::hide called - the current widget has not yet been rendered.');
                 }
             },
             /**
@@ -331,7 +332,7 @@ require.def('antie/widgets/widget',
                     var device = this.getCurrentApplication().getDevice();
                     device.moveElementTo(options);
                 } else {
-                    throw new Error("Widget::moveTo called - the current widget has not yet been rendered.");
+                    throw new Error('Widget::moveTo called - the current widget has not yet been rendered.');
                 }
             }
         });

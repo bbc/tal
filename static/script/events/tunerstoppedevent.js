@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/tunerstoppedevent',
+require.def(
+    'antie/events/tunerstoppedevent',
     ['antie/events/event'],
     function (Event) {
         'use strict';
@@ -41,7 +42,7 @@ require.def('antie/events/tunerstoppedevent',
              * @ignore
              */
             init: function() {
-                this._super("tunerstopped");
+                this._super('tunerstopped');
             }
         });
     }

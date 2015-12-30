@@ -17,60 +17,64 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
-require.def ('antie/widgets/state_view_container', [
-    'antie/widgets/container',
-    'antie/events/keyevent',
-    'antie/widgets/button'
-], function(Container, KeyEvent, Button){
-    'use strict';
+require.def (
+    'antie/widgets/state_view_container',
+    [
+        'antie/widgets/container',
+        'antie/events/keyevent',
+        'antie/widgets/button'
+    ], function(Container, KeyEvent, Button){
+        'use strict';
 
-    var keyMapping = { };
-    keyMapping[KeyEvent.VK_UP] = 'up';
-    keyMapping[KeyEvent.VK_DOWN] = 'down';
-    keyMapping[KeyEvent.VK_LEFT] = 'left';
-    keyMapping[KeyEvent.VK_RIGHT] = 'right';
-    keyMapping[KeyEvent.VK_BACK] = 'back';
+        var keyMapping = { };
+        keyMapping[KeyEvent.VK_UP] = 'up';
+        keyMapping[KeyEvent.VK_DOWN] = 'down';
+        keyMapping[KeyEvent.VK_LEFT] = 'left';
+        keyMapping[KeyEvent.VK_RIGHT] = 'right';
+        keyMapping[KeyEvent.VK_BACK] = 'back';
 
-     var StateViewContainer = Container.extend( {
+        var StateViewContainer = Container.extend( {
 
-        init:function(controller) {
-            this._super();
+            init:function(controller) {
+                this._super();
 
-            var self = this;
+                var self = this;
 
 
-            this.focusButtonHack = new Button();
-            this.appendChildWidget(this.focusButtonHack);
+                this.focusButtonHack = new Button();
+                this.appendChildWidget(this.focusButtonHack);
 
-            this.addEventListener("select",  function() { controller.select(); });
+                this.addEventListener('select',  function() { controller.select(); });
 
-            this.addEventListener("keydown", function(evt){
-               var mappedFunctionName = keyMapping[evt.keyCode];
-                if (mappedFunctionName){
-                   controller[mappedFunctionName]();
-               }
-            });
+                this.addEventListener('keydown', function(evt){
+                    var mappedFunctionName = keyMapping[evt.keyCode];
+                    if (mappedFunctionName){
+                        controller[mappedFunctionName]();
+                    }
+                });
 
-            this.addEventListener("afterhide", function() {
-                  self.focusHack();
-            });
 
-            this.addEventListener("beforeshow", function(evt) {
-                   self.getCurrentApplication().setActiveComponent(evt.component.id);
-            });
+                this.addEventListener('afterhide', function() {
+                    self.focusHack();
+                });
 
-        },
-        focusHack: function() {
-           this._isFocussed = true;
-           this.focusButtonHack.focus();
-        }
-    } );
 
-    return StateViewContainer;
+                this.addEventListener('beforeshow', function(evt) {
+                    self.getCurrentApplication().setActiveComponent(evt.component.id);
+                });
 
-});
+            },
+            focusHack: function() {
+                this._isFocussed = true;
+                this.focusButtonHack.focus();
+            }
+        } );
+
+        return StateViewContainer;
+
+    });

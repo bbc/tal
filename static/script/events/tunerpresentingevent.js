@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/tunerpresentingevent',
+require.def(
+    'antie/events/tunerpresentingevent',
     ['antie/events/event'],
     function (Event) {
         'use strict';
@@ -43,7 +44,7 @@ require.def('antie/events/tunerpresentingevent',
              */
             init: function(channelName) {
                 this.channel = channelName;
-                this._super("tunerpresenting");
+                this._super('tunerpresenting');
             }
         });
     }

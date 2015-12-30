@@ -34,9 +34,9 @@ require.def(
 
         /**
          * Exits the application by returning to broadcast using the Samsung API.
-        */
+         */
         Device.prototype.exitToBroadcast = function() {
-           new Common.API.Widget().sendExitEvent();
+            new Common.API.Widget().sendExitEvent();
         };
 
     }

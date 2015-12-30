@@ -207,7 +207,6 @@ require.def('antie/widgets/componentcontainer',
              * Hide the component within this container.
              */
             hide: function (focusToComponent, args, keepHistory, state, fromBack) {
-                var self = this;
 
                 if (this._currentComponent) {
                     var evt = new ComponentEvent('beforehide', this, this._currentComponent, args, state, fromBack);

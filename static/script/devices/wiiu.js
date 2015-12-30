@@ -27,13 +27,14 @@
  */
 
 
-require.def('antie/devices/wiiu',
+require.def(
+    'antie/devices/wiiu',
     [
         'antie/devices/browserdevice',
         'antie/events/keyevent'
     ],
     function(BrowserDevice, KeyEvent) {
-    'use strict';
+        'use strict';
 
         return BrowserDevice.extend({
             /* global nwf: true */
@@ -65,48 +66,48 @@ require.def('antie/devices/wiiu',
             _onGamePadButtonPress : function(buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
-                    case controllerButton.GAMEPAD_A:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_ENTER));
-                        break;
-                    case controllerButton.GAMEPAD_B:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_BACK));
-                        break;
-                    case controllerButton.GAMEPAD_UP:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_UP));
-                        break;
-                    case controllerButton.GAMEPAD_DOWN:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_DOWN));
-                        break;
+                case controllerButton.GAMEPAD_A:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_ENTER));
+                    break;
+                case controllerButton.GAMEPAD_B:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_BACK));
+                    break;
+                case controllerButton.GAMEPAD_UP:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_UP));
+                    break;
+                case controllerButton.GAMEPAD_DOWN:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+                    break;
 
-                    case controllerButton.GAMEPAD_LEFT:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_LEFT));
-                        break;
-                    case controllerButton.GAMEPAD_RIGHT:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_RIGHT));
-                        break;
+                case controllerButton.GAMEPAD_LEFT:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_LEFT));
+                    break;
+                case controllerButton.GAMEPAD_RIGHT:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+                    break;
                 }
             },
             _onGamePadButtonRelease: function(buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
-                    case controllerButton.GAMEPAD_A:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_ENTER));
-                        break;
-                    case controllerButton.GAMEPAD_B:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_BACK));
-                        break;
-                    case controllerButton.GAMEPAD_UP:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_UP));
-                        break;
-                    case controllerButton.GAMEPAD_DOWN:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_DOWN));
-                        break;
-                    case controllerButton.GAMEPAD_LEFT:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_LEFT));
-                        break;
-                    case controllerButton.GAMEPAD_RIGHT:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_RIGHT));
-                        break;
+                case controllerButton.GAMEPAD_A:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_ENTER));
+                    break;
+                case controllerButton.GAMEPAD_B:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_BACK));
+                    break;
+                case controllerButton.GAMEPAD_UP:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_UP));
+                    break;
+                case controllerButton.GAMEPAD_DOWN:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_DOWN));
+                    break;
+                case controllerButton.GAMEPAD_LEFT:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_LEFT));
+                    break;
+                case controllerButton.GAMEPAD_RIGHT:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_RIGHT));
+                    break;
                 }
             },
             /**
@@ -129,47 +130,47 @@ require.def('antie/devices/wiiu',
             _onWiiRemoteButtonPress : function(buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
-                    case controllerButton.WII_REMOTE_A:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_ENTER));
-                        break;
-                    case controllerButton.WII_REMOTE_B:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_BACK));
-                        break;
-                    case controllerButton.WII_REMOTE_UP:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_UP));
-                        break;
-                    case controllerButton.WII_REMOTE_DOWN:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_DOWN));
-                        break;
-                    case controllerButton.WII_REMOTE_LEFT:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_LEFT));
-                        break;
-                    case controllerButton.WII_REMOTE_RIGHT:
-                        this._application.bubbleEvent(new KeyEvent("keydown", KeyEvent.VK_RIGHT));
-                        break;
+                case controllerButton.WII_REMOTE_A:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_ENTER));
+                    break;
+                case controllerButton.WII_REMOTE_B:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_BACK));
+                    break;
+                case controllerButton.WII_REMOTE_UP:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_UP));
+                    break;
+                case controllerButton.WII_REMOTE_DOWN:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+                    break;
+                case controllerButton.WII_REMOTE_LEFT:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_LEFT));
+                    break;
+                case controllerButton.WII_REMOTE_RIGHT:
+                    this._application.bubbleEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+                    break;
                 }
             },
             _onWiiRemoteButtonRelease : function(buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
-                    case controllerButton.WII_REMOTE_A:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_ENTER));
-                        break;
-                    case controllerButton.WII_REMOTE_B:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_BACK));
-                        break;
-                    case controllerButton.WII_REMOTE_UP:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_UP));
-                        break;
-                    case controllerButton.WII_REMOTE_DOWN:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_DOWN));
-                        break;
-                    case controllerButton.WII_REMOTE_LEFT:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_LEFT));
-                        break;
-                    case controllerButton.WII_REMOTE_RIGHT:
-                        this._application.bubbleEvent(new KeyEvent("keyup", KeyEvent.VK_RIGHT));
-                        break;
+                case controllerButton.WII_REMOTE_A:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_ENTER));
+                    break;
+                case controllerButton.WII_REMOTE_B:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_BACK));
+                    break;
+                case controllerButton.WII_REMOTE_UP:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_UP));
+                    break;
+                case controllerButton.WII_REMOTE_DOWN:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_DOWN));
+                    break;
+                case controllerButton.WII_REMOTE_LEFT:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_LEFT));
+                    break;
+                case controllerButton.WII_REMOTE_RIGHT:
+                    this._application.bubbleEvent(new KeyEvent('keyup', KeyEvent.VK_RIGHT));
+                    break;
                 }
             }
         });

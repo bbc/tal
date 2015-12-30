@@ -6,10 +6,8 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         eslint: {
             src: [
-                // 'static/script/**/*.js',
-                "static/script/widgets/horizontalprogress.js"
-                // 'static/script-test/**/*.js',
-                // 'gruntfile.js'
+                'static/script/**/*.js',
+                'static/script-test/**/*.js'
             ],
             options: {
                 quiet: true

@@ -30,37 +30,37 @@ require.def(
         'antie/class'
     ],
     function(Class) {
-        "use strict";
-        return Class.extend(         
+        'use strict';
+        return Class.extend(
             {
                 stripWhiteSpace: function(str) {
                     return str.replace(/(^\s+|\s+$)/g,'');
                 },
-        
+
                 csvAppend: function(existing, additional) {
                     var retStr;
-                    if (existing === "") {
+                    if (existing === '') {
                         retStr = additional;
                     } else {
                         retStr = existing + ',' + additional;
                     }
                     return retStr;
                 },
-                  
+
                 buildCsvString: function(arr) {
                     var i, csvString;
-                    csvString = "";
+                    csvString = '';
                     for (i = 0; i !== arr.length; i += 1) {
                         csvString = this.csvAppend(csvString, arr[i]);
                     }
                     return csvString;
                 },
-                
+
                 splitStringOnNonParenthesisedCommas: function(inString) {
                     var parenthCount, i, tokens, currentSegment, currentChar;
                     tokens = [];
                     parenthCount = 0;
-                    currentSegment = "";
+                    currentSegment = '';
                     for(i = 0; i !== inString.length; i += 1) {
                         currentChar = inString.charAt(i);
                         if(currentChar === '(') {
@@ -69,26 +69,26 @@ require.def(
                         if(currentChar === ')') {
                             parenthCount -= 1;
                         }
-                        if((parenthCount === 0 && currentChar === ",")) {
+                        if((parenthCount === 0 && currentChar === ',')) {
                             currentSegment = this.stripWhiteSpace(currentSegment);
-                            if(currentSegment !== "") {
+                            if(currentSegment !== '') {
                                 tokens.push(currentSegment);
                             }
-                            currentSegment = "";
+                            currentSegment = '';
                         } else {
                             currentSegment += currentChar;
                         }
                     }
-                    
+
                     currentSegment = this.stripWhiteSpace(currentSegment);
-                    if(currentSegment !== "") {
+                    if(currentSegment !== '') {
                         tokens.push(currentSegment);
                     }
 
                     return tokens;
-                    
+
                 }
             }
-        ); 
+        );
     }
 );

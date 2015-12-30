@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/list',
+require.def(
+    'antie/widgets/list',
     [
         'antie/widgets/container',
         'antie/widgets/listitem',
@@ -167,15 +168,15 @@ require.def('antie/widgets/list',
                     }
                     self._totalDataItems = iterator._currentIndex;
 
-                    self.bubbleEvent(new DataBoundEvent("databound", self, iterator));
+                    self.bubbleEvent(new DataBoundEvent('databound', self, iterator));
                 }
 
                 function processDataError(response) {
                     self.removeChildWidgets();
-                    self.bubbleEvent(new DataBoundEvent("databindingerror", self, null, response));
+                    self.bubbleEvent(new DataBoundEvent('databindingerror', self, null, response));
                 }
 
-                self.bubbleEvent(new DataBoundEvent("beforedatabind", self));
+                self.bubbleEvent(new DataBoundEvent('beforedatabind', self));
                 if (!this._dataSource || (this._dataSource instanceof Array)) {
                     processDataCallback(this._dataSource);
                 } else {
@@ -192,7 +193,7 @@ require.def('antie/widgets/list',
              */
             setDataSource: function (dataSource) {
                 // abort currently processing data requests
-                if (this._dataSource && typeof(this._dataSource.abort) === "function") {
+                if (this._dataSource && typeof(this._dataSource.abort) === 'function') {
                     this._dataSource.abort();
                 }
                 this._dataSource = dataSource;
@@ -237,7 +238,7 @@ require.def('antie/widgets/list',
                     }
 
                     if (evt.type === 'beforedatabind') {
-                        widget.setText("");
+                        widget.setText('');
                         return;
                     }
 
@@ -255,8 +256,8 @@ require.def('antie/widgets/list',
 
                     var activeWidget = self.getActiveChildWidget();
                     var index = (self._dataBound && activeWidget && (activeWidget._listIndex !== undefined)) ?
-                        activeWidget._listIndex :
-                        self._selectedIndex - ignore;
+                          activeWidget._listIndex :
+                          self._selectedIndex - ignore;
 
                     var total = self._childWidgetOrder.length - ignore;
 
@@ -305,10 +306,10 @@ require.def('antie/widgets/list',
                 // TODO: Make this more generic - it will only work if carousel items contain a
                 // TODO: single item of data.
                 if (this._updateProgressHandler && (this._childWidgetOrder.length < this._totalDataItems)) {
-                    this.getCurrentApplication().getDevice().getLogger().warn("antie.widgets.List::removeChildWidget - removing" +
-                        " list items where multiple data items are contained within each list item" +
-                        " can cause unintended behaviour within any position indicator attached" +
-                        " to the list.");
+                    this.getCurrentApplication().getDevice().getLogger().warn('antie.widgets.List::removeChildWidget - removing' +
+                                                                              ' list items where multiple data items are contained within each list item' +
+                                                                              ' can cause unintended behaviour within any position indicator attached' +
+                                                                              ' to the list.');
                 }
 
                 var ignore = this._childWidgetOrder.length - this._totalDataItems;

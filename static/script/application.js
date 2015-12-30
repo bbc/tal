@@ -71,7 +71,7 @@ require.def('antie/application',
                     Device.load(_configuration, {
                         onSuccess: deviceLoaded,
                         onError: function (err) {
-                            console.error("Unable to load device", err);
+                            console.error('Unable to load device', err);
                         }
                     });
                 } else {
@@ -394,7 +394,7 @@ require.def('antie/application',
              * Called after {@link #run} to launch the application at a specific location.
              * @param {Array} route Location of application.
              */
-            route: function (route) {
+            route: function (/*route*/) {
                 // intentionally left blank
             },
             /**

@@ -24,31 +24,32 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/selecteditemchangeevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/selecteditemchangeevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised when a {@link antie.widgets.List} has been scrolled to another item.
-		 * @name antie.events.SelectedItemChangeEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {antie.widgets.List} target The list that has changed.
-		 * @param {antie.widgets.Widget} item The list item that has been selected. 
-		 * @param {Integer} index The index of the list item that has been selected.
-		 */
-		return Event.extend(/** @lends antie.events.SelectedItemChangeEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(target, item, index) {
-				this.target = target;
-				this.item = item;
-				this.index = index;
-				this._super("selecteditemchange");
-			}
-		});
-	}
+        /**
+         * Class of events raised when a {@link antie.widgets.List} has been scrolled to another item.
+         * @name antie.events.SelectedItemChangeEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {antie.widgets.List} target The list that has changed.
+         * @param {antie.widgets.Widget} item The list item that has been selected.
+         * @param {Integer} index The index of the list item that has been selected.
+         */
+        return Event.extend(/** @lends antie.events.SelectedItemChangeEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(target, item, index) {
+                this.target = target;
+                this.item = item;
+                this.index = index;
+                this._super('selecteditemchange');
+            }
+        });
+    }
 );

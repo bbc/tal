@@ -21,15 +21,16 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/aligners/aligner',
+require.def(
+    'antie/widgets/carousel/aligners/aligner',
     [
         'antie/class',
-        "antie/events/beforealignevent",
-        "antie/events/afteralignevent",
-        "antie/widgets/carousel/aligners/alignmentqueue"
+        'antie/events/beforealignevent',
+        'antie/events/afteralignevent',
+        'antie/widgets/carousel/aligners/alignmentqueue'
     ],
     function (Class, BeforeAlignEvent, AfterAlignEvent, AlignmentQueue) {
-        "use strict";
+        'use strict';
         /**
          * Converts simple index based alignment instructions to combinations of
          * one or more pixel based alignments to be performed on the mask

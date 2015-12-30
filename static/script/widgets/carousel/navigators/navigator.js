@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/navigators/navigator',
+require.def(
+    'antie/widgets/carousel/navigators/navigator',
     [
         'antie/class',
         'antie/events/selecteditemchangeevent',
@@ -38,7 +39,7 @@ require.def('antie/widgets/carousel/navigators/navigator',
      * @extends antie.Class
      */
     function (Class, SelectedItemChangeEvent, BeforeSelectedItemChangeEvent) {
-        "use strict";
+        'use strict';
         var Navigator;
 
         Navigator = Class.extend(/** @lends antie.widgets.carousel.navigators.Navigator.prototype */{

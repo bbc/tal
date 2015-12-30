@@ -35,7 +35,7 @@ require.def('antie/devices/parentalguidance/basepghandler',
              * @returns {boolean}
              */
             isChallengeActive: function() {
-                throw new Error("IsChallengeActive method has not been implemented.");
+                throw new Error('IsChallengeActive method has not been implemented.');
             },
             /**
              * Show UI for pin challenge
@@ -44,21 +44,21 @@ require.def('antie/devices/parentalguidance/basepghandler',
              *                   where response is defined by object in pgchallengeresponse
              */
             showChallenge: function() {
-                throw new Error("ShowChallenge method has not been implemented.");
+                throw new Error('ShowChallenge method has not been implemented.');
             },
             /**
              * Determines whether handler can display PG message as part of its PIN challenge
              * @returns {boolean}
              */
             supportsMessage: function() {
-                throw new Error("SupportsMessage method has not been implemented.");
+                throw new Error('SupportsMessage method has not been implemented.');
             },
             /**
              * Determines whether handler can handle display of PG settings screen.
              * @returns {boolean}
              */
             isConfigurable: function() {
-                throw new Error("IsConfigurable method has not been implemented.");
+                throw new Error('IsConfigurable method has not been implemented.');
             }
         });
 

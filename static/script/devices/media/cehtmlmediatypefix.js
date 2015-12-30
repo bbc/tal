@@ -27,17 +27,17 @@
  */
 
 require.def(
-	'antie/devices/media/cehtmlmediatypefix',
-	[
-		'antie/devices/media/cehtml'
-	],
-	function (CEHTMLPlayer) {
-		'use strict';
+    'antie/devices/media/cehtmlmediatypefix',
+    [
+        'antie/devices/media/cehtml'
+    ],
+    function (CEHTMLPlayer) {
+        'use strict';
 
-		CEHTMLPlayer.prototype._requiresMediaTypeFix = function() {
-			return true;
-		};
+        CEHTMLPlayer.prototype._requiresMediaTypeFix = function() {
+            return true;
+        };
 
-		return CEHTMLPlayer;
-	}
+        return CEHTMLPlayer;
+    }
 );

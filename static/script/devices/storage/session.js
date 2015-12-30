@@ -25,22 +25,21 @@
  */
 
 require.def(
-	'antie/devices/storage/session',
-	['antie/storageprovider'],
-	function(StorageProvider) {
-		'use strict';
+    'antie/devices/storage/session',
+    ['antie/storageprovider'],
+    function(StorageProvider) {
+        'use strict';
 
-		var namespaces = {};
-		var SessionStorage = StorageProvider.extend({});
+        var namespaces = {};
+        var SessionStorage = StorageProvider.extend({});
 
-		SessionStorage.getNamespace = function(namespace) {
-			if(!namespaces[namespace]) {
-				namespaces[namespace] = new SessionStorage();
-			}
-			return namespaces[namespace];
-		};
+        SessionStorage.getNamespace = function(namespace) {
+            if(!namespaces[namespace]) {
+                namespaces[namespace] = new SessionStorage();
+            }
+            return namespaces[namespace];
+        };
 
-		return SessionStorage;
-	}
+        return SessionStorage;
+    }
 );
-

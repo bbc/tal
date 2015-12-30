@@ -26,7 +26,7 @@
 require.def('antie/events/beforealignevent',
     ['antie/events/event'],
     function (Event) {
-        "use strict";
+        'use strict';
         /**
          * Class of events raised when a Mask is about to change alignment of its widget strip.
          * @name antie.events.BeforeAlignEvent
@@ -44,7 +44,7 @@ require.def('antie/events/beforealignevent',
             init: function (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super("beforealign");
+                this._super('beforealign');
             }
         });
     }
