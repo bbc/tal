@@ -49,7 +49,7 @@ require.def(
             var changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
             var startTop = Math.abs(options.el.style.top.replace(/px/, '')) || 0;
             var changeTop = (options.to.top !== undefined) ? (options.to.top - startTop) : 0;
-            if ((changeLeft == 0) && (changeTop == 0)) {
+            if ((changeLeft === 0) && (changeTop === 0)) {
                 if (options.onComplete) {
                     options.onComplete();
                 }
@@ -101,7 +101,7 @@ require.def(
         Device.prototype.hideElement = function(options) {
             options.el.style.visibility = 'hidden';
             options.el.style.opacity = 0;
-            if (typeof options.onComplete == 'function') {
+            if (typeof options.onComplete === 'function') {
                 options.onComplete();
             }
         };
@@ -110,7 +110,7 @@ require.def(
         Device.prototype.showElement = function(options) {
             options.el.style.visibility = 'visible';
             options.el.style.opacity = 1;
-            if (typeof options.onComplete == 'function') {
+            if (typeof options.onComplete === 'function') {
                 options.onComplete();
             }
         };

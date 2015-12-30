@@ -50,9 +50,9 @@ require.def(
 
                 this._eventHandlingCallback = eventHandlingCallback;
 
-                if (mediaType == 'audio') {
+                if (mediaType === 'audio') {
                     this._mediaType = 'audio';
-                } else if (mediaType == 'video') {
+                } else if (mediaType === 'video') {
                     this._mediaType = 'video';
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
@@ -63,7 +63,7 @@ require.def(
                 var device = Application.getCurrentApplication().getDevice();
                 this._mediaElement = device._createElement(this._mediaType, id);
 
-                if (currentVolume != -1) {
+                if (currentVolume !== -1) {
                     this._mediaElement.volume = currentVolume;
                 } else {
                     currentVolume = this._mediaElement.volume;
@@ -101,7 +101,7 @@ require.def(
             },
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType == 'audio') {
+                if (this._mediaType === 'audio') {
                     throw new Error('Unable to set window size for HTML5 audio.');
                 }
                 var device = Application.getCurrentApplication().getDevice();

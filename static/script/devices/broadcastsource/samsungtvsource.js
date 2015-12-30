@@ -216,7 +216,7 @@ require.def(
                     var channel;
 
                     for (var i = 0; i < channels.length; i++) {
-                        if (channels[i].channelName == params.name) {
+                        if (channels[i].channelName === params.name) {
                             channel = channels[i];
                             break;
                         }

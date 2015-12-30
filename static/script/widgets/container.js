@@ -93,7 +93,7 @@ require.def(
 
                     // If there's no active child widget set, try and set it to this
                     // (Will only have an affect if it's focusable (i.e. contains a button))
-                    if(this._activeChildWidget == null) {
+                    if(!this._activeChildWidget) {
                         this.setActiveChildWidget(widget);
                     }
 
@@ -145,7 +145,7 @@ require.def(
 
                     // If there's no active child widget set, try and set it to this
                     // (Will only have an affect if it's focusable (i.e. contains a button))
-                    if(this._activeChildWidget == null) {
+                    if(!this._activeChildWidget) {
                         this.setActiveChildWidget(widget);
                     }
 
@@ -219,7 +219,7 @@ require.def(
              * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
              */
             hasChildWidget: function(id) {
-                return this._childWidgets[id] != null;
+                return !!this._childWidgets[id];
             },
             /**
              * Get a child widget from its unique ID.
@@ -268,9 +268,9 @@ require.def(
                     widget.addClass('active');
                     this._activeChildWidget = widget;
 
-                    if(this.getCurrentApplication().getFocussedWidget() == null) {
+                    if(!this.getCurrentApplication().getFocussedWidget()) {
                         var widgetIterator = this;
-                        while(widgetIterator.parentWidget != null) {
+                        while(widgetIterator.parentWidget) {
                             widgetIterator.parentWidget._activeChildWidget = widgetIterator;
                             widgetIterator._isFocussed = true;
 
@@ -309,7 +309,7 @@ require.def(
              * @private
              */
             _setActiveChildFocussed: function(focus) {
-                if(this._activeChildWidget && (this._activeChildWidget._isFocussed != focus)) {
+                if(this._activeChildWidget && (this._activeChildWidget._isFocussed !== focus)) {
                     this._activeChildWidget._isFocussed = focus;
                     if(focus) {
                         this._activeChildWidget.addClass('focus');
@@ -337,7 +337,7 @@ require.def(
             isFocusable: function() {
                 for(var i=0; i<this._childWidgetOrder.length; i++) {
                     if(this._childWidgetOrder[i].isFocusable()) {
-                        if(this._activeChildWidget == null) {
+                        if(!this._activeChildWidget) {
                             //this._activeChildWidget = this._childWidgetOrder[i];
                             this.setActiveChildWidget(this._childWidgetOrder[i]);
                         }

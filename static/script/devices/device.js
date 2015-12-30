@@ -706,9 +706,9 @@ require.def(
              * @returns StorageProvider object.
              */
             getStorage: function(storageType, namespace, opts) {
-                if (storageType == StorageProvider.STORAGE_TYPE_SESSION) {
+                if (storageType === StorageProvider.STORAGE_TYPE_SESSION) {
                     return SessionStorage.getNamespace(namespace);
-                } else if (storageType == StorageProvider.STORAGE_TYPE_PERSISTENT) {
+                } else if (storageType === StorageProvider.STORAGE_TYPE_PERSISTENT) {
                     return this.getPersistentStorage(namespace, opts);
                 }
             },

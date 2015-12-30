@@ -42,7 +42,7 @@ require.def(
             showChallenge: function(message, guidanceChallengeResponseCallBack) {
                 if (!this._appHandler) {
                     throw new Error('No default parental guidance handler is registered');
-                } else if (typeof(guidanceChallengeResponseCallBack.onGuidanceChallengeResponse) != 'function') {
+                } else if (typeof(guidanceChallengeResponseCallBack.onGuidanceChallengeResponse) !== 'function') {
                     throw new Error('The guidanceChallengeResponseCallback object should contain an onGuidanceChallengeResponse' +
                                     'function. The appHandler should call this function with a value from pgchallengeresponse.js as the first parameter');
                 } else {

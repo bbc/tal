@@ -71,7 +71,7 @@ require.def(
                     return arr.indexOf(obj, start);
                 } else {
                     for (var i = (start || 0); i < arr.length; i++) {
-                        if (arr[i] == obj) {
+                        if (arr[i] === obj) {
                             return i;
                         }
                     }
@@ -89,7 +89,7 @@ require.def(
                 var el = document.createElement(tagName);
 
                 // don't add auto-generated IDs to the DOM
-                if (id && (id.substring(0, 1) != '#')) {
+                if (id && (id.substring(0, 1) !== '#')) {
                     el.id = id;
                 }
                 if (classNames && (classNames.length > 0)) {
@@ -497,7 +497,7 @@ require.def(
                 tagName = tagName.toLowerCase();
                 for (var i = 0; i < el.childNodes.length; i++) {
                     if(el.childNodes[i].tagName){
-                        if (el.childNodes[i].tagName.toLowerCase() == tagName) {
+                        if (el.childNodes[i].tagName.toLowerCase() === tagName) {
                             children.push(el.childNodes[i]);
                         }
                     }
@@ -560,7 +560,7 @@ require.def(
              */
             getScreenSize: function() {
                 var w, h;
-                if (typeof(window.innerWidth) == 'number') {
+                if (typeof(window.innerWidth) === 'number') {
                     w = window.innerWidth;
                     h = window.innerHeight;
                 } else {
