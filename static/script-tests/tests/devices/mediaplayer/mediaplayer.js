@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaPlayerTest = AsyncTestCase("MediaPlayerTest"); //jshint ignore:line
+    this.MediaPlayerTest = AsyncTestCase('MediaPlayerTest'); //jshint ignore:line
 
     this.MediaPlayerTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -49,22 +49,34 @@
             doEvent: function(type) {
                 this._emitEvent(type);
             },
-            getSource: function () { return "url"; },
-            getMimeType: function () { return "mime/type"; },
-            getCurrentTime: function () { return currentTime; },
-            getSeekableRange: function () { return range; },
-            getDuration: function () { return range.end; },
-            getState: function () { return MediaPlayer.STATE.PLAYING; }
+            getSource: function () {
+                return 'url';
+            },
+            getMimeType: function () {
+                return 'mime/type';
+            },
+            getCurrentTime: function () {
+                return currentTime;
+            },
+            getSeekableRange: function () {
+                return range;
+            },
+            getDuration: function () {
+                return range.end;
+            },
+            getState: function () {
+                return MediaPlayer.STATE.PLAYING;
+            }
         });
     };
 
     var getConfig = function() {
-        return {"modules":{"base":"antie/devices/browserdevice","modifiers":[]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        return {'modules':{'base':'antie/devices/browserdevice','modifiers':[]}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
     };
 
     this.MediaPlayerTest.prototype.testEventsEmittedBySubclassGoToAddedCallbackWithAllMetadata = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedRequire(queue, ['antie/devices/mediaplayer/mediaplayer'], function(MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -79,8 +91,8 @@
                 currentTime: 0,
                 seekableRange: { start: 0, end: 100 },
                 duration: 100,
-                url: "url",
-                mimeType: "mime/type",
+                url: 'url',
+                mimeType: 'mime/type',
                 state: MediaPlayer.STATE.PLAYING
             }));
         });
@@ -88,18 +100,30 @@
 
     this.MediaPlayerTest.prototype.testEventsEmittedBySubclassHaveMetaDataCollectedFromAccessors = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedRequire(queue, ['antie/devices/mediaplayer/mediaplayer'], function(MediaPlayer) {
 
             var SubClass = MediaPlayer.extend({
                 doEvent: function(type) {
                     this._emitEvent(type);
                 },
-                getSource: function () { return "url2"; },
-                getMimeType: function () { return "mime/type2"; },
-                getCurrentTime: function () { return 2; },
-                getSeekableRange: function () { return { start: 22, end: 200 }; },
-                getDuration: function () { return 666; },
-                getState: function () { return MediaPlayer.STATE.BUFFERING; }
+                getSource: function () {
+                    return 'url2';
+                },
+                getMimeType: function () {
+                    return 'mime/type2';
+                },
+                getCurrentTime: function () {
+                    return 2;
+                },
+                getSeekableRange: function () {
+                    return { start: 22, end: 200 };
+                },
+                getDuration: function () {
+                    return 666;
+                },
+                getState: function () {
+                    return MediaPlayer.STATE.BUFFERING;
+                }
             });
 
             var instance = new SubClass();
@@ -114,8 +138,8 @@
                 currentTime: 2,
                 seekableRange: { start: 22, end: 200 },
                 duration: 666,
-                url: "url2",
-                mimeType: "mime/type2",
+                url: 'url2',
+                mimeType: 'mime/type2',
                 state: MediaPlayer.STATE.BUFFERING
             }));
         });
@@ -123,7 +147,7 @@
 
     this.MediaPlayerTest.prototype.testEventsEmittedBySubclassDoNotGoToSpecificallyRemovedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedRequire(queue, ['antie/devices/mediaplayer/mediaplayer'], function(MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -142,7 +166,7 @@
 
     this.MediaPlayerTest.prototype.testEventsEmittedBySubclassDoNotGoToAnyRemovedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+        queuedRequire(queue, ['antie/devices/mediaplayer/mediaplayer'], function(MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -162,7 +186,7 @@
     this.MediaPlayerTest.prototype.testClampingCalculation = function (queue) {
         expectAsserts(18);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -201,7 +225,7 @@
         };
 
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -223,7 +247,7 @@
         };
 
         expectAsserts(3);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -236,7 +260,7 @@
 
     this.MediaPlayerTest.prototype.testIsNearToCurrentTimeCalculation = function (queue) {
         expectAsserts(14);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"], function(application, MediaPlayer) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'], function(application, MediaPlayer) {
 
             var SubClass = createSubClass(MediaPlayer);
             var instance = new SubClass();
@@ -262,11 +286,11 @@
     var testThatMediaPlayerFunctionThrowsError = function (action) {
         return function (queue) {
             expectAsserts(1);
-            queuedRequire(queue, ["antie/devices/mediaplayer/mediaplayer"], function(MediaPlayer) {
+            queuedRequire(queue, ['antie/devices/mediaplayer/mediaplayer'], function(MediaPlayer) {
                 var mediaPlayer = new MediaPlayer();
                 assertException(function() {
                     action(mediaPlayer);
-                }, "Error");
+                }, 'Error');
             });
         };
     };
@@ -276,7 +300,7 @@
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerPlayFromThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
-        mediaPlayer.playFrom("jumbo");
+        mediaPlayer.playFrom('jumbo');
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerPauseThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {

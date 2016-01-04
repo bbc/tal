@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.CullingStripTest = AsyncTestCase("CullingStrip"); //jshint ignore:line
+    this.CullingStripTest = AsyncTestCase('CullingStrip'); //jshint ignore:line
 
     this.CullingStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,7 +34,8 @@
     };
 
     this.CullingStripTest.prototype.testIsAWidgetStrip = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -49,7 +50,8 @@
     };
 
     this.CullingStripTest.prototype.testHasNoDetachedWidgetsOnInit = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -63,7 +65,8 @@
     };
 
     this.CullingStripTest.prototype.testHasDetachedWidgetsAfterAppend = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -80,7 +83,8 @@
     };
 
     this.CullingStripTest.prototype.testHasDetachedWidgetsAfterInsert = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -97,8 +101,9 @@
     };
 
     this.CullingStripTest.prototype.testHasNoDetachedWidgetsAfterLastRemoved = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -118,8 +123,9 @@
     };
 
     this.CullingStripTest.prototype.testHasNoDetachedWidgetsAfterAllRemoved = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -141,7 +147,8 @@
     };
 
     this.CullingStripTest.prototype.testInitCallsSuper = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -163,7 +170,8 @@
     };
 
     this.CullingStripTest.prototype.testAppendCallsSuper = function (queue) {
-        queuedApplicationInit(queue,
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -186,8 +194,9 @@
     };
 
     this.CullingStripTest.prototype.testWidgetNotRenderedOnAppend = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -207,8 +216,9 @@
     };
 
     this.CullingStripTest.prototype.testAttachIndexedWidgetsRendersIndexedWidgetWithoutOutputElements = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -230,8 +240,9 @@
     };
 
     this.CullingStripTest.prototype.testAttachIndexedWidgetsDoesNotReRenderAttachedWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -262,8 +273,9 @@
     };
 
     this.CullingStripTest.prototype.testAttachIndexedWidgetsDetachesNonIndexedAttachedWidgets = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -304,8 +316,9 @@
     };
 
     this.CullingStripTest.prototype.testWidgetsBeforeCurrentlyAttachedBlockPrepended = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -345,8 +358,9 @@
     };
 
     this.CullingStripTest.prototype.testRenderCausesWidgetsToReRenderOnAttach = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -384,8 +398,9 @@
     };
 
     this.CullingStripTest.prototype.testRenderWithNoOutputElementCreatesContainerAndSetsAsOutput = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -397,17 +412,18 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns("test");
+                device.createContainer.returns('test');
                 var rendered = strip.render(device);
-                assertEquals("test", strip.outputElement);
+                assertEquals('test', strip.outputElement);
                 assertEquals(rendered, strip.outputElement);
             }
         );
     };
 
     this.CullingStripTest.prototype.testRenderWithOutputDoesNotCreateNewOutputElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -419,7 +435,7 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns("test");
+                device.createContainer.returns('test');
                 var el = {id: 'strip'};
                 strip.outputElement = el;
                 var rendered = strip.render(device);
@@ -430,8 +446,9 @@
     };
 
     this.CullingStripTest.prototype.testRenderClearsExistingOutput = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -443,7 +460,7 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns("test");
+                device.createContainer.returns('test');
                 var el = {id: 'strip'};
                 strip.outputElement = el;
                 strip.render(device);
@@ -453,8 +470,9 @@
     };
 
     this.CullingStripTest.prototype.testGetLengthToIndexErrorsIfNoLengthsSet = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -485,8 +503,9 @@
     };
 
     this.CullingStripTest.prototype.testGetLengthToIndexCorrectWhenAllAttached = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -506,14 +525,15 @@
                 appendAllTo(strip, widgets, 40);
 
                 strip.attachIndexedWidgets([0, 1, 2]);
-                assertEquals("Length when all attached", 80, strip.getLengthToIndex(2));
+                assertEquals('Length when all attached', 80, strip.getLengthToIndex(2));
             }
         );
     };
 
     this.CullingStripTest.prototype.testGetLengthToIndexCorrectWhenSomeDetached = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/cullingstrip',
@@ -533,7 +553,7 @@
                 appendAllTo(strip, widgets, 40);
 
                 strip.attachIndexedWidgets([1, 2]);
-                assertEquals("Length when all attached", 40, strip.getLengthToIndex(2));
+                assertEquals('Length when all attached', 40, strip.getLengthToIndex(2));
             }
         );
     };

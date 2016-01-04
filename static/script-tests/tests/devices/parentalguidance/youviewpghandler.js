@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.YouViewPgHandlerTest = AsyncTestCase("YouView PG Handler");
+    this.YouViewPgHandlerTest = AsyncTestCase('YouView PG Handler');
 
     this.YouViewPgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -70,12 +70,12 @@
 
     };
 
-    var config = {"modules":{"base":"antie\/devices\/browserdevice","modifiers":["antie/devices/parentalguidance/youviewpghandler"]},"layouts":[{"width":999999,"height":999999,"module":"fixtures/layouts/toobig","classes":["toobig"]},{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}]};
+    var config = {'modules':{'base':'antie\/devices\/browserdevice','modifiers':['antie/devices/parentalguidance/youviewpghandler']},'layouts':[{'width':999999,'height':999999,'module':'fixtures/layouts/toobig','classes':['toobig']},{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}]};
 
     this.YouViewPgHandlerTest.prototype.testYouViewPgHandlerExtendsBasePgHandler = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function (application, BasePgHandler) {
 
                 var device = application.getDevice();
@@ -91,7 +91,7 @@
             function (application) {
 
                 var device = application.getDevice();
-                var appHandler = {foo: "bar"};
+                var appHandler = {foo: 'bar'};
                 device.registerAppPgHandler(appHandler);
 
                 assertUndefined(device.parentalGuidanceHelper._appHandler);
@@ -151,7 +151,7 @@
     this.YouViewPgHandlerTest.prototype.testThatShowChallengeCallsBackWithAuthorisedIfYouViewCallsBackWithCorrect = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/pgchallengeresponse"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/pgchallengeresponse'],
             function (application, PgChallengeResponse) {
 
                 var device = application.getDevice();
@@ -160,7 +160,7 @@
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
                 };
 
-                device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
 
                 assertTrue(onGuidanceChallengeResponseCallBackStub.calledWith(PgChallengeResponse.AUTHORISED));
             }, config);
@@ -171,7 +171,7 @@
 
         this.parentalGuidanceResponse = this.pinPromptResponseValues.INCORRECT;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/pgchallengeresponse"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/pgchallengeresponse'],
             function (application, PgChallengeResponse) {
 
                 var device = application.getDevice();
@@ -180,7 +180,7 @@
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
                 };
 
-                device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
 
                 assertTrue(onGuidanceChallengeResponseCallBackStub.calledWith(PgChallengeResponse.NOT_AUTHORISED));
             }, config);
@@ -191,7 +191,7 @@
 
         this.parentalGuidanceResponse = 'other';
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/pgchallengeresponse"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/pgchallengeresponse'],
             function (application, PgChallengeResponse) {
 
                 var device = application.getDevice();
@@ -200,7 +200,7 @@
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
                 };
 
-                device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
 
                 assertTrue(onGuidanceChallengeResponseCallBackStub.calledWith(PgChallengeResponse.ERROR));
             }, config);
@@ -211,7 +211,7 @@
 
         this.parentalGuidanceResponse = this.pinPromptResponseValues.CANCELLED_BY_USER;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/pgchallengeresponse"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/pgchallengeresponse'],
             function (application, PgChallengeResponse) {
 
                 var device = application.getDevice();
@@ -220,7 +220,7 @@
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
                 };
 
-                device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
 
                 assertTrue(onGuidanceChallengeResponseCallBackStub.calledWith(PgChallengeResponse.NOT_AUTHORISED));
             }, config);
@@ -239,7 +239,7 @@
             return mockChallengePromise;
         };
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/pgchallengeresponse"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/pgchallengeresponse'],
             function (application, PgChallengeResponse) {
 
                 var device = application.getDevice();
@@ -248,7 +248,7 @@
                     onGuidanceChallengeResponse: onGuidanceChallengeResponseCallBackStub
                 };
 
-                device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
 
                 assertTrue(onGuidanceChallengeResponseCallBackStub.calledWith(PgChallengeResponse.ERROR));
             }, config);

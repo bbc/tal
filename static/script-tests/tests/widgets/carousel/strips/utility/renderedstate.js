@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.RenderedStateTest = AsyncTestCase("RenderedState"); //jshint ignore:line
+    this.RenderedStateTest = AsyncTestCase('RenderedState'); //jshint ignore:line
 
     this.RenderedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,8 +34,9 @@
     };
 
     this.RenderedStateTest.prototype.testAppendDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -58,8 +59,9 @@
     };
 
     this.RenderedStateTest.prototype.testPrependDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -82,8 +84,9 @@
     };
 
     this.RenderedStateTest.prototype.testAppendAppendsOutputElementOfWidgetToOutputElementOfParent = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -97,8 +100,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -107,16 +110,17 @@
                 sinon.assert.calledOnce(Device.prototype.appendChildElement);
                 sinon.assert.calledWith(
                     Device.prototype.appendChildElement,
-                    "parent",
-                    "child"
+                    'parent',
+                    'child'
                 );
             }
         );
     };
 
     this.RenderedStateTest.prototype.testPrependPrependsOutputElementOfWidgetToOutputElementOfParent = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -130,8 +134,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -140,16 +144,17 @@
                 sinon.assert.calledOnce(Device.prototype.prependChildElement);
                 sinon.assert.calledWith(
                     Device.prototype.prependChildElement,
-                    "parent",
-                    "child"
+                    'parent',
+                    'child'
                 );
             }
         );
     };
 
     this.RenderedStateTest.prototype.testAppendChangesContextStateToAttached = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -176,8 +181,9 @@
     };
 
     this.RenderedStateTest.prototype.testPrependChangesContextStateToAttached = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -205,8 +211,9 @@
     };
 
     this.RenderedStateTest.prototype.testDetachDoesNotCallRemoveElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -225,8 +232,9 @@
     };
 
     this.RenderedStateTest.prototype.testDetachDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',
@@ -246,8 +254,9 @@
     };
 
     this.RenderedStateTest.prototype.testAttachedReturnsFalse = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/renderedstate',

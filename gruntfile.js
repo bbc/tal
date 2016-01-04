@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         eslint: {
             src: [
                 'static/script/**/*.js',
-                'static/script-test/**/*.js'
+                'static/script-tests/**/*.js'
             ],
             options: {
                 quiet: true

@@ -17,43 +17,43 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
 (function() {
-	this.QueuedRequireTest = AsyncTestCase("QueuedRequire Unit Testing Utilities"); //jshint ignore:line
+    this.QueuedRequireTest = AsyncTestCase('QueuedRequire Unit Testing Utilities'); //jshint ignore:line
 
-	this.QueuedRequireTest.prototype.setUp = function() {
-	};
+    this.QueuedRequireTest.prototype.setUp = function() {
+    };
 
-	this.QueuedRequireTest.prototype.tearDown = function() {
-	};
+    this.QueuedRequireTest.prototype.tearDown = function() {
+    };
 
-	this.QueuedRequireTest.prototype.testQueuedRequire = function(queue) {
-		expectAsserts(1);
+    this.QueuedRequireTest.prototype.testQueuedRequire = function(queue) {
+        expectAsserts(1);
 
-		queuedRequire(queue, ["fixtures/requiremodule"], function(module) {
-			assertEquals('queuedRequire loads module', 'Mock Require Module', module);
-		});
-	};
+        queuedRequire(queue, ['fixtures/requiremodule'], function(module) {
+            assertEquals('queuedRequire loads module', 'Mock Require Module', module);
+        });
+    };
 
-	this.QueuedRequireTest.prototype.testQueuedApplicationInit = function(queue) {
-		expectAsserts(1);
+    this.QueuedRequireTest.prototype.testQueuedApplicationInit = function(queue) {
+        expectAsserts(1);
 
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			assertEquals('queuedApplicationInit loads module', 'object', typeof application);
-		});
-	};
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            assertEquals('queuedApplicationInit loads module', 'object', typeof application);
+        });
+    };
 
-	this.QueuedRequireTest.prototype.testQueuedApplicationInitDependencies = function(queue) {
-		expectAsserts(2);
+    this.QueuedRequireTest.prototype.testQueuedApplicationInitDependencies = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(queue, 'lib/mockapplication', ['antie/application'], function(application, Application) {
-			assertNotUndefined('queuedApplicationInit loads dependencies', Application);
-			assert('queuedApplicationInit application is an Application', application instanceof Application);
-		});
-	};
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/application'], function(application, Application) {
+            assertNotUndefined('queuedApplicationInit loads dependencies', Application);
+            assert('queuedApplicationInit application is an Application', application instanceof Application);
+        });
+    };
 
 })();

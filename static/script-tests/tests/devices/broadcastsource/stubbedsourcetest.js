@@ -4,20 +4,20 @@
  */
 
 (function() {
-    this.stubbedSource = AsyncTestCase("Stubbed Broadcast Source"); //jshint ignore:line
+    this.stubbedSource = AsyncTestCase('Stubbed Broadcast Source'); //jshint ignore:line
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":[
-        "antie/devices/anim/styletopleft",
-        "antie/devices/media/html5",
-        "antie/devices/net/default",
-        "antie/devices/broadcastsource/stubbedsource",
-        "antie/devices/data/nativejson",
-        "antie/devices/storage/cookie",
-        "antie/devices/logging/default",
-        "antie/devices/exit/closewindow"
-    ]},"input":{"map":{}},"layouts":[
-        {"width":1280,"height":720,"module":"fixtures/layouts/default","classes":["browserdevice720p"]}
-    ],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':[
+        'antie/devices/anim/styletopleft',
+        'antie/devices/media/html5',
+        'antie/devices/net/default',
+        'antie/devices/broadcastsource/stubbedsource',
+        'antie/devices/data/nativejson',
+        'antie/devices/storage/cookie',
+        'antie/devices/logging/default',
+        'antie/devices/exit/closewindow'
+    ]},'input':{'map':{}},'layouts':[
+        {'width':1280,'height':720,'module':'fixtures/layouts/default','classes':['browserdevice720p']}
+    ],'deviceConfigurationKey':'devices-html5-1'};
 
     this.stubbedSource.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

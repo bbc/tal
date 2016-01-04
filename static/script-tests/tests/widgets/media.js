@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaTest = AsyncTestCase("MediaTest"); //jshint ignore:line
+    this.MediaTest = AsyncTestCase('MediaTest'); //jshint ignore:line
 
     this.MediaTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -35,7 +35,7 @@
 
     this.MediaTest.prototype.testEmbedModeConstantsMatchMediaInterfaceConstants = function (queue) {
         expectAsserts(3);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface", "antie/widgets/media"], function(application, MediaInterface, Media) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/media/mediainterface', 'antie/widgets/media'], function(application, MediaInterface, Media) {
             assertEquals(MediaInterface.EMBED_MODE_EXTERNAL, Media.EMBED_MODE_EXTERNAL);
             assertEquals(MediaInterface.EMBED_MODE_BACKGROUND, Media.EMBED_MODE_BACKGROUND);
             assertEquals(MediaInterface.EMBED_MODE_EMBEDDED, Media.EMBED_MODE_EMBEDDED);
@@ -44,7 +44,7 @@
 
     this.MediaTest.prototype.testNetworkConstantsMatchMediaInterfaceConstants = function (queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface", "antie/widgets/media"], function(application, MediaInterface, Media) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/media/mediainterface', 'antie/widgets/media'], function(application, MediaInterface, Media) {
             assertEquals(MediaInterface.NETWORK_EMPTY, Media.NETWORK_EMPTY);
             assertEquals(MediaInterface.NETWORK_IDLE, Media.NETWORK_IDLE);
             assertEquals(MediaInterface.NETWORK_LOADING, Media.NETWORK_LOADING);
@@ -54,7 +54,7 @@
 
     this.MediaTest.prototype.testDataPresenceConstantsMatchMediaInterfaceConstants = function (queue) {
         expectAsserts(5);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface", "antie/widgets/media"], function(application, MediaInterface, Media) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/media/mediainterface', 'antie/widgets/media'], function(application, MediaInterface, Media) {
             assertEquals(MediaInterface.MEDIA_ERR_UNKNOWN, Media.MEDIA_ERR_UNKNOWN);
             assertEquals(MediaInterface.MEDIA_ERR_ABORTED, Media.MEDIA_ERR_ABORTED);
             assertEquals(MediaInterface.MEDIA_ERR_NETWORK, Media.MEDIA_ERR_NETWORK);
@@ -65,7 +65,7 @@
 
     this.MediaTest.prototype.testReadyStateConstantsMatchMediaInterfaceConstants = function (queue) {
         expectAsserts(5);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/mediainterface", "antie/widgets/media"], function(application, MediaInterface, Media) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/media/mediainterface', 'antie/widgets/media'], function(application, MediaInterface, Media) {
             assertEquals(MediaInterface.HAVE_NOTHING, Media.HAVE_NOTHING);
             assertEquals(MediaInterface.HAVE_METADATA, Media.HAVE_METADATA);
             assertEquals(MediaInterface.HAVE_CURRENT_DATA, Media.HAVE_CURRENT_DATA);
@@ -76,17 +76,17 @@
 
     this.MediaTest.prototype.testMediaConstructorArgumentsPassedThroughToCreateMediaInterface = function (queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media"], function(application, Device, Media) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media'], function(application, Device, Media) {
 
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
 
-            new Media("id", "audio"); // jshint ignore:line
+            new Media('id', 'audio'); // jshint ignore:line
 
             var stub = Device.prototype.createMediaInterface;
 
             assertTrue(stub.calledOnce);
-            assertEquals("id", stub.args[0][0]);
-            assertEquals("audio", stub.args[0][1]);
+            assertEquals('id', stub.args[0][0]);
+            assertEquals('audio', stub.args[0][1]);
             assertFunction(stub.args[0][2]);
         });
     };
@@ -94,20 +94,20 @@
 
     this.MediaTest.prototype.testCreateMediaInterfaceCallbackCausesArgumentEventToBeBubbled = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/widgets/container", "antie/events/event"], function(application, Device, Media, Container, Event) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/widgets/container', 'antie/events/event'], function(application, Device, Media, Container, Event) {
 
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var callback = Device.prototype.createMediaInterface.args[0][2];
 
-            var parent = new Container("parent");
-            this.sandbox.stub(parent, "bubbleEvent");
+            var parent = new Container('parent');
+            this.sandbox.stub(parent, 'bubbleEvent');
 
             parent.appendChildWidget(media);
 
-            var event = new Event("first");
+            var event = new Event('first');
 
             callback(event);
             assertTrue(parent.bubbleEvent.calledOnce);
@@ -117,20 +117,20 @@
 
     this.MediaTest.prototype.testEventCallbackSetsEventTargetToMediaWidget = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/widgets/container", "antie/events/event"], function(application, Device, Media, Container, Event) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/widgets/container', 'antie/events/event'], function(application, Device, Media, Container, Event) {
 
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var callback = Device.prototype.createMediaInterface.args[0][2];
 
-            var parent = new Container("parent");
-            this.sandbox.stub(parent, "bubbleEvent");
+            var parent = new Container('parent');
+            this.sandbox.stub(parent, 'bubbleEvent');
 
             parent.appendChildWidget(media);
 
-            var event = new Event("first");
+            var event = new Event('first');
 
             callback(event);
             assertSame(media, event.target);
@@ -140,14 +140,14 @@
 
     this.MediaTest.prototype.testRenderDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.render(Device);
 
@@ -159,21 +159,21 @@
 
     this.MediaTest.prototype.testRenderReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.render.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.render(Device);
 
-	        assertSame(media.outputElement, result);
+            assertSame(media.outputElement, result);
             assertSame(object, result);
 
         });
@@ -181,14 +181,14 @@
 
     this.MediaTest.prototype.testShowDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.show({});
 
@@ -199,14 +199,14 @@
     };
     this.MediaTest.prototype.testHideDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.hide({});
 
@@ -217,14 +217,14 @@
     };
     this.MediaTest.prototype.testMoveToDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.moveTo({});
 
@@ -235,14 +235,14 @@
     };
     this.MediaTest.prototype.testSetWindowDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setWindow(0,1,2,3);
 
@@ -254,13 +254,13 @@
 
     this.MediaTest.prototype.testGetErrorDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getError();
 
@@ -272,17 +272,17 @@
 
     this.MediaTest.prototype.testGetErrorReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getError.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getError();
 
@@ -293,13 +293,13 @@
 
     this.MediaTest.prototype.testSetSourcesDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var sources = [ ];
             var tags = { };
@@ -313,13 +313,13 @@
     };
     this.MediaTest.prototype.testGetSourcesDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getSources();
 
@@ -331,17 +331,17 @@
 
     this.MediaTest.prototype.testGetSourcesReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getSources.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getSources();
 
@@ -351,13 +351,13 @@
     };
     this.MediaTest.prototype.testGetCurrentSourceDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getCurrentSource();
 
@@ -369,17 +369,17 @@
 
     this.MediaTest.prototype.testGetCurrentSourceReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getCurrentSource.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getCurrentSource();
 
@@ -389,13 +389,13 @@
     };
     this.MediaTest.prototype.testGetNetworkStateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getNetworkState();
 
@@ -407,17 +407,17 @@
 
     this.MediaTest.prototype.testGetNetworkStateReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getNetworkState.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getNetworkState();
 
@@ -427,13 +427,13 @@
     };
     this.MediaTest.prototype.testGetPreloadDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getPreload();
 
@@ -445,17 +445,17 @@
 
     this.MediaTest.prototype.testGetPreloadReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getPreload.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getPreload();
 
@@ -465,13 +465,13 @@
     };
     this.MediaTest.prototype.testSetPreloadDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setPreload(true);
 
@@ -482,13 +482,13 @@
     };
     this.MediaTest.prototype.testGetBufferedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getBuffered();
 
@@ -500,17 +500,17 @@
 
     this.MediaTest.prototype.testGetBufferedReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getBuffered.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getBuffered();
 
@@ -521,13 +521,13 @@
 
     this.MediaTest.prototype.testLoadDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.load();
 
@@ -538,37 +538,37 @@
     };
     this.MediaTest.prototype.testCanPlayTypeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
-            media.canPlayType("video/mp4");
+            media.canPlayType('video/mp4');
 
             assertTrue(stubMediaInterface.canPlayType.calledOnce);
-            assertTrue(stubMediaInterface.canPlayType.calledWith("video/mp4"));
+            assertTrue(stubMediaInterface.canPlayType.calledWith('video/mp4'));
 
         });
     };
 
     this.MediaTest.prototype.testCanPlayTypeReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.canPlayType.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
-            var result = media.canPlayType("video/mp4");
+            var result = media.canPlayType('video/mp4');
 
             assertSame(object, result);
 
@@ -576,13 +576,13 @@
     };
     this.MediaTest.prototype.testGetReadyStateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getReadyState();
 
@@ -594,17 +594,17 @@
 
     this.MediaTest.prototype.testGetReadyStateReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getReadyState.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getReadyState();
 
@@ -614,13 +614,13 @@
     };
     this.MediaTest.prototype.testGetSeekingDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getSeeking();
 
@@ -631,17 +631,17 @@
     };
     this.MediaTest.prototype.testGetSeekingReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getSeeking.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getSeeking();
 
@@ -652,13 +652,13 @@
 
     this.MediaTest.prototype.testSetCurrentTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setCurrentTime(120);
 
@@ -669,13 +669,13 @@
     };
     this.MediaTest.prototype.testGetCurrentTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getCurrentTime();
 
@@ -686,13 +686,13 @@
     };
     this.MediaTest.prototype.testGetInitialTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getInitialTime();
 
@@ -704,17 +704,17 @@
 
     this.MediaTest.prototype.testGetInitialTimeReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getInitialTime.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getInitialTime();
 
@@ -725,13 +725,13 @@
 
     this.MediaTest.prototype.testGetDurationDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getDuration();
 
@@ -743,17 +743,17 @@
 
     this.MediaTest.prototype.testGetDurationReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getDuration.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getDuration();
 
@@ -764,13 +764,13 @@
 
     this.MediaTest.prototype.testGetStartOffsetTimeDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getStartOffsetTime();
 
@@ -782,17 +782,17 @@
 
     this.MediaTest.prototype.testGetStartOffsetTimeReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getStartOffsetTime.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getStartOffsetTime();
 
@@ -803,13 +803,13 @@
 
     this.MediaTest.prototype.testGetPausedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getPaused();
 
@@ -820,17 +820,17 @@
     };
     this.MediaTest.prototype.testGetPausedReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getPaused.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getPaused();
 
@@ -841,13 +841,13 @@
 
     this.MediaTest.prototype.testGetDefaultPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getDefaultPlaybackRate();
 
@@ -859,17 +859,17 @@
 
     this.MediaTest.prototype.testGetSDefaultPlaybackRateReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getDefaultPlaybackRate.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getDefaultPlaybackRate();
 
@@ -880,13 +880,13 @@
 
     this.MediaTest.prototype.testGetPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getPlaybackRate();
 
@@ -898,17 +898,17 @@
 
     this.MediaTest.prototype.testGetPlaybackRateReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getPlaybackRate.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getPlaybackRate();
 
@@ -919,13 +919,13 @@
 
     this.MediaTest.prototype.testSetPlaybackRateDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setPlaybackRate(1);
 
@@ -936,13 +936,13 @@
     };
     this.MediaTest.prototype.testGetPlayedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getPlayed();
 
@@ -954,17 +954,17 @@
 
     this.MediaTest.prototype.testGetPlayedReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getPlayed.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getPlayed();
 
@@ -975,13 +975,13 @@
 
     this.MediaTest.prototype.testGetSeekableDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getSeekable();
 
@@ -993,17 +993,17 @@
 
     this.MediaTest.prototype.testGetSeekableReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getSeekable.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getSeekable();
 
@@ -1014,13 +1014,13 @@
 
     this.MediaTest.prototype.testGetEndedDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getEnded();
 
@@ -1031,17 +1031,17 @@
     };
     this.MediaTest.prototype.testGetEndedReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getEnded.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getEnded();
 
@@ -1051,13 +1051,13 @@
     };
     this.MediaTest.prototype.testGetAutoPlayDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getAutoPlay();
 
@@ -1069,17 +1069,17 @@
 
     this.MediaTest.prototype.testGetAutoPlayReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getAutoPlay.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getAutoPlay();
 
@@ -1090,13 +1090,13 @@
 
     this.MediaTest.prototype.testSetAutoPlayDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setAutoPlay(false);
 
@@ -1107,13 +1107,13 @@
     };
     this.MediaTest.prototype.testGetLoopDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getLoop();
 
@@ -1124,17 +1124,17 @@
     };
     this.MediaTest.prototype.testGetLoopReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getLoop.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getLoop();
 
@@ -1144,13 +1144,13 @@
     };
     this.MediaTest.prototype.testSetLoopDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setLoop(true);
 
@@ -1161,13 +1161,13 @@
     };
     this.MediaTest.prototype.testPlayDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.play();
 
@@ -1178,13 +1178,13 @@
     };
     this.MediaTest.prototype.testStopDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.stop();
 
@@ -1195,13 +1195,13 @@
     };
     this.MediaTest.prototype.testPauseDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.pause();
 
@@ -1212,13 +1212,13 @@
     };
     this.MediaTest.prototype.testSetNativeControlsDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setNativeControls(false);
 
@@ -1229,13 +1229,13 @@
     };
     this.MediaTest.prototype.testGetNativeControlsDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getNativeControls();
 
@@ -1246,17 +1246,17 @@
     };
     this.MediaTest.prototype.testGetNavitveControlsReturnsResultFromMediaInterface = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
             stubMediaInterface.getNativeControls.returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getNativeControls();
 
@@ -1266,15 +1266,15 @@
     };
     this.MediaTest.prototype.testSetVolumeDefersToDevice = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            this.sandbox.stub(Device.prototype, "setVolume");
+            this.sandbox.stub(Device.prototype, 'setVolume');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setVolume(0);
 
@@ -1285,15 +1285,15 @@
     };
     this.MediaTest.prototype.testGetVolumeDefersToDevice = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            this.sandbox.stub(Device.prototype, "getVolume");
+            this.sandbox.stub(Device.prototype, 'getVolume');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getVolume();
 
@@ -1304,17 +1304,17 @@
     };
     this.MediaTest.prototype.testGetVolumeReturnsResultFromDevice = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
-            this.sandbox.stub(Device.prototype, "getVolume").returns(object);
+            this.sandbox.stub(Device.prototype, 'getVolume').returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getVolume();
 
@@ -1324,15 +1324,15 @@
     };
     this.MediaTest.prototype.testSetMutedDefersToDevice = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            this.sandbox.stub(Device.prototype, "setMuted");
+            this.sandbox.stub(Device.prototype, 'setMuted');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.setMuted(false);
 
@@ -1343,15 +1343,15 @@
     };
     this.MediaTest.prototype.testGetMutedDefersToDevice = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            this.sandbox.stub(Device.prototype, "getMuted");
+            this.sandbox.stub(Device.prototype, 'getMuted');
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.getMuted();
 
@@ -1362,17 +1362,17 @@
     };
     this.MediaTest.prototype.testGetMutedReturnsResultFromDevice = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
             var object = { };
-            this.sandbox.stub(Device.prototype, "getMuted").returns(object);
+            this.sandbox.stub(Device.prototype, 'getMuted').returns(object);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             var result = media.getMuted();
 
@@ -1382,13 +1382,13 @@
     };
     this.MediaTest.prototype.testDestroyDefersToMediaInterface = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/device", "antie/widgets/media", "antie/devices/media/mediainterface"], function(application, Device, Media, MediaInterface) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device', 'antie/widgets/media', 'antie/devices/media/mediainterface'], function(application, Device, Media, MediaInterface) {
 
             var stubMediaInterface = this.sandbox.stub(MediaInterface.prototype);
-            this.sandbox.stub(Device.prototype, "createMediaInterface");
+            this.sandbox.stub(Device.prototype, 'createMediaInterface');
             Device.prototype.createMediaInterface.returns(stubMediaInterface);
 
-            var media = new Media("id", "audio");
+            var media = new Media('id', 'audio');
 
             media.destroy();
 

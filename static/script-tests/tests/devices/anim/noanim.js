@@ -24,7 +24,7 @@
 
 (function() {
     // jshint newcap: false
-    this.NoAnimAnimationTest = AsyncTestCase("Animation_NoAnim"); //jshint ignore:line
+    this.NoAnimAnimationTest = AsyncTestCase('Animation_NoAnim'); //jshint ignore:line
 
     this.NoAnimAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -37,28 +37,28 @@
     var getConfig = function() {
         var config;
         config = {
-            "modules": {
-                "base": "antie/devices/browserdevice",
-                "modifiers": [
+            'modules': {
+                'base': 'antie/devices/browserdevice',
+                'modifiers': [
                     'antie/devices/anim/noanim'
                 ]
             },
-            "input": {
-                "map": {}
+            'input': {
+                'map': {}
             },
-            "layouts": [
+            'layouts': [
                 {
-                    "width": 960,
-                    "height": 540,
-                    "module": "fixtures/layouts/default",
-                    "classes": ["browserdevice540p"]
+                    'width': 960,
+                    'height': 540,
+                    'module': 'fixtures/layouts/default',
+                    'classes': ['browserdevice540p']
                 }
             ],
-            "deviceConfigurationKey": "devices-html5-1"
+            'deviceConfigurationKey': 'devices-html5-1'
         };
         return config;
     };
-    
+
     this.NoAnimAnimationTest.prototype.testScrollElementTo = function(queue) {
         expectAsserts(3);
 
@@ -66,8 +66,8 @@
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
-            var div = device.createContainer("id_mask");
-            var inner = device.createContainer("id");
+            var div = device.createContainer('id_mask');
+            var inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
             var onComplete = this.sandbox.stub();
@@ -94,7 +94,7 @@
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
-            var div = device.createContainer("id");
+            var div = device.createContainer('id');
 
             var onComplete = this.sandbox.stub();
             device.moveElementTo({
@@ -132,7 +132,7 @@
             });
 
             assertEquals(0, parseFloat(div.style.opacity));
-            assertEquals("hidden", div.style.visibility);
+            assertEquals('hidden', div.style.visibility);
             assert(onComplete.calledOnce);
 
         }, config);
@@ -155,7 +155,7 @@
             });
 
             assertEquals(1, parseFloat(div.style.opacity));
-            assertEquals("visible", div.style.visibility);
+            assertEquals('visible', div.style.visibility);
             assert(onComplete.calledOnce);
 
         }, config);
@@ -180,14 +180,14 @@
             var device, div, options;
             device = application.getDevice();
             div = device.createContainer();
-                options = {
-                    el: div,
-                    from: { width: 60 },
-                    to: { width: 100 },
-                    units: { width: "px" }
-                };
-                device.tweenElementStyle(options);
-                assertEquals('To value set on element', "100px", div.style.width);
+            options = {
+                el: div,
+                from: { width: 60 },
+                to: { width: 100 },
+                units: { width: 'px' }
+            };
+            device.tweenElementStyle(options);
+            assertEquals('To value set on element', '100px', div.style.width);
         }, config);
     };
 
@@ -203,10 +203,10 @@
                 el: div,
                 from: { width: 60 },
                 to: { width: 100 },
-                units: { width: "%" }
+                units: { width: '%' }
             };
             device.tweenElementStyle(options);
-            assertEquals('To value set on element', "100%", div.style.width);
+            assertEquals('To value set on element', '100%', div.style.width);
         }, config);
     };
 
@@ -227,7 +227,7 @@
 
             spy = this.sandbox.spy(options, 'onComplete');
             device.tweenElementStyle(options);
-            assertTrue("onComplete fired", spy.calledOnce);
+            assertTrue('onComplete fired', spy.calledOnce);
         }, config);
     };
 
@@ -243,8 +243,8 @@
             options = {
                 el: {
                     style: {
-                        top: "",
-                        left: ""
+                        top: '',
+                        left: ''
                     }
                 },
                 to: { top: 0 },
@@ -252,9 +252,9 @@
             };
 
             device.moveElementTo(options);
-            assertTrue("onComplete fired", options.onComplete.calledOnce);
+            assertTrue('onComplete fired', options.onComplete.calledOnce);
         },
-        config);
+                              config);
     };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/noanim'], this.NoAnimAnimationTest);

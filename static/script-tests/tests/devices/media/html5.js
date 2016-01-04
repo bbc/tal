@@ -24,9 +24,9 @@
 
 (function() {
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/media/html5']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
-    this.HTML5Test = AsyncTestCase("HTML5 Media Device Modifier"); //jshint ignore:line
+    this.HTML5Test = AsyncTestCase('HTML5 Media Device Modifier'); //jshint ignore:line
 
     this.HTML5Test.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -39,13 +39,16 @@
     this.HTML5Test.prototype.testCreateMediaInterfaceReturnsHTML5PlayerWhenHTML5DeviceModifierUsed = function (queue) {
         expectAsserts(1);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/devices/media/html5'],
             function(application, HTML5Player) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
-                var result = device.createMediaInterface("id", "video", callbackStub);
+                var result = device.createMediaInterface('id', 'video', callbackStub);
 
                 assertInstanceOf(HTML5Player, result);
             }, config);
@@ -54,17 +57,20 @@
     this.HTML5Test.prototype.testCreateMediaInterfacePassesArgumentsThroughToHTML5PlayerConstructorWhenHTML5DeviceModifierUsed = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/devices/media/html5'],
             function(application, HTML5Player) {
 
-                var spy = self.sandbox.spy(HTML5Player.prototype, "init");
+                var spy = self.sandbox.spy(HTML5Player.prototype, 'init');
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
-                device.createMediaInterface("id", "video", callbackStub);
+                device.createMediaInterface('id', 'video', callbackStub);
 
                 assertTrue(spy.calledOnce);
-                assertTrue(spy.calledWith("id", "video", callbackStub));
+                assertTrue(spy.calledWith('id', 'video', callbackStub));
             }, config);
     };
 
@@ -72,14 +78,17 @@
     this.HTML5Test.prototype.testRenderCausesErrorEventToBeAdded = function (queue) {
         expectAsserts(2);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', [],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
 
-                var mediaElement = document.createElement("div");
+                var mediaElement = document.createElement('div');
                 var addEventListenerCounts = { };
                 mediaElement.addEventListener = function (type) {
                     if (!addEventListenerCounts[type]) {
@@ -89,9 +98,9 @@
                     }
                 };
 
-                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+                this.sandbox.stub(device, '_createElement').returns(mediaElement);
 
-                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', callbackStub);
 
                 assertUndefined(addEventListenerCounts.error);
 
@@ -104,22 +113,28 @@
     this.HTML5Test.prototype.testRenderCausesErrorEventListenerCallsbackWithAnErrorEventWithAvailableErrorCode = function (queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/media/html5',
+                'antie/events/mediaerrorevent'
+            ],
             function(application, HTML5Player, MediaErrorEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
 
-                var mediaElement = document.createElement("div");
+                var mediaElement = document.createElement('div');
                 var eventListeners = { };
                 mediaElement.addEventListener = function (type, callback) {
                     eventListeners[type] = callback;
                 };
 
-                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+                this.sandbox.stub(device, '_createElement').returns(mediaElement);
 
-                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', callbackStub);
 
                 mediaInterface.render(device);
 
@@ -128,7 +143,7 @@
                 var errorCode = { };
                 mediaElement.error = { code: errorCode };
 
-                eventListeners.error("error");
+                eventListeners.error('error');
 
                 assertTrue(callbackStub.calledOnce);
                 assertInstanceOf(MediaErrorEvent, callbackStub.args[0][0]);
@@ -140,28 +155,35 @@
     this.HTML5Test.prototype.testRenderCausesErrorEventListenerCallsbackWithAnErrorEventWithoutErrorCodeIfUnavailable = function (queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaerrorevent", "antie/devices/media/mediainterface"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/media/html5',
+                'antie/events/mediaerrorevent',
+                'antie/devices/media/mediainterface'
+            ],
             function(application, HTML5Player, MediaErrorEvent, MediaInterface) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
 
-                var mediaElement = document.createElement("div");
+                var mediaElement = document.createElement('div');
                 var eventListeners = { };
                 mediaElement.addEventListener = function (type, callback) {
                     eventListeners[type] = callback;
                 };
 
-                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+                this.sandbox.stub(device, '_createElement').returns(mediaElement);
 
-                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', callbackStub);
 
                 mediaInterface.render(device);
 
                 assertFunction(eventListeners.error);
 
-                eventListeners.error("error");
+                eventListeners.error('error');
 
                 assertTrue(callbackStub.calledOnce);
                 assertInstanceOf(MediaErrorEvent, callbackStub.args[0][0]);
@@ -174,32 +196,38 @@
     this.HTML5Test.prototype.testRenderCausesPlayEventListenerCallbackWithAPlayMediaEvent = function (queue) {
         expectAsserts(4);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/media/html5',
+                'antie/events/mediaevent'
+            ],
             function(application, HTML5Player, MediaEvent) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
 
-                var mediaElement = document.createElement("div");
+                var mediaElement = document.createElement('div');
                 var eventListeners = { };
                 mediaElement.addEventListener = function (type, callback) {
                     eventListeners[type] = callback;
                 };
 
-                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+                this.sandbox.stub(device, '_createElement').returns(mediaElement);
 
-                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', callbackStub);
 
                 mediaInterface.render(device);
 
                 assertFunction(eventListeners.play);
 
-                eventListeners.play({ type: "play" });
+                eventListeners.play({ type: 'play' });
 
                 assertTrue(callbackStub.calledOnce);
                 assertInstanceOf(MediaEvent, callbackStub.args[0][0]);
-                assertEquals("play", callbackStub.args[0][0].type);
+                assertEquals('play', callbackStub.args[0][0].type);
 
             }, config);
     };
@@ -207,22 +235,25 @@
     this.HTML5Test.prototype.testRenderOnlyAddsEventListenersTheFirstTimeItIsCalled = function (queue) {
         expectAsserts(3);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', [],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
 
                 var callbackStub = self.sandbox.stub();
 
                 var device = application.getDevice();
 
-                var mediaElement = document.createElement("div");
+                var mediaElement = document.createElement('div');
                 var eventListenerCount = 0;
                 mediaElement.addEventListener = function () {
                     eventListenerCount++;
                 };
 
-                this.sandbox.stub(device, "_createElement").returns(mediaElement);
+                this.sandbox.stub(device, '_createElement').returns(mediaElement);
 
-                var mediaInterface = device.createMediaInterface("id", "video", callbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', callbackStub);
 
                 assertEquals(0, eventListenerCount);
 
@@ -242,7 +273,15 @@
     this.HTML5Test.prototype.testSetSourcesErrorEventListenerOnSourceObjectsCallsBackWithMediaSourceErrorEvent = function (queue) {
         expectAsserts(5);
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/media/html5", "antie/events/mediaevent", "antie/devices/media/mediainterface", "antie/events/mediasourceerrorevent"],
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/media/html5',
+                'antie/events/mediaevent',
+                'antie/devices/media/mediainterface',
+                'antie/events/mediasourceerrorevent'
+            ],
             function(application, HTML5Player, MediaEvent, MediaInterface, MediaSourceErrorEvent) {
 
                 var errorHandlingCallbackStub = self.sandbox.stub();
@@ -254,24 +293,28 @@
                 var sourceAddEventListenerStub;
                 var sourceElementCount = 0;
 
-                this.sandbox.stub(document, "createElement", function(type) {
-                    if (type === "source") {
+                this.sandbox.stub(document, 'createElement', function(type) {
+                    if (type === 'source') {
                         var element = originalCreateElement.call(document, type);
-                        sourceAddEventListenerStub = self.sandbox.stub(element, "addEventListener");
+                        sourceAddEventListenerStub = self.sandbox.stub(element, 'addEventListener');
                         sourceElementCount++;
                         return element;
                     } else {
-                       return originalCreateElement.call(document, type);
+                        return originalCreateElement.call(document, type);
                     }
                 });
 
 
-                var mediaInterface = device.createMediaInterface("id", "video", errorHandlingCallbackStub);
+                var mediaInterface = device.createMediaInterface('id', 'video', errorHandlingCallbackStub);
                 mediaInterface.setSources(
                     [
                         {
-                            getURL : function() { return "url"; },
-                            getContentType : function() { return "video/mp4"; }
+                            getURL : function() {
+                                return 'url';
+                            },
+                            getContentType : function() {
+                                return 'video/mp4';
+                            }
                         }
                     ], { });
 

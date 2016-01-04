@@ -24,10 +24,10 @@
 
 (function() {
     // jshint newcap: false
-    this.CEHTMLSeekFinishedEmitEventTests = AsyncTestCase("CEHTMLSeekFinishedEmitEvent");
+    this.CEHTMLSeekFinishedEmitEventTests = AsyncTestCase('CEHTMLSeekFinishedEmitEvent');
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtmlseekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-    var configWithRestartTimeout = {"restartTimeout":10000, "modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtmlseekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/cehtmlseekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
+    var configWithRestartTimeout = {'restartTimeout':10000, 'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/cehtmlseekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
     var eventWasFired = function(eventHandler, eventType) {
         for(var i = 0; i < eventHandler.callCount; i++) {
@@ -45,7 +45,7 @@
     // ---------------
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
     // ---------------
-    window.commonTests.mediaPlayer.cehtml.mixinTests(this.CEHTMLSeekFinishedEmitEventTests, "antie/devices/mediaplayer/cehtmlseekfinishedemitevent", config);
+    window.commonTests.mediaPlayer.cehtml.mixinTests(this.CEHTMLSeekFinishedEmitEventTests, 'antie/devices/mediaplayer/cehtmlseekfinishedemitevent', config);
 
     // ---------------
     // Remove tests that are irrelevant for this sub-modifier.

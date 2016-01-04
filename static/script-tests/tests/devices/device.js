@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.DeviceTest = AsyncTestCase("Device"); //jshint ignore:line
+    this.DeviceTest = AsyncTestCase('Device'); //jshint ignore:line
 
     this.DeviceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -38,8 +38,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/devices/device","antie/class"],
+            'lib/mockapplication',
+            ['antie/devices/device','antie/class'],
             function(application, Device, Class) {
                 assertEquals('Device should be a function', 'function', typeof Device);
                 var device = new Device(antie.framework.deviceConfiguration);
@@ -52,8 +52,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/devices/device"],
+            'lib/mockapplication',
+            ['antie/devices/device'],
             function(application, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 assertFalse(device.isBroadcastSourceSupported());
@@ -65,11 +65,11 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/devices/device"],
+            'lib/mockapplication',
+            ['antie/devices/device'],
             function(application, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
-                assertException("Broadcast API not available on this device.", function() {
+                assertException('Broadcast API not available on this device.', function() {
                     device.createBroadcastSource();
                 });
             });
@@ -80,8 +80,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/devices/device"],
+            'lib/mockapplication',
+            ['antie/devices/device'],
             function(application, Device) {
                 var callbacks = {
                     onSuccess: this.sandbox.stub(),
@@ -90,19 +90,19 @@
                 assertNoException(function() {
                     Device.load(antie.framework.deviceConfiguration, callbacks);
                 });
-                assert("Device.load calls onSuccess callback when valid config is provided", callbacks.onSuccess.called);
+                assert('Device.load calls onSuccess callback when valid config is provided', callbacks.onSuccess.called);
 
                 assertNoException(function() {
                     Device.load({}, callbacks);
                 });
-                assert("Device.load calls onError callback when invalid config is provided", callbacks.onError.called);
+                assert('Device.load calls onError callback when invalid config is provided', callbacks.onError.called);
             });
     };
 
     this.DeviceTest.prototype.testGetConfig = function(queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/device"], function(application, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device'], function(application, Device) {
             var callbacks = {
                 onSuccess: this.sandbox.stub(),
                 onError: this.sandbox.stub()
@@ -118,9 +118,9 @@
     this.DeviceTest.prototype.testExit = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/devices/device"], function(Device) {
+        queuedRequire(queue, ['antie/devices/device'], function(Device) {
             var device = new Device(antie.framework.deviceConfiguration);
-            assertException("Default device implementation should throw exception on exit()", function() {
+            assertException('Default device implementation should throw exception on exit()', function() {
                 device.exit();
             });
         });
@@ -129,11 +129,11 @@
     this.DeviceTest.prototype.testExitToBroadcast = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/devices/device"], function(Device) {
+        queuedRequire(queue, ['antie/devices/device'], function(Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var exitStub = this.sandbox.stub(device, 'exit');
             device.exitToBroadcast();
-            assertEquals("Default device implementation calls exit() on exitToBroadcast()", 1, exitStub.callCount);
+            assertEquals('Default device implementation calls exit() on exitToBroadcast()', 1, exitStub.callCount);
         });
     };
 

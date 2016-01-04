@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelPlayableTest = AsyncTestCase("LivePlayerSupportLevelPlayableTest"); //jshint ignore:line
+    this.LivePlayerSupportLevelPlayableTest = AsyncTestCase('LivePlayerSupportLevelPlayableTest'); //jshint ignore:line
 
     this.LivePlayerSupportLevelPlayableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,24 +34,24 @@
         this.sandbox.restore();
     };
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testGetLiveSupportReturnsPlayableWithSupportLevelPlayable = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var liveSupportLevel = device.getLiveSupport();
 
-            assertEquals("playable", liveSupportLevel);
+            assertEquals('playable', liveSupportLevel);
         });
     };
 
     var testFunctionsInLivePlayerCallMediaPlayerFunctions = function(action, expectedArgCount) {
         return function (queue) {
             expectAsserts(2);
-            queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+            queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 var livePlayer = device.getLivePlayer();
                 var mediaPlayerFuncStub = this.sandbox.stub();
@@ -88,7 +88,7 @@
     this.LivePlayerSupportLevelPlayableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInPlayableLive = function (queue) {
         expectAsserts(6);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
@@ -104,65 +104,65 @@
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testGetStateReturnsState = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            assertEquals("EMPTY", livePlayer.getState());
+            assertEquals('EMPTY', livePlayer.getState());
         }, config);
     };
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testGetSourceReturnsSource = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns('http://test.mp4');
 
-            assertEquals("http://test.mp4", livePlayer.getSource());
+            assertEquals('http://test.mp4', livePlayer.getSource());
         }, config);
     };
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testGetMimeTypeReturnsMimeType = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns('video/mp4');
 
-            assertEquals("video/mp4", livePlayer.getMimeType());
+            assertEquals('video/mp4', livePlayer.getMimeType());
         }, config);
     };
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testMediaTypeIsMutatedToLive = function(queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
         }, config);
     };
 
     this.LivePlayerSupportLevelPlayableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/playable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/playable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            var playerElement = "player element";
+            var playerElement = 'player element';
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
 

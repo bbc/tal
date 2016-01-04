@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelSeekableTest = AsyncTestCase("LivePlayerSupportLevelSeekableTest"); //jshint ignore:line
+    this.LivePlayerSupportLevelSeekableTest = AsyncTestCase('LivePlayerSupportLevelSeekableTest'); //jshint ignore:line
 
     this.LivePlayerSupportLevelSeekableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -35,63 +35,63 @@
     };
 
     var config = {
-        "modules": {"base": "antie/devices/browserdevice", "modifiers": ["antie/devices/mediaplayer/html5"]},
-        "input": {"map": {}},
-        "layouts": [{
-            "width": 960,
-            "height": 540,
-            "module": "fixtures/layouts/default",
-            "classes": ["browserdevice540p"]
+        'modules': {'base': 'antie/devices/browserdevice', 'modifiers': ['antie/devices/mediaplayer/html5']},
+        'input': {'map': {}},
+        'layouts': [{
+            'width': 960,
+            'height': 540,
+            'module': 'fixtures/layouts/default',
+            'classes': ['browserdevice540p']
         }],
-        "deviceConfigurationKey": "devices-html5-1"
+        'deviceConfigurationKey': 'devices-html5-1'
     };
     var configWithForceBeginPlaybackToEndOfWindowAsTrue = {
-        "modules": {
-            "base": "antie/devices/browserdevice",
-            "modifiers": ["antie/devices/mediaplayer/html5"]
+        'modules': {
+            'base': 'antie/devices/browserdevice',
+            'modifiers': ['antie/devices/mediaplayer/html5']
         },
-        "input": {"map": {}},
-        "layouts": [{
-            "width": 960,
-            "height": 540,
-            "module": "fixtures/layouts/default",
-            "classes": ["browserdevice540p"]
+        'input': {'map': {}},
+        'layouts': [{
+            'width': 960,
+            'height': 540,
+            'module': 'fixtures/layouts/default',
+            'classes': ['browserdevice540p']
         }],
-        "deviceConfigurationKey": "devices-html5-1",
-        "streaming": {"overrides": {"forceBeginPlaybackToEndOfWindow": true}}
+        'deviceConfigurationKey': 'devices-html5-1',
+        'streaming': {'overrides': {'forceBeginPlaybackToEndOfWindow': true}}
     };
     var configWithForceBeginPlaybackToEndOfWindowAsFalse = {
-        "modules": {
-            "base": "antie/devices/browserdevice",
-            "modifiers": ["antie/devices/mediaplayer/html5"]
+        'modules': {
+            'base': 'antie/devices/browserdevice',
+            'modifiers': ['antie/devices/mediaplayer/html5']
         },
-        "input": {"map": {}},
-        "layouts": [{
-            "width": 960,
-            "height": 540,
-            "module": "fixtures/layouts/default",
-            "classes": ["browserdevice540p"]
+        'input': {'map': {}},
+        'layouts': [{
+            'width': 960,
+            'height': 540,
+            'module': 'fixtures/layouts/default',
+            'classes': ['browserdevice540p']
         }],
-        "deviceConfigurationKey": "devices-html5-1",
-        "streaming": {"overrides": {"forceBeginPlaybackToEndOfWindow": false}}
+        'deviceConfigurationKey': 'devices-html5-1',
+        'streaming': {'overrides': {'forceBeginPlaybackToEndOfWindow': false}}
     };
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetLiveSupportReturnsSeekableWithSupportLevelSeekable = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var liveSupportLevel = device.getLiveSupport();
 
-            assertEquals("seekable", liveSupportLevel);
+            assertEquals('seekable', liveSupportLevel);
         });
     };
 
     var testFunctionsInLivePlayerCallMediaPlayerFunctions = function (action, expectedArgCount) {
         return function (queue) {
             expectAsserts(2);
-            queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+            queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 var livePlayer = device.getLivePlayer();
                 var mediaPlayerFuncStub = this.sandbox.stub();
@@ -129,12 +129,12 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPauseCallsFunctionInMediaPlayer = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
             this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(30);
@@ -159,40 +159,40 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetStateReturnsState = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            assertEquals("EMPTY", livePlayer.getState());
+            assertEquals('EMPTY', livePlayer.getState());
         }, config);
     };
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetSourceReturnsSource = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns('http://test.mp4');
 
-            assertEquals("http://test.mp4", livePlayer.getSource());
+            assertEquals('http://test.mp4', livePlayer.getSource());
         }, config);
     };
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetMimeTypeReturnsMimeType = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns('video/mp4');
 
-            assertEquals("video/mp4", livePlayer.getMimeType());
+            assertEquals('video/mp4', livePlayer.getMimeType());
         }, config);
     };
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetCurrentTimeReturnsCurrentTime = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -204,13 +204,13 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetSeekableRangeReturnsSeekableRange = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
@@ -221,32 +221,32 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testMediaTypeIsMutatedToLive = function (queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
         }, config);
     };
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            var playerElement = "player element";
+            var playerElement = 'player element';
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
 
@@ -256,7 +256,7 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackFromIsCalledWithInfinityIfForceBeginPlaybackToEndOfWindowIsTrue = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -271,7 +271,7 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsFalse = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -286,7 +286,7 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsNotPresent = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -301,14 +301,14 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeWhenPausedAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
             this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
 
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
@@ -328,14 +328,14 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testDoesNotAutoResumeWhenItIsDisabled = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
             this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
 
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
@@ -356,14 +356,14 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
             this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
 
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
@@ -387,14 +387,14 @@
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeNotCancelledByEventWithPausedState = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/seekable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
             this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
 
             var expectedRange = {
-                "start": 0,
-                "end": 30
+                'start': 0,
+                'end': 30
             };
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
