@@ -57,12 +57,12 @@
             prototype = Class.prototype;
             /*eslint-disable */
             for (propertyName in prototype) { //jshint ignore:line
+            /*eslint-enable */
                 property = prototype[propertyName];
                 if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
                     self.sandbox.stub(prototype, propertyName);
                 }
             }
-            /*eslint-enable */
         }
         var i;
 
