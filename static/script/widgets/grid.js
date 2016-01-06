@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/grid',
+require.def(
+    'antie/widgets/grid',
     [
         'antie/widgets/container',
         'antie/events/keyevent',
@@ -119,14 +120,13 @@ require.def('antie/widgets/grid',
 
                 var rowElement;
                 for (var row = 0; row < this._rows; row++) {
-                    rowElement = device.createContainer(this.id + "_row_" + row, ["row"]);
+                    rowElement = device.createContainer(this.id + '_row_' + row, ['row']);
                     for (var col = 0; col < this._cols; col++) {
                         var widget = this.getWidgetAt(col, row);
                         if (widget) {
                             if (col === 0) {
                                 widget.addClass('firstcol');
-                            }
-                            else if (col === this._cols - 1) {
+                            } else if (col === this._cols - 1) {
                                 widget.addClass('lastcol');
                             }
                             device.appendChildElement(rowElement, this.getWidgetAt(col, row).render(device));
@@ -134,11 +134,10 @@ require.def('antie/widgets/grid',
                             var classes = ['spacer'];
                             if (col === 0) {
                                 classes.push('firstcol');
-                            }
-                            else if (col === this._cols - 1) {
+                            } else if (col === this._cols - 1) {
                                 classes.push('lastcol');
                             }
-                            device.appendChildElement(rowElement, device.createContainer(this.id + "_" + col + "_" + row, classes));
+                            device.appendChildElement(rowElement, device.createContainer(this.id + '_' + col + '_' + row, classes));
                         }
                     }
                     device.appendChildElement(this.outputElement, rowElement);
@@ -150,24 +149,24 @@ require.def('antie/widgets/grid',
              * Appends a child widget to this widget. Not supported for Grids.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (widget) { //jshint ignore:line
-                throw new Error("Not supported");
+            appendChildWidget: function (/*widget*/) { //jshint ignore:line
+                throw new Error('Not supported');
             },
             /**
              * Inserts a child widget at the specified index. Not supported for Grids.
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (index, widget) { //jshint ignore:line
-                throw new Error("Not supported");
+            insertChildWidget: function (/*index, widget*/) { //jshint ignore:line
+                throw new Error('Not supported');
             },
             /**
              * Removes a specific child widget from this widget. Not supported for Grids.
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
              */
-            removeChildWidget: function (widget, retainElement) { //jshint ignore:line
-                throw new Error("Not supported");
+            removeChildWidget: function (/*widget, retainElement*/) { //jshint ignore:line
+                throw new Error('Not supported');
             },
             /**
              * Attempt to set focus to the given child widget.

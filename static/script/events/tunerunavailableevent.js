@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/tunerunavailableevent',
+require.def(
+    'antie/events/tunerunavailableevent',
     ['antie/events/event'],
     function (Event) {
         'use strict';
@@ -42,7 +43,7 @@ require.def('antie/events/tunerunavailableevent',
              * @ignore
              */
             init: function () {
-                this._super("tunerunavailable");
+                this._super('tunerunavailable');
             }
         });
     }

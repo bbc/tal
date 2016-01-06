@@ -15,19 +15,19 @@ require.def(
         var namespaces = {};
 
         var XboxStorage = StorageProvider.extend({
-            init: function(namespace) {
+            init: function() {
                 /* global Windows: true */
                 this._storage = Windows.Storage.ApplicationData.current.localSettings.values;
 
             },
-            
+
             getItem: function (key) {
                 if (this._storage.hasKey(key)) {
                     var value = this._storage.lookup(key);
                     var jsonifiedValue = Device.prototype.decodeJson(value);
-                            
+
                     if (jsonifiedValue === null) {
-                       return undefined;
+                        return undefined;
                     }
 
                     return jsonifiedValue;

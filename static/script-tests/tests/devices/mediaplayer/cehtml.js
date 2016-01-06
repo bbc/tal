@@ -23,11 +23,11 @@
  */
 
 (function() {
-    this.CEHTMLMediaPlayerTests = AsyncTestCase("CEHTMLMediaPlayer"); //jshint ignore:line
+    this.CEHTMLMediaPlayerTests = AsyncTestCase('CEHTMLMediaPlayer'); //jshint ignore:line
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/cehtml"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/cehtml']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
     // Mixin the common tests shared by all HTML5 MediaPlayer implementations
-    window.commonTests.mediaPlayer.cehtml.mixinTests(this.CEHTMLMediaPlayerTests, "antie/devices/mediaplayer/cehtml", config);
+    window.commonTests.mediaPlayer.cehtml.mixinTests(this.CEHTMLMediaPlayerTests, 'antie/devices/mediaplayer/cehtml', config);
 
 })();

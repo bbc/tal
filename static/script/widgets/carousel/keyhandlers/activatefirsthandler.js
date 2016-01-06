@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/keyhandlers/activatefirsthandler',
+require.def(
+    'antie/widgets/carousel/keyhandlers/activatefirsthandler',
     [
         'antie/widgets/carousel/keyhandlers/keyhandler'
     ],
@@ -33,7 +34,7 @@ require.def('antie/widgets/carousel/keyhandlers/activatefirsthandler',
      * @extends antie.widgets.carousel.keyhandlers.KeyHandler
      */
     function (KeyHandler) {
-        "use strict";
+        'use strict';
         return KeyHandler.extend(/** @lends antie.widgets.carousel.keyhandlers.AlignFirstHandler.prototype */{
             _addAlignmentListeners: function () {
                 var carousel = this._carousel;

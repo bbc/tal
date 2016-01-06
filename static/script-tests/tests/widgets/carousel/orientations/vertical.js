@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.VerticalOrientationTest = AsyncTestCase("VerticalOrientation"); //jshint ignore:line
+    this.VerticalOrientationTest = AsyncTestCase('VerticalOrientation'); //jshint ignore:line
 
     this.VerticalOrientationTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

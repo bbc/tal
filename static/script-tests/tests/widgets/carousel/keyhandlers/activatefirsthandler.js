@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.ActivateFirstHandlerTest = AsyncTestCase("ActivateFirstHandler"); //jshint ignore:line
+    this.ActivateFirstHandlerTest = AsyncTestCase('ActivateFirstHandler'); //jshint ignore:line
 
     this.ActivateFirstHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -47,13 +47,13 @@
             [
                 'antie/widgets/carousel/keyhandlers/activatefirsthandler',
                 'antie/widgets/carousel/carouselcore',
-                "antie/widgets/carousel/strips/widgetstrip",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/bookendednavigator",
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/events/keyevent",
-                "antie/widgets/container",
-                "antie/events/beforealignevent"
+                'antie/widgets/carousel/strips/widgetstrip',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/bookendednavigator',
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/events/keyevent',
+                'antie/widgets/container',
+                'antie/events/beforealignevent'
             ],
             wrapped
         );

@@ -65,7 +65,7 @@ require.def('antie/widgets/componentcontainer',
              * @param {Object} [args] The arguments passed to populate the component.
              */
             _loadComponentCallback: function (module, componentClass, args, keepHistory, state) {
-                if (this.getCurrentApplication() == null) {
+                if (!this.getCurrentApplication()) {
                     // Application has been destroyed, abort
                     return;
                 }
@@ -160,7 +160,7 @@ require.def('antie/widgets/componentcontainer',
                     self._currentComponent.bubbleEvent(new ComponentEvent('aftershow', self, self._currentComponent, args, state, fromBack));
 
                     var focusRemoved = self.setActiveChildWidget(self._currentComponent);
-                    if (focusRemoved == false) {
+                    if (!focusRemoved) {
                         self._activeChildWidget = self._currentComponent;
                         self.getCurrentApplication().getDevice().getLogger().warn('active component is not currently focusable', self._activeChildWidget);
                     }
@@ -207,7 +207,6 @@ require.def('antie/widgets/componentcontainer',
              * Hide the component within this container.
              */
             hide: function (focusToComponent, args, keepHistory, state, fromBack) {
-                var self = this;
 
                 if (this._currentComponent) {
                     var evt = new ComponentEvent('beforehide', this, this._currentComponent, args, state, fromBack);
@@ -262,7 +261,9 @@ require.def('antie/widgets/componentcontainer',
         });
         ComponentContainer.destroy = function () {
             for (var module in _knownComponents) {
-                delete _knownComponents[module];
+                if(_knownComponents.hasOwnProperty(module)) {
+                    delete _knownComponents[module];
+                }
             }
         };
         return ComponentContainer;

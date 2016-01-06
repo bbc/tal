@@ -24,17 +24,18 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/carousel/carouselcore',
-	[
-		'antie/widgets/container',
+require.def(
+    'antie/widgets/carousel/carouselcore',
+    [
+        'antie/widgets/container',
         'antie/widgets/carousel/navigators/bookendednavigator',
         'antie/widgets/carousel/mask',
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/aligners/aligner',
         'antie/widgets/carousel/orientations/vertical',
         'antie/widgets/carousel/orientations/horizontal'
-	],
-	function (
+    ],
+    function(
         Container,
         BookendedNavigator,
         Mask,
@@ -43,7 +44,7 @@ require.def('antie/widgets/carousel/carouselcore',
         verticalOrientation,
         horizontalOrientation
     ) {
-		"use strict";
+        'use strict';
         /**
          * Ordered list of widgets that can be navigated by moving the list or the selection point
          * Use antie.widgets.Carousel instead if you need old container methods.
@@ -55,23 +56,23 @@ require.def('antie/widgets/carousel/carouselcore',
          * @param {Object} [orientation=antie.widgets.carousel.CarouselCore.orientations.VERTICAL] the orientation object of
          * the carousel. Vertical by default, for horizontal pass in antie.widgets.carousel.CarouselCore.orientations.HORIZONTAL
          */
-		var Carousel = Container.extend(/** @lends antie.widgets.carousel.CarouselCore.prototype */ {
+        var Carousel = Container.extend( /** @lends antie.widgets.carousel.CarouselCore.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-			init: function (id, orientation) {
-				this.id = id;
-				this._super(id);
+            init: function(id, orientation) {
+                this.id = id;
+                this._super(id);
                 this._setOrientation(orientation || Carousel.orientations.VERTICAL);
                 this.setWidgetStrip(WidgetStrip);
-				this._mask = new Mask(this.id + '_CarouselMask', this._widgetStrip, this._orientation);
-				this._directAppend(this._mask);
+                this._mask = new Mask(this.id + '_CarouselMask', this._widgetStrip, this._orientation);
+                this._directAppend(this._mask);
                 this.setNavigator(BookendedNavigator);
                 this._aligner = new Aligner(this._mask);
                 this._setAlignEventsFromStripToHaveCarouselAsTarget();
                 this._autoCalculate = true;
-			},
+            },
 
             /**
              * Renders the widget and any child widgets to device-specific output.
@@ -79,10 +80,10 @@ require.def('antie/widgets/carousel/carouselcore',
              * @returns A device-specific object that represents the Carousel as displayed on the device
              * (in a browser, two nested DIVs with the inner containing child widgets and the outer acting as a mask);
              */
-			render: function (device) {
+            render: function(device) {
                 this.outputElement = this._mask.render(device);
-				return this.outputElement;
-			},
+                return this.outputElement;
+            },
 
             /**
              * Adds a widget to the end of the carousel
@@ -92,10 +93,10 @@ require.def('antie/widgets/carousel/carouselcore',
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-			append: function (widget, length) {
+            append: function(widget, length) {
                 widget.addClass('carouselItem');
-				return this._widgetStrip.append(widget, length);
-			},
+                return this._widgetStrip.append(widget, length);
+            },
 
             /**
              * Adds a widget to the end of the carousel
@@ -106,7 +107,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-            insert: function (index, widget, length) {
+            insert: function(index, widget, length) {
                 widget.addClass('carouselItem');
                 return this._widgetStrip.insert(index, widget, length);
             },
@@ -118,7 +119,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * for the first widget's length, etc..)
              * Note only currently working with non-wrapping strips.
              */
-            setWidgetLengths: function (lengths) {
+            setWidgetLengths: function(lengths) {
                 this._widgetStrip.setLengths(lengths);
             },
 
@@ -128,7 +129,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * the mask.
              * @param length {number} The length in pixels to use in Mask calculations.
              */
-            setMaskLength: function (length) {
+            setMaskLength: function(length) {
                 this._mask.setLength(length);
             },
 
@@ -136,7 +137,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * Removes a widget from the carousel
              * @param {antie.widgets.Widget} widget. Widget to remove from the DOM
              */
-            remove: function (widget, retainElement) {
+            remove: function(widget, retainElement) {
                 if (this.hasChildWidget(widget.id)) {
                     widget.removeClass('carouselItem');
                     return this._widgetStrip.remove(widget, retainElement);
@@ -146,7 +147,7 @@ require.def('antie/widgets/carousel/carouselcore',
             /**
              * Removes all widgets from the carousel
              */
-            removeAll: function () {
+            removeAll: function() {
                 this._widgetStrip.removeAll();
             },
 
@@ -162,9 +163,9 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
-			alignNext: function (options) {
+            alignNext: function(options) {
                 this._aligner.alignNext(this._navigator, options);
-			},
+            },
 
             /**
              * Aligns the carousel to the enabled widget before that currently aligned.
@@ -178,9 +179,9 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
-            alignPrevious: function (options) {
+            alignPrevious: function(options) {
                 this._aligner.alignPrevious(this._navigator, options);
-			},
+            },
 
             /**
              * Aligns the carousel to the widget at the specified index
@@ -195,7 +196,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
-            alignToIndex: function (index, options) {
+            alignToIndex: function(index, options) {
                 this._aligner.alignToIndex(index, options);
             },
 
@@ -203,7 +204,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * Instantly completes any in-flight alignment animations, firing any callbacks that were provided.
              * If several alignments have been queued, all will complete in order.
              */
-            completeAlignment: function () {
+            completeAlignment: function() {
                 this._aligner.complete();
             },
 
@@ -212,7 +213,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param pixelsFromEdgeToWidgetEdge A value in pixels from the primary edge (top or left for Vertical/Horizontal)
              * at which widgets are aligned.
              */
-            setAlignPoint: function (pixelsFromEdgeToWidgetEdge) {
+            setAlignPoint: function(pixelsFromEdgeToWidgetEdge) {
                 this._mask.setAlignPoint(pixelsFromEdgeToWidgetEdge);
             },
 
@@ -221,7 +222,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param fractionOfMaskLength a value between 0 and 1 specifying how far along the mask a widget should
              * be aligned. i.e. 0.5 is the centre of the mask.
              */
-            setNormalisedAlignPoint: function (fractionOfMaskLength) {
+            setNormalisedAlignPoint: function(fractionOfMaskLength) {
                 this._mask.setNormalisedAlignPoint(fractionOfMaskLength);
             },
 
@@ -231,7 +232,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * aligned with the mask alignment point. i.e. in a horizontal Carousel, 0.5 is the centre of the widget,
              * 0 is the left edge, 1 is the right edge
              */
-            setNormalisedWidgetAlignPoint: function (fractionOfWidgetLength) {
+            setNormalisedWidgetAlignPoint: function(fractionOfWidgetLength) {
                 this._mask.setNormalisedWidgetAlignPoint(fractionOfWidgetLength);
             },
 
@@ -239,7 +240,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * Some widget strips peform calculations which require elements to be present in the document.
              * This method manually performs those recalculations.
              */
-            recalculate: function () {
+            recalculate: function() {
                 this._widgetStrip.recalculate();
             },
 
@@ -248,14 +249,14 @@ require.def('antie/widgets/carousel/carouselcore',
              * By default these calculations are performed whenever their values might be invalidated (after appending elements
              * for instance) This method can be used to be disable/enable this behaviour for performance optimisation.
              */
-            autoCalculate: function (on) {
+            autoCalculate: function(on) {
                 this._widgetStrip.autoCalculate(on);
             },
 
             /**
              * @returns the index of the currently active widget
              */
-            getActiveIndex: function () {
+            getActiveIndex: function() {
                 return this._navigator.currentIndex();
             },
 
@@ -264,21 +265,21 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param {Number} index the index of the widget to be made active.
              * If this is invalid or corresponds to a disabled widget the active index will not change
              */
-            setActiveIndex: function (index) {
+            setActiveIndex: function(index) {
                 this._navigator.setIndex(index);
             },
 
             /**
              * @returns the index first focussable index after the index of the active widget
              */
-            nextIndex: function () {
+            nextIndex: function() {
                 return this._navigator.nextIndex();
             },
 
             /**
              * @returns the index first focussable index before the index of the active widget
              */
-            previousIndex: function () {
+            previousIndex: function() {
                 return this._navigator.previousIndex();
             },
 
@@ -287,7 +288,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * @param {antie.widgets.Widget} widget the widget to be made active.
              * If the widget is not in the Carousel or corresponds to a disabled widget the active widget will not change
              */
-            setActiveWidget: function (widget) {
+            setActiveWidget: function(widget) {
                 var index;
                 index = this._widgetStrip.getIndexOfChildWidget(widget);
                 this._navigator.setIndex(index);
@@ -299,7 +300,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * antie.widgets.carousel.navigators.BookendedNavigator or antie.widgets.carousel.navigators.WrappingNavigator
              * On construction, the carousel uses antie.widgets.carousel.navigators.BookendedNavigator by default
              */
-            setNavigator: function (Navigator) {
+            setNavigator: function(Navigator) {
                 this._navigator = new Navigator(this._widgetStrip);
             },
 
@@ -309,7 +310,7 @@ require.def('antie/widgets/carousel/carouselcore',
              * antie.widgets.carousel.navigators.WidgetStrip, antie.widgets.carousel.navigators.WrappingStrip
              * On construction, the carousel uses antie.widgets.carousel.navigators.WidgetStrip by default
              */
-            setWidgetStrip: function (WidgetStrip) {
+            setWidgetStrip: function(WidgetStrip) {
                 this._widgetStrip = new WidgetStrip(this.id + '_WidgetStrip', this._orientation);
                 if (this._navigator) {
                     this._navigator.setContainer(this._widgetStrip);
@@ -323,29 +324,29 @@ require.def('antie/widgets/carousel/carouselcore',
             /**
              * @returns {Array} The widgets currently in the carousel
              */
-            items: function () {
+            items: function() {
                 return this._widgetStrip.widgets();
             },
 
             /**
              * @returns {Object} The orientation object associated with the carousel
              */
-            orientation: function () {
+            orientation: function() {
                 return this._orientation;
             },
 
-            _setOrientation: function (orientation) {
+            _setOrientation: function(orientation) {
                 this._orientation = orientation;
             },
 
-            _setAlignEventsFromStripToHaveCarouselAsTarget: function () {
+            _setAlignEventsFromStripToHaveCarouselAsTarget: function() {
                 this._remapWidgetStripEventToCarousel('beforealign');
                 this._remapWidgetStripEventToCarousel('afteralign');
             },
 
-            _remapWidgetStripEventToCarousel: function (eventName) {
+            _remapWidgetStripEventToCarousel: function(eventName) {
                 var self = this;
-                this._remapEvent = this._remapEvent || function (evt) {
+                this._remapEvent = this._remapEvent || function(evt) {
                     if (evt.target === self._widgetStrip) {
                         evt.target = self;
                     }
@@ -353,15 +354,15 @@ require.def('antie/widgets/carousel/carouselcore',
                 this.addEventListener(eventName, this._remapEvent);
             },
 
-            _directAppend: function (widget) {
+            _directAppend: function(widget) {
                 return this.appendChildWidget(widget);
             }
-		});
+        });
 
         Carousel.orientations = {
             VERTICAL: verticalOrientation,
             HORIZONTAL: horizontalOrientation
         };
-		return Carousel;
-	}
+        return Carousel;
+    }
 );

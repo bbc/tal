@@ -39,18 +39,19 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 function stubUnstubbedFunctions(Class) {
                     var prototype, propertyName, property;
                     prototype = Class.prototype;
+                    /*eslint-disable */
                     for (propertyName in prototype) { //jshint ignore:line
+                    /*eslint-enable */
                         property = prototype[propertyName];
                         if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
                             self.sandbox.stub(prototype, propertyName);
                         }
                     }
                 }
-                var i, currentClass, self;
+                var i, self;
                 self = this;
 
                 for (i = 0; i !== classArray.length; i += 1) {
-                    currentClass = classArray[i];
                     stubUnstubbedFunctions(classArray[i]);
                 }
             },
@@ -138,13 +139,13 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 container = new Container();
                 navigator = new NavClass(container);
 
-                container.getActiveChildWidget.returns("widget");
+                container.getActiveChildWidget.returns('widget');
                 container.getIndexOfChildWidget.returns(4);
 
                 index = navigator.currentIndex();
 
                 assertTrue('getActiveChildWidget called on container', container.getActiveChildWidget.calledOnce);
-                assertTrue('result of getActiveChildWidget passed to getIndexOfChildWidget on container', container.getIndexOfChildWidget.calledWith("widget"));
+                assertTrue('result of getActiveChildWidget passed to getIndexOfChildWidget on container', container.getIndexOfChildWidget.calledWith('widget'));
                 assertEquals('return value of getIndexOfChildWidget returned from currentIndex', 4, index);
             },
 
@@ -169,15 +170,15 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 container2 = { container: 2 };
                 navigator = new NavClass(container1);
                 navigator.setContainer(container2);
-                assertEquals("Container set correctly", container2, navigator._container);
+                assertEquals('Container set correctly', container2, navigator._container);
             },
 
             testSetContainerCalledDuringInit: function (NavClass, sandbox) {
-                var navigator, container;
+                var container;
                 container = {test: 'test'};
-                sandbox.stub(NavClass.prototype, "setContainer");
-                navigator = new NavClass(container);
-                assertTrue("Container set from constructor", NavClass.prototype.setContainer.calledOnce);
+                sandbox.stub(NavClass.prototype, 'setContainer');
+                new NavClass(container);
+                assertTrue('Container set from constructor', NavClass.prototype.setContainer.calledOnce);
             },
 
 
@@ -195,7 +196,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.nextIndex();
 
-                assertEquals("Next enabled widget index returned", 2, index);
+                assertEquals('Next enabled widget index returned', 2, index);
             },
 
             testIndexAfterSkipsDisabledWidget: function (NavClass, sandbox) {
@@ -210,7 +211,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.indexAfter(0);
 
-                assertEquals("Next enabled widget index returned", 2, index);
+                assertEquals('Next enabled widget index returned', 2, index);
             },
 
             testPreviousIndexSkipsDisabledWidget: function (NavClass, sandbox) {
@@ -227,7 +228,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.previousIndex();
 
-                assertEquals("Previous enabled widget index returned", 0, index);
+                assertEquals('Previous enabled widget index returned', 0, index);
             },
 
             testIndexBeforeSkipsDisabledWidget: function (NavClass, sandbox) {
@@ -243,7 +244,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.indexBefore(2);
 
-                assertEquals("Previous enabled widget index returned", 0, index);
+                assertEquals('Previous enabled widget index returned', 0, index);
             },
 
             testNextIndexReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
@@ -260,7 +261,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.nextIndex();
 
-                assertTrue("Next index null when all following disabled", index === null);
+                assertTrue('Next index null when all following disabled', index === null);
             },
 
             testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
@@ -275,8 +276,8 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
 
                 navigator = new NavClass(container);
                 index = navigator.indexAfter(0);
-                assertEquals("Index after 0 null when all following disabled", null, index);
-                assertTrue("Index after 0 null when all following disabled", index === null);
+                assertEquals('Index after 0 null when all following disabled', null, index);
+                assertTrue('Index after 0 null when all following disabled', index === null);
             },
 
             testPreviousIndexReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
@@ -293,7 +294,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 index = navigator.previousIndex();
 
-                assertTrue("Next index null when all preceding disabled", index === null);
+                assertTrue('Next index null when all preceding disabled', index === null);
             },
 
             testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled: function (NavClass, sandbox) {
@@ -308,8 +309,8 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
 
                 navigator = new NavClass(container);
                 index = navigator.indexBefore(2);
-                assertEquals("Index before 2 null when all preceding disabled", null, index);
-                assertTrue("Index before 2  null when all preceding disabled", index === null);
+                assertEquals('Index before 2 null when all preceding disabled', null, index);
+                assertTrue('Index before 2  null when all preceding disabled', index === null);
             },
 
             testSetIndexActivatesValidIndexOfActivatableWidget: function (NavClass, sandbox) {
@@ -324,7 +325,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertTrue("Widget set active", container.setActiveChildIndex.withArgs(1).called);
+                assertTrue('Widget set active', container.setActiveChildIndex.withArgs(1).called);
             },
 
             testSetIndexOnInvalidIndexDoesNotChangeActivation: function (NavClass, sandbox) {
@@ -341,9 +342,9 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator.setIndex(-1);
                 navigator.setIndex(null);
                 navigator.setIndex();
-                navigator.setIndex("invalid");
+                navigator.setIndex('invalid');
 
-                assertFalse("Active widget changed", container.setActiveChildIndex.called);
+                assertFalse('Active widget changed', container.setActiveChildIndex.called);
             },
 
             testSetIndexOnIndexOfDisabledWidgetDoesNotChangeActivation: function (NavClass, sandbox) {
@@ -358,7 +359,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertFalse("Active widget changed", container.setActiveChildIndex.called);
+                assertFalse('Active widget changed', container.setActiveChildIndex.called);
             },
 
             testIndexCountItemCountOfContainer: function (NavClass, sandbox) {
@@ -371,7 +372,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 container = this.createContainerWithWidgets([widget, widget, widget, widget]);
                 navigator = new NavClass(container);
 
-                assertEquals("length returns item count of container", 4, navigator.indexCount());
+                assertEquals('length returns item count of container', 4, navigator.indexCount());
             },
 
             testSelectedItemChangedEventFiredWhenIndexSetSuccessfully: function (NavClass, sandbox) {
@@ -386,7 +387,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertEquals("selecteditemchange event fired on container", 'selecteditemchange', container.bubbleEvent.secondCall.args[0].type);
+                assertEquals('selecteditemchange event fired on container', 'selecteditemchange', container.bubbleEvent.secondCall.args[0].type);
             },
 
             testBeforeSelectedItemChangedEventFiredBeforeIndexSetSuccessfully: function (NavClass, sandbox) {
@@ -401,7 +402,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertEquals("beforeselecteditemchange event fired on container", 'beforeselecteditemchange', container.bubbleEvent.firstCall.args[0].type);
+                assertEquals('beforeselecteditemchange event fired on container', 'beforeselecteditemchange', container.bubbleEvent.firstCall.args[0].type);
             },
 
             testSelectedItemChangedEventNotFiredWhenIndexNotSetSuccessfully: function (NavClass, sandbox) {
@@ -417,7 +418,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                 navigator = new NavClass(container);
                 navigator.setIndex(1);
 
-                assertFalse("event fired on container", container.bubbleEvent.calledOnce);
+                assertFalse('event fired on container', container.bubbleEvent.calledOnce);
             },
 
             getNestedContainer: function () {

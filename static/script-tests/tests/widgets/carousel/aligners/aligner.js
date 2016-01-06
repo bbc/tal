@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AlignerTest = AsyncTestCase("Aligner"); //jshint ignore:line
+    this.AlignerTest = AsyncTestCase('Aligner'); //jshint ignore:line
 
     this.AlignerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -62,8 +62,7 @@
     };
 
     var getNavigatorAtEndWithCurrentIndexInactive = function (Navigator, sandbox) {
-        var navigator, first;
-        first = true;
+        var navigator;
         navigator = getNavigator(Navigator, sandbox);
 
         navigator.currentIndex.returns(0);
@@ -74,8 +73,7 @@
     };
 
     var getThreeItemNavigatorAtEndWithCurrentIndexInactiveAndLastItemDisabled = function (Navigator, sandbox) {
-        var navigator, first;
-        first = true;
+        var navigator;
         navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(0);
         navigator.nextIndex.returns(0);
@@ -105,8 +103,7 @@
     };
 
     var getThreeItemNavigatorAtStartWithCurrentIndexInactiveAndFirstItemDisabled = function (Navigator, sandbox) {
-        var navigator, first;
-        first = true;
+        var navigator;
         navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(2);
         navigator.previousIndex.returns(2);
@@ -116,8 +113,7 @@
     };
 
     var getNavigatorAtStartWithCurrentIndexInactive = function (Navigator, sandbox) {
-        var navigator, first;
-        first = true;
+        var navigator;
         navigator = getNavigator(Navigator, sandbox);
         navigator.currentIndex.returns(1);
         navigator.nextIndex.returns(1);
@@ -132,9 +128,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/navigators/navigator',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Navigator, Mask) {
                 var aligner, mask, alignmentIndex;
@@ -146,7 +142,7 @@
                 alignmentIndex = 3;
                 aligner.alignToIndex(alignmentIndex);
 
-                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                assertTrue('beforeAlignTo called on mask', mask.beforeAlignTo.called);
                 sinon.assert.calledWith(mask.beforeAlignTo, sinon.match.any, alignmentIndex);
             }
         );
@@ -156,9 +152,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/navigators/navigator',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Navigator, Mask) {
                 var aligner, mask, navigator, initialIndex, alignmentIndex;
@@ -168,12 +164,12 @@
                 initialIndex = 0;
                 alignmentIndex = 1;
                 mask = new Mask();
-                
+
                 aligner = new Aligner(mask);
                 aligner.alignToIndex(initialIndex);
                 aligner.alignNext(navigator);
 
-                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                assertTrue('beforeAlignTo called on mask', mask.beforeAlignTo.called);
                 sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
@@ -183,9 +179,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/navigators/navigator",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/navigators/navigator',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner,  Navigator, Mask) {
                 var aligner, mask, navigator, alignmentIndex, initialIndex;
@@ -195,14 +191,14 @@
                 initialIndex = 1;
                 alignmentIndex = 0;
                 mask = new Mask();
-                
+
                 aligner = new Aligner(mask);
                 aligner.alignToIndex(1);
                 mask.beforeAlignTo.reset();
 
                 aligner.alignPrevious(navigator);
 
-                assertTrue("beforeAlignTo called on mask", mask.beforeAlignTo.called);
+                assertTrue('beforeAlignTo called on mask', mask.beforeAlignTo.called);
                 sinon.assert.calledWith(mask.beforeAlignTo, initialIndex, alignmentIndex);
             }
         );
@@ -212,8 +208,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Mask) {
                 var aligner, mask, alignmentIndex;
@@ -225,7 +221,7 @@
                 aligner = new Aligner(mask);
                 aligner.alignToIndex(alignmentIndex);
 
-                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                assertTrue('afterAlignTo called on mask', mask.afterAlignTo.called);
                 sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
@@ -235,9 +231,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator, alignmentIndex;
@@ -251,7 +247,7 @@
                 aligner = new Aligner(mask);
                 aligner.alignNext(navigator);
 
-                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                assertTrue('afterAlignTo called on mask', mask.afterAlignTo.called);
                 sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
@@ -261,9 +257,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator, alignmentIndex) {
                 var aligner, mask, navigator;
@@ -279,7 +275,7 @@
                 mask.afterAlignTo.reset();
                 aligner.alignPrevious(navigator);
 
-                assertTrue("afterAlignTo called on mask", mask.afterAlignTo.called);
+                assertTrue('afterAlignTo called on mask', mask.afterAlignTo.called);
                 sinon.assert.calledWith(mask.afterAlignTo, alignmentIndex);
             }
         );
@@ -289,20 +285,20 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
                 this.sandbox.stub(Mask.prototype);
                 mask = new Mask();
-                
+
                 aligner = new Aligner(mask);
                 navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner.alignNext(navigator);
 
-                assertFalse("afterAlignTo called on mask", mask.afterAlignTo.called);
+                assertFalse('afterAlignTo called on mask', mask.afterAlignTo.called);
             }
         );
     };
@@ -311,8 +307,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Mask) {
                 var aligner, mask;
@@ -323,7 +319,7 @@
 
                 aligner.alignToIndex(3);
 
-                assertTrue("Align to index called correctly on mask", mask.alignToIndex.calledWith(3));
+                assertTrue('Align to index called correctly on mask', mask.alignToIndex.calledWith(3));
             }
         );
     };
@@ -332,8 +328,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Mask) {
                 var aligner, mask;
@@ -343,11 +339,11 @@
                 aligner = new Aligner(mask);
 
                 aligner.alignToIndex(3, {
-                    skipAnim: "test"
+                    skipAnim: 'test'
                 });
 
-                assertTrue("Align to index called on mask", mask.alignToIndex.called);
-                assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+                assertTrue('Align to index called on mask', mask.alignToIndex.called);
+                assertEquals('skipAnim passed through', 'test', mask.alignToIndex.firstCall.args[1].skipAnim);
             }
         );
     };
@@ -356,8 +352,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask'
             ],
             function (application, Aligner, Mask) {
                 var aligner, mask, completeStub;
@@ -376,8 +372,8 @@
                     onComplete: completeStub
                 });
 
-                assertTrue("Align to index called on mask", mask.alignToIndex.called);
-                assertTrue("Options callback fired", completeStub.calledOnce);
+                assertTrue('Align to index called on mask', mask.alignToIndex.called);
+                assertTrue('Options callback fired', completeStub.calledOnce);
             }
         );
     };
@@ -386,9 +382,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -398,7 +394,7 @@
                 aligner = new Aligner(mask);
                 aligner.alignNext(navigator);
 
-                assertTrue("alignToIndex called on mask", mask.alignToIndex.calledWith(1));
+                assertTrue('alignToIndex called on mask', mask.alignToIndex.calledWith(1));
             }
         );
     };
@@ -407,9 +403,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -420,7 +416,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
-                assertTrue("alignToIndex called on mask", mask.alignToIndex.calledWith(0));
+                assertTrue('alignToIndex called on mask', mask.alignToIndex.calledWith(0));
             }
         );
     };
@@ -429,9 +425,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -443,7 +439,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
-                assertTrue("wrapForward called", aligner._wrap.calledWith(1, 0, navigator, Aligner.directions.FORWARD));
+                assertTrue('wrapForward called', aligner._wrap.calledWith(1, 0, navigator, Aligner.directions.FORWARD));
             }
         );
     };
@@ -452,9 +448,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -466,7 +462,7 @@
                 navigator = getNavigatorStartWithCurrentIndexActive(Navigator, this.sandbox);
                 aligner.alignPrevious(navigator);
 
-                assertTrue("wrapBackward called", aligner._wrap.calledWith(0, 1, navigator, Aligner.directions.BACKWARD));
+                assertTrue('wrapBackward called', aligner._wrap.calledWith(0, 1, navigator, Aligner.directions.BACKWARD));
             }
         );
     };
@@ -475,9 +471,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -490,7 +486,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
 
-                assertFalse("Align called on mask", mask.alignToIndex.called);
+                assertFalse('Align called on mask', mask.alignToIndex.called);
             }
         );
     };
@@ -499,9 +495,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -514,7 +510,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
-                assertFalse("Align called on mask", mask.alignToIndex.called);
+                assertFalse('Align called on mask', mask.alignToIndex.called);
             }
         );
     };
@@ -523,9 +519,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -536,7 +532,7 @@
                 aligner._wrapForward = this.sandbox.stub();
                 aligner.alignNext(navigator);
 
-                assertFalse("wrapForward called", aligner._wrapForward.called);
+                assertFalse('wrapForward called', aligner._wrapForward.called);
             }
         );
     };
@@ -545,9 +541,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, navigator;
@@ -559,7 +555,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
 
-                assertFalse("wrapBackward called", aligner._wrapBackward.called);
+                assertFalse('wrapBackward called', aligner._wrapBackward.called);
             }
         );
     };
@@ -568,9 +564,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, navigator;
@@ -581,8 +577,8 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
-                assertEquals("Align to index -1 for last clone", -1, wrapAlignCall.args[0]);
-                assertTrue("Align to index -1 skips anim", wrapAlignCall.args[1].skipAnim);
+                assertEquals('Align to index -1 for last clone', -1, wrapAlignCall.args[0]);
+                assertTrue('Align to index -1 skips anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -591,9 +587,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, animatedCall, navigator;
@@ -605,8 +601,8 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator, {skipAnim: true});
                 animatedCall = mask.alignToIndex.secondCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("SkipAnim passed into align", true, animatedCall.args[1].skipAnim);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('SkipAnim passed into align', true, animatedCall.args[1].skipAnim);
 
             }
         );
@@ -616,9 +612,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, navigator;
@@ -629,9 +625,9 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("Align to index -2 for correct clone", -2, wrapAlignCall.args[0]);
-                assertTrue("Align to index -2 skips anim", wrapAlignCall.args[1].skipAnim);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('Align to index -2 for correct clone', -2, wrapAlignCall.args[0]);
+                assertTrue('Align to index -2 skips anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -640,9 +636,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, alignCall, navigator;
@@ -653,8 +649,8 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("Align to index 3 for correct clone", 3, alignCall.args[0]);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('Align to index 3 for correct clone', 3, alignCall.args[0]);
             }
         );
     };
@@ -663,9 +659,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, navigator;
@@ -676,9 +672,9 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("Align to index length + 1 for correct clone", 4, wrapAlignCall.args[0]);
-                assertTrue("Align to clone anim", wrapAlignCall.args[1].skipAnim);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('Align to index length + 1 for correct clone', 4, wrapAlignCall.args[0]);
+                assertTrue('Align to clone anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -687,9 +683,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, alignCall, navigator;
@@ -700,8 +696,8 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignPrevious(navigator);
                 alignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("Align to index -2 for correct clone", -2, alignCall.args[0]);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('Align to index -2 for correct clone', -2, alignCall.args[0]);
             }
         );
     };
@@ -710,9 +706,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, navigator;
@@ -722,9 +718,9 @@
                 aligner = new Aligner(mask);
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("Align to index length+1 for last clone", 2, wrapAlignCall.args[0]);
-                assertTrue("Align to index length+1 skips anim", wrapAlignCall.args[1].skipAnim);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('Align to index length+1 for last clone', 2, wrapAlignCall.args[0]);
+                assertTrue('Align to index length+1 skips anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -733,9 +729,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, animatedCall, navigator;
@@ -746,8 +742,8 @@
                 aligner = new Aligner(mask);
                 aligner.alignPrevious(navigator, {skipAnim: true});
                 animatedCall = mask.alignToIndex.secondCall;
-                assertTrue("Align to index called", mask.alignToIndex.called);
-                assertEquals("SkipAnim passed into align", true, animatedCall.args[1].skipAnim);
+                assertTrue('Align to index called', mask.alignToIndex.called);
+                assertEquals('SkipAnim passed into align', true, animatedCall.args[1].skipAnim);
 
             }
         );
@@ -757,9 +753,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, alignCall, navigator;
@@ -768,16 +764,18 @@
                 mask = new Mask();
                 navigator = getNavigatorAtEndWithCurrentIndexInactive(Navigator, this.sandbox);
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
+                    if (options && typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
                 });
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 alignCall = mask.alignToIndex.secondCall;
-                assertEquals("onComplete callback passed to wrap align", 'function', typeof wrapAlignCall.args[1].onComplete);
-                assertTrue("Align to index called twice", mask.alignToIndex.calledTwice);
-                assertEquals("Align to destination index (0)", 0, alignCall.args[0]);
+                assertEquals('onComplete callback passed to wrap align', 'function', typeof wrapAlignCall.args[1].onComplete);
+                assertTrue('Align to index called twice', mask.alignToIndex.calledTwice);
+                assertEquals('Align to destination index (0)', 0, alignCall.args[0]);
             }
         );
     };
@@ -786,9 +784,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, alignCall, navigator;
@@ -797,16 +795,18 @@
                 mask = new Mask();
                 navigator = getNavigatorAtStartWithCurrentIndexInactive(Navigator, this.sandbox);
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
+                    if (options && typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
                 });
                 aligner = new Aligner(mask);
 
                 aligner.alignPrevious(navigator);
                 wrapAlignCall = mask.alignToIndex.firstCall;
                 alignCall = mask.alignToIndex.secondCall;
-                assertEquals("onComplete callback passed to wrap align", 'function', typeof wrapAlignCall.args[1].onComplete);
-                assertTrue("Align to index called twice", mask.alignToIndex.calledTwice);
-                assertEquals("Align to destination index (1)", 1, alignCall.args[0]);
+                assertEquals('onComplete callback passed to wrap align', 'function', typeof wrapAlignCall.args[1].onComplete);
+                assertTrue('Align to index called twice', mask.alignToIndex.calledTwice);
+                assertEquals('Align to destination index (1)', 1, alignCall.args[0]);
             }
         );
     };
@@ -815,9 +815,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, alignCall, navigator;
@@ -829,7 +829,7 @@
                 aligner._lastAlignIndex = 1;
                 aligner.alignNext(navigator);
                 alignCall = mask.alignToIndex.firstCall;
-                assertEquals("Align to destination index (2)", 2, alignCall.args[0]);
+                assertEquals('Align to destination index (2)', 2, alignCall.args[0]);
             }
         );
     };
@@ -838,9 +838,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, alignCall, navigator;
@@ -853,7 +853,7 @@
                 aligner.alignPrevious(navigator);
 
                 alignCall = mask.alignToIndex.firstCall;
-                assertEquals("Align to destination index (-1)", -1, alignCall.args[0]);
+                assertEquals('Align to destination index (-1)', -1, alignCall.args[0]);
             }
         );
     };
@@ -862,9 +862,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, alignCall, navigator;
@@ -872,7 +872,9 @@
                 Mask.prototype.alignToIndex.restore();
                 mask = new Mask();
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
+                    if (options && typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
                 });
                 aligner = new Aligner(mask);
                 navigator = getNavigatorAtEndWithCurrentIndexActive(Navigator, this.sandbox);
@@ -881,10 +883,10 @@
 
                 alignCall = mask.alignToIndex.firstCall;
                 wrapAlignCall = mask.alignToIndex.secondCall;
-                assertEquals("onComplete callback passed to align", 'function', typeof alignCall.args[1].onComplete);
-                assertTrue("Align to index called twice", mask.alignToIndex.calledTwice);
-                assertEquals("Wrap aligns to destination index (0)", 0, wrapAlignCall.args[0]);
-                assertTrue("Wrap align skips anim", wrapAlignCall.args[1].skipAnim);
+                assertEquals('onComplete callback passed to align', 'function', typeof alignCall.args[1].onComplete);
+                assertTrue('Align to index called twice', mask.alignToIndex.calledTwice);
+                assertEquals('Wrap aligns to destination index (0)', 0, wrapAlignCall.args[0]);
+                assertTrue('Wrap align skips anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -893,9 +895,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask, wrapAlignCall, alignCall, navigator;
@@ -903,7 +905,9 @@
                 Mask.prototype.alignToIndex.restore();
                 mask = new Mask();
                 this.sandbox.stub(mask, 'alignToIndex', function (index, options) {
-                    if (options && typeof options.onComplete === 'function') { options.onComplete(); }
+                    if (options && typeof options.onComplete === 'function') {
+                        options.onComplete();
+                    }
                 });
                 aligner = new Aligner(mask);
                 aligner._lastAlignIndex = 0;
@@ -912,10 +916,10 @@
 
                 alignCall = mask.alignToIndex.firstCall;
                 wrapAlignCall = mask.alignToIndex.secondCall;
-                assertEquals("onComplete callback passed to align", 'function', typeof alignCall.args[1].onComplete);
-                assertTrue("Align to index called twice", mask.alignToIndex.calledTwice);
-                assertEquals("Wrap aligns to destination index (1)", 1, wrapAlignCall.args[0]);
-                assertTrue("Wrap align skips anim", wrapAlignCall.args[1].skipAnim);
+                assertEquals('onComplete callback passed to align', 'function', typeof alignCall.args[1].onComplete);
+                assertTrue('Align to index called twice', mask.alignToIndex.calledTwice);
+                assertEquals('Wrap aligns to destination index (1)', 1, wrapAlignCall.args[0]);
+                assertTrue('Wrap align skips anim', wrapAlignCall.args[1].skipAnim);
             }
         );
     };
@@ -924,9 +928,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask;
@@ -937,11 +941,11 @@
                 aligner = new Aligner(mask);
 
                 aligner.alignNext(new Navigator(), {
-                    skipAnim: "test"
+                    skipAnim: 'test'
                 });
 
-                assertTrue("Align to index called on mask", mask.alignToIndex.called);
-                assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+                assertTrue('Align to index called on mask', mask.alignToIndex.called);
+                assertEquals('skipAnim passed through', 'test', mask.alignToIndex.firstCall.args[1].skipAnim);
             }
         );
     };
@@ -950,9 +954,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, Mask, Navigator) {
                 var aligner, mask;
@@ -963,11 +967,11 @@
                 aligner = new Aligner(mask);
 
                 aligner.alignPrevious(new Navigator(), {
-                    skipAnim: "test"
+                    skipAnim: 'test'
                 });
 
-                assertTrue("Align to index called on mask", mask.alignToIndex.called);
-                assertEquals("skipAnim passed through", "test", mask.alignToIndex.firstCall.args[1].skipAnim);
+                assertTrue('Align to index called on mask', mask.alignToIndex.called);
+                assertEquals('skipAnim passed through', 'test', mask.alignToIndex.firstCall.args[1].skipAnim);
             }
         );
     };
@@ -976,10 +980,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/aligners/alignmentqueue",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/aligners/alignmentqueue',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, AlignmentQueue, Mask, Navigator) {
                 var aligner, mask;
@@ -990,12 +994,12 @@
                 aligner = new Aligner(mask);
 
                 aligner.alignPrevious(new Navigator());
-                assertFalse("Complete called on alignment queue before called on aligner",
+                assertFalse('Complete called on alignment queue before called on aligner',
                     AlignmentQueue.prototype.complete.called);
 
                 aligner.complete();
 
-                assertTrue("Complete called on alignment queue",
+                assertTrue('Complete called on alignment queue',
                     AlignmentQueue.prototype.complete.calledOnce);
             }
         );
@@ -1005,10 +1009,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/aligners/alignmentqueue",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/aligners/alignmentqueue',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, AlignmentQueue, Mask, Navigator) {
                 var aligner, mask;
@@ -1027,10 +1031,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/aligners/alignmentqueue",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/aligners/alignmentqueue',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, AlignmentQueue, Mask, Navigator) {
                 var aligner, mask;
@@ -1049,10 +1053,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/aligners/alignmentqueue",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/aligners/alignmentqueue',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, AlignmentQueue, Mask, Navigator) {
                 var aligner, mask;
@@ -1072,10 +1076,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/aligners/aligner",
-                "antie/widgets/carousel/aligners/alignmentqueue",
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/navigators/navigator"
+                'antie/widgets/carousel/aligners/aligner',
+                'antie/widgets/carousel/aligners/alignmentqueue',
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/navigators/navigator'
             ],
             function (application, Aligner, AlignmentQueue, Mask, Navigator) {
                 var aligner, mask;

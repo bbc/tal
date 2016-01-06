@@ -32,7 +32,7 @@
 
 
     // jshint newcap: false
-    this.StyleTopLeftAnimationTest = AsyncTestCase("StyleTopLeftAnimation"); //jshint ignore:line
+    this.StyleTopLeftAnimationTest = AsyncTestCase('StyleTopLeftAnimation'); //jshint ignore:line
 
     this.StyleTopLeftAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -44,24 +44,24 @@
 
     var getDefaultConfig = function() {
         var config = {
-            "modules": {
-                "base": "antie/devices/browserdevice",
-                "modifiers": [
+            'modules': {
+                'base': 'antie/devices/browserdevice',
+                'modifiers': [
                     'antie/devices/anim/styletopleft'
                 ]
             },
-            "input": {
-                "map": {}
+            'input': {
+                'map': {}
             },
-            "layouts": [
+            'layouts': [
                 {
-                    "width": 960,
-                    "height": 540,
-                    "module": "fixtures/layouts/default",
-                    "classes": ["browserdevice540p"]
+                    'width': 960,
+                    'height': 540,
+                    'module': 'fixtures/layouts/default',
+                    'classes': ['browserdevice540p']
                 }
             ],
-            "deviceConfigurationKey": "devices-html5-1"
+            'deviceConfigurationKey': 'devices-html5-1'
         };
         return config;
     };
@@ -69,15 +69,14 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, inner, startTime;
+            var device, div, inner;
             device = application.getDevice();
-            div = device.createContainer("id_mask");
-            inner = device.createContainer("id");
-            startTime = Date.now();
+            div = device.createContainer('id_mask');
+            inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
             var clock = sinon.useFakeTimers();
@@ -108,17 +107,17 @@
         expectAsserts(1);
 
         var config = getDefaultConfig();
-	var self = this;
+        var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, inner;
             device = application.getDevice();
-            div = device.createContainer("id_mask");
-            inner = device.createContainer("id");
+            div = device.createContainer('id_mask');
+            inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
-            inner.style.top = "200px";
-            inner.style.left = "100px";
+            inner.style.top = '200px';
+            inner.style.left = '100px';
 
             var onComplete = self.sandbox.stub();
 
@@ -132,7 +131,7 @@
                 onComplete: onComplete
             });
 
-             assert(onComplete.calledOnce);
+            assert(onComplete.calledOnce);
 
         }, config);
     };
@@ -140,14 +139,13 @@
         expectAsserts(3);
 
         var config = getDefaultConfig();
-	var self = this;
+        var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, inner, startTime;
+            var device, div, inner;
             device = application.getDevice();
-            div = device.createContainer("id_mask");
-            inner = device.createContainer("id");
-            startTime = Date.now();
+            div = device.createContainer('id_mask');
+            inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
             var onComplete = self.sandbox.stub();
@@ -176,15 +174,14 @@
     this.StyleTopLeftAnimationTest.prototype.testScrollElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-	var self = this;
-        var config = getDefaultConfig(); 
-        config.animationDisabled = "true";
+        var self = this;
+        var config = getDefaultConfig();
+        config.animationDisabled = 'true';
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, inner, startTime;
+            var device, div, inner;
             device = application.getDevice();
-            div = device.createContainer("id_mask");
-            inner = device.createContainer("id");
-            startTime = Date.now();
+            div = device.createContainer('id_mask');
+            inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
             var onComplete = self.sandbox.stub();
@@ -209,13 +206,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
 
@@ -248,13 +245,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimAndNoDefaultValues = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -288,13 +285,13 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(2);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -330,13 +327,13 @@
     this.StyleTopLeftAnimationTest.prototype.testShowAndHideElementToWithAnimAndNoDefaultOpacity = function(queue) {
         expectAsserts(4);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
 
             var clock = sinon.useFakeTimers();
@@ -389,13 +386,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoLeftValue = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -427,13 +424,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoTopValue = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -465,16 +462,16 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithAnimNoMovement = function(queue) {
         expectAsserts(1);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
-            div.style.top = "200px";
-            div.style.left = "100px";
+            div.style.top = '200px';
+            div.style.left = '100px';
 
             var onComplete = self.sandbox.stub();
 
@@ -495,13 +492,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
@@ -529,13 +526,13 @@
     this.StyleTopLeftAnimationTest.prototype.testMoveElementToWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-	var self = this;
-        var config = getDefaultConfig(); 
-        config.animationDisabled = "true";
+        var self = this;
+        var config = getDefaultConfig();
+        config.animationDisabled = 'true';
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
@@ -559,13 +556,13 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -579,7 +576,7 @@
             clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
 
             assert(onComplete.calledOnce);
-            assertEquals("hidden", div.style.visibility);
+            assertEquals('hidden', div.style.visibility);
             assertEquals(0, parseFloat(div.style.opacity));
 
             clock.restore();
@@ -590,12 +587,12 @@
         expectAsserts(3);
 
         var config = getDefaultConfig();
-	var self = this;
+        var self = this;
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
@@ -606,7 +603,7 @@
             });
 
             assert(onComplete.calledOnce);
-            assertEquals("hidden", div.style.visibility);
+            assertEquals('hidden', div.style.visibility);
             assertEquals(0, parseFloat(div.style.opacity));
 
         }, config);
@@ -618,23 +615,23 @@
     this.StyleTopLeftAnimationTest.prototype.testHideElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-	var self = this;
-        var config = getDefaultConfig(); 
-        config.animationDisabled = "true";
+        var self = this;
+        var config = getDefaultConfig();
+        config.animationDisabled = 'true';
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
             device.hideElement({
-                    el: div,
-                    onComplete: onComplete
-                });
+                el: div,
+                onComplete: onComplete
+            });
 
             assert(onComplete.calledOnce);
-            assertEquals("hidden", div.style.visibility);
+            assertEquals('hidden', div.style.visibility);
             assertEquals(0, parseFloat(div.style.opacity));
 
         }, config);
@@ -643,13 +640,13 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var clock = sinon.useFakeTimers();
             var onComplete = self.sandbox.stub();
@@ -663,7 +660,7 @@
             clock.tick(DEFAULT_ONCOMPLETE_TIMEOUT);
 
             assert(onComplete.calledOnce);
-            assertEquals("visible", div.style.visibility);
+            assertEquals('visible', div.style.visibility);
             assertEquals(1, parseFloat(div.style.opacity));
 
             clock.restore();
@@ -674,13 +671,13 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnim = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
@@ -691,7 +688,7 @@
             });
 
             assert(onComplete.calledOnce);
-            assertEquals("visible", div.style.visibility);
+            assertEquals('visible', div.style.visibility);
             assertEquals(1, parseFloat(div.style.opacity));
 
         }, config);
@@ -703,14 +700,14 @@
     this.StyleTopLeftAnimationTest.prototype.testShowElementWithNoAnimInConfig = function(queue) {
         expectAsserts(3);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
-        config.animationDisabled = "true";
+        config.animationDisabled = 'true';
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
 
             var onComplete = self.sandbox.stub();
 
@@ -720,7 +717,7 @@
             });
 
             assert(onComplete.calledOnce);
-            assertEquals("visible", div.style.visibility);
+            assertEquals('visible', div.style.visibility);
             assertEquals(1, parseFloat(div.style.opacity));
 
         }, config);
@@ -733,29 +730,29 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.showElement({
                 el: div,
                 fps: 15,
                 duration: 123,
-                easing: "easeOutQuad"
+                easing: 'easeOutQuad'
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS passed through', 15, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration passed through', 123, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing passed through', "easeOutQuad", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing passed through', 'easeOutQuad', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * Where specific parameters for FPS, duration and easing are passed to hideElement(), ensure
      * these are passed on to the tweening engine.
@@ -763,29 +760,29 @@
     this.StyleTopLeftAnimationTest.prototype.testSpecificHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.hideElement({
                 el: div,
                 fps: 16,
                 duration: 321,
-                easing: "elastic"
+                easing: 'elastic'
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS passed through', 16, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration passed through', 321, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing passed through', "elastic", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing passed through', 'elastic', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to showElement(),
      * and no defaults are specified in the device config file, ensure the hardcoded default parameters
@@ -794,26 +791,26 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.showElement({
                 el: div // No animation properties provided, defaults will be used
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS is default', 25, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration is default', 840, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing is default', "linear", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing is default', 'linear', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to hideElement(),
      * and no defaults are specified in the device config file, ensure the hardcoded default parameters
@@ -822,26 +819,26 @@
     this.StyleTopLeftAnimationTest.prototype.testDefaultHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
+        var self = this;
         var config = getDefaultConfig();
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.hideElement({
                 el: div // No animation properties provided, defaults will be used
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS is default', 25, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration is default', 840, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing is default', "linear", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing is default', 'linear', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to showElement(),
      * ensure the defaults from the device config file are used.
@@ -849,34 +846,34 @@
     this.StyleTopLeftAnimationTest.prototype.testConfigurationShowAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
-        // This is the configuration!!        
+        var self = this;
+        // This is the configuration!!
         var config = getDefaultConfig();
         config.defaults = {
-            "showElementFade": {
-                "fps": 11, 
-                "duration": 888, 
-                "easing": "easeInCubic"
+            'showElementFade': {
+                'fps': 11,
+                'duration': 888,
+                'easing': 'easeInCubic'
             }
         };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.showElement({
                 el: div // No animation properties provided, config will be used
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS is from config', 11, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration is from config', 888, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing is from config', "easeInCubic", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing is from config', 'easeInCubic', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * Where no specific parameters are provided for FPS, duration and easing in a call to hideElement(),
      * ensure the defaults from the device config file are used.
@@ -884,34 +881,34 @@
     this.StyleTopLeftAnimationTest.prototype.testConfigurationHideAnimationPropertiesPassedToTween = function(queue) {
         expectAsserts(4);
 
-	var self = this;
-        // This is the configuration!!        
+        var self = this;
+        // This is the configuration!!
         var config = getDefaultConfig();
         config.defaults = {
-            "hideElementFade": {
-                "fps": 22, 
-                "duration": 777, 
-                "easing": "easeInQuint"
+            'hideElementFade': {
+                'fps': 22,
+                'duration': 777,
+                'easing': 'easeInQuint'
             }
         };
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, tweenStub;
             device = application.getDevice();
-            div = device.createContainer("id");
-            
-            tweenStub = self.sandbox.stub(device, "_tween");
+            div = device.createContainer('id');
+
+            tweenStub = self.sandbox.stub(device, '_tween');
             device.hideElement({
                 el: div // No animation properties provided, config will be used
             });
-            
+
             assert('Tween called once', tweenStub.calledOnce);
             assertEquals('FPS is from config', 22, tweenStub.getCall(0).args[0].fps);
             assertEquals('Duration is from config', 777, tweenStub.getCall(0).args[0].duration);
-            assertEquals('Easing is from config', "easeInQuint", tweenStub.getCall(0).args[0].easing);
+            assertEquals('Easing is from config', 'easeInQuint', tweenStub.getCall(0).args[0].easing);
         }, config);
     };
-    
+
     /**
      * When passing an options object to moveElementTo(), ensure that the options object is the same after
      * the call as before.
@@ -920,13 +917,13 @@
         expectAsserts(1);
 
         var config = getDefaultConfig();
-        
+
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             _assertNoSideEffects(device, device.moveElementTo);
         }, config);
     };
-    
+
     /**
      * When passing an options object to scrollElementTo(), ensure that the options object is the same after
      * the call as before.
@@ -935,13 +932,13 @@
         expectAsserts(1);
 
         var config = getDefaultConfig();
-        
+
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             _assertNoSideEffects(device, device.scrollElementTo);
         }, config);
     };
-    
+
     /**
      * When passing an options object to showElement(), ensure that the options object is the same after
      * the call as before.
@@ -950,13 +947,13 @@
         expectAsserts(1);
 
         var config = getDefaultConfig();
-        
+
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             _assertNoSideEffects(device, device.showElement);
         }, config);
     };
-    
+
     /**
      * When passing an options object to hideElement(), ensure that the options object is the same after
      * the call as before.
@@ -965,7 +962,7 @@
         expectAsserts(1);
 
         var config = getDefaultConfig();
-        
+
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
             _assertNoSideEffects(device, device.hideElement);
@@ -974,7 +971,7 @@
 
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenSkipped = function(queue) {
         var config = getDefaultConfig();
-	var self = this;
+        var self = this;
         expectAsserts(1);
         queuedApplicationInit(
             queue,
@@ -987,8 +984,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
 
@@ -1012,7 +1009,7 @@
                 device = application.getDevice();
                 completeSpy = self.sandbox.spy(options, 'onComplete');
                 device.tweenElementStyle(options);
-                assertTrue("onComplete called", completeSpy.calledOnce);
+                assertTrue('onComplete called', completeSpy.calledOnce);
             },
             config
         );
@@ -1020,7 +1017,7 @@
 
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleFiresOnCompleteWhenNoChange = function(queue) {
         var config = getDefaultConfig();
-	var self = this;
+        var self = this;
         expectAsserts(1);
         queuedApplicationInit(
             queue,
@@ -1033,8 +1030,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 options = {
@@ -1052,7 +1049,7 @@
                 device = application.getDevice();
                 completeSpy = self.sandbox.spy(options, 'onComplete');
                 device.tweenElementStyle(options);
-                assertTrue("onComplete called", completeSpy.calledOnce);
+                assertTrue('onComplete called', completeSpy.calledOnce);
             },
             config
         );
@@ -1061,25 +1058,25 @@
     this.StyleTopLeftAnimationTest.prototype.testFromValuesSetInTweenElementStyle = function(queue) {
         var config = getDefaultConfig();
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
-                var device, div, el;
+                var device, el;
                 el = {
                     style: {
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
-                
-                
+
+
                 device = application.getDevice();
-                div = _createScrollableDiv(device);
-                
+                _createScrollableDiv(device);
+
                 device.tweenElementStyle(
                     {
                         el: el,
@@ -1096,34 +1093,34 @@
                 );
                 assertTrue('From value of bottom has been set', parseInt(el.style.bottom, 10) > 20);
                 assertTrue('From value of right has been set', parseInt(el.style.right, 10) < 60);
-            }, 
+            },
             config
         );
     };
-    
+
     this.StyleTopLeftAnimationTest.prototype.testToValuesReachedAfterTweenElementStyle = function(queue) {
         var config;
         config = getDefaultConfig();
         expectAsserts(2);
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
-                var device, div, el;
-                
+                var device, el;
+
                 el = {
                     style: {
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 device = application.getDevice();
-                div = _createScrollableDiv(device);
+                _createScrollableDiv(device);
 
                 var clock = sinon.useFakeTimers();
 
@@ -1149,19 +1146,19 @@
 
                 clock.restore();
 
-            }, 
+            },
             config
         );
     };
-    
+
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleEqualEndpointsReturnNull = function(queue) {
         var config;
         config = getDefaultConfig();
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var el, device, tween;
                 device = application.getDevice();
@@ -1170,8 +1167,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 tween = device.tweenElementStyle(
@@ -1184,21 +1181,21 @@
                         duration: 30
                     }
                 );
-                
-                assertEquals("Equal Endpoints return null", tween, null);
-            }, 
+
+                assertEquals('Equal Endpoints return null', tween, null);
+            },
             config
         );
     };
-    
+
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsSkipAnim = function(queue) {
         var config;
         config = getDefaultConfig();
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var el, device;
                 device = application.getDevice();
@@ -1207,8 +1204,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 device.tweenElementStyle(
@@ -1222,22 +1219,22 @@
                         skipAnim: true
                     }
                 );
-                
-                assertEquals("Bottom target reached immediately", "100px", el.style.bottom);
-            }, 
+
+                assertEquals('Bottom target reached immediately', '100px', el.style.bottom);
+            },
             config
         );
     };
-    
+
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleRespectsGlobalAnimDisable = function(queue) {
         var config;
         config = getDefaultConfig();
-        config.animationDisabled = "true";
+        config.animationDisabled = 'true';
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var el, device;
                 device = application.getDevice();
@@ -1246,8 +1243,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 device.tweenElementStyle(
@@ -1260,22 +1257,22 @@
                         duration: 3000
                     }
                 );
-                
-                assertEquals("Bottom target reached immediately", "100px", el.style.bottom);
-            }, 
+
+                assertEquals('Bottom target reached immediately', '100px', el.style.bottom);
+            },
             config
         );
     };
-    
+
     this.StyleTopLeftAnimationTest.prototype.testTweenElementStyleSetsUnits = function(queue) {
         var config;
         config = getDefaultConfig();
-        config.animationDisabled = "true";
+        config.animationDisabled = 'true';
 
         queuedApplicationInit(
-            queue, 
-            'lib/mockapplication', 
-            [], 
+            queue,
+            'lib/mockapplication',
+            [],
             function(application) {
                 var el, device;
                 device = application.getDevice();
@@ -1284,8 +1281,8 @@
                         getPropertyValue: function(property) {
                             return el.style[property];
                         },
-                        bottom: "0px",
-                        right: "600px"
+                        bottom: '0px',
+                        right: '600px'
                     }
                 };
                 device.tweenElementStyle(
@@ -1297,19 +1294,19 @@
                         },
                         duration: 50,
                         units: {
-                            bottom: "FEET"
+                            bottom: 'FEET'
                         },
                         skipAnim: true
                     }
                 );
-                
-                assertEquals("Bottom has correct units", "100FEET", el.style.bottom);
-                assertEquals("Right has correct units", "200px", el.style.right);
-            }, 
+
+                assertEquals('Bottom has correct units', '100FEET', el.style.bottom);
+                assertEquals('Right has correct units', '200px', el.style.right);
+            },
             config
         );
     };
-    
+
     /** Kick off two animations slightly separated in time (less than one frame). Assert that updates to
      * the underlying DOM elements are forced into synchronisation.
      */
@@ -1320,10 +1317,10 @@
 
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div1, div2;
-            
+
             device = application.getDevice();
-            div1 = device.createContainer("id");
-            div2 = device.createContainer("id2");
+            div1 = device.createContainer('id');
+            div2 = device.createContainer('id2');
             div1.style.left = '0px';
             div2.style.left = '0px';
 
@@ -1362,7 +1359,7 @@
                 clock.tick(1);
                 timeout--;
                 if (timeout <= 0) {
-                    fail("Properties not changed");
+                    fail('Properties not changed');
                     break;
                 }
             }
@@ -1391,7 +1388,7 @@
         queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device, div, anim;
             device = application.getDevice();
-            div = device.createContainer("id");
+            div = device.createContainer('id');
             div.style.left = '0px';
             div.style.top = '0px';
 
@@ -1409,8 +1406,8 @@
             });
 
             // Check that the element hasn't gone to its end state immediately.
-            assertFalse('Element in its end position (left)', div.style.top === "100px");
-            assertFalse('Element in its end position (top)', div.style.top === "200px");
+            assertFalse('Element in its end position (left)', div.style.top === '100px');
+            assertFalse('Element in its end position (top)', div.style.top === '200px');
 
             clock.tick(100);
 
@@ -1432,37 +1429,37 @@
     function _assertNoSideEffects(device, optionsParamFunction) {
         var div, options1, options2, onComplete;
         div = _createScrollableDiv(device);
-    
+
         // Create two options objects - one to pass to the styletopleft method, one for reference
         options1 = _createStandardOptionsForElement(div);
         options2 = _createStandardOptionsForElement(div);
-        
+
         // Ensure that options1 is the same as options2 after the call to styletopleft.
         // (assertEquals does a deep comparison)
         onComplete = function() {
             assertEquals('Options is the same after tween has completed', options1, options2);
         };
-    
+
         // Configure onComplete method on options object.
         options1.onComplete = onComplete;
         options2.onComplete = onComplete;
-    
+
         // Perform the styletopleft method.
         optionsParamFunction.call(device, options1);
     }
-    
+
     /**
      * Helper: Create a scrollable div, for testing scrollElementTo() functionality.
      * @param {antie.devices.Device} device The device, with styletopleft functionality.
      */
     function _createScrollableDiv(device) {
-        var div = device.createContainer("id_mask"),
-        inner = device.createContainer("id");
-    
+        var div = device.createContainer('id_mask'),
+            inner = device.createContainer('id');
+
         device.appendChildElement(div, inner);
         return div;
     }
-    
+
     /**
      * Helper: Create a standardised options object for passing to scrollElementTo() and moveElementTo().
      * This contains a set of known values for the various parameters, and animation skipping set to true.

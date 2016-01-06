@@ -32,7 +32,7 @@ require.def(
         'antie/devices/anim/css3/transitiondefinition'
     ],
     function(TransitionDefinition) {
-        "use strict";
+        'use strict';
         return TransitionDefinition.extend(
             {
                 init: function(transitionElement) {
@@ -42,10 +42,10 @@ require.def(
                     durations = transitionElement.getDurations();
                     delays = transitionElement.getDelays();
                     timingFns = transitionElement.getTimingFns();
-    
+
                     for(i = 0; i !== properties.length; i += 1) {
                         this.setProperty(
-                            properties[i], 
+                            properties[i],
                             {
                                 duration: durations[i],
                                 timingFn: timingFns[i],

@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelRestartableTest = AsyncTestCase("LivePlayerSupportLevelRestartableTest"); //jshint ignore:line
+    this.LivePlayerSupportLevelRestartableTest = AsyncTestCase('LivePlayerSupportLevelRestartableTest'); //jshint ignore:line
 
     this.LivePlayerSupportLevelRestartableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,26 +34,26 @@
         this.sandbox.restore();
     };
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-    var configWithForceBeginPlaybackToEndOfWindowAsTrue = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","streaming":{"overrides":{"forceBeginPlaybackToEndOfWindow":true}}};
-    var configWithForceBeginPlaybackToEndOfWindowAsFalse = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1","streaming":{"overrides":{"forceBeginPlaybackToEndOfWindow":false}}};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
+    var configWithForceBeginPlaybackToEndOfWindowAsTrue = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1','streaming':{'overrides':{'forceBeginPlaybackToEndOfWindow':true}}};
+    var configWithForceBeginPlaybackToEndOfWindowAsFalse = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1','streaming':{'overrides':{'forceBeginPlaybackToEndOfWindow':false}}};
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetLiveSupportReturnsRestartableWithSupportLevelRestartable = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var liveSupportLevel = device.getLiveSupport();
 
-            assertEquals("restartable", liveSupportLevel);
+            assertEquals('restartable', liveSupportLevel);
         });
     };
 
     var testFunctionsInLivePlayerCallMediaPlayerFunctions = function(action, expectedArgCount) {
         return function (queue) {
             expectAsserts(2);
-            queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+            queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
                 var device = new Device(antie.framework.deviceConfiguration);
                 var livePlayer = device.getLivePlayer();
                 var mediaPlayerFuncStub = this.sandbox.stub();
@@ -99,7 +99,7 @@
     this.LivePlayerSupportLevelRestartableTest.prototype.testSeekableMediaPlayerFunctionsNotDefinedInRestartableLive = function (queue) {
         expectAsserts(3);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
@@ -112,65 +112,65 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetStateReturnsState = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            assertEquals("EMPTY", livePlayer.getState());
+            assertEquals('EMPTY', livePlayer.getState());
         }, config);
     };
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetSourceReturnsSource = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns("http://test.mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSource').returns('http://test.mp4');
 
-            assertEquals("http://test.mp4", livePlayer.getSource());
+            assertEquals('http://test.mp4', livePlayer.getSource());
         }, config);
     };
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetMimeTypeReturnsMimeType = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function(application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function(application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns("video/mp4");
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getMimeType').returns('video/mp4');
 
-            assertEquals("video/mp4", livePlayer.getMimeType());
+            assertEquals('video/mp4', livePlayer.getMimeType());
         }, config);
     };
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testMediaTypeIsMutatedToLive = function(queue) {
         expectAsserts(4);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, "", "");
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', '');
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
         }, config);
     };
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testGetPlayerElementReturnsPlayerElement = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
-            var playerElement = "player element";
+            var playerElement = 'player element';
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'getPlayerElement').returns(playerElement);
 
@@ -180,7 +180,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testBeginPlaybackFromIsCalledWithInfinityIfForceBeginPlaybackToEndOfWindowIsTrue = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -195,7 +195,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsFalse = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -210,7 +210,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testBeginPlaybackIsCalledIfForceBeginPlaybackToEndOfWindowIsNotPresent = function (queue) {
         expectAsserts(2);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -225,7 +225,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromThenPausedAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -247,7 +247,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackThenPausedAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -272,7 +272,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenPausedMultipleTimesAndStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -298,7 +298,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -323,7 +323,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumesImmediatelyIfPausedAfterAlreadyAutoResumeing = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -351,7 +351,7 @@
     this.LivePlayerSupportLevelRestartableTest.prototype.testDoesNotAutoResumeWhenItIsDisabled = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -374,7 +374,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeNotCancelledByEventWithPausedState = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -402,7 +402,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromTimeSpentBufferingIsDeducted = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
@@ -436,7 +436,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackTimeSpentBufferingIsDeducted = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer", "antie/devices/device", "antie/devices/mediaplayer/live/restartable"], function (application, MediaPlayer, Device) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 

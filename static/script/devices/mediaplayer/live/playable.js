@@ -26,15 +26,15 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/live/playable",
+    'antie/devices/mediaplayer/live/playable',
     [
-        "antie/class",
-        "antie/runtimecontext",
-        "antie/devices/device",
-        "antie/devices/mediaplayer/mediaplayer"
+        'antie/class',
+        'antie/runtimecontext',
+        'antie/devices/device',
+        'antie/devices/mediaplayer/mediaplayer'
     ],
     function (Class, RuntimeContext, Device, MediaPlayer) {
-        "use strict";
+        'use strict';
 
         /**
          * Live player for devices that support playing live streams, but cannot seek within them.

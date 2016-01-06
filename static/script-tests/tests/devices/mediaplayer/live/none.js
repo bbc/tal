@@ -24,7 +24,7 @@
 
 (function () {
     // jshint newcap: false
-    this.LivePlayerSupportLevelNoneTest = AsyncTestCase("LivePlayerSupportLevelNoneTest"); //jshint ignore:line
+    this.LivePlayerSupportLevelNoneTest = AsyncTestCase('LivePlayerSupportLevelNoneTest'); //jshint ignore:line
 
     this.LivePlayerSupportLevelNoneTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,7 +37,7 @@
     this.LivePlayerSupportLevelNoneTest.prototype.testGetLivePlayerReturnsNullWithSupportLevelNone = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/devices/device", "antie/devices/mediaplayer/live/none"], function (Device) {
+        queuedRequire(queue, ['antie/devices/device', 'antie/devices/mediaplayer/live/none'], function (Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var mediaPlayer = device.getLivePlayer();
@@ -49,12 +49,12 @@
     this.LivePlayerSupportLevelNoneTest.prototype.testGetLiveSuppoertReturnsNoneWithSupportLevelNone = function (queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ["antie/devices/device", "antie/devices/mediaplayer/live/none"], function (Device) {
+        queuedRequire(queue, ['antie/devices/device', 'antie/devices/mediaplayer/live/none'], function (Device) {
 
             var device = new Device(antie.framework.deviceConfiguration);
             var liveSupportLevel = device.getLiveSupport();
 
-            assertEquals("none", liveSupportLevel);
+            assertEquals('none', liveSupportLevel);
         });
     };
 

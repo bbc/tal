@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/hiddenstate',
+require.def(
+    'antie/widgets/carousel/strips/utility/hiddenstate',
     [
         'antie/widgets/carousel/strips/utility/state'
     ],
@@ -41,7 +42,7 @@ require.def('antie/widgets/carousel/strips/utility/hiddenstate',
                 this._show(context, widget);
             },
 
-            detach: function (context, widget) {
+            detach: function (/*context, widget*/) {
 
             },
 

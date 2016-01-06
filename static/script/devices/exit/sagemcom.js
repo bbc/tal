@@ -35,7 +35,7 @@ require.def(
          */
         Device.prototype.exit = function() {
             /* global parent: true */
-            parent.postMessage("JS_EVENT_QUIT_THIRD_PARTY", "*");
+            parent.postMessage('JS_EVENT_QUIT_THIRD_PARTY', '*');
         };
     }
 );

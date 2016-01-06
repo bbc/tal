@@ -28,14 +28,14 @@
 
 (function() {
     /* global nwf: true */
-    this.WiiUDevice = AsyncTestCase("WiiU Device");
+    this.WiiUDevice = AsyncTestCase('WiiU Device');
 
     this.WiiUDevice.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
         stubNWFSpecificApis();
-        this.wiiuConfig = {"modules":{"base":"antie/devices/wiiu","modifiers":['antie/devices/data/json2','antie/devices/anim/styletopleft', 'antie/devices/media/html5']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        this.wiiuConfig = {'modules':{'base':'antie/devices/wiiu','modifiers':['antie/devices/data/json2','antie/devices/anim/styletopleft', 'antie/devices/media/html5']},'input':{'map':{}},'layouts':[
+            {'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}
+        ],'deviceConfigurationKey':'devices-html5-1'};
     };
 
     this.WiiUDevice.prototype.tearDown = function() {
@@ -54,7 +54,7 @@
 
         var gamePadEventListenerSpy = this.sandbox.spy(window.nwf.input.WiiUGamePad, '_privateAddEventListener');
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/keyevent'], function(application, KeyEvent) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function() { //jshint ignore:line
             assertTrue(gamePadEventListenerSpy.called);
             assertEquals(nwf.events.ButtonControlEvent.PRESS, gamePadEventListenerSpy.getCall(0).args[0]);
             assertEquals(nwf.events.ButtonControlEvent.RELEASE, gamePadEventListenerSpy.getCall(1).args[0]);
@@ -69,7 +69,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_A);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_ENTER, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -82,7 +82,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_A);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_ENTER, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -97,7 +97,7 @@
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_B);
 
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_BACK, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -110,7 +110,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_B);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_BACK, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -119,7 +119,7 @@
         expectAsserts(1);
         var self = this;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/keyevent'], function(application, KeyEvent) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) { //jshint ignore:line
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_X);
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_X);
@@ -132,7 +132,7 @@
         expectAsserts(1);
         var self = this;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/keyevent'], function(application, KeyEvent) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) { //jshint ignore:line
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_Y);
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_Y);
@@ -149,7 +149,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_UP);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_UP, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -162,7 +162,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_UP);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_UP, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -175,7 +175,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_DOWN);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_DOWN, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -188,7 +188,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_DOWN);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_DOWN, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -201,7 +201,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_LEFT);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_LEFT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -214,7 +214,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_LEFT);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_LEFT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -227,7 +227,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_RIGHT);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_RIGHT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -240,7 +240,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_RIGHT);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_RIGHT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -261,7 +261,7 @@
 
         var gamePadEventListenerSpy = this.sandbox.spy(window.nwf.input.WiiRemote, '_privateAddEventListener');
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/events/keyevent'], function(application, KeyEvent) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function() { //jshint ignore:line
             assertTrue(gamePadEventListenerSpy.called);
             assertEquals(nwf.events.ButtonControlEvent.PRESS, gamePadEventListenerSpy.getCall(0).args[0]);
             assertEquals(nwf.events.ButtonControlEvent.RELEASE, gamePadEventListenerSpy.getCall(1).args[0]);
@@ -276,7 +276,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_A);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_ENTER, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -289,7 +289,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_A);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_ENTER, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -302,7 +302,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_B);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_BACK, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -315,7 +315,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_B);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_BACK, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -328,7 +328,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_UP);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_UP, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -341,7 +341,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_UP);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_UP, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -354,7 +354,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_DOWN);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_DOWN, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -367,7 +367,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_DOWN);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_DOWN, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -380,7 +380,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_LEFT);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_LEFT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -393,7 +393,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_LEFT);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_LEFT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -406,7 +406,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonPress(application, window.nwf.input.ControllerButton.WII_REMOTE_RIGHT);
 
-            assertEquals("keydown", bubbleEventSpy.args[0][0].type);
+            assertEquals('keydown', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_RIGHT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -419,7 +419,7 @@
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockWiiRemoteButtonRelease(application, window.nwf.input.ControllerButton.WII_REMOTE_RIGHT);
 
-            assertEquals("keyup", bubbleEventSpy.args[0][0].type);
+            assertEquals('keyup', bubbleEventSpy.args[0][0].type);
             assertEquals(KeyEvent.VK_RIGHT, bubbleEventSpy.args[0][0].keyCode);
         }, self.wiiuConfig);
     };
@@ -462,13 +462,13 @@
                     };
                     return controllerObject;
                 },
-                _privateAddEventListener : function(eventType, listener, scope) { //jshint ignore:line
+                _privateAddEventListener : function() { //jshint ignore:line
                     // Stub this out to ensure the event listener has been called correctly
                 }
             },
             WiiRemote: {
-                REMOTE_1 : "TBA",
-                getController : function(controller) { //jshint ignore:line
+                REMOTE_1 : 'TBA',
+                getController : function() { //jshint ignore:line
                     var self = this;
                     var controllerObject = {
                         connected: true,
@@ -480,7 +480,7 @@
                     };
                     return controllerObject;
                 },
-                _privateAddEventListener : function(eventType, listener, scope) { //jshint ignore:line
+                _privateAddEventListener : function() { //jshint ignore:line
                     // Stub this out to ensure the event listener has been called correctly
                 }
             }

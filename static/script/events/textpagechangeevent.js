@@ -24,30 +24,31 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/textpagechangeevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/textpagechangeevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised when page is changed in a TextPager object
-		 * @name antie.events.TextPageChangeEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {antie.widgets.TextPager} target The TextPager widget that changed page.
-		 * @param {Number} page The new page number.
-		 */
-		return Event.extend(/** @lends antie.events.TextPageChangeEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(target, page) {
-				this.target = target;
-				this.page = page;
+        /**
+         * Class of events raised when page is changed in a TextPager object
+         * @name antie.events.TextPageChangeEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {antie.widgets.TextPager} target The TextPager widget that changed page.
+         * @param {Number} page The new page number.
+         */
+        return Event.extend(/** @lends antie.events.TextPageChangeEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(target, page) {
+                this.target = target;
+                this.page = page;
 
-				this._super("textpagechange");
-			}
-		});
-	}
+                this._super('textpagechange');
+            }
+        });
+    }
 );

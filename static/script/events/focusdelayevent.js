@@ -24,28 +24,29 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/focusdelayevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/focusdelayevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised when focus is gained by a {@link antie.widgets.Button} and
-		 * has not been lost within an application-wide number of milliseconds.
-		 * @name antie.events.FocusDelayEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {antie.widgets.Button} target The button which gained focus.
-		 */
-		return Event.extend(/** @lends antie.events.FocusDelayEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(target) {
-				this.target = target;
-				this._super("focusdelay");
-			}
-		});
-	}
+        /**
+         * Class of events raised when focus is gained by a {@link antie.widgets.Button} and
+         * has not been lost within an application-wide number of milliseconds.
+         * @name antie.events.FocusDelayEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {antie.widgets.Button} target The button which gained focus.
+         */
+        return Event.extend(/** @lends antie.events.FocusDelayEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(target) {
+                this.target = target;
+                this._super('focusdelay');
+            }
+        });
+    }
 );

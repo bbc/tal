@@ -33,24 +33,24 @@
     // invokes the callback set up in _tween, which in turn updates the class name.
     var DEFAULT_ON_COMPLETE_TIME = 867;
 
-	this.TweenAnimationTest = AsyncTestCase("Animation_Tween"); //jshint ignore:line
+    this.TweenAnimationTest = AsyncTestCase('Animation_Tween'); //jshint ignore:line
 
-	this.TweenAnimationTest.prototype.setUp = function() {
-		this.sandbox = sinon.sandbox.create();
-	};
+    this.TweenAnimationTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
 
-	this.TweenAnimationTest.prototype.tearDown = function() {
-		this.sandbox.restore();
-	};
+    this.TweenAnimationTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
 
-	this.TweenAnimationTest.prototype.testTween = function(queue) {
-		expectAsserts(2);
+    this.TweenAnimationTest.prototype.testTween = function(queue) {
+        expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var div = device.createContainer();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer();
 
             var clock = sinon.useFakeTimers();
 
@@ -58,10 +58,10 @@
                 el: div,
                 style: div.style,
                 from: {
-                    top:"0px"
+                    top:'0px'
                 },
                 to: {
-                    top:"100px"
+                    top:'100px'
                 },
                 className: null
             });
@@ -74,17 +74,17 @@
 
             clock.restore();
 
-		}, config);
-	};
+        }, config);
+    };
 
-	this.TweenAnimationTest.prototype.testTweenClasses = function(queue) {
-		expectAsserts(2);
+    this.TweenAnimationTest.prototype.testTweenClasses = function(queue) {
+        expectAsserts(2);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
-		queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-			var device = application.getDevice();
-			var div = device.createContainer();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var device = application.getDevice();
+            var div = device.createContainer();
 
             var clock = sinon.useFakeTimers();
 
@@ -92,24 +92,24 @@
                 el: div,
                 style: div.style,
                 from: {
-                    top:"0px"
+                    top:'0px'
                 },
                 to: {
-                    top:"100px"
+                    top:'100px'
                 },
-                className: "testing"
+                className: 'testing'
             });
 
-            assertClassName("testing", div);
+            assertClassName('testing', div);
 
             clock.tick(DEFAULT_ON_COMPLETE_TIME);
 
-            assertClassName("nottesting", div);
+            assertClassName('nottesting', div);
 
             clock.restore();
 
-		}, config);
-	};
+        }, config);
+    };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/anim/styletopleft'], this.TweenAnimationTest);
 })();

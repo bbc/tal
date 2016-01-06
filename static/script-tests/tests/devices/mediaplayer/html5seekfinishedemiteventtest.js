@@ -24,10 +24,10 @@
 
 (function() {
     // jshint newcap: false
-    this.HTML5SeekFinishedEmitEventTests = AsyncTestCase("HTML5SeekFinishedEmitEvent");
+    this.HTML5SeekFinishedEmitEventTests = AsyncTestCase('HTML5SeekFinishedEmitEvent');
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5seekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
-    var configWithRestartTimeout = {"restartTimeout":10000, "modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5seekfinishedemitevent"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5seekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
+    var configWithRestartTimeout = {'restartTimeout':10000, 'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5seekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
     var eventWasFired = function(self, eventType) {
         for(var i = 0; i < self._eventCallback.args.length; i++) {
@@ -45,7 +45,7 @@
     // ---------------
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
     // ---------------
-    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5SeekFinishedEmitEventTests, "antie/devices/mediaplayer/html5seekfinishedemitevent", config);
+    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5SeekFinishedEmitEventTests, 'antie/devices/mediaplayer/html5seekfinishedemitevent', config);
 
     // ---------------
     // Remove tests that are irrelevant for this sub-modifier.

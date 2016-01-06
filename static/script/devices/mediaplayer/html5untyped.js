@@ -26,18 +26,18 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/html5untyped",
+    'antie/devices/mediaplayer/html5untyped',
     [
-        "antie/runtimecontext",
-        "antie/devices/device",
-        "antie/devices/mediaplayer/html5"
+        'antie/runtimecontext',
+        'antie/devices/device',
+        'antie/devices/mediaplayer/html5'
     ],
     function(RuntimeContext, Device, HTML5MediaPlayer) {
-        "use strict";
+        'use strict';
 
         /**
          * Main MediaPlayer implementation for HTML5 devices specifies a 'type'
-         * attribute in the source element.          
+         * attribute in the source element.
          * This device modifier implements a new version of the function to
          * generate the source element without setting a type attribute.
          * @name antie.devices.mediaplayer.HTML5Untyped
@@ -46,7 +46,7 @@ require.def(
          */
         var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.HTML5Untyped.prototype */ {
             init: function() {
-               this._super();
+                this._super();
             },
 
             _generateSourceElement: function(url) {

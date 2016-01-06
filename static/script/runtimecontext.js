@@ -24,60 +24,61 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/runtimecontext',
-	[
-		'antie/class'
-	],
-	/**
-	 * Static class for accessing the current running application
-	 * @name antie.RuntimeContext
-	 * @class
-	 * @static
-	 * @private
-	 */
-	function(Class) {
-		'use strict';
+require.def(
+    'antie/runtimecontext',
+    [
+        'antie/class'
+    ],
+    /**
+     * Static class for accessing the current running application
+     * @name antie.RuntimeContext
+     * @class
+     * @static
+     * @private
+     */
+    function(Class) {
+        'use strict';
 
-		var applicationObject;
+        var applicationObject;
 
-		var RuntimeContext = Class.extend(/** @lends antie.RuntimeContext.prototype */ {
-			/**
-			 * Clears the currently executing application.
-			 * @private
-			 */
-			clearCurrentApplication: function() {
-				applicationObject = undefined;
-			},
+        var RuntimeContext = Class.extend(/** @lends antie.RuntimeContext.prototype */ {
+            /**
+             * Clears the currently executing application.
+             * @private
+             */
+            clearCurrentApplication: function() {
+                applicationObject = undefined;
+            },
 
-			/**
-			 * Sets the currently executing application.
-			 * @private
-			 */
-			setCurrentApplication: function(app) {
-				if (applicationObject) {
-					throw new Error("RuntimeContext.setCurrentApplication called for a second time. You can only have one application instance running at any time.");
-				} else {
-					applicationObject = app;
-				}
-			},
+            /**
+             * Sets the currently executing application.
+             * @private
+             */
+            setCurrentApplication: function(app) {
+                if (applicationObject) {
+                    throw new Error('RuntimeContext.setCurrentApplication called for a second time. You can only have one application instance running at any time.');
+                } else {
+                    applicationObject = app;
+                }
+            },
 
-			/**
-			 * Returns the currently executing application.
-			 * @private
-			 */
-			getCurrentApplication: function() {
-				return applicationObject;
-			},
+            /**
+             * Returns the currently executing application.
+             * @private
+             */
+            getCurrentApplication: function() {
+                return applicationObject;
+            },
 
-			/**
-			 * Returns the current device
-			 * @private
-			 */
-			getDevice: function() {
-				return this.getCurrentApplication().getDevice();
-			}
-		});
+            /**
+             * Returns the current device
+             * @private
+             */
+            getDevice: function() {
+                return this.getCurrentApplication().getDevice();
+            }
+        });
 
-		return new RuntimeContext();
-	}
+        return new RuntimeContext();
+    }
 );

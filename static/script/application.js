@@ -71,7 +71,7 @@ require.def('antie/application',
                     Device.load(_configuration, {
                         onSuccess: deviceLoaded,
                         onError: function (err) {
-                            console.error("Unable to load device", err);
+                            console.error('Unable to load device', err);
                         }
                     });
                 } else {
@@ -394,7 +394,7 @@ require.def('antie/application',
              * Called after {@link #run} to launch the application at a specific location.
              * @param {Array} route Location of application.
              */
-            route: function (route) {
+            route: function (/*route*/) {
                 // intentionally left blank
             },
             /**
@@ -428,8 +428,7 @@ require.def('antie/application',
                         // Keys with values get 'key=value' syntax, valueless keys just get 'key'
                         if (mergedData[key] === undefined || mergedData[key] === null) {
                             query += window.encodeURIComponent(key) + '&';
-                        }
-                        else {
+                        } else {
                             query += window.encodeURIComponent(key) + '=' + window.encodeURIComponent(mergedData[key]) + '&';
                         }
                     }
@@ -503,8 +502,7 @@ require.def('antie/application',
                 var historian = this.getDevice().getHistorian();
                 if (historian.hasHistory()) {
                     this.getDevice().setWindowLocationUrl(historian.back());
-                }
-                else {
+                } else {
                     this.exit();
                 }
             },

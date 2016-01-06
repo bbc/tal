@@ -23,32 +23,32 @@
  */
 
 (function() {
-	this.HistoryExitTest = AsyncTestCase("Exit_History"); //jshint ignore:line
+    this.HistoryExitTest = AsyncTestCase('Exit_History'); //jshint ignore:line
 
-	this.HistoryExitTest.prototype.setUp = function() {
-		this.sandbox = sinon.sandbox.create();
-	};
+    this.HistoryExitTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
 
-	this.HistoryExitTest.prototype.tearDown = function() {
-		this.sandbox.restore();
-	};
+    this.HistoryExitTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
 
-	this.HistoryExitTest.prototype.testExit = function(queue) {
-		expectAsserts(1);
+    this.HistoryExitTest.prototype.testExit = function(queue) {
+        expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/exit/history"]},"input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/exit/history']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
-		var self = this;
-		queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
-			var expected = 0 - (history.length -1);
-			self.sandbox.stub(history, 'go', function(length) {
-				history.go.restore();
-				assertEquals("History.go(length) is " + length, expected, length);
-			});
+        var self = this;
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+            var expected = 0 - (history.length -1);
+            self.sandbox.stub(history, 'go', function(length) {
+                history.go.restore();
+                assertEquals('History.go(length) is ' + length, expected, length);
+            });
 
             application.getDevice().exit();
-		}, config);
-	};
+        }, config);
+    };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/exit/history'], this.HistoryExitTest);
 })();

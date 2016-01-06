@@ -17,746 +17,746 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
 (function() {
-	this.ListTest = AsyncTestCase("List"); //jshint ignore:line
+    this.ListTest = AsyncTestCase('List'); //jshint ignore:line
 
-	this.ListTest.prototype.setUp = function() {
-		this.sandbox = sinon.sandbox.create();
-	};
+    this.ListTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
 
-	this.ListTest.prototype.tearDown = function() {
-		this.sandbox.restore();
-	};
-	this.ListTest.prototype.testInterface = function(queue) {
-		expectAsserts(2);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list","antie/widgets/container"],
-			function(application, List, Container) {
-				assertEquals('List should be a function', 'function', typeof List);
-				assert('List should extend from Container', new List() instanceof Container);
-		});
-	};
-    this.ListTest.prototype.testRender = function(queue) {
-		expectAsserts(3);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list"],
-			function(application, List) {
-				var widget = new List("id");
-				var device = application.getDevice();
-				var el = widget.render(device);
-				assertEquals(typeof device.createContainer(), typeof el);
-				assertEquals("id", el.id);
-				assertClassName("list", el);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeDefault = function(queue) {
-		expectAsserts(2);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list"],
-			function(application, List) {
-				var widget = new List("id");
-				var device = application.getDevice();
-				var createContainerSpy = this.sandbox.spy(device, 'createContainer');
-				var el = widget.render(device);
-				assert(createContainerSpy.called);
-				assertEquals(typeof device.createContainer(), typeof el);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeList = function(queue) {
-		expectAsserts(2);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list"],
-			function(application, List) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_LIST);
-				var device = application.getDevice();
-				var createListSpy = this.sandbox.spy(device, 'createList');
-				var el = widget.render(device);
-				assert(createListSpy.called);
-				assertEquals(typeof device.createList(), typeof el);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeContainer = function(queue) {
-		expectAsserts(2);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list"],
-			function(application, List) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				var device = application.getDevice();
-				var createContainerSpy = this.sandbox.spy(device, 'createContainer');
-				var el = widget.render(device);
-				assert(createContainerSpy.called);
-				assertEquals(typeof device.createContainer(), typeof el);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeDefaultChildrenAreContainers = function(queue) {
-		expectAsserts(1);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var widget = new List("id");
-				widget.appendChildWidget(new Container());
-				assertInstanceOf(Container, widget.getChildWidgets()[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeListChildrenAreListItems = function(queue) {
-		expectAsserts(1);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list","antie/widgets/container","antie/widgets/listitem"],
-			function(application, List, Container, ListItem) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_LIST);
-				widget.appendChildWidget(new Container());
-				assertInstanceOf(ListItem, widget.getChildWidgets()[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testRenderModeContainerChildrenAreContainers = function(queue) {
-		expectAsserts(1);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				widget.appendChildWidget(new Container());
-				assertInstanceOf(Container, widget.getChildWidgets()[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testAppendedChildrenHaveListItemClass = function(queue) {
-		expectAsserts(2);
-
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var widget = new List("id");
-				var item = new Container();
-				assertFalse(item.hasClass("listitem"));
-				widget.appendChildWidget(item);
-				assert(item.hasClass("listitem"));
-			}
-		);
-	};
-	this.ListTest.prototype.testInsertedChildrenHaveListItemClass = function(queue) {
+    this.ListTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
+    this.ListTest.prototype.testInterface = function(queue) {
         expectAsserts(2);
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/list", "antie/widgets/container"],
+            'lib/mockapplication',
+            ['antie/widgets/list','antie/widgets/container'],
             function(application, List, Container) {
-                var list, item;
-                list = new List("id");
-                item = new Container();
-                assertFalse(item.hasClass("listitem"));
-                list.insertChildWidget(0, item);
-                assertTrue(item.hasClass("listitem"));
+                assertEquals('List should be a function', 'function', typeof List);
+                assert('List should extend from Container', new List() instanceof Container);
+            });
+    };
+    this.ListTest.prototype.testRender = function(queue) {
+        expectAsserts(3);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list'],
+            function(application, List) {
+                var widget = new List('id');
+                var device = application.getDevice();
+                var el = widget.render(device);
+                assertEquals(typeof device.createContainer(), typeof el);
+                assertEquals('id', el.id);
+                assertClassName('list', el);
             }
         );
     };
-	this.ListTest.prototype.testRemovedChildrenLoseListItemClass = function(queue) {
-		expectAsserts(4);
+    this.ListTest.prototype.testRenderModeDefault = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var list, insertedItem, appendedItem;
-				function removeAndCheck(item) {
-				    assertTrue(item.hasClass('listitem'));
-				    list.removeChildWidget(item);
-				    assertFalse(item.hasClass('listitem'));
-				}
-				
-				list = new List("id");
-				insertedItem = new Container();
-				appendedItem = new Container();
-				list.insertChildWidget(0, insertedItem);
-				list.appendChildWidget(appendedItem);
-			    removeAndCheck(insertedItem);
-			    removeAndCheck(appendedItem);
-			}
-		);
-	};
-	this.ListTest.prototype.testRemovedChildrenViaRemoveWidgetsLoseListItemClass = function(queue) {
-		expectAsserts(4);
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list'],
+            function(application, List) {
+                var widget = new List('id');
+                var device = application.getDevice();
+                var createContainerSpy = this.sandbox.spy(device, 'createContainer');
+                var el = widget.render(device);
+                assert(createContainerSpy.called);
+                assertEquals(typeof device.createContainer(), typeof el);
+            }
+        );
+    };
+    this.ListTest.prototype.testRenderModeList = function(queue) {
+        expectAsserts(2);
 
-			    var list, insertedItem, appendedItem;
-				list = new List("id");
-				insertedItem = new Container();
-				appendedItem = new Container();
-				
-				list.appendChildWidget(insertedItem);
-				list.insertChildWidget(0, appendedItem);
-				
-				assertTrue(insertedItem.hasClass("listitem"));
-				assertTrue(appendedItem.hasClass("listitem"));
-				list.removeChildWidgets();
-				assertFalse(insertedItem.hasClass("listitem"));
-				assertFalse(appendedItem.hasClass("listitem"));
-			}
-		);
-	};
-	this.ListTest.prototype.testSynchronousDataBoundViaConstructor = function(queue) {
-		expectAsserts(7);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list'],
+            function(application, List) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_LIST);
+                var device = application.getDevice();
+                var createListSpy = this.sandbox.spy(device, 'createList');
+                var el = widget.render(device);
+                assert(createListSpy.called);
+                assertEquals(typeof device.createList(), typeof el);
+            }
+        );
+    };
+    this.ListTest.prototype.testRenderModeContainer = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
-				assertEquals(dataSource.length, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertInstanceOf(Label, childWidgets[0]);
-				assertEquals(dataSource[0], childWidgets[0].getText());
-				assertInstanceOf(Label, childWidgets[1]);
-				assertEquals(dataSource[1], childWidgets[1].getText());
-				assertInstanceOf(Label, childWidgets[2]);
-				assertEquals(dataSource[2], childWidgets[2].getText());
-			}
-		);
-	};
-	this.ListTest.prototype.testAsynchronousDataBoundViaConstructor = function(queue) {
-		expectAsserts(7);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list'],
+            function(application, List) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                var device = application.getDevice();
+                var createContainerSpy = this.sandbox.spy(device, 'createContainer');
+                var el = widget.render(device);
+                assert(createContainerSpy.called);
+                assertEquals(typeof device.createContainer(), typeof el);
+            }
+        );
+    };
+    this.ListTest.prototype.testRenderModeDefaultChildrenAreContainers = function(queue) {
+        expectAsserts(1);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataItems = ['a', 'b', 'c'];
-				var dataSource = {
-				  load: function(callbacks) {
-					  callbacks.onSuccess(dataItems);
-				  }
-				};
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
-				assertEquals(dataItems.length, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertInstanceOf(Label, childWidgets[0]);
-				assertEquals(dataItems[0], childWidgets[0].getText());
-				assertInstanceOf(Label, childWidgets[1]);
-				assertEquals(dataItems[1], childWidgets[1].getText());
-				assertInstanceOf(Label, childWidgets[2]);
-				assertEquals(dataItems[2], childWidgets[2].getText());
-			}
-		);
-	};
-	this.ListTest.prototype.testSetDataSource = function(queue) {
-		expectAsserts(5);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var widget = new List('id');
+                widget.appendChildWidget(new Container());
+                assertInstanceOf(Container, widget.getChildWidgets()[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testRenderModeListChildrenAreListItems = function(queue) {
+        expectAsserts(1);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter());
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list','antie/widgets/container','antie/widgets/listitem'],
+            function(application, List, Container, ListItem) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_LIST);
+                widget.appendChildWidget(new Container());
+                assertInstanceOf(ListItem, widget.getChildWidgets()[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testRenderModeContainerChildrenAreContainers = function(queue) {
+        expectAsserts(1);
 
-				var secondDataSource = ["d", "e"];
-				widget.setDataSource(secondDataSource);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                widget.appendChildWidget(new Container());
+                assertInstanceOf(Container, widget.getChildWidgets()[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testAppendedChildrenHaveListItemClass = function(queue) {
+        expectAsserts(2);
 
-				assertEquals(secondDataSource.length, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertInstanceOf(Label, childWidgets[0]);
-				assertEquals(secondDataSource[0], childWidgets[0].getText());
-				assertInstanceOf(Label, childWidgets[1]);
-				assertEquals(secondDataSource[1], childWidgets[1].getText());
-			}
-		);
-	};
-	this.ListTest.prototype.testBeforeDataBindEvent = function(queue) {
-		expectAsserts(1);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var widget = new List('id');
+                var item = new Container();
+                assertFalse(item.hasClass('listitem'));
+                widget.appendChildWidget(item);
+                assert(item.hasClass('listitem'));
+            }
+        );
+    };
+    this.ListTest.prototype.testInsertedChildrenHaveListItemClass = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var list, item;
+                list = new List('id');
+                item = new Container();
+                assertFalse(item.hasClass('listitem'));
+                list.insertChildWidget(0, item);
+                assertTrue(item.hasClass('listitem'));
+            }
+        );
+    };
+    this.ListTest.prototype.testRemovedChildrenLoseListItemClass = function(queue) {
+        expectAsserts(4);
 
-				var beforeDataBind = this.sandbox.stub();
-				widget.addEventListener("beforedatabind", beforeDataBind);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var list, insertedItem, appendedItem;
+                function removeAndCheck(item) {
+                    assertTrue(item.hasClass('listitem'));
+                    list.removeChildWidget(item);
+                    assertFalse(item.hasClass('listitem'));
+                }
 
-				application.getRootWidget().appendChildWidget(widget);
+                list = new List('id');
+                insertedItem = new Container();
+                appendedItem = new Container();
+                list.insertChildWidget(0, insertedItem);
+                list.appendChildWidget(appendedItem);
+                removeAndCheck(insertedItem);
+                removeAndCheck(appendedItem);
+            }
+        );
+    };
+    this.ListTest.prototype.testRemovedChildrenViaRemoveWidgetsLoseListItemClass = function(queue) {
+        expectAsserts(4);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
 
-				assert(beforeDataBind.called);
-			}
-		);
-	};
-	this.ListTest.prototype.testDataBoundEvent = function(queue) {
-		expectAsserts(1);
+                var list, insertedItem, appendedItem;
+                list = new List('id');
+                insertedItem = new Container();
+                appendedItem = new Container();
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                list.appendChildWidget(insertedItem);
+                list.insertChildWidget(0, appendedItem);
 
-				var dataBound = this.sandbox.stub();
-				widget.addEventListener("databound", dataBound);
+                assertTrue(insertedItem.hasClass('listitem'));
+                assertTrue(appendedItem.hasClass('listitem'));
+                list.removeChildWidgets();
+                assertFalse(insertedItem.hasClass('listitem'));
+                assertFalse(appendedItem.hasClass('listitem'));
+            }
+        );
+    };
+    this.ListTest.prototype.testSynchronousDataBoundViaConstructor = function(queue) {
+        expectAsserts(7);
 
-				application.getRootWidget().appendChildWidget(widget);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
+                assertEquals(dataSource.length, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertInstanceOf(Label, childWidgets[0]);
+                assertEquals(dataSource[0], childWidgets[0].getText());
+                assertInstanceOf(Label, childWidgets[1]);
+                assertEquals(dataSource[1], childWidgets[1].getText());
+                assertInstanceOf(Label, childWidgets[2]);
+                assertEquals(dataSource[2], childWidgets[2].getText());
+            }
+        );
+    };
+    this.ListTest.prototype.testAsynchronousDataBoundViaConstructor = function(queue) {
+        expectAsserts(7);
 
-				assert(dataBound.called);
-			}
-		);
-	};
-	this.ListTest.prototype.testDataBindingError = function(queue) {
-		expectAsserts(1);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataItems = ['a', 'b', 'c'];
+                var dataSource = {
+                    load: function(callbacks) {
+                        callbacks.onSuccess(dataItems);
+                    }
+                };
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
+                assertEquals(dataItems.length, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertInstanceOf(Label, childWidgets[0]);
+                assertEquals(dataItems[0], childWidgets[0].getText());
+                assertInstanceOf(Label, childWidgets[1]);
+                assertEquals(dataItems[1], childWidgets[1].getText());
+                assertInstanceOf(Label, childWidgets[2]);
+                assertEquals(dataItems[2], childWidgets[2].getText());
+            }
+        );
+    };
+    this.ListTest.prototype.testSetDataSource = function(queue) {
+        expectAsserts(5);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = {
-				  load: function(callbacks) {
-					  callbacks.onError('description');
-				  }
-				};
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter());
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-				var dataBindingError = this.sandbox.stub();
-				widget.addEventListener("databindingerror", dataBindingError);
+                var secondDataSource = ['d', 'e'];
+                widget.setDataSource(secondDataSource);
 
-				application.getRootWidget().appendChildWidget(widget);
+                assertEquals(secondDataSource.length, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertInstanceOf(Label, childWidgets[0]);
+                assertEquals(secondDataSource[0], childWidgets[0].getText());
+                assertInstanceOf(Label, childWidgets[1]);
+                assertEquals(secondDataSource[1], childWidgets[1].getText());
+            }
+        );
+    };
+    this.ListTest.prototype.testBeforeDataBindEvent = function(queue) {
+        expectAsserts(1);
 
-				assert(dataBindingError.called);
-			}
-		);
-	};
-	this.ListTest.prototype.testAppendChildWidgetModeContainer = function(queue) {
-		expectAsserts(2);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				var child = new Container();
-				widget.appendChildWidget(child);
-				assertEquals(1, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertSame(child, childWidgets[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testAppendChildWidgetModeList = function(queue) {
-		expectAsserts(3);
+                var beforeDataBind = this.sandbox.stub();
+                widget.addEventListener('beforedatabind', beforeDataBind);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container", "antie/widgets/listitem"],
-			function(application, List, Container, ListItem) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_LIST);
-				var child = new Container();
-				widget.appendChildWidget(child);
-				assertEquals(1, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				var firstChild = childWidgets[0];
-				assertInstanceOf(ListItem, firstChild);
-				childWidgets = firstChild.getChildWidgets();
-				assertSame(child, childWidgets[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testInsertChildWidgetModeContainer = function(queue) {
-		expectAsserts(2);
+                application.getRootWidget().appendChildWidget(widget);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container"],
-			function(application, List, Container) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				widget.appendChildWidget(new Container());
-				var child = new Container();
-				widget.insertChildWidget(0, child);
-				assertEquals(2, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertSame(child, childWidgets[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testInsertChildWidgetModeList = function(queue) {
-		expectAsserts(5);
+                assert(beforeDataBind.called);
+            }
+        );
+    };
+    this.ListTest.prototype.testDataBoundEvent = function(queue) {
+        expectAsserts(1);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/container", "antie/widgets/listitem"],
-			function(application, List, Container, ListItem) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_LIST);
-				widget.appendChildWidget(new Container());
-				
-				assertEquals( 0, widget._selectedIndex );
-				
-				var child = new Container();
-				widget.insertChildWidget(0, child);
-				assertEquals(2, widget.getChildWidgetCount());
-				assertEquals( 1, widget._selectedIndex );
-				
-				var childWidgets = widget.getChildWidgets();
-				var firstChild = childWidgets[0];
-				assertInstanceOf(ListItem, firstChild);
-				childWidgets = firstChild.getChildWidgets();
-				assertSame(child, childWidgets[0]);
-			}
-		);
-	};
-	this.ListTest.prototype.testSetActiveChildWidgetRaisesSelectedItemChangeEvent = function(queue) {
-		expectAsserts(2);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/widgets/button"],
-			function(application, List, Button) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				var b1 = new Button();
-				var b2 = new Button();
-				widget.appendChildWidget(b1);
-				widget.appendChildWidget(b2);
-				var handler = this.sandbox.stub();
-				widget.addEventListener("selecteditemchange", handler);
-				widget.setActiveChildWidget(b1);
-				assertFalse(handler.called);
-				widget.setActiveChildWidget(b2);
-				assert(handler.called);
-			}
-		);
-	};
+                var dataBound = this.sandbox.stub();
+                widget.addEventListener('databound', dataBound);
 
-	this.ListTest.prototype.testResetDataBindings = function(queue) {
-		expectAsserts(2);
+                application.getRootWidget().appendChildWidget(widget);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+                assert(dataBound.called);
+            }
+        );
+    };
+    this.ListTest.prototype.testDataBindingError = function(queue) {
+        expectAsserts(1);
 
-				var dataBound = this.sandbox.stub();
-				widget.addEventListener("databound", dataBound);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = {
+                    load: function(callbacks) {
+                        callbacks.onError('description');
+                    }
+                };
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
 
-				widget.render(application.getDevice());
-				assertFalse(dataBound.called);
+                var dataBindingError = this.sandbox.stub();
+                widget.addEventListener('databindingerror', dataBindingError);
 
-				widget.resetDataBindings();
+                application.getRootWidget().appendChildWidget(widget);
 
-				widget.render(application.getDevice());
-				assert(dataBound.called);
-			}
-		);
-	};
+                assert(dataBindingError.called);
+            }
+        );
+    };
+    this.ListTest.prototype.testAppendChildWidgetModeContainer = function(queue) {
+        expectAsserts(2);
 
-	this.ListTest.prototype.testRebindDataSource = function(queue) {
-		expectAsserts(3);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                var child = new Container();
+                widget.appendChildWidget(child);
+                assertEquals(1, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertSame(child, childWidgets[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testAppendChildWidgetModeList = function(queue) {
+        expectAsserts(3);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container', 'antie/widgets/listitem'],
+            function(application, List, Container, ListItem) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_LIST);
+                var child = new Container();
+                widget.appendChildWidget(child);
+                assertEquals(1, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                var firstChild = childWidgets[0];
+                assertInstanceOf(ListItem, firstChild);
+                childWidgets = firstChild.getChildWidgets();
+                assertSame(child, childWidgets[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testInsertChildWidgetModeContainer = function(queue) {
+        expectAsserts(2);
 
-				assertEquals(dataSource.length, widget.getChildWidgetCount());
-				dataSource.push('d');
-				assertEquals(dataSource.length - 1, widget.getChildWidgetCount());
-				widget.rebindDataSource();
-				assertEquals(dataSource.length, widget.getChildWidgetCount());
-			}
-		);
-	};
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container'],
+            function(application, List, Container) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                widget.appendChildWidget(new Container());
+                var child = new Container();
+                widget.insertChildWidget(0, child);
+                assertEquals(2, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertSame(child, childWidgets[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testInsertChildWidgetModeList = function(queue) {
+        expectAsserts(5);
 
-	this.ListTest.prototype.testRemoveChildWidget = function(queue) {
-		expectAsserts(2);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/container', 'antie/widgets/listitem'],
+            function(application, List, Container, ListItem) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_LIST);
+                widget.appendChildWidget(new Container());
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+                assertEquals( 0, widget._selectedIndex );
 
-				assertEquals(dataSource.length, widget._totalDataItems);
-				widget.removeChildWidget(widget.getChildWidgets()[0]);
-				assertEquals(dataSource.length - 1, widget._totalDataItems);
-			}
-		);
-	};
+                var child = new Container();
+                widget.insertChildWidget(0, child);
+                assertEquals(2, widget.getChildWidgetCount());
+                assertEquals( 1, widget._selectedIndex );
 
-	this.ListTest.prototype.testRemoveChildWidgets = function(queue) {
-		expectAsserts(2);
+                var childWidgets = widget.getChildWidgets();
+                var firstChild = childWidgets[0];
+                assertInstanceOf(ListItem, firstChild);
+                childWidgets = firstChild.getChildWidgets();
+                assertSame(child, childWidgets[0]);
+            }
+        );
+    };
+    this.ListTest.prototype.testSetActiveChildWidgetRaisesSelectedItemChangeEvent = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var dataSource = ["a", "b", "c"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/widgets/button'],
+            function(application, List, Button) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                var b1 = new Button();
+                var b2 = new Button();
+                widget.appendChildWidget(b1);
+                widget.appendChildWidget(b2);
+                var handler = this.sandbox.stub();
+                widget.addEventListener('selecteditemchange', handler);
+                widget.setActiveChildWidget(b1);
+                assertFalse(handler.called);
+                widget.setActiveChildWidget(b2);
+                assert(handler.called);
+            }
+        );
+    };
 
-				assertEquals(dataSource.length, widget._totalDataItems);
-				widget.removeChildWidgets();
-				assertEquals(0, widget._totalDataItems);
-			}
-		);
-	};
+    this.ListTest.prototype.testResetDataBindings = function(queue) {
+        expectAsserts(2);
 
-	this.ListTest.prototype.testBindUnbindProgressIndicator = function(queue) {
-		expectAsserts(5);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/button", "antie/widgets/horizontalprogress"],
-			function(application, List, Formatter, Button, HorizontalProgress) {
-				var dataSource = ["a", "b", "c", "d", "e"];
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Button(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter(), dataSource);
-				application.getRootWidget().render(application.getDevice());
+                var dataBound = this.sandbox.stub();
+                widget.addEventListener('databound', dataBound);
 
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				application.getRootWidget().appendChildWidget(widget);
+                widget.render(application.getDevice());
+                assertFalse(dataBound.called);
 
-				var progress = new HorizontalProgress();
-				application.getRootWidget().appendChildWidget(progress);
+                widget.resetDataBindings();
 
-				widget.bindProgressIndicator(progress);
-				var setValueSpy = this.sandbox.spy(progress, 'setValue');
+                widget.render(application.getDevice());
+                assert(dataBound.called);
+            }
+        );
+    };
 
-				widget.setActiveChildIndex(1);
-				assert("2", setValueSpy.calledWithExactly(0.25));
-				widget.setActiveChildIndex(2);
-				assert("3", setValueSpy.calledWithExactly(0.5));
-				widget.setActiveChildIndex(3);
-				assert("4", setValueSpy.calledWithExactly(0.75));
-				widget.setActiveChildIndex(4);
-				assert("5", setValueSpy.calledWithExactly(1.0));
+    this.ListTest.prototype.testRebindDataSource = function(queue) {
+        expectAsserts(3);
 
-				progress.setValue.restore();
-				var setValueSpy2 = this.sandbox.spy(progress, 'setValue');
-				widget.unbindProgressIndicator();
-				widget.setActiveChildIndex(3);
-				assertFalse(setValueSpy2.called);
-			}
-		);
-	};
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-	this.ListTest.prototype.testSetGetDataBindingOrder = function(queue) {
-		expectAsserts(2);
+                assertEquals(dataSource.length, widget.getChildWidgetCount());
+                dataSource.push('d');
+                assertEquals(dataSource.length - 1, widget.getChildWidgetCount());
+                widget.rebindDataSource();
+                assertEquals(dataSource.length, widget.getChildWidgetCount());
+            }
+        );
+    };
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list"],
-			function(application, List) {
-				var widget = new List("id");
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+    this.ListTest.prototype.testRemoveChildWidget = function(queue) {
+        expectAsserts(2);
 
-				widget.setDataBindingOrder(List.DATA_BIND_REVERSE);
-				assertEquals(List.DATA_BIND_REVERSE, widget.getDataBindingOrder());
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-				widget.setDataBindingOrder(List.DATA_BIND_FORWARD);
-				assertEquals(List.DATA_BIND_FORWARD, widget.getDataBindingOrder());
-			}
-		);
-	};
+                assertEquals(dataSource.length, widget._totalDataItems);
+                widget.removeChildWidget(widget.getChildWidgets()[0]);
+                assertEquals(dataSource.length - 1, widget._totalDataItems);
+            }
+        );
+    };
 
-	this.ListTest.prototype.testBindingOrderForward = function(queue) {
-		expectAsserts(5);
+    this.ListTest.prototype.testRemoveChildWidgets = function(queue) {
+        expectAsserts(2);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter());
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				widget.setDataBindingOrder(List.DATA_BIND_FORWARD);
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var dataSource = ['a', 'b', 'c'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-				application.getRootWidget().appendChildWidget(widget);
+                assertEquals(dataSource.length, widget._totalDataItems);
+                widget.removeChildWidgets();
+                assertEquals(0, widget._totalDataItems);
+            }
+        );
+    };
 
-				var secondDataSource = ["d", "e"];
-				widget.setDataSource(secondDataSource);
+    this.ListTest.prototype.testBindUnbindProgressIndicator = function(queue) {
+        expectAsserts(5);
 
-				assertEquals(secondDataSource.length, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
-				assertInstanceOf(Label, childWidgets[0]);
-				assertEquals(secondDataSource[0], childWidgets[0].getText());
-				assertInstanceOf(Label, childWidgets[1]);
-				assertEquals(secondDataSource[1], childWidgets[1].getText());
-			}
-		);
-	};
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/button', 'antie/widgets/horizontalprogress'],
+            function(application, List, Formatter, Button, HorizontalProgress) {
+                var dataSource = ['a', 'b', 'c', 'd', 'e'];
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Button(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter(), dataSource);
+                application.getRootWidget().render(application.getDevice());
 
-	this.ListTest.prototype.testBindingOrderReverse = function(queue) {
-		expectAsserts(5);
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                application.getRootWidget().appendChildWidget(widget);
 
-		queuedApplicationInit(
-			queue,
-			"lib/mockapplication",
-			["antie/widgets/list", "antie/formatter", "antie/widgets/label"],
-			function(application, List, Formatter, Label) {
-				var SimpleFormatter = Formatter.extend({
-					format: function(iterator) {
-						return new Label(iterator.next());
-					}
-				});
-				var widget = new List("id", new SimpleFormatter());
-				widget.setRenderMode(List.RENDER_MODE_CONTAINER);
-				widget.setDataBindingOrder(List.DATA_BIND_REVERSE);
+                var progress = new HorizontalProgress();
+                application.getRootWidget().appendChildWidget(progress);
 
-				application.getRootWidget().appendChildWidget(widget);
+                widget.bindProgressIndicator(progress);
+                var setValueSpy = this.sandbox.spy(progress, 'setValue');
 
-				var secondDataSource = ["d", "e"];
-				widget.setDataSource(secondDataSource);
+                widget.setActiveChildIndex(1);
+                assert('2', setValueSpy.calledWithExactly(0.25));
+                widget.setActiveChildIndex(2);
+                assert('3', setValueSpy.calledWithExactly(0.5));
+                widget.setActiveChildIndex(3);
+                assert('4', setValueSpy.calledWithExactly(0.75));
+                widget.setActiveChildIndex(4);
+                assert('5', setValueSpy.calledWithExactly(1.0));
 
-				assertEquals(secondDataSource.length, widget.getChildWidgetCount());
-				var childWidgets = widget.getChildWidgets();
+                progress.setValue.restore();
+                var setValueSpy2 = this.sandbox.spy(progress, 'setValue');
+                widget.unbindProgressIndicator();
+                widget.setActiveChildIndex(3);
+                assertFalse(setValueSpy2.called);
+            }
+        );
+    };
 
-				assertInstanceOf(Label, childWidgets[0]);
-				assertEquals(secondDataSource[1], childWidgets[0].getText());
+    this.ListTest.prototype.testSetGetDataBindingOrder = function(queue) {
+        expectAsserts(2);
 
-				assertInstanceOf(Label, childWidgets[1]);
-				assertEquals(secondDataSource[0], childWidgets[1].getText());
-			}
-		);
-	};
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list'],
+            function(application, List) {
+                var widget = new List('id');
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+
+                widget.setDataBindingOrder(List.DATA_BIND_REVERSE);
+                assertEquals(List.DATA_BIND_REVERSE, widget.getDataBindingOrder());
+
+                widget.setDataBindingOrder(List.DATA_BIND_FORWARD);
+                assertEquals(List.DATA_BIND_FORWARD, widget.getDataBindingOrder());
+            }
+        );
+    };
+
+    this.ListTest.prototype.testBindingOrderForward = function(queue) {
+        expectAsserts(5);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter());
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                widget.setDataBindingOrder(List.DATA_BIND_FORWARD);
+
+                application.getRootWidget().appendChildWidget(widget);
+
+                var secondDataSource = ['d', 'e'];
+                widget.setDataSource(secondDataSource);
+
+                assertEquals(secondDataSource.length, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+                assertInstanceOf(Label, childWidgets[0]);
+                assertEquals(secondDataSource[0], childWidgets[0].getText());
+                assertInstanceOf(Label, childWidgets[1]);
+                assertEquals(secondDataSource[1], childWidgets[1].getText());
+            }
+        );
+    };
+
+    this.ListTest.prototype.testBindingOrderReverse = function(queue) {
+        expectAsserts(5);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/list', 'antie/formatter', 'antie/widgets/label'],
+            function(application, List, Formatter, Label) {
+                var SimpleFormatter = Formatter.extend({
+                    format: function(iterator) {
+                        return new Label(iterator.next());
+                    }
+                });
+                var widget = new List('id', new SimpleFormatter());
+                widget.setRenderMode(List.RENDER_MODE_CONTAINER);
+                widget.setDataBindingOrder(List.DATA_BIND_REVERSE);
+
+                application.getRootWidget().appendChildWidget(widget);
+
+                var secondDataSource = ['d', 'e'];
+                widget.setDataSource(secondDataSource);
+
+                assertEquals(secondDataSource.length, widget.getChildWidgetCount());
+                var childWidgets = widget.getChildWidgets();
+
+                assertInstanceOf(Label, childWidgets[0]);
+                assertEquals(secondDataSource[1], childWidgets[0].getText());
+
+                assertInstanceOf(Label, childWidgets[1]);
+                assertEquals(secondDataSource[0], childWidgets[1].getText());
+            }
+        );
+    };
 })();

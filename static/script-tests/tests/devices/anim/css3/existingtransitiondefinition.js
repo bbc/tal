@@ -25,9 +25,9 @@
 (function() {
     /* jshint newcap: false */
     var mockTransElement, properties, durations, delays, timingFns;
-    
-    this.ExistingTransitionDefinitionTest = AsyncTestCase("ExistingTransitionDefinition"); //jshint ignore:line
-    
+
+    this.ExistingTransitionDefinitionTest = AsyncTestCase('ExistingTransitionDefinition'); //jshint ignore:line
+
     function loadETD(queue, fn) {
         queuedRequire(queue,
             ['antie/devices/anim/css3/existingtransitiondefinition'],
@@ -37,11 +37,11 @@
 
     this.ExistingTransitionDefinitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
-        properties = ["top", "left", "opacity"];
+        properties = ['top', 'left', 'opacity'];
         durations = [300, 400, 500];
         delays = [0, 0, 10];
-        timingFns = ["linear", "easeIn", "easeOut"];
-        
+        timingFns = ['linear', 'easeIn', 'easeOut'];
+
         mockTransElement = {
             getProperties: function() {
                 return properties;
@@ -61,28 +61,28 @@
     this.ExistingTransitionDefinitionTest.prototype.tearDown = function() {
         this.sandbox.restore();
     };
-    
+
     this.ExistingTransitionDefinitionTest.prototype.testTransitionDefinitionCreatedCorrectlyFromElement = function(queue) {
-        
+
         loadETD(
-            queue, 
+            queue,
             function(ExisitingTransitionDefinition) {
                 var trans, i, numberOfProperties, property;
                 trans = new ExisitingTransitionDefinition(
                     mockTransElement
                 );
-               
+
                 numberOfProperties = properties.length;
                 expectAsserts((properties.length * 3) + 2);
                 // check we're testing something
                 assert(numberOfProperties > 0);
-                assertEquals("definition has correct properties", properties, trans.getProperties());
-                
+                assertEquals('definition has correct properties', properties, trans.getProperties());
+
                 for(i = 0; i !== numberOfProperties; i += 1) {
                     property = properties[i];
-                    assertEquals("property has correct duration", durations[i], trans.getPropertyDuration(property));
-                    assertEquals("property has correct delay", delays[i], trans.getPropertyDelay(property));
-                    assertEquals("property has correct timing function", timingFns[i], trans.getPropertyTimingFn(property));
+                    assertEquals('property has correct duration', durations[i], trans.getPropertyDuration(property));
+                    assertEquals('property has correct delay', delays[i], trans.getPropertyDelay(property));
+                    assertEquals('property has correct timing function', timingFns[i], trans.getPropertyTimingFn(property));
                 }
             }
         );

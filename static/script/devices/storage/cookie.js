@@ -37,9 +37,9 @@ require.def(
         var namespaces = {};
 
         var default_days = 366;
-        var pathParts = document.location.pathname.split("/");
+        var pathParts = document.location.pathname.split('/');
         pathParts.pop();
-        var path = pathParts.join("/") + "/";
+        var path = pathParts.join('/') + '/';
 
         function createCookie(namespace, value, days, opts) {
             value = encodeURIComponent(value);
@@ -47,22 +47,22 @@ require.def(
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             var cookieDataArray = [
-                    namespace + "=" + value,
-                    "expires=" + date.toGMTString(),
-                    "path=" + (opts.isPathless ? '/' : path)
+                namespace + '=' + value,
+                'expires=' + date.toGMTString(),
+                'path=' + (opts.isPathless ? '/' : path)
             ];
             if (opts.domain){
-                cookieDataArray.push("domain="+opts.domain);
+                cookieDataArray.push('domain='+opts.domain);
             }
             document.cookie = cookieDataArray.join('; ');
         }
 
         function readCookie(namespace) {
-            var nameEQ = namespace + "=";
+            var nameEQ = namespace + '=';
             var ca = document.cookie.split(';');
             for (var i = 0; i < ca.length; i++) {
                 var c = ca[i];
-                while (c.charAt(0) == ' ') {
+                while (c.charAt(0) === ' ') {
                     c = c.substring(1, c.length);
                 }
                 if (c.indexOf(nameEQ) === 0) {
@@ -73,7 +73,7 @@ require.def(
         }
 
         function eraseCookie(namespace, opts) {
-            createCookie(namespace, "", -1, opts);
+            createCookie(namespace, '', -1, opts);
         }
 
         /**
@@ -128,7 +128,9 @@ require.def(
             _isEmpty: function() {
                 var prop;
                 for(prop in this._valueCache) {
-                    return false;
+                    if(this._valueCache.hasOwnProperty(prop)) {
+                        return false;
+                    }
                 }
                 return true;
             },

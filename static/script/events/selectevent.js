@@ -24,27 +24,28 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/selectevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/selectevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised when a {@link antie.widgets.Button} has been selected/activated/clicked by a user.
-		 * @name antie.events.SelectEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {antie.widgets.Button} target The button which has been selected/activated/clicked by the user;
-		 */
-		return Event.extend(/** @lends antie.events.SelectEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(target) {
-				this.target = target;
-				this._super("select");
-			}
-		});
-	}
+        /**
+         * Class of events raised when a {@link antie.widgets.Button} has been selected/activated/clicked by a user.
+         * @name antie.events.SelectEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {antie.widgets.Button} target The button which has been selected/activated/clicked by the user;
+         */
+        return Event.extend(/** @lends antie.events.SelectEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(target) {
+                this.target = target;
+                this._super('select');
+            }
+        });
+    }
 );

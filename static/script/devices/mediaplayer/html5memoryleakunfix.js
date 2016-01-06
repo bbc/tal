@@ -26,12 +26,12 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/html5memoryleakunfix",
+    'antie/devices/mediaplayer/html5memoryleakunfix',
     [
-        "antie/devices/mediaplayer/html5"
+        'antie/devices/mediaplayer/html5'
     ],
     function(HTML5MediaPlayer) {
-        "use strict";
+        'use strict';
 
         HTML5MediaPlayer.prototype._unloadMediaSrc = function(){};
 

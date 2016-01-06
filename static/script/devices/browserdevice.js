@@ -9,7 +9,7 @@
  *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
  *     not this notice.
  *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
+ * @license Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -25,12 +25,13 @@
  * Please contact us for an alternative licence
  */
 
-require.def("antie/devices/browserdevice",
+require.def(
+    'antie/devices/browserdevice',
     [
-        "antie/devices/device",
-        "antie/events/keyevent",
-        "antie/historian",
-        "antie/devices/sanitiser"
+        'antie/devices/device',
+        'antie/events/keyevent',
+        'antie/historian',
+        'antie/devices/sanitiser'
     ],
     function(Device, KeyEvent, Historian, Sanitiser) {
         'use strict';
@@ -56,7 +57,7 @@ require.def("antie/devices/browserdevice",
                 this._super(config);
                 this._textSizeCache = {};
 
-                this.addClassToElement(this.getTopLevelElement(), "notanimating");
+                this.addClassToElement(this.getTopLevelElement(), 'notanimating');
             },
             /**
              * Returns the index of an object in an array. Behaves as native JavaScript 1.5 Array.indexOf().
@@ -70,7 +71,7 @@ require.def("antie/devices/browserdevice",
                     return arr.indexOf(obj, start);
                 } else {
                     for (var i = (start || 0); i < arr.length; i++) {
-                        if (arr[i] == obj) {
+                        if (arr[i] === obj) {
                             return i;
                         }
                     }
@@ -88,11 +89,11 @@ require.def("antie/devices/browserdevice",
                 var el = document.createElement(tagName);
 
                 // don't add auto-generated IDs to the DOM
-                if (id && (id.substring(0, 1) != "#")) {
+                if (id && (id.substring(0, 1) !== '#')) {
                     el.id = id;
                 }
                 if (classNames && (classNames.length > 0)) {
-                    el.className = classNames.join(" ");
+                    el.className = classNames.join(' ');
                 }
                 return el;
             },
@@ -103,7 +104,7 @@ require.def("antie/devices/browserdevice",
              * @returns A container element within the device's user-agent.
              */
             createContainer: function(id, classNames) {
-                return this._createElement("div", id, classNames);
+                return this._createElement('div', id, classNames);
             },
             /**
              * Creates a label (an element that only contains text) in the device's user-agent.
@@ -113,7 +114,7 @@ require.def("antie/devices/browserdevice",
              * @returns A label within the device's user-agent.
              */
             createLabel: function(id, classNames, text) {
-                var el = this._createElement("span", id, classNames);
+                var el = this._createElement('span', id, classNames);
                 this.setElementContent(el, text);
                 return el;
             },
@@ -124,7 +125,7 @@ require.def("antie/devices/browserdevice",
              * @returns A button within the device's user-agent.
              */
             createButton: function(id, classNames) {
-                return this._createElement("div", id, classNames);
+                return this._createElement('div', id, classNames);
             },
             /**
              * Creates a list in the device's user-agent.
@@ -133,7 +134,7 @@ require.def("antie/devices/browserdevice",
              * @returns A list within the device's user-agent.
              */
             createList: function(id, classNames) {
-                return this._createElement("ul", id, classNames);
+                return this._createElement('ul', id, classNames);
             },
             /**
              * Creates a list item in the device's user-agent.
@@ -142,7 +143,7 @@ require.def("antie/devices/browserdevice",
              * @returns A list item within the device's user-agent.
              */
             createListItem: function(id, classNames) {
-                return this._createElement("li", id, classNames);
+                return this._createElement('li', id, classNames);
             },
             /**
              * Creates an image in the device's user-agent.
@@ -153,9 +154,9 @@ require.def("antie/devices/browserdevice",
              * @returns An image within the device's user-agent.
              */
             createImage: function(id, classNames, src, size, onLoad, onError) {
-                var el = this._createElement("img", id, classNames);
+                var el = this._createElement('img', id, classNames);
                 el.src = src;
-                el.alt = "";
+                el.alt = '';
                 if (size) {
                     this.setElementSize(el, size);
                 }
@@ -176,15 +177,15 @@ require.def("antie/devices/browserdevice",
             loadStyleSheet: function(url, callback) {
                 var self = this;
                 function supportsCssRules() {
-                    var style = self._createElement("style");
-                    style.type = "text/css";
+                    var style = self._createElement('style');
+                    style.type = 'text/css';
                     style.innerHTML = 'body {};';
-                    style.className = "added-by-antie";
-                    document.getElementsByTagName("head")[0].appendChild(style);
+                    style.className = 'added-by-antie';
+                    document.getElementsByTagName('head')[0].appendChild(style);
                     try {
                         style.sheet.cssRules;
                         return true;
-                    } catch(ex) {
+                    } catch(e) {
                     } finally {
                         style.parentNode.removeChild(style);
                     }
@@ -192,11 +193,11 @@ require.def("antie/devices/browserdevice",
                 }
 
                 if (callback && supportsCssRules()) {
-                    var style = this._createElement("style");
-                    style.type = "text/css";
-                    style.innerHTML = "@import url('" + url + "');";
-                    style.className = "added-by-antie";
-                    document.getElementsByTagName("head")[0].appendChild(style);
+                    var style = this._createElement('style');
+                    style.type = 'text/css';
+                    style.innerHTML = '@import url(\'' + url + '\');';
+                    style.className = 'added-by-antie';
+                    document.getElementsByTagName('head')[0].appendChild(style);
 
                     var interval = window.setInterval(function() {
                         try {
@@ -208,17 +209,17 @@ require.def("antie/devices/browserdevice",
                         callback(url);
                     }, 200);
                 } else {
-                    var link = this._createElement("link");
-                    link.type = "text/css";
-                    link.rel = "stylesheet";
+                    var link = this._createElement('link');
+                    link.type = 'text/css';
+                    link.rel = 'stylesheet';
                     link.href = url;
-                    link.className = "added-by-antie";
-                    document.getElementsByTagName("head")[0].appendChild(link);
+                    link.className = 'added-by-antie';
+                    document.getElementsByTagName('head')[0].appendChild(link);
 
                     // Onload trickery from:
                     // http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
                     if (callback) {
-                        var img = this._createElement("img");
+                        var img = this._createElement('img');
                         var done = function() {
                             img.onerror = function() {};
                             callback(url);
@@ -305,7 +306,7 @@ require.def("antie/devices/browserdevice",
              * @param {Array} classNames An array of class names.
              */
             setElementClasses: function(el, classNames) {
-                el.className = classNames.join(" ");
+                el.className = classNames.join(' ');
             },
             /**
              * Removes a class from an element (and optionally descendants)
@@ -314,8 +315,8 @@ require.def("antie/devices/browserdevice",
              * @param {Boolean} [deep] If true, and this element has the given class, remove the class from it's children recursively.
              */
             removeClassFromElement: function(el, className, deep) {
-                if (new RegExp(" " + className + " ").test(" " + el.className + " ")) {
-                    el.className = trim((" " + el.className + " ").replace(" " + className + " ", " "));
+                if (new RegExp(' ' + className + ' ').test(' ' + el.className + ' ')) {
+                    el.className = trim((' ' + el.className + ' ').replace(' ' + className + ' ', ' '));
                 }
                 if (deep) {
                     for (var i = 0; i < el.childNodes.length; i++) {
@@ -330,7 +331,7 @@ require.def("antie/devices/browserdevice",
              */
             addClassToElement: function(el, className) {
                 this.removeClassFromElement(el, className, false);
-                el.className = trim(el.className + " " + className);
+                el.className = trim(el.className + ' ' + className);
             },
             /**
              * Adds global key event listener(s) to the user-agent.
@@ -340,7 +341,7 @@ require.def("antie/devices/browserdevice",
              *
              * @example
              * document.onkeydown = function(e) {
-             *     self._application.bubbleEvent(new KeyEvent("keydown", keyMap[e.keyCode]));
+             *     self._application.bubbleEvent(new KeyEvent('keydown', keyMap[e.keyCode]));
              * };
              */
             addKeyEventListener: function() {
@@ -357,10 +358,10 @@ require.def("antie/devices/browserdevice",
                     var _keyCode = _keyMap[e.keyCode.toString()];
                     if (_keyCode) {
                         if (!_pressed[e.keyCode.toString()]) {
-                            self._application.bubbleEvent(new KeyEvent("keydown", _keyCode));
+                            self._application.bubbleEvent(new KeyEvent('keydown', _keyCode));
                             _pressed[e.keyCode.toString()] = true;
                         } else {
-                            self._application.bubbleEvent(new KeyEvent("keypress", _keyCode));
+                            self._application.bubbleEvent(new KeyEvent('keypress', _keyCode));
                         }
                         e.preventDefault();
                     }
@@ -370,7 +371,7 @@ require.def("antie/devices/browserdevice",
                     var _keyCode = _keyMap[e.keyCode.toString()];
                     if (_keyCode) {
                         delete _pressed[e.keyCode.toString()];
-                        self._application.bubbleEvent(new KeyEvent("keyup", _keyCode));
+                        self._application.bubbleEvent(new KeyEvent('keyup', _keyCode));
                         e.preventDefault();
                     }
                 };
@@ -378,7 +379,7 @@ require.def("antie/devices/browserdevice",
                     e = e || window.event;
                     var _keyCode = _keyMap[e.keyCode.toString()];
                     if (_keyCode) {
-                        self._application.bubbleEvent(new KeyEvent("keypress", _keyCode));
+                        self._application.bubbleEvent(new KeyEvent('keypress', _keyCode));
                         e.preventDefault();
                     }
                 };
@@ -401,10 +402,10 @@ require.def("antie/devices/browserdevice",
              */
             setElementSize: function(el, size) {
                 if (size.width !== undefined) {
-                    el.style.width = size.width + "px";
+                    el.style.width = size.width + 'px';
                 }
                 if (size.height !== undefined) {
-                    el.style.height = size.height + "px";
+                    el.style.height = size.height + 'px';
                 }
             },
             /**
@@ -414,10 +415,10 @@ require.def("antie/devices/browserdevice",
              */
             setElementPosition: function(el, pos) {
                 if (pos.top !== undefined) {
-                    el.style.top = pos.top + "px";
+                    el.style.top = pos.top + 'px';
                 }
                 if (pos.left !== undefined) {
-                    el.style.left = pos.left + "px";
+                    el.style.left = pos.left + 'px';
                 }
             },
             /**
@@ -426,7 +427,7 @@ require.def("antie/devices/browserdevice",
              * @param {String} content The new content for the element.
              */
             setElementContent: function(el, content) {
-                if (content === "") {
+                if (content === '') {
                     this.clearElement(el);
                     return;
                 }
@@ -445,7 +446,7 @@ require.def("antie/devices/browserdevice",
             cloneElement: function(el, deep, appendClass, appendID) {
                 var clone = el.cloneNode(deep);
                 if (appendClass) {
-                    clone.className += " " + appendClass;
+                    clone.className += ' ' + appendClass;
                 }
                 if (appendID && el.id) {
                     clone.id = el.id + appendID;
@@ -466,19 +467,19 @@ require.def("antie/devices/browserdevice",
              */
             getTextHeight: function(text, maxWidth, classNames) {
                 /// TODO: is there a more efficient way of doing this?
-                var cacheKey = maxWidth + ":" + classNames.join(" ") + ":" + text;
+                var cacheKey = maxWidth + ':' + classNames.join(' ') + ':' + text;
                 var height;
                 if (!(height = this._textSizeCache[cacheKey])) {
                     if (!this._measureTextElement) {
-                        this._measureTextElement = this.createLabel("measure", null, "fW");
-                        this._measureTextElement.style.display = "block";
-                        this._measureTextElement.style.position = "absolute";
-                        this._measureTextElement.style.top = "-10000px";
-                        this._measureTextElement.style.left = "-10000px";
+                        this._measureTextElement = this.createLabel('measure', null, 'fW');
+                        this._measureTextElement.style.display = 'block';
+                        this._measureTextElement.style.position = 'absolute';
+                        this._measureTextElement.style.top = '-10000px';
+                        this._measureTextElement.style.left = '-10000px';
                         this.appendChildElement(document.body, this._measureTextElement);
                     }
-                    this._measureTextElement.className = classNames.join(" ");
-                    this._measureTextElement.style.width = (typeof maxWidth === 'number') ? maxWidth + "px" : maxWidth;
+                    this._measureTextElement.className = classNames.join(' ');
+                    this._measureTextElement.style.width = (typeof maxWidth === 'number') ? maxWidth + 'px' : maxWidth;
                     this._measureTextElement.innerHTML = text;
 
                     height = this._textSizeCache[cacheKey] = this._measureTextElement.clientHeight;
@@ -496,8 +497,8 @@ require.def("antie/devices/browserdevice",
                 tagName = tagName.toLowerCase();
                 for (var i = 0; i < el.childNodes.length; i++) {
                     if(el.childNodes[i].tagName){
-                        if (el.childNodes[i].tagName.toLowerCase() == tagName) {
-                        children.push(el.childNodes[i]);
+                        if (el.childNodes[i].tagName.toLowerCase() === tagName) {
+                            children.push(el.childNodes[i]);
                         }
                     }
                 }
@@ -537,20 +538,20 @@ require.def("antie/devices/browserdevice",
              * @return An literal object containing properties, top and left.
              */
             getElementOffset: function(el) {
-                var rect, parentRect, offsets;
-//                if (el && el.getBoundingClientRect && el.parentNode) {
-//                    rect = el.getBoundingClientRect();
-//                    parentRect = el.parentNode.getBoundingClientRect();
-//                    offsets = {
-//                        top: rect.top - parentRect.top,
-//                        left: rect.left - parentRect.left
-//                    };
-//                } else {
-                    offsets = {
-                        top: el.offsetTop,
-                        left: el.offsetLeft
-                    };
-//                }
+                var offsets;
+                //                if (el && el.getBoundingClientRect && el.parentNode) {
+                //                    var rect = el.getBoundingClientRect();
+                //                    var parentRect = el.parentNode.getBoundingClientRect();
+                //                    offsets = {
+                //                        top: rect.top - parentRect.top,
+                //                        left: rect.left - parentRect.left
+                //                    };
+                //                } else {
+                offsets = {
+                    top: el.offsetTop,
+                    left: el.offsetLeft
+                };
+                //                }
                 return offsets;
             },
             /**
@@ -559,7 +560,7 @@ require.def("antie/devices/browserdevice",
              */
             getScreenSize: function() {
                 var w, h;
-                if (typeof(window.innerWidth) == 'number') {
+                if (typeof(window.innerWidth) === 'number') {
                     w = window.innerWidth;
                     h = window.innerHeight;
                 } else {
@@ -578,9 +579,9 @@ require.def("antie/devices/browserdevice",
              */
             setCurrentRoute: function(route) {
                 var history = this.getHistorian().toString();
-                
+
                 if (route.length > 0) {
-                    window.location.hash = "#" + route.join("/") + history;
+                    window.location.hash = '#' + route.join('/') + history;
                 } else {
                     window.location.hash = (history === '') ? '' : '#' + history;
                 }
@@ -593,7 +594,7 @@ require.def("antie/devices/browserdevice",
                 var unescaped = unescape(window.location.hash).split(Historian.HISTORY_TOKEN, 1)[0];
                 return (unescaped.replace(/^#/, '').split('/'));
             },
-            
+
             /**
              * gets historian for current location
              * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
@@ -601,7 +602,7 @@ require.def("antie/devices/browserdevice",
             getHistorian: function() {
                 return new Historian(decodeURI(this.getWindowLocation().href));
             },
-            
+
             /**
              * Get an object giving access to the current URL, query string, hash etc.
              * @returns {Object} Object containing, at a minimum, the properties:

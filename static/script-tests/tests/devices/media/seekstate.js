@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.SeekStateTest = AsyncTestCase("Devices.Media.SeekState"); //jshint ignore:line
+    this.SeekStateTest = AsyncTestCase('Devices.Media.SeekState'); //jshint ignore:line
 
     this.SeekStateTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -34,7 +34,7 @@
     };
 
     this.SeekStateTest.prototype.testSeekStateExtendsClass = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate", "antie/class"], function(SeekState, Class) {
+        queuedRequire(queue, ['antie/devices/media/seekstate', 'antie/class'], function(SeekState, Class) {
 
             var eventHandlingCallback = this.sandbox.stub();
             var seekState = new SeekState(eventHandlingCallback);
@@ -45,7 +45,7 @@
     };
 
     this.SeekStateTest.prototype.testSeekToGeneratesSeeking = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
+        queuedRequire(queue, ['antie/devices/media/seekstate'], function(SeekState) {
 
             var eventHandlingCallback = this.sandbox.stub();
 
@@ -56,12 +56,12 @@
 
             var event = eventHandlingCallback.args[0][0];
 
-            assertEquals("seeking", event.type);
+            assertEquals('seeking', event.type);
         });
     };
 
     this.SeekStateTest.prototype.testSeekToSamePointDoesNotGeneratesSeeking = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
+        queuedRequire(queue, ['antie/devices/media/seekstate'], function(SeekState) {
 
             var eventHandlingCallback = this.sandbox.stub();
 
@@ -74,7 +74,7 @@
     };
 
     this.SeekStateTest.prototype.testSeekThenPlayingGeneratesSeeked = function (queue) {
-        queuedRequire(queue, ["antie/devices/media/seekstate"], function(SeekState) {
+        queuedRequire(queue, ['antie/devices/media/seekstate'], function(SeekState) {
 
             var eventHandlingCallback = this.sandbox.stub();
 
@@ -86,7 +86,7 @@
 
             var event = eventHandlingCallback.args[1][0];
 
-            assertEquals("seeked", event.type);
+            assertEquals('seeked', event.type);
         });
     };
 

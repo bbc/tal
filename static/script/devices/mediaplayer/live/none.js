@@ -26,13 +26,13 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/live/none",
+    'antie/devices/mediaplayer/live/none',
     [
-        "antie/devices/device",
-        "antie/devices/mediaplayer/mediaplayer"
+        'antie/devices/device',
+        'antie/devices/mediaplayer/mediaplayer'
     ],
     function (Device, MediaPlayer) {
-        "use strict";
+        'use strict';
 
         Device.prototype.getLivePlayer = function () {
             return null;

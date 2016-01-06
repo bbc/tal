@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.AppDefaultPgHandlerTest = AsyncTestCase("App Default PG Handler"); //jshint ignore:line
+    this.AppDefaultPgHandlerTest = AsyncTestCase('App Default PG Handler'); //jshint ignore:line
 
     this.AppDefaultPgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,7 +37,7 @@
     this.AppDefaultPgHandlerTest.prototype.testAppDefaultPgHandlerExtendsBasePgHandler = function (queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function (application, BasePgHandler) {
 
                 var device = application.getDevice();
@@ -53,7 +53,7 @@
             function (application) {
 
                 var device = application.getDevice();
-                var appHandler = {foo: "bar"};
+                var appHandler = {foo: 'bar'};
                 device.registerAppPgHandler(appHandler);
 
                 assertSame(appHandler, device.parentalGuidanceHelper._appHandler);
@@ -118,7 +118,7 @@
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                    device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
                 }, 'Error');
             });
     };
@@ -132,7 +132,7 @@
                 var device = application.getDevice();
                 var showChallengeStub = this.sandbox.stub();
                 var guidanceChallengeResponseCallBack = {
-                    onGuidanceChallengeResponse: "foo"
+                    onGuidanceChallengeResponse: 'foo'
                 };
 
                 var appHandler = {
@@ -143,7 +143,7 @@
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                    device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
                 }, 'Error');
             });
     };
@@ -169,9 +169,9 @@
 
                 assertNotUndefined(device.parentalGuidanceHelper._appHandler);
                 assertNoException(function() {
-                    device.parentalGuidanceHelper.showChallenge("Test message", guidanceChallengeResponseCallBack);
+                    device.parentalGuidanceHelper.showChallenge('Test message', guidanceChallengeResponseCallBack);
                 });
-                assertTrue(showChallengeStub.calledWith("Test message", guidanceChallengeResponseCallBack));
+                assertTrue(showChallengeStub.calledWith('Test message', guidanceChallengeResponseCallBack));
             });
     };
 

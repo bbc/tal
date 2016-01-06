@@ -24,14 +24,14 @@
 
 (function() {
     // jshint newcap: false
-    this.HTML5UntypedMediaPlayerTests = AsyncTestCase("HTML5UntypedMediaPlayer"); //jshint ignore:line
+    this.HTML5UntypedMediaPlayerTests = AsyncTestCase('HTML5UntypedMediaPlayer'); //jshint ignore:line
 
-    var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/mediaplayer/html5untyped"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+    var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5untyped']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
     // ---------------
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
     // ---------------
-    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5UntypedMediaPlayerTests, "antie/devices/mediaplayer/html5untyped", config);
+    window.commonTests.mediaPlayer.html5.mixinTests(this.HTML5UntypedMediaPlayerTests, 'antie/devices/mediaplayer/html5untyped', config);
 
     // ---------------
     // Remove tests that are irrelevant for this sub-modifier.

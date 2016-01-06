@@ -60,10 +60,10 @@ require.def(
                 this._addExitStrategyEventListener();
 
 
-                if (mediaType === "audio") {
-                    this._mediaType = "audio";
-                } else if (mediaType === "video") {
-                    this._mediaType = "video";
+                if (mediaType === 'audio') {
+                    this._mediaType = 'audio';
+                } else if (mediaType === 'video') {
+                    this._mediaType = 'video';
                 } else {
                     throw new Error('Unrecognised media type: ' + mediaType);
                 }
@@ -90,48 +90,48 @@ require.def(
                 var self = this;
 
                 window.SamsungMapleOnBufferingStart = function() {
-                    self._eventHandlingCallback(new MediaEvent("waiting", self));
+                    self._eventHandlingCallback(new MediaEvent('waiting', self));
                 };
                 this.playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
 
                 window.SamsungMapleOnBufferingComplete = function() {
-                    self._eventHandlingCallback(new MediaEvent("playing", self));
+                    self._eventHandlingCallback(new MediaEvent('playing', self));
                 };
                 this.playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
 
                 window.SamsungMapleOnConnectionFailed = function() {
-                    self._eventHandlingCallback(new MediaErrorEvent(self, "Connection failed"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, 'Connection failed'));
                 };
                 this.playerPlugin.OnConnectionFailed = 'SamsungMapleOnConnectionFailed';
 
                 window.SamsungMapleOnNetworkDisconnected = function() {
-                    self._eventHandlingCallback(new MediaErrorEvent(self, "Network disconnected"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, 'Network disconnected'));
                 };
                 this.playerPlugin.OnNetworkDisconnected = 'SamsungMapleOnNetworkDisconnected';
 
                 window.SamsungMapleOnRenderError = function() {
-                    self._eventHandlingCallback(new MediaErrorEvent(self, "Render error"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, 'Render error'));
                 };
                 this.playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
 
                 window.SamsungMapleOnStreamNotFound = function() {
-                    self._eventHandlingCallback(new MediaErrorEvent(self, "Stream not found"));
+                    self._eventHandlingCallback(new MediaErrorEvent(self, 'Stream not found'));
                 };
                 this.playerPlugin.OnStreamNotFound = 'SamsungMapleOnStreamNotFound';
 
                 window.SamsungMapleOnRenderingComplete = function () {
                     self.videoPlayerState.ended = true;
                     window.SamsungMapleOnTimeUpdate(self.videoPlayerState.durationSeconds);
-                    self._eventHandlingCallback(new MediaEvent("ended", self));
+                    self._eventHandlingCallback(new MediaEvent('ended', self));
                 };
                 this.playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
 
                 window.SamsungMapleOnStreamInfoReady = function () {
                     self.videoPlayerState.durationSeconds = self.playerPlugin.GetDuration() / 1000;
-                    self._eventHandlingCallback(new MediaEvent("loadedmetadata", self));
-                    self._eventHandlingCallback(new MediaEvent("durationchange", self));
-                    self._eventHandlingCallback(new MediaEvent("canplay", self));
-                    self._eventHandlingCallback(new MediaEvent("canplaythrough", self));
+                    self._eventHandlingCallback(new MediaEvent('loadedmetadata', self));
+                    self._eventHandlingCallback(new MediaEvent('durationchange', self));
+                    self._eventHandlingCallback(new MediaEvent('canplay', self));
+                    self._eventHandlingCallback(new MediaEvent('canplaythrough', self));
 
                 };
                 this.playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
@@ -149,8 +149,7 @@ require.def(
                             self._eventHandlingCallback(new MediaEvent('play', self));
                             self._eventHandlingCallback(new MediaEvent('playing', self));
                             self.videoPlayerState.playing = true;
-                        }
-                        else {
+                        } else {
                             // don't throw a timeupdate on the first event
                             window.SamsungMapleOnTimeUpdate(seconds);
                         }
@@ -158,21 +157,21 @@ require.def(
                 };
                 this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
 
-                window.SamsungMapleOnTimeUpdate = function(seconds) { //jshint ignore:line
-                    self._eventHandlingCallback(new MediaEvent("timeupdate", self));
+                window.SamsungMapleOnTimeUpdate = function(/*seconds*/) { //jshint ignore:line
+                    self._eventHandlingCallback(new MediaEvent('timeupdate', self));
                 };
             },
 
-            render: function(device) { //jshint ignore:line
+            render: function(/*device*/) { //jshint ignore:line
                 if (!this.outputElement) {
-                    this.outputElement = document.createElement("div");
+                    this.outputElement = document.createElement('div');
                 }
                 return this.outputElement;
             },
 
             // (not part of HTML5 media)
             setWindow: function(left, top, width, height) {
-                if (this._mediaType === "audio") {
+                if (this._mediaType === 'audio') {
                     throw new Error('Unable to set window size for Samsung audio.');
                 }
                 this.playerPlugin.SetDisplayArea(left, top, width, height);
@@ -201,7 +200,7 @@ require.def(
 
                 this._getSamsungFormattedUrl = this.mediaSource.getURL(tags);
                 if (this.mediaSource.isLiveStream()) {
-                    this._getSamsungFormattedUrl += "|COMPONENT=HLS";
+                    this._getSamsungFormattedUrl += '|COMPONENT=HLS';
                 }
 
                 this._resetVideoSize();
@@ -227,9 +226,9 @@ require.def(
             // @returns "none", "metadata" or "auto"
             getPreload: function() {
                 // TODO: Samsung implementation
-                return "none";
+                return 'none';
             },
-            setPreload: function(preload) { //jshint ignore:line
+            setPreload: function(/*preload*/) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges buffered;
@@ -246,13 +245,12 @@ require.def(
 
                 if (this.videoPlayerState.currentTime > 0) {
                     this.playerPlugin.ResumePlay(this._getSamsungFormattedUrl, this.videoPlayerState.currentTime);
-                }
-                else {
+                } else {
                     this.playerPlugin.Play(this._getSamsungFormattedUrl);
                 }
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(type) { //jshint ignore:line
+            canPlayType: function(/*type*/) { //jshint ignore:line
                 // TODO: Samsung implementation
                 return true;
             },
@@ -326,7 +324,7 @@ require.def(
                 // TODO: Samsung implementation
                 return 1;
             },
-            setPlaybackRate: function(playbackRate) { //jshint ignore:line
+            setPlaybackRate: function(/*playbackRate*/) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges played;
@@ -349,7 +347,7 @@ require.def(
                 // TODO: Samsung implementation
                 return false;
             },
-            setAutoPlay: function(autoplay) { //jshint ignore:line
+            setAutoPlay: function(/*autoplay*/) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // attribute boolean loop;
@@ -357,7 +355,7 @@ require.def(
                 // TODO: Samsung implementation
                 return false;
             },
-            setLoop: function(loop) { //jshint ignore:line
+            setLoop: function(/*loop*/) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             // void play();
@@ -365,8 +363,8 @@ require.def(
                 if (this.videoPlayerState.paused) {
                     this.playerPlugin.Resume();
                     this.videoPlayerState.paused = false;
-                    this._eventHandlingCallback(new MediaEvent("play", this));
-                    this._eventHandlingCallback(new MediaEvent("playing", this));
+                    this._eventHandlingCallback(new MediaEvent('play', this));
+                    this._eventHandlingCallback(new MediaEvent('playing', this));
                 }
             },
             stop: function() {
@@ -378,11 +376,11 @@ require.def(
                 self.playerPlugin.Pause();
                 self.videoPlayerState.paused = true;
                 window.setTimeout(function() {
-                    self._eventHandlingCallback(new MediaEvent("pause", self));
+                    self._eventHandlingCallback(new MediaEvent('pause', self));
                 }, 0);
             },
             // attribute boolean controls;
-            setNativeControls: function(controls) { //jshint ignore:line
+            setNativeControls: function(/*controls*/) { //jshint ignore:line
                 // TODO: Samsung implementation
             },
             getNativeControls: function() {
@@ -394,18 +392,18 @@ require.def(
             },
             _resetVideoSize: function() {
                 // Workaround for the Samsung 2010 device: video playback starts in a small window by default.
-                if (this._mediaType === "video") {
+                if (this._mediaType === 'video') {
                     var dimensions = Application.getCurrentApplication().getDevice().getScreenSize();
                     this.setWindow(0, 0, dimensions.width, dimensions.height);
                 }
             },
 
             _addExitStrategyEventListener: function() {
-              var self = this;
-              window.addEventListener('hide', function() {
-                self.playerPlugin.Stop();
-                self.tvmwPlugin.SetSource(self.originalSource);
-              }, false);
+                var self = this;
+                window.addEventListener('hide', function() {
+                    self.playerPlugin.Stop();
+                    self.tvmwPlugin.SetSource(self.originalSource);
+                }, false);
             }
         });
 
@@ -413,7 +411,7 @@ require.def(
             return new SamsungPlayer(id, mediaType, eventCallback);
         };
 
-        Device.prototype.getPlayerEmbedMode = function(mediaType) { //jshint ignore:line
+        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) { //jshint ignore:line
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
         /**
@@ -438,10 +436,10 @@ require.def(
         Device.prototype.setVolume = function(volume) {
             var audio = document.getElementById('audioPlugin');
             if (volume > 1.0) {
-                this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " > 1.0). Clipped to 1.0");
+                this.getLogger().warn('Samsung setVolume - Invalid volume specified (' + volume + ' > 1.0). Clipped to 1.0');
                 volume = 1.0;
             } else if (volume < 0.0) {
-                this.getLogger().warn("Samsung setVolume - Invalid volume specified (" + volume + " < 0.0). Clipped to 0.0");
+                this.getLogger().warn('Samsung setVolume - Invalid volume specified (' + volume + ' < 0.0). Clipped to 0.0');
                 volume = 0;
             }
 

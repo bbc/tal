@@ -31,19 +31,19 @@ require.def(
         'antie/devices/anim/css3/easinglookup'
     ],
     function(Class, EasingLookup) {
-        "use strict";
+        'use strict';
         var TransitionDefinition;
-        
+
         /*
          * Defines a class of transition in terms of its properties and their transition attributes.
-         * It defines durations, delays and timing functions but not start and end points or callbacks 
+         * It defines durations, delays and timing functions but not start and end points or callbacks
          * (these are handled by TransitionEndPoints)
          */
         TransitionDefinition = Class.extend({
             init: function(){
                 this.properties = {};
             },
-            
+
             setProperty: function(property, attributes){
                 if(attributes) {
                     this.properties[property] = {
@@ -59,11 +59,11 @@ require.def(
                     };
                 }
             },
-                        
+
             hasProperty: function(property) {
                 return this.properties.hasOwnProperty(property);
             },
-            
+
             getProperties: function() {
                 var prop, propArr;
                 propArr = [];
@@ -74,7 +74,7 @@ require.def(
                 }
                 return propArr;
             },
-            
+
             removeProperty: function(property) {
                 if(this.hasProperty(property)) {
                     delete this.properties[property];
@@ -82,20 +82,20 @@ require.def(
                 }
                 return false;
             },
-            
+
             getPropertyDuration: function(property) {
                 return this._getPropertyAttribute(property, 'duration');
-                
+
             },
-            
+
             getPropertyDelay: function(property) {
                 return this._getPropertyAttribute(property, 'delay');
             },
-            
+
             getPropertyTimingFn: function(property) {
                 return this._getPropertyAttribute(property, 'timingFn');
             },
-            
+
             setPropertyDuration: function(property, duration) {
                 if (this.hasProperty(property)) {
                     this.properties[property].duration = duration;
@@ -105,7 +105,7 @@ require.def(
                     });
                 }
             },
-            
+
             setPropertyDelay: function(property, delay) {
                 if (this.hasProperty(property)) {
                     this.properties[property].delay = delay;
@@ -115,7 +115,7 @@ require.def(
                     });
                 }
             },
-            
+
             setPropertyTimingFn: function(property, timingFn) {
                 if (this.hasProperty(property)) {
                     this.properties[property].timingFn = timingFn;
@@ -125,7 +125,7 @@ require.def(
                     });
                 }
             },
-            
+
             addIn: function(transitionDefinition) {
                 var property, addProps, i;
                 addProps = transitionDefinition.getProperties();
@@ -138,7 +138,7 @@ require.def(
                     });
                 }
             },
-            
+
             takeOut: function(transitionDefinition) {
                 var subProps, i;
                 subProps = transitionDefinition.getProperties();
@@ -148,7 +148,7 @@ require.def(
                     }
                 }
             },
-            
+
             areAllDurationsZero: function() {
                 var property, subProps, i, allZeros;
                 allZeros = true;
@@ -161,7 +161,7 @@ require.def(
                 }
                 return allZeros;
             },
-            
+
             _getPropertyAttribute: function(property, attribute) {
                 if(this.hasProperty(property)) {
                     return this.properties[property][attribute];
@@ -169,15 +169,15 @@ require.def(
                 return undefined;
             }
         });
-           
+
         TransitionDefinition.easingLookup = new EasingLookup();
-        
+
         TransitionDefinition.defaults = {
             duration: 840,
             delay: 0,
             timingFn: TransitionDefinition.easingLookup.easeInOut
         };
-        
+
         return TransitionDefinition;
     }
 );

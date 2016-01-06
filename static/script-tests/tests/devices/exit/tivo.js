@@ -23,7 +23,7 @@
  */
 (function() {
     /* jshint newcap: false */
-    this.ExitTiVoTest = AsyncTestCase("Exit (TiVo)");
+    this.ExitTiVoTest = AsyncTestCase('Exit (TiVo)');
 
     this.ExitTiVoTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -34,25 +34,25 @@
     };
 
     var config = {
-        "modules" : {
-            "base" : "antie/devices/browserdevice",
-            "modifiers" : [ "antie/devices/exit/tivo" ]
+        'modules' : {
+            'base' : 'antie/devices/browserdevice',
+            'modifiers' : [ 'antie/devices/exit/tivo' ]
         },
-        "input" : {
-            "map" : {}
+        'input' : {
+            'map' : {}
         },
-        "layouts" : [ {
-            "width" : 960,
-            "height" : 540,
-            "module" : "fixtures/layouts/default",
-            "classes" : [ "browserdevice540p" ]
+        'layouts' : [ {
+            'width' : 960,
+            'height' : 540,
+            'module' : 'fixtures/layouts/default',
+            'classes' : [ 'browserdevice540p' ]
         } ],
-        "deviceConfigurationKey" : "devices-html5-1"
+        'deviceConfigurationKey' : 'devices-html5-1'
     };
 
 
     this.ExitTiVoTest.prototype.testTiVoExit = function(queue) {
-        queuedApplicationInit(queue, "lib/mockapplication", [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             tivo = {
                 core: {

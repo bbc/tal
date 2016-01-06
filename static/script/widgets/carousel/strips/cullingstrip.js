@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/cullingstrip',
+require.def(
+    'antie/widgets/carousel/strips/cullingstrip',
     [
         'antie/widgets/carousel/strips/widgetstrip',
         'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -193,7 +194,7 @@ require.def('antie/widgets/carousel/strips/cullingstrip',
             },
 
             _throwNoLengthError: function () {
-                throw new Error("You must set widget lengths before aligning culling strip");
+                throw new Error('You must set widget lengths before aligning culling strip');
             }
         });
         return CullingStrip;

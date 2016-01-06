@@ -27,21 +27,21 @@ require.def('antie/devices/broadcastsource/stubbedsource',
             showCurrentChannel: function () {},
             stopCurrentChannel: function () {},
             getCurrentChannelName: function () {
-                return "BBC ONE N West";
+                return 'BBC ONE N West';
             },
             getChannelNameList : function () {
                 return [
-                    { "name" : "Catal Test" },
-                    { "name" : "BBC ONE N West" },
-                    { "name" : "BBC TWO" },
-                    { "name" : "INVALID"}
+                    { 'name' : 'Catal Test' },
+                    { 'name' : 'BBC ONE N West' },
+                    { 'name' : 'BBC TWO' },
+                    { 'name' : 'INVALID'}
                 ];
             },
 
             setChannelByName : function() {},
             setPosition : function() {},
             getState : function() {
-                return BaseTvSource.STATE.PRESENTING
+                return BaseTvSource.STATE.PRESENTING;
             },
             destroy : function() {}
         });

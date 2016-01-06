@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.BatchBinderTest = AsyncTestCase("BatchBinder"); //jshint ignore:line
+    this.BatchBinderTest = AsyncTestCase('BatchBinder'); //jshint ignore:line
 
     this.BatchBinderTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,9 +37,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binders/batchbinder",
-                "antie/formatter",
-                "antie/widgets/carousel/strips/wrappingstrip"
+                'antie/widgets/carousel/binders/batchbinder',
+                'antie/formatter',
+                'antie/widgets/carousel/strips/wrappingstrip'
             ],
             function (application, BatchBinder, Formatter, WrappingStrip) {
                 var binder, fakeStrip;
@@ -64,9 +64,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binders/batchbinder",
-                "antie/formatter",
-                "antie/widgets/carousel/strips/wrappingstrip"
+                'antie/widgets/carousel/binders/batchbinder',
+                'antie/formatter',
+                'antie/widgets/carousel/strips/wrappingstrip'
             ],
             function (application, BatchBinder, Formatter, WrappingStrip) {
                 var binder, fakeStrip;

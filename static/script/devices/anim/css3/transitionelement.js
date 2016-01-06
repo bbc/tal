@@ -31,8 +31,7 @@ require.def(
         'antie/devices/anim/css3/stringhelpers'
     ],
     function(Class, StringHelpers) {
-        "use strict";
-
+        'use strict';
         /*
          * Handles all interactions with the DOM element during a transition
          */
@@ -41,8 +40,8 @@ require.def(
                 init: function(element) {
                     this._element = element;
                     this._strHelper = new StringHelpers();
-                    this._prefixes = ["", "-webkit-", "-moz-", "-o-"];
-                    this._transitionEndEvents = ["webkitTransitionEnd", "oTransitionEnd", "otransitionend", "transitionend"];
+                    this._prefixes = ['', '-webkit-', '-moz-', '-o-'];
+                    this._transitionEndEvents = ['webkitTransitionEnd', 'oTransitionEnd', 'otransitionend', 'transitionend'];
                 },
 
                 getProperties: function() {
@@ -149,6 +148,7 @@ require.def(
 
                 _getCssCsvPropValueAsArray: function(cssProp) {
                     var value, propArr;
+
                     value = this._element.style.getPropertyValue(cssProp);
 
                     if(value !== null && value !== undefined) {
@@ -167,36 +167,38 @@ require.def(
                 _setProperties: function(properties) {
                     var transitionProperties;
                     transitionProperties = this._strHelper.buildCsvString(properties);
-                    this.setStylePropertyValueWithPrefixes("transition-property", transitionProperties);
+
+                    this.setStylePropertyValueWithPrefixes('transition-property', transitionProperties);
                 },
 
                 _setDurations: function(durations) {
                     var durationString, i;
                     for(i = 0; i !== durations.length; i += 1) {
-                        durations[i] += "ms";
+                        durations[i] += 'ms';
                     }
                     durationString = this._strHelper.buildCsvString(durations);
-                    this.setStylePropertyValueWithPrefixes("transition-duration", durationString);
+
+                    this.setStylePropertyValueWithPrefixes('transition-duration', durationString);
                 },
 
                 _setDelays: function(delays) {
                     var delayString, i;
                     for(i = 0; i !== delays.length; i += 1) {
-                        delays[i] += "ms";
+                        delays[i] += 'ms';
                     }
                     delayString = this._strHelper.buildCsvString(delays);
-                    this.setStylePropertyValueWithPrefixes("transition-delay", delayString);
+                    this.setStylePropertyValueWithPrefixes('transition-delay', delayString);
                 },
 
                 _setTimingFns: function(timings) {
                     var timingString;
                     timingString = this._strHelper.buildCsvString(timings);
-                    this.setStylePropertyValueWithPrefixes("transition-timing-function", timingString);
+                    this.setStylePropertyValueWithPrefixes('transition-timing-function', timingString);
                 },
 
-				isEventTarget: function(evt) {
-					return evt.target === this._element;
-				}
+                isEventTarget: function(evt) {
+                    return evt.target === this._element;
+                }
             }
         );
     }

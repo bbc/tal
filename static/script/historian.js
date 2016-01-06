@@ -24,14 +24,15 @@
  * Please contact us for an alternative licence
  */
 
-require.def("antie/historian",
+require.def(
+    'antie/historian',
     [
-        "antie/class"
+        'antie/class'
     ],
     function(Class) {
         'use strict';
 
-        // History stack is built up with most recent item at the FRONT (first), oldest items at the BACK (last). 
+        // History stack is built up with most recent item at the FRONT (first), oldest items at the BACK (last).
         var Historian = Class.extend({
             /**
              * @constructor
@@ -39,7 +40,7 @@ require.def("antie/historian",
              */
             init: function(currentUrl) {
                 var i;
-                
+
                 this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
                 this._currentUrl = this._historyArray.shift(); // non-history portion of the URL
                 for(i = 0; i !== this._historyArray.length; i += 1) {
@@ -54,37 +55,37 @@ require.def("antie/historian",
             back: function() {
                 var recent, remaining, fragmentSeparator, self;
                 self = this;
-                
+
                 function findRecentAndRemaining() {
                     var history = self._historyArray;
                     if (history.length > 0) {
                         recent = history[0].split(Historian.HISTORY_TOKEN)[1];
-                        remaining = history.slice(1, history.length).join("");
+                        remaining = history.slice(1, history.length).join('');
                     } else {
                         recent = remaining = '';
                     }
                 }
-                
+
                 function processRoute() {
                     if(recent.indexOf(Historian.ROUTE_TOKEN) !== -1) {
                         fragmentSeparator = '';
                         recent = recent.replace(Historian.ROUTE_TOKEN, '#');
                     }
                 }
-                
+
                 function buildBackUrl() {
                     if(remaining) {
                         return recent + fragmentSeparator + remaining;
                     }
                     return recent;
                 }
-                
+
                 fragmentSeparator = '#';
                 findRecentAndRemaining();
                 processRoute();
                 return buildBackUrl();
             },
-            
+
             /**
              * Returns a URL that allows navigation to the destination url while preserving history.
              * @param {String} destinationUrl, The non uri-encoded destination url including route fragment if applicable.
@@ -93,17 +94,17 @@ require.def("antie/historian",
             forward: function(destinationUrl) {
                 var fragmentSeparator, self;
                 self = this;
-                
+
                 function isRouteInDestination() {
                     return (destinationUrl.indexOf('#') !== -1);
                 }
-                
+
                 function replaceRouteInSource() {
                     if (self._currentUrl.indexOf('#') !== -1) {
                         self._currentUrl = self._currentUrl.replace('#', Historian.ROUTE_TOKEN);
                     }
                 }
-                
+
                 function addCurrentUrlToHistory() {
                     self._historyArray.unshift(Historian.HISTORY_TOKEN + self._currentUrl);
                 }
@@ -119,7 +120,7 @@ require.def("antie/historian",
                 if (this._currentUrl === '') {
                     return destinationUrl;
                 }
-                
+
                 replaceRouteInSource();
                 addCurrentUrlToHistory();
                 trimUrlHistoryToLength();
@@ -132,7 +133,7 @@ require.def("antie/historian",
              * @returns {String} A string representing the current history stack, to be appended to the current route within the application.
              */
             toString: function() {
-                return this._historyArray.join("");
+                return this._historyArray.join('');
             },
 
             /**
@@ -152,11 +153,11 @@ require.def("antie/historian",
                 return this._historyArray.length > 0 && this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
             }
         });
-        
+
         Historian.HISTORY_TOKEN = '&*history=';
         Historian.ROUTE_TOKEN = '&*route=';
         Historian.BROADCAST_ENTRY = 'broadcast';
-        
+
         return Historian;
     }
 );

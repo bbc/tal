@@ -21,12 +21,13 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/keyhandlers/keyhandler',
+require.def(
+    'antie/widgets/carousel/keyhandlers/keyhandler',
     [
         'antie/class'
     ],
     function (Class) {
-        "use strict";
+        'use strict';
         /**
          * The base KeyHandler class moves alignment of the carousel on LEFT and RIGHT key presses
          * when attached to a Carousel with Horizontal orientation, and moves alignment on UP and

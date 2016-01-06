@@ -42,7 +42,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             return fakeCEHTMLObject;
         };
 
-        return sandbox.stub(device, "_createElement", stubFunc);
+        return sandbox.stub(device, '_createElement', stubFunc);
     };
 
     // Setup device specific mocking
@@ -115,7 +115,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         },
         mockTime: function(/* mediaPlayer */) {
             if(clock !== undefined) {
-                throw "Trying to mock time twice";
+                throw 'Trying to mock time twice';
             }
             clock = sinon.useFakeTimers();
         },
@@ -127,7 +127,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         },
         unmockTime: function(/* mediaPlayer */) {
             if (clock === undefined) {
-                throw "Trying to unmock time twice";
+                throw 'Trying to unmock time twice';
             }
             clock.restore();
             clock = undefined;
@@ -138,7 +138,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         this.sandbox = sinon.sandbox.create();
 
         mockData = {};
-        fakeCEHTMLObject = document.createElement("div");
+        fakeCEHTMLObject = document.createElement('div');
         fakeCEHTMLObject.stop = this.sandbox.stub();
         fakeCEHTMLObject.onPlayStateChange = this.sandbox.stub();
         fakeCEHTMLObject.setFullScreen = this.sandbox.stub();
@@ -161,7 +161,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         this.sandbox.restore();
 
         // Clean up after ourselves in case we haven't reset() the media player
-        var element = document.getElementById("mediaPlayer");
+        var element = document.getElementById('mediaPlayer');
         if (element && element.parentNode) {
             element.parentNode.removeChild(element);
         }
@@ -169,7 +169,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var runMediaPlayerTest = function (self, queue, action) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'],
             function(application, MediaPlayer) {
                 deviceMockingHooks.setup.call(self, self.sandbox, application);
                 deviceMockingHooks.mockTime();
@@ -178,8 +178,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 self._clock = clock;
                 try {
                     action.call(self, MediaPlayer);
-                }
-                finally {
+                } finally {
                     deviceMockingHooks.unmockTime();
                 }
 
@@ -187,7 +186,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var runMediaPlayerTestWithSpecificConfig = function (self, queue, action, newConfig) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/mediaplayer/mediaplayer"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer'],
             function(application, MediaPlayer) {
                 deviceMockingHooks.setup.call(self, self.sandbox, application);
                 deviceMockingHooks.mockTime();
@@ -196,8 +195,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
                 self._clock = clock;
                 try {
                     action.call(self, MediaPlayer);
-                }
-                finally {
+                } finally {
                     deviceMockingHooks.unmockTime();
                 }
 
@@ -286,7 +284,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-            assert(this._createElementStub.calledWith("object", "mediaPlayer"));
+            assert(this._createElementStub.calledWith('object', 'mediaPlayer'));
         });
     };
 
@@ -295,7 +293,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
-            var body = document.getElementsByTagName("body")[0];
+            var body = document.getElementsByTagName('body')[0];
             assertSame(fakeCEHTMLObject, body.firstChild);
         });
     };
@@ -306,7 +304,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.reset();
 
-            var searchResult = document.getElementById("mediaPlayer");
+            var searchResult = document.getElementById('mediaPlayer');
 
             assertNull(searchResult);
         });
@@ -339,12 +337,12 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
 
-            assertEquals("absolute", fakeCEHTMLObject.style.position);
-            assertEquals("0px", fakeCEHTMLObject.style.top);
-            assertEquals("0px", fakeCEHTMLObject.style.left);
-            assertEquals("100%", fakeCEHTMLObject.style.width);
-            assertEquals("100%", fakeCEHTMLObject.style.height);
-            assertEquals("", fakeCEHTMLObject.style.zIndex);
+            assertEquals('absolute', fakeCEHTMLObject.style.position);
+            assertEquals('0px', fakeCEHTMLObject.style.top);
+            assertEquals('0px', fakeCEHTMLObject.style.left);
+            assertEquals('100%', fakeCEHTMLObject.style.width);
+            assertEquals('100%', fakeCEHTMLObject.style.height);
+            assertEquals('', fakeCEHTMLObject.style.zIndex);
         });
     };
 
@@ -352,7 +350,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assertEquals("video/mp4", fakeCEHTMLObject.type);
+            assertEquals('video/mp4', fakeCEHTMLObject.type);
         });
     };
 
@@ -360,7 +358,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assertEquals("http://testurl/", fakeCEHTMLObject.data);
+            assertEquals('http://testurl/', fakeCEHTMLObject.data);
         });
     };
 
@@ -648,9 +646,9 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
-            assert(fakeCEHTMLObject.hasOwnProperty("onPlayStateChange"));
+            assert(fakeCEHTMLObject.hasOwnProperty('onPlayStateChange'));
             this._mediaPlayer.reset();
-            assertFalse(fakeCEHTMLObject.hasOwnProperty("onPlayStateChange"));
+            assertFalse(fakeCEHTMLObject.hasOwnProperty('onPlayStateChange'));
         });
     };
 
@@ -658,7 +656,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var errorStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({error: errorStub});
+            this.sandbox.stub(this._device, 'getLogger').returns({error: errorStub});
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             this._mediaPlayer.beginPlaybackFrom(0);
@@ -1074,7 +1072,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             eventHandler.reset();
             clock.tick(100);
 
-            assertNotSame("Only seek or buffering sentinel event should fire, not both",
+            assertNotSame('Only seek or buffering sentinel event should fire, not both',
                 eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING),
                 eventTypeHasFired(eventHandler, MediaPlayer.EVENT.SENTINEL_SEEK));
         });
@@ -1497,7 +1495,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
             var debugStub = this.sandbox.stub();
             var warnStub = this.sandbox.stub();
-            this.sandbox.stub(this._device, "getLogger").returns({
+            this.sandbox.stub(this._device, 'getLogger').returns({
                 debug: debugStub,
                 warn: warnStub
             });
@@ -1507,7 +1505,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 0 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
-            assert(debugStub.withArgs("playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }").calledOnce);
+            assert(debugStub.withArgs('playFrom 50 clamped to 0 - seekable range is { start: 0, end: 0 }').calledOnce);
         });
     };
 
@@ -1530,8 +1528,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     for (var name in mixins) {
         if (mixins.hasOwnProperty(name)) {
             if (testCase.prototype[name]) {
-                if (name !== "setUp" && name !== "tearDown") {
-                    throw "Trying to mixin '"+name+"' but that already exists!";
+                if (name !== 'setUp' && name !== 'tearDown') {
+                    throw 'Trying to mixin \''+name+'\' but that already exists!';
                 }
             }
             testCase.prototype[name] = mixins[name];
@@ -1540,8 +1538,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
 
     // **** WARNING **** WARNING **** WARNING: These TODOs are NOT complete/exhaustive
     // TODO: Ensure the object element contains a dlna_res_attr param element (CEA-2014-A req 5.7.1.a (2))
-    // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - "An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio"
-    // TODO: Handle "seek" failing? (CEA-2014-A 5.7.1.F (13))
+    // TODO: Determine if it's possible to support CEA-2014-A req 5.7.1.a (3) - 'An <object> element of type video… SHOULD contain a <param> element set to the aspect ratio'
+    // TODO: Handle 'seek' failing? (CEA-2014-A 5.7.1.F (13))
     // TODO: Consider altering the mock CEHTML object to have play position undefined initially, when stop() is called on the device, and when the media element is
     //       destroyed. This was observed on at least 1 device.
 
@@ -1551,6 +1549,6 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     //---------------------
 
     // Mixin the common tests shared by all MediaPlayer implementations (last, so it can detect conflicts)
-    window.commonTests.mediaPlayer.all.mixinTests(testCase, "antie/devices/mediaplayer/cehtml", config, deviceMockingHooks);
+    window.commonTests.mediaPlayer.all.mixinTests(testCase, 'antie/devices/mediaplayer/cehtml', config, deviceMockingHooks);
 
 };
