@@ -72,14 +72,13 @@ Hopefully you will not need to investigate it, but it's useful to know it's ther
 
 We are currently on Jasmine 1.3 rather than the more recent [Jasmine 2.0](http://jasmine.github.io/2.0/introduction.html). This is because the adaption layer is written against Jasmine 1.3 and utilises some of its internals. We hope to update to Jasmine 2.0 at some point in the future.
 
-#### queuedRequire, queuedApplicationInit and queuedComponentInit
+#### queuedRequire and queuedApplicationInit
 
 These are helper methods for loading in framework modules under test and ensure they are unloaded in teardown.
 The methods should be used as follows:
 
 * Use `queuedRequire()` if the module under test is isolated and does not require an initialised application context (directly or indirectly)
-* Use `queuedApplicationInit()` if the module under test needs an application context but is not a component
-* Use `queuedComponentInit()` when testing a component
+* Use `queuedApplicationInit()` if the module under test needs an application context
 
 {% highlight javascript %}
 this.ExampleTest = AsyncTestCase("Example");

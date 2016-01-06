@@ -339,7 +339,6 @@ And these define the most common global variables found in the TAL codebase and 
     assertEquals: true,
     queuedRequire: true,
     queuedApplicationInit: true,
-    queuedComponentInit: true,
     assertClassName: true,
     assertSame: true,
     assertNotEquals: true,
