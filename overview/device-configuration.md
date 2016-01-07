@@ -7,6 +7,9 @@ title: Device Configuration
 <p class="lead">Device configurations are managed by a set of JSON files.
 Each file represents a device or family of similar devices.</p>
 
+The configuration files are loaded at runtime in the **[app index]({{site.baseurl}}/getting-started/tutorial/createanindex.html)** and exposed
+as a Javascript object to the framework.
+
 Configuration is split into two sets. The framework configuration files
 which specify a set of default values required by the framework itself, and an
 application file which can override these defaults and include additional
