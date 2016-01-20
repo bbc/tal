@@ -148,7 +148,7 @@ module.exports = function(grunt) {
     grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
-    grunt.registerTask('full', ['jshint', 'jasmine']);
+    grunt.registerTask('full', ['jshint', 'eslint', 'jasmine']);
     grunt.registerTask('default', 'full');
     grunt.registerTask('coverage', 'Produce a coverage report of the main source files', ['jasmine:src:build', 'shell:coverage']);
     grunt.registerTask('spec', ['jasmine:src:build', 'openspec']);
