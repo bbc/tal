@@ -255,7 +255,7 @@
 
         var self = this;
         var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', function (application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var channelListStub = self.sandbox.stub(tizen.tvchannel, 'getChannelList');
 
             var device = application.getDevice();
