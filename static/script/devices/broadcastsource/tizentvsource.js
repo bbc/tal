@@ -26,7 +26,9 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/devices/broadcastsource/tizentvsource', [
+require.def(
+    'antie/devices/broadcastsource/tizentvsource',
+    [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
         'antie/runtimecontext',
@@ -69,12 +71,12 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
 
                 this.signalStateChangeListenerId = tizen.tvchannel.addSignalStateChangeListener(function (signalState) {
                     switch (signalState) {
-                        case SIGNAL_STATE_OK:
-                            self.setState(BaseTvSource.STATE.PRESENTING);
-                            break;
-                        case SIGNAL_STATE_NO_SIGNAL:
-                            self.setState(BaseTvSource.STATE.UNAVAILABLE);
-                            break;
+                    case SIGNAL_STATE_OK:
+                        self.setState(BaseTvSource.STATE.PRESENTING);
+                        break;
+                    case SIGNAL_STATE_NO_SIGNAL:
+                        self.setState(BaseTvSource.STATE.UNAVAILABLE);
+                        break;
                     }
                 });
 
@@ -99,24 +101,24 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
                 // will always be emitted
                 if (state === this.getState() && state !== BaseTvSource.STATE.PRESENTING) {
                     return;
-                }   
+                }
 
                 switch (state) {
-                    case BaseTvSource.STATE.UNAVAILABLE:
-                        this.playState = state;
-                        RuntimeContext.getCurrentApplication().broadcastEvent(
-                            new TunerUnavailableEvent());
-                        break;
-                    case BaseTvSource.STATE.PRESENTING:
-                        this.playState = state;
-                        RuntimeContext.getCurrentApplication().broadcastEvent(
-                            new TunerPresentingEvent(this.getCurrentChannelName()));
-                        break;
-                    case BaseTvSource.STATE.STOPPED:
-                        this.playState = state;
-                        RuntimeContext.getCurrentApplication().broadcastEvent(
-                            new TunerStoppedEvent());
-                        break;
+                case BaseTvSource.STATE.UNAVAILABLE:
+                    this.playState = state;
+                    RuntimeContext.getCurrentApplication().broadcastEvent(
+                        new TunerUnavailableEvent());
+                    break;
+                case BaseTvSource.STATE.PRESENTING:
+                    this.playState = state;
+                    RuntimeContext.getCurrentApplication().broadcastEvent(
+                        new TunerPresentingEvent(this.getCurrentChannelName()));
+                    break;
+                case BaseTvSource.STATE.STOPPED:
+                    this.playState = state;
+                    RuntimeContext.getCurrentApplication().broadcastEvent(
+                        new TunerStoppedEvent());
+                    break;
                 }
             },
 
@@ -154,7 +156,7 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
             getChannelNameList: function (params) {
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
-                
+
                 this._getChannelList({
                     onSuccess: function (channels) {
                         var result = [];
@@ -173,18 +175,18 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
 
                 var onFailedToRetrieveChannelList = function () {
                     params.onError({
-                        name: "ChannelListError",
-                        message: "Channel list is not available"
+                        name: 'ChannelListError',
+                        message: 'Channel list is not available'
                     });
                 };
 
                 try {
                     tizen.tvchannel.getChannelList(params.onSuccess,
-                        onFailedToRetrieveChannelList, TUNE_MODE_ALL);
+                                                   onFailedToRetrieveChannelList, TUNE_MODE_ALL);
                 } catch (error) {
                     params.onError({
-                        name: "ChannelListError",
-                        message: "Channel list is empty or not available"
+                        name: 'ChannelListError',
+                        message: 'Channel list is empty or not available'
                     });
                 }
             },
@@ -192,7 +194,7 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
             /**
              * Sets the size and position of the visible broadcast source window
              * @param top
-             * @param left  
+             * @param left
              * @param width
              * @param height
              */
@@ -202,7 +204,7 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
                 tizen.tvwindow.show(
                     function () {
                         self.setState(BaseTvSource.STATE.PRESENTING);
-                    }, 
+                    },
                     this.nop,
                     [left, top, width, height],
                     TV_WINDOW_MAIN,
@@ -228,7 +230,7 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
             setChannelByName: function (params) {
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
-                
+
                 try {
                     var currentChannelName = this.getCurrentChannelName();
                     if (currentChannelName === params.channelName) {
@@ -243,8 +245,8 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
                     }
                 } catch (error) {
                     params.onError({
-                        name: "ChannelError",
-                        message: "Unable to determine current channel name"
+                        name: 'ChannelError',
+                        message: 'Unable to determine current channel name'
                     });
                 }
             },
@@ -257,19 +259,19 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
             _tuneToChannelByName: function (params) {
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
-                
+
                 var self = this;
-                
+
                 var onChannelListRetrieved = function (channels) {
                     var channel;
 
                     for (var i = 0, len = channels.length; i < len; i++) {
-                        if (channels[i].channelName == params.name) {
+                        if (channels[i].channelName === params.name) {
                             channel = channels[i];
                             break;
                         }
                     }
-                
+
                     if (channel) {
                         self._tuneToChannel({
                             channel: channel,
@@ -278,8 +280,8 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
                         });
                     } else {
                         params.onError({
-                            name: "ChannelError",
-                            message: "Channel could not be found"
+                            name: 'ChannelError',
+                            message: 'Channel could not be found'
                         });
                     }
                 };
@@ -299,20 +301,20 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
             _tuneToChannel: function (params) {
                 params.onError = params.onError || this.nop;
                 params.onSuccess = params.onSuccess || this.nop;
-                
+
                 var channel = params.channel;
                 var self = this;
 
-                var tuneError = function (err) {
+                var tuneError = function () {
                     params.onError({
-                        name: "ChangeChannelError",
-                        message: "Error tuning channel"
+                        name: 'ChangeChannelError',
+                        message: 'Error tuning channel'
                     });
                 };
 
                 try {
                     tizen.tvchannel.tune(channel, {
-                        onsuccess: function (channel, type) {
+                        onsuccess: function () {
                             self._setBroadcastToFullScreen();
                             self.setState(BaseTvSource.STATE.PRESENTING);
                             params.onSuccess();
@@ -320,12 +322,12 @@ require.def('antie/devices/broadcastsource/tizentvsource', [
                         onnosignal: function () {
                             self.setState(BaseTvSource.STATE.UNAVAILABLE);
                         },
-                        onprograminforeceived: function (program, type) {}
+                        onprograminforeceived: function () {}
                     }, tuneError);
                 } catch (error) {
                     params.onError({
-                        name: "ChangeChannelError",
-                        message: "Error tuning channel " + error.message
+                        name: 'ChangeChannelError',
+                        message: 'Error tuning channel ' + error.message
                     });
                 }
             }
