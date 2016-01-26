@@ -5,7 +5,7 @@ title: Coding Guidelines
 
 # TV Application Layer Coding Standards & Guidelines
 
-TAL JavaScript development uses the following coding standards. A pull request will not be accepted if it doesn't adhere to the coding standards & guidelines. For some of these issues there are arguments for and against. The most value to a team is not, particularly, from the individual guidelines themselves but more from the fact they encourage consistency. Which, in turn, improves readability. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
+TAL JavaScript development uses the following coding standards. A pull request will not be accepted if it doesn't adhere to the coding standards & guidelines. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
 
 This document was written with reference to the following
 
