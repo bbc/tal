@@ -65,7 +65,7 @@ For ```if``` Statements with an ```else``` case the ```else``` must be on the sa
 
 These rules apply for all compound statements. ```while```, ```for```, ```switch```, etc. The same conventions apply for any text representing JSON data.
 
-Single quotes should be used over double quotes. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
+Single quotes must be used over double quotes. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
 
 ### Naming - *camelCase*
 
@@ -135,7 +135,7 @@ This produces the following output:
     Boom!
 
 
-When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty should be used to filter out any unwanted members. Like so...
+When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty must be used to filter out any unwanted members. Like so...
 
     for (var prop in obj) { 
         if(obj.hasOwnProperty(prop)){    
@@ -223,7 +223,7 @@ Delete can be slow as it has to manipulate the underlying object.
 
 ### Eval - *No*
 
-```eval``` should only be required for RPC like systems and then only use with care. Using ```eval``` can lead to injection attacks. It can make debugging harder and ```eval```uated code is often *not* optimized by the JavaScript engine.
+Using ```eval``` can lead to injection attacks. It can make debugging harder and ```eval```uated code is often *not* optimized by the JavaScript engine.
 
 ### With Keyword - *No*
 
