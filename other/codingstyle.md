@@ -302,66 +302,8 @@ Summary - only use 'this' in constructors and to setup 'self' closures.
 
 Use in simple cases. In general it does not aid readability when used in non trivial expressions.
 
-### JSHint - *Yes*
+# ESLint - *Yes* #
 
-Use of JSHint is highly encouraged. Many of the worst JavaScript offences can be detected way before the code is deployed. Nearly every IDE will have support, or a plugin to add JSHint functionality.
+Use of ESLint is highly encouraged. Many of the worst JavaScript offences can be detected way before the code is deployed. Nearly every IDE will have support, or a plugin to add ESLint functionality.
 
-[JSHint For Eclipse](http://github.eclipsesource.com/jshint-eclipse/)
-
-[JSHint For Sublime](https://github.com/uipoet/sublime-jshint)
-
-These are the current setting used for developing in the TAL code base...
-
-
-    browser: true,
-    onevar: false,
-    smarttabs: true,
-    curly: true,
-    eqeqeq: true,   
-    forin: true,
-    immed: true,
-    newcap: true,
-    noarg: true,
-    nonew: true,
-    plusplus: true,
-    undef: true, 
-    unused: true
-
-
-And these define the most common global variables found in the TAL codebase and TAL unit tests.
-
-
-    require: true,
-    antie: true,
-    sinon: true,
-    assert: true,
-    expectAsserts: true,
-    assertEquals: true,
-    queuedRequire: true,
-    queuedApplicationInit: true,
-    assertClassName: true,
-    assertSame: true,
-    assertNotEquals: true,
-    assertException: true,
-    assertFalse: true,
-    assertTrue: true,
-    assertNull: true,
-    assertInstanceOf: true,
-    assertNoException: true,
-    assertMatch: true,
-    assertNotNull: true,
-    assertNotSame: true,
-    assertUndefined: true,
-    assertNotUndefined: true,
-    AsyncTestCase: true,
-    jstestdriver: true
-
-
-
-
-
-
-
-
-
-
+The current ESLint rules can be found in TAL's [eslint.rc](https://github.com/fmtvp/tal/blob/master/.eslintrc) file.
