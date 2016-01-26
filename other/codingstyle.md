@@ -5,7 +5,7 @@ title: Coding Guidelines
 
 # TV Application Layer Coding Standards & Guidelines
 
-TAL JavaScript development uses the following coding standards. Some of these are mandatory, some are not. For some of these issues there are arguments for and against. The most value to a team is not, particularly, from the individual guidelines themselves but more from the fact they encourage consistency. Which, in turn, improves readability. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
+TAL JavaScript development uses the following coding standards. A pull request will not be accepted if it doesn't adhere to the coding standards & guidelines. For some of these issues there are arguments for and against. The most value to a team is not, particularly, from the individual guidelines themselves but more from the fact they encourage consistency. Which, in turn, improves readability. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
 
 This document was written with reference to the following
 
@@ -19,7 +19,7 @@ Syntactic issues are generally a subjective choice but are, never the less, impo
 
 ### Indentation - 4 spaces
 
-4 spaces should always be used over tabs. Some of our source files use tabs and it is acceptable to reformat those files if a developer find themselves working on such a file. However care should be taken and the scheduled work should be completed first, committed then reformatted - this will make it clearer which parts of the code have actually had changes over and above the tabs/space reformatting.
+4 spaces must always be used over tabs. Some of our older source files use tabs and it is acceptable to reformat those files if a developer find themselves working on such a file. However care should be taken and the scheduled work should be completed first, committed then reformatted - this will make it clearer which parts of the code have actually had changes over and above the tabs/space reformatting.
 
 ### Maximum Line Length - *80 chars*
 
@@ -46,14 +46,14 @@ Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc) style comments to annotat
 
 ### Braces - *Line End*
 
-Braces should appear at the end of a line and after a single space. The closing brace should be indented to match the indentation of the line of code that holds the starting brace.
+Braces must appear at the end of a line and after a single space. The closing brace must be indented to match the indentation of the line of code that holds the starting brace.
 
     if (importantVariable === true) {
         importantFunction();
     } 
 
 
-For ```if``` Statements with an ```else``` case the ```else``` should be on the same line as the closing brace
+For ```if``` Statements with an ```else``` case the ```else``` must be on the same line as the closing brace
 
 
     if (importantVariable === true) {
@@ -65,11 +65,11 @@ For ```if``` Statements with an ```else``` case the ```else``` should be on the 
 
 These rules apply for all compound statements. ```while```, ```for```, ```switch```, etc. The same conventions apply for any text representing JSON data.
 
-Prefer single quotes over double quotes - though in JavaScript there is no difference. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
+Single quotes should be used over double quotes. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
 
 ### Naming - *camelCase*
 
-Functions and Variables should use lower camelCase. Constructor functions should use PascalCase. Choose descriptive names which are not overly long. Single letter names like ```i``` and ```j``` are acceptable for iterators and loops. Constants should be all UPPERCASE with underscores separating words. 
+Functions and Variables must use lower camelCase. Constructor functions must use PascalCase. Choose descriptive names which are not overly long. Single letter names like ```i``` and ```j``` are acceptable for iterators and loops. Constants must be all UPPERCASE with underscores separating words.
 
     //When naming constants use all uppercase with words separated by _
     HorizontalCarousel.ALIGNMENT_CENTER = 0;
@@ -98,7 +98,7 @@ Do not use the comma operator to place multiple statements on a single line. It 
 
 ### Non Function Blocks - *No*
 
-Non-function code blocks should not be used. JavaScript does not support block scope and using non-function code blocks harms readability.
+Non-function code blocks must not be used. JavaScript does not support block scope and using non-function code blocks harms readability.
 
 ## Semantic
 
