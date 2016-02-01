@@ -27,9 +27,9 @@
  */
 
 require.def(
-	'antie/devices/exit/openclosewindow',
-	['antie/devices/browserdevice'],
-	function(Device) {
+    'antie/devices/exit/openclosewindow',
+    ['antie/devices/browserdevice'],
+    function(Device) {
         'use strict';
 
         /**
@@ -39,7 +39,7 @@ require.def(
         Device.prototype.exit = function() {
             // Workaround to make the browser think this window was opened via script
             window.open('', '_self');
-            
+
             // Close the current window
             window.close();
         };

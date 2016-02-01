@@ -22,7 +22,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/carousel/navigators/wrappingnavigator',
+require.def(
+    'antie/widgets/carousel/navigators/wrappingnavigator',
     [
         'antie/widgets/carousel/navigators/navigator'
     ],
@@ -35,7 +36,7 @@ require.def('antie/widgets/carousel/navigators/wrappingnavigator',
      * @extends antie.widgets.carousel.navigators.Navigator
      */
     function (Navigator) {
-        "use strict";
+        'use strict';
         return Navigator.extend( /** @lends antie.widgets.carousel.navigators.WrappingNavigator.prototype */
             {
                 /**

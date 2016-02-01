@@ -3,13 +3,16 @@
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
-      "antie/devices/anim/styletopleft",
-      "antie/devices/media/html5",
+      "antie/devices/anim/css3",
+      "antie/devices/media/html5memoryleakfix",
+      "antie/devices/mediaplayer/html5memoryleakunfix",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
       "antie/devices/logging/consumelog",
-      "antie/devices/exit/history"
+      "antie/devices/exit/netcast",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {

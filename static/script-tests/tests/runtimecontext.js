@@ -17,73 +17,73 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
 (function() {
-	this.RuntimeContextTest = AsyncTestCase("RuntimeContext");
+    this.RuntimeContextTest = AsyncTestCase('RuntimeContext'); //jshint ignore:line
 
-	this.RuntimeContextTest.prototype.testGetApplicationWhenNoApplicationIsSet = function(queue) {
-		expectAsserts(1);
-		DoTest(queue, function(RuntimeContext) {
-			assertEquals(undefined, RuntimeContext.getCurrentApplication());
-		});
-	};
+    this.RuntimeContextTest.prototype.testGetApplicationWhenNoApplicationIsSet = function(queue) {
+        expectAsserts(1);
+        doTest(queue, function(RuntimeContext) {
+            assertEquals(undefined, RuntimeContext.getCurrentApplication());
+        });
+    };
 
-	this.RuntimeContextTest.prototype.testSetApplication = function(queue) {
-		expectAsserts(1);
-		DoTest(queue, function(RuntimeContext) {
-			var mockApplication = {};
-			RuntimeContext.setCurrentApplication(mockApplication);
-			assertEquals(mockApplication, RuntimeContext.getCurrentApplication());
-		});
-	};
+    this.RuntimeContextTest.prototype.testSetApplication = function(queue) {
+        expectAsserts(1);
+        doTest(queue, function(RuntimeContext) {
+            var mockApplication = {};
+            RuntimeContext.setCurrentApplication(mockApplication);
+            assertEquals(mockApplication, RuntimeContext.getCurrentApplication());
+        });
+    };
 
-	this.RuntimeContextTest.prototype.testSetApplicationTwiceCausesError = function(queue) {
-		expectAsserts(1);
-		DoTest(queue, function(RuntimeContext) {
-			RuntimeContext.setCurrentApplication({});
-			assertException(function () {
-				RuntimeContext.setCurrentApplication({});
-			}, 'Error');
-			
-		});
-	};
+    this.RuntimeContextTest.prototype.testSetApplicationTwiceCausesError = function(queue) {
+        expectAsserts(1);
+        doTest(queue, function(RuntimeContext) {
+            RuntimeContext.setCurrentApplication({});
+            assertException(function () {
+                RuntimeContext.setCurrentApplication({});
+            }, 'Error');
 
-	this.RuntimeContextTest.prototype.testClearApplication = function(queue) {
-		expectAsserts(1);
-		DoTest(queue, function(RuntimeContext) {
-			RuntimeContext.setCurrentApplication({});
-			RuntimeContext.clearCurrentApplication();
-			assertEquals(undefined, RuntimeContext.getCurrentApplication());
-		});
-	};
+        });
+    };
 
-	this.RuntimeContextTest.prototype.testGetDevice = function(queue) {
-		expectAsserts(1);
-		DoTest(queue, function(RuntimeContext) {
-			var mockDevice = {};
-			var mockApplication = {
-				getDevice: function () {
-					return mockDevice;
-				}
-			};
-			RuntimeContext.setCurrentApplication(mockApplication);
-			assertEquals(mockDevice, RuntimeContext.getDevice());
-		});
-	};
+    this.RuntimeContextTest.prototype.testClearApplication = function(queue) {
+        expectAsserts(1);
+        doTest(queue, function(RuntimeContext) {
+            RuntimeContext.setCurrentApplication({});
+            RuntimeContext.clearCurrentApplication();
+            assertEquals(undefined, RuntimeContext.getCurrentApplication());
+        });
+    };
 
-	// Helper
-	function DoTest (queue, test) {
-		queuedRequire(queue, ["antie/runtimecontext"], function(RuntimeContext) { // Make sure the class under test is available
-			var original = RuntimeContext.getCurrentApplication();
-			RuntimeContext.clearCurrentApplication(); // Start from scratch each time
-			test(RuntimeContext); // Run the actual test code
-			// tear down
-			RuntimeContext.clearCurrentApplication();
-			RuntimeContext.setCurrentApplication(original);
-		});
-	}
+    this.RuntimeContextTest.prototype.testGetDevice = function(queue) {
+        expectAsserts(1);
+        doTest(queue, function(RuntimeContext) {
+            var mockDevice = {};
+            var mockApplication = {
+                getDevice: function () {
+                    return mockDevice;
+                }
+            };
+            RuntimeContext.setCurrentApplication(mockApplication);
+            assertEquals(mockDevice, RuntimeContext.getDevice());
+        });
+    };
+
+    // Helper
+    function doTest (queue, test) {
+        queuedRequire(queue, ['antie/runtimecontext'], function(RuntimeContext) { // Make sure the class under test is available
+            var original = RuntimeContext.getCurrentApplication();
+            RuntimeContext.clearCurrentApplication(); // Start from scratch each time
+            test(RuntimeContext); // Run the actual test code
+            // tear down
+            RuntimeContext.clearCurrentApplication();
+            RuntimeContext.setCurrentApplication(original);
+        });
+    }
 })();

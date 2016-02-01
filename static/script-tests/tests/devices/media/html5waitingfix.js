@@ -24,38 +24,38 @@
 
 (function() {
 
-	this.HTML5WaitingEventFix = AsyncTestCase("HTML5_WaitingEventFix");
+    this.HTML5WaitingEventFix = AsyncTestCase('HTML5_WaitingEventFix'); //jshint ignore:line
 
-	this.HTML5WaitingEventFix.prototype.setUp = function() {
-		this.sandbox = sinon.sandbox.create();
-	};
+    this.HTML5WaitingEventFix.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
+    };
 
-	this.HTML5WaitingEventFix.prototype.tearDown = function() {
-		this.sandbox.restore();
-	};
+    this.HTML5WaitingEventFix.prototype.tearDown = function() {
+        this.sandbox.restore();
+    };
 
-	this.HTML5WaitingEventFix.prototype.testWaitingEventIsFiredWhenNoTimeUpdateFiredWithinHalfASecondAndVideoIsPlaying = function(queue) {
-		expectAsserts(4);
+    this.HTML5WaitingEventFix.prototype.testWaitingEventIsFiredWhenNoTimeUpdateFiredWithinHalfASecondAndVideoIsPlaying = function(queue) {
+        expectAsserts(4);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/media/html5', 'antie/devices/media/html5waitingfix']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/class', 'antie/events/mediaevent'], function(application, Class, MediaEvent) {
             var clock = sinon.useFakeTimers();
-            var mediaElement = document.createElement("div");
+            var mediaElement = document.createElement('div');
             var eventHandlers = { };
             mediaElement.addEventListener = function (type, callback) {
                 eventHandlers[type] = callback;
             };
 
-            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
+            this.sandbox.stub(application.getDevice(), '_createElement').returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface('player', 'video', eventHandlingCallback);
 
             // t = 0
-            eventHandlers.timeupdate("timeupdate");
+            eventHandlers.timeupdate('timeupdate');
 
             clock.tick(499);
             // t = 499
@@ -67,36 +67,36 @@
 
             assertTrue(eventHandlingCallback.calledOnce);
             assertInstanceOf(MediaEvent, eventHandlingCallback.args[0][0]);
-            assertEquals("waiting", eventHandlingCallback.args[0][0].type);
+            assertEquals('waiting', eventHandlingCallback.args[0][0].type);
 
             clock.restore();
 
-		}, config);
-	};
+        }, config);
+    };
 
-	this.HTML5WaitingEventFix.prototype.testWaitingEventIsNotFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsPaused = function(queue) {
-		expectAsserts(1);
+    this.HTML5WaitingEventFix.prototype.testWaitingEventIsNotFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsPaused = function(queue) {
+        expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5", "antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/media/html5', 'antie/devices/media/html5waitingfix']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var clock = sinon.useFakeTimers();
-            var mediaElement = document.createElement("div");
+            var mediaElement = document.createElement('div');
             var eventHandlers = { };
             mediaElement.addEventListener = function (type, callback) {
                 eventHandlers[type] = callback;
             };
 
-            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
+            this.sandbox.stub(application.getDevice(), '_createElement').returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface('player', 'video', eventHandlingCallback);
 
-            eventHandlers.timeupdate("timeupdate");
-            eventHandlers.pause("pause");
+            eventHandlers.timeupdate('timeupdate');
+            eventHandlers.pause('pause');
 
             clock.tick(501);
 
@@ -104,32 +104,32 @@
 
             clock.restore();
 
-		}, config);
-	};
+        }, config);
+    };
 
-	this.HTML5WaitingEventFix.prototype.testWaitingEventIsNotFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsStopped = function(queue) {
-		expectAsserts(1);
+    this.HTML5WaitingEventFix.prototype.testWaitingEventIsNotFiredWhenNoTimeUpdateFiredWithinASecondAndVideoIsStopped = function(queue) {
+        expectAsserts(1);
 
-		var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":["antie/devices/media/html5waitingfix"]}, "input":{"map":{}},"layouts":[{"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/media/html5waitingfix']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         var self = this;
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/class", "antie/events/mediaevent"], function(application, Class, MediaEvent) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
 
             var clock = sinon.useFakeTimers();
-            var mediaElement = document.createElement("div");
+            var mediaElement = document.createElement('div');
             var eventHandlers = { };
             mediaElement.addEventListener = function (type, callback) {
                 eventHandlers[type] = callback;
             };
 
-            this.sandbox.stub(application.getDevice(), "_createElement").returns(mediaElement);
+            this.sandbox.stub(application.getDevice(), '_createElement').returns(mediaElement);
 
             var eventHandlingCallback = self.sandbox.stub();
-            var player = application.getDevice().createMediaInterface("player", "video", eventHandlingCallback);
+            application.getDevice().createMediaInterface('player', 'video', eventHandlingCallback);
 
-            eventHandlers.timeupdate("timeupdate");
-            eventHandlers.ended("ended");
+            eventHandlers.timeupdate('timeupdate');
+            eventHandlers.ended('ended');
 
             clock.tick(501);
 
@@ -137,8 +137,8 @@
 
             clock.restore();
 
-		}, config);
-	};
+        }, config);
+    };
 
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/media/html5waitingfix'], this.HTML5WaitingEventFix);
 

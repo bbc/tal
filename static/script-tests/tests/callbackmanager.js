@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.CallbackManagerTest = AsyncTestCase("CallbackManagerTest");
+    this.CallbackManagerTest = AsyncTestCase('CallbackManagerTest'); //jshint ignore:line
 
     this.CallbackManagerTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -35,7 +35,7 @@
 
     this.CallbackManagerTest.prototype.testCallAllArgPassedToAddedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -51,7 +51,7 @@
 
     this.CallbackManagerTest.prototype.testMultipleCallAllArgsPassedToAddedCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -67,7 +67,7 @@
 
     this.CallbackManagerTest.prototype.testCallAllUsesThisArgWithAddedCallback = function (queue) {
         expectAsserts(1);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -78,19 +78,19 @@
             };
 
             var thisArg = {
-                myProp: "test"
+                myProp: 'test'
             };
 
             instance.addCallback(thisArg, callback);
             instance.callAll();
 
-            assertEquals("test", val);
+            assertEquals('test', val);
         });
     };
 
     this.CallbackManagerTest.prototype.testMultipleCallbacksUsesTheirOwnThisArgs = function (queue) {
         expectAsserts(1);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -101,23 +101,23 @@
             };
 
             var thisArg1 = {
-                myProp: "one"
+                myProp: 'one'
             };
             var thisArg2 = {
-                myProp: "two"
+                myProp: 'two'
             };
 
             instance.addCallback(thisArg1, callback);
             instance.addCallback(thisArg2, callback);
             instance.callAll();
 
-            assertEquals(["one", "two"], vals);
+            assertEquals(['one', 'two'], vals);
         });
     };
 
     this.CallbackManagerTest.prototype.testMultipleAdditionsOfOneCallbackStillOnlyAddsOnce = function (queue) {
         expectAsserts(1);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -135,7 +135,7 @@
 
     this.CallbackManagerTest.prototype.testRemoveAllCallbacksRemovesThemAll = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -154,7 +154,7 @@
 
     this.CallbackManagerTest.prototype.testRemoveCallbackRemovesASpecificCallback = function (queue) {
         expectAsserts(2);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -173,7 +173,7 @@
 
     this.CallbackManagerTest.prototype.testRemoveCallbackRemovesASpecificCallbackWithCorrectThisArg = function (queue) {
         expectAsserts(1);
-        queuedRequire(queue, ["antie/callbackmanager"], function(CallbackManager) {
+        queuedRequire(queue, ['antie/callbackmanager'], function(CallbackManager) {
 
             var instance = new CallbackManager();
 
@@ -184,10 +184,10 @@
             };
 
             var thisArg1 = {
-                myProp: "one"
+                myProp: 'one'
             };
             var thisArg2 = {
-                myProp: "two"
+                myProp: 'two'
             };
 
             instance.addCallback(thisArg1, callback);
@@ -195,7 +195,7 @@
             instance.removeCallback(thisArg2, callback);
             instance.callAll();
 
-            assertEquals(["one"], vals);
+            assertEquals(['one'], vals);
         });
     };
 

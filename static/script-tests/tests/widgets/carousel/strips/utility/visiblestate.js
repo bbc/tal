@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.VisibleStateTest = AsyncTestCase("VisibleState");
+    this.VisibleStateTest = AsyncTestCase('VisibleState'); //jshint ignore:line
 
     this.VisibleStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,8 +34,9 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -58,8 +59,9 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -82,8 +84,9 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotAppendOutputElementOfWidgetToAnything = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -97,8 +100,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
                 state.append(context, parent, child);
@@ -109,8 +112,9 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotPrependOutputElementOfWidgetToAnything = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -124,8 +128,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -138,8 +142,9 @@
     };
 
     this.VisibleStateTest.prototype.testAppendDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -163,8 +168,9 @@
     };
 
     this.VisibleStateTest.prototype.testPrependDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -188,8 +194,9 @@
     };
 
     this.VisibleStateTest.prototype.testDetachCallsHideElementWithWidgetElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -202,20 +209,21 @@
                 var state = createState(self, WidgetContext, VisibleState);
                 var context = new WidgetContext();
                 var child = new Widget();
-                child.outputElement = "testElement";
+                child.outputElement = 'testElement';
                 state.detach(context, child);
                 sinon.assert.calledOnce(Device.prototype.hideElement);
                 sinon.assert.calledWith(
                     Device.prototype.hideElement,
-                    sinon.match.has("el", "testElement")
+                    sinon.match.has('el', 'testElement')
                 );
             }
         );
     };
 
     this.VisibleStateTest.prototype.testDetachChangesStateToHidden = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -240,8 +248,9 @@
     };
 
     this.VisibleStateTest.prototype.testHasLengthReturnsTrue = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',
@@ -258,8 +267,9 @@
     };
 
     this.VisibleStateTest.prototype.testInViewReturnsTrue = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/visiblestate',

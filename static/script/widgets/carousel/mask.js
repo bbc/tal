@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/mask',
+require.def(
+    'antie/widgets/carousel/mask',
     [
         'antie/widgets/container',
         'antie/widgets/carousel/spinner',
@@ -29,7 +30,7 @@ require.def('antie/widgets/carousel/mask',
         'antie/events/afteralignevent'
     ],
     function (Container, Spinner, BeforeAlignEvent, AfterAlignEvent) {
-        "use strict";
+        'use strict';
         /**
          * The masking container of a carousel that the widget strip moves within.
          * @name antie.widgets.carousel.Mask

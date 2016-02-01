@@ -26,18 +26,18 @@
  */
 
 require.def(
-	'antie/devices/media/html5untyped',
-	[
-		'antie/devices/media/html5'
-	],
-	function (HTML5Player) {
-		'use strict';
+    'antie/devices/media/html5untyped',
+    [
+        'antie/devices/media/html5'
+    ],
+    function (HTML5Player) {
+        'use strict';
 
-		HTML5Player.prototype._supportsTypeAttribute = function() {
-			return false;
-		};
+        HTML5Player.prototype._supportsTypeAttribute = function() {
+            return false;
+        };
 
-		return HTML5Player;
-	}
+        return HTML5Player;
+    }
 
 );

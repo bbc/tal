@@ -33,7 +33,7 @@ require.def(
      * Translates Shifty style easing functions to CSS3 style timing functions
      */
     function (Class) {
-        "use strict";
+        'use strict';
 
         return Class.extend(
             {
@@ -75,4 +75,3 @@ require.def(
         );
     }
 );
-    

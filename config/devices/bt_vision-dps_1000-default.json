@@ -5,12 +5,15 @@
     "modifiers": [
       "antie/devices/anim/noanim",
       "antie/devices/media/cehtml",
+      "antie/devices/mediaplayer/cehtml",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/storage/cookie"
+      "antie/devices/storage/cookie",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {

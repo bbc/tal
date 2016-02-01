@@ -61,7 +61,7 @@
       "37": "LEFT",
       "39": "RIGHT",
       "13": "ENTER",
-      "179": "PLAY_PAUSE",
+      "179": "PLAY_PAUSE",	  
       "228": "FAST_FWD",
       "227": "REWIND",
       "27": "BACK",

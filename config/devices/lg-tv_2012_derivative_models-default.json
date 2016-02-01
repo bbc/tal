@@ -5,11 +5,14 @@
     "modifiers": [
       "antie/devices/anim/noanim",
       "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/logging/consumelog",
       "antie/devices/storage/cookie",
-      "antie/devices/exit/closewindow"
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {

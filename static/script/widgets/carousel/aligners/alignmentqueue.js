@@ -21,12 +21,13 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/aligners/alignmentqueue',
+require.def(
+    'antie/widgets/carousel/aligners/alignmentqueue',
     [
         'antie/class'
     ],
     function (Class) {
-        "use strict";
+        'use strict';
 
         function createAlignFunction(self, index, options) {
             return function () {

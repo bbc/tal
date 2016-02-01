@@ -33,8 +33,10 @@
 
 
 class AntieFramework {
-	
+
 	private $_configPath;
+
+	const DEFAULT_PAGE_STRATEGY = 'default';
 
     /**
      * The class constructor.
@@ -58,7 +60,7 @@ class AntieFramework {
      */
 	public function getDocType($deviceConfig) {
         $devicePageStrategy = $deviceConfig->pageStrategy;
-        return $this->getPageStrategyElement( $devicePageStrategy, 'doctype', '<!DOCTYPE html>' );
+        return $this->getPageStrategyElement( $devicePageStrategy, 'doctype' );
 	}
 
     /**
@@ -70,7 +72,7 @@ class AntieFramework {
      */
     public function getMimeType($deviceConfig){
     	$devicePageStrategy = $deviceConfig->pageStrategy;
-    	return $this->getPageStrategyElement( $devicePageStrategy, 'mimetype', 'text/html');
+    	return $this->getPageStrategyElement( $devicePageStrategy, 'mimetype' );
     }
 
     /**
@@ -82,7 +84,7 @@ class AntieFramework {
      */
     public function getRootHtmlTag($deviceConfig) {
     	$devicePageStrategy = $deviceConfig->pageStrategy;
-    	return $this->getPageStrategyElement( $devicePageStrategy, 'rootelement', '<html>');
+    	return $this->getPageStrategyElement( $devicePageStrategy, 'rootelement' );
     }
 
     /**
@@ -93,7 +95,7 @@ class AntieFramework {
      */
 	public function getDeviceHeaders($deviceConfig) {
 		$devicePageStrategy = $deviceConfig->pageStrategy;
-		return $this->getPageStrategyElement( $devicePageStrategy, 'header', "" );
+		return $this->getPageStrategyElement( $devicePageStrategy, 'header' );
 	}
 
     /**
@@ -102,9 +104,9 @@ class AntieFramework {
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The HTML content to be placed in the HTML <body>.
      */
-	public function getDeviceBody( $deviceConfig) {
+	public function getDeviceBody($deviceConfig) {
 		$devicePageStrategy = $deviceConfig->pageStrategy;
-		return $this->getPageStrategyElement( $devicePageStrategy, 'body', "" );
+		return $this->getPageStrategyElement( $devicePageStrategy, 'body' );
 	}
 
     /**
@@ -129,7 +131,7 @@ class AntieFramework {
 	public function getConfigurationFromFilesystem($key, $type) {
 		$configurationJSON = "";
 		$configurationPath = $this->_configPath."$type/$key.json";
-		
+
 		$configurationJSON = @file_get_contents($configurationPath, FILE_USE_INCLUDE_PATH);
 		return $configurationJSON;
 	}
@@ -149,13 +151,31 @@ class AntieFramework {
      * @param string $pageStrategy The page strategy used by this device.
      * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
      * directory).
-     * @param string $default The default value to return if the page strategy does not contain the requested element.
+	 * @throws Exception("No page strategy default value found for $element")
      * @return string An element (property) of the page strategy or the default value.
      */
-	public function getPageStrategyElement( $pageStrategy, $element, $default )
-	{
-		$returnFile = @file_get_contents( $this->_configPath."pagestrategy/$pageStrategy/$element", FILE_USE_INCLUDE_PATH );
-		return $returnFile ? $returnFile : $default;
+	private function getPageStrategyElement($pageStrategy, $element)	{
+		$returnValue = $this->getValueFromFile($pageStrategy, $element);
+		if($returnValue === false) {
+			$returnValue = $this->getValueFromFile(AntieFramework::DEFAULT_PAGE_STRATEGY, $element);
+		}
+		if($returnValue === false) {
+			throw new Exception("No page strategy default value found for $element");
+		}
+		return $returnValue;
+	}
+
+	/**
+	 * Reads the contents of a file, based on $pageStrategy and $element.
+	 *
+     * @param string $pageStrategy The page strategy used by this device.
+     * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
+	 * @return string or false, if file not found
+	 */
+	private function getValueFromFile($pageStrategy, $element) {
+		$path = $this->_configPath."pagestrategy/$pageStrategy/$element";
+		$returnFile = @file_get_contents( $path, FILE_USE_INCLUDE_PATH );
+		return $returnFile ? $returnFile : false;
 	}
 
     /**

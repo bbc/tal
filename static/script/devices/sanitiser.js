@@ -23,7 +23,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
- require.def('antie/devices/sanitiser', [], function () {
+require.def('antie/devices/sanitiser', [], function () {
 
     'use strict';
 
@@ -33,7 +33,7 @@
 
     Sanitiser.prototype.setElementContent = function (el) {
         el.innerHTML = this._string;
-    }
+    };
 
     return Sanitiser;
 });

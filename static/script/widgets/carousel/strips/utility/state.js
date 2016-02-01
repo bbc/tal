@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/state',
+require.def(
+    'antie/widgets/carousel/strips/utility/state',
     [
         'antie/class'
     ],
@@ -33,15 +34,15 @@ require.def('antie/widgets/carousel/strips/utility/state',
                 // implement in child
             },
 
-            append: function (context, parent, widget) {
+            append: function (/*context, parent, widget*/) { //jshint ignore:line
                 // implement in child
             },
 
-            prepend: function (context, parent, widget) {
+            prepend: function (/*context, parent, widget*/) { //jshint ignore:line
                 // implement in child
             },
 
-            detach: function (context, widget) {
+            detach: function (/*context, widget*/) { //jshint ignore:line
                 // implement in child
             },
 

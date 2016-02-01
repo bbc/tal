@@ -4,10 +4,13 @@
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/noanim",
-      "antie/devices/media/html5",
+      "antie/devices/media/html5memoryleakfix",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/logging/default",
-      "antie/devices/storage/cookie"
+      "antie/devices/storage/cookie",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
@@ -16,35 +19,31 @@
   "streaming": {
     "video": {
       "mediaURIFormat": "%href%",
-      "supported": [
-        {
-          "protocols": [
-            "http"
-          ],
-          "encodings": [
-            "h264"
-          ],
-          "transferFormat": [
-            "plain"
-          ],
-          "maximumBitRate": 2800,
-          "maximumVideoLines": 1080
-        }
-      ]
+      "supported": [{
+        "protocols": [
+          "http"
+        ],
+        "encodings": [
+          "h264"
+        ],
+        "transferFormat": [
+          "plain"
+        ],
+        "maximumBitRate": 3600,
+        "maximumVideoLines": 1080
+      }]
     },
     "audio": {
       "mediaURIFormat": "%href%",
-      "supported": [
-        {
-          "protocols": [
-            "http"
-          ],
-          "encodings": [
-            "aac"
-          ],
-          "maximumBitRate": 192
-        }
-      ]
+      "supported": [{
+        "protocols": [
+          "http"
+        ],
+        "encodings": [
+          "aac"
+        ],
+        "maximumBitRate": 192
+      }]
     }
   },
   "input": {
@@ -70,24 +69,21 @@
       ]
     }
   },
-  "layouts": [
-    {
-      "width": 960,
-      "height": 540,
-      "module": "%application%/appui/layouts/540p",
-      "classes": [
-        "browserdevice540p"
-      ]
-    },
-    {
-      "width": 1280,
-      "height": 720,
-      "module": "%application%/appui/layouts/720p",
-      "classes": [
-        "browserdevice720p"
-      ]
-    }
-  ],
+  "layouts": [{
+    "width": 960,
+    "height": 540,
+    "module": "%application%/appui/layouts/540p",
+    "classes": [
+      "browserdevice540p"
+    ]
+  }, {
+    "width": 1280,
+    "height": 720,
+    "module": "%application%/appui/layouts/720p",
+    "classes": [
+      "browserdevice720p"
+    ]
+  }],
   "networking": {
     "supportsJSONP": true
   }

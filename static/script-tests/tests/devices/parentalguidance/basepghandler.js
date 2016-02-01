@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.BasePgHandlerTest = AsyncTestCase("Base PG Handler");
+    this.BasePgHandlerTest = AsyncTestCase('Base PG Handler'); //jshint ignore:line
 
     this.BasePgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -35,44 +35,44 @@
 
     this.BasePgHandlerTest.prototype.testIsChallengeActiveThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.isChallengeActive()
+                    basePgHandler.isChallengeActive();
                 }, 'Error');
             });
     };
 
     this.BasePgHandlerTest.prototype.testShowChallengeThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.showChallenge()
+                    basePgHandler.showChallenge();
                 }, 'Error');
             });
     };
 
     this.BasePgHandlerTest.prototype.testSupportsMessageThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.supportsMessage()
+                    basePgHandler.supportsMessage();
                 }, 'Error');
             });
     };
 
     this.BasePgHandlerTest.prototype.testIsConfigurableThrowsExceptionWhenNotOverridden = function (queue) {
         expectAsserts(1);
-        queuedApplicationInit(queue, 'lib/mockapplication', ["antie/devices/parentalguidance/basepghandler"],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/parentalguidance/basepghandler'],
             function(application, BasePgHandler) {
-                var basePgHandler = new BasePgHandler;
+                var basePgHandler = new BasePgHandler();
                 assertException(function () {
-                    basePgHandler.isConfigurable()
+                    basePgHandler.isConfigurable();
                 }, 'Error');
             });
     };

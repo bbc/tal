@@ -22,7 +22,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/carousel',
+require.def(
+    'antie/widgets/carousel',
     [
         'antie/widgets/carousel/carouselcore',
         'antie/widgets/container'
@@ -39,7 +40,7 @@ require.def('antie/widgets/carousel',
      * the carousel. Vertical by default, for horizontal pass in antie.widgets.carousel.CarouselCore.orientations.HORIZONTAL
      */
     function (CarouselCore, Container) {
-        "use strict";
+        'use strict';
         var Carousel = CarouselCore.extend(/** @lends antie.widgets.Carousel.prototype */ {
             /**
              * Appends a child widget to this widget.

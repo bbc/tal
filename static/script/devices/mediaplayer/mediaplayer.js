@@ -26,14 +26,14 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/mediaplayer",
+    'antie/devices/mediaplayer/mediaplayer',
     [
-        "antie/class",
-        "antie/callbackmanager",
-        "antie/runtimecontext"
+        'antie/class',
+        'antie/callbackmanager',
+        'antie/runtimecontext'
     ],
     function(Class, CallbackManager, RuntimeContext) {
-        "use strict";
+        'use strict';
 
         /**
          * Base class for media playback device modifiers.
@@ -56,7 +56,7 @@ require.def(
              *
              * Note that failing to remove callbacks when you are finished with them can stop garbage collection
              * of objects/closures containing those callbacks and so create memory leaks in your application.
-             * @param {Object} thisArg The object to use as "this" when calling the callback.
+             * @param {Object} thisArg The object to use as 'this' when calling the callback.
              * @param {Function} callback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
              */
             addEventCallback: function(thisArg, callback) {
@@ -65,7 +65,7 @@ require.def(
 
             /**
              * Stop receiving events with the specified callback.
-             * @param {Object} thisArg The object specified to use as "this" when adding the callback.
+             * @param {Object} thisArg The object specified to use as 'this' when adding the callback.
              * @param {Function} callback Function to which events are no longer to be passed
              */
             removeEventCallback: function(thisArg, callback) {
@@ -83,9 +83,10 @@ require.def(
              * Protected method, for use by subclasses to emit events of any specified type, adding in the
              * standard payload used by all events.
              * @param {String} eventType The type of the event to be emitted.
+             * @param {Object} [eventLabels] Optional additional event labels.
              * @protected
              */
-            _emitEvent: function(eventType) {
+            _emitEvent: function(eventType, eventLabels) {
 
                 var event = {
                     type: eventType,
@@ -96,6 +97,14 @@ require.def(
                     mimeType: this.getMimeType(),
                     state: this.getState()
                 };
+
+                if (eventLabels) {
+                    for (var key in eventLabels) {
+                        if(eventLabels.hasOwnProperty(key)) {
+                            event[key] = eventLabels[key];
+                        }
+                    }
+                }
 
                 this._callbackManager.callAll(event);
             },
@@ -149,24 +158,23 @@ require.def(
              * @param {String} url location of the media resource to play
              * @param {String} mimeType type of media resource
              */
-            setSource: function (mediaType, url, mimeType) {
-                throw new Error("setSource method has not been implemented");
+            setSource: function (/*mediaType, url, mimeType*/) { //jshint ignore:line
+                throw new Error('setSource method has not been implemented');
             },
 
             /**
-             * Request that the media start playing from Time.
+             * Request that the media seeks to and starts playing from Time.
              * A media source must have been set with setSource before calling this.
-             * This can be used to resume media after changing source.
              * This may transition to the buffering state if enough media data is not yet available to play.
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
-             * Calling this in state EMPTY is an error.
+             * Calling this in state EMPTY or STOPPED is an error.
              * Clamps the time to the seekable range of the media.
-             * If trying to play at (or past) the very end of the media, this will actually begin playback just before the end.
+             * If trying to seek to (or past) the very end of the media, this will actually seek to before the end.
              * This allows the media playback to complete normally.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
-            playFrom: function (seconds) {
-                throw new Error("playFrom method has not been implemented");
+            playFrom: function (/*seconds*/) { //jshint ignore:line
+                throw new Error('playFrom method has not been implemented');
             },
 
             /**
@@ -177,7 +185,20 @@ require.def(
              * To begin playback from a specified time offset, use the playFrom function instead.
              */
             beginPlayback: function () {
-                throw new Error("beginPlayback method has not been implemented");
+                throw new Error('beginPlayback method has not been implemented');
+            },
+
+            /**
+             * Begin playback of the media resource from Time.
+             * A media source must have been set with setSource before calling this.
+             * This can be used to resume media after changing source.
+             * This function can only be called from the STOPPED state; calling it from any other state is an error.
+             * Clamps the time to the seekable range of the media.
+             * If trying to play at (or past) the very end of the media, this will actually begin playback before the end.
+             * @param {Number} seconds Time to play from in seconds from the start of the media
+             */
+            beginPlaybackFrom: function (/*seconds*/) { //jshint ignore:line
+                throw new Error('beginPlaybackFrom method has not been implemented');
             },
 
             /**
@@ -187,7 +208,7 @@ require.def(
              * Calling this in state EMPTY or STOPPED is an error.
              */
             pause: function () {
-                throw new Error("pause method has not been implemented");
+                throw new Error('pause method has not been implemented');
             },
 
             /**
@@ -197,7 +218,7 @@ require.def(
              * Calling this in state EMPTY or STOPPED is an error.
              */
             resume: function () {
-                throw new Error("resume method has not been implemented");
+                throw new Error('resume method has not been implemented');
             },
 
             /**
@@ -208,7 +229,7 @@ require.def(
              * Calling this in state EMPTY is an error.
              */
             stop: function () {
-                throw new Error("stop method has not been implemented");
+                throw new Error('stop method has not been implemented');
             },
 
             /**
@@ -217,7 +238,7 @@ require.def(
              * Calling this in any state other than STOPPED or ERROR is an error.
              */
             reset: function () {
-                throw new Error("reset method has not been implemented");
+                throw new Error('reset method has not been implemented');
             },
 
             /**
@@ -226,39 +247,39 @@ require.def(
              * @return {String} The URL
              */
             getSource: function () {
-                throw new Error("getSource method has not been implemented");
+                throw new Error('getSource method has not been implemented');
             },
 
             /**
-            * Get the source MIME type.
-            * If no source is set (in state EMPTY for example), then this returns undefined.
-            * @return {String} The MIME type
-            */
+             * Get the source MIME type.
+             * If no source is set (in state EMPTY for example), then this returns undefined.
+             * @return {String} The MIME type
+             */
             getMimeType: function () {
-                throw new Error("getMimeType method has not been implemented");
+                throw new Error('getMimeType method has not been implemented');
             },
 
             /**
-            * Get the current play time.
-            * If no current time is available, then this returns undefined.
-            * @return {Number} The current play time in seconds from the start of the media.
-            */
+             * Get the current play time.
+             * If no current time is available, then this returns undefined.
+             * @return {Number} The current play time in seconds from the start of the media.
+             */
             getCurrentTime: function () {
-                throw new Error("getCurrentTime method has not been implemented");
+                throw new Error('getCurrentTime method has not been implemented');
             },
 
             /**
-            * Get the available seekable range of media.
-            * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
-            * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
-            * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
-            * For live playback, 'end' is the current live time.
-            * For live playback, both 'start' and 'end' may advance over time.
-            * If no range is available, this returns undefined.
-            * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
-            */
+             * Get the available seekable range of media.
+             * Returns a range Object with 'start' and 'end' numeric properties, giving the start and end of the available media in seconds from the start of the media.
+             * For VOD playback, 'start' is zero and 'end' is the last possible seek time (in many cases equal to duration).
+             * For Live playback, 'start' may be non-zero, reflecting the amount of 'live rewind' available before the current play position.
+             * For live playback, 'end' is the current live time.
+             * For live playback, both 'start' and 'end' may advance over time.
+             * If no range is available, this returns undefined.
+             * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
+             */
             getSeekableRange: function () {
-                throw new Error("getSeekableRange method has not been implemented");
+                throw new Error('getSeekableRange method has not been implemented');
             },
 
             /**
@@ -269,15 +290,37 @@ require.def(
              * @return {Number} Duration of media in seconds, or Infinity, or undefined.
              */
             getDuration: function() {
-                throw new Error("getDuration method has not been implemented");
+
+                switch (this.getState()) {
+                case MediaPlayer.STATE.STOPPED:
+                case MediaPlayer.STATE.ERROR:
+                    return undefined;
+                default :
+                    if(this._isLiveMedia()){
+                        return Infinity;
+                    }
+                    return this._getMediaDuration();
+                }
+            },
+
+            _getMediaDuration: function() {
+                throw new Error('getMediaDuration method has not been implemented');
             },
 
             /**
-            * Get the current state of the Media PLayer state machine.
-            * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
-            */
+             * Get the current state of the Media PLayer state machine.
+             * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
+             */
             getState: function () {
-                throw new Error("getState method has not been implemented");
+                throw new Error('getState method has not been implemented');
+            },
+
+            /**
+             * Get the underlying DOM element used for media playback. Its type and signature will vary by device. On devices that do not use HTML5 media playback this will not be a media element. In general this should not be used by client applications.
+             * @return {Element} Underlying DOM element used for media playback on this device.
+             */
+            getPlayerElement: function() {
+                throw new Error('getPlayerElement method has not been implemented');
             },
 
             _getClampOffsetFromConfig: function() {
@@ -292,45 +335,51 @@ require.def(
                 } else {
                     return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
                 }
+            },
+
+            _isLiveMedia: function () {
+                return (this._type === MediaPlayer.TYPE.LIVE_VIDEO) || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
             }
         });
 
         /**
-        * An enumeration of possible media player states.
-        * @name antie.devices.mediaplayer.MediaPlayer.STATE
-        * @enum {String}
-        */
+         * An enumeration of possible media player states.
+         * @name antie.devices.mediaplayer.MediaPlayer.STATE
+         * @enum {String}
+         */
         MediaPlayer.STATE = {
-            EMPTY:      "EMPTY",     // No source set
-            STOPPED:    "STOPPED",   // Source set but no playback
-            BUFFERING:  "BUFFERING", // Not enough data to play, waiting to download more
-            PLAYING:    "PLAYING",   // Media is playing
-            PAUSED:     "PAUSED",    // Media is paused
-            COMPLETE:   "COMPLETE",  // Media has reached its end point
-            ERROR:      "ERROR"      // An error occurred
+            EMPTY:      'EMPTY',     // No source set
+            STOPPED:    'STOPPED',   // Source set but no playback
+            BUFFERING:  'BUFFERING', // Not enough data to play, waiting to download more
+            PLAYING:    'PLAYING',   // Media is playing
+            PAUSED:     'PAUSED',    // Media is paused
+            COMPLETE:   'COMPLETE',  // Media has reached its end point
+            ERROR:      'ERROR'      // An error occurred
         };
 
         /**
-        * Media Player event names
-        * @name antie.devices.mediaplayer.MediaPlayer.EVENT
-        * @enum {String}
-        */
+         * Media Player event names
+         * @name antie.devices.mediaplayer.MediaPlayer.EVENT
+         * @enum {String}
+         */
         MediaPlayer.EVENT = {
-            STOPPED:   "stopped",   // Event fired when playback is stopped
-            BUFFERING: "buffering", // Event fired when playback has to suspend due to buffering
-            PLAYING:   "playing",   // Event fired when starting (or resuming) playing of the media
-            PAUSED:    "paused",    // Event fired when media playback pauses
-            COMPLETE:  "complete",  // Event fired when media playback has reached the end of the media
-            ERROR:     "error",     // Event fired when an error condition occurs
-            STATUS:    "status",    // Event fired regularly during play
-            SENTINEL_ENTER_BUFFERING:  "sentinel-enter-buffering", // Event fired when a sentinel has to act because the device has started buffering but not reported it
-            SENTINEL_EXIT_BUFFERING:   "sentinel-exit-buffering",  // Event fired when a sentinel has to act because the device has finished buffering but not reported it
-            SENTINEL_PAUSE:            "sentinel-pause",           // Event fired when a sentinel has to act because the device has failed to pause when expected
-            SENTINEL_PLAY:             "sentinel-play",            // Event fired when a sentinel has to act because the device has failed to play when expected
-            SENTINEL_SEEK:             "sentinel-seek",            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
-            SENTINEL_COMPLETE:         "sentinel-complete",        // Event fired when a sentinel has to act because the device has completed the media but not reported it
-            SENTINEL_PAUSE_FAILURE:    "sentinel-pause-failure",   // Event fired when the pause sentinel has failed twice, so it is giving up
-            SENTINEL_SEEK_FAILURE:     "sentinel-seek-failure"     // Event fired when the seek sentinel has failed twice, so it is giving up
+            STOPPED:   'stopped',   // Event fired when playback is stopped
+            BUFFERING: 'buffering', // Event fired when playback has to suspend due to buffering
+            PLAYING:   'playing',   // Event fired when starting (or resuming) playing of the media
+            PAUSED:    'paused',    // Event fired when media playback pauses
+            COMPLETE:  'complete',  // Event fired when media playback has reached the end of the media
+            ERROR:     'error',     // Event fired when an error condition occurs
+            STATUS:    'status',    // Event fired regularly during play
+            SENTINEL_ENTER_BUFFERING:  'sentinel-enter-buffering', // Event fired when a sentinel has to act because the device has started buffering but not reported it
+            SENTINEL_EXIT_BUFFERING:   'sentinel-exit-buffering',  // Event fired when a sentinel has to act because the device has finished buffering but not reported it
+            SENTINEL_PAUSE:            'sentinel-pause',           // Event fired when a sentinel has to act because the device has failed to pause when expected
+            SENTINEL_PLAY:             'sentinel-play',            // Event fired when a sentinel has to act because the device has failed to play when expected
+            SENTINEL_SEEK:             'sentinel-seek',            // Event fired when a sentinel has to act because the device has failed to seek to the correct location
+            SENTINEL_COMPLETE:         'sentinel-complete',        // Event fired when a sentinel has to act because the device has completed the media but not reported it
+            SENTINEL_PAUSE_FAILURE:    'sentinel-pause-failure',   // Event fired when the pause sentinel has failed twice, so it is giving up
+            SENTINEL_SEEK_FAILURE:     'sentinel-seek-failure',     // Event fired when the seek sentinel has failed twice, so it is giving up
+            SEEK_ATTEMPTED: 'seek-attempted', // Event fired when a device using a seekfinishedemitevent modifier sets the source
+            SEEK_FINISHED: 'seek-finished'    // Event fired when a device using a seekfinishedemitevent modifier has seeked successfully
         };
 
         /**
@@ -339,8 +388,22 @@ require.def(
          * @enum {String}
          */
         MediaPlayer.TYPE = {
-            VIDEO: "video",
-            AUDIO: "audio"
+            VIDEO: 'video',
+            AUDIO: 'audio',
+            LIVE_VIDEO: 'live-video',
+            LIVE_AUDIO: 'live-audio'
+        };
+
+        /**
+         * Levels of support for the live media player
+         * @name antie.devices.mediaplayer.MediaPlayer.LIVE_SUPPORT
+         * @enum {String}
+         */
+        MediaPlayer.LIVE_SUPPORT = {
+            NONE: 'none',
+            PLAYABLE: 'playable',
+            RESTARTABLE: 'restartable',
+            SEEKABLE: 'seekable'
         };
 
         return MediaPlayer;

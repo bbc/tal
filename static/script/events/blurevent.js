@@ -24,27 +24,28 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/blurevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/blurevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised when focus is removed from a {@link antie.widgets.Button}.
-		 * @name antie.events.BlurEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {antie.widgets.Button} target The button which lost focus.
-		 */
-		return Event.extend(/** @lends antie.events.BlurEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(target) {
-				this.target = target;
-				this._super("blur");
-			}
-		});
-	}
+        /**
+         * Class of events raised when focus is removed from a {@link antie.widgets.Button}.
+         * @name antie.events.BlurEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {antie.widgets.Button} target The button which lost focus.
+         */
+        return Event.extend(/** @lends antie.events.BlurEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(target) {
+                this.target = target;
+                this._super('blur');
+            }
+        });
+    }
 );

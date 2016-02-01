@@ -1,0 +1,117 @@
+{
+  "pageStrategy": "hbbtv",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/css3",
+      "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
+      "antie/devices/net/default",
+      "antie/devices/broadcastsource/hbbtvsource",
+      "antie/devices/data/nativejson",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/storage/cookie",
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumBitRate": 3600,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "encodings": [
+            "aac"
+          ],
+          "protocols": [
+            "http"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "19": "UP",
+      "78": "DOWN",
+      "77": "LEFT",
+      "16": "RIGHT",
+      "17": "ENTER",
+      "64": "RED",
+      "74": "PLAY",
+      "75": "FAST_FWD",
+      "73": "REWIND",
+      "25": "NEXT",
+      "27": "PREV",
+      "18": "BACK",
+      "24": "SUBTITLE",
+      "71": "INFO",
+      "65": "GREEN",
+      "66": "YELLOW",
+      "67": "BLUE",
+      "68": "AD"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    },
+          {
+      "width":1920,
+      "height":1080,
+      "module":"%application%/appui/layouts/1080p",
+      "classes":[
+        "browserdevice1080p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true
+  }
+}

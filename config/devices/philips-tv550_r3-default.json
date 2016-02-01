@@ -1,0 +1,96 @@
+{
+	"pageStrategy": "html5",
+	"modules": {
+		"base": "antie/devices/browserdevice",
+		"modifiers": [
+			"antie/devices/anim/noanim",
+			"antie/devices/media/cehtml",
+			"antie/devices/mediaplayer/cehtml",
+      "antie/devices/mediaplayer/live/none",
+			"antie/devices/data/nativejson",
+			"antie/devices/logging/default",
+			"antie/devices/storage/cookie",
+			"antie/devices/net/default",
+			"antie/devices/parentalguidance/appdefaultpghandler"
+		]
+	},
+	"logging": {
+		"level": "none"
+	},
+	"streaming": {
+		"video": {
+			"mediaURIFormat": "%href%",
+			"supported": [
+				{
+					"protocols": [
+						"http"
+					],
+					"encodings": [
+						"h264"
+					],
+					"transferFormat": [
+						"plain"
+					]
+				}
+			]
+		},
+		"audio": {
+			"mediaURIFormat": "%href%",
+			"supported": [
+				{
+					"protocols": [
+						"http"
+					],
+					"encodings": [
+						"aac"
+					]
+				}
+			]
+		}
+	},
+	"input": {
+		"map": {
+			"13": "ENTER",
+			"37": "LEFT",
+			"38": "UP",
+			"39": "RIGHT",
+			"40": "DOWN",
+			"415": "PLAY",
+			"19": "PAUSE",
+			"413": "STOP",
+			"408": "FAST_FWD",
+			"412": "REWIND",
+			"8": "BACK",
+			"460": "SUBTITLE",
+			"455": "INFO"
+		}
+	},
+	"accessibility": {
+		"captions": {
+			"supported": [
+				"application/ttaf+xml"
+			]
+		}
+	},
+	"layouts": [
+		{
+			"width": 960,
+			"height": 540,
+			"module": "%application%/appui/layouts/540p",
+			"classes": [
+				"browserdevice540p"
+			]
+		},
+		{
+			"width": 1280,
+			"height": 720,
+			"module": "%application%/appui/layouts/720p",
+			"classes": [
+				"browserdevice720p"
+			]
+		}
+	],
+	"networking": {
+		"supportsJSONP": true
+	}
+}

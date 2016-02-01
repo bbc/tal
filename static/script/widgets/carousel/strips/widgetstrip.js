@@ -21,12 +21,13 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/widgetstrip',
+require.def(
+    'antie/widgets/carousel/strips/widgetstrip',
     [
         'antie/widgets/container'
     ],
     function (Container) {
-        "use strict";
+        'use strict';
         /**
          * A container for the widgets displayed within a carousel
          * @name antie.widgets.carousel.strips.WidgetStrip
@@ -156,7 +157,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
              * Strip should ensure all widgets indexed in the array are attached to the parent
              * @param {Array} indexArray
              */
-            attachIndexedWidgets: function (indexArray) {
+            attachIndexedWidgets: function (/*indexArray*/) {
 
             },
 
@@ -216,7 +217,7 @@ require.def('antie/widgets/carousel/strips/widgetstrip',
              * Calculation is any strip defined processing required after an append/insert to put the carousel in a valid state
              * Autocalculation is on by default when a carousel is created.
              */
-            autoCalculate: function (on) {
+            autoCalculate: function (/*on*/) {
 
             },
 

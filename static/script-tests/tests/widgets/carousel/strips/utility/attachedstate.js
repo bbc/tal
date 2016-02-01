@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AttachedStateTest = AsyncTestCase("AttachedState");
+    this.AttachedStateTest = AsyncTestCase('AttachedState'); //jshint ignore:line
 
     this.AttachedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,8 +34,9 @@
     };
 
     this.AttachedStateTest.prototype.testAppendDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -58,8 +59,9 @@
     };
 
     this.AttachedStateTest.prototype.testPrependDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -82,8 +84,9 @@
     };
 
     this.AttachedStateTest.prototype.testAppendDoesNotAppendOutputElementOfWidgetToAnything = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -97,8 +100,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
                 state.append(context, parent, child);
@@ -109,8 +112,9 @@
     };
 
     this.AttachedStateTest.prototype.testPrependDoesNotPrependOutputElementOfWidgetToAnything = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -124,8 +128,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -138,8 +142,9 @@
     };
 
     this.AttachedStateTest.prototype.testAppendDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -163,8 +168,9 @@
     };
 
     this.AttachedStateTest.prototype.testPrependDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -188,35 +194,36 @@
     };
 
     this.AttachedStateTest.prototype.testDetachCallsRemoveElementWithWidgetElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, AttachedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, AttachedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
                 var state = createState(self, WidgetContext, AttachedState);
                 var context = new WidgetContext();
                 var child = new Widget();
-                child.outputElement = "testElement";
+                child.outputElement = 'testElement';
                 state.detach(context, child);
                 sinon.assert.calledOnce(Device.prototype.removeElement);
                 sinon.assert.calledWith(
                     Device.prototype.removeElement,
-                    "testElement"
+                    'testElement'
                 );
             }
         );
     };
 
     this.AttachedStateTest.prototype.testDetachChangesStateToRendered = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
@@ -241,17 +248,17 @@
     };
 
     this.AttachedStateTest.prototype.testAttachedReturnsTrue = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/attachedstate',
                 'antie/widgets/carousel/strips/utility/widgetcontext',
                 'antie/widgets/widget',
-                'antie/devices/browserdevice',
-                'antie/widgets/carousel/strips/utility/attachedstate'
+                'antie/devices/browserdevice'
             ],
-            function (application, AttachedState, WidgetContext, Widget, Device, AttachedState) {
+            function (application, AttachedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
                 var state = createState(self, WidgetContext, AttachedState);
                 assertTrue(state.hasLength());

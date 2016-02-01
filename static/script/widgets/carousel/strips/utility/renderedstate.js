@@ -41,7 +41,7 @@ require.def('antie/widgets/carousel/strips/utility/renderedstate',
                 this._attach(context, parent, widget, 'prependChildElement');
             },
 
-            detach: function (context, widget) {
+            detach: function (/*context, widget*/) {
 
             },
 

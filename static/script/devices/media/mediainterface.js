@@ -39,33 +39,33 @@ require.def(
              * @param mediaType "audio" or "video"
              * @param eventCallback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
              */
-            init: function(id, mediaType, eventCallback){
+            init: function(/*id, mediaType, eventCallback*/){ //jshint ignore:line
 
             },
             /**
              * Hook to allow devices to any necessary rendering steps. By default does nothing.
              * @param device The Device on which we are operating.
              */
-            render: function(device){
+            render: function(/*device*/){ //jshint ignore:line
 
             },
             /**
              * @param options See Media.show
              */
-            show: function(options){
-                throw new Error("Show method has not been implemented.");
+            show: function(/*options*/){ //jshint ignore:line
+                throw new Error('Show method has not been implemented.');
             },
             /**
              * @param options See Media.hide
              */
-            hide: function(options){
-                throw new Error("Hide method has not been implemented.");
+            hide: function(/*options*/){ //jshint ignore:line
+                throw new Error('Hide method has not been implemented.');
             },
             /**
              * @param options See Media.moveTo
              */
-            moveTo: function(options){
-                throw new Error("MoveTo method has not been implemented.");
+            moveTo: function(/*options*/){ //jshint ignore:line
+                throw new Error('MoveTo method has not been implemented.');
             },
             /**
              * @param left X coordinate of top-left corner.
@@ -73,129 +73,129 @@ require.def(
              * @param width Width
              * @param height Height
              */
-            setWindow: function(left, top, width, height){
-                throw new Error("SetWindow method has not been implemented.");
+            setWindow: function(/*left, top, width, height*/){ //jshint ignore:line
+                throw new Error('SetWindow method has not been implemented.');
             },
             getError: function(){
-                throw new Error("GetError method has not been implemented.");
+                throw new Error('GetError method has not been implemented.');
             },
             /**
              * @param sources List of media sources
              * @param tags Associative array of "tags" in the URL that are replaced (when the URL is templated).
              */
-            setSources: function(sources, tags){
-                throw new Error("SetSources method has not been implemented.");
+            setSources: function(/*sources, tags*/){ //jshint ignore:line
+                throw new Error('SetSources method has not been implemented.');
             },
             getSources: function(){
-                throw new Error("GetSources method has not been implemented.");
+                throw new Error('GetSources method has not been implemented.');
             },
             getCurrentSource: function(){
-                throw new Error("GetCurrentSource method has not been implemented.");
+                throw new Error('GetCurrentSource method has not been implemented.');
             },
             getNetworkState: function(){
-                throw new Error("GetNetworkState method has not been implemented.");
+                throw new Error('GetNetworkState method has not been implemented.');
             },
             getPreload: function(){
-                throw new Error("GetPreload method has not been implemented.");
+                throw new Error('GetPreload method has not been implemented.');
             },
-            setPreload: function(preload){
-                throw new Error("SetPreload method has not been implemented.");
+            setPreload: function(/*preload*/){ //jshint ignore:line
+                throw new Error('SetPreload method has not been implemented.');
             },
             getBuffered: function(){
-                throw new Error("GetBuffered method has not been implemented.");
+                throw new Error('GetBuffered method has not been implemented.');
             },
             load: function(){
-                throw new Error("Load method has not been implemented.");
+                throw new Error('Load method has not been implemented.');
             },
             /**
              * @param type Mime type (string)
              */
-            canPlayType: function(type){
-                throw new Error("CanPlayType method has not been implemented.");
+            canPlayType: function(/*type*/){ //jshint ignore:line
+                throw new Error('CanPlayType method has not been implemented.');
             },
             getReadyState: function(){
-                throw new Error("GetReadyState method has not been implemented.");
+                throw new Error('GetReadyState method has not been implemented.');
             },
             getSeeking: function(){
-                throw new Error("GetSeeking method has not been implemented.");
+                throw new Error('GetSeeking method has not been implemented.');
             },
             /**
              * @param currentTime Number of seconds since the start of the media.
              */
-            setCurrentTime: function(currentTime){
-                throw new Error("SetCurrentTime method has not been implemented.");
+            setCurrentTime: function(/*currentTime*/){ //jshint ignore:line
+                throw new Error('SetCurrentTime method has not been implemented.');
             },
             getCurrentTime: function(){
-                throw new Error("GetCurrentTime method has not been implemented.");
+                throw new Error('GetCurrentTime method has not been implemented.');
             },
             getInitialTime: function(){
-                throw new Error("GetInitialTime method has not been implemented.");
+                throw new Error('GetInitialTime method has not been implemented.');
             },
             getDuration: function(){
-                throw new Error("GetDuration method has not been implemented.");
+                throw new Error('GetDuration method has not been implemented.');
             },
             getStartOffsetTime: function(){
-                throw new Error("GetStartOffsetTime method has not been implemented.");
+                throw new Error('GetStartOffsetTime method has not been implemented.');
             },
             getPaused: function(){
-                throw new Error("GetPaused method has not been implemented.");
+                throw new Error('GetPaused method has not been implemented.');
             },
             getDefaultPlaybackRate: function(){
-                throw new Error("GetDefaultPlaybackRate method has not been implemented.");
+                throw new Error('GetDefaultPlaybackRate method has not been implemented.');
             },
             getPlaybackRate: function(){
-                throw new Error("GetPlaybackRate method has not been implemented.");
+                throw new Error('GetPlaybackRate method has not been implemented.');
             },
             /**
              * @param playbackRate Number representing the playback rate
              */
-            setPlaybackRate: function(playbackRate){
-                throw new Error("SetPlaybackRate method has not been implemented.");
+            setPlaybackRate: function(/*playbackRate*/){ //jshint ignore:line
+                throw new Error('SetPlaybackRate method has not been implemented.');
             },
             getPlayed: function(){
-                throw new Error("GetPlayed method has not been implemented.");
+                throw new Error('GetPlayed method has not been implemented.');
             },
             getSeekable: function(){
-                throw new Error("GetSeekable method has not been implemented.");
+                throw new Error('GetSeekable method has not been implemented.');
             },
             getEnded: function(){
-                throw new Error("GetEnded method has not been implemented.");
+                throw new Error('GetEnded method has not been implemented.');
             },
             getAutoPlay: function(){
-                throw new Error("GetAutoPlay method has not been implemented.");
+                throw new Error('GetAutoPlay method has not been implemented.');
             },
             /**
              * @param autoplay Boolean indicating if media should be automatically played on load.
              */
-            setAutoPlay: function(autoplay){
-                throw new Error("SetAutoPlay method has not been implemented.");
+            setAutoPlay: function(/*autoplay*/){ //jshint ignore:line
+                throw new Error('SetAutoPlay method has not been implemented.');
             },
             getLoop: function(){
-                throw new Error("GetLoop method has not been implemented.");
+                throw new Error('GetLoop method has not been implemented.');
             },
             /**
              * @param loop Boolean indicating if the media should loop.
              */
-            setLoop: function(loop){
-                throw new Error("SetLoop method has not been implemented.");
+            setLoop: function(/*loop*/){ //jshint ignore:line
+                throw new Error('SetLoop method has not been implemented.');
             },
             play: function(){
-                throw new Error("Play method has not been implemented.");
+                throw new Error('Play method has not been implemented.');
             },
             stop: function(){
-                throw new Error("Stop method has not been implemented.");
+                throw new Error('Stop method has not been implemented.');
             },
             pause: function(){
-                throw new Error("Pause method has not been implemented.");
+                throw new Error('Pause method has not been implemented.');
             },
             /**
              * @param controls Boolean indicating if native controls should be used.
              */
-            setNativeControls: function(controls){
-                throw new Error("SetNativeControls method has not been implemented.");
+            setNativeControls: function(/*controls*/){ //jshint ignore:line
+                throw new Error('SetNativeControls method has not been implemented.');
             },
             getNativeControls: function(){
-                throw new Error("GetNativeControls method has not been implemented.");
+                throw new Error('GetNativeControls method has not been implemented.');
             },
             destroy: function(){
 

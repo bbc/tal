@@ -1,0 +1,107 @@
+{
+  "pageStrategy": "html5",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/styletopleft",
+      "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
+      "antie/devices/net/default",
+      "antie/devices/data/nativejson",
+      "antie/devices/exit/history",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/storage/cookie",
+      "antie/devices/parentalguidance/appdefaultpghandler"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumBitRate": 3600,
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "13": "ENTER",
+      "37": "LEFT",
+      "38": "UP",
+      "39": "RIGHT",
+      "40": "DOWN",
+      "125": "SUBTITLE",
+      "127": "PLAY",
+      "128": "PAUSE",
+      "129": "STOP",
+      "131": "FAST_FWD",
+      "130": "REWIND",
+      "27": "BACK",
+      "122": "INFO",
+      "32": "SPACE",
+	  "8": "BACK_SPACE",
+	  "125": "SUBTITLE",
+	  "122": "INFO"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true
+  }
+}
