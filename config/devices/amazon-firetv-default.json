@@ -65,7 +65,9 @@
       "228": "FAST_FWD",
       "227": "REWIND",
       "27": "BACK",
-      "18": "INFO"
+      "18": "INFO",
+      "166": "BACK",
+      "4": "BACK"
     }
   },
   "accessibility": {
