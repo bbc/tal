@@ -56,8 +56,6 @@ require.def('antie/widgets/media',
 			 */
 			init: function(id, mediaType) {
 				this._super(id);
-				
-				console.log('media obj init');
 
                 var self = this;
 
@@ -75,9 +73,7 @@ require.def('antie/widgets/media',
 				this.addClass('media');
 			},
             render: function(device) {
-            	console.log('media render');
 	            this.outputElement = this._mediaInterface.render(device);
-	            console.log(this.outputElement);
 	            return this.outputElement;
             },
             show: function(options) {
