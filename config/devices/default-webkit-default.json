@@ -4,14 +4,17 @@
     "base": "antie/devices/browserdevice",
     "modifiers": [
       "antie/devices/anim/styletopleft",
-      "uktvplay/appui/media/uktv_bcove",
+      "antie/devices/media/html5",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/net/default",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/exit/closewindow"
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
@@ -65,14 +68,11 @@
       "114": "PLAY_PAUSE",
       "19": "PLAY_PAUSE",
       "402": "PLAY_PAUSE",
-      "179": "PLAY_PAUSE",
       "115": "STOP",
       "413": "STOP",
       "116": "FAST_FWD",
       "417": "FAST_FWD",
       "117": "REWIND",
-      "227": "FAST_FWD",
-      "228": "REWIND",
       "412": "REWIND",
       "166": "BACK",
       "8": "BACK"
