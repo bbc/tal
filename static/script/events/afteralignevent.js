@@ -23,10 +23,11 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/events/afteralignevent',
+require.def(
+    'antie/events/afteralignevent',
     ['antie/events/event'],
     function (Event) {
-        "use strict";
+        'use strict';
         /**
          * Class of events raised when a Mask is about to change alignment of its widget strip.
          * @name antie.events.AfterAlignEvent
@@ -44,7 +45,7 @@ require.def('antie/events/afteralignevent',
             init: function (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super("afteralign");
+                this._super('afteralign');
             }
         });
     }

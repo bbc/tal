@@ -24,7 +24,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/tunerpresentingevent',
+require.def(
+    'antie/events/tunerpresentingevent',
     ['antie/events/event'],
     function (Event) {
         'use strict';
@@ -34,16 +35,16 @@ require.def('antie/events/tunerpresentingevent',
          * @class
          * @name antie.events.TunerPresentingEvent
          * @extends antie.events.Event
-         * @param {antie.devices.broadcastsource.Channel} channel The channel which is now playing.
+         * @param {String} channelName The channel name which is now playing.
          */
         return Event.extend(/** @lends antie.events.TunerPresentingEvent.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function(channel) {
-                this.channel = channel;
-                this._super("tunerpresenting");
+            init: function(channelName) {
+                this.channel = channelName;
+                this._super('tunerpresenting');
             }
         });
     }

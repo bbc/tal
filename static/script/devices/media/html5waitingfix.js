@@ -26,46 +26,46 @@
  */
 
 require.def(
-	'antie/devices/media/html5waitingfix',
-	[
-		'antie/devices/media/html5',
-		'antie/events/mediaevent'
-	],
-	function (HTML5Player, MediaEvent) {
-		'use strict';
+    'antie/devices/media/html5waitingfix',
+    [
+        'antie/devices/media/html5',
+        'antie/events/mediaevent'
+    ],
+    function (HTML5Player, MediaEvent) {
+        'use strict';
 
-		var originalConstructor = HTML5Player.prototype.init;
-		HTML5Player.prototype.init = function(id, mediaType, eventHandlingFunction) {
-			originalConstructor.call(this, id, mediaType, eventHandlingFunction);
+        var originalConstructor = HTML5Player.prototype.init;
+        HTML5Player.prototype.init = function(id, mediaType, eventHandlingFunction) {
+            originalConstructor.call(this, id, mediaType, eventHandlingFunction);
 
-			var checkWaitingTimer = null;
-			var waiting = false;
+            var checkWaitingTimer = null;
+            var waiting = false;
 
-			var self = this;
-			this._mediaElement.addEventListener('pause', function(evt) {
-				window.clearTimeout(checkWaitingTimer);
-			});
-			this._mediaElement.addEventListener('timeupdate', function(evt) {
-				if(checkWaitingTimer) {
-					window.clearTimeout(checkWaitingTimer);
-				}
-				checkWaitingTimer = window.setTimeout(function() {
-					waiting = true;
-					self._eventHandlingCallback(new MediaEvent("waiting"));
-				}, 500);
-				if(waiting) {
-					waiting = false;
-					self._eventHandlingCallback(new MediaEvent("playing"));
-				}
-			});
-			this._mediaElement.addEventListener('ended', function(evt) {
-				if(checkWaitingTimer) {
-					window.clearTimeout(checkWaitingTimer);
-				}
-			});
-		};
+            var self = this;
+            this._mediaElement.addEventListener('pause', function() {
+                window.clearTimeout(checkWaitingTimer);
+            });
+            this._mediaElement.addEventListener('timeupdate', function() {
+                if(checkWaitingTimer) {
+                    window.clearTimeout(checkWaitingTimer);
+                }
+                checkWaitingTimer = window.setTimeout(function() {
+                    waiting = true;
+                    self._eventHandlingCallback(new MediaEvent('waiting'));
+                }, 500);
+                if(waiting) {
+                    waiting = false;
+                    self._eventHandlingCallback(new MediaEvent('playing'));
+                }
+            });
+            this._mediaElement.addEventListener('ended', function() {
+                if(checkWaitingTimer) {
+                    window.clearTimeout(checkWaitingTimer);
+                }
+            });
+        };
 
-		return HTML5Player;
-	}
+        return HTML5Player;
+    }
 
 );

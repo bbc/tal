@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.BinderTest = AsyncTestCase("Binder");
+    this.BinderTest = AsyncTestCase('Binder'); //jshint ignore:line
 
     this.BinderTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,12 +37,12 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder"
+                'antie/widgets/carousel/binder'
             ],
             function (application, Binder) {
                 var binder, fakeWidget, fakeFormatter, fakeDataSource, fakeItem;
                 fakeItem = {
-                    fake: "item"
+                    fake: 'item'
                 };
                 fakeFormatter = {
                     format: function () {}
@@ -63,9 +63,9 @@
                 };
                 binder.appendAllTo(fakeWidget);
 
-                assertTrue("Item formatter called", fakeFormatter.format.calledOnce);
-                assertTrue("Widget append called", fakeWidget.appendChildWidget.calledOnce);
-                assertEquals("Formatted item appended to widget", fakeItem, fakeWidget.appendChildWidget.getCall(0).args[0]);
+                assertTrue('Item formatter called', fakeFormatter.format.calledOnce);
+                assertTrue('Widget append called', fakeWidget.appendChildWidget.calledOnce);
+                assertEquals('Formatted item appended to widget', fakeItem, fakeWidget.appendChildWidget.getCall(0).args[0]);
             }
         );
     };
@@ -74,9 +74,9 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/formatter",
-                "antie/widgets/widget"
+                'antie/widgets/carousel/binder',
+                'antie/formatter',
+                'antie/widgets/widget'
             ],
             function (application, Binder, Formatter, Widget) {
                 var binder, dataSource, formatter, widget;
@@ -88,7 +88,7 @@
                 binder = new Binder(formatter, dataSource);
                 widget = new Widget();
                 binder.appendAllTo(widget);
-                assertFalse("load called on array datasource", dataSource.load.called);
+                assertFalse('load called on array datasource', dataSource.load.called);
 
             }
         );
@@ -98,13 +98,13 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/formatter",
+                'antie/widgets/carousel/binder',
+                'antie/formatter',
                 'antie/widgets/carousel/carouselcore',
-                "antie/iterator"
+                'antie/iterator'
             ],
             function (application, Binder, Formatter, Carousel, Iterator) {
-                var binder, dataSource, formatter, carousel, iterator, testObj, callCount;
+                var binder, dataSource, formatter, carousel, callCount;
                 callCount = 0;
                 this.sandbox.stub(Formatter.prototype);
                 this.sandbox.stub(Carousel.prototype);
@@ -120,14 +120,14 @@
                     }
                 });
                 formatter = new Formatter();
-                dataSource = ["test"];
+                dataSource = ['test'];
 
                 binder = new Binder(formatter, dataSource);
                 carousel = new Carousel();
                 binder.appendAllTo(carousel);
 
-                assertTrue("DataSource converted to iterator on bind", Iterator.prototype.init.calledWith(dataSource));
-                assertTrue("Widget appended to carousel", carousel.appendChildWidget.called);
+                assertTrue('DataSource converted to iterator on bind', Iterator.prototype.init.calledWith(dataSource));
+                assertTrue('Widget appended to carousel', carousel.appendChildWidget.called);
             }
         );
     };
@@ -136,16 +136,16 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder"
+                'antie/widgets/carousel/binder'
             ],
             function (application, Binder) {
                 var binder, fakeWidget, fakeFormatter, fakeDataSource, fakeItem, fakeItem2, items, i;
                 i = 0;
                 fakeItem = {
-                    fake: "item"
+                    fake: 'item'
                 };
                 fakeItem2 = {
-                    fake: "item2"
+                    fake: 'item2'
                 };
                 fakeFormatter = {
                     format: function () {}
@@ -182,17 +182,17 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/iterator"
+                'antie/widgets/carousel/binder',
+                'antie/iterator'
             ],
             function (application, Binder, Iterator) {
                 var it, binder, fakeWidget, fakeFormatter, fakeDataSource, fakeItem, fakeItem2, i, items;
                 i = 0;
                 fakeItem = {
-                    fake: "item"
+                    fake: 'item'
                 };
                 fakeItem2 = {
-                    fake: "item2"
+                    fake: 'item2'
                 };
                 items = [fakeItem, fakeItem2];
                 it = new Iterator(items);
@@ -232,8 +232,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/events/databoundevent"
+                'antie/widgets/carousel/binder',
+                'antie/events/databoundevent'
             ],
             function (application, Binder, DataBoundEvent) {
                 var binder, fakeWidget, fakeFormatter, fakeDataSource;
@@ -258,15 +258,15 @@
 
                 binder.appendAllTo(fakeWidget);
 
-                assertTrue("event bubbled on widget",
+                assertTrue('event bubbled on widget',
                     fakeWidget.bubbleEvent.calledOnce);
-                assertTrue("event bubbled instance of databoundevent",
+                assertTrue('event bubbled instance of databoundevent',
                     fakeWidget.bubbleEvent.getCall(0).args[0] instanceof DataBoundEvent);
-                assertEquals("event bubbled beforedatabind",
-                    "beforedatabind",
+                assertEquals('event bubbled beforedatabind',
+                    'beforedatabind',
                     fakeWidget.bubbleEvent.getCall(0).args[0].type
                 );
-                assertEquals("event target is widget",
+                assertEquals('event target is widget',
                     fakeWidget,
                     fakeWidget.bubbleEvent.getCall(0).args[0].target
                 );
@@ -279,14 +279,14 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/events/databoundevent",
-                "antie/iterator"
+                'antie/widgets/carousel/binder',
+                'antie/events/databoundevent',
+                'antie/iterator'
             ],
             function (application, Binder, DataBoundEvent, Iterator) {
                 var binder, fakeWidget, fakeFormatter, fakeDataSource, fakeItem, it;
                 fakeItem = {
-                    fake: "item"
+                    fake: 'item'
                 };
                 fakeFormatter = {
                     format: function (it) {
@@ -310,24 +310,24 @@
                 };
                 binder.appendAllTo(fakeWidget);
 
-                assertEquals("2 events, beforedatabind and databound bubbled on widget",
+                assertEquals('2 events, beforedatabind and databound bubbled on widget',
                     2,
                     fakeWidget.bubbleEvent.callCount);
-                assertTrue("second event bubbled instance of databoundevent",
+                assertTrue('second event bubbled instance of databoundevent',
                     fakeWidget.bubbleEvent.getCall(1).args[0] instanceof DataBoundEvent);
-                assertEquals("event bubbled databound",
-                    "databound",
+                assertEquals('event bubbled databound',
+                    'databound',
                     fakeWidget.bubbleEvent.getCall(1).args[0].type
                 );
-                assertEquals("event target is widget",
+                assertEquals('event target is widget',
                     fakeWidget,
                     fakeWidget.bubbleEvent.getCall(1).args[0].target
                 );
-                assertEquals("event iterator is iterator returned by datasource",
+                assertEquals('event iterator is iterator returned by datasource',
                     it,
                     fakeWidget.bubbleEvent.getCall(1).args[0].iterator
                 );
-                assertTrue("bubble called after appendChildWidget", fakeWidget.bubbleEvent.calledAfter(fakeWidget.appendChildWidget));
+                assertTrue('bubble called after appendChildWidget', fakeWidget.bubbleEvent.calledAfter(fakeWidget.appendChildWidget));
 
             }
         );
@@ -337,12 +337,12 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/binder",
-                "antie/events/databoundevent"
+                'antie/widgets/carousel/binder',
+                'antie/events/databoundevent'
             ],
             function (application, Binder, DataBoundEvent) {
                 var binder, fakeWidget, fakeFormatter, fakeDataSource, error;
-                error = "ERROR";
+                error = 'ERROR';
 
                 fakeFormatter = {
                     format: function (it) {
@@ -363,27 +363,27 @@
                 };
                 binder.appendAllTo(fakeWidget);
 
-                assertEquals("2 events, beforedatabind and databindingerror bubbled on widget",
+                assertEquals('2 events, beforedatabind and databindingerror bubbled on widget',
                     2,
                     fakeWidget.bubbleEvent.callCount);
-                assertTrue("second event bubbled instance of databoundevent",
+                assertTrue('second event bubbled instance of databoundevent',
                     fakeWidget.bubbleEvent.getCall(1).args[0] instanceof DataBoundEvent);
-                assertEquals("event bubbled databindingerror",
-                    "databindingerror",
+                assertEquals('event bubbled databindingerror',
+                    'databindingerror',
                     fakeWidget.bubbleEvent.getCall(1).args[0].type
                 );
-                assertEquals("event target is widget",
+                assertEquals('event target is widget',
                     fakeWidget,
                     fakeWidget.bubbleEvent.getCall(1).args[0].target
                 );
-                assertTrue("event iterator is null",
+                assertTrue('event iterator is null',
                     null === fakeWidget.bubbleEvent.getCall(1).args[0].iterator
                 );
-                assertEquals("error passed to event",
+                assertEquals('error passed to event',
                     error,
                     fakeWidget.bubbleEvent.getCall(1).args[0].error
                 );
-                assertTrue("bubble called after load", fakeWidget.bubbleEvent.calledAfter(fakeDataSource.load));
+                assertTrue('bubble called after load', fakeWidget.bubbleEvent.calledAfter(fakeDataSource.load));
 
             }
         );

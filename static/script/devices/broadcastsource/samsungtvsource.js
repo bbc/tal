@@ -26,17 +26,17 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/devices/broadcastsource/samsungtvsource',
+require.def(
+    'antie/devices/broadcastsource/samsungtvsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource',
         'antie/runtimecontext',
-        'antie/devices/broadcastsource/channel',
         'antie/events/tunerunavailableevent',
         'antie/events/tunerstoppedevent',
         'antie/events/tunerpresentingevent'
     ],
-    function (Device, BaseTvSource, RuntimeContext, Channel, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
+    function (Device, BaseTvSource, RuntimeContext, TunerUnavailableEvent, TunerStoppedEvent, TunerPresentingEvent) {
         'use strict';
 
         /**
@@ -53,8 +53,8 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
         var PL_TV_EVENT_SOURCE_CHANGED = 114;
         var PL_TV_EVENT_TUNE_SUCCESS = 103;
 
-        var WINDOW_PLUGIN_DOM_ELEMENT_ID = "pluginObjectWindow";
-        var TV_PLUGIN_DOM_ELEMENT_ID = "pluginObjectTV";
+        var WINDOW_PLUGIN_DOM_ELEMENT_ID = 'pluginObjectWindow';
+        var TV_PLUGIN_DOM_ELEMENT_ID = 'pluginObjectTV';
 
         var SamsungSource = BaseTvSource.extend(/** @lends antie.devices.broadcastsource.SamsungTVSource.prototype */ {
             /**
@@ -72,20 +72,25 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
 
                 var self = this;
 
+                this.playState = BaseTvSource.STATE.UNKNOWN;
+
                 tvPlugin.OnEvent = function(id) {
                     switch (parseInt(id)) {
-                        case PL_TV_EVENT_NO_SIGNAL:
-                            var unavailableEvent = new TunerUnavailableEvent();
-                            RuntimeContext.getCurrentApplication().broadcastEvent(unavailableEvent);
-                            break;
-                        case PL_TV_EVENT_SOURCE_CHANGED:
-                            var stoppedEvent = new TunerStoppedEvent();
-                            RuntimeContext.getCurrentApplication().broadcastEvent(stoppedEvent);
-                            break;
-                        case PL_TV_EVENT_TUNE_SUCCESS:
-                            var presentingEvent = new TunerPresentingEvent(self.getCurrentChannel());
-                            RuntimeContext.getCurrentApplication().broadcastEvent(presentingEvent);
-                            break;
+                    case PL_TV_EVENT_NO_SIGNAL:
+                        self.playState = BaseTvSource.STATE.UNAVAILABLE;
+                        var unavailableEvent = new TunerUnavailableEvent();
+                        RuntimeContext.getCurrentApplication().broadcastEvent(unavailableEvent);
+                        break;
+                    case PL_TV_EVENT_SOURCE_CHANGED:
+                        self.playState = BaseTvSource.STATE.STOPPED;
+                        var stoppedEvent = new TunerStoppedEvent();
+                        RuntimeContext.getCurrentApplication().broadcastEvent(stoppedEvent);
+                        break;
+                    case PL_TV_EVENT_TUNE_SUCCESS:
+                        self.playState = BaseTvSource.STATE.PRESENTING;
+                        var presentingEvent = new TunerPresentingEvent(self.getCurrentChannelName());
+                        RuntimeContext.getCurrentApplication().broadcastEvent(presentingEvent);
+                        break;
                     }
                 };
 
@@ -94,6 +99,13 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 tvPlugin.SetEvent(PL_TV_EVENT_SOURCE_CHANGED);
 
                 this._setBroadcastToFullScreen();
+            },
+            /**
+             * Indicates the current state of the broadcast source
+             * @returns {antie.devices.broadcastsources.BaseTvSource.STATE} current state of the broadcast source
+             */
+            getState : function() {
+                return this.playState;
             },
             /**
              * Sets the current source to TV broadcast
@@ -120,43 +132,36 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
                 }
                 return channelName;
             },
-            getCurrentChannel : function() {
-                try {
-                    var mapleChannel = webapis.tv.channel.getCurrentChannel();
-                    return this._createChannelFromMapleChannel(mapleChannel);
+            getChannelNameList: function (params) {
 
-                } catch (e) {
-                    return false;
-                }
+                this._getChannelList( {
+                    onSuccess : function(mapleChannels) {
+                        var result = [];
+                        for (var i = 0; i < mapleChannels.length; i++) {
+                            result.push(mapleChannels[i].channelName);
+                        }
+                        params.onSuccess(result);
+                    },
+                    onError: params.onError
+                });
             },
-            getChannelList: function (params) {
-
-                var self = this;
-
-                var createChannelList = function(mapleChannels) {
-                    var result = [];
-                    for (var i = 0; i < mapleChannels.length; i++) {
-                        result.push(self._createChannelFromMapleChannel(mapleChannels[i]));
-                    }
-                    params.onSuccess(result);
-                };
-
+            _getChannelList: function (params) {
                 try {
                     var onFailedToRetrieveChannelList = function () {
                         params.onError({
-                            name : "ChannelListError",
-                            message : "Channel list is not available"
+                            name : 'ChannelListError',
+                            message : 'Channel list is not available'
                         });
                     };
 
-                    webapis.tv.channel.getChannelList(createChannelList, onFailedToRetrieveChannelList,
-                                                        webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
+                    webapis.tv.channel.getChannelList(params.onSuccess, onFailedToRetrieveChannelList,
+                                                      webapis.tv.channel.NAVIGATOR_MODE_ALL, 0, 1000000);
 
                 } catch (error) {
 
                     params.onError({
-                        name : "ChannelListError",
-                        message : "Channel list is empty or not available"
+                        name : 'ChannelListError',
+                        message : 'Channel list is empty or not available'
                     });
                 }
             },
@@ -178,63 +183,40 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             destroy : function() {
                 this.setPosition(0, -1, 0, 0);
             },
-            setChannel : function(params) {
-                this._tuneChannelByTriplet(params);
-            },
+
             setChannelByName : function(params) {
-                var currentChannel = this.getCurrentChannel();
-                if (!currentChannel) {
-                    params.onError({
-                        name : "ChannelError",
-                        message: "Unable to determine current channel name"
-                    });
-
-                } else if (currentChannel.name === params.channelName) {
-                    this.showCurrentChannel();
-                    params.onSuccess();
-
-                } else {
-
-                    this._tuneToChannelMatchingSpec({
-                            spec: { name: params.channelName },
+                try {
+                    var currentChannelName = this.getCurrentChannelName();
+                    if (currentChannelName === params.channelName) {
+                        this.showCurrentChannel();
+                        params.onSuccess();
+                    } else {
+                        this._tuneToChannelByName({
+                            name: params.channelName,
                             onError: params.onError,
                             onSuccess: params.onSuccess
-                        }
-                    );
+                        });
+                    }
+                } catch(error) {
+                    params.onError({
+                        name : 'ChannelError',
+                        message: 'Unable to determine current channel name'
+                    });
                 }
+
             },
             _setBroadcastToFullScreen : function() {
                 var currentLayout = RuntimeContext.getCurrentApplication().getLayout().requiredScreenSize;
                 this.setPosition(0, 0, currentLayout.width, currentLayout.height);
             },
-            /**
-             * @see http://img-developer.samsung.com/onlinedocs/samsung_webapi_guide/html/index.html
-             */
-            _tuneChannelByTriplet : function(params) {
 
-                this._tuneToChannelMatchingSpec({
-                    spec: {
-                        // FIXME: ONID is always reported as 65535, so we exclude it from the check in order
-                        // to prevent tuning information passed in (e.g. from MHEG) from causing the match
-                        // to fail.
-                        tsid: params.tsid,
-                        sid: params.sid
-                        },
-                    onError: params.onError,
-                    onSuccess: params.onSuccess
-                });
-
-            },
-            _tuneToChannelMatchingSpec : function (params) {
-
+            _tuneToChannelByName : function (params) {
                 var self = this;
-
                 var onChannelListRetrieved = function (channels) {
-
                     var channel;
 
                     for (var i = 0; i < channels.length; i++) {
-                        if (self._channelMatchesSpec(channels[i], params.spec)) {
+                        if (channels[i].channelName === params.name) {
                             channel = channels[i];
                             break;
                         }
@@ -249,32 +231,18 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
 
                     } else {
                         params.onError({
-                            name : "ChannelError",
-                            message : "Channel could not be found"
+                            name : 'ChannelError',
+                            message : 'Channel could not be found'
                         });
                     }
                 };
 
-                this.getChannelList({
+                this._getChannelList({
                     onError: params.onError,
                     onSuccess: onChannelListRetrieved
                 });
             },
-            _channelMatchesSpec: function(channel, spec) {
-                var result = true;
-                for (var prop in spec) {
-                    if (!spec.hasOwnProperty(prop)) {
-                        // Don't match on inherited properties (e.g. length)
-                        continue;
-                    }
-                    if (channel[prop] !== spec[prop]) {
-                        // Spec not matched
-                        result = false;
-                        break;
-                    }
-                }
-                return result;
-            },
+
             /**
              * @param params.channel Channel object
              * @param params.onError Function to call with a string message on error.
@@ -284,51 +252,31 @@ require.def('antie/devices/broadcastsource/samsungtvsource',
             _tuneToChannel: function(params) {
 
                 var channel = params.channel;
-
-                var newChannelArgs = {
-                    sourceID: channel.sourceId,
-                    programNumber: channel.sid,
-                    transportStreamID: channel.tsid,
-                    originalNetworkID: channel.onid,
-                    ptc: channel.ptc,
-                    major: channel.major,
-                    minor: channel.minor
-                };
-
                 try {
                     var tuneError = function () {
                         params.onError({
-                            name : "ChangeChannelError",
-                            message : "Error tuning channel"
+                            name : 'ChangeChannelError',
+                            message : 'Error tuning channel'
                         });
                     };
 
                     // Last argument is the Window ID.
                     // See http://www.samsungdforum.com/Guide/ref00008/tvchannel/dtv_tvchannel_module.html
-                    webapis.tv.channel.tune(newChannelArgs, params.onSuccess, tuneError, 0);
+                    webapis.tv.channel.tune(channel, params.onSuccess, tuneError, 0);
 
                 } catch (e) {
                     params.onError({
-                        name : "ChangeChannelError",
-                        message : "Error tuning channel"
+                        name : 'ChangeChannelError',
+                        message : 'Error tuning channel'
                     });
                 }
-
-            },
-            _createChannelFromMapleChannel: function (mapleChannel) {
-                return new Channel({
-                    name: mapleChannel.channelName,
-                    onid: mapleChannel.originalNetworkID,
-                    tsid: mapleChannel.transportStreamID,
-                    sid: mapleChannel.programNumber,
-                    idType: undefined,
-                    ptc: mapleChannel.ptc,
-                    major: mapleChannel.major,
-                    minor: mapleChannel.minor,
-                    sourceId: mapleChannel.sourceID
-                });
             }
+
         });
+
+        Device.prototype.isBroadcastSourceSupported = function() {
+            return true;
+        };
 
         /**
          * Create a new widget giving control over broadcast television. Check whether

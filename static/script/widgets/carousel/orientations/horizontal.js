@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/orientations/horizontal',
+require.def(
+    'antie/widgets/carousel/orientations/horizontal',
     [
         'antie/class',
         'antie/events/keyevent'
@@ -33,7 +34,7 @@ require.def('antie/widgets/carousel/orientations/horizontal',
      * @class
      */
     function (Class, KeyEvent) {
-        "use strict";
+        'use strict';
         var Horizontal = Class.extend(/** @lends antie.widgets.carousel.orientations.Horizontal.prototype */ {
             dimension: function () {
                 return 'width';

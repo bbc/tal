@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/initstate',
+require.def(
+    'antie/widgets/carousel/strips/utility/initstate',
     [
         'antie/widgets/carousel/strips/utility/state'
     ],
@@ -42,7 +43,7 @@ require.def('antie/widgets/carousel/strips/utility/initstate',
                 this._attach(context, parent, widget, 'prependChildElement');
             },
 
-            detach: function (context, widget) {
+            detach: function (/*context, widget*/) {
             },
 
             hasLength: function () {

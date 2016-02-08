@@ -1,3 +1,5 @@
+sudo: false
+cache: node_modules
 language: node_js
 node_js:
  - "0.10"

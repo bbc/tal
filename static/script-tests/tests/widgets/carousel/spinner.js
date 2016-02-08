@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.SpinnerTest = AsyncTestCase("Spinner");
+    this.SpinnerTest = AsyncTestCase('Spinner'); //jshint ignore:line
 
     this.SpinnerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -36,7 +36,7 @@
     this.SpinnerTest.prototype.testMoveContentsToCallsMoveToOnWidgetStripElement = function (queue) {
         queuedRequire(queue,
             [
-                "antie/widgets/carousel/spinner",
+                'antie/widgets/carousel/spinner',
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (Spinner, verticalOrientation) {
@@ -65,7 +65,7 @@
 
     this.SpinnerTest.prototype.testMoveContentsToUsesPassedInOptions = function (queue) {
         queuedRequire(queue,
-            [   "antie/widgets/carousel/spinner",
+            [   'antie/widgets/carousel/spinner',
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (Spinner, verticalOrientation) {
@@ -73,7 +73,7 @@
 
                 animOptions = {
                     onComplete: this.sandbox.stub(),
-                    skipAnim: "test"
+                    skipAnim: 'test'
                 };
 
                 dummyElement = {dummy: 'element'};
@@ -94,15 +94,17 @@
     this.SpinnerTest.prototype.testMoveContentsToGetsEdgeFromOrientation = function (queue) {
         queuedRequire(queue,
             [
-                "antie/widgets/carousel/spinner",
+                'antie/widgets/carousel/spinner',
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (Spinner, verticalOrientation) {
-                var device, animOptions, mask, spinner, dummyStrip, dummyElement, moveArgs;
+                var device, animOptions, mask, spinner, dummyStrip, dummyElement;
 
                 animOptions = {
-                    onComplete: function () { return true; },
-                    skipAnim: "test"
+                    onComplete: function () {
+                        return true;
+                    },
+                    skipAnim: 'test'
                 };
 
                 dummyElement = {dummy: 'element'};
@@ -132,17 +134,17 @@
             function (application, Spinner, Mask, verticalOrientation) {
                 var device, spinner;
                 device = application.getDevice();
-                this.sandbox.stub(device, 'moveElementTo').returns("test");
+                this.sandbox.stub(device, 'moveElementTo').returns('test');
                 device.stopAnimation = this.sandbox.stub();
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10, {});
-                assertFalse("stopAnimation called after first move", device.stopAnimation.called);
+                assertFalse('stopAnimation called after first move', device.stopAnimation.called);
                 spinner.moveContentsTo(20, {});
-                assertTrue("stopAnimation called after second move", device.stopAnimation.called);
-                assertEquals("stopAnimation called with first move handle after second move",
-                    "test",
+                assertTrue('stopAnimation called after second move', device.stopAnimation.called);
+                assertEquals('stopAnimation called with first move handle after second move',
+                    'test',
                     device.stopAnimation.getCall(0).args[0]);
             }
         );
@@ -163,11 +165,11 @@
                 this.sandbox.stub(device, 'moveElementTo').yieldsTo('onComplete');
                 device.stopAnimation = this.sandbox.stub();
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10, {});
                 spinner.moveContentsTo(20, {});
-                assertFalse("stopAnimation called after second move",
+                assertFalse('stopAnimation called after second move',
                     device.stopAnimation.called);
             }
         );
@@ -191,14 +193,14 @@
 
                 device = application.getDevice();
                 this.sandbox.stub(device, 'moveElementTo').yieldsTo('onComplete');
-                device.moveElementTo.returns("test");
+                device.moveElementTo.returns('test');
                 stopStub = this.sandbox.stub(device, 'stopAnimation');
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10, { onComplete: chain });
-                assertTrue("chained move executed", device.moveElementTo.calledTwice);
-                assertFalse("stopAnimation called after chained move",
+                assertTrue('chained move executed', device.moveElementTo.calledTwice);
+                assertFalse('stopAnimation called after chained move',
                     stopStub.called);
             }
         );
@@ -214,19 +216,19 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, stopStub;
+                var device, spinner;
 
                 device = application.getDevice();
                 this.sandbox.stub(device);
-                device.moveElementTo.returns("test");
+                device.moveElementTo.returns('test');
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10);
 
-                assertFalse("device stopAnimation called before stopAnimation", device.stopAnimation.calledOnce);
+                assertFalse('device stopAnimation called before stopAnimation', device.stopAnimation.calledOnce);
                 spinner.stopAnimation();
-                assertTrue("device stopAnimation called on stopAnimation", device.stopAnimation.calledOnce);
+                assertTrue('device stopAnimation called on stopAnimation', device.stopAnimation.calledOnce);
             }
         );
     };
@@ -241,16 +243,16 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, stopStub;
+                var device, spinner;
 
                 device = application.getDevice();
                 this.sandbox.stub(device);
-                device.moveElementTo.returns("test");
+                device.moveElementTo.returns('test');
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.stopAnimation();
-                assertFalse("device stopAnimation called when no animation in progress", device.stopAnimation.calledOnce);
+                assertFalse('device stopAnimation called when no animation in progress', device.stopAnimation.calledOnce);
             }
         );
     };
@@ -267,22 +269,22 @@
             function (application, Spinner, Mask, verticalOrientation) {
                 var device, spinner, options;
                 options = {
-                    duration: "test1",
-                    fps: "test2",
-                    easing: "test3",
-                    skipAnim: "test4"
+                    duration: 'test1',
+                    fps: 'test2',
+                    easing: 'test3',
+                    skipAnim: 'test4'
                 };
                 device = application.getDevice();
                 this.sandbox.stub(device);
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10, options);
 
-                assertEquals("Passed in duration used", "test1", device.moveElementTo.firstCall.args[0].duration);
-                assertEquals("Passed in fps used", "test2", device.moveElementTo.firstCall.args[0].fps);
-                assertEquals("Passed in easing used", "test3", device.moveElementTo.firstCall.args[0].easing);
-                assertEquals("Passed in skipAnim used", "test4", device.moveElementTo.firstCall.args[0].skipAnim);
+                assertEquals('Passed in duration used', 'test1', device.moveElementTo.firstCall.args[0].duration);
+                assertEquals('Passed in fps used', 'test2', device.moveElementTo.firstCall.args[0].fps);
+                assertEquals('Passed in easing used', 'test3', device.moveElementTo.firstCall.args[0].easing);
+                assertEquals('Passed in skipAnim used', 'test4', device.moveElementTo.firstCall.args[0].skipAnim);
             }
         );
     };
@@ -297,14 +299,14 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, options;
+                var device, spinner;
                 device = application.getDevice();
                 this.sandbox.stub(device);
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10);
-                assertEquals("Skipanim true", true, device.moveElementTo.firstCall.args[0].skipAnim);
+                assertEquals('Skipanim true', true, device.moveElementTo.firstCall.args[0].skipAnim);
             }
         );
     };
@@ -319,14 +321,14 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Spinner, Mask, verticalOrientation) {
-                var device, spinner, options;
+                var device, spinner;
                 device = application.getDevice();
                 this.sandbox.stub(device);
                 this.sandbox.stub(Mask.prototype);
-                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
                 spinner = new Spinner(device, new Mask(), verticalOrientation);
                 spinner.moveContentsTo(10, {skipAnim: false});
-                assertEquals("Skipanim overriden to false", false, device.moveElementTo.firstCall.args[0].skipAnim);
+                assertEquals('Skipanim overriden to false', false, device.moveElementTo.firstCall.args[0].skipAnim);
             }
         );
     };
@@ -348,7 +350,7 @@
 //                device = application.getDevice();
 //                this.sandbox.stub(device);
 //                this.sandbox.stub(Mask.prototype);
-//                Mask.prototype.getWidgetStrip.returns({outputElement: "test"});
+//                Mask.prototype.getWidgetStrip.returns({outputElement: 'test'});
 //                device.moveElementTo.returns(null);
 //                spinner = new Spinner(device, new Mask(), verticalOrientation);
 //                spinner.moveContentsTo(10, {skipAnim: false});

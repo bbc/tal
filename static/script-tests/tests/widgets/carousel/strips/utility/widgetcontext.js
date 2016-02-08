@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WidgetContextTest = AsyncTestCase("WidgetContext");
+    this.WidgetContextTest = AsyncTestCase('WidgetContext'); //jshint ignore:line
 
     this.WidgetContextTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,8 +34,9 @@
     };
 
     this.WidgetContextTest.prototype.testStateINITOnInit = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -51,8 +52,9 @@
     };
 
     this.WidgetContextTest.prototype.testAppendCalledOnNewStateAfterSetState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -69,8 +71,9 @@
     };
 
     this.WidgetContextTest.prototype.testAppendPassedParentAndWidgetContextInitialisedWith = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -94,8 +97,9 @@
     };
 
     this.WidgetContextTest.prototype.testPrependPassedParentAndWidgetContextInitialisedWith = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -119,8 +123,9 @@
     };
 
     this.WidgetContextTest.prototype.testDetatchPassedWidgetContextInitialisedWith = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -143,8 +148,9 @@
     };
 
     this.WidgetContextTest.prototype.testAttachedReturnsValueFromState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',
@@ -156,16 +162,17 @@
                 var widget = new Widget();
                 var parent = new Widget();
                 var context = createContextInState(self, WidgetContext, States, stateName, widget, parent);
-                States[stateName].prototype.hasLength.returns("boo");
+                States[stateName].prototype.hasLength.returns('boo');
                 var attached = context.hasLength();
-                assertEquals('value from state returned on hasLength', "boo", attached);
+                assertEquals('value from state returned on hasLength', 'boo', attached);
             }
         );
     };
 
     this.WidgetContextTest.prototype.testStateInititalisedOnStateChange = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/widgetcontext',

@@ -32,10 +32,10 @@ require.def(
         'antie/devices/anim/css3/existingtransitiondefinition',
         'antie/devices/anim/css3/skipanimtransitiondefinition'
     ],
-    
+
     function(Class, TransitionElement, ExisitingTransitionDefinition, SkipAnimTransitionDefinition) {
-        "use strict";
-        
+        'use strict';
+
         return Class.extend(
             {
                 /*
@@ -46,34 +46,34 @@ require.def(
                  */
                 init: function(transDef, endPoints, element) {
                     var combinedTransitions, shouldSkip;
-                    
+
                     this._endPoints = endPoints;
                     this._completed = false;
                     this._transEl = new TransitionElement(element);
                     this._ownTransitions = transDef;
                     this._endFn = this._genTransEndFn();
-                    
+
                     shouldSkip = this._isTransitionInstant();
-                    
+
                     if(shouldSkip) {
                         this._ownTransitions = new SkipAnimTransitionDefinition(this._ownTransitions);
                     }
-                    
+
                     combinedTransitions = new ExisitingTransitionDefinition(this._transEl);
                     combinedTransitions.addIn(this._ownTransitions);
-                    
-                    this._setInitialValues(); 
+
+                    this._setInitialValues();
                     this._forceUpdate();
-                    this._transEl.applyDefinition(combinedTransitions);               
+                    this._transEl.applyDefinition(combinedTransitions);
                     this._transEl.setCallback(this._endFn);
                     this._forceUpdate();
                     this._doTransition();
-                    
+
                     if(shouldSkip) {
                         this.stop(true);
                     }
                 },
-                
+
                 stop: function(skipToEnd) {
                     var currentStyle, currentProps, transitionTargets, prop, i, skip;
                     if(!this._completed) {
@@ -87,26 +87,26 @@ require.def(
                             transitionTargets = this._ownTransitions.getProperties();
                             currentStyle = this._transEl.getComputedStyle();
                             currentProps = {};
-                            
+
                             for(i = 0; i !== transitionTargets.length; i += 1) {
                                 prop = transitionTargets[i];
                                 currentProps[prop] = currentStyle[prop] || 0;
                             }
-                            
+
                             this._endFn();
                             this._forceUpdate();
-                            
+
                             for(i = 0; i !== transitionTargets.length; i += 1) {
                                 this._transEl.setStylePropertyValue(prop, currentProps[prop]);
                             }
                         }
                     }
-                },           
-                
+                },
+
                 _setInitialValues: function() {
                     var properties, origin, i, prop;
                     properties = this._endPoints.getProperties();
-                    
+
                     for(i = 0; i !== properties.length; i += 1) {
                         prop = properties[i];
                         origin = this._endPoints.getPropertyOrigin(prop);
@@ -116,7 +116,7 @@ require.def(
                         this._transEl.setStylePropertyValue(prop, origin);
                     }
                 },
-                
+
                 /* forces re-calc of style */
                 _forceUpdate: function() {
                     var transitionTargets;
@@ -125,15 +125,15 @@ require.def(
                         this._transEl.forceUpdate(transitionTargets[0]);
                     }
                 },
-                
+
                 _genTransEndFn: function() {
                     var self;
                     self = this;
                     function endFn(evt) {
                         var resetTransitions;
-                        
+
                         // check either called directly or event is firing for property on this transition
-                        
+
                         if(!evt || (self._transEl.isEventTarget(evt) && self._ownTransitions.hasProperty(evt.propertyName))){
                             self._completed = true;
                             self._transEl.removeCallback(endFn);
@@ -141,20 +141,20 @@ require.def(
                             resetTransitions = new ExisitingTransitionDefinition(self._transEl);
                             resetTransitions.takeOut(self._ownTransitions);
                             self._transEl.applyDefinition(resetTransitions);
-                            
+
                             if(typeof self._endPoints.getOnCompleteCallback() === 'function') {
                                 self._endPoints.getOnCompleteCallback()();
-                            } 
-                            
-                            //device.removeClassFromElement(device.getTopLevelElement(), "animating");
-                            //device.addClassToElement(device.getTopLevelElement(), "notanimating");
-                            //device.removeClassFromElement(element, "transition");
+                            }
+
+                            //device.removeClassFromElement(device.getTopLevelElement(), 'animating');
+                            //device.addClassToElement(device.getTopLevelElement(), 'notanimating');
+                            //device.removeClassFromElement(element, 'transition');
                         }
-                        
+
                     }
                     return endFn;
                 },
-                
+
                 _doTransition: function() {
                     var prop, destination, properties, i;
                     properties = this._endPoints.getProperties();
@@ -164,23 +164,23 @@ require.def(
                         this._transEl.setStylePropertyValue(prop, destination);
                     }
                 },
-                
+
                 _isTransitionInstant: function() {
                     var instant = this._ownTransitions.areAllDurationsZero();
                     instant = instant || this._endPoints.shouldSkip();
                     instant = instant || this._isThereNoChange();
                     return instant;
                 },
-                
+
                 _isThereNoChange: function() {
                     var targetProperties, prop, i, changed, self;
-                    
+
                     function targetDifferentToCurrent(prop) {
                         var current;
                         current = self._transEl.getStylePropertyValue(prop);
                         return (self._endPoints.getPropertyDestination(prop) !== current);
                     }
-                    
+
                     self = this;
                     changed = false;
                     targetProperties = this._endPoints.getProperties();
@@ -188,7 +188,7 @@ require.def(
                         prop = targetProperties[i];
                         changed = changed || targetDifferentToCurrent(prop);
                     }
-                    
+
                     return !changed;
                 }
             }

@@ -24,7 +24,7 @@
 
 (function () {
     /* jshint newcap: false, strict: false */
-    this.WrappingNavigatorTest = AsyncTestCase("WrappingNavigator");
+    this.WrappingNavigatorTest = AsyncTestCase('WrappingNavigator'); //jshint ignore:line
 
     this.WrappingNavigatorTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -38,8 +38,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testNextIndexReturnsOneWithTwoItemsAndActiveIndexZero(WrappingNavigator, this.sandbox);
@@ -51,8 +51,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testPreviousIndexReturnsZeroWithTwoItemsAndActiveIndexOne(WrappingNavigator, this.sandbox);
@@ -64,8 +64,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testGetIndexReturnsIndexOfContainerActiveWidget(WrappingNavigator, this.sandbox);
@@ -77,8 +77,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSetContainerUpdatesContainer(WrappingNavigator);
@@ -90,8 +90,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSetContainerCalledDuringInit(WrappingNavigator, this.sandbox);
@@ -103,8 +103,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testNextIndexSkipsDisabledWidget(WrappingNavigator, this.sandbox);
@@ -116,8 +116,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testPreviousIndexSkipsDisabledWidget(WrappingNavigator, this.sandbox);
@@ -129,8 +129,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testNextIndexReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
@@ -142,8 +142,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testPreviousIndexReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
@@ -155,8 +155,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSetIndexActivatesValidIndexOfActivatableWidget(WrappingNavigator, this.sandbox);
@@ -168,8 +168,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSetIndexOnInvalidIndexDoesNotChangeActivation(WrappingNavigator, this.sandbox);
@@ -181,8 +181,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSetIndexOnIndexOfDisabledWidgetDoesNotChangeActivation(WrappingNavigator, this.sandbox);
@@ -194,8 +194,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexCountItemCountOfContainer(WrappingNavigator, this.sandbox);
@@ -207,8 +207,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSelectedItemChangedEventFiredWhenIndexSetSuccessfully(WrappingNavigator, this.sandbox);
@@ -220,8 +220,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testSelectedItemChangedEventNotFiredWhenIndexNotSetSuccessfully(WrappingNavigator, this.sandbox);
@@ -233,8 +233,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexAfterZeroWithFocussableNextWidget(WrappingNavigator, this.sandbox);
@@ -246,8 +246,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexBeforeOneWithFocussableIndexZero(WrappingNavigator, this.sandbox);
@@ -259,8 +259,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexAfterSkipsDisabledWidget(WrappingNavigator, this.sandbox);
@@ -272,8 +272,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexBeforeSkipsDisabledWidget(WrappingNavigator, this.sandbox);
@@ -285,8 +285,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexAfterReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
@@ -298,8 +298,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testIndexBeforeReturnsNullWhenAllOtherWidgetsDisabled(WrappingNavigator, this.sandbox);
@@ -311,8 +311,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testBeforeSelectedItemChangedEventFiredBeforeIndexSetSuccessfully(WrappingNavigator, this.sandbox);
@@ -324,8 +324,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, NavHelper) {
                 NavHelper.testGetIndexReturnsNullWithEmptyWidget(WrappingNavigator, this.sandbox);
@@ -337,10 +337,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button;
@@ -361,10 +361,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button;
@@ -385,10 +385,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button, disabledButton;
@@ -410,10 +410,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button, disabledButton;
@@ -433,10 +433,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button, disabledButton;
@@ -456,10 +456,10 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/navigators/wrappingnavigator",
-                "antie/widgets/container",
-                "antie/widgets/button",
-                "tests/widgets/navigators/testhelpers/navigator"
+                'antie/widgets/carousel/navigators/wrappingnavigator',
+                'antie/widgets/container',
+                'antie/widgets/button',
+                'tests/widgets/navigators/testhelpers/navigator'
             ],
             function (application, WrappingNavigator, Container, Button, NavHelper) {
                 var container, navigator, button, disabledButton;
@@ -477,4 +477,3 @@
 
 
 }());
-

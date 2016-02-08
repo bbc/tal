@@ -22,11 +22,11 @@ var unloadRequire;
 	require.load = function(moduleName, contextName) {
 		var module = requireModules[moduleName];
 		if(module) {
-			require.s.contexts["_"].specified[moduleName] = true;
-			require.s.contexts["_"].loaded[moduleName] = false;
+			require.s.contexts._.specified[moduleName] = true;
+			require.s.contexts._.loaded[moduleName] = false;
 			setTimeout(function() {
 				require.def.apply(require, module);
-				require.completeLoad(moduleName, require.s.contexts["_"]);
+				require.completeLoad(moduleName, require.s.contexts._);
 			}, 0);
 			return;
 		}
@@ -35,20 +35,21 @@ var unloadRequire;
 
 	unloadRequire = function() {
 		for(var name in requireModules) {
-			var module = requireModules[name];
+            if(requireModules.hasOwnProperty(name)) {
 
-			//Allow for anonymous functions
-			if (typeof name === 'string') {
-				delete require.s.contexts["_"].specified[name];
-				delete require.s.contexts["_"].defined[name];
-				delete require.s.contexts["_"].loaded[name];
-			}
+                //Allow for anonymous functions
+                if (typeof name === 'string') {
+                    delete require.s.contexts._.specified[name];
+                    delete require.s.contexts._.defined[name];
+                    delete require.s.contexts._.loaded[name];
+                }
+            }
 		}
 	};
 })();
 
 
-TestCase = function (description, testSuiteClass) {
+var TestCase = function (description, testSuiteClass) {
     var testFns = {};
     var setup;
     var tearDown;
@@ -56,16 +57,18 @@ TestCase = function (description, testSuiteClass) {
     window.additionalTestFns[description] = otherFns;
 
     for (var propertyName in testSuiteClass) {
-        var fn = testSuiteClass[propertyName];
+        if(testSuiteClass.hasOwnProperty(propertyName)) {
+            var fn = testSuiteClass[propertyName];
 
-        if (propertyName.indexOf("test") === 0) {
-            testFns[propertyName] = fn;
-        } else if (propertyName === "setUp") {
-            setup = fn;
-        } else if (propertyName === "tearDown") {
-            tearDown = fn;
-        } else {
-            otherFns[propertyName] = fn;
+            if (propertyName.indexOf("test") === 0) {
+                testFns[propertyName] = fn;
+            } else if (propertyName === "setUp") {
+                setup = fn;
+            } else if (propertyName === "tearDown") {
+                tearDown = fn;
+            } else {
+                otherFns[propertyName] = fn;
+            }
         }
     }
 
@@ -75,7 +78,9 @@ TestCase = function (description, testSuiteClass) {
         }
 
         for (var testName in testFns) {
-            it (testName, testFns[testName]);
+            if(testFns.hasOwnProperty(testName)) {
+                it (testName, testFns[testName]);
+            }
         }
 
         var unloadRequireAndTearDown = function () {
@@ -98,7 +103,7 @@ testCase = TestCase;
 window.testSuites = {};
 
 AsyncTestCase = function (testSuiteName) {
-    var testSuite = new Object();
+    var testSuite = {};
     testSuite.prototype = {};
 
     window.testSuites[testSuiteName] = testSuite;
@@ -108,53 +113,59 @@ AsyncTestCase = function (testSuiteName) {
 
 registerTestsWithJasmine = function () {
     for (var testSuiteName in window.testSuites) {
-        var testSuiteClass = window.testSuites[testSuiteName];
+        if(window.testSuites.hasOwnProperty(testSuiteName)) {
+            var testSuiteClass = window.testSuites[testSuiteName];
 
-        var testFns = {};
-        var setup;
-        var tearDown;
+            var testFns = {};
+            var setup;
+            var tearDown;
 
-        for (var propertyName in testSuiteClass.prototype) {
-            var fn = testSuiteClass.prototype[propertyName];
+            for (var propertyName in testSuiteClass.prototype) {
+                if(testSuiteClass.prototype.hasOwnProperty(propertyName)) {
+                    var fn = testSuiteClass.prototype[propertyName];
 
-            if (propertyName.indexOf("test") === 0) {
-                testFns[propertyName] = fn;
-            } else if (propertyName === "setUp") {
-                setup = fn;
-            } else if (propertyName === "tearDown") {
-                tearDown = fn;
+                    if (propertyName.indexOf("test") === 0) {
+                        testFns[propertyName] = fn;
+                    } else if (propertyName === "setUp") {
+                        setup = fn;
+                    } else if (propertyName === "tearDown") {
+                        tearDown = fn;
+                    }
+                }
             }
+
+            var specDefinition = function () {
+                if (setup) {
+                    beforeEach(setup);
+                }
+
+                for (var testName in testFns) {
+                    if(testFns.hasOwnProperty(testName)) {
+                        it (testName, createRunAsyncTestFunction(testFns[testName]));
+                    }
+                }
+
+                if (tearDown) {
+                    afterEach(tearDown);
+                }
+
+                afterEach(function () {
+                    if(window.fakeApplication) {
+                        window.fakeApplication.destroy();
+                        window.fakeApplication = null;
+                    }
+                    var div = document.getElementById("rootWidget");
+                    if (div) {
+                        div.parentNode.removeChild(div);
+                    }
+                    unloadRequire();
+                    validateExpectAsserts.call(this);
+                });
+            };
+
+            describe(testSuiteName, specDefinition);
         }
 
-        var specDefinition = function () {
-            if (setup) {
-                beforeEach(setup);
-            }
-
-            for (var testName in testFns) {
-
-                it (testName, createRunAsyncTestFunction(testFns[testName]));
-            }
-
-            if (tearDown) {
-                afterEach(tearDown);
-            }
-
-            afterEach(function () {
-                if(window.fakeApplication) {
-                    window.fakeApplication.destroy();
-                    window.fakeApplication = null;
-                }
-                var div = document.getElementById("rootWidget");
-                if (div) {
-                    div.parentNode.removeChild(div);
-                }
-                unloadRequire();
-                validateExpectAsserts.call(this);
-            });
-        };
-
-        describe(testSuiteName, specDefinition);
     }
 };
 
@@ -229,9 +240,11 @@ jasmine.Block.prototype.execute = function(onComplete) {
 
     window.jasmineTestThisContext = this.spec;
 
-    for (fnName in otherFns) {
-        if (!(fnName in this.spec)) {
-            this.spec[fnName] = otherFns[fnName];
+    for (var fnName in otherFns) {
+        if(otherFns.hasOwnProperty(fnName)) {
+            if (!(fnName in this.spec)) {
+                this.spec[fnName] = otherFns[fnName];
+            }
         }
     }
 
@@ -274,7 +287,7 @@ assertEquals = function (msg, thing1, thing2) {
     if (arguments.length < 3) {
         thing2 = thing1;
         thing1 = msg;
-    };
+    }
     expect(thing2).toEqual(thing1);
 };
 
@@ -282,7 +295,7 @@ assertNotEquals = function (msg, thing1, thing2) {
     if (arguments.length < 3) {
         thing2 = thing1;
         thing1 = msg;
-    };
+    }
     expect(thing2).not.toEqual(thing1);
 };
 
@@ -290,7 +303,7 @@ assertSame = function (msg, thing1, thing2) {
     if (arguments.length < 3) {
         thing2 = thing1;
         thing1 = msg;
-    };
+    }
     expect(thing2).toBe(thing1);
 };
 
@@ -298,7 +311,7 @@ assertNotSame = function (msg, thing1, thing2) {
     if (arguments.length < 3) {
         thing2 = thing1;
         thing1 = msg;
-    };
+    }
     expect(thing2).not.toBe(thing1);
 };
 
@@ -320,7 +333,7 @@ assertInstanceOf = function (msg, clazz, thing) {
     if (arguments.length < 3) {
         thing = clazz;
         clazz = msg;
-    };
+    }
     expect(thing instanceof clazz).toBe(true);
 };
 
@@ -411,10 +424,10 @@ assertBoolean = function (msg, thing) {
 jstestdriver = {
     console: {
         log: function( msg ){
-            console.log( msg )
+            console.log( msg );
         },
         warn: function(msg) {
-            console.warn(msg)
+            console.warn(msg);
         },
         error: function(msg) {
             console.error(msg);

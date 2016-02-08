@@ -26,24 +26,24 @@
 
 // equivalent of logging to >dev/null
 require.def(
-	'antie/devices/logging/consumelog',
-	[
-		'module', 'antie/devices/device'
-	],
-	function( Module, Device ) 
-	{
-		'use strict';
+    'antie/devices/logging/consumelog',
+    [
+        'module',
+        'antie/devices/device'
+    ],
+    function( Module, Device ) {
+        'use strict';
 
-		function ignore() {}
+        function ignore() {}
 
-		var loggingMethods = {
-			log: ignore,
-			debug: ignore,
-			info: ignore,
-			warn: ignore,
-			error: ignore
-		};
-		
-		Device.addLoggingStrategy( Module.id, loggingMethods );
-	}
+        var loggingMethods = {
+            log: ignore,
+            debug: ignore,
+            info: ignore,
+            warn: ignore,
+            error: ignore
+        };
+
+        Device.addLoggingStrategy(Module.id, loggingMethods);
+    }
 );

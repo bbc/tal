@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/orientations/vertical',
+require.def(
+    'antie/widgets/carousel/orientations/vertical',
     [
         'antie/class',
         'antie/events/keyevent'
@@ -33,7 +34,7 @@ require.def('antie/widgets/carousel/orientations/vertical',
      * @class
      */
     function (Class, KeyEvent) {
-        "use strict";
+        'use strict';
         var Vertical = Class.extend(/** @lends antie.widgets.carousel.orientations.Vertical.prototype */{
             dimension: function () {
                 return 'height';

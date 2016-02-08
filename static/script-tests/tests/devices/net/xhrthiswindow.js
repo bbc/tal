@@ -23,10 +23,10 @@
  */
 
 (function() {
-	this.XHRThisWindowNetworkTest = AsyncTestCase("Network (xhrthiswindow)");
+    this.XHRThisWindowNetworkTest = AsyncTestCase('Network (xhrthiswindow)'); //jshint ignore:line
 
-	this.XHRThisWindowNetworkTest.prototype.setUp = function() {
-		this.sandbox = sinon.sandbox.create();
+    this.XHRThisWindowNetworkTest.prototype.setUp = function() {
+        this.sandbox = sinon.sandbox.create();
         this.xhr = sinon.useFakeXMLHttpRequest();
 
         var requests = [];
@@ -35,116 +35,46 @@
         this.xhr.onCreate = function (xhr) {
             requests.push(xhr);
         };
-	};
-
-	this.XHRThisWindowNetworkTest.prototype.tearDown = function() {
-		this.sandbox.restore();
-        this.xhr.restore();
-	};
-
-	// make sure test hangs in there until after timeouts and responses have all completed
-	this.XHRThisWindowNetworkTest.prototype.waitFor = function(callbacks, timeInMillis) {
-		var notify = callbacks.add(function() { }, config);
-		setTimeout(notify, timeInMillis);
-	};
-
-    var config = {
-        "modules": {
-            "base": "antie/devices/browserdevice",
-            "modifiers": [
-                "antie/devices/net/default",
-                "antie/devices/net/xhrthiswindow",
-                "antie/devices/data/json2"
-            ]
-        },
-        "input": {
-            "map": {}
-        },
-        "layouts": [
-            {
-                "width": 960,
-                "height": 540,
-                "module": "fixtures/layouts/default",
-                "classes": ["browserdevice540p"]
-            }
-        ],
-        "deviceConfigurationKey": "devices-html5-1"
     };
 
-	this.XHRThisWindowNetworkTest.prototype.testLoadAuthenticatedURL = function(queue) {
-		expectAsserts(4);
+    this.XHRThisWindowNetworkTest.prototype.tearDown = function() {
+        this.sandbox.restore();
+        this.xhr.restore();
+    };
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+    // make sure test hangs in there until after timeouts and responses have all completed
+    this.XHRThisWindowNetworkTest.prototype.waitFor = function(callbacks, timeInMillis) {
+        var notify = callbacks.add(function() { }, config);
+        setTimeout(notify, timeInMillis);
+    };
 
-            var opts = {
-                onLoad: this.sandbox.stub(),
-                onError: this.sandbox.stub()
-            };
+    var config = {
+        'modules': {
+            'base': 'antie/devices/browserdevice',
+            'modifiers': [
+                'antie/devices/net/default',
+                'antie/devices/net/xhrthiswindow',
+                'antie/devices/data/json2'
+            ]
+        },
+        'input': {
+            'map': {}
+        },
+        'layouts': [
+            {
+                'width': 960,
+                'height': 540,
+                'module': 'fixtures/layouts/default',
+                'classes': ['browserdevice540p']
+            }
+        ],
+        'deviceConfigurationKey': 'devices-html5-1'
+    };
 
-            device.loadAuthenticatedURL("/test/script-tests/fixtures/test.json", opts);
-
-            assertEquals(1, this.requests.length);
-
-            this.requests[0].respond(200, { "Content-Type": "application/json" }, '{"hello":"world"}');
-
-            assert(opts.onError.notCalled);
-            assert(opts.onLoad.calledOnce);
-            assert(opts.onLoad.calledWith('{"hello":"world"}', 200));
-		}, config);
-	};
-
-	this.XHRThisWindowNetworkTest.prototype.testLoadAuthenticatedURLError = function(queue) {
-		expectAsserts(4);
-
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
-            var opts = {
-                onLoad: this.sandbox.stub(),
-                onError: this.sandbox.stub()
-            };
-
-            device.loadAuthenticatedURL("/test/script-tests/fixtures/doesnotexist.json", opts);
-
-            assertEquals(1, this.requests.length);
-
-            this.requests[0].respond(404, { "Content-Type": "application/json" }, '{"hello":"world"}');
-
-            assert(opts.onLoad.notCalled);
-            assert(opts.onError.calledOnce);
-            assert(opts.onError.calledWith('{"hello":"world"}', 404));
-		}, config);
-	};
-
-
-	this.XHRThisWindowNetworkTest.prototype.testLoadURL = function(queue) {
-		expectAsserts(4);
-
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
-
-            var opts = {
-                onLoad: this.sandbox.stub(),
-                onError: this.sandbox.stub()
-            };
-
-            device.loadURL("/test/script-tests/fixtures/test.json", opts);
-
-            assertEquals(1, this.requests.length);
-
-            this.requests[0].respond(200, { "Content-Type": "application/json" }, '{"hello":"world"}');
-
-            assert(opts.onError.notCalled);
-            assert(opts.onLoad.calledOnce);
-            assert(opts.onLoad.calledWith('{"hello":"world"}', 200));
-		}, config);
-	};
-
-    this.XHRThisWindowNetworkTest.prototype.testLoadURLWith202StatusCodeAsASuccess = function (queue) {
+    this.XHRThisWindowNetworkTest.prototype.testLoadAuthenticatedURL = function(queue) {
         expectAsserts(4);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function (application, BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
             var opts = {
@@ -152,11 +82,81 @@
                 onError: this.sandbox.stub()
             };
 
-            device.loadURL("/test/script-tests/fixtures/test.json", opts);
+            device.loadAuthenticatedURL('/test/script-tests/fixtures/test.json', opts);
 
             assertEquals(1, this.requests.length);
 
-            this.requests[0].respond(202, { "Content-Type": "application/json" }, '{"hello":"world"}');
+            this.requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
+
+            assert(opts.onError.notCalled);
+            assert(opts.onLoad.calledOnce);
+            assert(opts.onLoad.calledWith('{"hello":"world"}', 200));
+        }, config);
+    };
+
+    this.XHRThisWindowNetworkTest.prototype.testLoadAuthenticatedURLError = function(queue) {
+        expectAsserts(4);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadAuthenticatedURL('/test/script-tests/fixtures/doesnotexist.json', opts);
+
+            assertEquals(1, this.requests.length);
+
+            this.requests[0].respond(404, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
+
+            assert(opts.onLoad.notCalled);
+            assert(opts.onError.calledOnce);
+            assert(opts.onError.calledWith('{"hello":"world"}', 404));
+        }, config);
+    };
+
+
+    this.XHRThisWindowNetworkTest.prototype.testLoadURL = function(queue) {
+        expectAsserts(4);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadURL('/test/script-tests/fixtures/test.json', opts);
+
+            assertEquals(1, this.requests.length);
+
+            this.requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
+
+            assert(opts.onError.notCalled);
+            assert(opts.onLoad.calledOnce);
+            assert(opts.onLoad.calledWith('{"hello":"world"}', 200));
+        }, config);
+    };
+
+    this.XHRThisWindowNetworkTest.prototype.testLoadURLWith202StatusCodeAsASuccess = function (queue) {
+        expectAsserts(4);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function (application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
+
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            device.loadURL('/test/script-tests/fixtures/test.json', opts);
+
+            assertEquals(1, this.requests.length);
+
+            this.requests[0].respond(202, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
 
             assert(opts.onError.notCalled);
             assert(opts.onLoad.calledOnce);
@@ -167,7 +167,7 @@
     this.XHRThisWindowNetworkTest.prototype.testLoadURLWithA300StatusCodeAsAnError = function(queue) {
         expectAsserts(4);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
             var opts = {
@@ -175,11 +175,11 @@
                 onError: this.sandbox.stub()
             };
 
-            device.loadURL("/test/script-tests/fixtures/test.json", opts);
+            device.loadURL('/test/script-tests/fixtures/test.json', opts);
 
             assertEquals(1, this.requests.length);
 
-            this.requests[0].respond(300, { "Content-Type": "application/json" }, '{"hello":"world"}');
+            this.requests[0].respond(300, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
 
             assert(opts.onLoad.notCalled);
             assert(opts.onError.calledOnce);
@@ -187,57 +187,80 @@
         }, config);
     };
 
-	this.XHRThisWindowNetworkTest.prototype.testLoadURLError = function(queue) {
-		expectAsserts(4);
+    this.XHRThisWindowNetworkTest.prototype.testLoadURLError = function(queue) {
+        expectAsserts(4);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice(antie.framework.deviceConfiguration);
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
             var opts = {
                 onLoad: this.sandbox.stub(),
                 onError: this.sandbox.stub()
             };
 
-            device.loadURL("/test/script-tests/fixtures/doesnotexist.json", opts);
+            device.loadURL('/test/script-tests/fixtures/doesnotexist.json', opts);
 
             assertEquals(1, this.requests.length);
 
-            this.requests[0].respond(404, { "Content-Type": "application/json" }, '{"hello":"world"}');
+            this.requests[0].respond(404, { 'Content-Type': 'application/json' }, '{"hello":"world"}');
 
             assert(opts.onLoad.notCalled);
             assert(opts.onError.calledOnce);
             assert(opts.onError.calledWith('{"hello":"world"}', 404));
-		}, config);
-	};
+        }, config);
+    };
 
-	this.XHRThisWindowNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
+    this.XHRThisWindowNetworkTest.prototype.testLoadURLCallsOnErrorWhenXHROpenThrowsException = function(queue) {
         expectAsserts(3);
 
-		queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
-			var testUrl = "http://test";
-			var successSpy = this.sandbox.stub();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice(antie.framework.deviceConfiguration);
 
-			device.executeCrossDomainGet(testUrl, {onSuccess: successSpy});
+            var opts = {
+                onLoad: this.sandbox.stub(),
+                onError: this.sandbox.stub()
+            };
+
+            var SECURITY_ERR = {type: 'SECURITY_ERR'};
+
+            this.sandbox.stub(this.xhr.prototype, 'open').throws(SECURITY_ERR);
+
+            device.loadURL('/test/script-tests/fixtures/doesnotexist.json', opts);
+
+            assert(opts.onLoad.notCalled);
+            assert(opts.onError.calledOnce);
+            assert(opts.onError.calledWith(SECURITY_ERR));
+        }, config);
+    };
+
+    this.XHRThisWindowNetworkTest.prototype.testExecuteCrossDomainGetParsesJsonResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
+        expectAsserts(3);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice({'networking': { 'supportsCORS': true }});
+            var testUrl = 'http://test';
+            var successSpy = this.sandbox.stub();
+
+            device.executeCrossDomainGet(testUrl, {onSuccess: successSpy});
 
             assertEquals(1, this.requests.length);
 
-            this.requests[0].respond(200, { "Content-Type": "application/json" }, '{ "test" : "myValue" }');
+            this.requests[0].respond(200, { 'Content-Type': 'application/json' }, '{ "test" : "myValue" }');
 
             assert(successSpy.calledOnce);
-            assert(successSpy.calledWith({ "test" : "myValue" }));
-		}, config);
-	},
+            assert(successSpy.calledWith({ 'test' : 'myValue' }));
+        }, config);
+    };
 
-	this.XHRThisWindowNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
+    this.XHRThisWindowNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
         expectAsserts(2);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/devices/browserdevice"], function(application, BrowserDevice) {
-			var device = new BrowserDevice({"networking": { "supportsCORS": true }});
-			var testUrl = "http://test";
-			var errorSpy = this.sandbox.stub();
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice({'networking': { 'supportsCORS': true }});
+            var testUrl = 'http://test';
+            var errorSpy = this.sandbox.stub();
 
-			device.executeCrossDomainGet(testUrl, {onError: errorSpy});
+            device.executeCrossDomainGet(testUrl, {onError: errorSpy});
 
             assertEquals(1, this.requests.length);
 
@@ -245,5 +268,5 @@
 
             assert(errorSpy.calledOnce);
         }, config);
-	}
+    };
 }());

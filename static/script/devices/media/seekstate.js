@@ -25,7 +25,8 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/devices/media/seekstate',
+require.def(
+    'antie/devices/media/seekstate',
     [
         'antie/class',
         'antie/events/mediaevent'
@@ -35,41 +36,41 @@ require.def('antie/devices/media/seekstate',
         'use strict';
 
         var State = {
-                        None        : 0,
-                        Seeking     : 1,
-                        Playing     : 2
-                    };
+            None        : 0,
+            Seeking     : 1,
+            Playing     : 2
+        };
 
-    var SeekState = Class.extend({
+        var SeekState = Class.extend({
 
-        init :function(eventHandlingCallback) {
-            this._eventHandlingCallback = eventHandlingCallback;
-            this._currentTime = 0;
-            this._state = State.None;
-        },
+            init :function(eventHandlingCallback) {
+                this._eventHandlingCallback = eventHandlingCallback;
+                this._currentTime = 0;
+                this._state = State.None;
+            },
 
-        seekTo: function(time) {
-            if (time === this._currentTime) {
-                return;
+            seekTo: function(time) {
+                if (time === this._currentTime) {
+                    return;
+                }
+
+                this._state = State.Seeking;
+                this._currentTime = time;
+
+                this._eventHandlingCallback(new MediaEvent('seeking'));
+            },
+
+            playing: function() {
+                if (this._state === State.Seeking) {
+                    this._eventHandlingCallback(new MediaEvent('seeked'));
+                }
+
+                this._state = State.Playing;
             }
 
-            this._state = State.Seeking;
-            this._currentTime = time;
+        });
 
-            this._eventHandlingCallback(new MediaEvent("seeking"));
-        },
+        return SeekState;
 
-        playing: function() {
-            if (this._state === State.Seeking) {
-                this._eventHandlingCallback(new MediaEvent("seeked"));
-            }
-
-            this._state = State.Playing;
-        }
-
-    });
-
-    return SeekState;
-
-}
+    }
 );

@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.AlignmentQueueTest = AsyncTestCase("AlignmentQueue");
+    this.AlignmentQueueTest = AsyncTestCase('AlignmentQueue'); //jshint ignore:line
 
     this.AlignmentQueueTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -37,8 +37,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, firstAlign, secondAlign;
@@ -59,8 +59,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, firstAlign, secondAlign;
@@ -72,7 +72,7 @@
                 secondAlign = Mask.prototype.alignToIndex.withArgs(4);
                 queue.start();
                 assertTrue(firstAlign.calledOnce);
-                assertEquals("alignToIndex called once", 1, Mask.prototype.alignToIndex.callCount);
+                assertEquals('alignToIndex called once', 1, Mask.prototype.alignToIndex.callCount);
                 assertFalse(secondAlign.calledOnce);
             }
         );
@@ -82,8 +82,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, firstComplete, secondComplete;
@@ -95,9 +95,9 @@
                 queue.add(3, {onComplete: firstComplete});
                 queue.add(4, {onComplete: secondComplete});
                 queue.start();
-                assertTrue("First supplied onComplete called", firstComplete.calledOnce);
-                assertTrue("Second supplied onComplete called", secondComplete.calledOnce);
-                assertTrue("First onComplete called before second", firstComplete.calledBefore(secondComplete));
+                assertTrue('First supplied onComplete called', firstComplete.calledOnce);
+                assertTrue('Second supplied onComplete called', secondComplete.calledOnce);
+                assertTrue('First onComplete called before second', firstComplete.calledBefore(secondComplete));
             }
         );
     };
@@ -106,8 +106,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 //onComplete tested elsewhere as sinon matcher struggles with it
@@ -137,18 +137,18 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue;
                 this.sandbox.stub(Mask.prototype);
                 queue = new AlignmentQueue(new Mask());
-                queue.add(3, {foo: "bar"});
-                queue.add(4, {bar: "foo"});
+                queue.add(3, {foo: 'bar'});
+                queue.add(4, {bar: 'foo'});
                 queue.start();
                 queue.complete();
-                assertTrue("Running animation halted", Mask.prototype.stopAnimation.calledOnce);
+                assertTrue('Running animation halted', Mask.prototype.stopAnimation.calledOnce);
             }
         );
     };
@@ -157,8 +157,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, lastComplete, alignStub;
@@ -176,8 +176,8 @@
                 queue.start();
                 queue.complete();
 
-                assertEquals("first call has original skipAnim", false, alignStub.firstCall.args[1].skipAnim);
-                assertEquals("second call has overridden skipAnim", true, alignStub.secondCall.args[1].skipAnim);
+                assertEquals('first call has original skipAnim', false, alignStub.firstCall.args[1].skipAnim);
+                assertEquals('second call has overridden skipAnim', true, alignStub.secondCall.args[1].skipAnim);
             }
         );
     };
@@ -186,8 +186,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, lastComplete, alignStub;
@@ -212,9 +212,9 @@
                 queue.complete();
                 queue.add(5, {skipAnim: false});
                 queue.start();
-                assertEquals("first call has original skipAnim", false, alignStub.firstCall.args[1].skipAnim);
-                assertEquals("second call has overridden skipAnim", true, alignStub.secondCall.args[1].skipAnim);
-                assertEquals("third call has original skipAnim", false, alignStub.thirdCall.args[1].skipAnim);
+                assertEquals('first call has original skipAnim', false, alignStub.firstCall.args[1].skipAnim);
+                assertEquals('second call has overridden skipAnim', true, alignStub.secondCall.args[1].skipAnim);
+                assertEquals('third call has original skipAnim', false, alignStub.thirdCall.args[1].skipAnim);
             }
         );
     };
@@ -223,8 +223,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue, alignStub;
@@ -237,7 +237,7 @@
                 queue.add(3, {skipAnim: false});
                 queue.start();
 
-                assertEquals("first call has original skipAnim", false, alignStub.firstCall.args[1].skipAnim);
+                assertEquals('first call has original skipAnim', false, alignStub.firstCall.args[1].skipAnim);
 
             }
         );
@@ -247,8 +247,8 @@
         queuedApplicationInit(queue,
             'lib/mockapplication',
             [
-                "antie/widgets/carousel/mask",
-                "antie/widgets/carousel/aligners/alignmentqueue"
+                'antie/widgets/carousel/mask',
+                'antie/widgets/carousel/aligners/alignmentqueue'
             ],
             function (application, Mask, AlignmentQueue) {
                 var queue;
@@ -259,7 +259,7 @@
                 queue.start();
                 queue.start();
 
-                assertEquals("alignToIndex only called once", 1, Mask.prototype.alignToIndex.callCount);
+                assertEquals('alignToIndex only called once', 1, Mask.prototype.alignToIndex.callCount);
 
             }
         );

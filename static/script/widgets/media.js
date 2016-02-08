@@ -19,45 +19,44 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/media',
-	[
-		'antie/widgets/widget',
+require.def(
+    'antie/widgets/media',
+    [
+        'antie/widgets/widget',
         'antie/devices/media/mediainterface',
 
-		// Include these so they're packaged with this file
-		// All subclasses (which will be dynamically loaded) should use these
-		'antie/events/mediaerrorevent',
-		'antie/events/mediasourceerrorevent'
-	],
-	function(Widget, MediaInterface) {
+        // Include these so they're packaged with this file
+        // All subclasses (which will be dynamically loaded) should use these
+        'antie/events/mediaerrorevent',
+        'antie/events/mediasourceerrorevent'
+    ],
+    function(Widget, MediaInterface) {
         'use strict';
 
-		/**
-		 * The Media widget is responsible for playing video and audio within an application.
-		 * It must be subclassed to provide support for different playback APIs.
-		 * Methods and events loosely match that of the HTML5 HTMLMediaElement:
-		 * @name antie.widgets.Media
-		 * @class
-		 * @abstract
-		 * @extends antie.widgets.Widget
-		 * @requires antie.events.MediaErrorEvent
-		 * @requires antie.events.MediaSourceErrorEvent
-		 * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
-		 */
-		var Media = Widget.extend(/** @lends antie.widgets.Media.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(id, mediaType) {
-				this._super(id);
-				
-				console.log('media obj init');
+        /**
+         * The Media widget is responsible for playing video and audio within an application.
+         * It must be subclassed to provide support for different playback APIs.
+         * Methods and events loosely match that of the HTML5 HTMLMediaElement:
+         * @name antie.widgets.Media
+         * @class
+         * @abstract
+         * @extends antie.widgets.Widget
+         * @requires antie.events.MediaErrorEvent
+         * @requires antie.events.MediaSourceErrorEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         */
+        var Media = Widget.extend(/** @lends antie.widgets.Media.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(id, mediaType) {
+                this._super(id);
 
                 var self = this;
 
@@ -72,13 +71,11 @@ require.def('antie/widgets/media',
 
                 this._mediaInterface = this.getCurrentApplication().getDevice().createMediaInterface(id, mediaType, eventCallback);
 
-				this.addClass('media');
-			},
+                this.addClass('media');
+            },
             render: function(device) {
-            	console.log('media render');
-	            this.outputElement = this._mediaInterface.render(device);
-	            console.log(this.outputElement);
-	            return this.outputElement;
+                this.outputElement = this._mediaInterface.render(device);
+                return this.outputElement;
             },
             show: function(options) {
                 this._mediaInterface.show(options);
@@ -230,5 +227,5 @@ require.def('antie/widgets/media',
         Media.HAVE_ENOUGH_DATA = MediaInterface.HAVE_ENOUGH_DATA;
 
         return Media;
-	}
+    }
 );

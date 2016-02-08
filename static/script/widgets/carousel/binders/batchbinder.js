@@ -21,12 +21,13 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/binders/batchbinder',
+require.def(
+    'antie/widgets/carousel/binders/batchbinder',
     [
         'antie/widgets/carousel/binder'
     ],
     function (Binder) {
-        "use strict";
+        'use strict';
         /**
          * Allows binding in batches with calculation disabled until after final bind
          * @name antie.widgets.carousel.binders.BatchBinder

@@ -21,7 +21,8 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/visiblestate',
+require.def(
+    'antie/widgets/carousel/strips/utility/visiblestate',
     [
         'antie/widgets/carousel/strips/utility/state'
     ],
@@ -33,11 +34,11 @@ require.def('antie/widgets/carousel/strips/utility/visiblestate',
 
             },
 
-            append: function (context, parent, widget) {
+            append: function (/*context, parent, widget*/) { //jshint ignore:line
 
             },
 
-            prepend: function (context, parent, widget) {
+            prepend: function (/*context, parent, widget*/) { //jshint ignore:line
 
             },
 

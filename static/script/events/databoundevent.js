@@ -24,32 +24,33 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/events/databoundevent',
-	['antie/events/event'],
-	function(Event) {
-		'use strict';
+require.def(
+    'antie/events/databoundevent',
+    ['antie/events/event'],
+    function(Event) {
+        'use strict';
 
-		/**
-		 * Class of events raised before and after databinding of a {@link antie.widgets.List}.
-		 * @name antie.events.DataBoundEvent
-		 * @class
-		 * @extends antie.events.Event
-		 * @param {String} type The type of the event.
-		 * @param {antie.widgets.List} target The list that has received data.
-		 * @param {antie.Iterator} iterator An iterator to the data that has been bound to the list.
-		 * @param {Object} error Error details (if applicable to the event type).
-		 */
-		return Event.extend(/** @lends antie.events.DataBoundEvent.prototype */ {
-			/**
-			 * @constructor
-			 * @ignore
-			 */
-			init: function(type, target, iterator, error) {
-				this.target = target;
-				this.iterator = iterator;
-				this.error = error;
-				this._super(type);
-			}
-		});
-	}
+        /**
+         * Class of events raised before and after databinding of a {@link antie.widgets.List}.
+         * @name antie.events.DataBoundEvent
+         * @class
+         * @extends antie.events.Event
+         * @param {String} type The type of the event.
+         * @param {antie.widgets.List} target The list that has received data.
+         * @param {antie.Iterator} iterator An iterator to the data that has been bound to the list.
+         * @param {Object} error Error details (if applicable to the event type).
+         */
+        return Event.extend(/** @lends antie.events.DataBoundEvent.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(type, target, iterator, error) {
+                this.target = target;
+                this.iterator = iterator;
+                this.error = error;
+                this._super(type);
+            }
+        });
+    }
 );

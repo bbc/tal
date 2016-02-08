@@ -24,12 +24,12 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/devices/broadcastsource/basetvsource',
+require.def(
+    'antie/devices/broadcastsource/basetvsource',
     [
-        'antie/class',
-        'antie/devices/browserdevice'
+        'antie/class'
     ],
-    function (Class, Device) {
+    function (Class) {
         'use strict';
 
         /**
@@ -40,75 +40,59 @@ require.def('antie/devices/broadcastsource/basetvsource',
          * @protected
          */
 
-        /**
-         * The play states
-         */
-        var PLAY_STATE_UNKNOWN = -1;
         var BaseTvSource = Class.extend(/** @lends antie.devices.broadcastsource.BaseTVSource.prototype */ {
             /**
              * @constructor
              * @ignore
              */
             init: function () {
-                throw new Error("Abstract class constructor should not be called directly");
+                throw new Error('Abstract class constructor should not be called directly');
             },
             /**
              * Displays the currently tuned channel
              */
             showCurrentChannel: function () {
-                throw new Error("Device broadcast source does not override abstract method showCurrentChannel");
+                throw new Error('Device broadcast source does not override abstract method showCurrentChannel');
             },
             /**
              * Stops the currently playing programme and turns the screen black
              */
             stopCurrentChannel: function () {
-                throw new Error("Device broadcast source does not override abstract method stopCurrentChannel");
+                throw new Error('Device broadcast source does not override abstract method stopCurrentChannel');
             },
             /**
              * Get the current channel name from broadcast and return as a string.
              * @returns A string with the name of the current channel.
              */
             getCurrentChannelName: function () {
-                throw new Error("Device broadcast source does not override abstract method getCurrentChannelName");
+                throw new Error('Device broadcast source does not override abstract method getCurrentChannelName');
             },
             /**
-             * Get the current channel information
-             * @returns A Channel object representing the current channel.
-             */
-            getCurrentChannel : function () {
-                throw new Error("Device broadcast source does not override abstract method getCurrentChannel");
-            },
-            /**
-             * Get the list of currently available channels.
+             * Get the list of currently available channels names.
              * @param params.onSuccess function called if the channel list is retrieved, passed a single argument which is a list of Channel objects.
              * @param params.onError function called if retrieving the channel list fails.
+             * @returns an array of strings, each representing an available channel
              */
-            getChannelList : function (params) {
-                throw new Error("Device broadcast source does not override abstract method getChannelList");
+            getChannelNameList : function (/*params*/) { //jshint ignore:line
+                throw new Error('Device broadcast source does not override abstract method getChannelList');
             },
             /**
              * Sets the size and position of the visible broadcast source
              * @param top
+
              * @param left
              * @param width
              * @param height
              */
-            setPosition : function(top, left, width, height) {
-                throw new Error("Device broadcast source does not override abstract method setPosition");
+            setPosition : function(/*top, left, width, height*/) { //jshint ignore:line
+                throw new Error('Device broadcast source does not override abstract method setPosition');
             },
-            getPlayState : function() {
-                return PLAY_STATE_UNKNOWN;
-            },
-            /**
-             * Requests the device switches a tuner to the channel specified as a DVB triplet
-             * @param params.onid The original network ID.
-             * @param params.tsid DVB or ISDB transport stream ID.
-             * @param params.sid  DVB or ISDB service ID, which must be within the range of 1 to 65535.
-             * @param params.onSuccess function to be called if the tuner was retuned successfully
-             * @param params.onError function to be called if the provided channel was unable to be tuned
-             */
-            setChannel : function(params) {
-                throw new Error("Device broadcast source does not override abstract method setChannel");
+        /**
+              * Indicates the current state of the broadcast source
+              * @returns {antie.devices.broadcastsources.BaseTvSource.STATE} current state of the broadcast source
+              */
+            getState : function() {
+                throw new Error('Device broadcast source does not override abstract method getState');
             },
             /**
              * Requests the device switches a tuner to the channel specified by the channel name.
@@ -116,20 +100,29 @@ require.def('antie/devices/broadcastsource/basetvsource',
              * @param params.onSuccess function to be called if the tuner was retuned successfully
              * @param params.onError function to be called if the provided channel was unable to be tuned
              */
-            setChannelByName : function(params) {
-                throw new Error("Device broadcast source does not override abstract method setChannelByName");
+            setChannelByName : function(/*params*/) { //jshint ignore:line
+                throw new Error('Device broadcast source does not override abstract method setChannelByName');
             },
             /**
              * Reverts the current screen settings and performs any clean up required before
              * the user exits the application back to standard broadcast.
              */
             destroy : function() {
-                throw new Error("Device broadcast source does not override abstract method destroy");
+                throw new Error('Device broadcast source does not override abstract method destroy');
             }
         });
 
-        Device.prototype.isBroadcastSourceSupported = function() {
-            return true;
+        /**
+         * An enumeration of possible tuner states.
+         * @name antie.devices.broadcastsource.BaseTvSource.STATE
+         * @enum {String}
+         */
+        BaseTvSource.STATE = {
+            UNKNOWN: 'UNKNOWN', // tuner state not known
+            UNAVAILABLE: 'UNAVAILABLE', // No tuner available
+            CONNECTING: 'CONNECTING', // tuner attempting to connect
+            PRESENTING: 'PRESENTING', // tuner is presenting a channel
+            STOPPED: 'STOPPED' // tuner is stopped
         };
 
         return BaseTvSource;

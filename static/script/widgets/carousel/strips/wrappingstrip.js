@@ -21,12 +21,13 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/wrappingstrip',
+require.def(
+    'antie/widgets/carousel/strips/wrappingstrip',
     [
         'antie/widgets/carousel/strips/widgetstrip'
     ],
     function (WidgetStrip) {
-        "use strict";
+        'use strict';
         /**
          * A container for the widgets displayed within a carousel
          * @name antie.widgets.carousel.strips.WrappingStrip
@@ -163,11 +164,11 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
                 return this._getElementLength(this._elements[index + this._elementIndexOffset]);
             },
 
-            _lengthToIndexUsingSuppliedValues: function (index) {
+            _lengthToIndexUsingSuppliedValues: function (/*index*/) {
                 return null;
             },
 
-            _lengthOfWidgetAtIndexUsingSuppliedValues: function (index) {
+            _lengthOfWidgetAtIndexUsingSuppliedValues: function (/*index*/) {
                 return null;
             },
 
@@ -193,7 +194,7 @@ require.def('antie/widgets/carousel/strips/wrappingstrip',
             },
 
             _getLengthOfElementArrayUpToIndex: function (elementArray, index) {
-                var elementsUpToIndex, endIndex, length;
+                var elementsUpToIndex, endIndex;
                 endIndex = this._getValidatedIndex(elementArray, index);
                 elementsUpToIndex = elementArray.slice(0, endIndex + 1);
                 return this._getOffsetToLastElementInArray(elementsUpToIndex);

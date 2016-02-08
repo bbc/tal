@@ -28,27 +28,26 @@ require.def(
     'antie/devices/anim/css3/transitionelement',
     [
         'antie/class',
-        'antie/devices/anim/css3/propertymap',
         'antie/devices/anim/css3/stringhelpers'
     ],
-    function(Class, PropertyMap, StringHelpers) {
-        "use strict";
-        
+    function(Class, StringHelpers) {
+        'use strict';
         /*
          * Handles all interactions with the DOM element during a transition
          */
-        return Class.extend( 
+        return Class.extend(
             {
                 init: function(element) {
                     this._element = element;
-                    this._propMap = new PropertyMap();
-                    this._strHelper = new StringHelpers(); 
+                    this._strHelper = new StringHelpers();
+                    this._prefixes = ['', '-webkit-', '-moz-', '-o-'];
+                    this._transitionEndEvents = ['webkitTransitionEnd', 'oTransitionEnd', 'otransitionend', 'transitionend'];
                 },
-                        
+
                 getProperties: function() {
                     return this._getCssCsvPropValueAsArray('transition-property');
                 },
-        
+
                 getDurations: function() {
                     var durStrings, durations, i;
                     durations = [];
@@ -59,7 +58,7 @@ require.def(
                     }
                     return durations;
                 },
-                
+
                 getDelays: function() {
                     var delayStrings, delays, i;
                     delays = [];
@@ -70,36 +69,36 @@ require.def(
                     }
                     return delays;
                 },
-        
+
                 getTimingFns: function() {
                     return this._getCssCsvPropValueAsArray('transition-timing-function');
                 },
-                       
+
                 setCallback: function(callback) {
                     var endEvents, endEvent, i;
-                    endEvents = this._propMap.transitionEndEvents;
+                    endEvents = this._transitionEndEvents;
                     for(i = 0; i !== endEvents.length; i+= 1) {
                         endEvent = endEvents[i];
                         this._element.addEventListener(endEvent, callback);
                     }
                 },
-                
+
                 removeCallback: function(callback) {
                     var endEvents, endEvent, i;
-                    endEvents = this._propMap.transitionEndEvents;
+                    endEvents = this._transitionEndEvents;
                     for(i = 0; i !== endEvents.length; i+= 1) {
                         endEvent = endEvents[i];
                         this._element.removeEventListener(endEvent, callback);
                     }
                 },
-                
+
                 applyDefinition: function(transitionDefinition) {
                     var transProperties, property, delays, durations, props, timingFns, i;
-                    delays = []; 
-                    props = []; 
-                    timingFns = []; 
+                    delays = [];
+                    props = [];
+                    timingFns = [];
                     durations = [];
-                    
+
                     transProperties = transitionDefinition.getProperties();
                     for(i = 0; i !== transProperties.length; i += 1) {
                         property = transProperties[i];
@@ -108,13 +107,13 @@ require.def(
                         timingFns.push(transitionDefinition.getPropertyTimingFn(property));
                         durations.push(transitionDefinition.getPropertyDuration(property));
                     }
-                    
+
                     this._setDurations(durations);
                     this._setDelays(delays);
                     this._setTimingFns(timingFns);
                     this._setProperties(props);
                 },
-                
+
                 /*
                  * Forces update of style; several browsers don't handle CSS transitions correctly, but you can force
                  * them to by accessing the computed style of the element after changing it.
@@ -124,69 +123,82 @@ require.def(
                     var style = this.getComputedStyle();
                     return (style) ? style[property] : null;
                 },
-                
+
                 getStylePropertyValue: function(property) {
                     return this._element.style.getPropertyValue(property);
                 },
-                
+
                 setStylePropertyValue: function(property, value) {
                     this._element.style.setProperty(property, value, '');
                 },
-                
+
+                setStylePropertyValueWithPrefixes: function(property, value) {
+                    var self = this;
+                    var prefix;
+
+                    for (var i = 0; i < self._prefixes.length; i += 1) {
+                        prefix = self._prefixes[i];
+                        self._element.style.setProperty(prefix + property, value, '');
+                    }
+                },
+
                 getComputedStyle: function() {
                     return window.getComputedStyle(this._element, null);
                 },
-                
+
                 _getCssCsvPropValueAsArray: function(cssProp) {
                     var value, propArr;
-                    value = this._element.style.getPropertyValue(this._propMap[cssProp]);
-                    
+
+                    value = this._element.style.getPropertyValue(cssProp);
+
                     if(value !== null && value !== undefined) {
                         value = String(value);
                     }
-                    
+
                     if (typeof value === 'string') {
                         propArr = this._strHelper.splitStringOnNonParenthesisedCommas(value);
                     } else {
                         propArr = [];
                     }
-                    
+
                     return propArr;
                 },
-                
+
                 _setProperties: function(properties) {
                     var transitionProperties;
                     transitionProperties = this._strHelper.buildCsvString(properties);
-                    this.setStylePropertyValue(this._propMap["transition-property"], transitionProperties);
+
+                    this.setStylePropertyValueWithPrefixes('transition-property', transitionProperties);
                 },
-                
+
                 _setDurations: function(durations) {
                     var durationString, i;
                     for(i = 0; i !== durations.length; i += 1) {
-                        durations[i] += "ms";
+                        durations[i] += 'ms';
                     }
                     durationString = this._strHelper.buildCsvString(durations);
-                    this.setStylePropertyValue(this._propMap["transition-duration"], durationString);
+
+                    this.setStylePropertyValueWithPrefixes('transition-duration', durationString);
                 },
-                
+
                 _setDelays: function(delays) {
                     var delayString, i;
                     for(i = 0; i !== delays.length; i += 1) {
-                        delays[i] += "ms";
+                        delays[i] += 'ms';
                     }
                     delayString = this._strHelper.buildCsvString(delays);
-                    this.setStylePropertyValue(this._propMap["transition-delay"], delayString);
+                    this.setStylePropertyValueWithPrefixes('transition-delay', delayString);
                 },
-                
+
                 _setTimingFns: function(timings) {
                     var timingString;
                     timingString = this._strHelper.buildCsvString(timings);
-                    this.setStylePropertyValue(this._propMap["transition-timing-function"], timingString);
+                    this.setStylePropertyValueWithPrefixes('transition-timing-function', timingString);
                 },
 
-				isEventTarget: function(evt) {
-					return evt.target === this._element;
-				}
+                isEventTarget: function(evt) {
+                    return evt.target === this._element;
+                }
             }
         );
     }

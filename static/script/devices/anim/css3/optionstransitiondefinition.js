@@ -31,7 +31,7 @@ require.def(
         'antie/devices/anim/css3/transitiondefinition'
     ],
     function(TransitionDefinition) {
-        "use strict";
+        'use strict';
         return TransitionDefinition.extend(
             {
                 /*
@@ -47,9 +47,9 @@ require.def(
                         if(options.to.hasOwnProperty(property)) {
                             timeEasing = options.easing || config.easing;
                             this.setProperty(property, {
-                               duration: options.duration || config.duration,
-                               delay: options.delay,
-                               timingFn: timeEasing ? TransitionDefinition.easingLookup[timeEasing] : undefined
+                                duration: options.duration || config.duration,
+                                delay: options.delay,
+                                timingFn: timeEasing ? TransitionDefinition.easingLookup[timeEasing] : undefined
                             });
                         }
                     }

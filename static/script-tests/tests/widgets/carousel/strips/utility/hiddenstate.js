@@ -23,7 +23,7 @@
  */
 (function () {
     /* jshint newcap: false, strict: false */
-    this.HiddenStateTest = AsyncTestCase("HiddenState");
+    this.HiddenStateTest = AsyncTestCase('HiddenState'); //jshint ignore:line
 
     this.HiddenStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -34,8 +34,9 @@
     };
 
     this.HiddenStateTest.prototype.testAppendDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -58,8 +59,9 @@
     };
 
     this.HiddenStateTest.prototype.testPrependDoesNotCallRenderOnWidget = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -82,8 +84,9 @@
     };
 
     this.HiddenStateTest.prototype.testAppendShowsElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -97,8 +100,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -114,8 +117,9 @@
     };
 
     this.HiddenStateTest.prototype.testPrependPrependsOutputElementOfWidgetToOutputElementOfParent = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -129,8 +133,8 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                var childEl = "child";
-                var parentEl = "parent";
+                var childEl = 'child';
+                var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
 
@@ -145,8 +149,9 @@
     };
 
     this.HiddenStateTest.prototype.testAppendChangesContextStateToVisible = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -173,8 +178,9 @@
     };
 
     this.HiddenStateTest.prototype.testPrependChangesContextStateToVisible = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -202,8 +208,9 @@
     };
 
     this.HiddenStateTest.prototype.testDetachDoesNotCallRemoveElement = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -222,8 +229,9 @@
     };
 
     this.HiddenStateTest.prototype.testDetachDoesNotChangeState = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -243,8 +251,9 @@
     };
 
     this.HiddenStateTest.prototype.testHasLengthReturnsTrue = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',
@@ -261,8 +270,9 @@
     };
 
     this.HiddenStateTest.prototype.testNotInView = function (queue) {
-	var self = this;
-        queuedApplicationInit(queue,
+        var self = this;
+        queuedApplicationInit(
+            queue,
             'lib/mockapplication',
             [
                 'antie/widgets/carousel/strips/utility/hiddenstate',

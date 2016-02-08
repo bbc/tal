@@ -17,13 +17,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * All rights reserved
  * Please contact us for an alternative licence
  */
 
 (function() {
-    this.WidgetTest = AsyncTestCase("Widget");
+    this.WidgetTest = AsyncTestCase('Widget'); //jshint ignore:line
 
     this.WidgetTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -37,8 +37,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget","antie/class"],
+            'lib/mockapplication',
+            ['antie/widgets/widget','antie/class'],
             function(application, Widget, Class) {
                 assertEquals('Widget should be a function', 'function', typeof Widget);
                 assert('Widget should extend from Class', new Widget() instanceof Class);
@@ -49,8 +49,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertException(function() {
@@ -64,8 +64,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertFalse(widget.hasClass('a'));
@@ -79,8 +79,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertFalse(widget.hasClass('a'));
@@ -101,8 +101,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 widget.addClass('a');
@@ -117,8 +117,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 widget.addClass('a');
@@ -132,18 +132,21 @@
     };
 
     this.WidgetTest.prototype.testAddEventListener = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget", "antie/events/event"],
+            'lib/mockapplication',
+            ['antie/widgets/widget', 'antie/events/event'],
             function(application, Widget, Event) {
                 var widget = new Widget();
-                var handler = this.sandbox.stub();
+                var handler = this.sandbox.stub(),
+                    handler2 = this.sandbox.stub();
                 widget.addEventListener('anevent', handler);
+                widget.addEventListener('anevent', handler2);
                 widget.fireEvent(new Event('anevent'));
                 assert(handler.called);
+                assert(handler2.called);
             }
         );
     };
@@ -153,8 +156,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget", "antie/events/event"],
+            'lib/mockapplication',
+            ['antie/widgets/widget', 'antie/events/event'],
             function(application, Widget, Event) {
                 var widget = new Widget();
                 var handler = this.sandbox.stub();
@@ -166,13 +169,29 @@
         );
     };
 
+    this.WidgetTest.prototype.testRemoveNonexistentEventListener = function(queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
+            function(application, Widget) {
+                var widget = new Widget();
+                var handler = this.sandbox.stub();
+                var result = widget.removeEventListener('anevent', handler);
+                assertFalse(result);
+            }
+        );
+    };
+
     this.WidgetTest.prototype.testBubbleEvent = function(queue) {
         expectAsserts(3);
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget", "antie/events/event"],
+            'lib/mockapplication',
+            ['antie/widgets/widget', 'antie/events/event'],
             function(application, Widget, Event) {
                 var widget = new Widget();
                 var parent = new Widget();
@@ -197,8 +216,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget", "antie/events/event"],
+            'lib/mockapplication',
+            ['antie/widgets/widget', 'antie/events/event'],
             function(application, Widget, Event) {
                 var widget = new Widget();
                 var handler = this.sandbox.stub();
@@ -214,8 +233,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertFalse(widget.isFocusable());
@@ -228,8 +247,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertFalse(widget.isComponent());
@@ -242,8 +261,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 assertSame(application, widget.getCurrentApplication());
@@ -256,10 +275,10 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
-                var dataItem = {hello:"world"};
+                var dataItem = {hello:'world'};
                 var widget = new Widget();
                 assertNull(widget.getDataItem());
                 widget.setDataItem(dataItem);
@@ -271,10 +290,10 @@
     this.WidgetTest.prototype.testGetComponent = function(queue) {
         expectAsserts(1);
 
-        queuedApplicationInit(queue, "lib/mockapplication", ["antie/widgets/widget", "antie/widgets/component"], function(application, Widget, Component) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/widgets/widget', 'antie/widgets/component'], function(application, Widget, Component) {
 
-            var component = new Component("componentID");
-            var widget = new Widget("widgetID");
+            var component = new Component('componentID');
+            var widget = new Widget('widgetID');
 
             component.appendChildWidget(widget);
 
@@ -287,8 +306,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 widget._isFocussed = true;
@@ -305,12 +324,12 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
 
-                assertException("Error: Widget::show called - the current widget has not yet been rendered.", function() {
+                assertException('Error: Widget::show called - the current widget has not yet been rendered.', function() {
                     widget.show({
                         fps: 25,
                         duration: 1000
@@ -325,17 +344,17 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
 
                 // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
+                widget.outputElement = device.createContainer('id_mask');
                 document.body.appendChild(widget.outputElement);
 
-                var spy = this.sandbox.spy(device, "showElement");
+                var spy = this.sandbox.spy(device, 'showElement');
 
                 var afterAnimationCallback = function() {
                 };
@@ -359,8 +378,8 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
@@ -368,7 +387,7 @@
                 var outputElement = { };
                 var options = { };
 
-                var showStub = this.sandbox.stub(device, "showElement");
+                var showStub = this.sandbox.stub(device, 'showElement');
 
                 widget.outputElement = outputElement;
 
@@ -386,12 +405,12 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
 
-                assertException("Error: Widget::hide called - the current widget has not yet been rendered.", function() {
+                assertException('Error: Widget::hide called - the current widget has not yet been rendered.', function() {
                     widget.hide({
                         fps: 25,
                         duration: 1000
@@ -406,17 +425,17 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
 
                 // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
+                widget.outputElement = device.createContainer('id_mask');
                 document.body.appendChild(widget.outputElement);
 
-                var spy = this.sandbox.spy(device, "hideElement");
+                var spy = this.sandbox.spy(device, 'hideElement');
 
                 var afterAnimationCallback = function() {
                 };
@@ -440,13 +459,13 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
 
-                var hideStub = this.sandbox.stub(device, "hideElement");
+                var hideStub = this.sandbox.stub(device, 'hideElement');
 
                 var options = { };
                 var outputElement = { };
@@ -469,12 +488,12 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
 
-                assertException("Error: Widget::moveTo called - the current widget has not yet been rendered.", function() {
+                assertException('Error: Widget::moveTo called - the current widget has not yet been rendered.', function() {
                     widget.moveTo({
                         to: {
                             top: 10,
@@ -493,17 +512,17 @@
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
 
                 // Mock out the output element
-                widget.outputElement = device.createContainer("id_mask");
+                widget.outputElement = device.createContainer('id_mask');
                 document.body.appendChild(widget.outputElement);
 
-                var spy = this.sandbox.spy(device, "moveElementTo");
+                var spy = this.sandbox.spy(device, 'moveElementTo');
 
                 var afterAnimationCallback = function() {
                 };
@@ -529,14 +548,14 @@
     this.WidgetTest.prototype.testMoveToMovesElementAsSpecified = function(queue) {
         expectAsserts(3);
 
-        var config = {"modules":{"base":"antie/devices/browserdevice","modifiers":['antie/devices/anim/styletopleft']},"input":{"map":{}},"layouts":[
-            {"width":960,"height":540,"module":"fixtures/layouts/default","classes":["browserdevice540p"]}
-        ],"deviceConfigurationKey":"devices-html5-1"};
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[
+            {'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}
+        ],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(
             queue,
-            "lib/mockapplication",
-            ["antie/widgets/widget"],
+            'lib/mockapplication',
+            ['antie/widgets/widget'],
             function(application, Widget) {
                 var widget = new Widget();
                 var device = application.getDevice();
@@ -544,7 +563,7 @@
                 var options = { };
                 var outputElement = { };
 
-                var moveToStub = this.sandbox.stub(device, "moveElementTo");
+                var moveToStub = this.sandbox.stub(device, 'moveElementTo');
 
                 // Mock out the output element
                 widget.outputElement = outputElement;

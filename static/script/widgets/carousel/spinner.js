@@ -22,12 +22,13 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/carousel/spinner',
+require.def(
+    'antie/widgets/carousel/spinner',
     [
         'antie/class'
     ],
     function (Class) {
-        "use strict";
+        'use strict';
         /**
          * Manages communication with device for carousel animations
          * @name antie.widgets.carousel.Spinner
