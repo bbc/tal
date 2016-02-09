@@ -252,8 +252,7 @@ require.def(
             },
 
             _setBroadcastToFullScreen: function () {
-                var currentLayout = RuntimeContext.getCurrentApplication().getLayout().requiredScreenSize;
-                this.setPosition(0, 0, currentLayout.width, currentLayout.height);
+                this.setPosition(0, 0, window.screen.width, window.screen.height);
             },
 
             _tuneToChannelByName: function (params) {
