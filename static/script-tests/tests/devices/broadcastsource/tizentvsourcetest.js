@@ -143,11 +143,7 @@
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
-            self.sandbox.stub(application, 'getLayout', function() {
-                return {
-                    requiredScreenSize: { height: 1080, width: 1920 }
-                };
-            });
+            self.sandbox.stub(window, 'screen', { height: 1080, width: 1920 });
 
             broadcastSource.showCurrentChannel();
 
