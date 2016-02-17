@@ -7,7 +7,7 @@
         "url": "https://github.com/fmtvp/tal.git"
     },
     "description": "Library for building applications for Connected TV devices",
-    "main": "./node/antieframework.js",
+    "main": "./node/antie.js",
     "directories": {
         "node": "./node",
         "config": "./config",
