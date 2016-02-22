@@ -9,15 +9,6 @@ function fileExistsSync(path) {
     }
 }
 
-function fileExists(path, callback) {
-    try {
-        fs.lstat(path);
-        callback(true);
-    } catch (e) {
-        callback(false);
-    }
-}
-
 module.exports = {
     getPageStrategyElementSync: function(pageStrategy, element) {
         var pageStrategyPath = __dirname + '/../config/pagestrategy/' + pageStrategy + '/' + element;
