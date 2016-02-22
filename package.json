@@ -1,36 +1,36 @@
 {
-    "name": "tal",
-    "license": "Apache-2.0",
-    "version": "3.1.3",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/fmtvp/tal.git"
-    },
-    "description": "Library for building applications for Connected TV devices",
-    "main": "./node/antie.js",
-    "directories": {
-        "node": "./node",
-        "config": "./config",
-        "static": "./static/script"
-    },
-    "devDependencies": {
-        "eslint-plugin-jasmine": "^1.6.0",
-        "eslint-plugin-requirejs": "^0.6.0",
-        "exec-sync": "latest",
-        "grunt": "^0.4.5",
-        "grunt-bump": "^0.6.0",
-        "grunt-cli": "~0.1.6",
-        "grunt-complexity": "^0.2.0",
-        "grunt-contrib-jasmine": "~0.5.2",
-        "grunt-contrib-jshint": "~0.10.0",
-        "grunt-contrib-watch": "~0.6.1",
-        "grunt-shell": "^1.1.1",
-        "grunt-text-replace": "^0.4.0",
-        "gruntify-eslint": "^1.3.0",
-        "jsdoc-toolkit": "latest"
-    },
-    "dependencies": {},
-    "scripts": {
-        "test": "grunt full --verbose"
-    }
+  "name": "tal",
+  "license": "Apache-2.0",
+  "version": "3.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fmtvp/tal.git"
+  },
+  "description": "Library for building applications for Connected TV devices",
+  "main": "./node/antie.js",
+  "directories": {
+    "node": "./node",
+    "config": "./config",
+    "static": "./static/script"
+  },
+  "devDependencies": {
+    "eslint-plugin-jasmine": "^1.6.0",
+    "eslint-plugin-requirejs": "^0.6.0",
+    "exec-sync": "latest",
+    "grunt": "^0.4.5",
+    "grunt-bump": "^0.6.0",
+    "grunt-cli": "~0.1.6",
+    "grunt-complexity": "^0.2.0",
+    "grunt-contrib-jasmine": "~0.5.2",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-shell": "^1.1.1",
+    "grunt-text-replace": "^0.4.0",
+    "gruntify-eslint": "^1.3.0",
+    "jsdoc-toolkit": "latest"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "grunt full --verbose"
+  }
 }
