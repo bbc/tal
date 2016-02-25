@@ -26,7 +26,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/devices/exit/samsung_tizen',
     ['antie/devices/browserdevice'],
     function(Device) {

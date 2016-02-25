@@ -25,7 +25,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/devices/mediaplayer/html5untyped',
     [
         'antie/runtimecontext',

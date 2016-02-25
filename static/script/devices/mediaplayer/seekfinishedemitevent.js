@@ -27,7 +27,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def(
+define(
     'antie/devices/mediaplayer/seekfinishedemitevent',
     [
         'antie/devices/mediaplayer/mediaplayer',

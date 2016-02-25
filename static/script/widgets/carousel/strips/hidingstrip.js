@@ -21,7 +21,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/hidingstrip',
+define('antie/widgets/carousel/strips/hidingstrip',
     [
         'antie/widgets/carousel/strips/cullingstrip',
         'antie/widgets/carousel/strips/utility/widgetcontext',

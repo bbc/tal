@@ -26,7 +26,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/devices/media/html5',
     [
         'antie/devices/device',

@@ -1,4 +1,4 @@
-require.def(
+define(
     'antie/devices/media/samsung_maple_unload',
     [
         'antie/devices/media/samsung_maple'

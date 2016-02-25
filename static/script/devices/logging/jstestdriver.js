@@ -27,7 +27,7 @@
  */
 
 //logs to the jstestdriver console
-require.def(
+define(
     'antie/devices/logging/jstestdriver',
     [
         'module',

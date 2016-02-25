@@ -21,7 +21,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def(
+define(
     'antie/widgets/carousel/strips/widgetstrip',
     [
         'antie/widgets/container'
