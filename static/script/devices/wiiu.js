@@ -27,7 +27,7 @@
  */
 
 
-require.def(
+define(
     'antie/devices/wiiu',
     [
         'antie/devices/browserdevice',

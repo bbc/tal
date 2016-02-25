@@ -26,7 +26,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/devices/broadcastsource/tizentvsource',
     [
         'antie/devices/browserdevice',

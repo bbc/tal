@@ -3,7 +3,7 @@
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
-require.def(
+define(
     'antie/devices/storage/xboxpls',
     [
         'antie/devices/browserdevice',

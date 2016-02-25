@@ -23,7 +23,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/devices/sanitiser', [], function () {
+define('antie/devices/sanitiser', [], function () {
 
     'use strict';
 

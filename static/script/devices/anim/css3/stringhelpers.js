@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/devices/anim/css3/stringhelpers',
     [
         'antie/class'

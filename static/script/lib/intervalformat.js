@@ -1,4 +1,4 @@
-require.def('antie/lib/intervalformat', function() {
+define('antie/lib/intervalformat', function() {
 	var _unitOrder = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'];
 	var _divisors = {
 		'years': 60 * 60 * 24 * 365,

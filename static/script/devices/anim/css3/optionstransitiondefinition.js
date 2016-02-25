@@ -25,7 +25,7 @@
  */
 
 
-require.def(
+define(
     'antie/devices/anim/css3/optionstransitiondefinition',
     [
         'antie/devices/anim/css3/transitiondefinition'

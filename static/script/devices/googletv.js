@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/devices/googletv',
+define('antie/devices/googletv',
 	[
 		'antie/devices/browserdevice',
 		'antie/runtimecontext'

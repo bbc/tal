@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/horizontalcarousel',
+define('antie/widgets/horizontalcarousel',
     [
         'antie/widgets/horizontallist',
         'antie/widgets/list',

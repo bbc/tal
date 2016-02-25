@@ -25,7 +25,7 @@
  */
 
 //Logs to via an XML HTTP Request ( XHR )
-require.def(
+define(
     'antie/devices/logging/xhr',
     [
         'module',

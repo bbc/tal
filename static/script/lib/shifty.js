@@ -1,4 +1,4 @@
-require.def('antie/lib/shifty', function() {
+define('antie/lib/shifty', function() {
 
 	/*global setTimeout:true, clearTimeout:true */
 

@@ -1,4 +1,4 @@
-require.def(
+define(
     'antie/devices/parentalguidance/pgchallengeresponse',
     [],
     function () {
