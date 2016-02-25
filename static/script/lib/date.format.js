@@ -1,4 +1,4 @@
-require.def('antie/lib/date.format', function() {
+define('antie/lib/date.format', function() {
 
 // Simulates PHP's date function
 // From: http://jacwright.com/projects/javascript/date_format

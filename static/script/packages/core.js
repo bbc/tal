@@ -1,4 +1,4 @@
-require.def('antie/packages/core',[
+define('antie/packages/core',[
     'antie/application',
     'antie/mediasource',
     'antie/videosource',

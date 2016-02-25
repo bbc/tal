@@ -25,7 +25,7 @@
  */
 
 //logs to the screen
-require.def(
+define(
     'antie/devices/logging/onscreen',
     [
         'module',

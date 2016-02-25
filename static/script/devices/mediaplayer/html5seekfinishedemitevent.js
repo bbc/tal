@@ -1,4 +1,4 @@
-require.def(
+define(
     'antie/devices/mediaplayer/html5seekfinishedemitevent',
     [
         'antie/devices/mediaplayer/seekfinishedemitevent',

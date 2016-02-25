@@ -30,7 +30,7 @@
  * @namespace
  */
 
-require.def(
+define(
     'antie/widgets/widget',
     [
         'antie/class',

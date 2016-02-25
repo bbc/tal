@@ -3,7 +3,7 @@
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
-require.def('antie/devices/broadcastsource/stubbedsource',
+define('antie/devices/broadcastsource/stubbedsource',
     [
         'antie/devices/browserdevice',
         'antie/devices/broadcastsource/basetvsource'

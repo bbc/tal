@@ -26,7 +26,7 @@
 
 
 //logs to the javascript console
-require.def(
+define(
     'antie/devices/logging/default',
     [
         'module',

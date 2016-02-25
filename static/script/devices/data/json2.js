@@ -2,7 +2,7 @@
  * @fileOverview Requirejs modifier to use J Crockford's JSON2 implementation.
  */
 
-require.def(
+define(
 	"antie/devices/data/json2",
 	['antie/devices/browserdevice'],
 	function(Device) {

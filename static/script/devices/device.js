@@ -50,7 +50,7 @@
  * @namespace
  */
 
-require.def(
+define(
     'antie/devices/device',
     [
         'antie/class',

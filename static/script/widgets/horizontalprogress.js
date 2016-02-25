@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/horizontalprogress',
+define('antie/widgets/horizontalprogress',
     [
         'antie/widgets/container',
         'antie/widgets/label'

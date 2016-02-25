@@ -25,7 +25,7 @@
 * Please contact us for an alternative licence
 */
 
-require.def('antie/devices/exit/samsung_maple', ['antie/devices/browserdevice'], function(Device) {
+define('antie/devices/exit/samsung_maple', ['antie/devices/browserdevice'], function(Device) {
     'use strict';
 
     /**

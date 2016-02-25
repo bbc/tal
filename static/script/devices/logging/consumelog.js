@@ -25,7 +25,7 @@
  */
 
 // equivalent of logging to >dev/null
-require.def(
+define(
     'antie/devices/logging/consumelog',
     [
         'module',
