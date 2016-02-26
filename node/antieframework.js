@@ -4,24 +4,21 @@
  * Sets the config path used to locate pageStrategy elements, defaults to the current working directory if no config
  * path is provided.
  * @param string _configPath The directory path to the antie config directory.
- * @param string frameworkPath The directory path to the antie config directory.
  */
 var fs = require("fs"),
     strategies = require("tal-page-strategies");
 
-var AntieFramework = function(configPath, frameworkPath) {
+var AntieFramework = function(configPath) {
 
     var DEFAULT_PAGE_STRATEGY = 'default';
 
     var _configPath;
-    var _frameworkPath;
     var self = this;
 
     this._configPath = configPath || "";
-    this._frameworkPath = frameworkPath || "";
 
     if (!(this instanceof AntieFramework)) {
-        return new AntieFramework(configPath, frameworkPath);
+        return new AntieFramework(configPath);
     }
 
     /**
