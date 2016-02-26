@@ -6,7 +6,9 @@
  * @param string _configPath The directory path to the antie config directory.
  * @param string frameworkPath The directory path to the antie config directory.
  */
-var fs = require("fs");
+var fs = require("fs"),
+    strategies = require("tal-page-strategies");
+
 var AntieFramework = function(configPath, frameworkPath) {
 
     var DEFAULT_PAGE_STRATEGY = 'default';
@@ -105,7 +107,7 @@ var AntieFramework = function(configPath, frameworkPath) {
      * on the class of device. This is required to support multiple specification standards such as HTML5, PlayStation 3,
      * HBBTV and Maple.
      *
-     * The page strategy elements are contained in a directory structure located in _configpath/pagestrategy.
+     * The page strategy elements are contained a separate repository referenced by a Node module, tal-page-strategies.
      *
      * Typical page strategy elements include: the HTTP header mimetype property, HTML doctype, HTML head, HTML root
      * element & HTML body. For example the HTML <head> and <body> may need to contain vendor specific code/markup.
@@ -113,38 +115,22 @@ var AntieFramework = function(configPath, frameworkPath) {
      * @param string pageStrategy The page strategy used by this device.
      * @param string element The page strategy property to return (Sub-directory of {{_configPath}}/config/pagestrategy/{{pageStrategy}}/{{element}}
      * directory).
-     * @param string default The default value to return if the page strategy does not contain the requested element.
      * @return string An element (property) of the page strategy or the default value.
      */
     var getPageStrategyElement = function(pageStrategy, element) {
-        var result = readValueFromFile(pageStrategy, element);
-        if(result === false) {
-            result = readValueFromFile(DEFAULT_PAGE_STRATEGY, element);
+        var result = strategies.getPageStrategyElement(pageStrategy, element);
+
+        if (result.noSuchStrategy) {
+            result = strategies.getPageStrategyElement(DEFAULT_PAGE_STRATEGY, element);
         }
-        if(result === false) {
+
+        if (result.noSuchStrategy) {
             var message = 'No page strategy default value found for ' + element;
             console.error(message);
             throw message;
         }
-        return result;
-    }
 
-    /**
-     * Reads the contents of a file, based on pageStrategy and element.
-     *
-     * @param string pageStrategy The page strategy used by this device.
-     * @param string element The page strategy property to return (Sub-directory of {{_configPath}}/config/pagestrategy/{{pageStrategy}}/{{element}}
-     * @return string or false, if file not found
-     */
-    var readValueFromFile = function(pageStrategy, element) {
-        var returnValue = '';
-        try {
-            var pageStrategyPath = self._configPath + '/pagestrategy/' + pageStrategy + '/' + element;
-            returnValue = fs.readFileSync(pageStrategyPath).toString();
-        } catch (e) {
-            returnValue = false;
-        }
-        return returnValue;
+        return result.data;
     }
 
     /**
