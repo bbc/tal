@@ -158,27 +158,6 @@ this.ExampleTest.prototype.stubExample = function(queue) {
 
 ## Server Unit Tests
 
-### PHP Server
-For the TAL server side PHP code, using php-unit.
-
-1\. Install phpunit: https://phpunit.de/
-
-2\. Run the tests:
-
-    cd php-test
-    phpunit *.php
-
-Expected sample output:
-
-    PHPUnit 4.7.7 by Sebastian Bergmann and contributors.
-
-    ................
-
-    Time: 1.02 seconds, Memory: 18.25Mb
-
-    OK (16 tests, 16 assertions)
-
-
 ### NodeJS Server
 For the TAL server side NodeJS code, using nodeunit:
 
@@ -200,16 +179,16 @@ Expected sample output:
     ✔ Generic TV1 Device has default Mime type
     ✔ Generic TV1 Device has default Root element
     ✔ Generic TV1 Device has default Doc type
-    ✔ Generic TV2 Device has expected header
-    ✔ Generic TV2 Device has expected body
-    ✔ Generic TV2 Device has expected Mime type
-    ✔ Generic TV2 Device has expected Root element
-    ✔ Generic TV2 Device has expected Doc type
+    ✔ Device has expected header
+    ✔ Device has expected body
+    ✔ Device has expected Mime type
+    ✔ Device has expected Root element
+    ✔ Device has expected Doc type
     ✔ Normalise key names replaces special characters with underscores
     ✔ Normalise key names replaces upper case to lower case
     ✔ Get generic device config
     ✔ Get generic app config
     ✔ Get generic app config (Alt)
     ✔ App config overrides device config when merged
-        
+
     OK: 16 assertions (23ms)
