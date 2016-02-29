@@ -9,11 +9,16 @@ title: Installation and Configuration
 <p class="lead">Getting started with the TV Application Layer</p>
 
 Create a new directory to house your application and configure your web server to serve files from it.
-If you are going to make use of the (minimal) php included within the framework, you will also need [php5](http://php.net/downloads.php) installed and configured.
+If you are going to make use of the (minimal) Node.js bootstrap code included within the framework, you will also need [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) installed.
 
 Within the application directory, check out the TAL repo to a folder named 'antie' (the internal name for TAL)
 
     git clone https://github.com/fmtvp/tal.git antie
+
+Change into the directory and use NPM to install its node.js dependencies:
+
+    cd antie
+    npm install
 
 You can arrange the rest of your application as you please, but the example applications and included device configurations assume the directory structure below:
 
@@ -21,7 +26,6 @@ You can arrange the rest of your application as you please, but the example appl
     ├── sampleapp                                   // Root application folder
     │   ├── antie                                   // The framework
     |   |   ├── config                              // Framework configuration directory
-    |   |   |   ├── pagestrategy                    // Page strategy directories
     |   |   |   ├── devices                         // Framework Device configuration files [1]
     |   |   |       ├── sometv.json              
     |   |   |       ├── someothertv.json
@@ -72,15 +76,18 @@ For more information see [Device Configuration]({{site.baseurl}}/overview/device
 
 The talexample repository contains an example framework application. It demonstrates the use of some TAL widgets and media playback.
 
-Change to the root directory of a web server set up to serve html, javascript and php5. Then, to check out the example:
+It includes its own simple web server implemented in Node.js. While TAL's static JavaScript files can be hosted statically on any web server, the [index page](createanindex.html) - containing the &lt;script&gt; tags that power TAL - must be generated based on the calling device's brand and model. The Node.js server included with the example project performs both roles for simplicity.
+
+To check out and run the example project:
 
     git clone https://github.com/fmtvp/talexample.git talexample
     cd talexample
-    git clone https://github.com/fmtvp/tal.git antie
+    npm install
+    node index.js
 
 Finally, browse to:
 
-    http://yourserver.com/talexample
+    http://127.0.0.1:1337/
 
 <ul class="thumbnails">
   <li class="span6">

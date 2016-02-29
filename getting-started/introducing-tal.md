@@ -106,7 +106,6 @@ You will need to be comfortable with the following technologies:
 
 * JavaScript
 * HTML and CSS
-* Some PHP might be useful to understand the tutorial
 
 ## Writing Applications for TVs
 
