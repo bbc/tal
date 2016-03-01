@@ -48,9 +48,13 @@ The following may vary between families of device.
 * Additional requirements in the html head block (to load device specific javaScript APIs via `<script>` tags for example)
 * Additional requirements in the html body block (to load device specific video plugins for example)
 
-'Page Strategies' encapsulate these variations. These are loaded from a separate repository, [tal-page-strategies](https://github.com/fmtvp/tal-page-strategies). TAL's `package.json` includes the tal-page-strategies repository as a dependency, so the latest set will always be fetched by [NPM](https://www.npmjs.com/) if you are using Node.js.
+'Page Strategies' encapsulate these variations. These are loaded from a separate repository, [tal-page-strategies](https://github.com/fmtvp/tal-page-strategies).
+
+#### Using the page strategies repository
 
 The TAL repository exposes a module known as AntieFramework as its Node.js entry point. AntieFramework contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.
+
+TAL's `package.json` includes the [tal-page-strategies](https://github.com/fmtvp/tal-page-strategies) repository as a dependency, so the latest set will always be fetched by [NPM](https://www.npmjs.com/) - simply run `npm install`.
 
 The code for AntieFramework can be found under `node/antieframework.js`. Using TAL in your Node.js application is a matter of defining it as a dependency in package.json:
 
@@ -68,7 +72,7 @@ var AntieFramework = require('tal'),
     ...
 {% endhighlight %}
 
-If you do not wish to use Node.js in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology - remembering also to import the page strategies from their repository.
+If you do not wish to use Node.js in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology - remembering also to import the page strategy files from their repository as part of your build process.
 
 ## An example index (NodeJS)
 
