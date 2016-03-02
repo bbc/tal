@@ -6,11 +6,11 @@ title: Creating an index
 
 # Creating an index
 
-<p class="lead">Creating an entry point for your TAL Application.</p>
+<p class="lead">Creating an entry point for your TAL Application</p>
 
-The framework is primarily JavaScript. However, there are device specific
+The framework is primarily client-side JavaScript. However, there are device specific
 choices that need to be made at the page construction stage, before any
-JavaScript is executed.
+client-side JavaScript is executed.
 
 The example below demonstrates one way to create an index page based upon
 these choices. It is the initial point a device will reach when a user
@@ -48,197 +48,44 @@ The following may vary between families of device.
 * Additional requirements in the html head block (to load device specific javaScript APIs via `<script>` tags for example)
 * Additional requirements in the html body block (to load device specific video plugins for example)
 
-'Page Strategies' encapsulate these variations. By default they are located in antie/config/pagestrategy.
+'Page Strategies' encapsulate these variations. These are loaded from a separate repository, [tal-page-strategies](https://github.com/fmtvp/tal-page-strategies).
 
-A class `AntieFramework` contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.
-This class is provided in `php/antieframework.php` if using the PHP implementation, or `node/antieframework.js` if using the nodejs implementation.
+#### Using the page strategies repository
 
-If you do not wish to use php or nodejs in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology.
+The TAL repository exposes a module known as AntieFramework as its Node.js entry point. AntieFramework contains methods to return the appropriate variant of each of the above properties. Each method takes a device configuration as a parameter, uses this to determine the page strategy, then uses the page strategy to determine the correct response.
 
-## An example index (PHP)
+TAL's `package.json` includes the [tal-page-strategies](https://github.com/fmtvp/tal-page-strategies) repository as a dependency, so the latest set will always be fetched by [NPM](https://www.npmjs.com/) - simply run `npm install`.
 
-Below is an example of how to use `AntieFramework` to build a simple index using php.
-The supplied code has been written for clarity, not elegance, but should be simple to adapt.
+The code for AntieFramework can be found under `node/antieframework.js`. Using TAL in your Node.js application is a matter of defining it as a dependency in package.json:
 
-The example uses some methods of AntieFramework. They all take a decoded device configuration file as a parameter.
-
-| Method                       | Description |
-| ---------------------------- | ----------- |
-| `getMimeType($config)`       | Some devices need pages to be delivered with a specific mime type. `getMimeType()` returns an appropriate type for the device |
-| `getDocType($config)`        | Returns a device appropriate doctype tag, such as `<!DOCTYPE html>` |
-| `getRootHtmlTag($config)`    | Returns a device appropriate opening page tag, such as `<html>` |
-| `getDeviceHeaders($config)`  | Returns any device specific content to go in the `<head>` block, such as device api `<script>` tags |
-| `getDeviceBody($config)`     | Returns any device specific content to go in the `<body>` block, such as device plugin objects |
-
-As noted, device detection is out of ANTIE's scope, so we pass in the name of the device configuration as a url parameter.
-
-`index.php`
-
-{% highlight html+php %}
-<?php
-
-// INIT AND CONFIG LOAD
-
-// Check TAL is available
-if (!file_exists('antie/php/antieframework.php')) {
-    echo "<h2>Framework error</h2>";
-    echo "<h4>antieframework.php can not be found.</h4>";
-    echo "<h4>Please install TAL to a folder 'antie' in your application's root</h4>";
-    exit;
-}
-
-require('antie/php/antieframework.php');
-
-// Set up application ID and path to framework configuration directory
-$application_id = "sampleapp";
-$antie_config_path = 'antie/config';
-
-// Create an AntieFramework instance
-$antie = new AntieFramework($antie_config_path);
-
-// Get brand and model from url parameters, or use 
-// brand = default, model = webkit
-$device_brand = isset($_GET['brand'])? $_GET['brand'] : 'default';
-$device_model = isset($_GET['model'])? $_GET['model'] : 'webkit';
-
-// Normalises to lower case with spaces replaced by underscores
-$device_brand = $antie->normaliseKeyNames($device_brand);
-$device_model = $antie->normaliseKeyNames($device_model);
-
-// Framework device config files in format BRAND-MODEL-default.json 
-// Construct filename from this and config path
-$device_configuration_name = $device_brand . "-" . $device_model;
-$device_configuration_file_path = $antie_config_path . "/devices/" . $device_configuration_name . "-default.json";
-
-// Load in device configuration
-try {
-    $device_configuration = @file_get_contents($device_configuration_file_path);
-    if(!$device_configuration)
-        throw new Exception("Device ($device_configuration_name) not supported");
-} catch(Exception $e){
-    echo $e->getMessage(); exit;
-}
-
-// Substitute appid wherever /%applicaion%/ is present in device configuration
-$device_configuration = preg_replace('/%application%/m', $application_id, $device_configuration);
-
-// Decode to php object
-$device_configuration_decoded = json_decode($device_configuration);
-
-
-
-// PAGE GENERATION
-
-// Set document mime type
-header("Content-Type: " . $antie->getMimeType($device_configuration_decoded));
-
-// Set doctype and opening html tag
-echo $antie->getDocType($device_configuration_decoded);
-echo $antie->getRootHtmlTag($device_configuration_decoded);
-?>
-
-
-
-<!-- HEAD -->
-
-<head>
-    <!-- Device specific head block (API loading etc) -->
-<?php
-    echo $antie->getDeviceHeaders($device_configuration_decoded);
-    ?>
-
-    <!-- Set up require aliases -->
-    <script type="text/javascript">
-        var require = {
-            baseUrl: "",
-            paths: {
-                <?php echo $application_id; ?>: 'static/script',
-                antie : "antie/static/script"
-            },
-            priority: [],
-            callback: function() {}
-        };
-    </script>
-
-    <!-- Load require.js -->
-    <script type="text/javascript" src="antie/static/script/lib/require.js"></script>
-
-    <!-- Load application base style sheet -->
-    <link rel="stylesheet" href="static/style/base.css"/>
-
-    <!-- Expose device config to framework -->
-    <script>
-        var antie = {
-            framework: {
-                deviceConfiguration: <?php echo $device_configuration ?>
-            }
-        }
-    </script>
-
-</head>
-
-
-
-<!-- BODY -->
-
-<body style="background: #000;">
-
-<!-- Add in device specific body (Plugins etc) -->
-<?php echo $antie->getDeviceBody($device_configuration_decoded); ?>
-
-<!-- Create a loading message -->
-<div id="static-loading-screen" style="position: absolute; width: 100%; height: 100%; background: #000;">
-    Application is loading...
-</div>
-
-<!-- Create a div to house the app -->
-<div id="app" class="display-none"></div>
-
-<!-- Load the application and launch, remove loading screen via callback -->
-<script type='text/javascript'>
-    require(
-            [
-                'sampleapp/appui/sampleapp'
-            ],
-            function(SampleApp) {
-
-                require.ready(function() {
-                    function onReady() {
-                        var staticLoadingScreen = document.getElementById('static-loading-screen');
-                        staticLoadingScreen.parentNode.removeChild(staticLoadingScreen);
-                    };
-
-                    new SampleApp(
-                            document.getElementById('app'),
-                            'static/style/',
-                            'static/img/',
-                            onReady
-                    );
-                });
-            }
-    );
-</script>
-
-</body>
-</html>
+{% highlight json %}
+  "dependencies": {
+    "tal": "fmtvp/tal"
+  }
 {% endhighlight %}
 
+Then use AntieFramework from your own app using Node.js's require mechanism:
 
+{% highlight javascript %}
+var AntieFramework = require('tal'),
+    antie = new AntieFramework(configPath);
+    ...
+{% endhighlight %}
+
+If you do not wish to use Node.js in your application, it should be straightforward to replace the methods of AntieFramework with some other server side technology - remembering also to import the page strategy files from their repository as part of your build process.
 
 ## An example index (NodeJS)
 
-Below is an example of how to use `AntieFramework` to build a simple index using nodejs.
+The TAL Example repository [contains an example](https://github.com/fmtvp/talexample/blob/master/index.js) of how to use `AntieFramework` to build a simple index using nodejs.
 The supplied code has been written for clarity, not elegance, but should be simple to adapt.
 
-To create a new object you have to indicate the `configPath` and the `frameworkPath`- this is the main difference between the PHP implementation and this one.
-An example constructor using these variables might be:
+To create a new object you have to indicate the `configPath`. An example constructor using this variable might be:
 
 {% highlight javascript %}
-var configPath = "config/";
-var frameworkPath = "config/framework/";
-var AntieFramework = require("node/antieframework");
+var configPath = "node_modules/tal/config";
+var AntieFramework = require('tal');
 
-var antie = new AntieFramework(configPath, frameworkPath);
+var antie = new AntieFramework(configPath);
 {% endhighlight %}
 
 The [example](https://github.com/fmtvp/talexample) uses some methods of AntieFramework. Most of them take a decoded device configuration file as a parameter.
