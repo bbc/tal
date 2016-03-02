@@ -306,4 +306,4 @@ Use in simple cases. In general it does not aid readability when used in non tri
 
 Use of ESLint is highly encouraged. Many of the worst JavaScript offences can be detected way before the code is deployed. Nearly every IDE will have support, or a plugin to add ESLint functionality.
 
-The current ESLint rules can be found in TAL's [eslint.rc](https://github.com/fmtvp/tal/blob/master/.eslintrc) file.
+The current ESLint rules can be found in TAL's [eslintrc](https://github.com/fmtvp/tal/blob/master/.eslintrc.json) file.
