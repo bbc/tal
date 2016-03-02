@@ -27,7 +27,7 @@ that are necessary for a functioning application:
 The index should be placed in the root of your application and acts as an entry point.
 It needs to be delivered as a page formatted appropriately for the device, and should accomplish the following:
 
-* Load a configuration file for the type of device using the application
+* Load a **[configuration file]({{site.baseurl}}/overview/device-configuration.html)** for the type of device using the application
 * Define an 'Application ID' string and substitute this into the configuration wherever the token `%application%` appears
 * Provide the substituted configuration as a nested object within a javascript global variable 'antie'
 * Load any device specific api code / plugin objects
