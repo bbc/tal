@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/widgets/label',
     ['antie/widgets/widget'],
     function(Widget) {

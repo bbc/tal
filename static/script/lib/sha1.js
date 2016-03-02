@@ -1,4 +1,4 @@
-require.def('antie/lib/sha1', function() {
+define('antie/lib/sha1', function() {
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
  * in FIPS 180-1

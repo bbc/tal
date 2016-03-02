@@ -34,7 +34,7 @@
  * @namespace
  */
 
-require.def(
+define(
     'antie/events/event',
     [
         'antie/class',

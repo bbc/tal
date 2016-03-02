@@ -5,7 +5,7 @@ var unloadRequire;
 	var requireModules = { };
 
 	var originalDef = require.def;
-	var originalDefine = require.define;
+	var originalDefine = define;
 	var originalLoad = require.load;
 
 	require.def = function() {
@@ -14,7 +14,7 @@ var unloadRequire;
 		originalDef.apply(require, arguments);
 	};
 
-	require.define = function() {
+	define = function() {
 		var name = arguments[0];
 		requireModules[name] = arguments;
 		originalDefine.apply(require, arguments);

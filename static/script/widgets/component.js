@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/component',
+define('antie/widgets/component',
     [
         'antie/widgets/container',
         'antie/runtimecontext'

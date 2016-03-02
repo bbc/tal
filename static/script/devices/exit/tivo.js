@@ -24,7 +24,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def(
+define(
     'antie/devices/exit/tivo',
     ['antie/devices/browserdevice'],
     function(Device) {

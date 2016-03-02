@@ -1,4 +1,4 @@
-require.def('antie/lib/array.indexof', function() {
+define('antie/lib/array.indexof', function() {
 
   // From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
   // License: CC-BY-SA 2.5. http://creativecommons.org/licenses/by-sa/2.5/

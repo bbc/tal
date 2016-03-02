@@ -1,4 +1,4 @@
-require.def('antie/lib/date.parse', function() {
+define('antie/lib/date.parse', function() {
 
 /**
  * Date.parse with progressive enhancement for ISO-8601

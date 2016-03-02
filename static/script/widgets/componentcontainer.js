@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('antie/widgets/componentcontainer',
+define('antie/widgets/componentcontainer',
     [
         'antie/widgets/container',
         'antie/events/componentevent'

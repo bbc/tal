@@ -24,7 +24,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def(
+define(
     'antie/widgets/image',
     ['antie/widgets/container'],
     function(Container) {

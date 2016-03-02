@@ -1,4 +1,4 @@
-require.def('antie/lib/math.seedrandom', function() {
+define('antie/lib/math.seedrandom', function() {
 
 // seedrandom.js
 // Author: David Bau 12/25/2010

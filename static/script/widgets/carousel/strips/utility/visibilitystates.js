@@ -21,7 +21,7 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
-require.def('antie/widgets/carousel/strips/utility/visibilitystates',
+define('antie/widgets/carousel/strips/utility/visibilitystates',
     [
         'antie/widgets/carousel/strips/utility/initstate',
         'antie/widgets/carousel/strips/utility/hiddenstate',
