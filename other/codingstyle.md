@@ -5,7 +5,7 @@ title: Coding Guidelines
 
 # TV Application Layer Coding Standards & Guidelines
 
-TAL JavaScript development uses the following coding standards. Some of these are mandatory, some are not. For some of these issues there are arguments for and against. The most value to a team is not, particularly, from the individual guidelines themselves but more from the fact they encourage consistency. Which, in turn, improves readability. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
+TAL JavaScript development uses the following coding standards. A pull request will not be accepted if it doesn't adhere to the coding standards & guidelines. As ever the best reference for the TAL coding standards is the source code itself and anything not covered here can be deduced from a quick read of the source code.
 
 This document was written with reference to the following
 
@@ -19,7 +19,7 @@ Syntactic issues are generally a subjective choice but are, never the less, impo
 
 ### Indentation - 4 spaces
 
-4 spaces should always be used over tabs. Some of our source files use tabs and it is acceptable to reformat those files if a developer find themselves working on such a file. However care should be taken and the scheduled work should be completed first, committed then reformatted - this will make it clearer which parts of the code have actually had changes over and above the tabs/space reformatting.
+4 spaces must always be used over tabs. Some of our older source files use tabs and it is acceptable to reformat those files if a developer find themselves working on such a file. However care should be taken and the scheduled work should be completed first, committed then reformatted - this will make it clearer which parts of the code have actually had changes over and above the tabs/space reformatting.
 
 ### Maximum Line Length - *80 chars*
 
@@ -46,14 +46,14 @@ Always use [JSDoc](http://en.wikipedia.org/wiki/JSDoc) style comments to annotat
 
 ### Braces - *Line End*
 
-Braces should appear at the end of a line and after a single space. The closing brace should be indented to match the indentation of the line of code that holds the starting brace.
+Braces must appear at the end of a line and after a single space. The closing brace must be indented to match the indentation of the line of code that holds the starting brace.
 
     if (importantVariable === true) {
         importantFunction();
     } 
 
 
-For ```if``` Statements with an ```else``` case the ```else``` should be on the same line as the closing brace
+For ```if``` Statements with an ```else``` case the ```else``` must be on the same line as the closing brace
 
 
     if (importantVariable === true) {
@@ -65,11 +65,11 @@ For ```if``` Statements with an ```else``` case the ```else``` should be on the 
 
 These rules apply for all compound statements. ```while```, ```for```, ```switch```, etc. The same conventions apply for any text representing JSON data.
 
-Prefer single quotes over double quotes - though in JavaScript there is no difference. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
+Single quotes must be used over double quotes. Single quotes are considered better due to HTML using double quotes, which would need to be escaped if the single quotes were not used.
 
 ### Naming - *camelCase*
 
-Functions and Variables should use lower camelCase. Constructor functions should use PascalCase. Choose descriptive names which are not overly long. Single letter names like ```i``` and ```j``` are acceptable for iterators and loops. Constants should be all UPPERCASE with underscores separating words. 
+Functions and Variables must use lower camelCase. Constructor functions must use PascalCase. Choose descriptive names which are not overly long. Single letter names like ```i``` and ```j``` are acceptable for iterators and loops. Constants must be all UPPERCASE with underscores separating words.
 
     //When naming constants use all uppercase with words separated by _
     HorizontalCarousel.ALIGNMENT_CENTER = 0;
@@ -98,7 +98,7 @@ Do not use the comma operator to place multiple statements on a single line. It 
 
 ### Non Function Blocks - *No*
 
-Non-function code blocks should not be used. JavaScript does not support block scope and using non-function code blocks harms readability.
+Non-function code blocks must not be used. JavaScript does not support block scope and using non-function code blocks harms readability.
 
 ## Semantic
 
@@ -135,7 +135,7 @@ This produces the following output:
     Boom!
 
 
-When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty should be used to filter out any unwanted members. Like so...
+When Iterating over Objects the only way *is* to use the ```for``` ```in``` construct. This will iterate over all members even those inherited from the object's prototype. If this is not the required functionality then hasOwnProperty must be used to filter out any unwanted members. Like so...
 
     for (var prop in obj) { 
         if(obj.hasOwnProperty(prop)){    
@@ -223,7 +223,7 @@ Delete can be slow as it has to manipulate the underlying object.
 
 ### Eval - *No*
 
-```eval``` should only be required for RPC like systems and then only use with care. Using ```eval``` can lead to injection attacks. It can make debugging harder and ```eval```uated code is often *not* optimized by the JavaScript engine.
+Using ```eval``` can lead to injection attacks. It can make debugging harder and ```eval```uated code is often *not* optimized by the JavaScript engine.
 
 ### With Keyword - *No*
 
@@ -302,66 +302,8 @@ Summary - only use 'this' in constructors and to setup 'self' closures.
 
 Use in simple cases. In general it does not aid readability when used in non trivial expressions.
 
-### JSHint - *Yes*
+# ESLint - *Yes* #
 
-Use of JSHint is highly encouraged. Many of the worst JavaScript offences can be detected way before the code is deployed. Nearly every IDE will have support, or a plugin to add JSHint functionality.
+Use of ESLint is highly encouraged. Many of the worst JavaScript offences can be detected way before the code is deployed. Nearly every IDE will have support, or a plugin to add ESLint functionality.
 
-[JSHint For Eclipse](http://github.eclipsesource.com/jshint-eclipse/)
-
-[JSHint For Sublime](https://github.com/uipoet/sublime-jshint)
-
-These are the current setting used for developing in the TAL code base...
-
-
-    browser: true,
-    onevar: false,
-    smarttabs: true,
-    curly: true,
-    eqeqeq: true,   
-    forin: true,
-    immed: true,
-    newcap: true,
-    noarg: true,
-    nonew: true,
-    plusplus: true,
-    undef: true, 
-    unused: true
-
-
-And these define the most common global variables found in the TAL codebase and TAL unit tests.
-
-
-    require: true,
-    antie: true,
-    sinon: true,
-    assert: true,
-    expectAsserts: true,
-    assertEquals: true,
-    queuedRequire: true,
-    queuedApplicationInit: true,
-    assertClassName: true,
-    assertSame: true,
-    assertNotEquals: true,
-    assertException: true,
-    assertFalse: true,
-    assertTrue: true,
-    assertNull: true,
-    assertInstanceOf: true,
-    assertNoException: true,
-    assertMatch: true,
-    assertNotNull: true,
-    assertNotSame: true,
-    assertUndefined: true,
-    assertNotUndefined: true,
-    AsyncTestCase: true,
-    jstestdriver: true
-
-
-
-
-
-
-
-
-
-
+The current ESLint rules can be found in TAL's [eslintrc](https://github.com/fmtvp/tal/blob/master/.eslintrc.json) file.
