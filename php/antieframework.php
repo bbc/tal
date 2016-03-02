@@ -43,6 +43,7 @@ class AntieFramework {
      *
      * Sets the config path used to locate pageStrategy elements, defaults to the current working directory if no config
      * path is provided.
+     * @deprecated See README.md for details
      * @param string|bool $configPath The directory path to the antie config directory.
      */
 	public function __construct($configPath = false) {
@@ -55,6 +56,7 @@ class AntieFramework {
     /**
      * Returns the doctype required by this device. The doctype is used in the returned HTML page.
      *
+     * @deprecated See README.md for details
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The doctype associated with this device.
      */
@@ -66,6 +68,7 @@ class AntieFramework {
     /**
      * Returns The mimetype that needs to be associated with the HTTP response for this device.
      *
+     * @deprecated See README.md for details
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The HTTP mimetype required by this device. If this value is not found in the page strategy
      * default return value is 'text/html'.
@@ -78,6 +81,7 @@ class AntieFramework {
     /**
      * Returns the root HTML tag to be used in the HTML response.
      *
+     * @deprecated See README.md for details
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The root HTML element required by this device. If this value is not found in the page strategy
      * default return value is <html>.
@@ -90,6 +94,7 @@ class AntieFramework {
     /**
      * Returns any extra HTML content that the device requires to be placed in the HTML <head>.
      *
+     * @deprecated See README.md for details
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The HTML content to be placed in the HTML <head>.
      */
@@ -101,6 +106,7 @@ class AntieFramework {
     /**
      * Returns any extra HTML content that the device requires to be placed in the HTML <body>.
      *
+     * @deprecated See README.md for details
      * @param object $deviceConfig The device configuration information for the device that made the request.
      * @return string The HTML content to be placed in the HTML <body>.
      */
@@ -113,6 +119,7 @@ class AntieFramework {
      * Replaces whitespace with underscores and lowercases all uppercase characters. Used to compare strings where
      * capitalization is not guaranteed.
      *
+     * @deprecated See README.md for details
      * @static
      * @param string $value The value to be normalized.
      * @return string The normalized value.
@@ -124,6 +131,7 @@ class AntieFramework {
     /**
      * Returns a JSON formatted device configuration from the file system
      *
+     * @deprecated See README.md for details
      * @param $key The unique device identifier, typically brand-model.
      * @param $type The $_configPath sub-directory where the device configuration is located.
      * @return string of JSON. Empty string if not found.
@@ -148,6 +156,7 @@ class AntieFramework {
      * Typical page strategy elements include: the HTTP header mimetype property, HTML doctype, HTML head, HTML root
      * element & HTML body. For example the HTML <head> and <body> may need to contain vendor specific code/markup.
      *
+     * @deprecated See README.md for details
      * @param string $pageStrategy The page strategy used by this device.
      * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
      * directory).
@@ -168,6 +177,7 @@ class AntieFramework {
 	/**
 	 * Reads the contents of a file, based on $pageStrategy and $element.
 	 *
+     * @deprecated See README.md for details
      * @param string $pageStrategy The page strategy used by this device.
      * @param string $element The page strategy property to return (Sub-directory of $this->_configpath/pagestrategy
 	 * @return string or false, if file not found
@@ -181,6 +191,7 @@ class AntieFramework {
     /**
      * Returns a device configuration that includes any overridden properties defined in the supplied patch object.
      *
+     * @deprecated See README.md for details
      * @static
      * @param object $original The device configuration information for the device that made the request.
      * @param object $patch Device configuration override properties.

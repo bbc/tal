@@ -10,14 +10,14 @@ var AntieFrameworkTest = function() {
 		'Generic TV1 Device has no Headers' : function(test) {
 			setUpNormalConfig();
 			var headers = framework.getDeviceHeaders(getGenericDevice1Config());
-			test.ok(headers === "<!-- sample default header -->", "The device headers are not empty. It contains: " + headers);
+			test.ok(!headers, "The device headers are not empty. It contains: " + headers);
 			test.done();
 		},
 
 		'Generic TV1 Device has no body'  : function(test) {
 			setUpNormalConfig();
 			body = framework.getDeviceBody(getGenericDevice1Config());
-			test.ok(body === "<!-- sample default body -->", "The device body is not empty. It contains: " + body);
+			test.ok(!body, "The device body is not empty. It contains: " + body);
 			test.done();
 		},
 
@@ -42,38 +42,45 @@ var AntieFrameworkTest = function() {
 			test.done();
 		},
 
-		'Generic TV2 Device has expected header' : function(test) {
+		'Device has expected header' : function(test) {
 			setUpNormalConfig();
-			headers = framework.getDeviceHeaders(getGenericDevice2Config());
-			test.ok(headers == "expectedheader", "The device header was not the expected value. The value was " + headers);
+			headers = framework.getDeviceHeaders({
+				pageStrategy: "samsungmaple"
+			});
+			var expected = fs.readFileSync('../node_modules/tal-page-strategies/samsungmaple/header', 'UTF-8');
+			test.ok(headers === expected, "The device header was not the expected value. The value was " + headers);
 			test.done();
 		},
 
-		'Generic TV2 Device has expected body' : function(test) {
+		'Device has expected body' : function(test) {
 			setUpNormalConfig();
-			body = framework.getDeviceBody(getGenericDevice2Config());
-			test.ok(body == "expectedbody", "The device body was not the expected value. The value was " + body);
+			body = framework.getDeviceBody(getHbbtvDeviceConfig());
+			var expected = fs.readFileSync('../node_modules/tal-page-strategies/hbbtv/body', 'UTF-8');
+			test.ok(body === expected, "The device body was not the expected value. The value was " + body);
 			test.done();
 		},
 
-		'Generic TV2 Device has expected Mime type' : function(test) {
+		'Device has expected Mime type' : function(test) {
 			setUpNormalConfig();
-			mimeType = framework.getMimeType(getGenericDevice2Config());
-			test.ok(mimeType == "expectedmimetype", "The device mime type was not the expected value. It was " + mimeType);
+			mimeType = framework.getMimeType(getHbbtvDeviceConfig());
+			var expected = fs.readFileSync('../node_modules/tal-page-strategies/hbbtv/mimetype', 'UTF-8');
+			test.ok(mimeType === expected, "The device mime type was not the expected value. It was " + mimeType);
 			test.done();
 		},
 
-		'Generic TV2 Device has expected Root element' : function(test) {
+		'Device has expected Root element' : function(test) {
 			setUpNormalConfig();
-			rootElement = framework.getRootHtmlTag(getGenericDevice2Config());
-			test.ok(rootElement == "expectedrootelement", "The device root element was not the expected value. It was " + rootElement);
+			rootElement = framework.getRootHtmlTag(getHbbtvDeviceConfig());
+			var expected = fs.readFileSync('../node_modules/tal-page-strategies/hbbtv/rootelement', 'UTF-8');
+			test.ok(rootElement === expected, "The device root element was not the expected value. It was " + rootElement);
 			test.done();
 		},
 
-		'Generic TV2 Device has expected Doc type' : function(test) {
+		'Device has expected Doc type' : function(test) {
 			setUpNormalConfig();
-			docType = framework.getDocType(getGenericDevice2Config());
-			test.ok(docType == "expecteddoctype", "The device doc type was not the expected value. It was " + docType);
+			docType = framework.getDocType(getHbbtvDeviceConfig());
+			var expected = fs.readFileSync('../node_modules/tal-page-strategies/hbbtv/doctype', 'UTF-8');
+			test.ok(docType === expected, "The device doc type was not the expected value. It was " + docType);
 			test.done();
 		},
 
@@ -129,9 +136,10 @@ var AntieFrameworkTest = function() {
         return json;
     }
 
-    function getGenericDevice2Config() {
-        var json = JSON.parse(framework.getConfigurationFromFilesystem("generic-tv2", "deviceconfig"));
-        return json;
+    function getHbbtvDeviceConfig() {
+        return {
+            pageStrategy: 'hbbtv'
+        };
     }
 
     var getFramework = function() {

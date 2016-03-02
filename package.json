@@ -7,7 +7,7 @@
     "url": "https://github.com/fmtvp/tal.git"
   },
   "description": "Library for building applications for Connected TV devices",
-  "main": "./node/antie.js",
+  "main": "./node/antieframework.js",
   "directories": {
     "node": "./node",
     "config": "./config",
@@ -29,7 +29,9 @@
     "gruntify-eslint": "^1.3.0",
     "jsdoc-toolkit": "latest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "tal-page-strategies": "fmtvp/tal-page-strategies"
+  },
   "scripts": {
     "test": "grunt full --verbose"
   }
