@@ -30,13 +30,13 @@ Used in page construction
 | `hbbtv`        | For hbbtv compatible devices |
 | `samsungmaple` | For samsung devices running in maple mode (use html5 instead unless specifically needed) |
   
-###modules (object)
+### modules (object)
 The require modules which should be loaded to implement the device abstraction layer. Each module applies platform specific overrides or implementations that run while the app is starting up. For example, including the `antie/devices/anim/noanim` modifier will disable animations for that platform.
 
-####modules.base (string)
+#### modules.base (string)
 The module on which the device is based. This will usually be antie/devices/browserdevice.
 
-####modules.modifiers (array)
+#### modules.modifiers (array)
 Mix-in modules to support common implementations of the abstraction layer. This must contain one module from each of the following namespaces
 
 * `antie/devices/anim/*` -- Animation
@@ -51,7 +51,7 @@ It should also include all of the supported modules from
 
 * `antie/devices/logging/*` - Log output method 
 
-#####Animation Modifiers
+##### Animation Modifiers
 
 | Module name                              | Description |
 | ---------------------------------------- | ----------- |
@@ -60,7 +60,7 @@ It should also include all of the supported modules from
 | `antie/devices/anim/styletopleft`        | Animation via tweening style.top and style.left with JavaScript. For reasonably quick devices which do not support css3. |
 | `antie/devices/anim/scrolloffset`        | Deprecated |
 
-#####Media playback modifiers
+##### Media playback modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
@@ -68,7 +68,7 @@ It should also include all of the supported modules from
 | `antie/devices/mediaplayer/cehtml`            | CE-HTML is used for media playback |
 | `antie/devices/mediaplayer/samsung_maple`     | Samsung's Device API and Player object are used for media playback |
 
-#####Media playback modifiers (deprecated)
+##### Media playback modifiers (deprecated)
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
@@ -76,33 +76,33 @@ It should also include all of the supported modules from
 | `antie/devices/media/cehtml`            | CE-HTML is used for media playback |
 | `antie/devices/media/samsung_maple`     | Samsung's Device API and Player object are used for media playback |
 
-#####Data modifiers
+##### Data modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
 | `antie/devices/data/nativejson`         | ECMAScript 5 JSON object used for parsing |
 | `antie/devices/data/json2`              | Douglas Crockford's json2.js library used for parsing |
 
-#####Network modifiers
+##### Network modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
 | `antie/devices/net/default`             | Use XHR for network requests |
 
-#####Storage modifiers
+##### Storage modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
 | `antie/devices/storage/cookie`          | Use persistant cookies for storage |
 
-#####Exit modifiers
+##### Exit modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
 | `antie/devices/exit/history`            | Exits the application by going to the first item in the browser history |
 | `antie/devices/exit/closewindow`        | Exits the application by calling window.close() |
 
-#####Logging modifiers
+##### Logging modifiers
 
 | Module name                             | Description |
 | --------------------------------------- | ----------- |
@@ -113,9 +113,9 @@ It should also include all of the supported modules from
 | `antie/devices/logging/jstestdriver`    | Log messages output via the jstestdriver console object (for use within unit tests) |
 | `antie/devices/logging/xhr`             | Remote logging |
 
-###logging (object)
+### logging (object)
 
-####logging.level (string)
+#### logging.level (string)
 
 The framework supports the following log types, in ascending severity
 
@@ -136,30 +136,30 @@ Which log all or no messages respectively.
 
 All framework configurations should have this value set to `none`. If logging is required it should be overridden by applications only during development.
 
-###streaming (object)
+### streaming (object)
 Details of media support for the device, including codecs, protocols and limits.
 
 The default is `%href%`
 
-####streaming.video (object)
+#### streaming.video (object)
 Video specific media information
 
-#####streaming.video.mediaURIFormat (string)
+##### streaming.video.mediaURIFormat (string)
 One or more tags (e.g. %tagname%) used when building media URLs.
 
-#####streaming.video.supported (array of profile objects)
+##### streaming.video.supported (array of profile objects)
 An array of supported profile objects. (see below)
 
-####streaming.audio (object)
+#### streaming.audio (object)
 Audio specific media information
 
-#####streaming.audio.mediaURIFormat (string)
+##### streaming.audio.mediaURIFormat (string)
 See steaming.video.mediaURIFormat
 
-#####streaming.audio.supported (array of profile objects)
+##### streaming.audio.supported (array of profile objects)
 An array of supported profile objects. (See below)
 
-####Profile objects
+#### Profile objects
 
 `profile.protocols` __(array of strings)__
 
@@ -175,10 +175,10 @@ maximum bit rate supported by the device in kbps
 `profile.maximumVideoLines` __(integer, video profiles only)__
 The maximum number of horizontal lines (i.e. vertical resolution) the device supports. e.g. 1080.
 
-###input (object)
+### input (object)
 Information about user input
 
-####input.map(object)
+#### input.map(object)
 Map from raw key codes to their semantic meanings.
 Valid symbols for the mappings are as follows (bold are mandatory):
 
@@ -217,19 +217,19 @@ The map may also contain the following shortcuts:
 
 Care should be exercised when using optional keys within an application as not all devices will support them.
 
-###accessibility (object)
+### accessibility (object)
 Accessibility related device information
 
-####accessibility.captions (object)
+#### accessibility.captions (object)
 Device support of subtitles
 
-#####accessibility.captions.supported (array of strings)
+##### accessibility.captions.supported (array of strings)
 An array of MIME types for supported subtitle formats (e.g. `application/ttaf+xml`)
 
-###layouts (array of layout objects)
+### layouts (array of layout objects)
 Details of resolutions the device's browser may run in, these must be supported by each application that wishes to run on the device.
 
-###Layout objects
+### Layout objects
 
 `layout.width` (integer)
 
@@ -249,29 +249,29 @@ CSS Class names to add to the top-level element when this layout is used.
 `layout.css` (array of strings)
 Additional CSS files to load for this layout (relative to the styleBaseUrl passed to the application constructor)
 
-###networking (object)
+### networking (object)
 Network related information
 
-####networking.supportsJSONP (boolean)
+#### networking.supportsJSONP (boolean)
 Whether a device can successfully load JSON objects via JSONP.
 
-##Optional properties
+## Optional properties
 The following properties may be added to framework device configuration files, but are not compulsary
 
-###\_comment (string)
+### \_comment (string)
 A human readable comment about the configuration
 
-###defaults (object)
+### defaults (object)
 Animation defaults
 
-####defaults.showElementFade (object)
+#### defaults.showElementFade (object)
 An animation options object describing how fade-ins should behave. See [Animation][].
 
-####defaults.hideElementFade (object)
+#### defaults.hideElementFade (object)
 An animation options object describing how fade-outs should behave. See [Animation][].
 [Animation]: {{site.baseurl}}/widgets/animation.html
 
-##Application Configuration
+## Application Configuration
 
 In addition to the framework configuration, it is likely you will want to specify application specific properties per device.
 
@@ -279,7 +279,7 @@ It is TAL convention to do this via a separate JSON file, then merge the two to 
 
 There is a method `mergeConfigurations()` in the _AntieFramework_ php class for merging device configurations. Note that `mergeConfigurations()` overrides any properties present in the original with those present in the patch.
 
-##Example Framework Configuration file
+## Example Framework Configuration file
 {% highlight json %}
 {
   "pageStrategy": "html5",

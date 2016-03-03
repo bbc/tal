@@ -89,7 +89,7 @@ The GUI is built from a tree structure of instances of *Widgets*.
 A *Button* or subclass of *Button* is a Widget that can obtain input focus (and thus be spatially navigated between).
 All Widgets have the notion of active state (i.e. when focus is moved to that widget, the Active child will receive focus).
 
-#### Containers
+#### Containers
 *Container* widgets are widgets that may contain child widgets.
 
 ### Components
