@@ -4,7 +4,7 @@ title: Installation and Configuration
 ---
 [Creating an index]: createanindex.html
 
-#Installation
+# Installation
 
 <p class="lead">Getting started with the TV Application Layer</p>
 
@@ -22,7 +22,8 @@ Change into the directory and use NPM to install its node.js dependencies:
 
 You can arrange the rest of your application as you please, but the example applications and included device configurations assume the directory structure below:
 
-##Sample Application Structure
+## Sample Application Structure
+
     ├── sampleapp                                   // Root application folder
     │   ├── antie                                   // The framework
     |   |   ├── config                              // Framework configuration directory
@@ -66,13 +67,13 @@ If you do use another structure, you will need to:
 * Update the paths when initialising your application 
 * Override the default layout paths provided in the framework device configuration files from your application device configuration files.
 
-##Device Configuration Files
+## Device Configuration Files
 
 The framework abstracts device specific portions of code to a common API. To specify which differences apply to which devices, configuration files are used \[1\]. The framework contains configuration files for a number of devices which specify defaults we have found to work well. You are free to override these defaults and provide your own configuration via device configuration files within your application. \[2\]
 
 For more information see [Device Configuration]({{site.baseurl}}/overview/device-configuration.html).
 
-##Example Applications
+## Example Applications
 
 The talexample repository contains an example framework application. It demonstrates the use of some TAL widgets and media playback.
 
@@ -108,7 +109,7 @@ Finally, browse to:
   </li>
 </ul>
 
-##Hello World
+## Hello World
 
 Over the next few pages we will describe the minimum setup required to launch a TAL application for use on multiple devices.
 

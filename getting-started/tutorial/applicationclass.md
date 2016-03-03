@@ -96,7 +96,7 @@ require.def('sampleapp/appui/sampleapp',
 );
 {% endhighlight %}
 
-## Responsibilities
+## Responsibilities
 
 Any module extending Application should
 

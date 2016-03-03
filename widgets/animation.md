@@ -149,7 +149,7 @@ This must contain at least one of the following properties:
 
 If you only need to move/scroll along a single axis, only supply one property.
 
-#### moveElementTo()
+#### moveElementTo()
 
 Widgets may be moved within their container using the following method:
 
