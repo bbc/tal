@@ -1,6 +1,0 @@
-  <object id='playerPlugin' border='0' classid='clsid:SAMSUNG-INFOLINK-PLAYER' style='position: absolute'></object>
-  <object id='audioPlugin' border='0' classid='clsid:SAMSUNG-INFOLINK-AUDIO' style='position: absolute'></object>
-  <object id='pluginObjectTV' border='0' classid='clsid:SAMSUNG-INFOLINK-TV' style='position: absolute'></object>
-  <object id='pluginObjectTVMW' border='0' classid='clsid:SAMSUNG-INFOLINK-TVMW' style='position: absolute'></object>
-  <object id='pluginObjectNNavi' border='0' classid='clsid:SAMSUNG-INFOLINK-NNAVI' style='position: absolute'></object>
-  <object id='pluginObjectWindow' border='0' classid='clsid:SAMSUNG-INFOLINK-WINDOW' style='visibility:hidden; position:absolute; opacity: 0.0; width: 0; height: 0'></object>
