@@ -425,9 +425,9 @@ define(
             setElementSize: function(/*el, size*/) { //jshint ignore:line
             },
             /**
-             * -PROTECTED- Scroll an element (within some masking container) so that its top-left corner is at the given position.
-             * Note, fps duration and easing parameters currently only implemented when using styletopleft modifier.
-             * Do not use from within applications, instead use scrolling methods on the widget you wish to scroll. This method may be deprecated in future.
+             * Scroll an element (within some masking container) so that its top-left corner is at the given position.
+             * Note: fps parameter currently only implemented when using styletopleft animation modifier.
+             * Consider using scrolling methods on the widget you wish to scroll (e.g. carousels). This method may be deprecated in future.
              * @param {Object} options
              * @param {Element} options.el The element you wish to scroll.
              * @param {Integer} [options.to.left] The x-coordinate you wish to position the top-left corner on. If null, the x-coordinate will not be altered.
@@ -443,9 +443,9 @@ define(
             scrollElementTo: function(/*options*/) { //jshint ignore:line
             },
             /**
-             * -PROTECTED- Moves an element so that its top-left corner is at the given position.
-             * Note, fps duration and easing parameters currently only implemented when using styletopleft modifier.
-             * Do not use from within applications, instead use the animation methods on the widget you want to move
+             * Moves an element so that its top-left corner is at the given position.
+             * Note: fps parameter currently only implemented when using styletopleft animation modifier.
+             * Consider using any animation methods on the widget you want to move. This method may be deprecated in future.
              * @param {Object} options
              * @param {Element} options.el The element you wish to move.
              * @param {Integer} [options.to.left] The x-coordinate you wish to position the top-left corner on. If null, the x-coordinate will not be altered.
@@ -461,9 +461,9 @@ define(
             moveElementTo: function(/*options*/) { //jshint ignore:line
             },
             /**
-             * -PROTECTED- Hides an element.
-             * Note, fps duration and easing parameters currently only implemented when using styletopleft modifier.
-             * Do not use from within applications, instead use the animation methods on the widget you want to hide.
+             * Hides an element.
+             * Note: fps parameter currently only implemented when using styletopleft animation modifier.
+             * Consider using higher-level methods on the widget you want to hide (e.g. Component.hide()).
              * @param {Object}  options Details of the element to be hidden, with optional parameters.
              * @param {Element} options.el The element you wish to hide.
              * @param {Boolean} [options.skipAnim] By default the hiding of the element will be animated (faded out). Pass <code>true</code> here to prevent animation.
@@ -477,9 +477,9 @@ define(
             hideElement: function(/*options*/) { //jshint ignore:line
             },
             /**
-             * -PROTECTED- Shows an element.
-             * Note, fps duration and easing parameters currently only implemented when using styletopleft modifier.
-             * Do not use from within applications, instead use the animation methods on the widget you want to hide.
+             * Shows an element.
+             * Note: fps and easing parameters only used by styletopleft modifier.
+             * Consider using higher-level methods on the widget you want to show (e.g. ComponentContainer.show()).
              * @param {Object}  options Details of the element to be shown, with optional parameters.
              * @param {Element} options.el The element you wish to show.
              * @param {Boolean} [options.skipAnim] By default the showing of the element will be animated (faded in). Pass <code>true</code> here to prevent animation.
@@ -493,8 +493,8 @@ define(
             showElement: function(/*options*/) { //jshint ignore:line
             },
             /**
-             * -PROTECTED- Tweens a property (or properties) of an element's style from one value to another.
-             * Note fps only used by styletopleft modifier.
+             * Tweens a property (or properties) of an element's style from one value to another.
+             * Note: fps parameter currently only implemented when using styletopleft animation modifier.
              * @param {Object} options Details of the element whose style will be tweened, with parameters describing tween.
              * @param {Element} options.el The element with a style you wish to tween.
              * @param {Object} options.to A property: value map of the style properties you wish to tween and the numerical value of its destination, e.g { width: 30 }
