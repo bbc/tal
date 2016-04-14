@@ -18,6 +18,7 @@ The following methods control animation:
 * `device.scrollElementTo(options)`
 * `device.hideElement(options)`
 * `device.showElement(options)`
+* `device.tweenElementStyle(options)`
 * `device.stopAnimation(handle)`
 
 All animation methods except `stopAnimation()` take an options object and return an animation handle.
@@ -44,7 +45,7 @@ Animations can be configured via a set of properties. These are either passed di
 The order of presidence is:
 
       options object > device configuration > default
-       
+
 with the exception of the global animation toggle, which always overrides any other setting.
 
 ### duration
@@ -53,15 +54,15 @@ How long the animation should take to complete in milliseconds.
 ### onComplete
 A callback function that will be executed when the animation has completed.
 
-### skipAnim 
+### skipAnim
 default=false
 
 A boolean property, if true the animation is skipped - i.e. it completes instantly and any callback is fired immediately. Overridden to true by the global animationDisabled device configuration property.
 
-### easing 
+### easing
 default=easeFromTo
 
-An easing function that defines how the rate the animation progresses over time. 
+An easing function that defines how the rate the animation progresses over time.
 Only available on the movement functions (fades are always linear)
 
 Acceptable values are:
@@ -196,6 +197,46 @@ device.scrollElementTo({
 {% endhighlight %}
 
 *Note:* If an animation method other than 'scrolloffset' is used, a mask element must be created to wrap the output element. The moveElementTo(...) method will then be used on the inner element to move the visible area within the mask. The mask element must be styled to be a offset parent (i.e. `position: absolute`, or `relative`), have a size, and have `overflow: hidden`.
+
+### Tweening style properties
+
+Style properties can be tweened using the following method
+
+{% highlight javascript %}
+device.tweenElementStyle({
+    el: widget.outputElement,   // mandatory
+    from: {                     // mandatory
+        height: 0
+    },
+    to: {                       // mandatory
+        height: 500
+    },
+    skipAnim: true,             // optional
+    duration: 100,              // optional
+    fps: 60,                    // optional
+    onComplete: function () {   // optional
+        // functionality to run after animation has finished
+    }
+});
+{% endhighlight %}
+
+The method will automatically add the correct units for the following properties: `top`, `left`, `bottom`, `right`, `width` and `height`. If you want to tween any other numeric property you'll need to specify the unit in the `units` property of the options object.
+
+{% highlight javascript %}
+device.tweenElementStyle({
+    el: widget.outputElement,
+    from: {
+        maxHeight: 0
+    },
+    to: {
+        maxHeight: 500
+    },
+    units: {
+        maxHeight: 'px'
+    }
+});
+{% endhighlight %}
+
 
 ## Aborting Animations
 
