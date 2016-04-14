@@ -198,9 +198,9 @@ device.scrollElementTo({
 
 *Note:* If an animation method other than 'scrolloffset' is used, a mask element must be created to wrap the output element. The moveElementTo(...) method will then be used on the inner element to move the visible area within the mask. The mask element must be styled to be a offset parent (i.e. `position: absolute`, or `relative`), have a size, and have `overflow: hidden`.
 
-### Tweening style properties
+### Animating style properties
 
-Style properties can be tweened using the following method
+Style properties can be animated using the following method
 
 {% highlight javascript %}
 device.tweenElementStyle({
