@@ -99,7 +99,7 @@
         );
     };
 
-     this.ImageTest.prototype.testRenderUnspecifiedMode = function(queue) {
+    this.ImageTest.prototype.testRenderUnspecifiedMode = function(queue) {
         expectAsserts(8);
 
         queuedApplicationInit(
