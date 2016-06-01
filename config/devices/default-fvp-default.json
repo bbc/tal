@@ -62,7 +62,7 @@
       "413": "STOP",
       "415": "PLAY",
       "467": "SUBTITLE",
-      "473": "FAST_FWD",
+      "417": "FAST_FWD",
       "40": "DOWN",
       "19": "PAUSE",
       "13": "ENTER",
