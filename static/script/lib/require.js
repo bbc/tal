@@ -48,7 +48,7 @@ var require, define;
             cfg = require;
         }
     }
-    
+
         /**
      * Calls a method on a plugin. The obj object should have two property,
      * name: the name of the method to call on the plugin
@@ -70,7 +70,7 @@ var require, define;
             req(["require/" + prefix], context.contextName);
         }
     }
-    
+
     /**
      * Convenience method to call main for a require.def call that was put on
      * hold in the defQueue.
@@ -324,6 +324,9 @@ var require, define;
         defQueue.push([name, deps, callback, null, contextName]);
     };
 
+    //Simulate modern require for newer libraries
+    define.amd = { jQuery: false };
+
     main = function (name, deps, callback, config, contextName, relModuleName) {
         //Grab the context, or create a new one for the given context name.
         var context, newContext, loaded, pluginPrefix,
@@ -347,7 +350,7 @@ var require, define;
                 pluginPrefix = context.defPlugin[name];
             }
 
-            
+
             //If module already defined for context, or already waiting to be
             //evaluated, leave.
             waitingName = context.waiting[name];
@@ -402,7 +405,7 @@ var require, define;
                         if (s.plugins.newContext) {
                 s.plugins.newContext(newContext);
             }
-            
+
             context = s.contexts[contextName] = newContext;
         }
 
@@ -477,7 +480,7 @@ var require, define;
             if (config.ready) {
                 req.ready(config.ready);
             }
-            
+
             //If it is just a config block, nothing else,
             //then return.
             if (!deps) {
@@ -548,7 +551,7 @@ var require, define;
                 args: [name, deps, callback, context]
             });
         }
-        
+
         //Hold on to the module until a script load or other adapter has finished
         //evaluating the whole file. This helps when a file has more than one
         //module in it -- dependencies are not traced and fetched until the whole
@@ -679,7 +682,7 @@ var require, define;
 
         return req;
     };
-    
+
     /**
      * As of jQuery 1.4.3, it supports a readyWait property that will hold off
      * calling jQuery ready callbacks until all scripts are loaded. Be sure
@@ -701,7 +704,7 @@ var require, define;
                     context.defined.jquery = $;
                 }
 
-                //Make sure 
+                //Make sure
                 if (context.scriptCount) {
                     $.readyWait += 1;
                     context.jQueryIncremented = true;
@@ -872,7 +875,7 @@ var require, define;
             }
         }
     };
-    
+
     req.isArray = function (it) {
         return ostring.call(it) === "[object Array]";
     };
@@ -1020,7 +1023,7 @@ var require, define;
      * Splits a name into a possible plugin prefix and
      * the module name. If baseName is provided it will
      * also normalize the name via require.normalizeName()
-     * 
+     *
      * @param {String} name the module name
      * @param {String} [baseName] base name that name is
      * relative to.
@@ -1149,7 +1152,7 @@ var require, define;
                 hasLoadedProp = false, stillLoading = false, prop,
 
                                 pIsWaiting = s.plugins.isWaiting, pOrderDeps = s.plugins.orderDeps,
-                
+
                 i, module, allDone, loads, loadArgs, err;
 
         //If already doing a checkLoaded call,
@@ -1234,7 +1237,7 @@ var require, define;
         if (pOrderDeps) {
             pOrderDeps(context);
         }
-        
+
                 //Before defining the modules, give priority treatment to any modifiers
         //for modules that are already defined.
         for (prop in modifiers) {
@@ -1244,7 +1247,7 @@ var require, define;
                 }
             }
         }
-        
+
         //Define the modules, doing a depth first search.
         for (i = 0; (module = waiting[i]); i++) {
             req.exec(module, {}, waiting, context);
@@ -1344,12 +1347,12 @@ var require, define;
 
     /**
      * Executes the modules in the correct order.
-     * 
+     *
      * @private
      */
     req.exec = function (module, traced, waiting, context) {
         //Some modules are just plain script files, abddo not have a formal
-        //module definition, 
+        //module definition,
         if (!module) {
             //Returning undefined for Spidermonky strict checking in Komodo
             return undefined;
@@ -1426,7 +1429,7 @@ var require, define;
 
                 //Execute modifiers, if they exist.
         req.execModifiers(name, traced, waiting, context);
-        
+
         return ret;
     };
 
@@ -1466,7 +1469,7 @@ var require, define;
             delete modifiers[target];
         }
     };
-    
+
     /**
      * callback for script loads, used to check status of loading.
      *
@@ -1587,11 +1590,11 @@ var require, define;
         if (cfg.baseUrlMatch) {
             rePkg = cfg.baseUrlMatch;
         } else {
-            
-            
-            
+
+
+
                         rePkg = /(allplugins-)?require\.js(\W|$)/i;
-            
+
                     }
 
         for (i = scripts.length - 1; i > -1 && (script = scripts[i]); i--) {
@@ -1742,7 +1745,7 @@ var require, define;
         }
     }
     //****** END page load functionality ****************
-    
+
     //Set up default context. If require was a configuration object, use that as base config.
     req(cfg);
 
@@ -2044,7 +2047,7 @@ var require, define;
                         if (loc === "_match") {
                             //Found default locale to use for the top-level bundle name.
                             defLoc = msWaiting[loc];
-                        
+
                         } else if (msWaiting[loc] !== loc) {
                             //A "best fit" locale, store it off to the end and handle
                             //it at the end by just assigning the best fit value, since
@@ -2074,7 +2077,7 @@ var require, define;
                 //loop above so that the default locale bundle has been properly mixed
                 //together.
                 context.defined[master] = context.defined[modulePrefix + "/" + defLoc + "/" + moduleSuffix];
-                
+
                 //Handle any best fit locale definitions.
                 if (bestFit) {
                     for (loc in bestFit) {
@@ -2139,7 +2142,7 @@ var require, define;
                         progIds = [progId];  // so faster next time
                         break;
                     }
-                }   
+                }
             }
 
             if (!xhr) {
@@ -2149,7 +2152,7 @@ var require, define;
             return xhr;
         };
     }
-    
+
     if (!require.fetchText) {
         require.fetchText = function (url, callback) {
             var xhr = require.getXhr();
@@ -2414,7 +2417,7 @@ var require, define;
 
         /**
          * Called when all modules have been loaded. Not needed for this plugin.
-         * State is reset as part of scriptCacheCallback. 
+         * State is reset as part of scriptCacheCallback.
          */
         orderDeps: function (context) {
         }
