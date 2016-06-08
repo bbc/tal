@@ -78,7 +78,7 @@ The playback state can be accessed using `getState()`.
 * Device metadata/start-buffering/finish-buffering : stay in `STOPPED`
 * On network error : transition to `ERROR`
 
-#### In state `BUFFERING`
+#### In state `BUFFERING`
 * On entry to state: fire event type `MediaPlayer.EVENT.BUFFERING`
 * Call `playFrom(time)`: seek to time (clamped to the available range), and remember to resume playback and transition to `PLAYING` when sufficient data is available
 * Call `stop()` : transition to `STOPPED`
