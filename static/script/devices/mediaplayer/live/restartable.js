@@ -35,6 +35,7 @@ define(
     ],
     function (Class, RuntimeContext, Device, MediaPlayer) {
         'use strict';
+        var AUTO_RESUME_WINDOW_START_CUSHION_MILLISECONDS = 8000;
 
         /**
          * Live player for devices that support restarting while playing live streams, but cannot seek within them.
@@ -153,12 +154,13 @@ define(
             _autoResumeAtStartOfRange: function () {
                 var self = this;
                 if (this._millisecondsUntilStartOfWindow !== null) {
+                    var resumeTimeOut = Math.max(0, this._millisecondsUntilStartOfWindow - AUTO_RESUME_WINDOW_START_CUSHION_MILLISECONDS);
                     var pauseStarted = new Date().getTime();
                     var autoResumeTimer = setTimeout(function () {
                         self.removeEventCallback(self, detectIfUnpaused);
                         self._millisecondsUntilStartOfWindow = 0;
                         self.resume();
-                    }, self._millisecondsUntilStartOfWindow);
+                    }, resumeTimeOut);
 
                     this.addEventCallback(this, detectIfUnpaused);
                 }
