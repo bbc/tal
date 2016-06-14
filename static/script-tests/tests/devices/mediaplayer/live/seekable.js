@@ -299,8 +299,8 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeWhenPausedAndStartOfRangeIsReached = function (queue) {
-        expectAsserts(1);
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeWhenPausedAndStartOfRangeIsApproached = function (queue) {
+        expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
@@ -318,7 +318,11 @@
 
             var clock = sinon.useFakeTimers();
             livePlayer.pause();
-            clock.tick(30 * 1000);
+            clock.tick(21 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
@@ -345,7 +349,7 @@
 
             var clock = sinon.useFakeTimers();
             livePlayer.pause({disableAutoResume: true});
-            clock.tick(30 * 1000);
+            clock.tick(22 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.notCalled);
 
@@ -354,7 +358,7 @@
     };
 
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelSeekableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsApproached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
@@ -377,7 +381,7 @@
             livePlayer.pause();
 
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
-            clock.tick(30 * 1000);
+            clock.tick(22 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.notCalled);
 
@@ -409,7 +413,7 @@
 
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PAUSED);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
-            clock.tick(30 * 1000);
+            clock.tick(22 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 

@@ -223,8 +223,8 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromThenPausedAndStartOfRangeIsReached = function (queue) {
-        expectAsserts(1);
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackFromThenPausedAndStartOfRangeIsApproached = function (queue) {
+        expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
@@ -237,7 +237,11 @@
             var clock = sinon.useFakeTimers();
             livePlayer.beginPlaybackFrom(30);
             livePlayer.pause();
-            clock.tick(30 * 1000);
+            clock.tick(21 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
@@ -245,8 +249,8 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackThenPausedAndStartOfRangeIsReached = function (queue) {
-        expectAsserts(1);
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenBeginPlaybackThenPausedAndStartOfRangeIsApproached = function (queue) {
+        expectAsserts(2);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
@@ -262,15 +266,20 @@
             livePlayer.beginPlayback();
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
             livePlayer.pause();
-            clock.tick(30 * 1000);
+            clock.tick(21 * 1000);
+
+            assert(livePlayer._mediaPlayer.resume.notCalled);
+
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
             clock.restore();
+
         }, config);
     };
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenPausedMultipleTimesAndStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeWhenPausedMultipleTimesAndStartOfRangeIsApproached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
@@ -285,10 +294,10 @@
             var clock = sinon.useFakeTimers();
             livePlayer.beginPlaybackFrom(30);
             livePlayer.pause();
-            clock.tick(15 * 1000);
+            clock.tick(21 * 1000);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
             livePlayer.pause();
-            clock.tick(15 * 1000);
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
@@ -296,7 +305,7 @@
         }, config);
     };
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsReached = function (queue) {
+    this.LivePlayerSupportLevelRestartableTest.prototype.testAutoResumeCancelledWhenPausedAndResumedBeforeStartOfRangeIsApproached = function (queue) {
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/restartable'], function (application, MediaPlayer, Device) {
             var device = new Device(antie.framework.deviceConfiguration);
@@ -313,7 +322,7 @@
             livePlayer.pause();
 
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
-            clock.tick(30 * 1000);
+            clock.tick(22 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.notCalled);
 
@@ -392,7 +401,7 @@
 
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PAUSED);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.SENTINEL_PAUSE);
-            clock.tick(30 * 1000);
+            clock.tick(22 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
@@ -419,14 +428,14 @@
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.BUFFERING);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.BUFFERING);
 
-            clock.tick(10 * 1000);
+            clock.tick(21 * 1000);
 
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
 
             livePlayer.pause();
 
-            clock.tick(20 * 1000);
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
@@ -455,14 +464,14 @@
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.BUFFERING);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.BUFFERING);
 
-            clock.tick(10 * 1000);
+            clock.tick(21 * 1000);
 
             livePlayer._mediaPlayer.getState.returns(MediaPlayer.STATE.PLAYING);
             livePlayer._mediaPlayer._emitEvent(MediaPlayer.EVENT.PLAYING);
 
             livePlayer.pause();
 
-            clock.tick(20 * 1000);
+            clock.tick(1 * 1000);
 
             assert(livePlayer._mediaPlayer.resume.called);
 
