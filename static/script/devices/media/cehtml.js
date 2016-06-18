@@ -79,7 +79,7 @@ define(
                 this._mediaElement = obj;
                 this._outputElement.appendChild(this._mediaElement);
             },
-            render: function(/*device*/) { //jshint ignore:line
+            render: function(/*device*/) {
                 return this._outputElement;
             },
             // (not part of HTML5 media)
@@ -201,11 +201,11 @@ define(
                 // TODO: CE-HTML implementation
                 return 'none';
             },
-            setPreload: function(/*preload*/) { //jshint ignore:line
+            setPreload: function(/*preload*/) {
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges buffered;
-            getBuffered: function() { //jshint ignore:line
+            getBuffered: function() {
                 // TODO: CE-HTML implementation
                 return [];
             },
@@ -214,7 +214,7 @@ define(
                 // TODO: CE-HTML implementation
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(/*type*/) { //jshint ignore:line
+            canPlayType: function(/*type*/) {
                 // TODO: CE-HTML implementation
                 return true;
             },
@@ -275,7 +275,7 @@ define(
                 // TODO: CE-HTML implementation
                 return 1;
             },
-            setPlaybackRate: function(/*playbackRate*/) { //jshint ignore:line
+            setPlaybackRate: function(/*playbackRate*/) {
                 // TODO: CE-HTML implementation
             },
             // readonly attribute TimeRanges played;
@@ -297,7 +297,7 @@ define(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setAutoPlay: function(/*autoplay*/) { //jshint ignore:line
+            setAutoPlay: function(/*autoplay*/) {
                 // TODO: CE-HTML implementation
             },
             // attribute boolean loop;
@@ -305,7 +305,7 @@ define(
                 // TODO: CE-HTML implementation
                 return false;
             },
-            setLoop: function(/*loop*/) { //jshint ignore:line
+            setLoop: function(/*loop*/) {
                 // TODO: CE-HTML implementation
             },
             // void play();
@@ -325,7 +325,7 @@ define(
                 this._mediaElement.play(0);
             },
             // attribute boolean controls;
-            setNativeControls: function(/*controls*/) { //jshint ignore:line
+            setNativeControls: function(/*controls*/) {
                 // TODO: CE-HTML implementation
             },
             getNativeControls: function() {
@@ -356,7 +356,7 @@ define(
         Device.prototype.createMediaInterface = function(id, mediaType, eventCallback) {
             return new CEHTMLPlayer(id, mediaType, eventCallback);
         };
-        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) { //jshint ignore:line
+        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) {
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
 

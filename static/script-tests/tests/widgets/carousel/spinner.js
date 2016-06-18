@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.SpinnerTest = AsyncTestCase('Spinner'); //jshint ignore:line
+
+    this.SpinnerTest = AsyncTestCase('Spinner');
 
     this.SpinnerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

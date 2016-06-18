@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.HorizontalCarouselTest = AsyncTestCase('HorizontalCarousel'); //jshint ignore:line
+    this.HorizontalCarouselTest = AsyncTestCase('HorizontalCarousel');
 
     var addTestButtons = function(noButtonsReq, widget, Button) {
         for(var i = 0; i < noButtonsReq; i++) {

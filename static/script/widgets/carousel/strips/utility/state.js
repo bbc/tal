@@ -34,15 +34,15 @@ define(
                 // implement in child
             },
 
-            append: function (/*context, parent, widget*/) { //jshint ignore:line
+            append: function (/*context, parent, widget*/) {
                 // implement in child
             },
 
-            prepend: function (/*context, parent, widget*/) { //jshint ignore:line
+            prepend: function (/*context, parent, widget*/) {
                 // implement in child
             },
 
-            detach: function (/*context, widget*/) { //jshint ignore:line
+            detach: function (/*context, widget*/) {
                 // implement in child
             },
 

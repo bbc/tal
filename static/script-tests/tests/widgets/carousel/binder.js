@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.BinderTest = AsyncTestCase('Binder'); //jshint ignore:line
+
+    this.BinderTest = AsyncTestCase('Binder');
 
     this.BinderTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

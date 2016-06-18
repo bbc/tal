@@ -23,8 +23,8 @@
  */
 
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.WrappingNavigatorTest = AsyncTestCase('WrappingNavigator'); //jshint ignore:line
+
+    this.WrappingNavigatorTest = AsyncTestCase('WrappingNavigator');
 
     this.WrappingNavigatorTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

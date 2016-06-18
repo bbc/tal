@@ -23,8 +23,7 @@
  */
 
 (function () {
-    // jshint newcap: false
-    this.LivePlayerSupportLevelRestartableTest = AsyncTestCase('LivePlayerSupportLevelRestartableTest'); //jshint ignore:line
+    this.LivePlayerSupportLevelRestartableTest = AsyncTestCase('LivePlayerSupportLevelRestartableTest');
 
     this.LivePlayerSupportLevelRestartableTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

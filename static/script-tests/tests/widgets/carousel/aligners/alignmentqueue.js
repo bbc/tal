@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.AlignmentQueueTest = AsyncTestCase('AlignmentQueue'); //jshint ignore:line
+
+    this.AlignmentQueueTest = AsyncTestCase('AlignmentQueue');
 
     this.AlignmentQueueTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

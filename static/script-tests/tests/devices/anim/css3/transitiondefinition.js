@@ -23,7 +23,7 @@
  */
 
 (function() {
-    /* jshint newcap: false */
+
     function loadTD(queue, fn) {
         queuedRequire(
             queue,
@@ -32,7 +32,7 @@
         );
     }
 
-    this.TransitionDefinitionTest = AsyncTestCase('TransitionDefinition'); //jshint ignore:line
+    this.TransitionDefinitionTest = AsyncTestCase('TransitionDefinition');
 
     this.TransitionDefinitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

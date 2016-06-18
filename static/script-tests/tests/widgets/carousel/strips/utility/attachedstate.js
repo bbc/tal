@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.AttachedStateTest = AsyncTestCase('AttachedState'); //jshint ignore:line
+
+    this.AttachedStateTest = AsyncTestCase('AttachedState');
 
     this.AttachedStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

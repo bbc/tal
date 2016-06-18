@@ -1,4 +1,3 @@
-/* jshint -W030 */
 /**
  * @fileOverview Requirejs module containing the antie.BrowserDevice class.
  *

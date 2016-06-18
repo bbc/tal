@@ -34,11 +34,11 @@ define(
 
             },
 
-            append: function (/*context, parent, widget*/) { //jshint ignore:line
+            append: function (/*context, parent, widget*/) {
 
             },
 
-            prepend: function (/*context, parent, widget*/) { //jshint ignore:line
+            prepend: function (/*context, parent, widget*/) {
 
             },
 

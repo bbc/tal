@@ -203,7 +203,6 @@ define(
                 this.filteredLoggingMethods = filterLoggingMethods(config, selectLoggingStrategy(config, this.loggingStrategies));
 
                 function filterLoggingMethods(config, loggingMethods) {
-                    /* jshint -W086 */ // We're falling through case statements deliberately
                     var filteredLogging = ignoreLoggingMethods;
 
                     if (config.logging && config.logging.level) {
@@ -287,7 +286,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A container element within the device's user-agent.
              */
-            createContainer: function(/*id, classNames*/) { //jshint ignore:line
+            createContainer: function(/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a label (an element that only contains text) in the device's user-agent.
@@ -298,7 +297,7 @@ define(
              * @param {String} [text] The text within the label.
              * @returns A label within the device's user-agent.
              */
-            createLabel: function(/*id, classNames, text*/) { //jshint ignore:line
+            createLabel: function(/*id, classNames, text*/) {
             },
             /**
              * -PROTECTED- Creates a button (an element that can be selected by the user to perform an action) in the device's user-agent.
@@ -308,7 +307,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A button within the device's user-agent.
              */
-            createButton: function(/*id, classNames*/) { //jshint ignore:line
+            createButton: function(/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a list in the device's user-agent.
@@ -318,7 +317,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list within the device's user-agent.
              */
-            createList: function(/*id, classNames*/) { //jshint ignore:line
+            createList: function(/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a list item in the device's user-agent.
@@ -328,7 +327,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list item within the device's user-agent.
              */
-            createListItem: function(/*id, classNames*/) { //jshint ignore:line
+            createListItem: function(/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates an image in the device's user-agent.
@@ -339,21 +338,21 @@ define(
              * @param {String} src The source URL of the image.
              * @returns An image within the device's user-agent.
              */
-            createImage: function(/*id, classNames, src*/) { //jshint ignore:line
+            createImage: function(/*id, classNames, src*/) {
             },
             /**
              * Appends an element as a child of another.
              * @param {Element} to Append as a child of this element.
              * @param {Element} el The new child element.
              */
-            appendChildElement: function(/*to, el*/) { //jshint ignore:line
+            appendChildElement: function(/*to, el*/) {
             },
             /**
              * Sets the classes of an element.
              * @param {Element} el The element which will receive new class names.
              * @param {Array} classNames An array of class names.
              */
-            setElementClasses: function(/*el, classNames*/) { //jshint ignore:line
+            setElementClasses: function(/*el, classNames*/) {
             },
             /**
              * Removes a class from an element (and optionally descendants)
@@ -361,14 +360,14 @@ define(
              * @param {String} className The class to remove.
              * @param {Boolean} [deep] If true, and this element has the given class, remove the class from it's children recursively.
              */
-            removeClassFromElement: function(/*el, className, deep*/) { //jshint ignore:line
+            removeClassFromElement: function(/*el, className, deep*/) {
             },
             /**
              * Adds a class name to an element
              * @param {Element} el The element which will receive new class name.
              * @param {String} className The new class name to add.
              */
-            addClassToElement: function(/*el, className*/) { //jshint ignore:line
+            addClassToElement: function(/*el, className*/) {
             },
             /**
              * Adds global key event listener(s) to the user-agent.
@@ -389,40 +388,40 @@ define(
              * @param {String} tagName The tag name you are looking for.
              * @returns An array of elements having the provided tag name.
              */
-            getChildElementsByTagName: function(/*el, tagName*/) { //jshint ignore:line
+            getChildElementsByTagName: function(/*el, tagName*/) {
             },
             /**
              * Returns the top-level element. This is the target of layout class names.
              * @return The top-level DOM element.
              */
-            getTopLevelElement: function() { //jshint ignore:line
+            getTopLevelElement: function() {
             },
             /**
              * Returns all the loaded stylesheet elements.
              * @return An array containing all loaded stylesheet elements (link and style elements)
              */
-            getStylesheetElements: function() { //jshint ignore:line
+            getStylesheetElements: function() {
             },
             /**
              * Returns the offset of the element within its offset container.
              * @param {Element} el The element you wish to know the offset of.
              * @return An literal object containing properties, top and left.
              */
-            getElementOffset: function(/*el*/) { //jshint ignore:line
+            getElementOffset: function(/*el*/) {
             },
             /**
              * Gets the size of an element.
              * @param {Element} el The element of which to return the size.
              * @returns A size object containing the width and height of the element.
              */
-            getElementSize: function(/*el*/) { //jshint ignore:line
+            getElementSize: function(/*el*/) {
             },
             /**
              * Sets the size of an element.
              * @param {Element} el The element of which to set the size.
              * @param {Size} size The new size of the element.
              */
-            setElementSize: function(/*el, size*/) { //jshint ignore:line
+            setElementSize: function(/*el, size*/) {
             },
             /**
              * Scroll an element (within some masking container) so that its top-left corner is at the given position.
@@ -440,7 +439,7 @@ define(
              * @returns {Object} A handle to any animation started
              * @see antie.devices.Device#stopAnimation
              */
-            scrollElementTo: function(/*options*/) { //jshint ignore:line
+            scrollElementTo: function(/*options*/) {
             },
             /**
              * Moves an element so that its top-left corner is at the given position.
@@ -458,7 +457,7 @@ define(
              * @returns {Object} A handle to any animation started
              * @see #stopAnimation
              */
-            moveElementTo: function(/*options*/) { //jshint ignore:line
+            moveElementTo: function(/*options*/) {
             },
             /**
              * Hides an element.
@@ -474,7 +473,7 @@ define(
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            hideElement: function(/*options*/) { //jshint ignore:line
+            hideElement: function(/*options*/) {
             },
             /**
              * Shows an element.
@@ -490,7 +489,7 @@ define(
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            showElement: function(/*options*/) { //jshint ignore:line
+            showElement: function(/*options*/) {
             },
             /**
              * Tweens a property (or properties) of an element's style from one value to another.
@@ -507,26 +506,26 @@ define(
              * @param {Number} [options.fps] Frames per second of animation (styletopleft only)
              * @returns {Object} A handle to animation started. This should only be used for passing to stopAnimation and nothing else should be inferred by its value. If no animation occurs, null may be returned but should not be used as an indicator.
              */
-            tweenElementStyle: function(/*options*/){ //jshint ignore:line
+            tweenElementStyle: function(/*options*/){
 
             },
             /**
              * Stops the specified animation. The any completeHandler for the animation will be executed.
              * @param {object} anim A handle to the animation you wish to stop.
              */
-            stopAnimation: function(/*anim*/) { //jshint ignore:line
+            stopAnimation: function(/*anim*/) {
             },
             /**
              * Encodes an object as JSON.
              * @param {object} obj Object to encode.
              */
-            encodeJson: function(/*obj*/) { //jshint ignore:line
+            encodeJson: function(/*obj*/) {
             },
             /**
              * Decodes JSON.
              * @param {String} json JSON to decode.
              */
-            decodeJson: function(/*json*/) { //jshint ignore:line
+            decodeJson: function(/*json*/) {
             },
             /**
              * Gets the current key map from the device configuration.
@@ -542,7 +541,7 @@ define(
              * @param mediaType Type of media. "audio" or "video"
              * @param eventCallback Function that is called to processes media events.
              */
-            createMediaInterface: function(/*id, mediaType, eventCallback*/) { //jshint ignore:line
+            createMediaInterface: function(/*id, mediaType, eventCallback*/) {
             },
             /**
              * Get the media player.
@@ -570,14 +569,14 @@ define(
              * @param {String} mediaType "video" or "radio".
              * @returns The embed mode of the current player
              */
-            getPlayerEmbedMode: function(/*mediaType*/) { //jshint ignore:line
+            getPlayerEmbedMode: function(/*mediaType*/) {
                 // mediaType: video or audio
             },
             /**
              * Sets the current route (a reference pointing to a location within the application).
              * @param {Array} route A route pointing to a location within the application.
              */
-            setCurrentRoute: function(/*route*/) { //jshint ignore:line
+            setCurrentRoute: function(/*route*/) {
             },
             /**
              * Gets the current route (a reference pointing to a location within the application).
@@ -600,7 +599,7 @@ define(
              * to manipulate the current location more easily.
              * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            setWindowLocationUrl: function(/*url*/) { //jshint ignore:line
+            setWindowLocationUrl: function(/*url*/) {
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
@@ -618,7 +617,7 @@ define(
              * @param {String} [callbackSuffix] Suffix to append to end of callback function name.
              * @returns The script element that will load the script.
              */
-            loadScript: function(/*url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix*/) { //jshint ignore:line
+            loadScript: function(/*url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix*/) {
             },
             /**
              * Loads an external style sheet.
@@ -626,7 +625,7 @@ define(
              * @param {function(String)} [callback] Callback function when style has loaded/failed
              * @returns The link element that will load the style sheet.
              */
-            loadStyleSheet: function(/*url, callback*/) { //jshint ignore:line
+            loadStyleSheet: function(/*url, callback*/) {
             },
             /**
              * Loads a resource from a URL protected by device authentication.
@@ -634,7 +633,7 @@ define(
              * @param {Object} opts Object containing onLoad and onError callback functions.
              * @returns The request object used to load the resource.
              */
-            loadAuthenticatedURL: function(/*url, opts*/) { //jshint ignore:line
+            loadAuthenticatedURL: function(/*url, opts*/) {
             },
             /**
              * Loads a resource from a URL.
@@ -642,7 +641,7 @@ define(
              * @param {Object} opts Object containing onLoad and onError callback functions.
              * @returns The request object used to load the resource.
              */
-            loadURL: function(/*url, opts*/) { //jshint ignore:line
+            loadURL: function(/*url, opts*/) {
             },
             /**
              * Performs a POST HTTP request to a URL on a different host/domain.
@@ -650,7 +649,7 @@ define(
              * @param {Object} data Associative array of fields/values to post.
              * @param {Object} opts Object containing onLoad and onError callback functions.
              */
-            crossDomainPost: function(/*url, opts*/) { //jshint ignore:line
+            crossDomainPost: function(/*url, opts*/) {
             },
             /**
              * Performs a cross domain GET for a decoded JSON object utilising CORS if supported by
@@ -664,7 +663,7 @@ define(
              * @param {String} [options.callbackKey=callback] Key to use in query string when passing callback function name
              * for JSON-P call. Default: callback
              */
-            executeCrossDomainGet: function(/*url, callbacks, options*/) { //jshint ignore:line
+            executeCrossDomainGet: function(/*url, callbacks, options*/) {
             },
             /**
              * Performs a cross domain POST HTTP using CORS or the content delivered as a single form field value depending on device capability
@@ -673,13 +672,13 @@ define(
              * @param {Object} opts Object containing onLoad and onError callback functions and a fieldName property to be
              * used for the name of the form filed if the iframe hack is used
              */
-            executeCrossDomainPost: function(/*url, data, opts*/) { //jshint ignore:line
+            executeCrossDomainPost: function(/*url, data, opts*/) {
             },
             /**
              * Forces the device to pre-load an image.
              * @param {String} url The URL of the image to preload.
              */
-            preloadImage: function(/*url*/) { //jshint ignore:line
+            preloadImage: function(/*url*/) {
             },
             /**
              * Checks to see if HD output is currently enabled.
@@ -729,7 +728,7 @@ define(
              * Set the current volume.
              * @param {Float} volume The new volume level (0.0 to 1.0).
              */
-            setVolume: function(/*volume*/) { //jshint ignore:line
+            setVolume: function(/*volume*/) {
             },
             /**
              * Check to see if the volume is currently muted.
@@ -741,7 +740,7 @@ define(
              * Mute or unmute the device.
              * @param {Boolean} muted The new muted state. Boolean true to mute, false to unmute.
              */
-            setMuted: function(/*muted*/) { //jshint ignore:line
+            setMuted: function(/*muted*/) {
             },
             /**
              * Check to see whether device has disabled animation.

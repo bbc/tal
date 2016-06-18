@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ApplicationRoutingTest = AsyncTestCase('Application_Routing'); //jshint ignore:line
+    this.ApplicationRoutingTest = AsyncTestCase('Application_Routing');
 
     this.ApplicationRoutingTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -98,7 +98,7 @@
 
             var routeStub = this.sandbox.stub(MockApplication.prototype, 'route');
 
-            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
+            new MockApplication(document.createElement('div'), null, null, null);
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];

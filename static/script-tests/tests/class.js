@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ClassTest = AsyncTestCase('Class'); //jshint ignore:line
+    this.ClassTest = AsyncTestCase('Class');
 
     this.ClassTest.prototype.setUp = function() {
     };

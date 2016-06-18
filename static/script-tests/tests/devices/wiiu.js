@@ -54,7 +54,7 @@
 
         var gamePadEventListenerSpy = this.sandbox.spy(window.nwf.input.WiiUGamePad, '_privateAddEventListener');
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function() { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function() {
             assertTrue(gamePadEventListenerSpy.called);
             assertEquals(nwf.events.ButtonControlEvent.PRESS, gamePadEventListenerSpy.getCall(0).args[0]);
             assertEquals(nwf.events.ButtonControlEvent.RELEASE, gamePadEventListenerSpy.getCall(1).args[0]);
@@ -119,7 +119,7 @@
         expectAsserts(1);
         var self = this;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_X);
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_X);
@@ -132,7 +132,7 @@
         expectAsserts(1);
         var self = this;
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var bubbleEventSpy = this.sandbox.spy(application, 'bubbleEvent');
             mockGamePadButtonPress(application, window.nwf.input.ControllerButton.GAMEPAD_Y);
             mockGamePadButtonRelease(application, window.nwf.input.ControllerButton.GAMEPAD_Y);
@@ -261,7 +261,7 @@
 
         var gamePadEventListenerSpy = this.sandbox.spy(window.nwf.input.WiiRemote, '_privateAddEventListener');
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function() { //jshint ignore:line
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function() {
             assertTrue(gamePadEventListenerSpy.called);
             assertEquals(nwf.events.ButtonControlEvent.PRESS, gamePadEventListenerSpy.getCall(0).args[0]);
             assertEquals(nwf.events.ButtonControlEvent.RELEASE, gamePadEventListenerSpy.getCall(1).args[0]);
@@ -462,13 +462,13 @@
                     };
                     return controllerObject;
                 },
-                _privateAddEventListener : function() { //jshint ignore:line
+                _privateAddEventListener : function() {
                     // Stub this out to ensure the event listener has been called correctly
                 }
             },
             WiiRemote: {
                 REMOTE_1 : 'TBA',
-                getController : function() { //jshint ignore:line
+                getController : function() {
                     var self = this;
                     var controllerObject = {
                         connected: true,
@@ -480,7 +480,7 @@
                     };
                     return controllerObject;
                 },
-                _privateAddEventListener : function() { //jshint ignore:line
+                _privateAddEventListener : function() {
                     // Stub this out to ensure the event listener has been called correctly
                 }
             }

@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.MaskTest = AsyncTestCase('Mask'); //jshint ignore:line
+
+    this.MaskTest = AsyncTestCase('Mask');
 
     this.MaskTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

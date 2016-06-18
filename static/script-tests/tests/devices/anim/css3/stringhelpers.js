@@ -23,7 +23,7 @@
  */
 
 (function() {
-    /* jshint newcap: false */
+
     function loadSH(queue, fn) {
         queuedRequire(queue,
                       ['antie/devices/anim/css3/stringhelpers'],
@@ -31,7 +31,7 @@
                      );
     }
 
-    this.StringHelpersTest = AsyncTestCase('StringHelpers'); //jshint ignore:line
+    this.StringHelpersTest = AsyncTestCase('StringHelpers');
 
     this.StringHelpersTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

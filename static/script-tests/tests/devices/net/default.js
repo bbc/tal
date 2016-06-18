@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.DefaultNetworkTest = AsyncTestCase('Network (Default)'); //jshint ignore:line
+    this.DefaultNetworkTest = AsyncTestCase('Network (Default)');
 
     this.DefaultNetworkTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

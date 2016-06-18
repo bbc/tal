@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.AlignerTest = AsyncTestCase('Aligner'); //jshint ignore:line
+
+    this.AlignerTest = AsyncTestCase('Aligner');
 
     this.AlignerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

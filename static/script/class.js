@@ -1,5 +1,3 @@
-/* Surpression of JSHint 'Don't make functions within a loop'*/
-/* jshint -W083 */
 /**
  * @fileOverview Requirejs module containing antie.Class top-level base class.
  *

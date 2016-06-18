@@ -23,7 +23,7 @@
  */
 
 (function() {
-    /* jshint newcap: false */
+
     function loadTE(queue, fn) {
         queuedRequire(
             queue,
@@ -93,7 +93,7 @@
         return transEl;
     }
 
-    this.TransitionElementTest = AsyncTestCase('TransitionElement'); //jshint ignore:line
+    this.TransitionElementTest = AsyncTestCase('TransitionElement');
 
     this.TransitionElementTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

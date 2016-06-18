@@ -23,8 +23,8 @@
  */
 
 (function() {
-    /* jshint newcap: false, onevar: false */
-    this.BrowserDeviceTest = AsyncTestCase('BrowserDevice'); //jshint ignore:line
+    /* , onevar: false */
+    this.BrowserDeviceTest = AsyncTestCase('BrowserDevice');
 
     this.BrowserDeviceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

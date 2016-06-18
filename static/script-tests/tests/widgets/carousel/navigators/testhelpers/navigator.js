@@ -40,7 +40,7 @@ require.def('tests/widgets/navigators/testhelpers/navigator',
                     var prototype, propertyName, property;
                     prototype = Class.prototype;
                     /*eslint-disable */
-                    for (propertyName in prototype) { //jshint ignore:line
+                    for (propertyName in prototype) {
                     /*eslint-enable */
                         property = prototype[propertyName];
                         if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {

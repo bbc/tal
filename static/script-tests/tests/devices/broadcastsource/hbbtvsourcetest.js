@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.hbbtvSource = AsyncTestCase('HBBTV Broadcast Source'); //jshint ignore:line
+    this.hbbtvSource = AsyncTestCase('HBBTV Broadcast Source');
 
     /*  Helper functions to mock out and use HBBTV specific APIs */
 

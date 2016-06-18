@@ -23,9 +23,8 @@
  */
 
 (function() {
-    // jshint newcap: false
-    /* global console */
-    this.LoggingTest = AsyncTestCase('Logging'); //jshint ignore:line
+        /* global console */
+    this.LoggingTest = AsyncTestCase('Logging');
 
     this.LoggingTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

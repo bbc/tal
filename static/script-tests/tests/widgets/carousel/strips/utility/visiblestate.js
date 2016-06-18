@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.VisibleStateTest = AsyncTestCase('VisibleState'); //jshint ignore:line
+
+    this.VisibleStateTest = AsyncTestCase('VisibleState');
 
     this.VisibleStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

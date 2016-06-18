@@ -73,7 +73,7 @@ define(
              * @param params.onError function called if retrieving the channel list fails.
              * @returns an array of strings, each representing an available channel
              */
-            getChannelNameList : function (/*params*/) { //jshint ignore:line
+            getChannelNameList : function (/*params*/) {
                 throw new Error('Device broadcast source does not override abstract method getChannelList');
             },
             /**
@@ -84,7 +84,7 @@ define(
              * @param width
              * @param height
              */
-            setPosition : function(/*top, left, width, height*/) { //jshint ignore:line
+            setPosition : function(/*top, left, width, height*/) {
                 throw new Error('Device broadcast source does not override abstract method setPosition');
             },
         /**
@@ -100,7 +100,7 @@ define(
              * @param params.onSuccess function to be called if the tuner was retuned successfully
              * @param params.onError function to be called if the provided channel was unable to be tuned
              */
-            setChannelByName : function(/*params*/) { //jshint ignore:line
+            setChannelByName : function(/*params*/) {
                 throw new Error('Device broadcast source does not override abstract method setChannelByName');
             },
             /**

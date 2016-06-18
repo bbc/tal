@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.CookieStorageProviderTest = AsyncTestCase('Storage_Cookie'); //jshint ignore:line
+    this.CookieStorageProviderTest = AsyncTestCase('Storage_Cookie');
 
     var stores;
 

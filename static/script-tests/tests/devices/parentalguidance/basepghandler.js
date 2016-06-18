@@ -23,7 +23,7 @@
  */
 
 (function () {
-    this.BasePgHandlerTest = AsyncTestCase('Base PG Handler'); //jshint ignore:line
+    this.BasePgHandlerTest = AsyncTestCase('Base PG Handler');
 
     this.BasePgHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
