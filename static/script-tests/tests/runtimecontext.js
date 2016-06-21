@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.RuntimeContextTest = AsyncTestCase('RuntimeContext'); //jshint ignore:line
+    this.RuntimeContextTest = AsyncTestCase('RuntimeContext');
 
     this.RuntimeContextTest.prototype.testGetApplicationWhenNoApplicationIsSet = function(queue) {
         expectAsserts(1);

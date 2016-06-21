@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.HiddenStateTest = AsyncTestCase('HiddenState'); //jshint ignore:line
+
+    this.HiddenStateTest = AsyncTestCase('HiddenState');
 
     this.HiddenStateTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

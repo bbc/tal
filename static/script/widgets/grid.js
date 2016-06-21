@@ -149,7 +149,7 @@ define(
              * Appends a child widget to this widget. Not supported for Grids.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (/*widget*/) { //jshint ignore:line
+            appendChildWidget: function (/*widget*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -157,7 +157,7 @@ define(
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (/*index, widget*/) { //jshint ignore:line
+            insertChildWidget: function (/*index, widget*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -165,7 +165,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
              */
-            removeChildWidget: function (/*widget, retainElement*/) { //jshint ignore:line
+            removeChildWidget: function (/*widget, retainElement*/) {
                 throw new Error('Not supported');
             },
             /**

@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ApplicationInitialisationTest = AsyncTestCase('Application_Initialisation'); //jshint ignore:line
+    this.ApplicationInitialisationTest = AsyncTestCase('Application_Initialisation');
 
     this.ApplicationInitialisationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -94,7 +94,7 @@
 
             this.application = new MockApplication(document.createElement('div'));
             assertException(function() {
-                new MockApplication(document.createElement('div')); // jshint ignore:line
+                new MockApplication(document.createElement('div'));
             });
         });
     };
@@ -125,7 +125,7 @@
 
             var runStub = this.sandbox.stub(MockApplication.prototype, 'run');
 
-            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
+            new MockApplication(document.createElement('div'), null, null, null);
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];

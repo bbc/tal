@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.LabelTest = AsyncTestCase('Label'); //jshint ignore:line
+    this.LabelTest = AsyncTestCase('Label');
 
     this.LabelTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

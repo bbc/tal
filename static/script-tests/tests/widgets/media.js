@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaTest = AsyncTestCase('MediaTest'); //jshint ignore:line
+    this.MediaTest = AsyncTestCase('MediaTest');
 
     this.MediaTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -80,7 +80,7 @@
 
             this.sandbox.stub(Device.prototype, 'createMediaInterface');
 
-            new Media('id', 'audio'); // jshint ignore:line
+            new Media('id', 'audio');
 
             var stub = Device.prototype.createMediaInterface;
 

@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.WrappingStripTest = AsyncTestCase('WrappingStrip'); //jshint ignore:line
+
+    this.WrappingStripTest = AsyncTestCase('WrappingStrip');
 
     this.WrappingStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

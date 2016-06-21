@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    this.KeyHandlerTest = AsyncTestCase('KeyHandler'); //jshint ignore:line
+    this.KeyHandlerTest = AsyncTestCase('KeyHandler');
 
     this.KeyHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -121,7 +121,7 @@
     this.KeyHandlerTest.prototype.testHandlerCausesUpKeyToAlignPrevious = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, upEvent;
                     Navigator.prototype.previousIndex.returns(3);
                     carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
@@ -136,7 +136,7 @@
     this.KeyHandlerTest.prototype.testHandlerCausesDownKeyToAlignNext = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, upEvent;
                     Navigator.prototype.nextIndex.returns(3);
                     carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
@@ -151,7 +151,7 @@
     this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnUpWhenNoPreviousIndex = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, upEvent;
                     Navigator.prototype.previousIndex.returns(null);
                     carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
@@ -166,7 +166,7 @@
     this.KeyHandlerTest.prototype.testHandlerDoesNotAlignOnDownWhenNoNextIndex = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, downEvent;
                     Navigator.prototype.nextIndex.returns(null);
                     carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
@@ -228,7 +228,7 @@
     this.KeyHandlerTest.prototype.testHandlerPassesEmptyAnimationOptionsByDefault = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, upEvent;
                     carousel = createCarouselAndAttachHandler(CarouselCore, Handler);
                     self.sandbox.stub(carousel, 'alignNext');
@@ -242,7 +242,7 @@
     this.KeyHandlerTest.prototype.testHandlerPassesSpecifiedAnimationOptions = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, upEvent, handler, options;
                     options = {test: 'test'};
                     carousel = new CarouselCore('myCarousel');
@@ -260,7 +260,7 @@
     this.KeyHandlerTest.prototype.testCallsCompleteBeforeNext = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, nextEvent, handler, options;
                     options = {test: 'test'};
                     carousel = new CarouselCore('myCarousel');
@@ -280,7 +280,7 @@
     this.KeyHandlerTest.prototype.testCallsCompleteBeforePrevious = function (queue) {
         var self = this;
         runTest(this, queue,
-                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) { //jshint ignore:line
+                function (application, Handler, CarouselCore, WidgetStrip, Mask, Navigator, Aligner, KeyEvent) {
                     var carousel, previousEvent, handler, options;
                     options = {test: 'test'};
                     carousel = new CarouselCore('myCarousel');

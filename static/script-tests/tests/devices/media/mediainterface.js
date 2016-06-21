@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.MediaInterfaceTest = AsyncTestCase('MediaInterfaceTest'); //jshint ignore:line
+    this.MediaInterfaceTest = AsyncTestCase('MediaInterfaceTest');
 
     this.MediaInterfaceTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

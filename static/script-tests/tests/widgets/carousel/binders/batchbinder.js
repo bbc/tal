@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.BatchBinderTest = AsyncTestCase('BatchBinder'); //jshint ignore:line
+
+    this.BatchBinderTest = AsyncTestCase('BatchBinder');
 
     this.BatchBinderTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

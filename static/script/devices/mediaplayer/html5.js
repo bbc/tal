@@ -81,25 +81,25 @@ define(
                     var self = this;
                     this._wrapOnFinishedBuffering = function() {
                         self._onFinishedBuffering();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnError = function() {
                         self._onDeviceError();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnEndOfMedia = function() {
                         self._onEndOfMedia();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnDeviceBuffering = function() {
                         self._onDeviceBuffering();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnStatus = function() {
                         self._onStatus();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnMetadata = function() {
                         self._onMetadata();
-                    }; //jshint ignore:line
+                    };
                     this._wrapOnSourceError = function() {
                         self._onSourceError();
-                    }; //jshint ignore:line
+                    };
                     this._mediaElement.addEventListener('canplay', this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener('seeked', this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener('playing', this._wrapOnFinishedBuffering, false);

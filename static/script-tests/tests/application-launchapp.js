@@ -22,8 +22,7 @@
  */
 
 (function() {
-    // jshint newcap: false
-    this.ApplicationLaunchAppTest = AsyncTestCase('Application_LaunchApp'); //jshint ignore:line
+    this.ApplicationLaunchAppTest = AsyncTestCase('Application_LaunchApp');
 
     this.ApplicationLaunchAppTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

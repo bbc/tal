@@ -27,7 +27,6 @@
         "bower.json",
         "gruntfile.js",
         "LICENSE",
-        ".jshintrc",
         "package.json",
         "README.md",
         "static/script-tests"

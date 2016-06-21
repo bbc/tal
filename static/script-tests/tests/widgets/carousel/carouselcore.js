@@ -23,8 +23,8 @@
  */
 
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.CarouselCoreTest = AsyncTestCase('CarouselCore'); //jshint ignore:line
+
+    this.CarouselCoreTest = AsyncTestCase('CarouselCore');
 
     this.CarouselCoreTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

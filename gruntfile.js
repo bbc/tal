@@ -1,4 +1,3 @@
-/* jshint node: true */
 module.exports = function(grunt) {
     'use strict';
 
@@ -11,18 +10,6 @@ module.exports = function(grunt) {
             ],
             options: {
                 quiet: true
-            }
-        },
-        jshint: {
-            files: ['static/script/**/*.js'],
-            options: {
-                jshintrc: '.jshintrc',
-                ignores: [
-                    'static/script/lib/*',
-                    'static/script/devices/googletv.js',
-                    'static/script/devices/data/json2.js',
-                    'static/script/widgets/horizontalcarousel.js'
-                ]
             }
         },
         jasmine: {
@@ -56,9 +43,9 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            jshint: {
+            eslint: {
                 files: ['static/script/**/*.js'],
-                tasks: ['jshint']
+                tasks: ['eslint']
             }
         },
         complexity: {
@@ -134,7 +121,6 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
@@ -143,12 +129,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('gruntify-eslint');
 
 
-    grunt.registerTask('hint', ['jshint']);
-    grunt.registerTask('test', ['jasmine']);
+    grunt.registerTask('test', ['jasmine, eslint']);
     grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
-    grunt.registerTask('full', ['jshint', 'eslint', 'jasmine']);
+    grunt.registerTask('full', ['eslint', 'jasmine']);
     grunt.registerTask('default', 'full');
     grunt.registerTask('coverage', 'Produce a coverage report of the main source files', ['jasmine:src:build', 'shell:coverage']);
     grunt.registerTask('spec', ['jasmine:src:build', 'openspec']);

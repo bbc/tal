@@ -23,8 +23,7 @@
  */
 
 (function() {
-    // jshint newcap: false
-    this.NoAnimAnimationTest = AsyncTestCase('Animation_NoAnim'); //jshint ignore:line
+    this.NoAnimAnimationTest = AsyncTestCase('Animation_NoAnim');
 
     this.NoAnimAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

@@ -896,7 +896,7 @@ window.commonTests.mediaPlayer.all.mixinTests = function (testCase, mediaPlayerD
     var makeStandardErrorWhileMakingCallInEmptyAndErrorStatesIsLoggedTest = function(method, args) {
         return function(queue) {
             expectAsserts(2);
-            doTest(this, queue, function () { //jshint ignore:line
+            doTest(this, queue, function () {
                 var errorStub = this.sandbox.stub();
                 this.sandbox.stub(this.device, 'getLogger').returns({error: errorStub});
                 try {

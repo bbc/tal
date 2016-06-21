@@ -23,8 +23,8 @@
  */
 
 (function() {
-    /* jshint newcap: false */
-    this.TransitionTest = AsyncTestCase('Transition'); //jshint ignore:line
+
+    this.TransitionTest = AsyncTestCase('Transition');
 
     this.TransitionTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

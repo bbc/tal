@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ApplicationLayoutsTest = AsyncTestCase('Application_Layouts'); //jshint ignore:line
+    this.ApplicationLayoutsTest = AsyncTestCase('Application_Layouts');
 
     this.ApplicationLayoutsTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
@@ -72,7 +72,7 @@
 
             var setLayoutStub = this.sandbox.stub(MockApplication.prototype, 'setLayout');
 
-            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
+            new MockApplication(document.createElement('div'), null, null, null);
 
             assert(deviceLoadStub.calledOnce);
             var deviceLoadCallbacks = deviceLoadStub.args[0][1];

@@ -3,7 +3,7 @@
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 (function () {
-    this.tizentvSource = AsyncTestCase('Tizen Broadcast Source'); //jshint ignore:line
+    this.tizentvSource = AsyncTestCase('Tizen Broadcast Source');
 
     var stubTizenTVSpecificApis = function () {
         window.tizen = {

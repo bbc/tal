@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.CullingStripTest = AsyncTestCase('CullingStrip'); //jshint ignore:line
+
+    this.CullingStripTest = AsyncTestCase('CullingStrip');
 
     this.CullingStripTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -158,7 +158,7 @@
             function (application, CullingStrip, vertical, WidgetStrip) {
                 this.sandbox.spy(WidgetStrip.prototype, 'init');
 
-                new CullingStrip('test', vertical); // jshint ignore:line
+                new CullingStrip('test', vertical);
 
                 sinon.assert.calledWith(
                     WidgetStrip.prototype.init,

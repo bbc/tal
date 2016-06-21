@@ -4,7 +4,7 @@
  */
 
 (function() {
-    this.stubbedSource = AsyncTestCase('Stubbed Broadcast Source'); //jshint ignore:line
+    this.stubbedSource = AsyncTestCase('Stubbed Broadcast Source');
 
     var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':[
         'antie/devices/anim/styletopleft',

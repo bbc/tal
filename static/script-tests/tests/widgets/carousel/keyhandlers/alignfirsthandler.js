@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.AlignFirstHandlerTest = AsyncTestCase('AlignFirstHandler'); //jshint ignore:line
+
+    this.AlignFirstHandlerTest = AsyncTestCase('AlignFirstHandler');
 
     this.AlignFirstHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

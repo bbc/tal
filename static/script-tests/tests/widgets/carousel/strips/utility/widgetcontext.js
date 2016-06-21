@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.WidgetContextTest = AsyncTestCase('WidgetContext'); //jshint ignore:line
+
+    this.WidgetContextTest = AsyncTestCase('WidgetContext');
 
     this.WidgetContextTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

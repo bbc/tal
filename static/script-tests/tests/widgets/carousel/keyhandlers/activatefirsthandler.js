@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.ActivateFirstHandlerTest = AsyncTestCase('ActivateFirstHandler'); //jshint ignore:line
+
+    this.ActivateFirstHandlerTest = AsyncTestCase('ActivateFirstHandler');
 
     this.ActivateFirstHandlerTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();

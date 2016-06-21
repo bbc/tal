@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 (function() {
-    /* jshint newcap: false */
+
     this.ExitTiVoTest = AsyncTestCase('Exit (TiVo)');
 
     this.ExitTiVoTest.prototype.setUp = function() {

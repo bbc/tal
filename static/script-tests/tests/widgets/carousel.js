@@ -23,8 +23,8 @@
  */
 
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.CarouselTest = AsyncTestCase('Carousel'); //jshint ignore:line
+
+    this.CarouselTest = AsyncTestCase('Carousel');
 
     this.CarouselTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
@@ -56,7 +56,7 @@
             var prototype, propertyName, property;
             prototype = Class.prototype;
             /*eslint-disable */
-            for (propertyName in prototype) { //jshint ignore:line
+            for (propertyName in prototype) {
             /*eslint-enable */
                 property = prototype[propertyName];
                 if ((typeof property === 'function') && !(property.restore && property.restore.sinon) && propertyName !== 'self') {
@@ -210,7 +210,7 @@
 
     this.CarouselTest.prototype.testGetChildWidgetWithMaskIdCallsCore = function (queue) {
         var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container) { //jshint ignore:line
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container) {
             var carousel, widget;
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
             carousel = new Carousel();
@@ -222,7 +222,7 @@
 
     this.CarouselTest.prototype.testGetChildWidgetWithNonMaskIdCallsWidgetStrip = function (queue) {
         var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container) { //jshint ignore:line
+        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container) {
             var carousel;
             self.sandbox.stub(WidgetStrip.prototype, 'getChildWidget');
             stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);

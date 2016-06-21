@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.ComponentTest = AsyncTestCase('Component'); //jshint ignore:line
+    this.ComponentTest = AsyncTestCase('Component');
 
     this.ComponentTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

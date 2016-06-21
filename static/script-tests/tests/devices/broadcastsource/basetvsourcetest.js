@@ -23,7 +23,7 @@
  */
 
 (function() {
-    this.baseTvSource = AsyncTestCase('Abstract Base Broadcast Source'); //jshint ignore:line
+    this.baseTvSource = AsyncTestCase('Abstract Base Broadcast Source');
 
     var extendBaseTvSourceWithNoOverriddenMethods = function(BaseTvSource) {
         BaseTvSource.prototype.init = function() {
@@ -69,7 +69,7 @@
         expectAsserts(1);
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/broadcastsource/basetvsource'], function(application, BaseTvSource) {
             assertException('Abstract class constructor should not be called directly', function() {
-                new BaseTvSource(); // jshint ignore:line
+                new BaseTvSource();
             });
         });
     };

@@ -31,8 +31,7 @@
     var DEFAULT_ONCOMPLETE_TIMEOUT = 867;
 
 
-    // jshint newcap: false
-    this.StyleTopLeftAnimationTest = AsyncTestCase('StyleTopLeftAnimation'); //jshint ignore:line
+    this.StyleTopLeftAnimationTest = AsyncTestCase('StyleTopLeftAnimation');
 
     this.StyleTopLeftAnimationTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

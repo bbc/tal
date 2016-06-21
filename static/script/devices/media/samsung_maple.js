@@ -157,12 +157,12 @@ define(
                 };
                 this.playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
 
-                window.SamsungMapleOnTimeUpdate = function(/*seconds*/) { //jshint ignore:line
+                window.SamsungMapleOnTimeUpdate = function(/*seconds*/) {
                     self._eventHandlingCallback(new MediaEvent('timeupdate', self));
                 };
             },
 
-            render: function(/*device*/) { //jshint ignore:line
+            render: function(/*device*/) {
                 if (!this.outputElement) {
                     this.outputElement = document.createElement('div');
                 }
@@ -228,7 +228,7 @@ define(
                 // TODO: Samsung implementation
                 return 'none';
             },
-            setPreload: function(/*preload*/) { //jshint ignore:line
+            setPreload: function(/*preload*/) {
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges buffered;
@@ -250,7 +250,7 @@ define(
                 }
             },
             // DOMString canPlayType(in DOMString type);
-            canPlayType: function(/*type*/) { //jshint ignore:line
+            canPlayType: function(/*type*/) {
                 // TODO: Samsung implementation
                 return true;
             },
@@ -324,7 +324,7 @@ define(
                 // TODO: Samsung implementation
                 return 1;
             },
-            setPlaybackRate: function(/*playbackRate*/) { //jshint ignore:line
+            setPlaybackRate: function(/*playbackRate*/) {
                 // TODO: Samsung implementation
             },
             // readonly attribute TimeRanges played;
@@ -347,7 +347,7 @@ define(
                 // TODO: Samsung implementation
                 return false;
             },
-            setAutoPlay: function(/*autoplay*/) { //jshint ignore:line
+            setAutoPlay: function(/*autoplay*/) {
                 // TODO: Samsung implementation
             },
             // attribute boolean loop;
@@ -355,7 +355,7 @@ define(
                 // TODO: Samsung implementation
                 return false;
             },
-            setLoop: function(/*loop*/) { //jshint ignore:line
+            setLoop: function(/*loop*/) {
                 // TODO: Samsung implementation
             },
             // void play();
@@ -380,7 +380,7 @@ define(
                 }, 0);
             },
             // attribute boolean controls;
-            setNativeControls: function(/*controls*/) { //jshint ignore:line
+            setNativeControls: function(/*controls*/) {
                 // TODO: Samsung implementation
             },
             getNativeControls: function() {
@@ -411,7 +411,7 @@ define(
             return new SamsungPlayer(id, mediaType, eventCallback);
         };
 
-        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) { //jshint ignore:line
+        Device.prototype.getPlayerEmbedMode = function(/*mediaType*/) {
             return MediaInterface.EMBED_MODE_BACKGROUND;
         };
         /**

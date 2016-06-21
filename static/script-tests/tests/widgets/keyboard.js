@@ -28,7 +28,7 @@
         LOWERCASE = 1,
         TITLECASE = 2;
 
-    this.KeyboardTest = AsyncTestCase('Keyboard'); //jshint ignore:line
+    this.KeyboardTest = AsyncTestCase('Keyboard');
 
     this.KeyboardTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();

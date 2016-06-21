@@ -22,8 +22,8 @@
  * Please contact us for an alternative licence
  */
 (function () {
-    /* jshint newcap: false, strict: false */
-    this.VerticalOrientationTest = AsyncTestCase('VerticalOrientation'); //jshint ignore:line
+
+    this.VerticalOrientationTest = AsyncTestCase('VerticalOrientation');
 
     this.VerticalOrientationTest.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
