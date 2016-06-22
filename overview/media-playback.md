@@ -1,12 +1,10 @@
 ---
 layout: default
-title: Media Playback (improved)
+title: Media Playback
 ---
-# Media Playback (improved)
+# Media Playback
 
 TAL provides an device-agnostic [media playback API via the `MediaPlayer`](/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
-
-> This deprecates the [old media playback API](../widgets/media-playback.html) from TAL 2.1.7 onwards, offering improved media playback across devices.
 
 The framework only supports the the playback of one item of media at a time.
 Video can be only be played in full screen.
