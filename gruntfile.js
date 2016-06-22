@@ -129,7 +129,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('gruntify-eslint');
 
 
-    grunt.registerTask('test', ['jasmine, eslint']);
+    grunt.registerTask('test', ['jasmine', 'eslint']);
     grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
