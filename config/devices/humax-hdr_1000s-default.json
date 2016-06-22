@@ -4,8 +4,6 @@
         "base": "antie/devices/browserdevice",
         "modifiers": [
             "antie/devices/anim/css3",
-            "antie/devices/media/html5",
-            "antie/devices/media/html5memoryleakfix",
             "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/playable",
             "antie/devices/broadcastsource/hbbtvsource",
