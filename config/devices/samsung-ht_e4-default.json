@@ -4,7 +4,6 @@
     "base": "antie/devices/browserdevice",
     "modifiers": [
 	    "antie/devices/anim/noanim",
-	    "antie/devices/media/html5",
 	    "antie/devices/mediaplayer/html5",
 	    "antie/devices/mediaplayer/live/none",
 	    "antie/devices/net/default",
