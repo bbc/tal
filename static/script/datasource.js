@@ -52,8 +52,6 @@ define(
                 this._func = func;
                 this._args = args;
 
-
-
                 if(component) {
                     var self = this;
 
