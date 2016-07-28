@@ -893,11 +893,26 @@
         });
     };
 
-    this.hbbtvSource.prototype.testTuningToCurrentChannelByNameCausesShowOfCurrentChannel = function (queue) {
+    this.hbbtvSource.prototype.testTuningToCurrentChannelByNameCausesBroadcastToBeSetVisible = function (queue) {
         expectAsserts(4);
 
         var hbbtvPlugin = this.hbbtvPlugin;
         doChannelTuningTest(this, queue, 'BBC One', function () {
+            assert(hbbtvPlugin.bindToCurrentChannel.calledOnce);
+            assertEquals('1280px', hbbtvPlugin.style.width);
+            assertEquals('720px', hbbtvPlugin.style.height);
+            assertEquals('visible',hbbtvPlugin.style.visibility);
+        });
+    };
+
+    this.hbbtvSource.prototype.testTuningToNewChannelByNameCausesBroadcastToBeSetVisible = function (queue) {
+        expectAsserts(4);
+
+        var hbbtvPlugin = this.hbbtvPlugin;
+        doChannelTuningTest(this, queue, 'BBC Two', function () {
+            var evt = new CustomEvent('ChannelChangeSucceeded');
+            hbbtvPlugin.dispatchEvent(evt);
+
             assert(hbbtvPlugin.bindToCurrentChannel.calledOnce);
             assertEquals('1280px', hbbtvPlugin.style.width);
             assertEquals('720px', hbbtvPlugin.style.height);

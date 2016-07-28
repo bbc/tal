@@ -209,6 +209,7 @@ define(
                 var successEventListener = function(/* channel */) {
                     self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', successEventListener);
                     self._broadcastVideoObject.removeEventListener('ChannelChangeError', errorEventListener);
+                    self.showCurrentChannel();
                     onSuccess();
                 };
 
