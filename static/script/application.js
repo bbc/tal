@@ -110,7 +110,7 @@ require.def('antie/application',
              * Override to apply any blocking start up work and then call the provided callback when done
              */
             runAsync: function (callback) {
-                setTimeout(callback(), 0);
+                setTimeout(callback, 0);
             },
             /**
              * Called once application startup is ready (i.e. config has been loaded).
