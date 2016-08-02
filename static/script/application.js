@@ -93,13 +93,24 @@ define('antie/application',
                         }
                     }
 
+                    var syncStartUp = function() {
+                        self.run();
+                        self.route(device.getCurrentRoute());
+                    };
+
                     require([_layout.module], function (layout) {
-                        self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function () {
-                            self.run();
-                            self.route(device.getCurrentRoute());
+                        self.setLayout(layout, styleBaseUrl, imageBaseUrl, _layout.css, _layout.classes, [], function(){
+                            self.runAsync(syncStartUp);
                         });
                     });
                 }
+            },
+            /**
+             * Called once application startup is ready (i.e. config has been loaded).
+             * Override to apply any blocking start up work and then call the provided callback when done
+             */
+            runAsync: function (callback) {
+                setTimeout(callback, 0);
             },
             /**
              * Called once application startup is ready (i.e. config has been loaded).
