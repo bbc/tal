@@ -121,6 +121,8 @@
             var device = application.getDevice();
             application.destroy();
 
+            var clock = sinon.useFakeTimers();
+
             var deviceLoadStub = this.sandbox.stub(Device, "load");
 
             var runStub = this.sandbox.stub(MockApplication.prototype, "run");
@@ -146,8 +148,56 @@
 
             requireCallback(mockLayout);
 
+            clock.tick(1);
+
             assert(runStub.calledOnce);
-		});
+
+            clock.restore();
+                });
+	};
+	this.ApplicationInitialisationTest.prototype.testRunAsyncIsCalledAndTheProvidedCallbackInvokesRun = function(queue) {
+		expectAsserts(8);
+
+		queuedApplicationInit(queue, "lib/mockapplication", ["lib/mockapplication", "antie/devices/device"], function(application, MockApplication, Device) {
+
+            var device = application.getDevice();
+            application.destroy();
+
+            var deviceLoadStub = this.sandbox.stub(Device, "load");
+
+            var runAsyncStub = this.sandbox.stub(MockApplication.prototype, "runAsync");
+            var runStub = this.sandbox.stub(MockApplication.prototype, "run");
+
+            new MockApplication(document.createElement('div'), null, null, null); // jshint ignore:line
+
+            assert(deviceLoadStub.calledOnce);
+            var deviceLoadCallbacks = deviceLoadStub.args[0][1];
+            assertObject(deviceLoadCallbacks);
+            assertFunction(deviceLoadCallbacks.onSuccess);
+
+            var requireStub = this.sandbox.stub(window, "require");
+
+            deviceLoadCallbacks.onSuccess(device);
+
+            assert(requireStub.calledOnce);
+            var requireCallback = requireStub.args[0][1];
+            assertFunction(requireCallback);
+
+            assert(runAsyncStub.notCalled);
+
+            var mockLayout = { };
+
+            requireCallback(mockLayout);
+
+            assert(runAsyncStub.calledOnce);
+
+            var runAsyncCallback = runAsyncStub.args[0][0];
+
+            runAsyncCallback();
+                    
+            assert(runStub.calledOnce);
+
+           });
 	};
 	this.ApplicationInitialisationTest.prototype.testGetDevice = function(queue) {
 		expectAsserts(1);

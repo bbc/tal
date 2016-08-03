@@ -94,6 +94,8 @@
             var device = application.getDevice();
             application.destroy();
 
+            var clock = sinon.useFakeTimers();
+
             var deviceLoadStub = this.sandbox.stub(Device, "load");
 
             var routeStub = this.sandbox.stub(MockApplication.prototype, "route");
@@ -121,7 +123,11 @@
 
             requireCallback(mockLayout);
 
+            clock.tick(1);
+
             assert(routeStub.calledOnce);
+
+            clock.restore();
         });
 
 	};
