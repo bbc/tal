@@ -92,9 +92,11 @@ define(
                 });
             },
             showCurrentChannel: function () {
-                // Check if exception is thrown by bindToCurrentChannel?
-                this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.bindToCurrentChannel();
+                this._setBroadcastVisible();
+            },
+            _setBroadcastVisible: function () {
+                this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.style.visibility = 'visible';
             },
             stopCurrentChannel: function () {
@@ -209,6 +211,7 @@ define(
                 var successEventListener = function(/* channel */) {
                     self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', successEventListener);
                     self._broadcastVideoObject.removeEventListener('ChannelChangeError', errorEventListener);
+                    self._setBroadcastVisible();
                     onSuccess();
                 };
 
