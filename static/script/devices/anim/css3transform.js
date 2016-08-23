@@ -1,7 +1,10 @@
 define(
     'antie/devices/anim/css3transform',
     [
-        'antie/devices/browserdevice'
+        'antie/devices/browserdevice',
+
+        // Static imports
+        'antie/devices/anim/noanim'
     ],
     function (Device) {
         'use strict';
@@ -62,15 +65,15 @@ define(
                     options.onComplete();
                     return;
                 }
-
                 el.classList.add('animate');
                 registerTransitionEndEvent(options.onComplete);
                 setStyle('transform', 'translateX(' + options.to.left + 'px)', true);
             }
 
-            this.stopAnimation = function stopAnimation () {
+            this.stopAnimation = function () {
+                el.classList.remove('animate');
+                setStyle('transform', 'translateX(' + options.to.left + 'px)', true);
                 onTransitionEnd();
-                removeTransitionEvent(onTransitionEnd);
             };
 
             init();
