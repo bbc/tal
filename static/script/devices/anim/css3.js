@@ -30,9 +30,11 @@ define(
         'antie/devices/browserdevice',
         'antie/devices/anim/css3/transition',
         'antie/devices/anim/css3/optionstransitiondefinition',
-        'antie/devices/anim/shared/transitionendpoints'
+        'antie/devices/anim/shared/transitionendpoints',
+        'antie/devices/anim/css3/transitionelement',
+        'antie/devices/anim/css3/transitionelement',
     ],
-    function(Device,  Transition, OptionsTransitionDefinition, TransitionEndPoints) {
+    function(Device,  Transition, OptionsTransitionDefinition, TransitionEndPoints, TransitionElement) {
         'use strict';
 
         function shouldSkipAnim(options, device) {
@@ -88,6 +90,13 @@ define(
         /* documented in antie.devices.Device */
         Device.prototype.moveElementTo = function(options) {
             var trans, transEndPoints;
+
+            if (options.el.classList.contains('tertiaryContentComponent__widgetStrip')) {
+                var transEl = new TransitionElement(options.el);
+                transEl.setStylePropertyValueWithPrefixes('transform', 'translate(' + options.to.left + 'px, 0px)');
+                options.onComplete();
+                return;
+            }
 
             transEndPoints = new TransitionEndPoints(
                 {
@@ -197,7 +206,7 @@ define(
         };
 
         Device.prototype.stopAnimation = function(transition) {
-            transition.stop(true);
+            transition && transition.stop(true);
         };
     }
 );
