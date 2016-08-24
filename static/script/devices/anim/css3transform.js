@@ -14,11 +14,11 @@ define(
             options.device = this;
             var transformer = getTransformer(options);
             transformer.startAnimation();
-            return transformer;
+            return transformer.animationIsComplete () ? null : transformer;
         };
 
         Device.prototype.stopAnimation = function (transformer) {
-            transformer.stopAnimation();
+            transformer && transformer.stopAnimation();
         };
     }
 );
