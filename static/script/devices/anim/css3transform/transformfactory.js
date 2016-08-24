@@ -1,14 +1,17 @@
 define(
     'antie/devices/anim/css3transform/transformfactory',
     [
-        'antie/devices/anim/css3transform/translatex',
+        'antie/devices/anim/css3transform/translate',
     ],
-    function (TranslateX) {
+    function (Translate) {
         'use strict';
 
         return function (options) {
             if (options.to.left) {
-                return new TranslateX(options);
+                return new Translate(options, options.to.left, 'X');
+            }
+            if (options.to.top !== undefined) {
+                return new Translate(options, options.to.top, 'Y');
             }
         };
     }

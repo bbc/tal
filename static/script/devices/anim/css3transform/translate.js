@@ -1,37 +1,45 @@
 define(
-    'antie/devices/anim/css3transform/translatex',
+    'antie/devices/anim/css3transform/translate',
     [
         'antie/devices/anim/shared/helpers'
     ],
     function (Helpers) {
         'use strict';
 
-        var TRANSLATEX_REGEX = /\.*translateX\((.*)px\)/i;
+        var TRANSLATE_REGEX = /\.*translate[XY]\((.*)px\)/i;
 
-        return function (options) {
+        return function (options, position, axis) {
             var el = options.el;
-            var position = options.to.left;
             var onTransitionEnd;
             var animationComplete = false;
 
-            function getTranslateXValue () {
-                var res = TRANSLATEX_REGEX.exec(el.style.getPropertyValue('transform'));
+            function getTranslateValue () {
+                var res = TRANSLATE_REGEX.exec(el.style.getPropertyValue('transform'));
                 if (res) {
                     return parseInt(res[1], 10);
                 }
             }
 
+            function setStyle () {
+                var translate = 'translateX';
+                if (axis === 'Y') {
+                    translate = 'translateY';
+                    position = '-' + position;
+                }
+                Helpers.setStyle(el, 'transform', translate + '(' + position + 'px)', true);
+            }
+
             function startAnimation () {
-                if (Helpers.skipAnim(options) || getTranslateXValue() === position) {
+                if (Helpers.skipAnim(options) || getTranslateValue() === position) {
                     el.classList.remove('animate');
-                    Helpers.setStyle(el, 'transform', 'translateX(' + position + 'px)', true);
+                    setStyle();
                     options.onComplete();
                     animationComplete = true;
                     return;
                 }
                 el.classList.add('animate');
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
-                Helpers.setStyle(el, 'transform', 'translateX(' + position + 'px)', true);
+                setStyle();
             }
 
             function stopAnimation () {
