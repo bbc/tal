@@ -14,7 +14,7 @@ define(
             options.device = this;
             var transformer = getTransformer(options);
             transformer.start();
-            return transformer.animationIsComplete () ? null : transformer;
+            return options.skipAnim ? null : transformer;
         };
 
         Device.prototype.scrollElementTo = function (options) {
@@ -31,7 +31,7 @@ define(
 
             var transformer = getTransformer(options);
             transformer.start();
-            return transformer.animationIsComplete () ? null : transformer;
+            return options.skipAnim ? null : transformer;
         };
 
         Device.prototype.stopAnimation = function (transformer) {

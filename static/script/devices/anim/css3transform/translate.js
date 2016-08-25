@@ -9,7 +9,6 @@ define(
         return function (options, position, axis) {
             var el = options.el;
             var onTransitionEnd;
-            var animationComplete = false;
 
             function setStyle () {
                 var translate = axis === 'X' ? 'translateX' : 'translateY';
@@ -21,26 +20,23 @@ define(
                     el.classList.remove('animate');
                     setStyle();
                     options.onComplete();
-                    animationComplete = true;
                     return;
                 }
-                el.classList.add('animate');
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
-                setStyle();
+                setTimeout(function () {
+                    el.classList.add('animate');
+                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
+                    setStyle();
+                }, 0);
             }
 
             function stop () {
-                options.el.classList.remove('animate');
+                el.classList.remove('animate');
                 onTransitionEnd();
-                animationComplete = true;
             }
 
             return {
                 start: start,
-                stop: stop,
-                animationIsComplete: function () {
-                    return animationComplete;
-                }
+                stop: stop
             };
         };
     }
