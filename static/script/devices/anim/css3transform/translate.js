@@ -6,31 +6,18 @@ define(
     function (Helpers) {
         'use strict';
 
-        var TRANSLATE_REGEX = /\.*translate[XY]\((.*)px\)/i;
-
         return function (options, position, axis) {
             var el = options.el;
             var onTransitionEnd;
             var animationComplete = false;
 
-            function getTranslateValue () {
-                var res = TRANSLATE_REGEX.exec(el.style.getPropertyValue('transform'));
-                if (res) {
-                    return parseInt(res[1], 10);
-                }
-            }
-
             function setStyle () {
-                var translate = 'translateX';
-                if (axis === 'Y') {
-                    translate = 'translateY';
-                    position = '-' + position;
-                }
+                var translate = axis === 'X' ? 'translateX' : 'translateY';
                 Helpers.setStyle(el, 'transform', translate + '(' + position + 'px)', true);
             }
 
-            function startAnimation () {
-                if (Helpers.skipAnim(options) || getTranslateValue() === position) {
+            function start () {
+                if (Helpers.skipAnim(options)) {
                     el.classList.remove('animate');
                     setStyle();
                     options.onComplete();
@@ -42,15 +29,15 @@ define(
                 setStyle();
             }
 
-            function stopAnimation () {
+            function stop () {
                 options.el.classList.remove('animate');
                 onTransitionEnd();
                 animationComplete = true;
             }
 
             return {
-                startAnimation: startAnimation,
-                stopAnimation: stopAnimation,
+                start: start,
+                stop: stop,
                 animationIsComplete: function () {
                     return animationComplete;
                 }

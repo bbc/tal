@@ -13,31 +13,36 @@ define(
         Device.prototype.moveElementTo = function (options) {
             options.device = this;
             var transformer = getTransformer(options);
-            transformer.startAnimation();
+            transformer.start();
             return transformer.animationIsComplete () ? null : transformer;
         };
 
         Device.prototype.scrollElementTo = function (options) {
-            // Stu: Not my fault
-            if (new RegExp('_mask$').test(options.el.id)) {
-                if(options.el.childNodes.length === 0)  {
-                    return null;
-                }
-                options.el.style.position = 'relative';
-                options.el = options.el.childNodes[0];
-                options.el.style.position = 'relative';
-            } else {
+            if (!(/_mask$/.test(options.el.id) && options.el.childNodes.length > 0)) {
                 return null;
             }
 
             options.device = this;
+            options.el = options.el.childNodes[0];
+
+            if (options.to.top) {
+                options.to.top = parseInt(options.to.top) * -1;
+            }
+
             var transformer = getTransformer(options);
-            transformer.startAnimation();
+            transformer.start();
             return transformer.animationIsComplete () ? null : transformer;
         };
 
         Device.prototype.stopAnimation = function (transformer) {
-            transformer && transformer.stopAnimation();
+            transformer && transformer.stop();
         };
+
+        /*
+        Device.prototype.tweenElementStyle = function (options) {
+            var transformer = getTransformer(options);
+            transformer.start();
+        };
+        */
     }
 );
