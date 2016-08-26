@@ -40,12 +40,17 @@ define(
             return onComplete;
         }
 
+        function forceReflow (el) {
+            el.offsetHeight;
+        }
+
         return {
             setStyle: setStyle,
             skipAnim: skipAnim,
             addTransitionEvent: addTransitionEvent,
             removeTransitionEvent: removeTransitionEvent,
-            registerTransitionEndEvent: registerTransitionEndEvent
+            registerTransitionEndEvent: registerTransitionEndEvent,
+            forceReflow: forceReflow
         };
     }
 );

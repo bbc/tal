@@ -10,27 +10,23 @@ define(
             var el = options.el;
             var onTransitionEnd;
 
-            function setStyle () {
+            function transform () {
                 var translate = axis === 'X' ? 'translateX' : 'translateY';
                 Helpers.setStyle(el, 'transform', translate + '(' + position + 'px)', true);
-            }
-
-            function forceUpdate () {
-                el.offsetHeight;
+                Helpers.forceReflow(el);
             }
 
             function start () {
                 if (Helpers.skipAnim(options)) {
                     el.classList.remove('animate');
-                    setStyle();
-                    forceUpdate();
+                    transform();
                     options.onComplete();
                     return;
                 }
 
                 el.classList.add('animate');
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
-                setStyle();
+                transform();
             }
 
             function stop () {
