@@ -15,18 +15,22 @@ define(
                 Helpers.setStyle(el, 'transform', translate + '(' + position + 'px)', true);
             }
 
+            function forceUpdate () {
+                el.offsetHeight;
+            }
+
             function start () {
                 if (Helpers.skipAnim(options)) {
                     el.classList.remove('animate');
                     setStyle();
+                    forceUpdate();
                     options.onComplete();
                     return;
                 }
-                setTimeout(function () {
-                    el.classList.add('animate');
-                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
-                    setStyle();
-                }, 0);
+
+                el.classList.add('animate');
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, options.onComplete);
+                setStyle();
             }
 
             function stop () {

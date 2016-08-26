@@ -35,7 +35,7 @@ define(
         };
 
         Device.prototype.stopAnimation = function (transformer) {
-            transformer && transformer.stop();
+            transformer.stop();
         };
 
         /*
