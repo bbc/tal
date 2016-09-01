@@ -5,6 +5,7 @@
 libpeerconnection.log
 *.iml
 node_modules
+**/*npm-debug.log
 .idea
 static/script-tests/jasmine/WebRunner.html
 .grunt
