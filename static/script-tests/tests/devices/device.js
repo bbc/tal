@@ -31,10 +31,17 @@ require(
         'use strict';
 
         describe('antie.devices.Device', function() {
+            var mockXMLHttpRequest;
             var device;
 
             beforeEach(function() {
+                mockXMLHttpRequest = jasmine.createSpyObj('mockXMLHttpRequest', ['open', 'send', 'setRequestHeader']);
+                mockXMLHttpRequest.readyState = 0;
+                mockXMLHttpRequest.responseText = '';
+                mockXMLHttpRequest.status = 0;
+
                 device = new Device(antie.framework.deviceConfiguration);
+                spyOn(device, '_newXMLHttpRequest').andReturn(mockXMLHttpRequest);
             });
 
             it('should extend from Class', function() {
@@ -125,13 +132,203 @@ require(
                 }
             });
 
-            it('calls exit() on default exitToBroadcast(', function() {
+            it('calls exit() on default exitToBroadcast()', function() {
                 spyOn(device, 'exit');
 
                 // Method under test
                 device.exitToBroadcast();
 
                 expect(device.exit).toHaveBeenCalledWith();
+            });
+
+            it('sends xhr request with specified method and data', function() {
+                var opts = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: '<submit>Data</submit>'
+                };
+
+                // Method under test
+                var xhr = device.loadURL('http://test.uri/', opts);
+
+                expect(xhr).toBe(mockXMLHttpRequest);
+                expect(mockXMLHttpRequest.open).toHaveBeenCalledWith('POST', 'http://test.uri/', true);
+                expect(mockXMLHttpRequest.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+                expect(mockXMLHttpRequest.send).toHaveBeenCalledWith('<submit>Data</submit>');
+            });
+
+            it('uses GET if there is no opts.method', function() {
+                spyOn(XMLHttpRequest.prototype, 'open');
+                spyOn(XMLHttpRequest.prototype, 'send');
+
+                var opts = { };
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(mockXMLHttpRequest.open).toHaveBeenCalledWith('GET', 'http://test.uri/', true);
+            });
+
+            it('sends null if there is no opts.data', function() {
+                var opts = { };
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(mockXMLHttpRequest.send).toHaveBeenCalledWith(null);
+            });
+
+            it('does not set any headers if there is no opts.headers property', function() {
+                var opts = { };
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(mockXMLHttpRequest.setRequestHeader).not.toHaveBeenCalled();
+            });
+
+            it('only inspects the opts.headers object for headers, not its whole prototype chain', function() {
+                function HeadersBase() { }
+                HeadersBase.prototype.notOwnProperty = 'gibberish';   // notOwnProperty is on the headers prototype chain
+
+                var opts = {
+                    headers: new HeadersBase()
+                };
+                opts.headers['Content-Type'] = 'application/json';    // Content-Type is on the headers object itself
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(mockXMLHttpRequest.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+                expect(mockXMLHttpRequest.setRequestHeader).not.toHaveBeenCalledWith('notOwnProperty', 'gibberishn');
+                expect(mockXMLHttpRequest.setRequestHeader.calls.length).toBe(1);
+            });
+
+            it('calls onError if XMLHttpRequest open() throws an error', function() {
+                var SECURITY_ERR = {type: 'SECURITY_ERR'};
+                mockXMLHttpRequest.open.andCallFake(function() {
+                    throw(SECURITY_ERR);
+                });
+
+                var opts = jasmine.createSpyObj('opts', ['onLoad', 'onError']);
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(opts.onError).toHaveBeenCalledWith(SECURITY_ERR);
+                expect(opts.onLoad).not.toHaveBeenCalled();
+                expect(mockXMLHttpRequest.send).not.toHaveBeenCalled();
+            });
+
+            it('still does not call onLoad if XMLHttpRequest open() throws an error, even if no onError has been supplied', function() {
+                var SECURITY_ERR = {type: 'SECURITY_ERR'};
+                mockXMLHttpRequest.open.andCallFake(function() {
+                    throw(SECURITY_ERR);
+                });
+
+                var opts = jasmine.createSpyObj('opts', ['onLoad']);
+
+                // Method under test
+                device.loadURL('http://test.uri/', opts);
+
+                expect(opts.onLoad).not.toHaveBeenCalled();
+                expect(mockXMLHttpRequest.send).not.toHaveBeenCalled();
+            });
+
+            it('calls onLoad with success response', function() {
+                var opts = jasmine.createSpyObj('opts', ['onLoad', 'onError']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 4;
+                xhr.status = 200;
+                xhr.responseText = '{"status":"done"}';
+
+                // Method under test
+                xhr.onreadystatechange();
+
+                expect(xhr.onreadystatechange).toBeNull();
+                expect(opts.onLoad).toHaveBeenCalledWith('{"status":"done"}', 200);
+                expect(opts.onError).not.toHaveBeenCalled();
+            });
+
+            it('does not call onError with success response, even if there is no onLoad callback', function() {
+                var opts = jasmine.createSpyObj('opts', ['onError']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 4;
+                xhr.status = 200;
+                xhr.responseText = '{"status":"done"}';
+
+                // Method under test
+                xhr.onreadystatechange();
+
+                expect(xhr.onreadystatechange).toBeNull();
+                expect(opts.onError).not.toHaveBeenCalled();
+            });
+
+            it('does not call onLoad if readyState is not 4', function() {
+                var opts = jasmine.createSpyObj('opts', ['onLoad', 'onError']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 3;
+                xhr.status = 200;
+                xhr.responseText = '{"status":"done"}';
+
+                // Method under test
+                xhr.onreadystatechange();
+
+                expect(xhr.onreadystatechange).not.toBeNull();
+                expect(opts.onLoad).not.toHaveBeenCalled();
+                expect(opts.onError).not.toHaveBeenCalled();
+            });
+
+            it('calls onError with non 2xx response', function() {
+                var opts = jasmine.createSpyObj('opts', ['onLoad', 'onError']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 4;
+                xhr.status = 300;
+                xhr.responseText = '{"status":"redirect"}';
+
+                // Method under test
+                xhr.onreadystatechange(xhr);
+
+                expect(xhr.onreadystatechange).toBeNull();
+                expect(opts.onLoad).not.toHaveBeenCalled();
+                expect(opts.onError).toHaveBeenCalledWith('{"status":"redirect"}', 300);
+            });
+
+            it('does not call onLoad with non 2xx response, even if there is no onError callback', function() {
+                var opts = jasmine.createSpyObj('opts', ['onLoad']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 4;
+                xhr.status = 300;
+                xhr.responseText = '{"status":"redirect"}';
+
+                // Method under test
+                xhr.onreadystatechange();
+
+                expect(xhr.onreadystatechange).toBeNull();
+                expect(opts.onLoad).not.toHaveBeenCalled();
+            });
+
+            it('does not call onError if readyState is not 4', function() {
+                var opts = jasmine.createSpyObj('opts', ['onLoad', 'onError']);
+
+                var xhr = device.loadURL('http://test.uri/', opts);
+                xhr.readyState = 2;
+                xhr.status = 300;
+                xhr.responseText = '{"status":"redirect"}';
+
+                // Method under test
+                xhr.onreadystatechange();
+
+                expect(xhr.onreadystatechange).not.toBeNull();
+                expect(opts.onLoad).not.toHaveBeenCalled();
+                expect(opts.onError).not.toHaveBeenCalled();
             });
 
         });

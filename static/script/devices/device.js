@@ -635,14 +635,58 @@ define(
              */
             loadAuthenticatedURL: function(/*url, opts*/) {
             },
+
+            /**
+             * Returns a new XMLHttpRequest. Overridden in unit tests.
+             * @returns {XMLHttpRequest} a new instance
+             * @private
+             */
+            _newXMLHttpRequest: function() {
+                return new XMLHttpRequest();
+            },
+
             /**
              * Loads a resource from a URL.
              * @param {String} url The URL to load.
              * @param {Object} opts Object containing onLoad and onError callback functions.
-             * @returns The request object used to load the resource.
+             * @returns {XMLHttpRequest} The request object used to load the resource.
              */
-            loadURL: function(/*url, opts*/) {
+            loadURL: function (url, opts) {
+                var xhr = this._newXMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        xhr.onreadystatechange = null;
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            if (opts.onLoad) {
+                                opts.onLoad(xhr.responseText, xhr.status);
+                            }
+                        } else {
+                            if (opts.onError) {
+                                opts.onError(xhr.responseText, xhr.status);
+                            }
+                        }
+                    }
+                };
+
+                try {
+                    xhr.open(opts.method || 'GET', url, true);
+                    // TODO The opts protection in the following expression is redundant as there are lots of other places an undefined opts will cause TypeError to be thrown
+                    if (opts && opts.headers) {
+                        for (var header in opts.headers) {
+                            if (opts.headers.hasOwnProperty(header)) {
+                                xhr.setRequestHeader(header, opts.headers[header]);
+                            }
+                        }
+                    }
+                    xhr.send(opts.data || null);
+                } catch (ex) {
+                    if (opts.onError) {
+                        opts.onError(ex);
+                    }
+                }
+                return xhr;
             },
+
             /**
              * Performs a POST HTTP request to a URL on a different host/domain.
              * @param {String} url The URL to post to.
