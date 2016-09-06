@@ -21,120 +21,119 @@
  * All rights reserved
  * Please contact us for an alternative licence
  */
+require(
+    [
+        'antie/class',
+        'antie/devices/browserdevice',
+        'antie/devices/device'
+    ],
+    function(Class, BrowserDevice, Device) {
+        'use strict';
 
-(function() {
-    this.DeviceTest = AsyncTestCase('Device');
+        describe('antie.devices.Device', function() {
+            var device;
 
-    this.DeviceTest.prototype.setUp = function() {
-        this.sandbox = sinon.sandbox.create();
-    };
-
-    this.DeviceTest.prototype.tearDown = function() {
-        this.sandbox.restore();
-    };
-
-    this.DeviceTest.prototype.testInterface = function(queue) {
-        expectAsserts(2);
-
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            ['antie/devices/device','antie/class'],
-            function(application, Device, Class) {
-                assertEquals('Device should be a function', 'function', typeof Device);
-                var device = new Device(antie.framework.deviceConfiguration);
-                assert('Device should extend from Class', device instanceof Class);
+            beforeEach(function() {
+                device = new Device(antie.framework.deviceConfiguration);
             });
-    };
 
-    this.DeviceTest.prototype.testIsBroadcastSourceAvailable = function(queue) {
-        expectAsserts(1);
-
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            ['antie/devices/device'],
-            function(application, Device) {
-                var device = new Device(antie.framework.deviceConfiguration);
-                assertFalse(device.isBroadcastSourceSupported());
+            it('should extend from Class', function() {
+                expect(device).toEqual(jasmine.any(Class));
             });
-    };
 
-    this.DeviceTest.prototype.testCreateBroadcastSource = function(queue) {
-        expectAsserts(1);
+            it('does not support broadcastSource', function() {
+                expect(device.isBroadcastSourceSupported()).toBe(false);
+            });
 
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            ['antie/devices/device'],
-            function(application, Device) {
-                var device = new Device(antie.framework.deviceConfiguration);
-                assertException('Broadcast API not available on this device.', function() {
+            it('chokes on call to Broadcast API', function() {
+                // expect(function() {
+                //     // Method under test
+                //     device.createBroadcastSource();
+                // }).toThrowError('Broadcast API not available on this device.');   // Jasmine 2.0
+
+                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
+                try {
+                    // Method under test
                     device.createBroadcastSource();
-                });
+                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
+                } catch (e) {
+                    expect(e.message).toBe('Broadcast API not available on this device.');
+                }
             });
-    };
 
-    this.DeviceTest.prototype.testLoad = function(queue) {
-        expectAsserts(4);
+            it('asynchronously calls onSuccess callback when valid config is passed to Device.load', function() {
+                var done = false;
 
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            ['antie/devices/device'],
-            function(application, Device) {
-                var callbacks = {
-                    onSuccess: this.sandbox.stub(),
-                    onError: this.sandbox.stub()
-                };
-                assertNoException(function() {
+                var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
+                callbacks.onSuccess.andCallFake(function() {
+                    done = true;
+                });
+                callbacks.onError.andCallFake(function() {
+                    done = true;
+                });
+
+                // This is the class that will be instantiated and passed to onSuccess
+                expect(antie.framework.deviceConfiguration.modules.base).toBe('antie/devices/browserdevice');
+
+                runs(function() {
+                    // Method under test
                     Device.load(antie.framework.deviceConfiguration, callbacks);
                 });
-                assert('Device.load calls onSuccess callback when valid config is provided', callbacks.onSuccess.called);
 
-                assertNoException(function() {
-                    Device.load({}, callbacks);
+                // Wait for onSuccess to set done.  More verbose than Jasmine 2.0 but works fine.
+                waitsFor(
+                    function() {
+                        return done;
+                    },
+                    'timed out waiting for onSuccess callback',
+                    500
+                );
+
+                runs(function() {
+                    expect(callbacks.onSuccess).toHaveBeenCalledWith(jasmine.any(BrowserDevice));  // New instance of device named in antie.framework.deviceConfiguration.modules.base
+                    expect(callbacks.onSuccess.calls[0].args[0].getConfig()).toBe(antie.framework.deviceConfiguration);
+                    expect(callbacks.onError).not.toHaveBeenCalled();
                 });
-                assert('Device.load calls onError callback when invalid config is provided', callbacks.onError.called);
             });
-    };
 
-    this.DeviceTest.prototype.testGetConfig = function(queue) {
-        expectAsserts(2);
+            it('imediately calls onError callback when invalid config is passed to Device.load', function() {
+                var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
 
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/device'], function(application, Device) {
-            var callbacks = {
-                onSuccess: this.sandbox.stub(),
-                onError: this.sandbox.stub()
-            };
-            assertNoException(function() {
-                Device.load(antie.framework.deviceConfiguration, callbacks);
+                expect(function() {
+                    // Method under test
+                    Device.load({}, callbacks);
+                }).not.toThrow();
+
+                expect(callbacks.onSuccess).not.toHaveBeenCalled();
+                expect(callbacks.onError).toHaveBeenCalledWith(jasmine.any(Object));
+                expect(callbacks.onError.calls[0].args[0].message).toMatch(/'undefined' is not an object/);
             });
-            var device = application.getDevice();
-            assertSame(antie.framework.deviceConfiguration, device.getConfig());
-        });
-    };
 
-    this.DeviceTest.prototype.testExit = function(queue) {
-        expectAsserts(1);
+            it('chokes on default exit()', function() {
+                // expect(function() {
+                //     // Method under test
+                //     device.exit();
+                // }).toThrowError('Not supported on this device.');   // Jasmine 2.0
 
-        queuedRequire(queue, ['antie/devices/device'], function(Device) {
-            var device = new Device(antie.framework.deviceConfiguration);
-            assertException('Default device implementation should throw exception on exit()', function() {
-                device.exit();
+                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
+                try {
+                    // Method under test
+                    device.exit();
+                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
+                } catch (e) {
+                    expect(e.message).toBe('Not supported on this device.');
+                }
             });
+
+            it('calls exit() on default exitToBroadcast(', function() {
+                spyOn(device, 'exit');
+
+                // Method under test
+                device.exitToBroadcast();
+
+                expect(device.exit).toHaveBeenCalledWith();
+            });
+
         });
-    };
-
-    this.DeviceTest.prototype.testExitToBroadcast = function(queue) {
-        expectAsserts(1);
-
-        queuedRequire(queue, ['antie/devices/device'], function(Device) {
-            var device = new Device(antie.framework.deviceConfiguration);
-            var exitStub = this.sandbox.stub(device, 'exit');
-            device.exitToBroadcast();
-            assertEquals('Default device implementation calls exit() on exitToBroadcast()', 1, exitStub.callCount);
-        });
-    };
-
-})();
+    }
+);
