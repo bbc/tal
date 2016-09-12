@@ -78,19 +78,20 @@ define(
             },
 
             pause: function (opts) {
+                opts = opts || {};
                 var secondsUntilStartOfWindow = this._mediaPlayer.getCurrentTime() - this._mediaPlayer.getSeekableRange().start;
-                if (secondsUntilStartOfWindow > AUTO_RESUME_WINDOW_START_CUSHION_SECONDS) {
+
+                if (opts.disableAutoResume) {
                     this._mediaPlayer.pause();
-                    opts = opts || {};
-                    if(opts.disableAutoResume !== true){
-                        this._autoResumeAtStartOfRange();
-                    }
+                } else if (secondsUntilStartOfWindow <= AUTO_RESUME_WINDOW_START_CUSHION_SECONDS) {
+                  // IPLAYERTVV1-4166
+                  // We can't pause so close to the start of the sliding window, so do a quick state transition in and
+                  // out on 'pause' state to be consistent with the rest of TAL.
+                  this._mediaPlayer._toPaused();
+                  this._mediaPlayer._toPlaying();
                 } else {
-                    // IPLAYERTVV1-4166
-                    // We can't pause so close to the start of the sliding window, so do a quick state transition in and
-                    // out on 'pause' state to be consistent with the rest of TAL.
-                    this._mediaPlayer._toPaused();
-                    this._mediaPlayer._toPlaying();
+                  this._mediaPlayer.pause();
+                  this._autoResumeAtStartOfRange();
                 }
             },
             resume: function () {
