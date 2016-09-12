@@ -84,14 +84,14 @@ define(
                 if (opts.disableAutoResume) {
                     this._mediaPlayer.pause();
                 } else if (secondsUntilStartOfWindow <= AUTO_RESUME_WINDOW_START_CUSHION_SECONDS) {
-                  // IPLAYERTVV1-4166
-                  // We can't pause so close to the start of the sliding window, so do a quick state transition in and
-                  // out on 'pause' state to be consistent with the rest of TAL.
-                  this._mediaPlayer._toPaused();
-                  this._mediaPlayer._toPlaying();
+                    // IPLAYERTVV1-4166
+                    // We can't pause so close to the start of the sliding window, so do a quick state transition in and
+                    // out on 'pause' state to be consistent with the rest of TAL.
+                    this._mediaPlayer._toPaused();
+                    this._mediaPlayer._toPlaying();
                 } else {
-                  this._mediaPlayer.pause();
-                  this._autoResumeAtStartOfRange();
+                    this._mediaPlayer.pause();
+                    this._autoResumeAtStartOfRange();
                 }
             },
             resume: function () {
