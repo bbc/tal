@@ -1,6 +1,9 @@
-#TAL -- TV Application Layer
-[<img src="https://api.travis-ci.org/fmtvp/tal.png?branch=master" align="right" alt="Build Status" />](https://travis-ci.org/fmtvp/tal)
+# TAL -- TV Application Layer
+
 ![TAL](http://fmtvp.github.com/tal/img/tal-logo-bw-small.jpg)
+
+[![Build Status](https://travis-ci.org/fmtvp/tal.svg?branch=master)](https://travis-ci.org/fmtvp/tal)
+[![npm version](https://badge.fury.io/js/tal.svg)](https://badge.fury.io/js/tal)
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
 whilst increasing the reach of BBC TV applications such as *iPlayer*. Today all of the BBC's HTML-based
