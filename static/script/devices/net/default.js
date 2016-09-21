@@ -89,46 +89,7 @@ define(
             // Simple implementation - assuming XHR in browser can perform client-authenticated SSL requests
             return this.loadURL(url, opts);
         };
-        /**
-         * Loads a resource from a URL.
-         * @param {String} url The URL to load.
-         * @param {Object} opts Object containing onLoad and onError callback functions.
-         * @returns The request object used to load the resource.
-         */
-        Device.prototype.loadURL = function (url, opts) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    this.onreadystatechange = null;
-                    if (this.status >= 200 && this.status < 300) {
-                        if (opts.onLoad) {
-                            opts.onLoad(this.responseText, this.status);
-                        }
-                    } else {
-                        if (opts.onError) {
-                            opts.onError(this.responseText, this.status);
-                        }
-                    }
-                }
-            };
 
-            try {
-                xhr.open(opts.method || 'GET', url, true);
-                if (opts && opts.headers) {
-                    for (var header in opts.headers) {
-                        if(opts.headers.hasOwnProperty(header)) {
-                            xhr.setRequestHeader(header, opts.headers[header]);
-                        }
-                    }
-                }
-                xhr.send(opts.data || null);
-            } catch (ex) {
-                if (opts.onError) {
-                    opts.onError(ex);
-                }
-            }
-            return xhr;
-        };
         /**
          * Performs a POST HTTP request to a URL on a different host/domain.
          * @param {String} url The URL to post to.
