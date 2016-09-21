@@ -8,7 +8,6 @@
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/broadcastsource/samsungtvsource",
       "antie/devices/data/nativejson",
-      "antie/devices/net/default",
       "antie/devices/storage/cookie",
       "antie/devices/logging/default",
       "antie/devices/exit/samsung_maple",

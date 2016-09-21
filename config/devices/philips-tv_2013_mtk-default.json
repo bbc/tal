@@ -6,7 +6,6 @@
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/playable",
-      "antie/devices/net/default",
       "antie/devices/data/json2",
       "antie/devices/storage/cookie",
       "antie/devices/logging/consumelog",

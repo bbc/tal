@@ -6,7 +6,6 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/net/default",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
       "antie/devices/parentalguidance/appdefaultpghandler"
