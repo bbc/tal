@@ -85,7 +85,6 @@
         // Set to HTML5 to get coverage
         return {'modules':{'base':'antie/devices/browserdevice','modifiers':[
             'antie/devices/anim/styletopleft',
-            'antie/devices/net/default',
             'antie/devices/broadcastsource/samsungtvsource',
             'antie/devices/data/nativejson',
             'antie/devices/storage/cookie',

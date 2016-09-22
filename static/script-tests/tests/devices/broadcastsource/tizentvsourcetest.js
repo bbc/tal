@@ -44,7 +44,6 @@
         return {
             modules: {base: 'antie/devices/browserdevice', modifiers: [
                 'antie/devices/anim/styletopleft',
-                'antie/devices/net/default',
                 'antie/devices/broadcastsource/tizentvsource',
                 'antie/devices/data/nativejson',
                 'antie/devices/storage/cookie',
@@ -54,7 +53,7 @@
                 {width: 1280, height: 720, module: 'fixtures/layouts/default', classes: ['browserdevice720p']}
             ], deviceConfigurationKey: 'devices-html5-1'};
     };
-    
+
     this.tizentvSource.prototype.setUp = function () {
         this.sandbox = sinon.sandbox.create();
         stubTizenTVSpecificApis();
@@ -325,7 +324,7 @@
             assertEquals('ALL', channelListStub.args[0][2]);
 
             var successFunc = channelListStub.args[0][0];
-            
+
             var data = [
                 {
                     channelName: 'Alpha'
@@ -386,7 +385,7 @@
             assert(params.onSuccess.calledOnce);
             assert(params.onError.notCalled);
         }, config);
-    };    
+    };
 
     this.tizentvSource.prototype.testSetChannelByNameDoesNotRetrieveChannelListWhenChangingToCurrentChannel = function (queue) {
         expectAsserts(1);
@@ -603,7 +602,7 @@
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
             assert(params.onError.calledWithMatch({
-                name : 'ChangeChannelError' 
+                name : 'ChangeChannelError'
             }));
 
         }, config);
@@ -657,7 +656,7 @@
             assert(params.onError.calledOnce);
             assert(params.onError.calledWith({
                 name : 'ChangeChannelError',
-                message : 'Error tuning channel' 
+                message : 'Error tuning channel'
             }));
 
         }, config);
@@ -774,13 +773,13 @@
 
             listener('SIGNAL_STATE_OK');
             assert(broadcastEventSpy.calledOnce);
-            
+
             var event = broadcastEventSpy.args[0][0];
             assertInstanceOf(TunerPresentingEvent, event);
             assertEquals('BBC One', event.channel);
             assertEquals(BaseTvSource.STATE.PRESENTING, broadcastSource.getState());
 
         }, config);
-    };   
+    };
 
 })();

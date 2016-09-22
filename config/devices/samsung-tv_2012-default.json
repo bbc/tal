@@ -7,7 +7,6 @@
       "antie/devices/mediaplayer/samsung_maple",
       "antie/devices/mediaplayer/live/none",
       "antie/devices/data/nativejson",
-      "antie/devices/net/default",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",

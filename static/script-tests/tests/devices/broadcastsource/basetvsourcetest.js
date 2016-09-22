@@ -33,7 +33,6 @@
     var getGenericBaseBroadcastConfig = function() {
         return {'modules':{'base':'antie/devices/browserdevice','modifiers':[
             'antie/devices/anim/styletopleft',
-            'antie/devices/net/default',
             'antie/devices/broadcastsource/basetvsource',
             'antie/devices/data/nativejson',
             'antie/devices/storage/cookie',

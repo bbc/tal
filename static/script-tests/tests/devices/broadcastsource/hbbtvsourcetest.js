@@ -104,7 +104,6 @@
     var getGenericHBBTVConfig = function() {
         return {modules:{base:'antie/devices/browserdevice',modifiers:[
             'antie/devices/anim/styletopleft',
-            'antie/devices/net/default',
             'antie/devices/broadcastsource/hbbtvsource',
             'antie/devices/data/nativejson',
             'antie/devices/storage/cookie',
