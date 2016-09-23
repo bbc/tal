@@ -237,8 +237,7 @@ define(
                 return this._childWidgetOrder;
             },
             getIndexOfChildWidget: function(widget) {
-                var device = this.getCurrentApplication().getDevice();
-                return device.arrayIndexOf(this._childWidgetOrder, widget);
+                return this._childWidgetOrder.indexOf(widget);
             },
             /**
              * Attempt to set focus to the given child widget.

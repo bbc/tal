@@ -46,20 +46,6 @@
         });
     };
 
-    this.BrowserDeviceTest.prototype.testArrayIndexOf = function(queue) {
-        expectAsserts(5);
-
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            var arr = [1,2,3];
-            assertEquals(0, device.arrayIndexOf(arr, 1));
-            assertEquals(2, device.arrayIndexOf(arr, 3));
-            assertEquals(1, device.arrayIndexOf(arr, 2));
-            assertEquals(-1, device.arrayIndexOf(arr, 4));
-            assertEquals(-1, device.arrayIndexOf(arr, null));
-        });
-    };
-
     function defineElementCreationTests(funcName, expectedTag) {
         expectedTag = expectedTag.toLowerCase();
 
