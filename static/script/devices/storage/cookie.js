@@ -46,10 +46,13 @@ define(
             days = days || default_days;
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+            var cookiePath = opts.path || path;
+
             var cookieDataArray = [
                 namespace + '=' + value,
                 'expires=' + date.toGMTString(),
-                'path=' + (opts.isPathless ? '/' : path)
+                'path=' + (opts.isPathless ? '/' : cookiePath)
             ];
             if (opts.domain){
                 cookieDataArray.push('domain='+opts.domain);
