@@ -11,23 +11,6 @@ define('antie/lib/intervalformat', function() {
 	};
 
 	/**
-	 * Method to wrap Array.prototype.indexOf and add support for pre-JS1.5 browsers
-	 * @private
-	 */
-	function _indexOf(arr, obj, start) {
-		if(typeof(Array.prototype.indexOf) === 'function') {
-			return arr.indexOf(obj, start);
-		} else {
-			for (var i = (start || 0); i < arr.length; i++) {
-				if (arr[i] == obj) {
-					return i;
-				}
-			}
-			return -1;
-		}
-	}
-
-	/**
 	 * Formats a time interval, e.g. 3850 seconds as "1 hour, 4 minutes and 10 seconds",
 	 * or "1 hour and 4 minutes" or "64 minutes and 10 seconds", etc.
 	 *
@@ -51,7 +34,7 @@ define('antie/lib/intervalformat', function() {
 		var stringParts = [];
 		for(var i = 0; i < _unitOrder.length; i++) {
 			var unit = _unitOrder[i];
-			if(_indexOf(units, unit) !== -1) {
+			if(units.indexOf(unit) !== -1) {
 				var count = Math.floor(seconds / _divisors[unit]);
 				if(!unitMinimums || !unitMinimums[unit] || count >= unitMinimums[unit]) {
 					seconds %= _divisors[unit];
