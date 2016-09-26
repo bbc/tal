@@ -59,25 +59,6 @@ define(
                 this.addClassToElement(this.getTopLevelElement(), 'notanimating');
             },
             /**
-             * Returns the index of an object in an array. Behaves as native JavaScript 1.5 Array.indexOf().
-             * @param {Array} arr Array in which to search.
-             * @param {Object} obj Object to search for.
-             * @param {Integer} start Index from which to start searching.
-             * @returns Index of object in array. -1 if object is not found.
-             */
-            arrayIndexOf: function(arr, obj, start) {
-                if (typeof(Array.prototype.indexOf) === 'function') {
-                    return arr.indexOf(obj, start);
-                } else {
-                    for (var i = (start || 0); i < arr.length; i++) {
-                        if (arr[i] === obj) {
-                            return i;
-                        }
-                    }
-                    return -1;
-                }
-            },
-            /**
              * Creates an element in the device's user-agent.
              * @private
              * @param {String} tagName The tag name of the element to create.

@@ -38,8 +38,7 @@ define(
     'antie/events/event',
     [
         'antie/class',
-        'antie/runtimecontext',
-        'antie/lib/array.indexof' // Adds Array.prototype.indexOf()
+        'antie/runtimecontext'
     ],
     function(Class, RuntimeContext) {
         'use strict';
