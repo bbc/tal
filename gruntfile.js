@@ -101,38 +101,28 @@ module.exports = function(grunt) {
             coverage: {
                 command: 'cd static/script-tests/jasmine; pwd; ./coverage.sh -p;'
             }
+        },
+        jsdoc: {
+            dist: {
+                src: ['static/script/*/**.js'],
+                options: {
+                    destination: 'jsdoc'
+                }
+            }
         }
-    });
-
-    grunt.registerTask('generate-jsdoc', 'Generate JsDoc for TAL', function() {
-        var path = require('path');
-        var execSync = require('exec-sync');
-
-        if (grunt.file.exists('jsdoc/symbols')) {
-            grunt.file.delete('jsdoc/symbols');
-        }
-        grunt.file.recurse('static/script', function(absPath, rootDir, subDir, fileName) {
-            subDir = subDir || '';
-            grunt.file.copy(absPath, path.join('antie', 'static', 'script', subDir, fileName));
-        });
-
-        execSync('node_modules/jsdoc-toolkit/app/run.js -r=10 -t=node_modules/jsdoc-toolkit/templates/jsdoc -d=jsdoc antie/static/script');
-        grunt.file.delete('antie');
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-complexity');
     grunt.loadNpmTasks('grunt-text-replace');
-    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('gruntify-eslint');
-
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     grunt.registerTask('test', ['jasmine', 'eslint']);
     grunt.registerTask('lint', ['eslint']);
 
-    grunt.registerTask('jsdoc', ['generate-jsdoc', 'replace:jsdoc-tidy']);
     grunt.registerTask('full', ['eslint', 'jasmine']);
     grunt.registerTask('default', 'full');
     grunt.registerTask('coverage', 'Produce a coverage report of the main source files', ['jasmine:src:build', 'shell:coverage']);
