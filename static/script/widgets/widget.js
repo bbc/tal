@@ -290,13 +290,13 @@ define(
              * @param {Number}    [options.fps=25] Frames per second for fade animation.
              * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
              * @param {String}    [options.easing=linear] Easing style for fade animation.
-             * @returns Boolean true if animation was called, otherwise false
+             * @returns The reference to the animation object when created.
              */
             show : function(options) {
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
-                    device.showElement(options);
+                    return device.showElement(options);
                 } else {
                     throw new Error('Widget::show called - the current widget has not yet been rendered.');
                 }
@@ -309,13 +309,13 @@ define(
              * @param {Number}    [options.fps=25] Frames per second for fade animation.
              * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
              * @param {String}    [options.easing=linear] Easing style for fade animation.
-             * @returns Boolean true if animation was called, otherwise false
+             * @returns The reference to the animation object when created.
              */
             hide : function(options) {
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
-                    device.hideElement(options);
+                    return device.hideElement(options);
                 } else {
                     throw new Error('Widget::hide called - the current widget has not yet been rendered.');
                 }
@@ -328,13 +328,13 @@ define(
              * @param {Number}    [options.fps=25] Frames per second for fade animation.
              * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
              * @param {String}    [options.easing=linear] Easing style for fade animation.
-             * @returns Boolean true if animation was called, otherwise false
+             * @returns The reference to the animation object when created.
              */
             moveTo : function(options) {
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
-                    device.moveElementTo(options);
+                    return device.moveElementTo(options);
                 } else {
                     throw new Error('Widget::moveTo called - the current widget has not yet been rendered.');
                 }
