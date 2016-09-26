@@ -14,7 +14,7 @@
     "static": "./static/script"
   },
   "engines" : {
-    "npm" : "~4.10.3"
+    "npm" : "~3.10.3"
   },
   "devDependencies": {
     "eslint-plugin-jasmine": "^1.6.0",
