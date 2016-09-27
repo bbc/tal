@@ -30,9 +30,10 @@ define(
         'antie/devices/browserdevice',
         'antie/devices/anim/css3/transition',
         'antie/devices/anim/css3/optionstransitiondefinition',
-        'antie/devices/anim/shared/transitionendpoints'
+        'antie/devices/anim/shared/transitionendpoints',
+        'antie/devices/anim/shared/animationhandle'
     ],
-    function(Device,  Transition, OptionsTransitionDefinition, TransitionEndPoints) {
+    function(Device,  Transition, OptionsTransitionDefinition, TransitionEndPoints, AnimationHandle) {
         'use strict';
 
         function shouldSkipAnim(options, device) {
@@ -44,6 +45,12 @@ define(
                 return device.getConfig().defaults[propertyName];
             }
             return undefined;
+        }
+
+        function animationHandle(trans){
+            return new AnimationHandle( function(gotoEnd){
+                trans.stop(gotoEnd);
+            });
         }
 
         /* documented in antie.devices.Device */
@@ -82,7 +89,7 @@ define(
                 options.el
             );
 
-            return (trans._completed ? null : trans);
+            return animationHandle(trans);
         };
 
         /* documented in antie.devices.Device */
@@ -107,12 +114,12 @@ define(
                 );
             }
 
-            return (trans._completed ? null : trans);
+            return animationHandle(trans);
         };
 
         /* documented in antie.devices.device */
         Device.prototype.showElement = function(options) {
-            var transDef, transEndPoints, transOpts, config;
+            var transDef, transEndPoints, transOpts, config, trans;
             config = getConfig('showElementFade', this);
             transOpts = {
                 to: {
@@ -132,16 +139,17 @@ define(
             transDef.setPropertyDuration('visibility', 0);
             transEndPoints = new TransitionEndPoints(transOpts);
 
-            return new Transition(
+            trans = new Transition(
                 transDef,
                 transEndPoints,
                 options.el
             );
+            return animationHandle(trans);
         };
 
         /* documented in antie.devices.device - easing and fps not yet implemented here */
         Device.prototype.hideElement = function(options) {
-            var transDef, transEndPoints, transOpts, config;
+            var transDef, transEndPoints, transOpts, config, trans;
             config = getConfig('hideElementFade', this);
             transOpts = {
                 to: {
@@ -161,12 +169,13 @@ define(
             transDef.setPropertyDelay('visibility', transDef.getPropertyDuration('opacity'));
             transEndPoints = new TransitionEndPoints(transOpts);
 
-            return new Transition(
+            trans = new Transition(
                 transDef,
                 transEndPoints,
                 options.el
             );
 
+            return animationHandle(trans);
         };
 
         Device.prototype.tweenElementStyle = function(options) {
@@ -183,12 +192,11 @@ define(
                 }
             );
 
-            return new Transition(
+            return animationHandle(new Transition(
                 transDef,
                 transEndPoints,
                 options.el
-            );
-
+            ));
         };
 
         /* documented in antie.devices.device */
@@ -196,8 +204,11 @@ define(
             return false;
         };
 
-        Device.prototype.stopAnimation = function(transition) {
-            transition.stop(true);
+        /**
+          * @deprecated just call stop on the animation handle itself
+          */
+        Device.prototype.stopAnimation = function(animHandle) {
+            animHandle.stop(true);
         };
     }
 );
