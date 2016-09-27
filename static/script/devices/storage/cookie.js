@@ -88,6 +88,7 @@ define(
          * @param {Object} [opts]
          * @param {String} [opts.domain] The domain value of the cookie, if not provided this is not set on the cookie
          * @param {Boolean} [opts.isPathless] If <code>true</code> sets the path to '/' else retrieves the path from the location
+         * @param {String} [opt.path] The path to save the cookie against
          */
         var CookieStorage = StorageProvider.extend(/** @lends antie.devices.storage.CookieStorage.prototype */{
             /**
