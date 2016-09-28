@@ -11,10 +11,12 @@
       "antie/devices/logging/alert",
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
-      "antie/devices/storage/cookie",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
-    ]
+    ],
+    "mods": {
+      "PersistantStorage": "antie/devices/storage/cookie"
+    }
   },
   "logging": {
     "level": "none"

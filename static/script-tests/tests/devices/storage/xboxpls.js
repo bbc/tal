@@ -6,21 +6,19 @@
 require(
     [
         'antie/devices/storage/xboxpls',
-        'antie/devices/data/nativejson',
-        'antie/devices/browserdevice'
+        'antie/devices/data/nativejson'
     ],
-    function(XBoxStorage, NativeJson, Device) {
+    function(XBoxStorage) {
         'use strict';
 
-        var device,
-            storage,
+        var storage,
             hasMockAPI;
 
         describe('Xbox device storage', function() {
             beforeEach(function () {
                 mock().storage = {};
-                device = new Device({});
-                storage = device.getPersistentStorage('namespace');
+
+                storage = new XBoxStorage();
             });
 
             afterEach(function() {

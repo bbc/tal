@@ -7,10 +7,34 @@
     this.CookieStorageProviderTest = AsyncTestCase('Storage_Cookie');
 
     var stores;
+    var config = {};
 
     this.CookieStorageProviderTest.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
         stores = [];
+        config = {
+            'modules':{
+                'base':'antie/devices/browserdevice',
+                'modifiers':[
+                    'antie/devices/data/json2'
+                ],
+                'mods': {
+                    'PersistantStorage': 'antie/devices/storage/cookie'
+                }
+            },
+            'input':{
+                'map':{}
+            },
+            'layouts':[
+                {
+                    'width':960,
+                    'height':540,
+                    'module':'fixtures/layouts/default',
+                    'classes':['browserdevice540p']
+                }
+            ],
+            'deviceConfigurationKey':'devices-html5-1'
+        };
     };
 
     this.CookieStorageProviderTest.prototype.tearDown = function() {
@@ -29,8 +53,6 @@
     this.CookieStorageProviderTest.prototype.testNamespaceRecoverable = function(queue) {
         expectAsserts(1);
 
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
-
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test');
             var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test');
@@ -41,8 +63,6 @@
 
     this.CookieStorageProviderTest.prototype.testStringRecoverable = function(queue) {
         expectAsserts(1);
-
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test');
@@ -57,8 +77,6 @@
 
     this.CookieStorageProviderTest.prototype.testObjectRecoverable = function(queue) {
         expectAsserts(1);
-
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var obj = {
@@ -78,8 +96,6 @@
     this.CookieStorageProviderTest.prototype.testNamespaceIsolated = function(queue) {
         expectAsserts(1);
 
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
-
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
             var storage2 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test2');
@@ -90,8 +106,6 @@
 
     this.CookieStorageProviderTest.prototype.testValueIsolated = function(queue) {
         expectAsserts(1);
-
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
@@ -106,8 +120,6 @@
     this.CookieStorageProviderTest.prototype.testRemoveItem = function(queue) {
         expectAsserts(2);
 
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
-
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
 
@@ -121,8 +133,6 @@
 
     this.CookieStorageProviderTest.prototype.testRemoveItemIsolated = function(queue) {
         expectAsserts(4);
-
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var storage1 = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
@@ -143,8 +153,6 @@
     this.CookieStorageProviderTest.prototype.testCookiesAreRead = function(queue) {
         expectAsserts(1);
 
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/nativejson','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
-
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var obj = {
                 'hello': ['house','street','town','region','country','continent','world','solar system','galaxy', 'universe']
@@ -161,8 +169,6 @@
 
     this.CookieStorageProviderTest.prototype.testCookiesAreSet = function(queue) {
         expectAsserts(1);
-
-        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
         queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
             var obj = {
