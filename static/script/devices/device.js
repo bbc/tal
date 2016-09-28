@@ -992,12 +992,12 @@ define(
         }
 
         /**
-         * Loads a device configuration document from the given URL.
+         * Loads a device configuration document, and its modifiers.
          * @name load
          * @memberOf antie.devices.Device
          * @static
          * @function
-         * @param {String} configUrl URL to the device configuration document.
+         * @param {Object} config Device configuration document.
          * @param {Object} callbacks Object containing onSuccess and onError callback functions.
          */
         Device.load = function(config, callbacks) {
@@ -1024,8 +1024,8 @@ define(
          * @memberOf antie.devices.Device
          * @static
          * @function
-         * @param {String} id of require module that defined the logging methods - eg antie/devices/logging/default
-         * @param {Object} an object that contains implementations of each logging interface ( log,debug,info,warn,error )
+         * @param {String} moduleId of require module that defined the logging methods - eg antie/devices/logging/default
+         * @param {Object} loggingMethods object that contains implementations of each logging interface ( log,debug,info,warn,error )
          */
 
         Device.addLoggingStrategy = function(moduleID, loggingMethods) {
