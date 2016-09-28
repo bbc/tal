@@ -9,7 +9,7 @@ require(
     function (Cookie) {
         describe('antie.devices.storage.Cookie', function () {
             describe('Created by getInstance', function () {
-                it('Can retieve saved cookies', function () {
+                it('Can retrieve saved cookies', function () {
                     var savedObject = {
                         some: 'things'
                     };
