@@ -1,27 +1,6 @@
 /**
- * @fileOverview Requirejs module containing the antie.Device class.
- *
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
 /**
@@ -1013,12 +992,12 @@ define(
         }
 
         /**
-         * Loads a device configuration document from the given URL.
+         * Loads a device configuration document, and its modifiers.
          * @name load
          * @memberOf antie.devices.Device
          * @static
          * @function
-         * @param {String} configUrl URL to the device configuration document.
+         * @param {Object} config Device configuration document.
          * @param {Object} callbacks Object containing onSuccess and onError callback functions.
          */
         Device.load = function(config, callbacks) {
@@ -1045,8 +1024,8 @@ define(
          * @memberOf antie.devices.Device
          * @static
          * @function
-         * @param {String} id of require module that defined the logging methods - eg antie/devices/logging/default
-         * @param {Object} an object that contains implementations of each logging interface ( log,debug,info,warn,error )
+         * @param {String} moduleId of require module that defined the logging methods - eg antie/devices/logging/default
+         * @param {Object} loggingMethods object that contains implementations of each logging interface ( log,debug,info,warn,error )
          */
 
         Device.addLoggingStrategy = function(moduleID, loggingMethods) {
