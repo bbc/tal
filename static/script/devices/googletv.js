@@ -1,4 +1,5 @@
 /**
+ * @fileOverview Requirejs module containing the antie.BrowserDevice subclass for Google TV devices.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */

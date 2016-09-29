@@ -1,4 +1,5 @@
 /**
+ * @fileOverview Requirejs module containing a class to build URLs from templates
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
