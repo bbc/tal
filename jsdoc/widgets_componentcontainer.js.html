@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/componentcontainer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/componentcontainer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.ComponentContainer class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+
+define('antie/widgets/componentcontainer',
+    [
+        'antie/widgets/container',
+        'antie/events/componentevent'
+    ],
+    function (Container, ComponentEvent) {
+        'use strict';
+
+        var _knownComponents = {};
+        /**
+         * The ComponentContainer widget class represents a container that Components (sections of UI) may be dynamically loaded into.
+         * @name antie.widgets.ComponentContainer
+         * @class
+         * @extends antie.widgets.Container
+         * @requires antie.events.ComponentEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         */
+        var ComponentContainer = Container.extend(/** @lends antie.widgets.ComponentContainer.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function (id) {
+                this._loadingIndex = 0;
+                this._loadingModule = null;
+                this._currentModule = null;
+                this._currentComponent = null;
+                this._currentArgs = null;
+                this._historyStack = [];
+                this._previousFocus = null;
+                this._super(id);
+                this.addClass('componentcontainer');
+            },
+            /**
+             * Callback called when a requirejs containing a component has been loaded.
+             * @private
+             * @param {String} module The requirejs module name of the loaded component.
+             * @param {Class} componentClass The subclass of antie.widgets.Component which has been loaded.
+             * @param {Object} [args] The arguments passed to populate the component.
+             */
+            _loadComponentCallback: function (module, componentClass, args, keepHistory, state) {
+                if (!this.getCurrentApplication()) {
+                    // Application has been destroyed, abort
+                    return;
+                }
+
+                var newComponent = new componentClass();
+
+                // Add the component to our table of known components.
+                _knownComponents[module] = newComponent;
+
+                // set the parent widget so the next event bubbles correctly through the tree
+                newComponent.parentWidget = this;
+                newComponent.bubbleEvent(new ComponentEvent('load', this, _knownComponents[module], args));
+                // clear the parent widget again
+                newComponent.parentWidget = null;
+
+                // Show the component.
+                this.show(module, args, keepHistory, state);
+            },
+            /**
+             * Show a component within this container. If the specified component has not been loaded, load it.
+             * @param {String} module The requirejs module name of the component to show.
+             * @param {Object} [args] The arguments to populate the component.
+             * @param {Boolean} [keepHistory] If true, the current component shown in this container is preserved in the history stack.
+             * @param {Object} [state] Additional component-specific state information
+             */
+            show: function (module, args, keepHistory, state, fromBack, focus) {
+                this._loadingModule = module;
+
+                this._loadingIndex++;
+                var loadingIndex = this._loadingIndex;
+
+                var self;
+                if (_knownComponents[module]) {
+                    var device = this.getCurrentApplication().getDevice();
+
+                    var _focus = this.getCurrentApplication().getFocussedWidget();
+                    if (this._currentComponent) {
+                        this.hide(null, args, keepHistory, state, fromBack);
+                    }
+
+                    this._currentModule = module;
+                    this._currentComponent = _knownComponents[module];
+                    this._currentArgs = args;
+                    if (!fromBack) {
+                        this._previousFocus = _focus;
+                    }
+
+                    if (!this._isFocussed) {
+                        // We don't have focus, so any of our children shouldn't
+                        // (_isFocussed state can be set to true if focussed widget is in a unloaded component)
+                        var p = this._currentComponent;
+                        while (p) {
+                            p.removeFocus();
+                            p = p._activeChildWidget;
+                        }
+                    }
+
+                    // set the parent widget so the next event bubbles correctly through the tree
+                    this._currentComponent.parentWidget = this;
+
+                    this._currentComponent.bubbleEvent(new ComponentEvent('beforerender', this, this._currentComponent, args, state, fromBack));
+
+                    this._currentComponent.render(device);
+
+                    // and clear it again
+                    this._currentComponent.parentWidget = null;
+
+                    device.hideElement({
+                        el: this._currentComponent.outputElement,
+                        skipAnim: true
+                    });
+
+                    this.appendChildWidget(this._currentComponent);
+
+                    var evt = new ComponentEvent('beforeshow', this, this._currentComponent, args, state, fromBack);
+                    this._currentComponent.bubbleEvent(evt);
+
+                    if (focus) {
+                        focus.focus();
+                    }
+
+                    self = this;
+                    if (!evt.isDefaultPrevented()) {
+                        var config = device.getConfig();
+                        var animate = !config.widgets || !config.widgets.componentcontainer || (config.widgets.componentcontainer.fade !== false);
+                        device.showElement({
+                            el: this._currentComponent.outputElement,
+                            skipAnim: !animate
+                        });
+                    }
+
+                    self._currentComponent.bubbleEvent(new ComponentEvent('aftershow', self, self._currentComponent, args, state, fromBack));
+
+                    var focusRemoved = self.setActiveChildWidget(self._currentComponent);
+                    if (!focusRemoved) {
+                        self._activeChildWidget = self._currentComponent;
+                        self.getCurrentApplication().getDevice().getLogger().warn('active component is not currently focusable', self._activeChildWidget);
+                    }
+                } else {
+                    // hook into requirejs to load the component from the module and call us again
+                    self = this;
+                    require([module], function (componentClass) {
+                        // Check we've not navigated elsewhere whilst requirejs has been loading the module
+                        if (self._loadingModule === module &amp;&amp; self._loadingIndex === loadingIndex) {
+                            self._loadComponentCallback(module, componentClass, args, keepHistory, state, fromBack, focus);
+                        }
+                    });
+                }
+            },
+            /**
+             * Pushes a component into the history stack of the container (and shows it).
+             * @param {String} module The requirejs module name of the component to show.
+             * @param {Object} [args] An optional object to pass arguments to the component.
+             */
+            pushComponent: function (module, args) {
+                this.show(module, args, true);
+            },
+            /**
+             * Returns the widget added to this container.
+             */
+            getContent: function () {
+                return this._currentComponent;
+            },
+            /**
+             * Return this component container to the previous component in the history.
+             */
+            back: function () {
+                var _focus = this._currentComponent.getIsModal() ? this._previousFocus : null;
+
+                var _lastComponent = this._historyStack.pop();
+                if (_lastComponent) {
+                    this._previousFocus = _lastComponent.previousFocus;
+                    this.show(_lastComponent.module, _lastComponent.args, true, _lastComponent.state, true, _focus);
+                } else {
+                    this.hide(null, null, false, null, false);
+                }
+            },
+            /**
+             * Hide the component within this container.
+             */
+            hide: function (focusToComponent, args, keepHistory, state, fromBack) {
+
+                if (this._currentComponent) {
+                    var evt = new ComponentEvent('beforehide', this, this._currentComponent, args, state, fromBack);
+                    this._currentComponent.bubbleEvent(evt);
+
+                    var _state = keepHistory ? this._currentComponent.getCurrentState() : null;
+
+                    // remove the child widget, but if default event is prevented, keep the output element in the DOM
+                    this.removeChildWidget(this._currentComponent, evt.isDefaultPrevented());
+
+                    var _component = this._currentComponent;
+                    this._currentComponent = null;
+
+                    // set the parent widget so the next event bubbles correctly through the tree
+                    _component.parentWidget = this;
+                    _component.bubbleEvent(new ComponentEvent('afterhide', this, _component, args, state, fromBack));
+                    // and clear it again
+                    _component.parentWidget = null;
+
+                    if (keepHistory) {
+                        if (!fromBack) {
+                            this._historyStack.push({
+                                module: this._currentModule,
+                                args: this._currentArgs,
+                                state: _state,
+                                previousFocus: this._previousFocus
+                            });
+                        }
+                    } else {
+                        // Reset the history stack when a component is shown in this container without explicitly
+                        // enabling history.
+                        if (_component.getIsModal() &amp;&amp; !fromBack) {
+                            if (this._historyStack.length > 0) {
+                                this._historyStack[0].previousFocus.focus();
+                            } else if (this._previousFocus) {
+                                this._previousFocus.focus();
+                            }
+                        }
+                        this._historyStack = [];
+                    }
+                }
+                if (this._isFocussed &amp;&amp; focusToComponent) {
+                    this.parentWidget.setActiveChildWidget(this.parentWidget._childWidgets[focusToComponent]);
+                }
+            },
+            getCurrentModule: function () {
+                return this._currentModule;
+            },
+            getCurrentArguments: function () {
+                return this._currentArgs;
+            }
+        });
+        ComponentContainer.destroy = function () {
+            for (var module in _knownComponents) {
+                if(_knownComponents.hasOwnProperty(module)) {
+                    delete _knownComponents[module];
+                }
+            }
+        };
+        return ComponentContainer;
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

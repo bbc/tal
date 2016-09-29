@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/button.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/button.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.Button class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/widgets/button',
+    [
+        'antie/widgets/container',
+        'antie/events/focusevent',
+        'antie/events/focusdelayevent',
+        'antie/events/blurevent',
+        'antie/events/keyevent',
+        'antie/events/selectevent'
+    ],
+    function(Container, FocusEvent, FocusDelayEvent, BlurEvent, KeyEvent, SelectEvent) {
+        'use strict';
+
+        /**
+         * The Button widget class represents a container widget which can receive focus and be selected/activated by the user.
+         * @name antie.widgets.Button
+         * @class
+         * @extends antie.widgets.Container
+         * @requires antie.events.FocusEvent
+         * @requires antie.events.FocusDelayEvent
+         * @requires antie.events.BlurEvent
+         * @requires antie.events.KeyEvent
+         * @requires antie.events.SelectEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         * @param {boolean} [animationEnabled] If true, a focus delay will be set before displaying the button
+         */
+        return Container.extend(/** @lends antie.widgets.Button.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(id, animationEnabled) {
+                //TODO refactor this to set focusDelay explicitly rather than using animationEnabled with fixed focusDelay
+                this._super(id);
+                this.addClass('button');
+                this.addClass('buttonBlurred');
+
+                this._focusDelayHandle = null;
+                this._disabled = false;
+
+                /* Reduce the focusDelayTimeout for devices that don't have animation enabled */
+                if(typeof animationEnabled === 'boolean' &amp;&amp; !animationEnabled) {
+                    this._focusDelayTimeout = 500;
+                } else {
+                    this._focusDelayTimeout = 1500;
+                }
+
+                /* if the ENTER key is pressed, translate into into a SelectEvent on this button */
+                var self = this;
+                this.addEventListener('keydown', function(e) {
+                    if(e.keyCode === KeyEvent.VK_ENTER) {
+                        self.select();
+                        e.stopPropagation();
+                    }
+                });
+            },
+            /**
+             * Renders the widget and any child widgets to device-specific output.
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+             */
+            render: function(device) {
+                this.outputElement = device.createButton(this.id, this.getClasses(), '#');
+                for(var i=0; i&lt;this._childWidgetOrder.length; i++) {
+                    device.appendChildElement(this.outputElement, this._childWidgetOrder[i].render(device));
+                }
+                return this.outputElement;
+            },
+            /**
+             * Checks to see if a widget is focusable.
+             * @see antie.widgets.Button
+             * @returns {Boolean} True if the button is enabled.
+             */
+            isFocusable: function() {
+                // a widget can receive focus if it or any of it's descendants are Buttons
+                // We're a button, so we are
+                return !this._disabled;
+            },
+            /**
+             * Set the button to be disabled and therefore not focusable. Adds buttonDisabled class.
+             * @param {Boolean} disabled True if the button is to be disabled.
+             */
+            setDisabled: function(disabled) {
+                this._disabled = disabled;
+                if(disabled) {
+                    this.addClass('buttonDisabled');
+                } else {
+                    this.removeClass('buttonDisabled');
+                }
+            },
+            /**
+             * Gives this button focus by setting active children back up the widget tree.
+             * @see antie.widgets.Button
+             * @param {Boolean} [force] Pass &lt;code>true&lt;/code> to force focus to a disabled button.
+             * @returns Boolean true if focus has been moved to the button. Otherwise returns false.
+             */
+            focus: function(force) {
+                var origDisabled = this._disabled;
+                if(force) {
+                    this._disabled = false;
+                }
+
+                var focusChanged = true;
+                var w = this;
+                while(w.parentWidget) {
+                    if(!w.parentWidget.setActiveChildWidget(w)) {
+                        focusChanged = false;
+                    }
+                    w = w.parentWidget;
+                }
+
+                this._disabled = origDisabled;
+
+                return focusChanged;
+            },
+            select: function() {
+                this.bubbleEvent(new SelectEvent(this));
+            },
+            /**
+             * Flags the active child as focussed or blurred.
+             * @param {Boolean} focus True if the active child is to be focussed, False if the active child is to be blurred.
+             * @private
+             */
+            _setActiveChildFocussed: function(focus) {
+                if(this._focusDelayHandle) {
+                    clearTimeout(this._focusDelayHandle);
+                }
+                if(focus) {
+                    this.removeClass('buttonBlurred');
+                    this.addClass('buttonFocussed');
+
+                    var self = this;
+                    // Fire a focus delay event if this button has had focus for more than x-seconds.
+                    this._focusDelayHandle = setTimeout(function() {
+                        self.bubbleEvent(new FocusDelayEvent(self));
+                    }, this._focusDelayTimeout);
+
+                    this.getCurrentApplication()._setFocussedWidget(this);
+                } else {
+                    this.removeClass('buttonFocussed');
+                    this.addClass('buttonBlurred');
+                }
+            },
+            removeFocus: function() {
+                this._super();
+                this.removeClass('buttonFocussed');
+                this.addClass('buttonBlurred');
+            }
+        });
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

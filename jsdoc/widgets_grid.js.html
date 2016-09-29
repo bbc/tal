@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/grid.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/grid.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.Grid class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/widgets/grid',
+    [
+        'antie/widgets/container',
+        'antie/events/keyevent',
+        'antie/events/selecteditemchangeevent'
+    ],
+    function (Container, KeyEvent, SelectedItemChangeEvent) {
+        'use strict';
+
+        /**
+         * The Grid widget class represents a grid of widgets that may be navigated between using up/down/left/right.
+         * @name antie.widgets.Grid
+         * @class
+         * @extends antie.widgets.Container
+         * @requires antie.events.KeyEvent
+         * @requires antie.events.SelectedItemChangeEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         * @param {Integer} cols The number of columns in the grid.
+         * @param {Integer} rows The number of rows in the grid.
+         */
+        var Grid = Container.extend(/** @lends antie.widgets.Grid.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function (id, cols, rows) {
+                this._super(id);
+                this.addClass('grid');
+                this._cols = cols;
+                this._rows = rows;
+
+                this._selectedRow = 0;
+                this._selectedCol = 0;
+
+                for (var i = 0; i &lt; cols * rows; i++) {
+                    this._childWidgetOrder.push(null);
+                }
+
+                var self = this;
+                this.addEventListener('keydown', function (e) {
+                    self._onKeyDown(e);
+                });
+            },
+            /**
+             * Get the widget positioned at the specified column and row.
+             * @param {Integer} col The column the widget it in
+             * @param {Integer} row The row the widget it in
+             * @returns The widget in the specified column and row
+             */
+            getWidgetAt: function (col, row) {
+                return this._childWidgetOrder[(this._cols * row) + col];
+            },
+            /**
+             * Positions a widget at the specified column and row.
+             * @param {Integer} col The column to position the widget in
+             * @param {Integer} row The row to position the widget in
+             * @returns The widget to position
+             */
+            setWidgetAt: function (col, row, widget) {
+                if (!this.hasChildWidget(widget.id)) {
+                    this._childWidgets[widget.id] = widget;
+                    this._childWidgetOrder[(this._cols * row) + col] = widget;
+                    widget.parentWidget = this;
+
+                    // If there's no active child widget set, try and set it to this
+                    // (Will only have an affect if it's focusable (i.e. contains a button))
+                    if (!this._activeChildWidget) {
+                        this.setActiveChildWidget(widget);
+                    }
+
+                    if (this.outputElement &amp;&amp; this._autoRenderChildren) {
+                        var device = this.getCurrentApplication().getDevice();
+
+                        if (!widget.outputElement) {
+                            widget.render(device);
+                        }
+
+                        device.appendChildElement(this.outputElement, widget.outputElement);
+                    }
+                }
+            },
+            /**
+             * Renders the widget and any child widgets to device-specific output.
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+             */
+            render: function (device) {
+                if (!this.outputElement) {
+                    this.outputElement = device.createContainer(this.id, this.getClasses());
+                } else {
+                    device.clearElement(this.outputElement);
+                }
+
+                var rowElement;
+                for (var row = 0; row &lt; this._rows; row++) {
+                    rowElement = device.createContainer(this.id + '_row_' + row, ['row']);
+                    for (var col = 0; col &lt; this._cols; col++) {
+                        var widget = this.getWidgetAt(col, row);
+                        if (widget) {
+                            if (col === 0) {
+                                widget.addClass('firstcol');
+                            } else if (col === this._cols - 1) {
+                                widget.addClass('lastcol');
+                            }
+                            device.appendChildElement(rowElement, this.getWidgetAt(col, row).render(device));
+                        } else {
+                            var classes = ['spacer'];
+                            if (col === 0) {
+                                classes.push('firstcol');
+                            } else if (col === this._cols - 1) {
+                                classes.push('lastcol');
+                            }
+                            device.appendChildElement(rowElement, device.createContainer(this.id + '_' + col + '_' + row, classes));
+                        }
+                    }
+                    device.appendChildElement(this.outputElement, rowElement);
+                }
+
+                return this.outputElement;
+            },
+            /**
+             * Appends a child widget to this widget. Not supported for Grids.
+             * @param {antie.widgets.Widget} widget The child widget to add.
+             */
+            appendChildWidget: function (/*widget*/) {
+                throw new Error('Not supported');
+            },
+            /**
+             * Inserts a child widget at the specified index. Not supported for Grids.
+             * @param {Integer} index The index where to insert the child widget.
+             * @param {antie.widgets.Widget} widget The child widget to add.
+             */
+            insertChildWidget: function (/*index, widget*/) {
+                throw new Error('Not supported');
+            },
+            /**
+             * Removes a specific child widget from this widget. Not supported for Grids.
+             * @param {antie.widgets.Widget} widget The child widget to remove.
+             * @param {Boolean} [retainElement] Pass &lt;code>true&lt;/code> to retain the child output element of the given widget
+             */
+            removeChildWidget: function (/*widget, retainElement*/) {
+                throw new Error('Not supported');
+            },
+            /**
+             * Attempt to set focus to the given child widget.
+             *
+             * Note: You can only set focus to a focusable widget. A focusable widget is one that
+             * contains an enabled antie.widgets.Button as either a direct or indirect child.
+             *
+             * Note: Widgets have 2 independant states: active and focussed. A focussed widget is
+             * either the Button with focus, or any parent of that Button. An active widget is
+             * one which is the active child of its parent Container. When the parent widget
+             * receives focus, focus will be placed on the active child.
+             *
+             * Classes 'active' and 'focus' are appended to widgets with these states.
+             *
+             * @param {antie.widgets.Widget} widget The child widget to set focus to.
+             * @returns Boolean true if the child widget was focusable, otherwise boolean false.
+             */
+            setActiveChildWidget: function (widget) {
+                var changed = this._activeChildWidget !== widget;
+                if (this._super(widget)) {
+                    var selectedIndex = this.getIndexOfChildWidget(widget);
+                    this._selectedRow = Math.floor(selectedIndex / this._cols);
+                    this._selectedCol = Math.floor(selectedIndex % this._cols);
+
+                    if (changed) {
+                        this.bubbleEvent(new SelectedItemChangeEvent(this, widget, selectedIndex));
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            /**
+             * Key handler for grids. Processes KeyEvent.VK_UP, VK_DOWN, VK_LEFT and VK_RIGHT keys and stops propagation
+             * if the keypress is handled. Otherwise allows the event to be bubbled up to the parent widget to allow
+             * spatial navigation out of the list.
+             * @param {antie.events.KeyEvent} evt The key event.
+             */
+            _onKeyDown: function (evt) {
+                if (evt.keyCode !== KeyEvent.VK_UP &amp;&amp; evt.keyCode !== KeyEvent.VK_DOWN &amp;&amp;
+                    evt.keyCode !== KeyEvent.VK_LEFT &amp;&amp; evt.keyCode !== KeyEvent.VK_RIGHT) {
+                    return;
+                }
+
+                var _newSelectedCol = this._selectedCol;
+                var _newSelectedRow = this._selectedRow;
+                var _newSelectedWidget = null;
+                do {
+                    if (evt.keyCode === KeyEvent.VK_UP) {
+                        _newSelectedRow--;
+                    } else if (evt.keyCode === KeyEvent.VK_DOWN) {
+                        _newSelectedRow++;
+                    } else if (evt.keyCode === KeyEvent.VK_LEFT) {
+                        _newSelectedCol--;
+                    } else if (evt.keyCode === KeyEvent.VK_RIGHT) {
+                        _newSelectedCol++;
+                    }
+                    if (_newSelectedCol &lt; 0 || _newSelectedCol >= this._cols) {
+                        break;
+                    }
+                    if (_newSelectedRow &lt; 0 || _newSelectedRow >= this._rows) {
+                        break;
+                    }
+
+                    var _newSelectedIndex = (_newSelectedRow * this._cols) + _newSelectedCol;
+                    var _widget = this._childWidgetOrder[_newSelectedIndex];
+                    if (_widget &amp;&amp; _widget.isFocusable()) {
+                        _newSelectedWidget = _widget;
+                        break;
+                    }
+                } while (true);
+
+                if (_newSelectedWidget) {
+                    this.setActiveChildWidget(_newSelectedWidget);
+                    evt.stopPropagation();
+
+                }
+            },
+
+            /**
+             * Broadcasts an event from the application level to every single
+             * object it contains.
+             */
+            broadcastEvent: function (evt) {
+                this.fireEvent(evt);
+                if (!evt.isPropagationStopped()) {
+                    for (var i = 0; i &lt; this._childWidgetOrder.length; i++) {
+                        // Grids are the only type of container that may contain
+                        // null entries in the _childWidgetOrder array
+                        if (this._childWidgetOrder[i]) {
+                            this._childWidgetOrder[i].broadcastEvent(evt);
+                        }
+                    }
+                }
+            }
+        });
+
+        return Grid;
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

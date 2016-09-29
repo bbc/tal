@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/widget.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/widget.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.Widget abstract base class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+/**
+ * User interface widgets.
+ * @name antie.widgets.Widget
+ * @namespace
+ */
+
+define(
+    'antie/widgets/widget',
+    [
+        'antie/class',
+        'antie/runtimecontext'
+    ],
+    function(Class, RuntimeContext) {
+        'use strict';
+
+        /**
+         * Keep a count of generated IDs so we can ensure they're always unique
+         * @private
+         */
+        var widgetUniqueIDIndex = 0;
+
+        /**
+         * The base widget class. A widget is a UI-component which can be rendered to device-specific output
+         * via a {@link antie.devices.Device} object.
+         * @name antie.widgets.Widget
+         * @class
+         * @abstract
+         * @extends antie.Class
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         */
+        return Class.extend(/** @lends antie.widgets.Widget.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(id) {
+                this._classNames = {'widget':true};
+                this.parentWidget = null;
+                this.outputElement = null;
+                this._eventListeners = {};
+                this._dataItem = null; // Any data item bound to this widget
+                this._isFocussed = false;
+
+                function createUniqueID() {
+                    return '#' + (new Date() * 1) + '_' + (widgetUniqueIDIndex++);
+                }
+
+                // ensure all widgets have an ID
+                this.id = id ? id : createUniqueID();
+            },
+            /**
+             * Renders the widget to device-specific output.
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+             */
+            render: function(/*device*/) {
+                throw new Error('Widget::render called - the subclass for widget \'' + this.id + '\' must have not overridden the render method.');
+            },
+            /**
+             * Adds a CSS class to the widget if not already present.
+             * @param {String} className The class name to add.
+             */
+            addClass: function(className) {
+                if (!this._classNames[className]) {
+                    this._classNames[className] = true;
+                    if (this.outputElement) {
+                        var device = this.getCurrentApplication().getDevice();
+                        device.setElementClasses(this.outputElement, this.getClasses());
+                    }
+                }
+            },
+            /**
+             * Removes a CSS class from the widget if present.
+             * @param {String} className The class name to remove.
+             */
+            removeClass: function(className) {
+                if (this._classNames[className]) {
+                    this._classNames[className] = null;
+                    if (this.outputElement) {
+                        var device = this.getCurrentApplication().getDevice();
+                        device.setElementClasses(this.outputElement, this.getClasses());
+                    }
+                }
+            },
+            /**
+             * Checks to see if the widget has a given CSS class.
+             * @param {String} className The class name to check.
+             * @returns Boolean true if the device has the className. Otherwise boolean false.
+             */
+            hasClass: function(className) {
+                return (this._classNames[className] ? true : false);
+            },
+            /**
+             * Get an array of class names that this widget has.
+             * @returns An array of class names (Strings)
+             */
+            getClasses: function() {
+                var _names = [];
+                for (var i in this._classNames) {
+                    if(this._classNames.hasOwnProperty(i)) {
+                        _names.push(i);
+                    }
+                }
+                return _names;
+            },
+            /**
+             * Add an event listener function to this widget.
+             * @param {String} ev The event type to listen for (e.g. &lt;code>keydown&lt;/code>)
+             * @param {Function} func The handler to be called when the event is fired.
+             * @see antie.events.Event
+             */
+            addEventListener: function(ev, func) {
+                var listeners = this._eventListeners[ev];
+                if (typeof listeners === 'undefined') {
+                    listeners = [];
+                    this._eventListeners[ev] = listeners;
+                }
+                if (!~listeners.indexOf(func)) {
+                    listeners.push(func);
+                }
+            },
+            /**
+             * Removes an event listener function to this widget.
+             * @param {String} ev The event type that the listener is to be removed from (e.g. &lt;code>keydown&lt;/code>)
+             * @param {Function} func The handler to be removed.
+             * @see antie.events.Event
+             */
+            removeEventListener: function(ev, func) {
+                var listeners = this._eventListeners[ev],
+                    listener;
+
+                if (!listeners) {
+                    RuntimeContext.getDevice().getLogger().error('Attempting to remove non-existent event listener');
+                    return false;
+                }
+
+                listener = listeners.indexOf(func);
+                if (~listener) {
+                    listeners.splice(listener, 1);
+                }
+            },
+            /**
+             * Fires an event on this object, triggering any event listeners bound to this widget only.
+             * Note: this does not bubble or propagate the event to other widgets, for that functionality
+             * see {@link #bubbleEvent}.
+             * @param {antie.events.Event} ev The event to fire.
+             * @see antie.events.Event
+             */
+            fireEvent: function(ev) {
+                var listeners = this._eventListeners[ev.type];
+                if (listeners) {
+                    for (var func in listeners) {
+                        if(listeners.hasOwnProperty(func)) {
+                            try {
+                                listeners[func](ev);
+                            } catch (exception) {
+                                var logger = this.getCurrentApplication().getDevice().getLogger();
+                                logger.error('Error in ' + ev.type + ' event listener on widget ' + this.id + ': ' + exception.message, exception, listeners[func]);
+                            }
+                        }
+                    }
+                }
+            },
+            /**
+             * Bubbles an event from object, triggering any event listeners bound to this widget and any
+             * parent widgets.
+             * To halt bubbling of the event, see {@link antie.events.Event#stopPropagation}.
+             * @param {antie.events.Event} ev The event to bubble.
+             * @see antie.events.Event
+             */
+            bubbleEvent: function(ev) {
+                this.fireEvent(ev);
+                if (!ev.isPropagationStopped()) {
+                    if (this.parentWidget) {
+                        this.parentWidget.bubbleEvent(ev);
+                    } else {
+                        ev.stopPropagation();
+                    }
+
+                }
+            },
+
+            /**
+             * Broadcast an event from object, triggering any event listeners bound to this widget and any
+             * parent widgets.
+             * To halt bubbling of the event, see {@link antie.events.Event#stopPropagation}.
+             * @param {antie.events.Event} ev The event to bubble.
+             * @see antie.events.Event
+             */
+            broadcastEvent: function(ev) {
+                this.fireEvent(ev);
+            },
+
+            /**
+             * Checks to see if a widget is focussable, i.e. contains an enabled button.
+             * @see antie.widgets.Button
+             */
+            isFocusable: function() {
+                // a widget can receive focus if any of it's children or children-of-children are Buttons
+                // We're not a button and we have no children, so we're not.
+                return false;
+            },
+            /**
+             * Gets a reference to the application responsible for creating the widget.
+             * @see antie.RuntimeContext
+             */
+            getCurrentApplication: function() {
+                try {
+                    return RuntimeContext.getCurrentApplication();
+                } catch (ex) {
+                    return null;
+                }
+            },
+            /**
+             * Get any data item associated with this widget.
+             */
+            getDataItem: function() {
+                return this._dataItem;
+            },
+            /**
+             * Associate a data item with this widget.
+             * @param {object} dataItem Object to associate with this widget.
+             */
+            setDataItem: function(dataItem) {
+                this._dataItem = dataItem;
+            },
+            /**
+             * Returns the component this widget is a descendant of
+             */
+            getComponent: function() {
+                var widget = this;
+                while (widget &amp;&amp; !(widget.isComponent())) {
+                    widget = widget.parentWidget;
+                }
+                return widget;
+            },
+            /**
+             * Remove focus state from this widget.
+             */
+            removeFocus: function() {
+                this.removeClass('focus');
+                this._isFocussed = false;
+            },
+            /**
+             * Get if this widget is in the current focus path.
+             * @returns Boolean true if this widget is in the focus path, otherwise false.
+             */
+            isFocussed: function() {
+                return this._isFocussed;
+            },
+            /**
+             * Returns whether the widget is a Component.
+             * @returns {Boolean} True if the widget is a Component.
+             */
+            isComponent: function() {
+                return false;
+            },
+            /**
+             * Shows a widget. If animation is enabled the widget will be faded in.
+             * @param {Object}    options Details of the element to be shown, with optional parameters.
+             * @param {Boolean} [options.skipAnim] By default the showing of the element will be animated (faded in). Pass &lt;code>true&lt;/code> here to prevent animation.
+             * @param {Function} [options.onComplete] Callback function to be called when the element has been shown.
+             * @param {Number}    [options.fps=25] Frames per second for fade animation.
+             * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
+             * @param {String}    [options.easing=linear] Easing style for fade animation.
+             * @returns Boolean true if animation was called, otherwise false
+             */
+            show : function(options) {
+                if (this.outputElement) {
+                    options.el = this.outputElement;
+                    var device = this.getCurrentApplication().getDevice();
+                    device.showElement(options);
+                } else {
+                    throw new Error('Widget::show called - the current widget has not yet been rendered.');
+                }
+            },
+            /**
+             * Hides a widget. If animation is enabled the widget will be faded out of view.
+             * @param {Object}    options Details of the element to be shown, with optional parameters.
+             * @param {Boolean} [options.skipAnim] By default the showing of the element will be animated (faded in). Pass &lt;code>true&lt;/code> here to prevent animation.
+             * @param {Function} [options.onComplete] Callback function to be called when the element has been shown.
+             * @param {Number}    [options.fps=25] Frames per second for fade animation.
+             * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
+             * @param {String}    [options.easing=linear] Easing style for fade animation.
+             * @returns Boolean true if animation was called, otherwise false
+             */
+            hide : function(options) {
+                if (this.outputElement) {
+                    options.el = this.outputElement;
+                    var device = this.getCurrentApplication().getDevice();
+                    device.hideElement(options);
+                } else {
+                    throw new Error('Widget::hide called - the current widget has not yet been rendered.');
+                }
+            },
+            /**
+             * Moves a widget so that its top-left corner is at the given position.
+             * @param {Object}    options Details of the element to be shown, with optional parameters.
+             * @param {Boolean} [options.skipAnim] By default the showing of the element will be animated (faded in). Pass &lt;code>true&lt;/code> here to prevent animation.
+             * @param {Function} [options.onComplete] Callback function to be called when the element has been shown.
+             * @param {Number}    [options.fps=25] Frames per second for fade animation.
+             * @param {Number}    [options.duration=840] Duration of fade animation, in milliseconds (ms).
+             * @param {String}    [options.easing=linear] Easing style for fade animation.
+             * @returns Boolean true if animation was called, otherwise false
+             */
+            moveTo : function(options) {
+                if (this.outputElement) {
+                    options.el = this.outputElement;
+                    var device = this.getCurrentApplication().getDevice();
+                    device.moveElementTo(options);
+                } else {
+                    throw new Error('Widget::moveTo called - the current widget has not yet been rendered.');
+                }
+            }
+        });
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
