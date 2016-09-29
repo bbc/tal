@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/horizontallist.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/horizontallist.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.HorizontalList class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/widgets/horizontallist',
+    [
+        'antie/widgets/list',
+        'antie/events/keyevent'
+    ],
+    function(List, KeyEvent) {
+        'use strict';
+
+        /**
+         * The HorizontalList widget is a container widget that supports spatial navigation between items using {@link KeyEvent.VK_LEFT} and {@link KeyEvent.VK_RIGHT}.
+         * @name antie.widgets.HorizontalList
+         * @class
+         * @extends antie.widgets.List
+         * @requires antie.events.KeyEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         * @param {antie.Formatter} [itemFormatter] A formatter class used on each data item to generate the list item child widgets.
+         * @param {antie.DataSource|Array} [dataSource] An array of data to be used to generate the list items, or an aysnchronous data source.
+         */
+        var HorizontalList = List.extend(/** @lends antie.widgets.HorizontalList.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(id, itemFormatter, dataSource) {
+                // we need to wrap our contents in a mask to support animation
+                this._maskElement = null;
+
+                this._super(id, itemFormatter, dataSource);
+                this.addClass('horizontallist');
+
+                var self = this;
+                this.addEventListener('keydown', function(e) {
+                    self._onKeyDown(e);
+                });
+            },
+
+            /**
+             * Set whether to support wrapping within the list.
+             * @param {Integer} wrapMode    Pass &lt;code>HorizontalList.WRAP_MODE_NONE&lt;/code> for no wrapping.
+             *                              Pass &lt;code>HorizontalList.WRAP_MODE_NONE&lt;/code> to allow navigation to wrap.
+             */
+            setWrapMode: function(wrapMode) {
+                this._wrapMode = wrapMode;
+            },
+
+            /**
+             * Key handler for horizontal lists. Processes KeyEvent.VK_LEFT and KeyEvent.VK_RIGHT keys and stops propagation
+             * if the keypress is handled. Otherwise allows the event to be bubbled up to the parent widget to allow
+             * spatial navigation out of the list.
+             * @param {antie.events.KeyEvent} evt The key event.
+             */
+            _onKeyDown: function(evt) {
+                if(evt.keyCode !== KeyEvent.VK_LEFT &amp;&amp; evt.keyCode !== KeyEvent.VK_RIGHT) {
+                    return;
+                }
+
+                var _newSelectedIndex = this._selectedIndex;
+                var _newSelectedWidget = null;
+                do {
+                    if(evt.keyCode === KeyEvent.VK_LEFT) {
+                        _newSelectedIndex--;
+                    } else if(evt.keyCode === KeyEvent.VK_RIGHT) {
+                        _newSelectedIndex++;
+                    }
+
+                    //force the index to wrap correctly
+                    if(this._wrapMode === HorizontalList.WRAP_MODE_WRAP ) {
+                        _newSelectedIndex = ( _newSelectedIndex + this._childWidgetOrder.length ) % this._childWidgetOrder.length;
+                    } else if(_newSelectedIndex &lt; 0 || _newSelectedIndex >= this._childWidgetOrder.length) {
+
+                        break;
+                    }
+                    var _widget = this._childWidgetOrder[_newSelectedIndex];
+                    if(_widget.isFocusable()) {
+                        _newSelectedWidget = _widget;
+                        break;
+                    }
+                } while(true);
+
+                if(_newSelectedWidget) {
+                    this.setActiveChildWidget(_newSelectedWidget);
+                    evt.stopPropagation();
+                }
+
+                return (_newSelectedWidget !== null);
+            }
+        });
+
+        HorizontalList.WRAP_MODE_NONE = 0;
+        HorizontalList.WRAP_MODE_WRAP = 1;
+
+        return HorizontalList;
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

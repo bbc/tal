@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: widgets/list.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: widgets/list.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing the antie.widgets.List class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/widgets/list',
+    [
+        'antie/widgets/container',
+        'antie/widgets/listitem',
+        'antie/iterator',
+        'antie/events/databoundevent',
+        'antie/events/selecteditemchangeevent'
+    ],
+    function (Container, ListItem, Iterator, DataBoundEvent, SelectedItemChangeEvent) {
+        'use strict';
+        /**
+         * The List widget contains an ordered list of items which may be populated either by a static
+         * array or by binding to an asynchronous data source.
+         * Note: The List widget has no spatial navigation. See {@link antie.widgets.VerticalList}
+         * and {@link antie.widgets.HorizontalList} for widgets that support spatial navigation.
+         * @name antie.widgets.List
+         * @class
+         * @extends antie.widgets.Container
+         * @requires antie.widgets.ListItem
+         * @requires antie.Iterator
+         * @requires antie.events.DataBoundEvent
+         * @requires antie.events.SelectedItemChangeEvent
+         * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
+         * @param {antie.Formatter} [itemFormatter] A formatter class used on each data item to generate the list item child widgets.
+         * @param {antie.DataSource|Array} [dataSource] An array of data to be used to generate the list items, or an asynchronous data source.
+         */
+        var List = Container.extend(/** @lends antie.widgets.List.prototype */ {
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function (id, itemFormatter, dataSource) {
+                this._selectedIndex = 0;
+                this._dataSource = dataSource;
+                this._itemFormatter = itemFormatter;
+                this._dataBound = false;
+                this._totalDataItems = 0;
+                this._renderMode = List.RENDER_MODE_CONTAINER;
+                this._dataBindingOrder = List.DATA_BIND_FORWARD;
+
+                this._super(id);
+                this.addClass('list');
+            },
+            /**
+             * Appends a child widget to this widget, creating a new list item.
+             * @param {antie.widgets.Widget} widget The child widget to add.
+             */
+            appendChildWidget: function (widget) {
+                if ((this._renderMode === List.RENDER_MODE_LIST) &amp;&amp; !(widget instanceof ListItem)) {
+                    var li = new ListItem();
+                    li.appendChildWidget(widget);
+                    li.setDataItem(widget.getDataItem());
+                    this._super(li);
+                    return li;
+                } else {
+                    widget.addClass('listitem');
+                    this._super(widget);
+                    return widget;
+                }
+            },
+            /**
+             * Inserts a child widget at the specified index.
+             * @param {Integer} index The index where to insert the child widget.
+             * @param {antie.widgets.Widget} widget The child widget to add.
+             */
+            insertChildWidget: function (index, widget) {
+                var w;
+                if ((this._renderMode === List.RENDER_MODE_LIST) &amp;&amp; !(widget instanceof ListItem)) {
+                    w = new ListItem();
+                    w.appendChildWidget(widget);
+                    w.setDataItem(widget.getDataItem());
+                    this._super(index, w);
+                } else {
+                    widget.addClass('listitem');
+                    this._super(index, widget);
+                    w = widget;
+                }
+                if (index &lt;= this._selectedIndex &amp;&amp;
+                    (( this._selectedIndex + 1 ) &lt; this.getChildWidgetCount())) {
+                    this._selectedIndex++;
+                }
+                return widget;
+            },
+            /**
+             * Attempt to set focus to the given child widget.
+             * Note: You can only set focus to a focusable widget. A focusable widget is one that
+             * contains an enabled antie.widgets.Button as either a direct or indirect child.
+             * @param {antie.widgets.Widget} widget The child widget to set focus to.
+             * @returns Boolean true if the child widget was focusable, otherwise boolean false.
+             */
+            setActiveChildWidget: function (widget) {
+                var changed = this._activeChildWidget !== widget;
+                if (this._super(widget)) {
+                    this._selectedIndex = this.getIndexOfChildWidget(widget);
+                    if (changed) {
+                        this.bubbleEvent(new SelectedItemChangeEvent(this, widget, this._selectedIndex));
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            /**
+             * Renders the widget and any child widgets to device-specific output. If the list is bound
+             * to an asynchronous data source, get the data.
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
+             */
+            render: function (device) {
+                if (!this._dataBound &amp;&amp; this._dataSource &amp;&amp; this._itemFormatter) {
+                    this._createDataBoundItems();
+                }
+                if (!this.outputElement &amp;&amp; (this._renderMode === List.RENDER_MODE_LIST)) {
+                    this.outputElement = device.createList(this.id, this.getClasses());
+                }
+                return this._super(device);
+            },
+            /**
+             * Create list items from the bound data.
+             * @private
+             */
+            _createDataBoundItems: function () {
+                this._dataBound = true;
+
+                var self = this;
+
+                function processDataCallback(data) {
+                    self.removeChildWidgets();
+
+                    var iterator = (data instanceof Iterator) ? data : new Iterator(data);
+                    while (iterator.hasNext()) {
+                        var i = iterator._currentIndex;
+
+                        var w = self._itemFormatter.format(iterator);
+                        w._listIndex = i;
+                        if (self._dataBindingOrder === List.DATA_BIND_FORWARD) {
+                            self.appendChildWidget(w);
+                        } else if (self._dataBindingOrder === List.DATA_BIND_REVERSE) {
+                            self.insertChildWidget(0, w);
+                        }
+                    }
+                    self._totalDataItems = iterator._currentIndex;
+
+                    self.bubbleEvent(new DataBoundEvent('databound', self, iterator));
+                }
+
+                function processDataError(response) {
+                    self.removeChildWidgets();
+                    self.bubbleEvent(new DataBoundEvent('databindingerror', self, null, response));
+                }
+
+                self.bubbleEvent(new DataBoundEvent('beforedatabind', self));
+                if (!this._dataSource || (this._dataSource instanceof Array)) {
+                    processDataCallback(this._dataSource);
+                } else {
+                    this._dataSource.load({
+                        onSuccess: processDataCallback,
+                        onError: processDataError
+                    });
+                }
+            },
+            /**
+             * Binds the list to a different data source. If the list is already rendered,
+             * the output will be updated to reflect the new data.
+             * @param {antie.DataSource} dataSource The data source to bind to.
+             */
+            setDataSource: function (dataSource) {
+                // abort currently processing data requests
+                if (this._dataSource &amp;&amp; typeof(this._dataSource.abort) === 'function') {
+                    this._dataSource.abort();
+                }
+                this._dataSource = dataSource;
+                if (this.outputElement) {
+                    this._createDataBoundItems();
+                }
+            },
+            /**
+             * Invalidates the data-related bindings - causing items to be re-created on next render;
+             */
+            resetDataBindings: function () {
+                this._dataBound = false;
+            },
+            /**
+             * Re-iterates the data source, recreating list items.
+             */
+            rebindDataSource: function () {
+                this._dataBound = false;
+                this.setDataSource(this._dataSource);
+            },
+            /**
+             * Sets the rendering mode to either &lt;code>List.RENDER_MODE_CONTAINER&lt;/code> or &lt;code>List.RENDER_MODE_LIST&lt;/code>.
+             * List.RENDER_MODE_CONTAINER causes the list to be rendered as a generic container (e.g. &amp;lt;div&amp;gt;), with a generic container for each
+             * list item. List.RENDER_MODE_LIST causes the list to be rendered as a list (e.g. &amp;lt;ul&amp;gt;), with list item elements (e.g. &amp;lt;li&amp;gt;) for each item.
+             * @param {Integer} mode The rendering mode to use.
+             */
+            setRenderMode: function (mode) {
+                this._renderMode = mode;
+            },
+            /**
+             * Binds a progress indicator widget to this list.
+             * @param {antie.Widgets.HorizontalProgress} widget The progress indicator widget.
+             * @param {Function} [formatterCallback] A function that tkes the current item index and the total number of items and returns
+             *                    a string to popular the progress indicator's label.
+             */
+            bindProgressIndicator: function (widget, formatterCallback) {
+                var self = this;
+
+                this._updateProgressHandler = function (evt) {
+                    if (evt.target !== self) {
+                        return;
+                    }
+
+                    if (evt.type === 'beforedatabind') {
+                        widget.setText('');
+                        return;
+                    }
+
+                    // TODO: This is a bit of a hack - if more data items were iterated over to populate the list
+                    // TODO: than there are items in the list, we assume some list items contain more than one
+                    // TODO: data item, therefore we have to use their position within the data source, rather than
+                    // TODO: their position within the rendered list widget.
+
+
+                    var ignore = self._childWidgetOrder.length - self._totalDataItems;
+
+                    if (ignore &lt; 0) {
+                        ignore = 0;
+                    }
+
+                    var activeWidget = self.getActiveChildWidget();
+                    var index = (self._dataBound &amp;&amp; activeWidget &amp;&amp; (activeWidget._listIndex !== undefined)) ?
+                          activeWidget._listIndex :
+                          self._selectedIndex - ignore;
+
+                    var total = self._childWidgetOrder.length - ignore;
+
+                    var p;
+                    if (index &lt; 0) {
+                        p = 0;
+                    } else {
+                        p = index / (total - 1);
+                        if (p &lt; 0) {
+                            p = 0;
+                        }
+                    }
+
+                    if (formatterCallback) {
+                        var val = formatterCallback(index + 1, total);
+                        if (typeof(val) === 'string') {
+                            widget.setText(val);
+                        } else {
+                            widget.setText(val.text);
+                            p = val.pos;
+                        }
+                    }
+
+                    //if the formatter function has moved the position indicator, we don't change it
+                    widget.setValue(p);
+                };
+                this.addEventListener('selecteditemchange', this._updateProgressHandler);
+                this.addEventListener('focus', this._updateProgressHandler);
+                this.addEventListener('blur', this._updateProgressHandler);
+                this.addEventListener('beforedatabind', this._updateProgressHandler);
+                this.addEventListener('databound', this._updateProgressHandler);
+            },
+            /**
+             * Unbinds a previously-bound progress indicator widget.
+             */
+            unbindProgressIndicator: function () {
+                if (this._updateProgressHandler) {
+                    this.removeEventListener('selecteditemchange', this._updateProgressHandler);
+                    this.removeEventListener('focus', this._updateProgressHandler);
+                    this.removeEventListener('blur', this._updateProgressHandler);
+                    this.removeEventListener('databound', this._updateProgressHandler);
+                }
+            },
+
+            removeChildWidget: function (widget) {
+                // TODO: Make this more generic - it will only work if carousel items contain a
+                // TODO: single item of data.
+                if (this._updateProgressHandler &amp;&amp; (this._childWidgetOrder.length &lt; this._totalDataItems)) {
+                    this.getCurrentApplication().getDevice().getLogger().warn('antie.widgets.List::removeChildWidget - removing' +
+                                                                              ' list items where multiple data items are contained within each list item' +
+                                                                              ' can cause unintended behaviour within any position indicator attached' +
+                                                                              ' to the list.');
+                }
+
+                var ignore = this._childWidgetOrder.length - this._totalDataItems;
+                this._totalDataItems--;
+                var retValue = this._super(widget);
+                widget.removeClass('listitem');
+
+                for (var i = 0; i &lt; this._childWidgetOrder.length; i++) {
+                    this._childWidgetOrder[i]._listIndex = i - ignore;
+                }
+                return retValue;
+            },
+            removeChildWidgets: function () {
+                for (var i = 0; i &lt; this._childWidgetOrder.length; i++) {
+                    this._childWidgetOrder[i].removeClass('listitem');
+                }
+
+                this._totalDataItems = 0;
+                return this._super();
+            },
+
+            setDataBindingOrder: function (order) {
+                this._dataBindingOrder = order;
+            },
+
+            getDataBindingOrder: function () {
+                return this._dataBindingOrder;
+            }
+        });
+
+        /**
+         * Render as a generic container (e.g. &amp;lt;div&amp;gt;), with a generic container for each list item.
+         * @name RENDER_MODE_CONTAINER
+         * @memberOf antie.widgets.List
+         * @constant
+         * @static
+         */
+        List.RENDER_MODE_CONTAINER = 1;
+        /**
+         * Render as a list (e.g. &amp;lt;ul&amp;gt;), with list item elements (e.g. &amp;lt;li&amp;gt;) for each item.
+         * @name RENDER_MODE_LIST
+         * @memberOf antie.widgets.List
+         * @constant
+         * @static
+         */
+        List.RENDER_MODE_LIST = 2;
+
+        List.DATA_BIND_FORWARD = 0;
+        List.DATA_BIND_REVERSE = 1;
+
+        return List;
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

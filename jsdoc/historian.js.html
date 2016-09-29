@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: historian.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: historian.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileOverview Requirejs module containing base antie.historian class.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/historian',
+    [
+        'antie/class'
+    ],
+    function(Class) {
+        'use strict';
+
+        // History stack is built up with most recent item at the FRONT (first), oldest items at the BACK (last).
+        var Historian = Class.extend({
+            /**
+             * @constructor
+             * @ignore
+             */
+            init: function(currentUrl) {
+                var i;
+
+                this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
+                this._currentUrl = this._historyArray.shift(); // non-history portion of the URL
+                for(i = 0; i !== this._historyArray.length; i += 1) {
+                    this._historyArray[i] =  Historian.HISTORY_TOKEN + this._historyArray[i];
+                }
+            },
+
+            /**
+             * Returns a URL to navigate back to the previous application
+             * @returns {String} The first history item in currentUrl as a non-encoded URL, or the empty string if there is no history.
+             */
+            back: function() {
+                var recent, remaining, fragmentSeparator, self;
+                self = this;
+
+                function findRecentAndRemaining() {
+                    var history = self._historyArray;
+                    if (history.length > 0) {
+                        recent = history[0].split(Historian.HISTORY_TOKEN)[1];
+                        remaining = history.slice(1, history.length).join('');
+                    } else {
+                        recent = remaining = '';
+                    }
+                }
+
+                function processRoute() {
+                    if(recent.indexOf(Historian.ROUTE_TOKEN) !== -1) {
+                        fragmentSeparator = '';
+                        recent = recent.replace(Historian.ROUTE_TOKEN, '#');
+                    }
+                }
+
+                function buildBackUrl() {
+                    if(remaining) {
+                        return recent + fragmentSeparator + remaining;
+                    }
+                    return recent;
+                }
+
+                fragmentSeparator = '#';
+                findRecentAndRemaining();
+                processRoute();
+                return buildBackUrl();
+            },
+
+            /**
+             * Returns a URL that allows navigation to the destination url while preserving history.
+             * @param {String} destinationUrl, The non uri-encoded destination url including route fragment if applicable.
+             * @returns {String} A non encoded uri with history information appended, the exact format of this is subject to change and should not be depended upon.
+             */
+            forward: function(destinationUrl) {
+                var fragmentSeparator, self;
+                self = this;
+
+                function isRouteInDestination() {
+                    return (destinationUrl.indexOf('#') !== -1);
+                }
+
+                function replaceRouteInSource() {
+                    if (self._currentUrl.indexOf('#') !== -1) {
+                        self._currentUrl = self._currentUrl.replace('#', Historian.ROUTE_TOKEN);
+                    }
+                }
+
+                function addCurrentUrlToHistory() {
+                    self._historyArray.unshift(Historian.HISTORY_TOKEN + self._currentUrl);
+                }
+
+                // Some devices have a de facto URL length limit of around 1000 characters, so trim URL by dropping history elements.
+                // Keep the oldest history entry - drop oldest items from the middle.
+                function trimUrlHistoryToLength() {
+                    while (self._historyArray.length > 1 &amp;&amp; self.toString().length + destinationUrl.length > 999) {
+                        self._historyArray.splice(-2, 1);
+                    }
+                }
+
+                if (this._currentUrl === '') {
+                    return destinationUrl;
+                }
+
+                replaceRouteInSource();
+                addCurrentUrlToHistory();
+                trimUrlHistoryToLength();
+                fragmentSeparator = isRouteInDestination() ? '' : '#';
+                return destinationUrl + fragmentSeparator + this.toString();
+            },
+
+            /**
+             * Returns a string representation of the current history stack. This is not useful externally.
+             * @returns {String} A string representing the current history stack, to be appended to the current route within the application.
+             */
+            toString: function() {
+                return this._historyArray.join('');
+            },
+
+            /**
+             * Returns a Boolean to indicate whether the history stack contains valid return URLs. This excludes the 'return to broadcast' special case.
+             * @returns {Boolean} True if the history stack contains one or more valid return URLs.
+             */
+            hasHistory: function() {
+                var historyMinimumLength = this.hasBroadcastOrigin() ? 2 : 1;
+                return this._historyArray.length >= historyMinimumLength;
+            },
+
+            /**
+             * Returns a Boolean to indicate whether the first entry in the history stack is the special 'broadcast' entry.
+             * @returns {Boolean} True if the first entry in the history stack is the special 'broadcast' entry.
+             */
+            hasBroadcastOrigin: function() {
+                return this._historyArray.length > 0 &amp;&amp; this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
+            }
+        });
+
+        Historian.HISTORY_TOKEN = '&amp;*history=';
+        Historian.ROUTE_TOKEN = '&amp;*route=';
+        Historian.BROADCAST_ENTRY = 'broadcast';
+
+        return Historian;
+    }
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
