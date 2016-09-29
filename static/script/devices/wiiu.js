@@ -3,6 +3,13 @@
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
+/**
+ * @fileOverview Requirejs module containing the antie.devices.WiiU class to support the WiiU Bamboo framework.
+ * @author Ian Arundale <ian.arundale@bbc.co.uk>
+ * @notes Updated for compatibility with Wii U SDK >= 2.0.8.11 (Daniel Jeffrey <daniel.jeffrey@accedo.tv>)
+ */
+
+
 define(
     'antie/devices/wiiu',
     [
