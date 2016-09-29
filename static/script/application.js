@@ -109,7 +109,7 @@ define('antie/application',
 
                 // sort the layouts by largest first
                 _layouts.sort(function (a, b) {
-                    var ad = (a.width * a.width) + (a.height * b.height),
+                    var ad = (a.width * a.width) + (a.height * a.height),
                         bd = (b.width * b.width) + (b.height * b.height);
                     if (ad === bd) {
                         return 0;
