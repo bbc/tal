@@ -1,4 +1,6 @@
 /**
+ * @fileOverview Requirejs module containing base class for device
+ * modifiers for media playback
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
