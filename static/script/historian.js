@@ -1,5 +1,5 @@
 /**
- * @fileOverview Requirejs module containing base antie.Formatter class.
+ * @fileOverview Requirejs module containing base antie.historian class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
  * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
