@@ -81,7 +81,7 @@ define(
              */
             removeClass: function(className) {
                 if (this._classNames[className]) {
-                    this._classNames[className] = null;
+                    delete(this._classNames[className]);
                     if (this.outputElement) {
                         var device = this.getCurrentApplication().getDevice();
                         device.setElementClasses(this.outputElement, this.getClasses());
