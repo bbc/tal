@@ -88,7 +88,6 @@ var unloadRequire;
             'antie/formatter',
             'antie/historian',
             'antie/iterator',
-            'antie/lib/array.indexof',
             'antie/lib/date.format',
             'antie/lib/date.parse',
             'antie/lib/intervalformat',

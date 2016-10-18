@@ -13,7 +13,6 @@
       "antie/devices/logging/jstestdriver",
       "antie/devices/exit/closewindow",
       "antie/devices/storage/cookie",
-      "antie/devices/net/default",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },

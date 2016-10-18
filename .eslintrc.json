@@ -87,6 +87,8 @@
         "beforeEach": true,
         "afterEach": true,
         "describe": true,
+        "runs": false,
+        "waitsFor": false,
         "onDeviceTestConfigValidation": true
     },
     "env": {

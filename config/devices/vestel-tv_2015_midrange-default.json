@@ -12,7 +12,6 @@
       "antie/devices/logging/xhr",
       "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
-      "antie/devices/net/default",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]

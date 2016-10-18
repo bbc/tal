@@ -1,25 +1,6 @@
 /**
- * @preserve Copyright (c) 2013 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
 (function() {
@@ -43,20 +24,6 @@
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
             assert('BrowserDevice should extend from Device', device instanceof Device);
 
-        });
-    };
-
-    this.BrowserDeviceTest.prototype.testArrayIndexOf = function(queue) {
-        expectAsserts(5);
-
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
-            var device = new BrowserDevice(antie.framework.deviceConfiguration);
-            var arr = [1,2,3];
-            assertEquals(0, device.arrayIndexOf(arr, 1));
-            assertEquals(2, device.arrayIndexOf(arr, 3));
-            assertEquals(1, device.arrayIndexOf(arr, 2));
-            assertEquals(-1, device.arrayIndexOf(arr, 4));
-            assertEquals(-1, device.arrayIndexOf(arr, null));
         });
     };
 

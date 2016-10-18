@@ -9,7 +9,6 @@
       "antie/devices/data/json2",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
-      "antie/devices/net/default",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },

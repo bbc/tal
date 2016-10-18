@@ -1,25 +1,6 @@
 /**
- * @preserve Copyright (c) 2015 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
 (function () {
@@ -145,6 +126,49 @@
             assert(pauseStub.calledOnce);
             assertEquals(0, pauseStub.getCall(0).args.length);
             clock.restore();
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPauseFakesImmediateAutoResumeNearStartOfSeekableRange = function (queue) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            var expectedRange = {
+                'start': 0,
+                'end': 30
+            };
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(8);
+            var toPausedStub = this.sandbox.stub(livePlayer._mediaPlayer, '_toPaused');
+            var toPlayingStub = this.sandbox.stub(livePlayer._mediaPlayer, '_toPlaying');
+            var pauseStub = this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
+
+            livePlayer.pause();
+            assert(pauseStub.notCalled);
+            assert(toPausedStub.calledOnce);
+            assert(toPlayingStub.calledOnce);
+            sinon.assert.callOrder(toPausedStub, toPlayingStub);
+        }, config);
+    };
+
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerPauseDoesNotFakeImmediateAutoResumeIfDisabledNearStartOfSeekableRange = function (queue) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/mediaplayer', 'antie/devices/device', 'antie/devices/mediaplayer/live/seekable'], function (application, MediaPlayer, Device) {
+            var device = new Device(antie.framework.deviceConfiguration);
+            var livePlayer = device.getLivePlayer();
+            var expectedRange = {
+                'start': 0,
+                'end': 30
+            };
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getSeekableRange').returns(expectedRange);
+            this.sandbox.stub(livePlayer._mediaPlayer, 'getCurrentTime').returns(8);
+            var toPausedStub = this.sandbox.stub(livePlayer._mediaPlayer, '_toPaused');
+            var toPlayingStub = this.sandbox.stub(livePlayer._mediaPlayer, '_toPlaying');
+            var pauseStub = this.sandbox.stub(livePlayer._mediaPlayer, 'pause');
+
+            livePlayer.pause({disableAutoResume: true});
+            assert(pauseStub.calledOnce);
+            assert(toPausedStub.notCalled);
+            assert(toPlayingStub.notCalled);
         }, config);
     };
 
