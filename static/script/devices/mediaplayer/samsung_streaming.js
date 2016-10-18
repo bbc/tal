@@ -116,9 +116,7 @@ require.def(
                 var self = this;
                 this._playerPlugin = document.getElementById('sefPlayer');
 
-                this.logger.info('Calling this.playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer")');
-                var openResponse = this._playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer");
-                this.logger.info('this.playerPlugin.Open responded with ' + openResponse);
+                this._playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer");
 
                 this.tvmwPlugin = document.getElementById('pluginObjectTVMW');
 
@@ -249,8 +247,8 @@ require.def(
                         this._toBuffering();
                         //this._setDisplayFullScreenForVideo();
                         //this._playerPlugin.Play(this._wrappedSource());
-                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback",0)');
-                        var result = this._playerPlugin.Execute("StartPlayback", 0);
+                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback")');
+                        var result = this._playerPlugin.Execute("StartPlayback");
                         this.logger.info('"StartPlayback" responded with ' + result);
 
                         break;
@@ -269,8 +267,9 @@ require.def(
 
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+                seekingTo = parseInt(Math.floor(seekingTo), 10);
 
-                this._targetSeekTime = seconds;
+                this._targetSeekTime = seekingTo;
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
@@ -278,8 +277,8 @@ require.def(
                         //this._setDisplayFullScreenForVideo();
                         //this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
 
-                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback, ' + seekingTo + ')');
-                        var success = this._playerPlugin.Execute("StartPlayback", seekingTo);
+                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback")');
+                        var success = this._playerPlugin.Execute("StartPlayback");
                         this.logger.info('"StartPlayback" responded with ' + success);
 
                         this._toBuffering();
@@ -636,6 +635,7 @@ require.def(
             },
 
             _jump: function (offsetSeconds) {
+                offsetSeconds = Math.floor(offsetSeconds);
 
                 if (offsetSeconds > 0) {
                     this.logger.info('Calling this.playerPlugin.Execute("JumpForward", ' + offsetSeconds + ')');
