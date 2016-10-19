@@ -35,7 +35,6 @@
             "hls",
             "plain"
           ],
-          "maximumBitRate": 3600,
           "maximumVideoLines": 1080
         }
       ]
@@ -127,5 +126,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": ["uhd"],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

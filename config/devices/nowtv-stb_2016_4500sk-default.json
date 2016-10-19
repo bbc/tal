@@ -1,0 +1,112 @@
+{
+    "pageStrategy": "html5hbbtvhybrid",
+    "modules": {
+        "base": "antie/devices/browserdevice",
+        "modifiers": [
+            "antie/devices/anim/css3",
+            "antie/devices/mediaplayer/html5",
+            "antie/devices/mediaplayer/live/seekable",
+            "antie/devices/data/nativejson",
+            "antie/devices/broadcastsource/hbbtvsource",
+            "antie/devices/storage/cookie",
+            "antie/devices/logging/onscreen",
+            "antie/devices/logging/xhr",
+            "antie/devices/logging/jstestdriver",
+            "antie/devices/exit/closewindow",
+            "antie/devices/parentalguidance/appdefaultpghandler"
+        ]
+    },
+    "logging": {
+        "level": "none"
+    },
+    "streaming": {
+        "video": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "h264"
+                    ],
+                    "transferFormat": [
+                        "hls",
+                        "plain"
+                    ],
+                    "maximumVideoLines": 1080
+                }
+            ]
+        },
+        "audio": {
+            "mediaURIFormat": "%href%",
+            "supported": [
+                {
+                    "protocols": [
+                        "http"
+                    ],
+                    "encodings": [
+                        "aac"
+                    ],
+                    "maximumBitRate": 192
+                }
+            ]
+        }
+    },
+    "input": {
+        "map": {
+            "38": "UP",
+            "37": "LEFT",
+            "13": "ENTER",
+            "39": "RIGHT",
+            "40": "DOWN",
+            "227": "REWIND",
+            "179": "PLAY_PAUSE",
+            "228": "FAST_FWD",
+            "97": "INFO",
+            "27": "BACK"
+        }
+    },
+    "accessibility": {
+        "captions": {
+            "supported": [
+                "application/ttaf+xml"
+            ]
+        }
+    },
+    "layouts": [
+        {
+            "width": 960,
+            "height": 540,
+            "module": "%application%/appui/layouts/540p",
+            "classes": [
+                "browserdevice540p"
+            ]
+        },
+        {
+            "width": 1280,
+            "height": 720,
+            "module": "%application%/appui/layouts/720p",
+            "classes": [
+                "browserdevice720p"
+            ]
+        },
+        {
+            "width": 1920,
+            "height": 1080,
+            "module": "%application%/appui/layouts/1080p",
+            "classes": [
+                "browserdevice1080p"
+            ]
+        }
+    ],
+    "networking": {
+        "supportsJSONP": true,
+        "supportsCORS": true
+    },
+    "capabilities": ["dial_capable"],
+    "statLabels": {
+        "deviceType": "stb",
+        "serviceType": "retail"
+    }
+}

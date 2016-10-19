@@ -106,5 +106,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
   }
 }

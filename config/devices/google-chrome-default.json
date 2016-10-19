@@ -31,7 +31,8 @@
                         "h264"
                     ],
                     "transferFormat": [
-                        "plain"
+                        "plain",
+                        "hls"
                     ],
                     "maximumBitRate": 3600,
                     "maximumVideoLines": 1080
@@ -138,5 +139,7 @@
     ],
     "networking": {
         "supportsJSONP": true
-    }
+    },
+  "capabilities": [],
+  "statLabels": {}
 }

@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/playable",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/data/nativejson",
       "antie/devices/exit/closewindow",
       "antie/devices/logging/onscreen",
@@ -103,5 +103,10 @@
   ],
   "networking": {
     "supportsJSONP": true
-}
+},
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
+  }
 }

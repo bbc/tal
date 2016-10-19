@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/cehtml",
-      "antie/devices/mediaplayer/live/playable",
+      "antie/devices/mediaplayer/live/none",
       "antie/devices/data/json2",
       "antie/devices/storage/cookie",
       "antie/devices/logging/xhr",
@@ -113,5 +113,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

@@ -22,32 +22,35 @@
   "streaming": {
     "video": {
       "mediaURIFormat": "%href%",
-      "supported": [{
-        "protocols": [
-          "http"
-        ],
-        "encodings": [
-          "h264"
-        ],
-        "transferFormat": [
-          "hls",
-          "plain"
-        ],
-        "maximumBitRate": 3600,
-        "maximumVideoLines": 1080
-      }]
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
     },
     "audio": {
       "mediaURIFormat": "%href%",
-      "supported": [{
-        "encodings": [
-          "aac"
-        ],
-        "protocols": [
-          "http"
-        ],
-        "maximumBitRate": 192
-      }]
+      "supported": [
+        {
+          "encodings": [
+            "aac"
+          ],
+          "protocols": [
+            "http"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
     }
   },
   "input": {
@@ -92,16 +95,24 @@
       ]
     }
   },
-  "layouts": [{
-    "width": 1280,
-    "height": 720,
-    "classes": [
-      "browserdevice720p"
-    ],
-    "module": "%application%/appui/layouts/720p"
-  }],
+  "layouts": [
+    {
+      "width": 1280,
+      "height": 720,
+      "classes": [
+        "browserdevice720p"
+      ],
+      "module": "%application%/appui/layouts/720p"
+    }
+  ],
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

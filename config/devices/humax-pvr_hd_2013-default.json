@@ -104,5 +104,15 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
   }
 }

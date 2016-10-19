@@ -34,7 +34,7 @@
                         "h264"
                     ],
                     "transferFormat": ["hls"],
-                    
+
                     "maximumVideoLines": 1080
                 }
             ]
@@ -109,5 +109,19 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
+  },
+  "broadcast": {
+    "aitProfile": "youview"
   }
 }

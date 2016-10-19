@@ -100,5 +100,10 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail"
   }
 }

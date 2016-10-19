@@ -3,7 +3,7 @@
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
-      "antie/devices/anim/css3",
+      "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
@@ -127,5 +127,11 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "chromium"
   }
 }

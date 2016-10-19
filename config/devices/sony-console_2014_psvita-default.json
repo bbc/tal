@@ -19,10 +19,6 @@
   "logging": {
     "level": "none"
   },
-  "mediasets": {
-    "tv": "stb-all-h264",
-    "radio": "stb-aac"
-  },
   "streaming": {
     "video": {
       "mediaURIFormat": "%href%",
@@ -87,5 +83,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

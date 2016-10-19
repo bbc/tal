@@ -116,5 +116,16 @@
     ],
     "networking": {
         "supportsJSONP": true
-    }
+    },
+    "broadcast" : {
+        "currentChannelValidation": {
+            "enabled": true
+        }
+    },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "chromium"
+  }
 }

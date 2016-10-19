@@ -114,5 +114,7 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
-  }
+  },
+  "capabilities": [],
+  "statLabels": {}
 }

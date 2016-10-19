@@ -94,5 +94,10 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "streamer",
+    "serviceType": "retail"
   }
 }
