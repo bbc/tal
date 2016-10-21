@@ -11,8 +11,11 @@ define(
             var onTransitionEnd;
 
             function transform () {
-                var translate = axis === 'X' ? 'translateX' : 'translateY';
-                Helpers.setStyle(el, 'transform', translate + '(' + position + 'px)', true);
+                if (axis === 'X') {
+                    Helpers.setStyle(el, 'transform', 'translate3d(' + position + 'px, 0, 0)', true);
+                } else {
+                    Helpers.setStyle(el, 'transform', 'translate3d(0, ' + position + 'px, 0)', true);
+                }
                 Helpers.forceReflow(el);
             }
 
