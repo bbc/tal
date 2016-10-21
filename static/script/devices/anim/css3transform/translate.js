@@ -16,7 +16,6 @@ define(
                 } else {
                     Helpers.setStyle(el, 'transform', 'translate3d(0, ' + position + 'px, 0)', true);
                 }
-                Helpers.forceReflow(el);
             }
 
             function start () {
