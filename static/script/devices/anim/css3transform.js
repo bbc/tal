@@ -8,7 +8,6 @@ define(
         'use strict';
 
         Device.prototype.moveElementTo = function (options) {
-            options.device = this;
             var animator = getAnimator(options);
             animator.start();
             return options.skipAnim ? null : animator;
@@ -19,11 +18,13 @@ define(
                 return null;
             }
 
-            options.device = this;
             options.el = options.el.childNodes[0];
 
             if (options.to.top) {
                 options.to.top = parseInt(options.to.top, 10) * -1;
+            }
+            if (options.to.left) {
+                options.to.left = parseInt(options.to.left, 10) * -1;
             }
 
             var animator = getAnimator(options);
@@ -62,6 +63,6 @@ define(
 
         Device.prototype.isAnimationDisabled = function () {
             return false;
-        }
+        };
     }
 );

@@ -1,6 +1,9 @@
 define(
     'antie/devices/anim/shared/helpers',
-    function () {
+    [
+        'antie/runtimecontext'
+    ],
+    function (RuntimeContext) {
         'use strict';
 
         var VENDOR_PREFIXES = ['-webkit-', '-moz-', '-o-'];
@@ -16,7 +19,7 @@ define(
         }
 
         function skipAnim (options) {
-            return options.device.getConfig().animationDisabled || options.skipAnim;
+            return RuntimeContext.getDevice().getConfig().animationDisabled || options.skipAnim;
         }
 
         function addTransitionEvent (el, callback) {
