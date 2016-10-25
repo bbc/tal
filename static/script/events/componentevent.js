@@ -27,12 +27,13 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, container, component, args, state, fromBack) {
+            init: function(type, container, component, args, state, fromBack, transition) {
                 this.container = container;
                 this.component = component;
                 this.args = args;
                 this.state = state;
                 this.fromBack = fromBack;
+                this.transition = transition;
                 this._super(type);
             }
         });
