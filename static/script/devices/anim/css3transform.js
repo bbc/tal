@@ -2,10 +2,7 @@ define(
     'antie/devices/anim/css3transform',
     [
         'antie/devices/browserdevice',
-        'antie/devices/anim/css3transform/animationfactory',
-
-        // Static imports
-        'antie/devices/anim/noanim'
+        'antie/devices/anim/css3transform/animationfactory'
     ],
     function (Device, getAnimator) {
         'use strict';
@@ -48,5 +45,23 @@ define(
                 animator.stop();
             }
         };
+
+        Device.prototype.showElement = function (options) {
+            // TODO: A real implementation
+            if (options && options.el) {
+                options.el.style.opacity = 1;
+            }
+        };
+
+        Device.prototype.hideElement = function (options) {
+            // TODO: A real implementation
+            if (options && options.el) {
+                options.el.style.opacity = 0;
+            }
+        };
+
+        Device.prototype.isAnimationDisabled = function () {
+            return false;
+        }
     }
 );
