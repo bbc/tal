@@ -9,7 +9,7 @@ define(
         'use strict';
 
         return function (options) {
-            if (options.to.left) {
+            if (options.to.left !== undefined) {
                 return new Translate(options, options.to.left, 'X');
             }
             if (options.to.top !== undefined) {

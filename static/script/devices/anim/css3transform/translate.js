@@ -37,7 +37,9 @@ define(
                 Helpers.setStyle(el, 'transform', '', true);
                 Helpers.setStyle(el, axis2Direction[axis], position + 'px', false);
 
-                options.onComplete();
+                if (options.onComplete) {
+                    options.onComplete();
+                }
             }
 
             function start () {
