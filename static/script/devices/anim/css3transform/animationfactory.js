@@ -15,7 +15,7 @@ define(
             if (options.to.top !== undefined) {
                 return new Translate(options, options.to.top, 'Y');
             }
-            if (options.to.height && options.to.width) {
+            if (options.to.height || options.to.width) {
                 return new Expand(options);
             }
             if (options.to.opacity !== undefined) {

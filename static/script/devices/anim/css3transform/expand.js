@@ -10,8 +10,12 @@ define(
             var el = options.el;
 
             function start () {
-                Helpers.setStyle(el, 'width', options.to.width + 'px');
-                Helpers.setStyle(el, 'height', options.to.height + 'px');
+                if (options.to.width) {
+                    Helpers.setStyle(el, 'width', options.to.width + 'px');
+                }
+                if (options.to.height) {
+                    Helpers.setStyle(el, 'height', options.to.height + 'px');
+                }
                 el.classList.remove('willChange');
             }
 
