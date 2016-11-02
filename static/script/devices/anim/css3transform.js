@@ -7,6 +7,16 @@ define(
     function (Device, getAnimator) {
         'use strict';
 
+        function optionsForOpacity(options, opacity, callback) {
+            return {
+                el: options.el,
+                to: {
+                    opacity: opacity
+                },
+                onComplete: callback
+            };
+        }
+
         Device.prototype.moveElementTo = function (options) {
             var animator = getAnimator(options);
             animator.start();
@@ -48,17 +58,19 @@ define(
         };
 
         Device.prototype.showElement = function (options) {
-            // TODO: A real implementation
-            if (options && options.el) {
-                options.el.style.opacity = 1;
-            }
+            options.el.style.visibility = 'visible';
+            return this.tweenElementStyle(optionsForOpacity(options, 1, options.onComplete));
         };
 
         Device.prototype.hideElement = function (options) {
-            // TODO: A real implementation
-            if (options && options.el) {
-                options.el.style.opacity = 0;
+            function onComplete () {
+                options.el.style.visibility = 'hidden';
+                if (options.onComplete) {
+                    options.onComplete();
+                }
             }
+
+            return this.tweenElementStyle(optionsForOpacity(options, 0, onComplete));
         };
 
         Device.prototype.isAnimationDisabled = function () {

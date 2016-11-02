@@ -11,6 +11,10 @@ define(
 
             function start () {
                 Helpers.setStyle(el, 'opacity', options.to.opacity);
+
+                if (options.onComplete) {
+                    options.onComplete();
+                }
             }
 
             function stop () {
