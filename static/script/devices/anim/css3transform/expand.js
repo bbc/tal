@@ -7,6 +7,9 @@ define(
         'use strict';
 
         return function (options) {
+            var onTransitionEnd;
+            var onComplete = options.onComplete || function () {};
+
             var el = options.el;
 
             function start () {
@@ -16,11 +19,14 @@ define(
                 if (options.to.height) {
                     Helpers.setStyle(el, 'height', options.to.height + 'px');
                 }
+
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
                 el.classList.remove('willChange');
             }
 
             function stop () {
                 el.classList.add('willChange');
+                onTransitionEnd();
             }
 
             return {
