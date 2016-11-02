@@ -9,7 +9,6 @@ define(
         return function (options) {
             var onTransitionEnd;
             var onComplete = options.onComplete || function () {};
-
             var el = options.el;
 
             function start () {
@@ -20,8 +19,12 @@ define(
                     Helpers.setStyle(el, 'height', options.to.height + 'px');
                 }
 
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                el.classList.remove('willChange');
+                if (Helpers.skipAnim(options)) {
+                    onComplete();
+                } else {
+                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                    el.classList.remove('willChange');
+                }
             }
 
             function stop () {
