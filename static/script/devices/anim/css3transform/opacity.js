@@ -12,24 +12,26 @@ define(
 
             function start () {
                 function onComplete () {
-                    // TODO: This doesn't get called for components being displayed for the
-                    // TODO: first time and that makes me sad. And probably makes the browser
-                    // TODO: sad as well. Why?
                     el.classList.remove('animate');
                     if (options.onComplete) {
                         options.onComplete();
                     }
                 }
 
-                // TODO: Element class list gets overwritten if addClass() and removeClass()
-                // TODO: are called on its related widget - even if device.addClassToElement()
-                // TODO: has been used. SAD! This means the 'animate' class gets removed when
-                // TODO: widget.setActiveChildWidget() is called by container.show()
-                // TODO: immediately after device.showElement() the first time a component
-                // TODO: appears.
-                el.classList.add('animate');
-                Helpers.setStyle(el, 'opacity', options.to.opacity);
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                /* Run the opacity animation after a 0-ms timeout to tackle the following problems:
+                   - 'animate' element class can be overwritten by TAL widget operations running
+                     immediately after this method (e.g. setActiveChildWidget() overwrites
+                     the element's classes with only the set that the widget knows about).
+                     With the timeout, we add the 'animate' class after that stuff happens.
+                   - without the timeout, the transitionend event does not run for some elements
+                     that have just been added to the page (unclear why).
+                   - some fade-ins look different without the timeout. Again, don't know why!
+                 */
+                setTimeout(function() {
+                    el.classList.add('animate');
+                    Helpers.setStyle(el, 'opacity', options.to.opacity);
+                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                }, 0);
             }
 
             function stop () {
