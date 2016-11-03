@@ -56,6 +56,7 @@ define(
                 onComplete: options.onComplete
             };
 
+            options.el.style.opacity = 0;
             options.el.style.visibility = 'visible';
             return this.tweenElementStyle(fadeOptions);
         };
