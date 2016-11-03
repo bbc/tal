@@ -8,27 +8,39 @@ define(
 
         return function (options) {
             var onTransitionEnd;
-            var onComplete = options.onComplete || function () {};
             var el = options.el;
 
             function start () {
-                if (options.to.width) {
-                    Helpers.setStyle(el, 'width', options.to.width + 'px');
+                function setDimensions () {
+                    if (options.to.width) {
+                        Helpers.setStyle(el, 'width', options.to.width + 'px');
+                    }
+                    if (options.to.height) {
+                        Helpers.setStyle(el, 'height', options.to.height + 'px');
+                    }
                 }
-                if (options.to.height) {
-                    Helpers.setStyle(el, 'height', options.to.height + 'px');
+
+                function onComplete () {
+                    el.classList.remove('animate');
+                    el.classList.add('willChange');
+                    if (options.onComplete) {
+                        options.onComplete();
+                    }
                 }
 
                 if (Helpers.skipAnim(options)) {
+                    setDimensions();
                     onComplete();
-                } else {
-                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                    el.classList.remove('willChange');
+                    return;
                 }
+
+                el.classList.add('animate');
+                setDimensions();
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                el.classList.remove('willChange');
             }
 
             function stop () {
-                el.classList.add('willChange');
                 onTransitionEnd();
             }
 
