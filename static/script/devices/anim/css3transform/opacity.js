@@ -18,6 +18,12 @@ define(
                     }
                 }
 
+                if (Helpers.skipAnim(options)) {
+                    Helpers.setStyle(el, 'opacity', options.to.opacity);
+                    onComplete();
+                    return;
+                }
+
                 /* Run the opacity animation after a 0-ms timeout to tackle the following problems:
                    - 'animate' element class can be overwritten by TAL widget operations running
                      immediately after this method (e.g. setActiveChildWidget() overwrites
