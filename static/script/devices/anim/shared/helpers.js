@@ -46,8 +46,6 @@ define(
         return {
             setStyle: setStyle,
             skipAnim: skipAnim,
-            addTransitionEvent: addTransitionEvent,
-            removeTransitionEvent: removeTransitionEvent,
             registerTransitionEndEvent: registerTransitionEndEvent
         };
     }
