@@ -95,7 +95,7 @@ require(
 
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
                 expect(callbacks.onError).toHaveBeenCalledWith(jasmine.any(Object));
-                expect(callbacks.onError.calls[0].args[0].message).toMatch(/'undefined' is not an object/);
+                expect(callbacks.onError.calls[0].args[0].name).toBe('TypeError');
             });
 
             it('chokes on default exit()', function() {
