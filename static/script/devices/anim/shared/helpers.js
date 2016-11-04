@@ -19,7 +19,7 @@ define(
         }
 
         function skipAnim (options) {
-            return RuntimeContext.getDevice().getConfig().animationDisabled || options.skipAnim;
+            return options.skipAnim || RuntimeContext.getDevice().getConfig().animationDisabled;
         }
 
         function addTransitionEvent (el, callback) {
