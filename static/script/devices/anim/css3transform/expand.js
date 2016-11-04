@@ -22,7 +22,6 @@ define(
 
                 function onComplete () {
                     el.classList.remove('animate');
-                    el.classList.add('willChange');
                     if (options.onComplete) {
                         options.onComplete();
                     }
@@ -37,7 +36,6 @@ define(
                 el.classList.add('animate');
                 setDimensions();
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                el.classList.remove('willChange');
             }
 
             function stop () {
