@@ -53,7 +53,8 @@ define(
                 to: {
                     opacity: 1
                 },
-                onComplete: options.onComplete
+                onComplete: options.onComplete,
+                skipAnim: options.skipAnim
             };
 
             options.el.style.opacity = 0;
