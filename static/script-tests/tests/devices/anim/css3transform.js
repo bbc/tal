@@ -10,7 +10,7 @@ require(
         var device = new BrowserDevice(antie.framework.deviceConfiguration);
         var element, maskElement;
 
-        describe('CSS3 Transform Animations', function () {
+        describe('CSS3 Transform Animation Modifier', function () {
             beforeEach(function () {
                 spyOn(RuntimeContext, 'getCurrentApplication').andReturn({
                     getDevice: function () {
@@ -66,11 +66,6 @@ require(
                             jasmine.Clock.useMock();
                         });
 
-                        it('adds animate class to element', function () {
-                            callMethod();
-                            expect(element.classList.contains('animate')).toBe(true);
-                        });
-
                         it('does not add animate class to element when animation is being skipped (via options)', function () {
                             callMethod({
                                 skipAnim: true
@@ -85,6 +80,22 @@ require(
 
                             callMethod();
                             expect(element.classList.contains('animate')).toBe(false);
+                        });
+
+                        describe('when animating', function () {
+                            beforeEach(function () {
+                                callMethod();
+                            });
+
+                            it('adds animate class to element', function () {
+                                expect(element.classList.contains('animate')).toBe(true);
+                            });
+
+                            it('removes animate class when transition ends', function () {
+                                var transitionEndEvent = new CustomEvent('transitionend');
+                                element.dispatchEvent(transitionEndEvent);
+                                expect(element.classList.contains('animate')).toBe(false);
+                            });
                         });
                     });
                 });
