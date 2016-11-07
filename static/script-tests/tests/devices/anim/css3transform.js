@@ -2,19 +2,22 @@ require(
     [
         'antie/devices/browserdevice',
         'antie/runtimecontext',
-        'antie/devices/anim/css3transform' // adds methods to Device.prototype
+        'antie/devices/anim/css3transform'
     ],
-    function (BrowserDevice, RuntimeContext) {
+    function (BrowserDevice, RuntimeContext, Css3Transform) {
         'use strict';
 
-        var device = new BrowserDevice(antie.framework.deviceConfiguration);
+        var browserDevice = new BrowserDevice(antie.framework.deviceConfiguration);
+        var animationDevice = {};
+        Css3Transform.assignMethodsTo(animationDevice);
+
         var element, maskElement;
 
         describe('CSS3 Transform Animation Modifier', function () {
             beforeEach(function () {
                 spyOn(RuntimeContext, 'getCurrentApplication').andReturn({
                     getDevice: function () {
-                        return device;
+                        return browserDevice;
                     }
                 });
 
@@ -25,7 +28,7 @@ require(
             });
 
             it('indicates animation is not disabled', function () {
-                expect(device.isAnimationDisabled()).toBe(false);
+                expect(animationDevice.isAnimationDisabled()).toBe(false);
             });
 
             describe('common behaviour across animation methods', function () {
@@ -55,7 +58,7 @@ require(
                             options.el = element;
                             options.to = method.to;
 
-                            device[method.name](options);
+                            animationDevice[method.name](options);
 
                             if (method.animatesAfterTick) {
                                 jasmine.Clock.tick(1);
