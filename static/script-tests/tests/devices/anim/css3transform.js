@@ -82,9 +82,28 @@ require(
                             expect(element.classList.contains('animate')).toBe(false);
                         });
 
+                        it('calls back immediately when animation is being skipped', function () {
+                            var callback = jasmine.createSpy('onComplete');
+                            callMethod({
+                                skipAnim: true,
+                                onComplete: callback
+                            });
+                            expect(callback).toHaveBeenCalled();
+                        });
+
                         describe('when animating', function () {
+                            function simulateTransitionEnd () {
+                                var transitionEndEvent = new CustomEvent('transitionend');
+                                element.dispatchEvent(transitionEndEvent);
+                            }
+
+                            var callback;
+
                             beforeEach(function () {
-                                callMethod();
+                                callback = jasmine.createSpy('onComplete');
+                                callMethod({
+                                    onComplete: callback
+                                });
                             });
 
                             it('adds animate class to element', function () {
@@ -92,9 +111,14 @@ require(
                             });
 
                             it('removes animate class when transition ends', function () {
-                                var transitionEndEvent = new CustomEvent('transitionend');
-                                element.dispatchEvent(transitionEndEvent);
+                                simulateTransitionEnd();
                                 expect(element.classList.contains('animate')).toBe(false);
+                            });
+
+                            it('calls back only when transition ends', function () {
+                                expect(callback).not.toHaveBeenCalled();
+                                simulateTransitionEnd();
+                                expect(callback).toHaveBeenCalled();
                             });
                         });
                     });
