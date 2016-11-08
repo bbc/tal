@@ -33,9 +33,12 @@ define(
                     return;
                 }
 
-                el.classList.add('animate');
-                setDimensions();
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                // Avoid the 'animate' class being overwritten by TAL if any widget-class methods are called after animating. Sigh...
+                setTimeout(function () {
+                    el.classList.add('animate');
+                    setDimensions();
+                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
+                }, 0);
             }
 
             function stop () {
