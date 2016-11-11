@@ -23,7 +23,7 @@ As the value of this animation modifier is still being proven, the following cav
 
 * You must [specify transitions in CSS yourself](#configuring-css-transitions), for the reasons outlined in [Rationale](#rationale). If you will also be using the other animation modifiers, this means duplicating details such as animation duration and easing between code and CSS. This may change in the future, allowing all animation options to be specified in code, in line with the other animation modifiers.
 * Multiple animation operations applied to the same widget in quick succession are not queued or merged; the last one simply "wins". This should not be problematic if you are only animating [TAL's built-in Carousels](carousel.html), as these cancel the previous animation before triggering a new one, but it may cause trouble if you're performing custom animations.
-* Elements being hidden via `hideElement()` are hidden without animation and the completion callback is called immediately. This is to work around a bug where our application is calling `hideElement()` then showElement()` on the same element in quick succession.
+* Elements being hidden via `hideElement()` are hidden without animation and the completion callback is called immediately. This is to work around a bug where our application is calling `hideElement()` then `showElement()` on the same element in quick succession.
 
 ## Rationale
 
