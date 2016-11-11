@@ -62,7 +62,6 @@ Here is some example CSS for controlling the transition on a carousel:
 .tertiaryContentComponent__widgetStrip.animate {
   -webkit-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
   -moz-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
-  -ms-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
   -o-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
   transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1); 
 }
@@ -78,7 +77,6 @@ And for allowing all TAL Components to fade in with their default timing:
 .widget.component.animate {
   -webkit-transition: opacity 840ms linear;
   -moz-transition: opacity 840ms linear;
-  -ms-transition: opacity 840ms linear;
   -o-transition: opacity 840ms linear;
   transition: opacity 840ms linear;
 }
@@ -92,7 +90,6 @@ And for allowing a TAL widget to be resized smoothly using `tweenElementStyle()`
 .centrallyExpandingContentItem.animate {
   -webkit-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
   -moz-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  -ms-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
   -o-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
   transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
@@ -110,12 +107,10 @@ We found that the performance of resizing widgets via `tweenElementStyle()` coul
 .centrallyExpandingContentItem {
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
-  -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
   -o-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -131,7 +126,6 @@ By adding a `translateZ(0)` transform to the background image, the browser puts 
 .applicationBackgroundImage {
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
-  -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
 }
