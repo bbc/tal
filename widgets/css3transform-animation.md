@@ -52,7 +52,18 @@ In order to minimise the number of style properties set by JavaScript, this anim
 
 The `transition` properties must be set in a selector including the `animate` class, which the code in this animation modifier will add to indicate an animation is required. This avoids transitions being applied where animation is supposed to be skipped, or on devices configured to use one of the other animation modifiers.
 
-For best results across different devices, it is important to set the vendor-specific versions of the `transition` properties as well as the base one. You can make this easier by using a tool such as [Sass](http://sass-lang.com/) to create macros/mixins.
+#### Vendor prefixes
+
+Vendor-prefixed versions of the `transition` property may be necessary depending on the browser family used on your target devices. You can make this easier by using a [CSS autoprefixer](https://css-tricks.com/autoprefixer/) or a preprocessor such as [Sass](http://sass-lang.com/) to create macros/mixins.
+
+The set of vendor prefixes you may want to include, in addition to the base `transition` property, is:
+
+* `-webkit-transition` (WebKit browsers)
+* `-moz-transition` (Mozilla/Gecko browsers)
+* `-o-transition` (Opera browsers)
+* `-ms-transition` (Microsoft browsers, e.g. Xbox One)
+
+For the sake of brevity, the examples below only include the base property.
 
 #### Sample carousel transition
 
@@ -60,9 +71,6 @@ Here is some example CSS for controlling the transition on a carousel:
 
 ```css
 .tertiaryContentComponent__widgetStrip.animate {
-  -webkit-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
-  -moz-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
-  -o-transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1);
   transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1); 
 }
 ```
@@ -75,9 +83,6 @@ And for allowing all TAL Components to fade in with their default timing:
 
 ```css
 .widget.component.animate {
-  -webkit-transition: opacity 840ms linear;
-  -moz-transition: opacity 840ms linear;
-  -o-transition: opacity 840ms linear;
   transition: opacity 840ms linear;
 }
 ```
@@ -88,16 +93,17 @@ And for allowing a TAL widget to be resized smoothly using `tweenElementStyle()`
 
 ```css
 .centrallyExpandingContentItem.animate {
-  -webkit-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  -moz-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  -o-transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
   transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 ```
 
 ## Suggestions for performance
 
-Some CSS tweaks have been found to offer significant performance improvements. These include:
+Some CSS tweaks have been found to offer significant performance improvements.
+
+In the examples below, the `transform` and `backface-visibility` properties both have [vendor prefixed](#vendor-prefixes) equivalents.
+
+Suggested tweaks include:
 
 #### Allow the browser to optimise elements that will change size
 
@@ -105,13 +111,7 @@ We found that the performance of resizing widgets via `tweenElementStyle()` coul
 
 ```css
 .centrallyExpandingContentItem {
-  -webkit-transform: translateZ(0);
-  -moz-transform: translateZ(0);
-  -o-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 ```
@@ -124,9 +124,6 @@ By adding a `translateZ(0)` transform to the background image, the browser puts 
 
 ```css
 .applicationBackgroundImage {
-  -webkit-transform: translateZ(0);
-  -moz-transform: translateZ(0);
-  -o-transform: translateZ(0);
   transform: translateZ(0);
 }
 ```
