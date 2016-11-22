@@ -124,5 +124,13 @@
     ],
     "networking": {
         "supportsJSONP": true
-    }
+    },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "managed_service"
+  },
+  "broadcast": {
+    "aitProfile": "youview"
+  }
 }

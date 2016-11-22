@@ -119,6 +119,14 @@
     "supportsCORS": true
   },
   "broadcast": {
-    "aitProfile": "dtg_local"
+    "aitProfile": "dtg_local",
+    "currentChannelValidation": {
+            "enabled": true
+        }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

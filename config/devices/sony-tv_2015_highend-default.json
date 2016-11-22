@@ -33,7 +33,6 @@
           "hls",
           "plain"
         ],
-        "maximumBitRate": 3600,
         "maximumVideoLines": 1080
       }]
     },
@@ -103,5 +102,11 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

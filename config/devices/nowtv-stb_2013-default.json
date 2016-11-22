@@ -56,9 +56,9 @@
       "38": "UP",
       "39": "RIGHT",
       "40": "DOWN",
-      "112": "REWIND",
-      "113": "PLAY_PAUSE",
-      "114": "FAST_FWD"
+      "227": "REWIND",
+      "179": "PLAY_PAUSE",
+      "228": "FAST_FWD"
     }
   },
   "accessibility": {
@@ -85,5 +85,10 @@
   }],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "streamer",
+    "serviceType": "retail"
   }
 }

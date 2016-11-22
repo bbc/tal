@@ -1,0 +1,131 @@
+{
+  "pageStrategy": "samsungmaple",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/css3",
+      "antie/devices/mediaplayer/samsung_maple",
+      "antie/devices/mediaplayer/live/playable",
+      "antie/devices/broadcastsource/samsungtvsource",
+      "antie/devices/data/json2",
+      "antie/devices/storage/cookie",
+      "antie/devices/logging/default",
+      "antie/devices/exit/samsung_maple",
+      "antie/devices/exit/broadcast/samsung_maple",
+      "antie/devices/parentalguidance/appdefaultpghandler"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+
+      "29460": "UP",
+      "29461": "DOWN",
+      "4": "LEFT",
+      "5": "RIGHT",
+      "29443": "ENTER",
+      "108": "RED",  
+      "71": "PLAY",
+      "74": "PAUSE",
+      "70": "STOP",
+      "72": "FAST_FWD",
+      "69": "REWIND", 
+      "101": "1",
+      "98": "2",
+      "6": "3",
+      "9": "5",    
+      "10": "6",
+      "12": "7",
+      "13": "8",
+      "14": "9",
+      "17": "0",
+      "88": "BACK",	  
+      "31": "INFO",
+      "20": "GREEN",
+      "21": "YELLOW",
+      "22": "BLUE",
+      "39": "SUBTITLE"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 960,
+      "height": 540,
+      "module": "%application%/appui/layouts/540p",
+      "classes": [
+        "browserdevice540p"
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "module": "%application%/appui/layouts/1080p",
+      "classes": [
+        "browserdevice1080p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true,
+    "supportsCORS": true
+  },
+  "broadcast": {
+    "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail"
+  }
+}

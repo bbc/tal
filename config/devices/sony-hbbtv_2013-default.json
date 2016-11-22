@@ -111,5 +111,18 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [
+    "longVodAssetsUnsupported"
+  ],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

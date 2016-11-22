@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/seekable",
+      "antie/devices/mediaplayer/live/restartable",
       "antie/devices/data/nativejson",
       "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/logging/onscreen",
@@ -81,7 +81,7 @@
       "403": "RED",
       "404": "GREEN",
       "502": "YELLOW",
-      "406": "BLUE"    
+      "406": "BLUE"
     }
   },
   "accessibility": {
@@ -119,5 +119,15 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

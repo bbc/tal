@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/restartable",
+      "antie/devices/mediaplayer/live/seekable",
       "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
@@ -122,5 +122,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }
