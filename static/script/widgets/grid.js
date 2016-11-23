@@ -61,7 +61,7 @@ define(
              * Positions a widget at the specified column and row.
              * @param {Integer} col The column to position the widget in
              * @param {Integer} row The row to position the widget in
-             * @returns The widget to position
+             * @param {antie.widgets.Widget} widget The widget to add
              */
             setWidgetAt: function (col, row, widget) {
                 if (!this.hasChildWidget(widget.id)) {
@@ -126,11 +126,11 @@ define(
                 return this.outputElement;
             },
             /**
-             * Appends a child widget to this widget. Not supported for Grids.
+             * Appends a child widget to this widget. Not supported for Grids - use setWidgetAt() instead.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
             appendChildWidget: function (/*widget*/) {
-                throw new Error('Not supported');
+                throw new Error('Not supported for Grids - use setWidgetAt() instead.');
             },
             /**
              * Inserts a child widget at the specified index. Not supported for Grids.
