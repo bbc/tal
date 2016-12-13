@@ -856,7 +856,7 @@ define(
              * @param {Object} opts Object containing callback functions, a form field name and an optional bearer token.
              * @param {String} opts.fieldName Name to be used for the POST form field for form based (non-CORS) requests.
              * @param {Function} [opts.onLoad] Will be called with the decoded JSON response if the POST is successful.
-             * @param {Function} [opts.onError} Will be called with error text or an Exception object if the POST fails.
+             * @param {Function} [opts.onError] Will be called with error text or an Exception object if the POST fails.
              * @param {String} [opts.bearerToken] Used when making POST requests for resources that require authentication. For
              * CORS requests, the token is used as a Bearer token in an Authorization header (see RFC 6750, section 2.1), and
              * for form requests the token is included as a bearerToken form field value. If not specified, no token is included
