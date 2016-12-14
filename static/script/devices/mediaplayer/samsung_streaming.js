@@ -130,6 +130,10 @@ require.def(
             _initPlayer: function(source) {
                 this.logger.info('Calling this.playerPlugin.Execute("InitPlayer", ' + this._source + ')');
                 var result = this._playerPlugin.Execute("InitPlayer", source);
+                if (result === -1) {
+                    this._toError('STOP');
+                    return;
+                }
                 this.logger.info('InitPlayer responded with ' + result);
 
                 this.logger.info('Calling this.playerPlugin.Execute("SetTotalBufferSize", ' +  32 *1024*1024 + ')');
@@ -225,7 +229,7 @@ require.def(
                         //this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
 
                         this.logger.info('Calling this.playerPlugin.Execute("StartPlayback");');
-                        var result = this._playerPlugin.Execute("StartPlayback");        // <TODO> set seeking to some how
+                        var result = this._playerPlugin.Execute("StartPlayback", seekingTo);
                         this.logger.info('"StartPlayback" responded with ' + result);
 
                         this._toBuffering();
@@ -278,7 +282,7 @@ require.def(
                         //this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
 
                         this.logger.info('Calling this.playerPlugin.Execute("StartPlayback")');
-                        var success = this._playerPlugin.Execute("StartPlayback");
+                        var success = this._playerPlugin.Execute("StartPlayback", seekingTo);
                         this.logger.info('"StartPlayback" responded with ' + success);
 
                         this._toBuffering();
@@ -463,13 +467,14 @@ require.def(
             },
 
             _onMetadata: function() {
-                this.logger.info('Calling this.playerPlugin.Execute("GetDuration")');
+                this.logger.info('Calling this.playerPlugin.Execute("GetPlayingRange")');
+                var range = this._playerPlugin.Execute("GetPlayingRange").split('-');
                 this._range = {
-                    start: 0,
-                    end: this._playerPlugin.Execute("GetDuration") / 1000
+                    start: range[0],
+                    end: range[1]
                 };
 
-                this.logger.info('GetDuration returned ' + this._range.end * 1000 + 'ms');
+                this.logger.info('Current Duration ' + this._range.end * 1000 + 'ms');
 
                 // this.logger.info("_onMetadata range = {0, "  + this._range.end);
                 // this.logger.info("this._currentTime = " + this._currentTime);       //<TODO> so currentTime is currently in milliseconds relative to midnight! and not to hls window
@@ -551,6 +556,10 @@ require.def(
 
                         case self.PlayerEventCodes.CURRENT_PLAYBACK_TIME:
                             self._onCurrentTime(param1);
+                            //<TODO> use only in LIVE scenario
+                            if (Math.floor(param1/1000) % 8 === 0 && self._state !== MediaPlayer.STATE.STOPPED) {
+                                self._onMetadata();
+                            }
                             break;
 
                         // All these below doesn't seem to be implemented for HLS? I certainly have not seen any of these being logged....
