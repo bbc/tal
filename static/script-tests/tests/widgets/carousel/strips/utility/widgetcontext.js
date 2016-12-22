@@ -138,7 +138,6 @@
     };
 
     this.WidgetContextTest.prototype.testStateInititalisedOnStateChange = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',

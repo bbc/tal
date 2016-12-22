@@ -536,14 +536,6 @@
         }
     };
 
-    var resetRenderOn = function (renderableSpiedObjectArray) {
-        var i, renderable;
-        for (i = 0; i !== renderableSpiedObjectArray.length; i += 1) {
-            renderable = renderableSpiedObjectArray[i];
-            renderable.render.reset();
-        }
-    };
-
     var createWidgets = function (numberOfWidgets, Widget) {
         var i, widget, widgets;
         widgets = [];
