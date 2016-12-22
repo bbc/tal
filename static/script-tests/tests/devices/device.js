@@ -23,7 +23,7 @@ require(
                 mockXMLHttpRequest.status = 0;
 
                 device = new Device(antie.framework.deviceConfiguration);
-                spyOn(device, '_newXMLHttpRequest').andReturn(mockXMLHttpRequest);
+                spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
             });
 
             it('should extend from Class', function() {
@@ -35,83 +35,49 @@ require(
             });
 
             it('chokes on call to Broadcast API', function() {
-                // expect(function() {
-                //     // Method under test
-                //     device.createBroadcastSource();
-                // }).toThrowError('Broadcast API not available on this device.');   // Jasmine 2.0
-
-                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
-                try {
+                expect(function() {
                     // Method under test
                     device.createBroadcastSource();
-                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
-                } catch (e) {
-                    expect(e.message).toBe('Broadcast API not available on this device.');
-                }
+                }).toThrowError('Broadcast API not available on this device.');
             });
 
-            it('asynchronously calls onSuccess callback when valid config is passed to Device.load', function() {
-                var done = false;
-
+            it('asynchronously calls onSuccess callback when valid config is passed to Device.load', function(done) {
                 var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
-                callbacks.onSuccess.andCallFake(function() {
-                    done = true;
+                callbacks.onSuccess.and.callFake(function(arg) {
+                    expect(arg).toEqual(jasmine.any(BrowserDevice));  // New instance of device named in antie.framework.deviceConfiguration.modules.base
+                    expect(arg.getConfig()).toBe(antie.framework.deviceConfiguration);
+                    done();
                 });
-                callbacks.onError.andCallFake(function() {
-                    done = true;
+                callbacks.onError.and.callFake(function() {
+                    expect(callbacks.onError).not.toHaveBeenCalled();
+                    done();
                 });
 
                 // This is the class that will be instantiated and passed to onSuccess
                 expect(antie.framework.deviceConfiguration.modules.base).toBe('antie/devices/browserdevice');
-
-                runs(function() {
-                    // Method under test
-                    Device.load(antie.framework.deviceConfiguration, callbacks);
-                });
-
-                // Wait for onSuccess to set done.  More verbose than Jasmine 2.0 but works fine.
-                waitsFor(
-                    function() {
-                        return done;
-                    },
-                    'timed out waiting for onSuccess callback',
-                    500
-                );
-
-                runs(function() {
-                    expect(callbacks.onSuccess).toHaveBeenCalledWith(jasmine.any(BrowserDevice));  // New instance of device named in antie.framework.deviceConfiguration.modules.base
-                    expect(callbacks.onSuccess.calls[0].args[0].getConfig()).toBe(antie.framework.deviceConfiguration);
-                    expect(callbacks.onError).not.toHaveBeenCalled();
-                });
+                Device.load(antie.framework.deviceConfiguration, callbacks);
             });
 
-            it('imediately calls onError callback when invalid config is passed to Device.load', function() {
+            it('imediately calls onError callback when invalid config is passed to Device.load', function(done) {
                 var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
-
+                callbacks.onError.and.callFake(function (arg) {
+                    expect(arg).toEqual(jasmine.any(Object));
+                    expect(arg.name).toBe('TypeError');
+                    done();
+                });
                 expect(function() {
                     // Method under test
                     Device.load({}, callbacks);
                 }).not.toThrow();
 
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
-                expect(callbacks.onError).toHaveBeenCalledWith(jasmine.any(Object));
-                expect(callbacks.onError.calls[0].args[0].name).toBe('TypeError');
             });
 
             it('chokes on default exit()', function() {
-                // expect(function() {
-                //     // Method under test
-                //     device.exit();
-                // }).toThrowError('Not supported on this device.');   // Jasmine 2.0
-
-                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
-                try {
+                expect(function() {
                     // Method under test
                     device.exit();
-                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
-                } catch (e) {
-                    expect(e.message).toBe('Not supported on this device.');
-                }
+                }).toThrowError('Not supported on this device.');
             });
 
             it('calls exit() on default exitToBroadcast()', function() {
@@ -185,12 +151,12 @@ require(
 
                 expect(mockXMLHttpRequest.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
                 expect(mockXMLHttpRequest.setRequestHeader).not.toHaveBeenCalledWith('notOwnProperty', 'gibberishn');
-                expect(mockXMLHttpRequest.setRequestHeader.calls.length).toBe(1);
+                expect(mockXMLHttpRequest.setRequestHeader.calls.count()).toBe(1);
             });
 
             it('calls onError if XMLHttpRequest open() throws an error', function() {
                 var SECURITY_ERR = {type: 'SECURITY_ERR'};
-                mockXMLHttpRequest.open.andCallFake(function() {
+                mockXMLHttpRequest.open.and.callFake(function() {
                     throw(SECURITY_ERR);
                 });
 
@@ -206,7 +172,7 @@ require(
 
             it('still does not call onLoad if XMLHttpRequest open() throws an error, even if no onError has been supplied', function() {
                 var SECURITY_ERR = {type: 'SECURITY_ERR'};
-                mockXMLHttpRequest.open.andCallFake(function() {
+                mockXMLHttpRequest.open.and.callFake(function() {
                     throw(SECURITY_ERR);
                 });
 

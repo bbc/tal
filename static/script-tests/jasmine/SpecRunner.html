@@ -26,7 +26,7 @@
     </script>
 
     <% with (scripts) { %>
-    <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
+    <% [].concat(jasmine, boot, vendor, helpers).forEach(function(script){ %>
     <script src="<%= script %>"></script>
     <% }) %>
     <% }; %>
@@ -35,32 +35,7 @@
     require(
         ['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'],
         function(){
-
             registerTestsWithJasmine();
-
-            var jasmineEnv = jasmine.getEnv();
-            jasmineEnv.updateInterval = 1000;
-
-            var htmlReporter = new jasmine.HtmlReporter();
-
-            jasmineEnv.addReporter(htmlReporter);
-
-            jasmineEnv.specFilter = function(spec) {
-                return htmlReporter.specFilter(spec);
-            };
-
-            var currentWindowOnload = window.onload;
-
-            window.onload = function() {
-                if (currentWindowOnload) {
-                    currentWindowOnload();
-                }
-                execJasmine();
-            };
-
-            function execJasmine() {
-                jasmineEnv.execute();
-            }
         }
     );
     </script>

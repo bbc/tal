@@ -146,16 +146,17 @@
                 };
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    appendChildWidget: this.sandbox.stub(),
+                    childWidgets: [],
+                    appendChildWidget: function (widget) {
+                        this.childWidgets.push(widget);
+                    },
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.appendAllTo(fakeWidget);
-
-                sinon.assert.callOrder(
-                    fakeWidget.appendChildWidget.withArgs(fakeItem),
-                    fakeWidget.appendChildWidget.withArgs(fakeItem2)
-                );
-
+                expect(fakeWidget.childWidgets).toEqual([
+                    fakeItem,
+                    fakeItem2
+                ]);
             }
         );
     };
@@ -196,16 +197,17 @@
                 };
                 binder = new Binder(fakeFormatter, fakeDataSource);
                 fakeWidget = {
-                    appendChildWidget: this.sandbox.stub(),
+                    childWidgets: [],
+                    appendChildWidget: function (widget) {
+                        this.childWidgets.push(widget);
+                    },
                     bubbleEvent: this.sandbox.stub()
                 };
                 binder.appendAllTo(fakeWidget);
-
-                sinon.assert.callOrder(
-                    fakeWidget.appendChildWidget.withArgs(fakeItem),
-                    fakeWidget.appendChildWidget.withArgs(fakeItem2)
-                );
-
+                expect(fakeWidget.childWidgets).toEqual([
+                    fakeItem,
+                    fakeItem2
+                ]);
             }
         );
     };
@@ -366,9 +368,7 @@
                     fakeWidget.bubbleEvent.getCall(1).args[0].error
                 );
                 assertTrue('bubble called after load', fakeWidget.bubbleEvent.calledAfter(fakeDataSource.load));
-
             }
         );
     };
-
 }());

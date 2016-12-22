@@ -15,8 +15,15 @@
         this.sandbox.restore();
     };
 
+    function spyOnAll(thing) {
+        for (var i in thing) {
+            if(thing.hasOwnProperty(i)) {
+                spyOn(thing, i);
+            }
+        }
+    }
+
     this.MaskTest.prototype.testWidgetStripChildOfMask = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -25,13 +32,11 @@
                 'antie/widgets/carousel/orientations/vertical'
             ],
             function (application, Mask, verticalOrientation) {
-                var childStub, appendedWidget;
-                childStub = self.sandbox.stub(Mask.prototype, 'appendChildWidget');
+                spyOn(Mask.prototype, 'appendChildWidget');
 
                 var mockWidgetStrip = { };
-                new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
-                appendedWidget = childStub.getCall(0).args[0];
-                assertSame('Widget strip is child of mask', appendedWidget, mockWidgetStrip);
+                var mask = new Mask('myCarousel_mask', mockWidgetStrip, verticalOrientation);
+                expect(mask.appendChildWidget).toHaveBeenCalledWith(mockWidgetStrip);
             }
         );
     };
@@ -668,7 +673,6 @@
     };
 
     this.MaskTest.prototype.testVisibleIndicesBetweenCurrentAndFutureAlignIndexSetOnStripBeforeAlign = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -676,31 +680,32 @@
                 'antie/widgets/carousel/mask',
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/carousel/spinner'
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/container',
+                'antie/widgets/widget'
             ],
-            function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, Container, Widget) {
                 var device, mask, strip;
                 device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Spinner.prototype);
-                self.sandbox.stub(WidgetStrip.prototype);
+                spyOn(device, 'getElementSize').and.returnValue({width: 25, height: 25});
+                spyOnAll(Spinner.prototype);
+                spyOnAll(WidgetStrip.prototype);
+                spyOnAll(Container.prototype);
+                spyOnAll(Widget.prototype);
+                Widget.prototype.getCurrentApplication.and.returnValue(application);
+
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex.returns(10);
-                device.getElementSize.returns({width: 25, height: 25});
-                strip.getChildWidgetCount.returns(5);
-                strip.needsVisibleIndices.returns(true);
+                strip.lengthOfWidgetAtIndex.and.returnValue(10);
+                strip.getChildWidgetCount.and.returnValue(5);
+                strip.needsVisibleIndices.and.returnValue(true);
                 mask.beforeAlignTo(0, 1);
-                sinon.assert.calledWith(
-                    strip.attachIndexedWidgets,
-                    [0, 1, 2, 3]
-                );
+                expect(strip.attachIndexedWidgets).toHaveBeenCalledWith([0, 1, 2, 3]);
             }
         );
     };
 
     this.MaskTest.prototype.testVisibleIndicesBetweenCurrentAndFutureAlignIndexSetOnStripBeforeAlignToLast = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -708,31 +713,31 @@
                 'antie/widgets/carousel/mask',
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/carousel/spinner'
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/container',
+                'antie/widgets/widget'
             ],
-            function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, Container, Widget) {
                 var device, mask, strip;
                 device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Spinner.prototype);
-                self.sandbox.stub(WidgetStrip.prototype);
+                spyOn(device, 'getElementSize').and.returnValue({width: 25, height: 25});
+                spyOnAll(Spinner.prototype);
+                spyOnAll(WidgetStrip.prototype);
+                spyOnAll(Container.prototype);
+                spyOnAll(Widget.prototype);
+                Widget.prototype.getCurrentApplication.and.returnValue(application);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex.returns(10);
-                device.getElementSize.returns({width: 25, height: 25});
-                strip.getChildWidgetCount.returns(5);
-                strip.needsVisibleIndices.returns(true);
+                strip.lengthOfWidgetAtIndex.and.returnValue(10);
+                strip.getChildWidgetCount.and.returnValue(5);
+                strip.needsVisibleIndices.and.returnValue(true);
                 mask.beforeAlignTo(0, 4);
-                sinon.assert.calledWith(
-                    strip.attachIndexedWidgets,
-                    [0, 1, 2, 3, 4]
-                );
+                expect(strip.attachIndexedWidgets).toHaveBeenCalledWith([0, 1, 2, 3, 4]);
             }
         );
     };
 
     this.MaskTest.prototype.testVisibleIndicesSetAfterAlignIfStripNeedsThem = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -740,25 +745,26 @@
                 'antie/widgets/carousel/mask',
                 'antie/widgets/carousel/strips/cullingstrip',
                 'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/carousel/spinner'
+                'antie/widgets/carousel/spinner',
+                'antie/widgets/container',
+                'antie/widgets/widget'
             ],
-            function (application, Mask, WidgetStrip, verticalOrientation, Spinner) {
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, Container, Widget) {
                 var device, mask, strip;
                 device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Spinner.prototype);
-                self.sandbox.stub(WidgetStrip.prototype);
+                spyOn(device, 'getElementSize').and.returnValue({width: 25, height: 25});
+                spyOnAll(Spinner.prototype);
+                spyOnAll(WidgetStrip.prototype);
+                spyOnAll(Container.prototype);
+                spyOnAll(Widget.prototype);
+                Widget.prototype.getCurrentApplication.and.returnValue(application);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
-                strip.lengthOfWidgetAtIndex.returns(10);
-                device.getElementSize.returns({width: 25, height: 25});
-                strip.getChildWidgetCount.returns(5);
-                strip.needsVisibleIndices.returns(true);
+                strip.lengthOfWidgetAtIndex.and.returnValue(10);
+                strip.getChildWidgetCount.and.returnValue(5);
+                strip.needsVisibleIndices.and.returnValue(true);
                 mask.afterAlignTo(3);
-                sinon.assert.calledWith(
-                    strip.attachIndexedWidgets,
-                    [3, 4]
-                );
+                expect(strip.attachIndexedWidgets).toHaveBeenCalledWith([3, 4]);
             }
         );
     };
@@ -1012,7 +1018,6 @@
     };
 
     this.MaskTest.prototype.testBeforeAlignToFiresBeforeAlignEventOnStrip = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -1021,34 +1026,31 @@
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/carousel/spinner',
-                'antie/events/beforealignevent'
+                'antie/events/beforealignevent',
+                'antie/widgets/container',
+                'antie/widgets/widget'
             ],
-            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, BeforeAlignEvent) {
-                var device, mask, strip, targetIndex;
-                targetIndex = 3;
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, BeforeAlignEvent, Container, Widget) {
+                var device, mask, strip;
+                var targetIndex = 3;
                 device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Spinner.prototype);
-                self.sandbox.stub(WidgetStrip.prototype);
-                self.sandbox.stub(BeforeAlignEvent.prototype);
+                spyOn(device, 'getElementSize').and.returnValue({width: 25, height: 25});
+                spyOnAll(Spinner.prototype);
+                spyOnAll(WidgetStrip.prototype);
+                spyOnAll(Container.prototype);
+                spyOnAll(Widget.prototype);
+                spyOnAll(BeforeAlignEvent.prototype);
+                Widget.prototype.getCurrentApplication.and.returnValue(application);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
                 mask.beforeAlignTo(0, targetIndex);
-                sinon.assert.calledWith(
-                    WidgetStrip.prototype.bubbleEvent,
-                    sinon.match.instanceOf(BeforeAlignEvent)
-                );
-                sinon.assert.calledWith(
-                    BeforeAlignEvent.prototype.init,
-                    sinon.match.instanceOf(WidgetStrip),
-                    targetIndex
-                );
+                expect(WidgetStrip.prototype.bubbleEvent).toHaveBeenCalledWith(jasmine.any(BeforeAlignEvent));
+                expect(BeforeAlignEvent.prototype.init).toHaveBeenCalledWith(jasmine.any(WidgetStrip), targetIndex);
             }
         );
     };
 
     this.MaskTest.prototype.testAfterAlignToFiresBeforeAlignEventOnStrip = function (queue) {
-        var self = this;
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -1057,28 +1059,27 @@
                 'antie/widgets/carousel/strips/widgetstrip',
                 'antie/widgets/carousel/orientations/vertical',
                 'antie/widgets/carousel/spinner',
-                'antie/events/afteralignevent'
+                'antie/events/afteralignevent',
+                'antie/widgets/container',
+                'antie/widgets/widget'
             ],
-            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, AfterAlignEvent) {
-                var device, mask, strip, targetIndex;
-                targetIndex = 3;
+            function (application, Mask, WidgetStrip, verticalOrientation, Spinner, AfterAlignEvent, Container, Widget) {
+                var device, mask, strip;
+                var targetIndex = 3;
                 device = application.getDevice();
-                self.sandbox.stub(device);
-                self.sandbox.stub(Spinner.prototype);
-                self.sandbox.stub(WidgetStrip.prototype);
-                self.sandbox.stub(AfterAlignEvent.prototype);
+                spyOn(device, 'getElementSize').and.returnValue({width: 25, height: 25});
+                spyOnAll(Spinner.prototype);
+                spyOnAll(WidgetStrip.prototype);
+                spyOnAll(Container.prototype);
+                spyOnAll(Widget.prototype);
+                spyOnAll(AfterAlignEvent.prototype);
+                Widget.prototype.getCurrentApplication.and.returnValue(application);
                 strip = new WidgetStrip('strip', verticalOrientation);
                 mask = new Mask('testMask', strip, verticalOrientation);
                 mask.afterAlignTo(targetIndex);
-                sinon.assert.calledWith(
-                    WidgetStrip.prototype.bubbleEvent,
-                    sinon.match.instanceOf(AfterAlignEvent)
-                );
-                sinon.assert.calledWith(
-                    AfterAlignEvent.prototype.init,
-                    sinon.match.instanceOf(WidgetStrip),
-                    targetIndex
-                );
+
+                expect(WidgetStrip.prototype.bubbleEvent).toHaveBeenCalledWith(jasmine.any(AfterAlignEvent));
+                expect(AfterAlignEvent.prototype.init).toHaveBeenCalledWith(jasmine.any(WidgetStrip), targetIndex);
             }
         );
     };

@@ -138,15 +138,11 @@
                 'antie/widgets/carousel/strips/widgetstrip'
             ],
             function (application, CullingStrip, vertical, WidgetStrip) {
-                this.sandbox.spy(WidgetStrip.prototype, 'init');
+                spyOn(WidgetStrip.prototype, 'init');
 
                 new CullingStrip('test', vertical);
 
-                sinon.assert.calledWith(
-                    WidgetStrip.prototype.init,
-                    'test',
-                    vertical
-                );
+                expect(WidgetStrip.prototype.init).toHaveBeenCalledWith('test', vertical);
             }
         );
     };
@@ -162,15 +158,13 @@
                 'antie/widgets/widget'
             ],
             function (application, CullingStrip, vertical, WidgetStrip, Widget) {
-                this.sandbox.stub(Widget.prototype);
-                this.sandbox.spy(WidgetStrip.prototype, 'append');
+                spyOn(Widget.prototype, 'init');
+                spyOn(Widget.prototype, 'addClass');
+                spyOn(WidgetStrip.prototype, 'append');
                 var strip = new CullingStrip('test', vertical);
-                strip.append(new Widget(), 50);
-                sinon.assert.calledWith(
-                    WidgetStrip.prototype.append,
-                    sinon.match.instanceOf(Widget),
-                    50
-                );
+                var widget = new Widget();
+                strip.append(widget, 50);
+                expect(WidgetStrip.prototype.append).toHaveBeenCalledWith(widget, 50);
             }
         );
     };
@@ -188,11 +182,13 @@
             ],
             function (application, CullingStrip, vertical, Widget, Device) {
                 stubAppAndDevice(self, application, Device, Widget);
-                self.sandbox.spy(Widget.prototype, 'render');
+                spyOn(Widget.prototype, 'init');
+                spyOn(Widget.prototype, 'addClass');
+                spyOn(Widget.prototype, 'render');
                 var strip = new CullingStrip('test', vertical);
                 strip.outputElement = {};
                 strip.append(new Widget());
-                sinon.assert.notCalled(Widget.prototype.render);
+                expect(Widget.prototype.render).not.toHaveBeenCalled();
             }
         );
     };
@@ -211,12 +207,12 @@
             function (application, CullingStrip, vertical, Widget, Device) {
                 stubAppAndDevice(self, application, Device, Widget);
                 var widget = new Widget('test');
-                self.sandbox.stub(widget, 'render');
+                spyOn(widget, 'render');
                 var strip = new CullingStrip('test', vertical);
                 strip.outputElement = {};
                 strip.append(widget);
                 strip.attachIndexedWidgets([0]);
-                sinon.assert.calledOnce(widget.render);
+                expect(widget.render.calls.count()).toBe(1);
             }
         );
     };
@@ -245,11 +241,9 @@
 
                 strip.attachIndexedWidgets([1]);
 
-                resetRenderOn(widgets);
-
                 strip.attachIndexedWidgets([0, 1]);
-                sinon.assert.calledOnce(widgets[0].render); // indexed & not already attached
-                sinon.assert.notCalled(widgets[1].render); // already attached
+                expect(widgets[0].render.calls.count()).toBe(1);
+                expect(widgets[1].render.calls.count()).toBe(1);
             }
         );
     };
@@ -277,22 +271,11 @@
                 appendAllTo(strip, widgets, 40);
 
                 strip.attachIndexedWidgets([1]);
-
-                resetRenderOn(widgets);
-
                 strip.attachIndexedWidgets([0, 2]);
-                sinon.assert.calledWith(
-                    Device.prototype.removeElement,
-                    widgets[1].outputElement
-                );
-                sinon.assert.neverCalledWith(
-                    Device.prototype.removeElement,
-                    widgets[0].outputElement
-                );
-                sinon.assert.neverCalledWith(
-                    Device.prototype.removeElement,
-                    widgets[2].outputElement
-                );
+
+                expect(Device.prototype.removeElement).toHaveBeenCalledWith(widgets[1].outputElement);
+                expect(Device.prototype.removeElement).not.toHaveBeenCalledWith(widgets[0].outputElement);
+                expect(Device.prototype.removeElement).not.toHaveBeenCalledWith(widgets[2].outputElement);
             }
         );
     };
@@ -320,21 +303,10 @@
                 appendAllTo(strip, widgets, 40);
 
                 strip.attachIndexedWidgets([1, 2]);
-                Device.prototype.prependChildElement.reset();
                 strip.attachIndexedWidgets([0, 3]);
 
-                sinon.assert.calledWith(
-                    Device.prototype.prependChildElement,
-                    strip.outputElement,
-                    widgets[0].outputElement
-                );
-
-                sinon.assert.neverCalledWith(
-                    Device.prototype.appendChildElement,
-                    strip.outputElement,
-                    widgets[0].outputElement
-                );
-
+                expect(Device.prototype.prependChildElement).toHaveBeenCalledWith(strip.outputElement, widgets[0].outputElement);
+                expect(Device.prototype.appendChildElement).not.toHaveBeenCalledWith(strip.outputElement, widgets[0].outputElement);
             }
         );
     };
@@ -362,18 +334,13 @@
                 appendAllTo(strip, widgets, 40);
 
                 strip.attachIndexedWidgets([0]);
-                resetRenderOn(widgets);
-                sinon.assert.notCalled(
-                    widgets[0].render
-                );
+                expect(widgets[0].render.calls.count()).toBe(1);
+
                 strip.render(new Device());
-                sinon.assert.notCalled(
-                    widgets[0].render
-                );
+                expect(widgets[0].render.calls.count()).toBe(1);
+
                 strip.attachIndexedWidgets([0]);
-                sinon.assert.calledOnce(
-                    widgets[0].render
-                );
+                expect(widgets[0].render.calls.count()).toBe(2);
 
             }
         );
@@ -394,7 +361,7 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns('test');
+                device.createContainer.and.returnValue('test');
                 var rendered = strip.render(device);
                 assertEquals('test', strip.outputElement);
                 assertEquals(rendered, strip.outputElement);
@@ -417,7 +384,7 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns('test');
+                device.createContainer.and.returnValue('test');
                 var el = {id: 'strip'};
                 strip.outputElement = el;
                 var rendered = strip.render(device);
@@ -442,11 +409,11 @@
                 stubAppAndDevice(self, application, Device, Widget);
                 var strip = new CullingStrip('test', vertical);
                 var device = new Device();
-                device.createContainer.returns('test');
+                device.createContainer.and.returnValue('test');
                 var el = {id: 'strip'};
                 strip.outputElement = el;
                 strip.render(device);
-                sinon.assert.calledWith(device.clearElement, el);
+                expect(device.clearElement).toHaveBeenCalledWith(el);
             }
         );
     };
@@ -541,8 +508,12 @@
     };
 
     var stubAppAndDevice = function (self, application, Device, Widget) {
-        self.sandbox.stub(Device.prototype);
-        self.sandbox.stub(Widget.prototype, 'getCurrentApplication').returns(application);
+        for (var i in Device.prototype) {
+            if(Device.prototype.hasOwnProperty(i)) {
+                spyOn(Device.prototype, i);
+            }
+        }
+        spyOn(Widget.prototype, 'getCurrentApplication').and.returnValue(application);
     };
 
     var appendAllTo = function (strip, widgetArray, widgetsLength) {
@@ -561,7 +532,7 @@
 
         for (i = 0; i !== renderableObjectArray.length; i += 1) {
             renderable = renderableObjectArray[i];
-            self.sandbox.stub(renderable, 'render', renderStub);
+            spyOn(renderable, 'render').and.callFake(renderStub);
         }
     };
 

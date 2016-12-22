@@ -37,9 +37,9 @@ module.exports = function(grunt) {
                 keepRunner: true,
                 display: 'full',
                 templateOptions: {
-                    scriptRoot: '../..',
-                    frameworkVersion: '2.1.0'
-                }
+                    scriptRoot: '../..'
+                },
+                summary: true
             }
         },
         watch: {
