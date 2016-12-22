@@ -15,7 +15,7 @@ require(
 
         describe('CSS3 Transform Animation Modifier', function () {
             beforeEach(function () {
-                spyOn(RuntimeContext, 'getCurrentApplication').andReturn({
+                spyOn(RuntimeContext, 'getCurrentApplication').and.returnValue({
                     getDevice: function () {
                         return browserDevice;
                     }
@@ -62,12 +62,16 @@ require(
                             animationDevice[method.name](options);
 
                             if (method.animatesAfterTick) {
-                                jasmine.Clock.tick(1);
+                                jasmine.clock().tick(1);
                             }
                         }
 
                         beforeEach(function () {
-                            jasmine.Clock.useMock();
+                            jasmine.clock().install();
+                        });
+
+                        afterEach(function() {
+                            jasmine.clock().uninstall();
                         });
 
                         it('does not add animate class to element when animation is being skipped (via options)', function () {
@@ -78,7 +82,7 @@ require(
                         });
 
                         it('does not add animate class to element when animation is being skipped (via device config)', function () {
-                            spyOn(RuntimeContext.getCurrentApplication().getDevice(), 'getConfig').andReturn({
+                            spyOn(RuntimeContext.getCurrentApplication().getDevice(), 'getConfig').and.returnValue({
                                 animationDisabled: true
                             });
 
