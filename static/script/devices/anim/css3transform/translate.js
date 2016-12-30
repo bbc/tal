@@ -1,9 +1,10 @@
 define(
     'antie/devices/anim/css3transform/translate',
     [
-        'antie/devices/anim/shared/helpers'
+        'antie/devices/anim/shared/helpers',
+        'antie/devices/anim/css3transform/transition'
     ],
-    function (Helpers) {
+    function (Helpers, Transition) {
         'use strict';
 
         return function (options, position, axis) {
@@ -20,6 +21,7 @@ define(
             }
 
             function transform () {
+                Transition.set(el, 'transform', options);
                 if (axis === 'X') {
                     Helpers.setStyle(el, 'transform', 'translate3d(' + getDifference('left') + 'px, 0, 0)', true);
                 } else {
@@ -33,9 +35,9 @@ define(
                     Y: 'top'
                 };
 
-                el.classList.remove('animate');
                 Helpers.setStyle(el, 'transform', '', true);
                 Helpers.setStyle(el, axis2Direction[axis], position + 'px', false);
+                Transition.clear(el);
 
                 if (options.onComplete) {
                     options.onComplete();
@@ -48,7 +50,6 @@ define(
                     return;
                 }
 
-                el.classList.add('animate');
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, endTransform);
                 transform();
             }
