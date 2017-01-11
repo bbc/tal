@@ -38,7 +38,7 @@
             });
 
     };
-
+    
     this.KeyboardTest.prototype.testStandardMultiTap = function (queue) {
         // Use JSON.parse/stringify to create a copy of the device config
         var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
@@ -57,6 +57,9 @@
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
                 assertEquals('b', keyboard.getText());
+                assert(keyboard._letterButtons['b'].hasClass('active')); //check the button is active
+                assertFalse(keyboard._letterButtons['a'].hasClass('active')); //check the other buttons are not active
+                assertFalse(keyboard._letterButtons['c'].hasClass('active'));
             }, config);
     };
 
@@ -83,6 +86,31 @@
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
                 assertEquals('ba', keyboard.getText());
                 clock.restore();
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testDeleteKeyFocus = function (queue) {
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 1, 6, ['a','b','c','-']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_BACK_SPACE));
+                assertEquals('', keyboard.getText());
+                assert(keyboard._letterButtons['-'].hasClass('active')); //check the button is active
+                assertFalse(keyboard._letterButtons['a'].hasClass('active')); //check the other buttons are not active
+                assertFalse(keyboard._letterButtons['b'].hasClass('active'));
+                assertFalse(keyboard._letterButtons['c'].hasClass('active'));
             }, config);
     };
 
