@@ -109,15 +109,6 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            isEmpty: function() {
-                var prop;
-                for(prop in this._valueCache) {
-                    if(this._valueCache.hasOwnProperty(prop)) {
-                        return false;
-                    }
-                }
-                return true;
-            },
             _save: function() {
                 if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
