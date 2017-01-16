@@ -119,7 +119,7 @@ define(
                 return true;
             },
             _save: function() {
-                if(this._isEmpty()) {
+                if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {
                     var json = Device.prototype.encodeJson(this._valueCache);
