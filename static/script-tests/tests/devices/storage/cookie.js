@@ -178,5 +178,20 @@
         }, config);
     };
 
+    this.CookieStorageProviderTest.prototype.isEmpty = function(queue) {
+        expectAsserts(2);
+
+        var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/data/json2','antie/devices/storage/cookie']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/storageprovider'], function(application, StorageProvider) {
+            var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
+
+            assertEquals(true, storage.isEmpty());
+
+            storage.setItem('hello');
+            assertEquals(false, storage.isEmpty());
+        }, config);
+    };
+
     onDeviceTestConfigValidation.removeTestsForIncompatibleDevices(['antie/devices/storage/cookie'], this.CookieStorageProviderTest);
 })();
