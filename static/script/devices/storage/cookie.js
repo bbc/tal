@@ -109,7 +109,7 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            _isEmpty: function() {
+            isEmpty: function() {
                 var prop;
                 for(prop in this._valueCache) {
                     if(this._valueCache.hasOwnProperty(prop)) {
