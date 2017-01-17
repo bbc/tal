@@ -109,17 +109,8 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            _isEmpty: function() {
-                var prop;
-                for(prop in this._valueCache) {
-                    if(this._valueCache.hasOwnProperty(prop)) {
-                        return false;
-                    }
-                }
-                return true;
-            },
             _save: function() {
-                if(this._isEmpty()) {
+                if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {
                     var json = Device.prototype.encodeJson(this._valueCache);
