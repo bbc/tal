@@ -15,10 +15,6 @@ of managing developer conversation:
 If you want to contact us about anything else please email our
 [FMTVP organisation](https://github.com/fmtvp) email address.
 
-Follow us on twitter (@TALOpenSource) for TAL announcements, or look on our
-[Twitter home page](https://twitter.com/TALOpenSource).
-
-
-
+Follow us on twitter [@BBCOpenSource](https://twitter.com/BBCOpenSource) for announcements on all of our open source projects, including TAL.
 
 We also occasionally blog on the [BBC Internet Blog](http://www.bbc.co.uk/blogs/internet/).
