@@ -1,9 +1,10 @@
 define(
     'antie/devices/anim/css3transform/expand',
     [
-        'antie/devices/anim/shared/helpers'
+        'antie/devices/anim/shared/helpers',
+        'antie/devices/anim/css3transform/transition'
     ],
-    function (Helpers) {
+    function (Helpers, Transition) {
         'use strict';
 
         return function (options) {
@@ -21,7 +22,7 @@ define(
                 }
 
                 function onComplete () {
-                    el.classList.remove('animate');
+                    Transition.clear(el);
                     if (options.onComplete) {
                         options.onComplete();
                     }
@@ -33,12 +34,11 @@ define(
                     return;
                 }
 
-                // Avoid the 'animate' class being overwritten by TAL if any widget-class methods are called after animating. Sigh...
-                setTimeout(function () {
-                    el.classList.add('animate');
-                    setDimensions();
-                    onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                }, 0);
+                // TODO: Only set the property that's changing
+                Transition.set(el, 'width', options);
+                Transition.set(el, 'height', options);
+                setDimensions();
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }
 
             function stop () {
