@@ -11,12 +11,12 @@ define(
             var onTransitionEnd;
             var el = options.el;
 
-            function expand(options) {
-              var duration = (options.duration || 840) + "ms ";
-              var easing = Transition.getEasing(options);
-              var props = duration + easing;
-              var transition = 'width ' + props + ', height ' + props;
-              Helpers.setStyle(el, 'transition', transition, true);
+            function setExpansion () {
+                var duration = (options.duration || 840) + 'ms ';
+                var easing = Transition.getEasing(options);
+                var props = duration + easing;
+                var transition = 'width ' + props + ', height ' + props;
+                Helpers.setStyle(el, 'transition', transition, true);
             }
 
             function start () {
@@ -42,7 +42,7 @@ define(
                     return;
                 }
 
-                expand(options);
+                setExpansion();
                 setDimensions();
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }
