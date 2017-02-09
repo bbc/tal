@@ -11,6 +11,14 @@ define(
             var onTransitionEnd;
             var el = options.el;
 
+            function expand(options) {
+              var duration = (options.duration || 840) + "ms ";
+              var easing = Transition.getEasing(options);
+              var props = duration + easing;
+              var transition = 'width ' + props + ', height ' + props;
+              Helpers.setStyle(el, 'transition', transition, true);
+            }
+
             function start () {
                 function setDimensions () {
                     if (options.to.width) {
@@ -34,9 +42,7 @@ define(
                     return;
                 }
 
-                // TODO: Only set the property that's changing
-                Transition.set(el, 'width', options);
-                Transition.set(el, 'height', options);
+                expand(options);
                 setDimensions();
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }

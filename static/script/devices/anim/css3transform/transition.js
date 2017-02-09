@@ -7,12 +7,16 @@ define(
     function (Helpers, EasingLookup) {
       'use strict';
 
-      function set (el, property, options) {
-        var durationMs = options.duration || 840;
-        var easing = options.easing || 'easeFromTo';
-        var easingFormula = new EasingLookup()[easing];
+      var easingLookup = new EasingLookup();
 
-        var transition = property + ' ' + durationMs + 'ms ' + easingFormula;
+      function getEasing(options) {
+        var easing = options.easing || 'easeFromTo';
+        return easingLookup[easing]
+      }
+
+      function set (el, property, options) {
+        var duration = options.duration || 840;
+        var transition = property + ' ' + duration + 'ms ' + getEasing(options);
         Helpers.setStyle(el, 'transition', transition, true);
       }
 
@@ -21,6 +25,7 @@ define(
       }
 
       return {
+        getEasing: getEasing,
         set: set,
         clear: clear
       }
