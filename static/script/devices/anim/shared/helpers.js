@@ -11,14 +11,11 @@ define(
 
         function setStyle (el, prop, val, prefixed) {
             el.style.setProperty(prop, val);
-            // TODO: Do we need these?
-            /*
             if (prefixed) {
                 for (var i = 0, len = VENDOR_PREFIXES.length; i < len; i++) {
                     el.style.setProperty(VENDOR_PREFIXES[i] + prop, val);
                 }
             }
-            */
         }
 
         function skipAnim (options) {
