@@ -15,10 +15,10 @@ define(
                     dimensions = dimensions || {};
 
                     if (dimensions.width !== undefined) {
-                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width: 'px'));
+                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width : 'px'));
                     }
                     if (dimensions.height !== undefined) {
-                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height: 'px'));
+                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height : 'px'));
                     }
                 }
 
@@ -36,7 +36,7 @@ define(
                 }
 
                 setDimensions(options.from, options.units);
-                // Avoid the 'animate' class being overwritten by TAL if any widget-class methods are called after animating. Sigh...
+                // Force reflow so the 'from' values are applied before the 'to'
                 el.offsetHeight;
                 el.classList.add('animate');
                 setDimensions(options.to, options.units);
