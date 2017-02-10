@@ -20,12 +20,14 @@ define(
             }
 
             function start () {
-                function setDimensions () {
-                    if (options.to.width) {
-                        Helpers.setStyle(el, 'width', options.to.width + 'px');
+                function setDimensions (dimensions, units) {
+                    dimensions = dimensions || {};
+
+                    if (dimensions.width !== undefined) {
+                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width: 'px'));
                     }
-                    if (options.to.height) {
-                        Helpers.setStyle(el, 'height', options.to.height + 'px');
+                    if (dimensions.height !== undefined) {
+                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height: 'px'));
                     }
                 }
 
@@ -42,8 +44,10 @@ define(
                     return;
                 }
 
+                setDimensions(options.from, options.units);
                 setExpansion();
-                setDimensions();
+                el.offsetHeight;
+                setDimensions(options.to, options.units);
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }
 
