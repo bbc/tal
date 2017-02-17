@@ -2,7 +2,7 @@
 
 ![TAL](https://bbc.github.io/tal/img/tal-logo-bw-small.jpg)
 
-[![Build Status](https://travis-ci.org/fmtvp/tal.svg?branch=master)](https://travis-ci.org/fmtvp/tal)
+[![Build Status](https://travis-ci.org/bbc/tal.svg?branch=master)](https://travis-ci.org/bbc/tal/branches)
 [![npm version](https://badge.fury.io/js/tal.svg)](https://badge.fury.io/js/tal)
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
@@ -34,4 +34,3 @@ and [documentation](https://bbc.github.io/tal/other/contributing.html) to learn 
 ## Testing
 
 For developers who want to modify and contribute to TAL, we have a page on [testing](https://bbc.github.io/tal/testing.html) which you should follow before starting development.
-
