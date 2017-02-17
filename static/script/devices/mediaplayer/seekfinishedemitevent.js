@@ -5,7 +5,7 @@
  * waits for an optional timeout and then fires a SEEK_FINISHED event to give
  * extra security that have seeked correctly.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
