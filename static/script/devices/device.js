@@ -1033,7 +1033,7 @@ define(
             Device.prototype.loggingStrategies[ moduleID ] = loggingMethods;
         };
 
-        Device.prototype.loggingStrategies = [];
+        Device.prototype.loggingStrategies = {};
         Device.prototype.filteredLoggingMethods = null;
 
         return Device;
