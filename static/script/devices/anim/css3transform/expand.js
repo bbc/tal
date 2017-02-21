@@ -24,10 +24,10 @@ define(
                     dimensions = dimensions || {};
 
                     if (dimensions.width !== undefined) {
-                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width: 'px'));
+                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width : 'px'));
                     }
                     if (dimensions.height !== undefined) {
-                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height: 'px'));
+                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height : 'px'));
                     }
                 }
 
@@ -39,13 +39,15 @@ define(
                 }
 
                 if (Helpers.skipAnim(options)) {
-                    setDimensions();
+                    setDimensions(options.to, options.units);
                     onComplete();
                     return;
                 }
 
                 setDimensions(options.from, options.units);
                 setExpansion();
+                
+                // Force reflow so the 'from' values are applied before the 'to'
                 el.offsetHeight;
                 setDimensions(options.to, options.units);
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
