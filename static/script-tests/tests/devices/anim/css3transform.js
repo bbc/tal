@@ -41,7 +41,6 @@ require(
                     },
                     {
                         name: 'tweenElementStyle',
-                        animatesAfterTick: true,
                         to: {
                             width: 666
                         }
