@@ -25,9 +25,9 @@ define(
                     return;
                 }
 
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
                 Transition.set(el, 'opacity', options);
                 Helpers.setStyle(el, 'opacity', options.to.opacity);
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }
 
             function stop () {

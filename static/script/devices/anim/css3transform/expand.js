@@ -45,12 +45,12 @@ define(
                 }
 
                 setDimensions(options.from, options.units);
+                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
                 setExpansion();
                 
                 // Force reflow so the 'from' values are applied before the 'to'
                 el.offsetHeight;
                 setDimensions(options.to, options.units);
-                onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
             }
 
             function stop () {
