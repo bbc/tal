@@ -30,7 +30,7 @@ define(
                 }
 
                 if (Helpers.skipAnim(options)) {
-                    setDimensions();
+                    setDimensions(options.to, options.units);
                     onComplete();
                     return;
                 }
