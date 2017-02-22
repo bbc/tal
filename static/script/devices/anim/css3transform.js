@@ -60,6 +60,7 @@ define(
 
                 options.el.style.opacity = 0;
                 options.el.style.visibility = 'visible';
+                options.el.offsetHeight;
                 return this.tweenElementStyle(fadeOptions);
             };
 
