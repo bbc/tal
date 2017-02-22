@@ -65,11 +65,22 @@ define(
             };
 
             target.hideElement = function (options) {
-                options.el.style.visibility = 'hidden';
-                options.el.style.opacity = 0;
-                if (options.onComplete) {
-                    options.onComplete();
+                function onComplete () {
+                    options.el.style.visibility = 'hidden';
+                    if (options.onComplete) {
+                        options.onComplete();
+                    }
                 }
+                var fadeOptions = {
+                    el: options.el,
+                    to: {
+                        opacity: 0
+                    },
+                    onComplete: onComplete,
+                    skipAnim: options.skipAnim
+                };
+
+                return this.tweenElementStyle(fadeOptions);
             };
 
             target.isAnimationDisabled = function () {
