@@ -9,7 +9,7 @@ define(
 
         return function (options, position, axis) {
             var el = options.el;
-            var onTransitionEnd;
+            var onTransitionEnd, cancelledAnimation;
 
             function getStyle (name) {
                 var value = parseInt(el.style[name], 10);
@@ -30,14 +30,17 @@ define(
             }
 
             function endTransform () {
-                var axis2Direction = {
-                    X: 'left',
-                    Y: 'top'
-                };
-
-                Helpers.setStyle(el, 'transform', '', true);
-                Helpers.setStyle(el, axis2Direction[axis], position + 'px', false);
                 Transition.clear(el);
+
+                if (!cancelledAnimation) {
+                    var axis2Direction = {
+                        X: 'left',
+                        Y: 'top'
+                    };
+
+                    Helpers.setStyle(el, 'transform', '', true);
+                    Helpers.setStyle(el, axis2Direction[axis], position + 'px', false);
+                }
 
                 if (options.onComplete) {
                     options.onComplete();
@@ -55,6 +58,7 @@ define(
             }
 
             function stop () {
+                cancelledAnimation = true;
                 onTransitionEnd();
             }
 
