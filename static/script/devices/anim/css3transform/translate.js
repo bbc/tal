@@ -7,39 +7,32 @@ define(
     function (Helpers, Transition) {
         'use strict';
 
-        return function (options, position, axis) {
+        return function (options, position, property) {
             var el = options.el;
             var onTransitionEnd, cancelledAnimation;
+            var propertyTranslateMap = {
+                left: 'translate3d({x}px, 0, 0)',
+                top: 'translate3d(0, {x}px, 0)'
+            };
 
-            function getStyle (name) {
-                var value = parseInt(el.style[name], 10);
+            function getStyle () {
+                var value = parseInt(el.style[property], 10);
                 return value || 0;
             }
 
-            function getDifference (direction) {
-                return position - getStyle(direction);
-            }
-
             function transform () {
+                var distance = position - getStyle();
+                var translate3d = propertyTranslateMap[property].replace('{x}', distance);
                 Transition.set(el, 'transform', options);
-                if (axis === 'X') {
-                    Helpers.setStyle(el, 'transform', 'translate3d(' + getDifference('left') + 'px, 0, 0)', true);
-                } else {
-                    Helpers.setStyle(el, 'transform', 'translate3d(0, ' + getDifference('top') + 'px, 0)', true);
-                }
+                Helpers.setStyle(el, 'transform', translate3d, true);
             }
 
             function endTransform () {
                 Transition.clear(el);
 
                 if (!cancelledAnimation) {
-                    var axis2Direction = {
-                        X: 'left',
-                        Y: 'top'
-                    };
-
                     Helpers.setStyle(el, 'transform', '', true);
-                    Helpers.setStyle(el, axis2Direction[axis], position + 'px', false);
+                    Helpers.setStyle(el, property, position + 'px', false);
                 }
 
                 if (options.onComplete) {

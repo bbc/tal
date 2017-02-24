@@ -10,10 +10,10 @@ define(
 
         return function (options) {
             if (options.to.left !== undefined) {
-                return new Translate(options, options.to.left, 'X');
+                return new Translate(options, options.to.left, 'left');
             }
             if (options.to.top !== undefined) {
-                return new Translate(options, options.to.top, 'Y');
+                return new Translate(options, options.to.top, 'top');
             }
             if (options.to.height || options.to.width) {
                 return new Expand(options);
