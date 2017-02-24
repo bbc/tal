@@ -7,6 +7,10 @@ define(
     function (Device, getAnimator) {
         'use strict';
 
+        function triggerLayoutFor (element) {
+            element.offsetHeight;
+        }
+
         function assignMethodsTo (target) {
             target.moveElementTo = function (options) {
                 var animator = getAnimator(options);
@@ -60,7 +64,7 @@ define(
 
                 options.el.style.opacity = 0;
                 options.el.style.visibility = 'visible';
-                options.el.offsetHeight;
+                triggerLayoutFor(options.el);
                 return this.tweenElementStyle(fadeOptions);
             };
 
