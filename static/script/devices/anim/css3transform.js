@@ -58,6 +58,7 @@ define(
                     to: {
                         opacity: 1
                     },
+                    easing: 'linear',
                     onComplete: options.onComplete,
                     skipAnim: options.skipAnim
                 };
@@ -80,6 +81,7 @@ define(
                     to: {
                         opacity: 0
                     },
+                    easing: 'linear',
                     onComplete: onComplete,
                     skipAnim: options.skipAnim
                 };
