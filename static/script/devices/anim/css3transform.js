@@ -7,10 +7,6 @@ define(
     function (Device, getAnimator) {
         'use strict';
 
-        function triggerLayoutFor (element) {
-            element.offsetHeight;
-        }
-
         function assignMethodsTo (target) {
             target.moveElementTo = function (options) {
                 var animator = getAnimator(options);
@@ -53,6 +49,10 @@ define(
             };
 
             target.showElement = function (options) {
+                function triggerLayoutFor (element) {
+                    element.offsetHeight;
+                }
+
                 var fadeOptions = {
                     el: options.el,
                     to: {
