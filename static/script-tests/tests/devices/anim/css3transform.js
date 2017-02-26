@@ -38,6 +38,9 @@ require(
                     });
                 }
 
+                var duration = 500;
+                var easing = 'ease';
+
                 var animationMethods = [
                     {
                         name: 'moveElementTo',
@@ -108,6 +111,8 @@ require(
                             options = options || {};
                             options.el = element;
                             options.to = method.to;
+                            options.duration = duration;
+                            options.easing = easing;
 
                             animationDevice[method.name](options);
 
@@ -172,6 +177,11 @@ require(
                                 Object.keys(method.expectedTransitionStyles).forEach(function (styleProperty) {
                                     expect(element.style.transition).toContain(styleProperty);
                                 });
+                            });
+
+                            it('includes easing and duration in transition property', function () {
+                                expect(element.style.transition).toContain(easing);
+                                expect(element.style.transition).toContain(duration + 'ms');
                             });
 
                             it('clears transition style property when animation ends', function () {

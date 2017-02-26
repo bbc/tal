@@ -58,7 +58,8 @@ define(
                     to: {
                         opacity: 1
                     },
-                    easing: 'linear',
+                    duration: options.duration,
+                    easing: options.easing || 'linear',
                     onComplete: options.onComplete,
                     skipAnim: options.skipAnim
                 };
@@ -81,7 +82,8 @@ define(
                     to: {
                         opacity: 0
                     },
-                    easing: 'linear',
+                    duration: options.duration,
+                    easing: options.easing || 'linear',
                     onComplete: onComplete,
                     skipAnim: options.skipAnim
                 };
