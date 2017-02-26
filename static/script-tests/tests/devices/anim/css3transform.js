@@ -22,9 +22,6 @@ require(
                 });
 
                 element = document.createElement('div');
-                maskElement = document.createElement('div');
-                maskElement.id = 'the_mask';
-                maskElement.appendChild(element);
             });
 
             it('indicates animation is not disabled', function () {
@@ -195,6 +192,39 @@ require(
                             });
                         });
                     });
+                });
+            });
+
+            describe('scrollElementTo', function () {
+                var options, onComplete;
+                beforeEach(function () {
+                    onComplete = jasmine.createSpy('onComplete');
+                    options = {
+                        el: element,
+                        to: {
+                            left: 666
+                        },
+                        skipAnim: true,
+                        onComplete: onComplete
+                    };
+                })
+
+                it('does nothing on elements that are not _masks', function () {
+                    element.id = 'jim_carrey';
+                    animationDevice.scrollElementTo(options);
+                    expect(onComplete).not.toHaveBeenCalled();
+                });
+
+                it('scrolls the child of a _mask element in the opposite direction', function () {
+                    element.id = 'the_mask';
+                    var innerElement = document.createElement('div');
+                    element.appendChild(innerElement);
+
+                    animationDevice.scrollElementTo(options);
+
+                    expect(element.style.left).toBe('');
+                    expect(innerElement.style.left).toBe('-666px');
+                    expect(onComplete).toHaveBeenCalled();
                 });
             });
         });
