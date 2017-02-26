@@ -49,14 +49,13 @@ define(
             };
 
             target.showElement = function (options) {
-                function triggerLayoutFor (element) {
-                    element.offsetHeight;
-                }
-
                 var fadeOptions = {
                     el: options.el,
                     to: {
                         opacity: 1
+                    },
+                    from: {
+                        opacity: 0
                     },
                     duration: options.duration,
                     easing: options.easing || 'linear',
@@ -64,9 +63,7 @@ define(
                     skipAnim: options.skipAnim
                 };
 
-                options.el.style.opacity = 0;
                 options.el.style.visibility = 'visible';
-                triggerLayoutFor(options.el);
                 return this.tweenElementStyle(fadeOptions);
             };
 

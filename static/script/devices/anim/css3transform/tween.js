@@ -1,5 +1,5 @@
 define(
-    'antie/devices/anim/css3transform/expand',
+    'antie/devices/anim/css3transform/tween',
     [
         'antie/devices/anim/shared/helpers',
         'antie/devices/anim/css3transform/transition'
@@ -12,15 +12,21 @@ define(
             var el = options.el;
 
             function start () {
-                function setDimensions (dimensions, units) {
-                    dimensions = dimensions || {};
+                function triggerReflowFor (element) {
+                    element.offsetHeight;
+                }
 
-                    if (dimensions.width !== undefined) {
-                        Helpers.setStyle(el, 'width', dimensions.width + (units ? units.width : 'px'));
-                    }
-                    if (dimensions.height !== undefined) {
-                        Helpers.setStyle(el, 'height', dimensions.height + (units ? units.height : 'px'));
-                    }
+                function setDimensions (dimensions, units) {
+                    units = units || {};
+                    var defaultUnits = {
+                        width: 'px',
+                        height: 'px'
+                    };
+
+                    Object.keys(dimensions).forEach(function (key) {
+                        var unit = units[key] || defaultUnits[key] || '';
+                        Helpers.setStyle(el, key, dimensions[key] + unit);
+                    });
                 }
 
                 function onComplete () {
@@ -36,12 +42,13 @@ define(
                     return;
                 }
 
-                setDimensions(options.from, options.units);
+                if (options.from) {
+                    setDimensions(options.from, options.units);
+                    triggerReflowFor(el);
+                }
+
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                Transition.set(el, ['width', 'height'], options);
-                
-                // Force reflow so the 'from' values are applied before the 'to'
-                el.offsetHeight;
+                Transition.set(el, Object.keys(options.to), options);
                 setDimensions(options.to, options.units);
             }
 
