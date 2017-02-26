@@ -30,14 +30,13 @@ define(
 
                 function setDimensions (dimensions, units) {
                     units = units || {};
-                    var hasSetDimensions = false;
+                    var filteredDimensions = filterDimensions(dimensions);
 
-                    filterDimensions(dimensions).forEach(function (key) {
+                    filteredDimensions.forEach(function (key) {
                         var unit = units[key] || whitelistWithDefaultUnits[key] || '';
                         Helpers.setStyle(el, key, dimensions[key] + unit);
-                        hasSetDimensions = true;
                     });
-                    return hasSetDimensions;
+                    return filteredDimensions.length > 0;
                 }
 
                 function onComplete () {
