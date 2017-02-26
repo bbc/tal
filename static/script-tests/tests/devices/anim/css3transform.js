@@ -115,19 +115,7 @@ require(
                             options.easing = easing;
 
                             animationDevice[method.name](options);
-
-                            if (method.animatesAfterTick) {
-                                jasmine.clock().tick(1);
-                            }
                         }
-
-                        beforeEach(function () {
-                            jasmine.clock().install();
-                        });
-
-                        afterEach(function() {
-                            jasmine.clock().uninstall();
-                        });
 
                         it('immediately sets target properties when animation is being skipped (via options)', function () {
                             callMethod({
