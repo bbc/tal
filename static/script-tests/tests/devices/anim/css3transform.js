@@ -30,9 +30,19 @@ require(
 
             describe('verify behaviour across animation methods', function () {
                 function verifyElementStyles (element, styles) {
+                    var mayBePrefixed = ['transition', 'transform'];
+
                     Object.keys(styles).forEach(function (key) {
-                        expect(element.style[key]).toBe(styles[key]);
+                        var style = element.style[key];
+                        if (mayBePrefixed.indexOf(key) !== -1) {
+                            style = getStyleWithPossiblePrefix(element, key);
+                        }
+                        expect(style).toBe(styles[key]);
                     });
+                }
+
+                function getStyleWithPossiblePrefix(element, unprefixedStyle) {
+                    return element.style[unprefixedStyle] || element.style['-webkit-' + unprefixedStyle];
                 }
 
                 var duration = 500;
@@ -160,18 +170,18 @@ require(
 
                             it('sets transition property containing styles under change', function () {
                                 Object.keys(method.expectedTransitionStyles).forEach(function (styleProperty) {
-                                    expect(element.style.transition).toContain(styleProperty);
+                                    expect(getStyleWithPossiblePrefix(element, 'transition')).toContain(styleProperty);
                                 });
                             });
 
                             it('includes easing and duration in transition property', function () {
-                                expect(element.style.transition).toContain(easing);
-                                expect(element.style.transition).toContain(duration + 'ms');
+                                expect(getStyleWithPossiblePrefix(element, 'transition')).toContain(easing);
+                                expect(getStyleWithPossiblePrefix(element, 'transition')).toContain(duration + 'ms');
                             });
 
                             it('clears transition style property when animation ends', function () {
                                 simulateTransitionEnd();
-                                expect(element.style.transition).toBe('');
+                                expect(getStyleWithPossiblePrefix(element, 'transition')).toBe('');
                             });
 
                             it('sets final style properties when animation ends', function () {
