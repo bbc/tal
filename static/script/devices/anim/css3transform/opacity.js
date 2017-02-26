@@ -26,7 +26,7 @@ define(
                 }
 
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                Transition.set(el, 'opacity', options);
+                Transition.set(el, ['opacity'], options);
                 Helpers.setStyle(el, 'opacity', options.to.opacity);
             }
 

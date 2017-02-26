@@ -23,7 +23,7 @@ define(
             function transform () {
                 var distance = position - getStyle();
                 var translate3d = propertyTranslateMap[property].replace('{x}', distance);
-                Transition.set(el, 'transform', options);
+                Transition.set(el, ['transform'], options);
                 Helpers.setStyle(el, 'transform', translate3d, true);
             }
 

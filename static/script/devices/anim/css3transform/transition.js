@@ -14,10 +14,13 @@ define(
             return easingLookup[easing];
         }
 
-        function set (el, property, options) {
-            var duration = options.duration || 840;
-            var transition = property + ' ' + duration + 'ms ' + getEasing(options);
-            Helpers.setStyle(el, 'transition', transition, true);
+        function set (el, properties, options) {
+            var duration = (options.duration || 840) + 'ms ';
+            var easing = getEasing(options);
+            var transitions = properties.map(function (property) {
+                return property + ' ' + duration + easing;
+            }).join(',');
+            Helpers.setStyle(el, 'transition', transitions, true);
         }
 
         function clear (el) {
@@ -25,7 +28,6 @@ define(
         }
 
         return {
-            getEasing: getEasing,
             set: set,
             clear: clear
         };

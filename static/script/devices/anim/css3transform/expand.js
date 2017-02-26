@@ -23,14 +23,6 @@ define(
                     }
                 }
 
-                function setExpansion () {
-                    var duration = (options.duration || 840) + 'ms ';
-                    var easing = Transition.getEasing(options);
-                    var props = duration + easing;
-                    var transition = 'width ' + props + ', height ' + props;
-                    Helpers.setStyle(el, 'transition', transition, true);
-                }
-
                 function onComplete () {
                     Transition.clear(el);
                     if (options.onComplete) {
@@ -46,7 +38,7 @@ define(
 
                 setDimensions(options.from, options.units);
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                setExpansion();
+                Transition.set(el, ['width', 'height'], options);
                 
                 // Force reflow so the 'from' values are applied before the 'to'
                 el.offsetHeight;
