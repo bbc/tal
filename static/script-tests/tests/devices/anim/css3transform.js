@@ -9,9 +9,8 @@ require(
 
         var browserDevice = new BrowserDevice(antie.framework.deviceConfiguration);
         var animationDevice = {};
+        var element;
         Css3Transform.assignMethodsTo(animationDevice);
-
-        var element, maskElement;
 
         describe('CSS3 Transform Animation Modifier', function () {
             beforeEach(function () {
@@ -217,7 +216,7 @@ require(
                         skipAnim: true,
                         onComplete: onComplete
                     };
-                })
+                });
 
                 it('does nothing on elements that are not _masks', function () {
                     element.id = 'jim_carrey';
