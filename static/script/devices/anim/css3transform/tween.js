@@ -10,23 +10,34 @@ define(
         return function (options) {
             var onTransitionEnd;
             var el = options.el;
+            var whitelistWithDefaultUnits = {
+                width: 'px',
+                height: 'px',
+                opacity: ''
+            };
 
             function start () {
                 function triggerReflowFor (element) {
                     element.offsetHeight;
                 }
 
+                function filterDimensions (dimensions) {
+                    dimensions = dimensions || {};
+                    return Object.keys(dimensions).filter(function (dimension) {
+                        return whitelistWithDefaultUnits[dimension] !== undefined;
+                    });
+                }
+
                 function setDimensions (dimensions, units) {
                     units = units || {};
-                    var defaultUnits = {
-                        width: 'px',
-                        height: 'px'
-                    };
+                    var hasSetDimensions = false;
 
-                    Object.keys(dimensions).forEach(function (key) {
-                        var unit = units[key] || defaultUnits[key] || '';
+                    filterDimensions(dimensions).forEach(function (key) {
+                        var unit = units[key] || whitelistWithDefaultUnits[key] || '';
                         Helpers.setStyle(el, key, dimensions[key] + unit);
+                        hasSetDimensions = true;
                     });
+                    return hasSetDimensions;
                 }
 
                 function onComplete () {
@@ -42,13 +53,12 @@ define(
                     return;
                 }
 
-                if (options.from) {
-                    setDimensions(options.from, options.units);
+                if (setDimensions(options.from, options.units)) {
                     triggerReflowFor(el);
                 }
 
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                Transition.set(el, Object.keys(options.to), options);
+                Transition.set(el, filterDimensions(options.to), options);
                 setDimensions(options.to, options.units);
             }
 
