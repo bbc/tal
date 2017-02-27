@@ -149,9 +149,12 @@ require(
                         });
 
                         describe('when animating', function () {
-                            function simulateTransitionEnd () {
-                                var transitionEndEvent = new CustomEvent('transitionend');
-                                element.dispatchEvent(transitionEndEvent);
+                            function simulateTransitionEnd (target) {
+                                target = target || element;
+                                var transitionEndEvent = new CustomEvent('transitionend', {
+                                    bubbles: true
+                                });
+                                target.dispatchEvent(transitionEndEvent);
                             }
 
                             var callback;
@@ -192,6 +195,13 @@ require(
                                 expect(callback).not.toHaveBeenCalled();
                                 simulateTransitionEnd();
                                 expect(callback).toHaveBeenCalled();
+                            });
+
+                            it('does not call back when a child element\'s transition ends', function () {
+                                var childEl = document.createElement('div');
+                                element.appendChild(childEl);
+                                simulateTransitionEnd(childEl);
+                                expect(callback).not.toHaveBeenCalled();
                             });
 
                             it('will not call back more than once', function () {

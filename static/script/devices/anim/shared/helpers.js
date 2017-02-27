@@ -35,9 +35,11 @@ define(
         }
 
         function registerTransitionEndEvent (el, callback) {
-            var onComplete = function () {
-                removeTransitionEvent(el, onComplete);
-                callback();
+            var onComplete = function (evt) {
+                if (evt.target === el) {
+                    removeTransitionEvent(el, onComplete);
+                    callback();
+                }
             };
             addTransitionEvent(el, onComplete);
             return onComplete;
