@@ -10,13 +10,13 @@ define(
         var TRANSITION_END_EVENTS = ['webkitTransitionEnd', 'oTransitionEnd', 'otransitionend', 'transitionend'];
 
         function setStyle (el, prop, val, prefixed) {
-            el.style.setProperty(prop, val);
             if (prefixed) {
                 for (var i = 0, len = VENDOR_PREFIXES.length; i < len; i++) {
                     var prefix = VENDOR_PREFIXES[i];
                     el.style.setProperty(prefix + prop, val.replace('transform', prefix + 'transform'));
                 }
             }
+            el.style.setProperty(prop, val);
         }
 
         function skipAnim (options) {
