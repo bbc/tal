@@ -120,7 +120,7 @@ require(
                             options.duration = duration;
                             options.easing = easing;
 
-                            animationDevice[method.name](options);
+                            return animationDevice[method.name](options);
                         }
 
                         it('immediately sets target properties when animation is being skipped (via options)', function () {
@@ -148,10 +148,23 @@ require(
                             expect(callback).toHaveBeenCalled();
                         });
 
+                        it('calls back when a running animation is cancelled', function () {
+                            var callback = jasmine.createSpy('onComplete');
+                            var animHandle = callMethod({
+                                onComplete: callback
+                            });
+                            expect(callback).not.toHaveBeenCalled();
+                            animationDevice.stopAnimation(animHandle);
+                            expect(callback).toHaveBeenCalled();
+                        });
+
                         describe('when animating', function () {
-                            function simulateTransitionEnd () {
-                                var transitionEndEvent = new CustomEvent('transitionend');
-                                element.dispatchEvent(transitionEndEvent);
+                            function simulateTransitionEnd (target) {
+                                target = target || element;
+                                var transitionEndEvent = new CustomEvent('transitionend', {
+                                    bubbles: true
+                                });
+                                target.dispatchEvent(transitionEndEvent);
                             }
 
                             var callback;
@@ -192,6 +205,13 @@ require(
                                 expect(callback).not.toHaveBeenCalled();
                                 simulateTransitionEnd();
                                 expect(callback).toHaveBeenCalled();
+                            });
+
+                            it('does not call back when a child element\'s transition ends', function () {
+                                var childEl = document.createElement('div');
+                                element.appendChild(childEl);
+                                simulateTransitionEnd(childEl);
+                                expect(callback).not.toHaveBeenCalled();
                             });
 
                             it('will not call back more than once', function () {
