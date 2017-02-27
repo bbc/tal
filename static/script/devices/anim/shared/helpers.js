@@ -13,7 +13,8 @@ define(
             el.style.setProperty(prop, val);
             if (prefixed) {
                 for (var i = 0, len = VENDOR_PREFIXES.length; i < len; i++) {
-                    el.style.setProperty(VENDOR_PREFIXES[i] + prop, val);
+                    var prefix = VENDOR_PREFIXES[i];
+                    el.style.setProperty(prefix + prop, val.replace('transform', prefix + 'transform'));
                 }
             }
         }
