@@ -15,21 +15,23 @@ Read more about how the framework handles animation on the general [Animation pa
 Use this modifier by:
 
 1. [Configuring your device](../overview/device-configuration.html) to use the `antie/devices/anim/css3transform` animation modifier.
-2. [Adding CSS Transitions](#configuring-css-transitions) to your application's stylesheets.
+2. [Reviewing the suggested CSS tweaks](#suggestions-for-performance) for your application.
 
 ## Caveats
 
 As the value of this animation modifier is still being proven, the following caveats apply. Some of these may change in the future as the modifier improves.
 
-* You must [specify transitions in CSS yourself](#configuring-css-transitions), for the reasons outlined in [Rationale](#rationale). If you will also be using the other animation modifiers, this means duplicating details such as animation duration and easing between code and CSS. This may change in the future, allowing all animation options to be specified in code, in line with the other animation modifiers.
 * Multiple animation operations applied to the same widget in quick succession are not queued or merged; the last one simply "wins". This should not be problematic if you are only animating [TAL's built-in Carousels](carousel.html), as these cancel the previous animation before triggering a new one, but it may cause trouble if you're performing custom animations.
-* Elements being hidden via `hideElement()` are hidden without animation and the completion callback is called immediately. This is to work around a bug where our application is calling `hideElement()` then `showElement()` on the same element in quick succession.
+* The only widget properties that can be animated are:
+  * opacity (via `showElement()`, `hideElement()` and `tweenElementStyle()`)
+  * left, top (via `scrollElementTo()` and `moveElementTo()`, implemented using CSS `transform` operations)
+  * width, height (via `tweenElementStyle()`)
 
 ## Rationale
 
 The existing animation modifiers - _styletopleft_ and _css3_ - are quite heavyweight in terms of JavaScript that must be executed for every animation operation. This can lead to poor animation performance on devices that have weak CPU capabilities but relatively strong graphics hardware.
 
-By contrast, this animation modifier is intended to be lightweight in terms of the code it will execute, depending more heavily on efficient CSS transforms. This means [there are some caveats to its use](#caveats).
+By contrast, this animation modifier is intended to be lightweight in terms of the code it will execute, depending more heavily on efficient CSS transitions. This means [there are some caveats to its use](#caveats).
 
 This modifier is particularly strong when it comes to moving widgets around the screen. The other animation modifiers achieve this by manipulating the `top` and `left` properties of the underlying DOM element, which results in Paint operations by the browser. This modifier achieves smoother animation by using CSS Transforms with the `translate3d()` function. Compatible devices are able to promote the element being animated to a separate layer and accelerate its movement using the GPU, resulting in improved performance. This is especially relevant when scrolling TAL's [Carousel widget](carousel.html).
 
@@ -39,67 +41,18 @@ Widget resize and opacity operations also benefit from lighter-weight JavaScript
 
 When an animation is requested using one of the [framework's animation methods](animation.html), the following process is followed:
 
-* The `animate` class is added to the element being animated, in order to enable the [specified CSS transitions](#configuring-css-transitions).
+* Only if required: the initial style properties (e.g. opacity) are set on the DOM element and a redraw is forced, to ensure the animation starts from the correct point.
+* The CSS `transition` property is set on the underlying DOM element, specifying duration and easing properties for the properties being changed.
 * Appropriate style properties are set on the element to move it to its final state: the `transform` property utilising `translate3d()` for moving position, and `width`, `height` or `opacity` properties for size and opacity changes.
 * The framework listens for the `transitionend` DOM event (and vendor-specific equivalents) to signal the end of the animation, and when it arrives:
-  * Removes the `animate` class. This ensures that subsequent changes are not animated by accident.
+  * Removes the CSS `transition` property. This ensures that subsequent changes are not animated by accident.
   * For position changes only: At the end of the transition, the element is moved to its final position via `top` or `left` properties, and the `transform` is reset. This ensures that other elements flow correctly with respect to the element being moved.
-  * Note that, if no animation occurs because the transition has not been configured in CSS, no `transitionend` event will fire and these cleanup steps will not happen. You should therefore ensure that all elements you expect to be animated have CSS transitions configured.
 
-## Configuring CSS Transitions
-
-In order to minimise the number of style properties set by JavaScript, this animation modifier relies on the `transition` properties for the animation - duration, easing and the properties that they apply to - to be set outside of TAL, using stylesheets loaded as part of your application.
-
-The `transition` properties must be set in a selector including the `animate` class, which the code in this animation modifier will add to indicate an animation is required. This avoids transitions being applied where animation is supposed to be skipped, or on devices configured to use one of the other animation modifiers.
-
-#### Vendor prefixes
-
-Vendor-prefixed versions of the `transition` property may be necessary depending on the browser family used on your target devices. You can make this easier by using a [CSS autoprefixer](https://css-tricks.com/autoprefixer/) or a preprocessor such as [Sass](http://sass-lang.com/) to create macros/mixins.
-
-The set of vendor prefixes you may want to include, in addition to the base `transition` property, is:
-
-* `-webkit-transition` (WebKit browsers)
-* `-moz-transition` (Mozilla/Gecko browsers)
-* `-o-transition` (Opera browsers)
-* `-ms-transition` (Microsoft browsers, e.g. Xbox One)
-
-For the sake of brevity, the examples below only include the base property.
-
-#### Sample carousel transition
-
-Here is some example CSS for controlling the transition on a carousel:
-
-```css
-.tertiaryContentComponent__widgetStrip.animate {
-  transition: transform 500ms cubic-bezier(0.39, 0.575, 0.565, 1); 
-}
-```
-
-*Tip:* The mapping between the easing strings used in TAL (e.g. "easeInOutQuart") and their CSS expressions [can be found in the source code](https://github.com/fmtvp/tal/blob/master/static/script/devices/anim/css3/easinglookup.js). For example, this one is "easeOutSine".
-
-#### Sample opacity transition
-
-And for allowing all TAL Components to fade in with their default timing:
-
-```css
-.widget.component.animate {
-  transition: opacity 840ms linear;
-}
-```
-
-#### Sample expansion transition
-
-And for allowing a TAL widget to be resized smoothly using `tweenElementStyle()`:
-
-```css
-.centrallyExpandingContentItem.animate {
-  transition: width 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95), height 600ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-}
-```
+For the `transition` and `transform` CSS properties, the framework sets [vendor-prefixed versions](#vendor-prefixes) (such as `-webkit-transition` and `-webkit-transform`) in addition to the base, unprefixed property. This should ensure the widest possible browser compatibility.
 
 ## Suggestions for performance
 
-Some CSS tweaks have been found to offer significant performance improvements.
+Some CSS tweaks have been found to offer significant performance improvements. You may want to set these in your application's stylesheet so that they are present from the moment your application loads.
 
 In the examples below, the `transform` and `backface-visibility` properties both have [vendor prefixed](#vendor-prefixes) equivalents.
 
@@ -137,3 +90,14 @@ It is possible to set the `will-change` CSS property to give the browser a hint 
 	will-change: width, height;
 }
 ```
+
+## Vendor prefixes
+
+The vendor prefixes that can be applied to `transition`, `transform` and `backface-visibility` are:
+
+* `-webkit-` (WebKit browsers)
+* `-moz-` (Mozilla/Gecko browsers)
+* `-o-` (Opera browsers)
+* `-ms-` (Microsoft browsers, e.g. Xbox One)
+
+For instance, the Mozilla vendor-prefixed version of `transform` is `-moz-transform`. TAL sets the various prefixes automatically when specifying `transition` and `transform` properties as a result of the various animation methods being called, but you will need to set them yourself when following the [performance suggestions](#suggestions-for-performance) above.
