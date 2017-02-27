@@ -106,8 +106,8 @@ define(
              * Shows current channel by setting broadcast source to full screen
              * @override
              */
-            showCurrentChannel: function () {
-                this._setBroadcastToFullScreen();
+            showCurrentChannel: function (callback) {
+                this._setBroadcastToFullScreen(callback);
             },
 
             /**
@@ -178,12 +178,15 @@ define(
              * @param width
              * @param height
              */
-            setPosition: function (top, left, width, height) {
+            setPosition: function (top, left, width, height, callback) {
                 var self = this;
-
+                
                 tizen.tvwindow.show(
                     function () {
                         self.setState(BaseTvSource.STATE.PRESENTING);
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     },
                     this.nop,
                     [left, top, width, height],
@@ -210,17 +213,20 @@ define(
             setChannelByName: function (params) {
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
+                
+                var self = this;
 
                 try {
                     var currentChannelName = this.getCurrentChannelName();
                     if (currentChannelName === params.channelName) {
-                        this.showCurrentChannel();
-                        params.onSuccess();
-                    } else {
-                        this._tuneToChannelByName({
-                            name: params.channelName,
-                            onError: params.onError,
-                            onSuccess: params.onSuccess
+                        this.showCurrentChannel(params.onSuccess);
+                    } else {    
+                        this.showCurrentChannel(function() {
+                            self._tuneToChannelByName({
+                                name: params.channelName,
+                                onError: params.onError,
+                                onSuccess: params.onSuccess
+                            });
                         });
                     }
                 } catch (error) {
@@ -231,11 +237,11 @@ define(
                 }
             },
 
-            _setBroadcastToFullScreen: function () {
-                this.setPosition(0, 0, window.screen.width, window.screen.height);
+            _setBroadcastToFullScreen: function (callback) {
+                this.setPosition(0, 0, window.screen.width, window.screen.height, callback);
             },
 
-            _tuneToChannelByName: function (params) {
+            _tuneToChannelByName: function (params) {                
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
 
