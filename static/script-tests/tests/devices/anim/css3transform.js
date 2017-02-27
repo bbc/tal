@@ -120,7 +120,7 @@ require(
                             options.duration = duration;
                             options.easing = easing;
 
-                            animationDevice[method.name](options);
+                            return animationDevice[method.name](options);
                         }
 
                         it('immediately sets target properties when animation is being skipped (via options)', function () {
@@ -145,6 +145,16 @@ require(
                                 skipAnim: true,
                                 onComplete: callback
                             });
+                            expect(callback).toHaveBeenCalled();
+                        });
+
+                        it('calls back when a running animation is cancelled', function () {
+                            var callback = jasmine.createSpy('onComplete');
+                            var animHandle = callMethod({
+                                onComplete: callback
+                            });
+                            expect(callback).not.toHaveBeenCalled();
+                            animationDevice.stopAnimation(animHandle);
                             expect(callback).toHaveBeenCalled();
                         });
 

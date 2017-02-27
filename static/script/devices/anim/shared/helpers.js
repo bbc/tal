@@ -36,7 +36,7 @@ define(
 
         function registerTransitionEndEvent (el, callback) {
             var onComplete = function (evt) {
-                if (evt.target === el) {
+                if (!evt || evt.target === el) {
                     removeTransitionEvent(el, onComplete);
                     callback();
                 }
