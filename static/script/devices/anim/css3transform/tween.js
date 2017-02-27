@@ -21,7 +21,7 @@ define(
                     element.offsetHeight;
                 }
 
-                function filterDimensions (dimensions) {
+                function filterDimensionKeys (dimensions) {
                     dimensions = dimensions || {};
                     return Object.keys(dimensions).filter(function (dimension) {
                         return whitelistWithDefaultUnits[dimension] !== undefined;
@@ -30,13 +30,13 @@ define(
 
                 function setDimensions (dimensions, units) {
                     units = units || {};
-                    var filteredDimensions = filterDimensions(dimensions);
+                    var filteredDimensionKeys = filterDimensionKeys(dimensions);
 
-                    filteredDimensions.forEach(function (key) {
-                        var unit = units[key] || whitelistWithDefaultUnits[key] || '';
+                    filteredDimensionKeys.forEach(function (key) {
+                        var unit = units[key] || whitelistWithDefaultUnits[key];
                         Helpers.setStyle(el, key, dimensions[key] + unit);
                     });
-                    return filteredDimensions.length > 0;
+                    return filteredDimensionKeys.length > 0;
                 }
 
                 function onComplete () {
@@ -57,7 +57,7 @@ define(
                 }
 
                 onTransitionEnd = Helpers.registerTransitionEndEvent(el, onComplete);
-                Transition.set(el, filterDimensions(options.to), options);
+                Transition.set(el, filterDimensionKeys(options.to), options);
                 setDimensions(options.to, options.units);
             }
 
