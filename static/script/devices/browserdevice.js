@@ -79,7 +79,7 @@ define(
                 return el;
             },
             /**
-             * Creates a button (an element that can be selected by the user to perform an action) in the device's user-agent.
+             * CreatesetElementContent a button (an element that can be selected by the user to perform an action) in the device's user-agent.
              * @param {String} [id] The id of the element to create.
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A button within the device's user-agent.
@@ -386,14 +386,14 @@ define(
              * @param {Element} el The element of which to change the content.
              * @param {String} content The new content for the element.
              */
-            setElementContent: function(el, content) {
+            setElementContent: function(el, content, enableHTML) {
                 if (content === '') {
                     this.clearElement(el);
                     return;
                 }
 
                 var sanitiser = new Sanitiser(content);
-                sanitiser.setElementContent(el);
+                sanitiser.setElementContent(el, enableHTML);
             },
             /**
              * Clones an element.

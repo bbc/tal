@@ -43,7 +43,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function(device, enableHTML) {
                 // TODO: is there a more efficient way of doing this?
                 var s;
                 if(this._width && this._maxLines && this._text && (this._truncationMode === Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
@@ -83,7 +83,7 @@ define(
                 if(!this.outputElement) {
                     this.outputElement = device.createLabel(this.id, this.getClasses(), s);
                 } else {
-                    device.setElementContent(this.outputElement, s);
+                    device.setElementContent(this.outputElement, s, enableHTML);
                 }
 
                 return this.outputElement;
@@ -96,6 +96,18 @@ define(
                 this._text = text;
                 if(this.outputElement) {
                     this.render(this.getCurrentApplication().getDevice());
+                }
+            },
+            /**
+             * Sets the text displayed by this label. Supports HTML content.
+             * This function is highly vulnerable to code injection.
+             * @deprecated
+             * @param {String} text The new text to be displayed.
+             */
+            unsafeSetHTMLText: function(text) {
+                this._text = text;
+                if(this.outputElement) {
+                    this.render(this.getCurrentApplication().getDevice(), true);
                 }
             },
             /**
