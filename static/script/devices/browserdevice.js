@@ -73,9 +73,9 @@ define(
              * @param {String} [text] The text within the label.
              * @returns A label within the device's user-agent.
              */
-            createLabel: function(id, classNames, text) {
+            createLabel: function(id, classNames, text, enableHTML) {
                 var el = this._createElement('span', id, classNames);
-                this.setElementContent(el, text);
+                this.setElementContent(el, text, enableHTML);
                 return el;
             },
             /**

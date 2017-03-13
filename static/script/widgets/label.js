@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, text) {
+            init: function(id, text, enableHTML) {
                 // The current API states that if only one parameter is passed to
                 // use that value as the text and auto generate an internal id
                 if(arguments.length === 1) {
@@ -35,6 +35,7 @@ define(
                 }
                 this._truncationMode = Label.TRUNCATION_MODE_NONE;
                 this._maxLines = 0;
+                this._enableHTML = enableHTML || false;
                 this._width = 0;
                 this.addClass('label');
             },
@@ -43,7 +44,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device, enableHTML) {
+            render: function(device) {
                 // TODO: is there a more efficient way of doing this?
                 var s;
                 if(this._width && this._maxLines && this._text && (this._truncationMode === Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
@@ -81,9 +82,9 @@ define(
                 }
 
                 if(!this.outputElement) {
-                    this.outputElement = device.createLabel(this.id, this.getClasses(), s);
+                    this.outputElement = device.createLabel(this.id, this.getClasses(), s, this._enableHTML);
                 } else {
-                    device.setElementContent(this.outputElement, s, enableHTML);
+                    device.setElementContent(this.outputElement, s, this._enableHTML);
                 }
 
                 return this.outputElement;
@@ -96,18 +97,6 @@ define(
                 this._text = text;
                 if(this.outputElement) {
                     this.render(this.getCurrentApplication().getDevice());
-                }
-            },
-            /**
-             * Sets the text displayed by this label. Supports HTML content.
-             * This function is highly vulnerable to code injection.
-             * @deprecated
-             * @param {String} text The new text to be displayed.
-             */
-            unsafeSetHTMLText: function(text) {
-                this._text = text;
-                if(this.outputElement) {
-                    this.render(this.getCurrentApplication().getDevice(), true);
                 }
             },
             /**
