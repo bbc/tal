@@ -26,8 +26,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id) {
-                this._super(id, '');
+            init: function(id, enableHTML) {
+                this._super(id, '', enableHTML);
                 this.addClass('textpager');
                 this._page = 1;
             },
@@ -36,7 +36,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device, enableHTML) {
+            render: function(device) {
                 var s = this._text;
 
                 if(!this.outputElement) {
@@ -44,7 +44,7 @@ define(
                     this.innerElement = device.createContainer(this.id + '_inner');
                     this.outputElement.appendChild(this.innerElement);
                 }
-                device.setElementContent(this.innerElement, s, enableHTML);
+                device.setElementContent(this.innerElement, s, this._enableHTML);
 
                 return this.outputElement;
             },
@@ -91,22 +91,6 @@ define(
             },
 
             setText: function(text) {
-                this._super(text);
-
-                // Remove the bottom padding to allow the page count to be
-                // recalculated.
-                if(this.innerElement) {
-                    this.innerElement.style.paddingBottom = 0;
-                }
-                this._paddingFudge = false;
-            },
-            /**
-             * Sets the text displayed by this label. Supports HTML content.
-             * This function is highly vulnerable to code injection.
-             * @deprecated
-             * @param {String} text The new text to be displayed.
-             */
-            unsafeSetHTMLText: function(text) {
                 this._super(text);
 
                 // Remove the bottom padding to allow the page count to be
