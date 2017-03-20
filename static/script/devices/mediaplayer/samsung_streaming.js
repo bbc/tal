@@ -35,11 +35,11 @@ require.def(
         "use strict";
 
         /**
-         * Main MediaPlayer implementation for Samsung devices implementing the Maple API.
+         * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Maple API.
          * Use this device modifier if a device implements the Samsung Maple media playback standard.
          * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
          * Those objects must expose an API in accordance with the Samsung Maple media specification.
-         * @name antie.devices.mediaplayer.SamsungMaple
+         * @name antie.devices.mediaplayer.SamsungStreaming
          * @class
          * @extends antie.devices.mediaplayer.MediaPlayer
          */
@@ -66,14 +66,22 @@ require.def(
                 SUBTITLE : 19,
                 CUSTOM : 20
             },
+            PlayerEmps: {
+                Player : 0,
+                StreamingPlayer : 1
+            },
 
             init: function() {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
+                this._currentPlayer = undefined;
                 this._deferSeekingTo = null;
+                this._nextSeekingTo = null;
                 this._postBufferingState = null;
                 this._tryingToPause = false;
                 this._currentTimeKnown = false;
+                this._updatingTime = false;
+                this._lastWindowRanged = false;
 
                 try {
                     this._registerSamsungPlugins();
@@ -95,14 +103,16 @@ require.def(
                     this._registerEventHandlers();
                     this._toStopped();
 
-
-                    // this.logger.info('setSource(): ' + mediaType);
-
-                    if (mediaType === 'live-video') {
-                    //    this.logger.info("recognised live video, appending URL");
-                        this._source += "|HLSSLIDING|COMPONENT=HLS";
+                    if (this._isHlsMimeType()) {
+                        if (this._isLiveMedia()) {
+                            this._source += "|HLSSLIDING|COMPONENT=HLS";
+                            this._openStreamingPlayerPlugin();
+                        } else {
+                            this._source += "|COMPONENT=HLS";
+                            this._openPlayerPlugin();
+                        }
                     } else {
-                        this._source += "|COMPONENT=HLS";       //<TODO> is this correct for VOD HLS?
+                        this._openPlayerPlugin();
                     }
 
                     this._initPlayer(this._source);
@@ -116,8 +126,6 @@ require.def(
                 var self = this;
                 this._playerPlugin = document.getElementById('sefPlayer');
 
-                this._playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer");
-
                 this.tvmwPlugin = document.getElementById('pluginObjectTVMW');
 
                 this.originalSource = this.tvmwPlugin.GetSource();
@@ -126,27 +134,34 @@ require.def(
                     self.tvmwPlugin.SetSource(self.originalSource);
                 }, false);
             },
+            
+            _openPlayerPlugin : function() {
+                if (this._currentPlayer !== undefined) {
+                    this._playerPlugin.Close();
+                }
+                this._playerPlugin.Open("Player", "1.010", "Player");
+                this._currentPlayer = this.PlayerEmps.Player;
+            },
+            
+            _openStreamingPlayerPlugin : function() {
+                if (this._currentPlayer !== undefined) {
+                    this._playerPlugin.Close();
+                }
+                this._playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer");
+                this._currentPlayer = this.PlayerEmps.StreamingPlayer;
+            },
+            
+            _closePlugin: function() {
+                this._playerPlugin.Close();
+                this._currentPlayer = undefined;
+            },
 
             _initPlayer: function(source) {
-                this.logger.info('Calling this.playerPlugin.Execute("InitPlayer", ' + this._source + ')');
                 var result = this._playerPlugin.Execute("InitPlayer", source);
-                if (result === -1) {
-                    this._toError('STOP');
-                    return;
+                
+                if (result !== 1) {
+                    this._toError("Failed to initialize video: " + this._source);
                 }
-                this.logger.info('InitPlayer responded with ' + result);
-
-                this.logger.info('Calling this.playerPlugin.Execute("SetTotalBufferSize", ' +  32 *1024*1024 + ')');
-                result = this._playerPlugin.Execute("SetTotalBufferSize", 32 *1024*1024);
-                this.logger.info('SetTotalBufferSize responded with ' + result);
-
-                this.logger.info('Calling this.playerPlugin.Execute("SetInitialBufferSize", ' +  32 *1024*1024 + ')');
-                result = this._playerPlugin.Execute("SetInitialBufferSize", 32 *1024*1024);
-                this.logger.info('SetInitialBufferSize responded with ' + result);
-
-                this.logger.info('Calling this.playerPlugin.Execute("SetPendingBuffer", ' +  32 *1024*1024 + ')');
-                result = this._playerPlugin.Execute("SetPendingBuffer", 32 *1024*1024);
-                this.logger.info('InitPlayer responded with ' + result);
             },
 
             /**
@@ -166,9 +181,7 @@ require.def(
                         break;
 
                     case MediaPlayer.STATE.PAUSED:
-                        this.logger.info('calling this._playerPlugin.Execute("Resume")');
                         var result = this._playerPlugin.Execute("Resume");
-                        this.logger.info('Resume responded with ' + result);
 
                         this._toPlaying();
                         break;
@@ -184,11 +197,12 @@ require.def(
             */
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
-
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;             
+                
                 switch (this.getState()) {
                     case MediaPlayer.STATE.BUFFERING:
-                        this._deferSeekingTo = seekingTo;
+//                        this._deferSeekingTo = seekingTo;
+                        this._nextSeekingTo = seekingTo;
                         break;
 
                     case MediaPlayer.STATE.PLAYING:
@@ -208,30 +222,18 @@ require.def(
                         if (!this._currentTimeKnown) {
                             this._deferSeekingTo = seekingTo;
                         } else if (this._isNearToCurrentTime(seekingTo)) {
-                            this.logger.info('Calling this._playerPlugin.Execute("Resume")');
                             var result = this._playerPlugin.Execute("Resume");
-                            this.logger.info('"Resume" responded with ' + result);
                             this._toPlaying();
                         } else {
                             this._seekToWithFailureStateTransition(seekingTo);
-                            this.logger.info('Calling this._playerPlugin.Execute("Resume")');
                             var result = this._playerPlugin.Execute("Resume");
-                            this.logger.info('"Resume" responded with ' + result);
                         }
                         break;
 
                     case MediaPlayer.STATE.COMPLETE:
-                        this.logger.info('Calling this.playerPlugin.Execute("Stop");');
                         var result = this._playerPlugin.Execute("Stop");
-                        this.logger.info('"Stop" responded with ' + result);
-
-                        //this._setDisplayFullScreenForVideo();
-                        //this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
-
-                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback");');
+                        this._initPlayer(this._source);
                         var result = this._playerPlugin.Execute("StartPlayback", seekingTo);
-                        this.logger.info('"StartPlayback" responded with ' + result);
-
                         this._toBuffering();
                         break;
 
@@ -249,12 +251,7 @@ require.def(
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
                         this._toBuffering();
-                        //this._setDisplayFullScreenForVideo();
-                        //this._playerPlugin.Play(this._wrappedSource());
-                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback")');
                         var result = this._playerPlugin.Execute("StartPlayback");
-                        this.logger.info('"StartPlayback" responded with ' + result);
-
                         break;
 
                     default:
@@ -267,23 +264,19 @@ require.def(
              * @inheritDoc
              */
             beginPlaybackFrom: function(seconds) {
-                // this.logger.info('beginPlaybackFrom:'+seconds);
-
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
-                seekingTo = parseInt(Math.floor(seekingTo), 10);
-
-                this._targetSeekTime = seekingTo;
+                
+                //StartPlayback from live position 0 causes spoiler defect
+                if (seekingTo === 0 && this._isLiveMedia()) {
+                    seekingTo = this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                } else {
+                    seekingTo = parseInt(Math.floor(seekingTo), 10);
+                }
 
                 switch (this.getState()) {
                     case MediaPlayer.STATE.STOPPED:
-
-                        //this._setDisplayFullScreenForVideo();
-                        //this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
-
-                        this.logger.info('Calling this.playerPlugin.Execute("StartPlayback")');
                         var success = this._playerPlugin.Execute("StartPlayback", seekingTo);
-                        this.logger.info('"StartPlayback" responded with ' + success);
 
                         this._toBuffering();
                         break;
@@ -386,6 +379,16 @@ require.def(
             getSeekableRange: function () {
                 return this._range;
             },
+            
+            isLiveRangeOutdated: function () {
+                var time = Math.floor(this._currentTime);
+                if (time % 8 === 0 && !this._updatingTime && this._lastWindowRanged !== time) {
+                    this._lastWindowRanged = time;
+                    return true;
+                } else {
+                    return false;
+                }
+            },
 
             /**
              * @inheritDoc
@@ -415,6 +418,11 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 }
+                
+                if (!this._isInitialBufferingFinished() && this._nextSeekingTo !== null) {
+                    this._deferSeekingTo = this._nextSeekingTo;
+                    this._nextSeekingTo = null;
+                }
 
                 if (this._deferSeekingTo === null) {
                     if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -440,17 +448,13 @@ require.def(
             },
 
             _stopPlayer: function() {
-                this.logger.info('Calling this.playerPlugin.Execute("Stop")');
                 var result = this._playerPlugin.Execute("Stop");
-                this.logger.info('"Stop" responded with ' + result);
 
                 this._currentTimeKnown = false;
             },
 
             _tryPauseWithStateTransition: function() {
-                this.logger.info('Calling this.playerPlugin.Execute("Pause")');
                 var success = this._isSuccessCode(this._playerPlugin.Execute("Pause"));
-                this.logger.info('"Pause" responded with ' + success);
 
                 if (success) {
                     this._toPaused();
@@ -465,48 +469,50 @@ require.def(
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
             },
-
-            _onMetadata: function() {
-                this.logger.info('Calling this.playerPlugin.Execute("GetPlayingRange")');
-                var range = this._playerPlugin.Execute("GetPlayingRange").split('-');
-                this._range = {
-                    start: range[0],
-                    end: range[1]
-                };
-
-                this.logger.info('Current Duration ' + this._range.end * 1000 + 'ms');
-
-                // this.logger.info("_onMetadata range = {0, "  + this._range.end);
-                // this.logger.info("this._currentTime = " + this._currentTime);       //<TODO> so currentTime is currently in milliseconds relative to midnight! and not to hls window
-
-                if (this._waitingToPlayFrom()) {
-                    this._deferredPlayFrom();
+            
+            _updateRange: function () {
+                var self = this;
+                if (this._currentPlayer === this.PlayerEmps.StreamingPlayer) {
+                    var range = this._playerPlugin.Execute("GetPlayingRange").split('-');
+                    this._range = {
+                        start: Math.floor(range[0]),
+                        end: Math.floor(range[1])
+                    };
+                    //don't call range for the next 8 seconds
+                    this._updatingTime = true;
+                    setTimeout(function () {
+                        self._updatingTime = false;
+                    }, self.RANGE_UPDATE_TOLERANCE * 1000);
+                } else if (this._currentPlayer === this.PlayerEmps.Player) {
+                    var duration = this._playerPlugin.Execute("GetDuration")/1000;
+                    this._range = {
+                        start: 0,
+                        end: duration
+                    }
                 }
-
-                this._onFinishedBuffering();
-            },
-
-            _waitingToPlayFrom: function() {
-                return this._targetSeekTime !== undefined;
-            },
-
-            _deferredPlayFrom: function() {
-                this._seekTo(this._targetSeekTime);
-
-                if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
-                    this._tryPauseWithStateTransition();
-                }
-                this._targetSeekTime = undefined;
             },
 
 
             _onCurrentTime: function(timeInMillis) {
 
-                //this.logger.info("_onCurrentTime "  + timeInMillis);
+                //this.logger.info("_onCurrentTime: "  + timeInMillis);
 
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
                 this._currentTimeKnown = true;
+
+                //[optimisation] do not call player API periodically in HLS live
+                // - calculate range manually when possible
+                // - do not calculate range if player API was called less than RANGE_UPDATE_TOLERANCE seconds ago
+                if (this._isLiveMedia() && this.isLiveRangeOutdated()) {
+                    this._range.start += 8;
+                    this._range.end += 8;
+                }
+                
+                if (this._nextSeekingTo !== null) {
+                    this._deferSeekingTo = this._nextSeekingTo;
+                    this._nextSeekingTo = null;
+                }
 
                 if (this._deferSeekingTo !== null) {
                     this._deferredSeek();
@@ -533,11 +539,30 @@ require.def(
             },
 
             _getClampedTimeForPlayFrom: function (seconds) {
+                if (this._currentPlayer === this.PlayerEmps.StreamingPlayer && !this._updatingTime) {
+                    this._updateRange();
+                }
                 var clampedTime = this._getClampedTime(seconds);
                 if (clampedTime !== seconds) {
                     RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds+ " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
                 }
                 return clampedTime;
+            },
+            
+            _getClampOffsetFromConfig: function() {
+                var clampOffsetFromEndOfRange;
+                var config = RuntimeContext.getDevice().getConfig();
+                if (config && config.streaming && config.streaming.overrides) {
+                    clampOffsetFromEndOfRange = config.streaming.overrides.clampOffsetFromEndOfRange;
+                }
+
+                if(clampOffsetFromEndOfRange !== undefined) {
+                    return clampOffsetFromEndOfRange;
+                } else if (this._isLiveMedia()) {
+                    return this.CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE;
+                } else {
+                    return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                }
             },
 
             _registerEventHandlers: function() {
@@ -545,24 +570,29 @@ require.def(
                 this._playerPlugin.OnEvent = function(eventType, param1, param2) {
 
                     if (eventType !== self.PlayerEventCodes.CURRENT_PLAYBACK_TIME) {
-                        self.logger.info("Received event " + eventType + ' ' + param1);
+                        //self.logger.info("Received event " + eventType + ' ' + param1);
                     }
 
                     switch (eventType) {
 
                         case self.PlayerEventCodes.STREAM_INFO_READY:
-                            self._onMetadata();
+                            self._updateRange()
                             break;
 
                         case self.PlayerEventCodes.CURRENT_PLAYBACK_TIME:
-                            self._onCurrentTime(param1);
-                            //<TODO> use only in LIVE scenario
-                            if (Math.floor(param1/1000) % 8 === 0 && self._state !== MediaPlayer.STATE.STOPPED) {
-                                self._onMetadata();
+                            if (self._range && self._isLiveMedia()) {
+                                var seconds = Math.floor(param1/1000);
+                                //jump to previous current time if PTS out of range occurs
+                                if (seconds > self._range.end + self.RANGE_END_TOLERANCE) {
+                                    self.playFrom(self._currentTime);
+                                    break;
+                                //call GetPlayingRange() on SEF emp if current time is out of range
+                                } else if (!self._isCurrentTimeInRangeTolerance(seconds)) {
+                                    self._updateRange();
+                                }
                             }
+                            self._onCurrentTime(param1);
                             break;
-
-                        // All these below doesn't seem to be implemented for HLS? I certainly have not seen any of these being logged....
 
                         case self.PlayerEventCodes.BUFFERING_START:
                         case self.PlayerEventCodes.BUFFERING_PROGRESS:
@@ -570,27 +600,39 @@ require.def(
                             break;
 
                         case self.PlayerEventCodes.BUFFERING_COMPLETE:
-                            self._onFinishedBuffering();
+                            //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
+                            //ignore BUFFERING_COMPLETE if player is already in COMPLETE state
+                            if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                                self._onFinishedBuffering();
+                            }
                             break;
 
                         case self.PlayerEventCodes.RENDERING_COMPLETE:
-                            self._onEndOfMedia();
+                            //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
+                            //ignore RENDERING_COMPLETE if player is already in COMPLETE state
+                            if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                                self._onEndOfMedia();
+                            }
                             break;
 
                         case self.PlayerEventCodes.CONNECTION_FAILED:
-                            self._onDeviceError("Connection failed");
+                            self._onDeviceError("Media element emitted OnConnectionFailed");
+                            break;
+                            
+                        case self.PlayerEventCodes.NETWORK_DISCONNECTED:
+                            self._onDeviceError("Media element emitted OnNetworkDisconnected");
                             break;
 
                         case self.PlayerEventCodes.AUTHENTICATION_FAILED:
-                            self._onDeviceError("Authentication failed");
+                            self._onDeviceError("Media element emitted OnAuthenticationFailed");
                             break;
 
                         case self.PlayerEventCodes.RENDER_ERROR:
-                            self._onDeviceError("Render failed");
+                            self._onDeviceError("Media element emitted OnRenderError");
                             break;
 
                         case self.PlayerEventCodes.STREAM_NOT_FOUND:
-                            self._onDeviceError("Stream not found");
+                            self._onDeviceError("Media element emitted OnStreamNotFound");
                             break;
                     }
                 };
@@ -607,29 +649,33 @@ require.def(
             },
 
             _unregisterEventHandlers: function() {
+                this._playerPlugin.OnEvent = undefined;
                 window.removeEventListener('hide', this._onWindowHide, false);
                 window.removeEventListener('unload', this._onWindowHide, false);
             },
 
             _wipe: function () {
                 this._stopPlayer();
+                this._closePlugin();
+                this._unregisterEventHandlers();
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
                 this._currentTime = undefined;
                 this._range = undefined;
                 this._deferSeekingTo = null;
+                this._nextSeekingTo = null;
                 this._tryingToPause = false;
                 this._currentTimeKnown = false;
-                this._unregisterEventHandlers();
-                this._targetSeekTime = undefined;
+                this._updatingTime = false;
+                this._lastWindowRanged = false;
             },
 
             _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
                 var success = this._jump(offset);
 
-                if (success) {
+                if (success === 1) {
                     this._currentTime = seconds;
                 }
 
@@ -638,23 +684,17 @@ require.def(
 
             _seekToWithFailureStateTransition: function(seconds) {
                 var success = this._seekTo(seconds);
-                if (!success) {
+                if (success !== 1) {
                     this._toPlaying();
                 }
             },
 
             _jump: function (offsetSeconds) {
-                offsetSeconds = Math.floor(offsetSeconds);
-
                 if (offsetSeconds > 0) {
-                    this.logger.info('Calling this.playerPlugin.Execute("JumpForward", ' + offsetSeconds + ')');
                     var result = this._playerPlugin.Execute("JumpForward", offsetSeconds);
-                    this.logger.info('"JumpForward" responded with ' + result);
                     return result;
                 } else {
-                    this.logger.info('Calling this.playerPlugin.Execute("JumpBackward", ' + Math.abs(offsetSeconds) + ')');
                     var result = this._playerPlugin.Execute("JumpBackward", Math.abs(offsetSeconds));
-                    this.logger.info('"JumpBackward" responded with ' + result);
                     return result;
                 }
             },
@@ -663,10 +703,28 @@ require.def(
                 var mime = this._mimeType.toLowerCase();
                 return mime === "application/vnd.apple.mpegurl" || mime === "application/x-mpegurl";
             },
+            
+            _isCurrentTimeInRangeTolerance: function (seconds) {
+                if (seconds > this._range.end + this.RANGE_UPDATE_TOLERANCE) {
+                    return false;
+                } else if (seconds < this._range.start - this.RANGE_UPDATE_TOLERANCE) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            
+            _isInitialBufferingFinished: function () {
+                if (this._currentTime === undefined || this._currentTime === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
 
             _reportError: function(errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
-                this._emitEvent(MediaPlayer.EVENT.ERROR);
+                this._emitEvent(MediaPlayer.EVENT.ERROR, {'errorMessage': errorMessage});
             },
 
             _toStopped: function () {
@@ -708,15 +766,6 @@ require.def(
                 throw "ApiError: " + errorMessage;
             },
 
-            _setDisplayFullScreenForVideo: function() {
-                if (this._type === MediaPlayer.TYPE.VIDEO) {
-                    var dimensions = RuntimeContext.getDevice().getScreenSize();
-                    this.logger.info('Calling this.playerPlugin.SetDisplayArea');
-                    var result = this._playerPlugin.SetDisplayArea(0, 0, dimensions.width, dimensions.height);
-                    this.logger.info('"SetDisplayArea" responded with ' + result);
-                }
-            },
-
             _isSuccessCode: function(code) {
                 var samsung2010ErrorCode = -1;
                 return code && code !== samsung2010ErrorCode;
@@ -724,10 +773,13 @@ require.def(
 
             /**
              * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
-             * On a sample device (Samsung FoxP 2013), seeking by two seconds worked 90% of the time, but seeking
-             * by 2.5 seconds was always seen to work.
+             * Jumping to time lower than 3s causes error in PlayFrom60 on HLS live - player jumps to previous chunk.
+             * Value set to 4s to be ahead of potential wrong player jumps.
              */
-            CURRENT_TIME_TOLERANCE: 2.5
+            CURRENT_TIME_TOLERANCE: 4,
+            CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE: 10,
+            RANGE_UPDATE_TOLERANCE: 8,
+            RANGE_END_TOLERANCE: 100
         });
 
         var instance = new Player();
