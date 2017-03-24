@@ -1,0 +1,668 @@
+/**
+ * @fileOverview Requirejs module containing device modifier for media playback on Samsung devices.
+ * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ */
+
+define(
+    'antie/devices/mediaplayer/samsung_maple_ls',
+    [
+        'antie/devices/device',
+        "antie/devices/mediaplayer/mediaplayer",
+        'antie/devices/mediaplayer/samsung_maple',
+        'antie/runtimecontext'
+    ],
+    function(Device, MediaPlayer, SamsungMaple, RuntimeContext) {
+        'use strict';
+
+        /**
+         * Main MediaPlayer implementation for Samsung devices implementing the Maple API.
+         * Use this device modifier if a device implements the Samsung Maple media playback standard.
+         * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
+         * Those objects must expose an API in accordance with the Samsung Maple media specification.
+         * @name antie.devices.mediaplayer.SamsungMapleLS
+         * @class
+         * @extends antie.devices.mediaplayer.SamsungMaple
+         */
+        var Player = SamsungMaple.extend({
+
+            init: function() {
+                this._super();
+                this._state = MediaPlayer.STATE.EMPTY;
+                this._playerPlugin = document.getElementById('playerPlugin');
+                this._deferSeekingTo = null;
+                this._postBufferingState = null;
+                this._tryingToPause = false;
+                this._currentTimeKnown = false;
+                this._lastWindowRanged = false;
+                this._updatingTime = false;
+            },
+
+
+            /**
+             * @inheritDoc
+             */
+            setSource: function (mediaType, url, mimeType) {
+                if (this.getState() === MediaPlayer.STATE.EMPTY) {
+                    this._type = mediaType;
+                    this._source = url;
+                    this._mimeType = mimeType;
+                    this._registerEventHandlers();
+                    this._toStopped();
+                } else {
+                    this._toError('Cannot set source unless in the \'' + MediaPlayer.STATE.EMPTY + '\' state');
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            resume : function () {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                case MediaPlayer.STATE.PLAYING:
+                    break;
+
+                case MediaPlayer.STATE.BUFFERING:
+                    if (this._tryingToPause) {
+                        this._tryingToPause = false;
+                        this._toPlaying();
+                    }
+                    break;
+
+                case MediaPlayer.STATE.PAUSED:
+                    this._playerPlugin.Resume();
+                    this._toPlaying();
+                    break;
+
+                default:
+                    this._toError('Cannot resume while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            playFrom: function (seconds) {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+
+                switch (this.getState()) {
+                case MediaPlayer.STATE.BUFFERING:
+                    this._deferSeekingTo = seekingTo;
+                    break;
+
+                case MediaPlayer.STATE.PLAYING:
+                    this._toBuffering();
+                    if (!this._currentTimeKnown) {
+                        this._deferSeekingTo = seekingTo;
+                    } else if (this._isNearToCurrentTime(seekingTo)) {
+                        this._toPlaying();
+                    } else {
+                        this._seekToWithFailureStateTransition(seekingTo);
+                    }
+                    break;
+
+
+                case MediaPlayer.STATE.PAUSED:
+                    this._toBuffering();
+                    if (!this._currentTimeKnown) {
+                        this._deferSeekingTo = seekingTo;
+                    } else if (this._isNearToCurrentTime(seekingTo)) {
+                        this._playerPlugin.Resume();
+                        this._toPlaying();
+                    } else {
+                        this._seekToWithFailureStateTransition(seekingTo);
+                        this._playerPlugin.Resume();
+                    }
+                    break;
+
+                case MediaPlayer.STATE.COMPLETE:
+                    this._playerPlugin.Stop();
+                    this._setDisplayFullScreenForVideo();
+                    this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
+                    this._toBuffering();
+                    break;
+
+                default:
+                    this._toError('Cannot playFrom while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            beginPlayback: function() {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                switch (this.getState()) {
+                case MediaPlayer.STATE.STOPPED:
+                    this._toBuffering();
+                    this._setDisplayFullScreenForVideo();
+                    this._playerPlugin.Play(this._wrappedSource());
+                    break;
+
+                default:
+                    this._toError('Cannot beginPlayback while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            beginPlaybackFrom: function(seconds) {
+                this._postBufferingState = MediaPlayer.STATE.PLAYING;
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+
+                switch (this.getState()) {
+                case MediaPlayer.STATE.STOPPED:
+                    this._setDisplayFullScreenForVideo();
+                    this._playerPlugin.ResumePlay(this._wrappedSource(), seekingTo);
+                    this._toBuffering();
+                    break;
+
+                default:
+                    this._toError('Cannot beginPlayback while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            pause: function () {
+                this._postBufferingState = MediaPlayer.STATE.PAUSED;
+                switch (this.getState()) {
+                case MediaPlayer.STATE.BUFFERING:
+                case MediaPlayer.STATE.PAUSED:
+                    break;
+
+                case MediaPlayer.STATE.PLAYING:
+                    this._tryPauseWithStateTransition();
+                    break;
+
+                default:
+                    this._toError('Cannot pause while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            stop: function () {
+                switch (this.getState()) {
+                case MediaPlayer.STATE.STOPPED:
+                    break;
+
+                case MediaPlayer.STATE.BUFFERING:
+                case MediaPlayer.STATE.PLAYING:
+                case MediaPlayer.STATE.PAUSED:
+                case MediaPlayer.STATE.COMPLETE:
+                    this._stopPlayer();
+                    this._toStopped();
+                    break;
+
+                default:
+                    this._toError('Cannot stop while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            reset: function () {
+                switch (this.getState()) {
+                case MediaPlayer.STATE.EMPTY:
+                    break;
+
+                case MediaPlayer.STATE.STOPPED:
+                case MediaPlayer.STATE.ERROR:
+                    this._toEmpty();
+                    break;
+
+                default:
+                    this._toError('Cannot reset while in the \'' + this.getState() + '\' state');
+                    break;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getSource: function () {
+                return this._source;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getMimeType: function () {
+                return this._mimeType;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getCurrentTime: function () {
+                if (this.getState() === MediaPlayer.STATE.STOPPED) {
+                    return undefined;
+                } else {
+                    return this._currentTime;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getSeekableRange: function() {
+                return this._range;
+            },
+            
+            isLiveRangeOutdated: function () {
+                var time = Math.floor(this._currentTime);
+                if (time % 8 === 0 && !this._updatingTime && this._lastWindowRanged !== time) {
+                    this._lastWindowRanged = time;
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+
+            /**
+             * @inheritDoc
+             */
+            _getMediaDuration: function() {
+                if (this._range) {
+                    return this._range.end;
+                }
+                return undefined;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getState: function () {
+                return this._state;
+            },
+
+            /**
+             * @inheritDoc
+             */
+            getPlayerElement: function() {
+                return this._playerPlugin;
+            },
+
+            _onFinishedBuffering: function() {
+                if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
+                    return;
+                }
+
+                if (this._deferSeekingTo === null) {
+                    if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
+                        this._tryPauseWithStateTransition();
+                    } else {
+                        this._toPlaying();
+                    }
+                }
+            },
+
+            _onDeviceError: function(message) {
+                this._reportError(message);
+            },
+
+            _onDeviceBuffering: function() {
+                if (this.getState() === MediaPlayer.STATE.PLAYING) {
+                    this._toBuffering();
+                }
+            },
+
+            _onEndOfMedia: function() {
+                this._toComplete();
+            },
+
+            _stopPlayer: function() {
+                this._playerPlugin.Stop();
+                this._currentTimeKnown = false;
+            },
+
+            _tryPauseWithStateTransition: function() {
+                var success = this._isSuccessCode(this._playerPlugin.Pause());
+                if (success) {
+                    this._toPaused();
+                }
+
+                this._tryingToPause = !success;
+            },
+
+            _onStatus: function() {
+                var state = this.getState();
+                if (state === MediaPlayer.STATE.PLAYING) {
+                    this._emitEvent(MediaPlayer.EVENT.STATUS);
+                }
+            },
+
+            _updateRange: function () {
+                var self = this;
+                if (this._isLiveMedia() && this._isHlsMimeType()) {
+                    var range = this._playerPlugin.GetLiveDuration().split('|');
+                    this._range = {
+                        start: Math.floor(range[0]),
+                        end: Math.floor(range[1])
+                    };
+                    //don't call range for the next 8 seconds
+                    this._updatingTime = true;
+                    setTimeout(function () {
+                        self._updatingTime = false;
+                    }, self.RANGE_UPDATE_TOLERANCE * 1000);
+                } else {
+                    var duration = this._playerPlugin.GetDuration()/1000;
+                    this._range = {
+                        start: 0,
+                        end: duration
+                    }
+                }
+            },
+
+            _onCurrentTime: function(timeInMillis) {
+                this._currentTime = timeInMillis / 1000;
+                this._onStatus();
+                this._currentTimeKnown = true;
+                
+                //[optimisation] do not call player API periodically in HLS live
+                // - calculate range manually when possible
+                // - do not calculate range if player API was called less than RANGE_UPDATE_TOLERANCE seconds ago
+                if (this.range && this._isLiveMedia() && this.isLiveRangeOutdated()) {
+                    this._range.start += 8;
+                    this._range.end += 8;
+                }
+
+                if (this._deferSeekingTo !== null) {
+                    this._deferredSeek();
+                }
+
+                if (this._tryingToPause) {
+                    this._tryPauseWithStateTransition();
+                }
+            },
+
+            _deferredSeek: function() {
+                var clampedTime = this._getClampedTimeForPlayFrom(this._deferSeekingTo);
+                var isNearCurrentTime = this._isNearToCurrentTime(clampedTime);
+
+                if (isNearCurrentTime) {
+                    this._toPlaying();
+                    this._deferSeekingTo = null;
+                } else {
+                    var seekResult = this._seekTo(clampedTime);
+                    if (seekResult) {
+                        this._deferSeekingTo = null;
+                    }
+                }
+            },
+
+            _getClampedTimeForPlayFrom: function (seconds) {
+                if (this._isLiveMedia() && !this._updatingTime) {
+                    this._updateRange();
+                }
+                var clampedTime = this._getClampedTime(seconds);
+                if (clampedTime !== seconds) {
+                    RuntimeContext.getDevice().getLogger().debug('playFrom ' + seconds+ ' clamped to ' + clampedTime + ' - seekable range is { start: ' + this._range.start + ', end: ' + this._range.end + ' }');
+                }
+                return clampedTime;
+            },
+            
+            _getClampOffsetFromConfig: function() {
+                var clampOffsetFromEndOfRange;
+                var config = RuntimeContext.getDevice().getConfig();
+                if (config && config.streaming && config.streaming.overrides) {
+                    clampOffsetFromEndOfRange = config.streaming.overrides.clampOffsetFromEndOfRange;
+                }
+
+                if(clampOffsetFromEndOfRange !== undefined) {
+                    return clampOffsetFromEndOfRange;
+                } else if (this._isLiveMedia()) {
+                    return this.CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE;
+                } else {
+                    return this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                }
+            },
+
+            _registerEventHandlers: function() {
+                var self = this;
+
+                window.SamsungMapleOnRenderError = function () {
+                    self._onDeviceError('Media element emitted OnRenderError');
+                };
+                this._playerPlugin.OnRenderError = 'SamsungMapleOnRenderError';
+
+                window.SamsungMapleOnConnectionFailed = function () {
+                    self._onDeviceError('Media element emitted OnConnectionFailed');
+                };
+                this._playerPlugin.OnConnectionFailed = 'SamsungMapleOnConnectionFailed';
+
+                window.SamsungMapleOnNetworkDisconnected = function () {
+                    self._onDeviceError('Media element emitted OnNetworkDisconnected');
+                };
+                this._playerPlugin.OnNetworkDisconnected = 'SamsungMapleOnNetworkDisconnected';
+
+                window.SamsungMapleOnStreamNotFound = function () {
+                    self._onDeviceError('Media element emitted OnStreamNotFound');
+                };
+                this._playerPlugin.OnStreamNotFound = 'SamsungMapleOnStreamNotFound';
+
+                window.SamsungMapleOnAuthenticationFailed = function () {
+                    self._onDeviceError('Media element emitted OnAuthenticationFailed');
+                };
+                this._playerPlugin.OnAuthenticationFailed = 'SamsungMapleOnAuthenticationFailed';
+
+                window.SamsungMapleOnRenderingComplete = function () {
+                    if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                        self._onEndOfMedia();
+                    }
+                };
+                this._playerPlugin.OnRenderingComplete = 'SamsungMapleOnRenderingComplete';
+
+                window.SamsungMapleOnBufferingStart = function () {
+                    self._onDeviceBuffering();
+                };
+                this._playerPlugin.OnBufferingStart = 'SamsungMapleOnBufferingStart';
+
+                window.SamsungMapleOnBufferingComplete = function () {
+                    if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                        self._onFinishedBuffering();
+                    }
+                };
+                this._playerPlugin.OnBufferingComplete = 'SamsungMapleOnBufferingComplete';
+
+                window.SamsungMapleOnStreamInfoReady = function () {
+                    self._updateRange();
+                };
+                this._playerPlugin.OnStreamInfoReady = 'SamsungMapleOnStreamInfoReady';
+
+                window.SamsungMapleOnCurrentPlayTime = function (timeInMillis) {
+                    if (self._range && self._isLiveMedia() && !self._isCurrentTimeInRangeTolerance(timeInMillis / 1000)) {
+                        self._updateRange();
+                    }
+                    self._onCurrentTime(timeInMillis);
+                };
+                this._playerPlugin.OnCurrentPlayTime = 'SamsungMapleOnCurrentPlayTime';
+
+                this._onWindowHide = function () {
+                    self.stop();
+                };
+
+                window.addEventListener('hide', this._onWindowHide, false);
+                window.addEventListener('unload', this._onWindowHide, false);
+            },
+
+            _unregisterEventHandlers: function() {
+                var eventHandlers = [
+                    'SamsungMapleOnRenderError',
+                    'SamsungMapleOnRenderingComplete',
+                    'SamsungMapleOnBufferingStart',
+                    'SamsungMapleOnBufferingComplete',
+                    'SamsungMapleOnStreamInfoReady',
+                    'SamsungMapleOnCurrentPlayTime',
+                    'SamsungMapleOnConnectionFailed',
+                    'SamsungMapleOnNetworkDisconnected',
+                    'SamsungMapleOnStreamNotFound',
+                    'SamsungMapleOnAuthenticationFailed'
+                ];
+
+                for (var i = 0; i < eventHandlers.length; i++){
+                    var handler = eventHandlers[i];
+                    var hook = handler.substring('SamsungMaple'.length);
+                    this._playerPlugin[hook] = undefined;
+
+                    delete window[handler];
+                }
+
+                window.removeEventListener('hide', this._onWindowHide, false);
+                window.removeEventListener('unload', this._onWindowHide, false);
+            },
+
+            _wipe: function () {
+                this._stopPlayer();
+                this._type = undefined;
+                this._source = undefined;
+                this._mimeType = undefined;
+                this._currentTime = undefined;
+                this._range = undefined;
+                this._deferSeekingTo = null;
+                this._tryingToPause = false;
+                this._currentTimeKnown = false;
+                this._lastWindowRanged = false;
+                this._updatingTime = false;
+                this._unregisterEventHandlers();
+            },
+
+            _seekTo: function(seconds) {
+                var offset = seconds - this.getCurrentTime();
+                var success = this._isSuccessCode(this._jump(offset));
+
+                if (success) {
+                    this._currentTime = seconds;
+                }
+
+                return success;
+            },
+
+            _seekToWithFailureStateTransition: function(seconds) {
+                var success = this._seekTo(seconds);
+                if (!success) {
+                    this._toPlaying();
+                }
+            },
+
+            _jump: function (offsetSeconds) {
+                if (offsetSeconds > 0) {
+                    return this._playerPlugin.JumpForward(offsetSeconds);
+                } else {
+                    return this._playerPlugin.JumpBackward(Math.abs(offsetSeconds));
+                }
+            },
+
+            _isHlsMimeType: function () {
+                var mime = this._mimeType.toLowerCase();
+                return mime === 'application/vnd.apple.mpegurl' || mime === 'application/x-mpegurl';
+            },
+            
+            _isCurrentTimeInRangeTolerance: function (seconds) {
+                if (seconds > this._range.end + this.RANGE_UPDATE_TOLERANCE) {
+                    return false;
+                } else if (seconds < this._range.start - this.RANGE_UPDATE_TOLERANCE) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+
+            _wrappedSource: function () {
+                var source = this._source;
+                if (this._isHlsMimeType()) {
+                    source += '|COMPONENT=HLS';
+                }
+                return source;
+            },
+
+            _reportError: function(errorMessage) {
+                RuntimeContext.getDevice().getLogger().error(errorMessage);
+                this._emitEvent(MediaPlayer.EVENT.ERROR, {'errorMessage': errorMessage});
+            },
+
+            _toStopped: function () {
+                this._currentTime = 0;
+                this._range = undefined;
+                this._state = MediaPlayer.STATE.STOPPED;
+                this._emitEvent(MediaPlayer.EVENT.STOPPED);
+            },
+
+            _toBuffering: function () {
+                this._state = MediaPlayer.STATE.BUFFERING;
+                this._emitEvent(MediaPlayer.EVENT.BUFFERING);
+            },
+
+            _toPlaying: function () {
+                this._state = MediaPlayer.STATE.PLAYING;
+                this._emitEvent(MediaPlayer.EVENT.PLAYING);
+            },
+
+            _toPaused: function () {
+                this._state = MediaPlayer.STATE.PAUSED;
+                this._emitEvent(MediaPlayer.EVENT.PAUSED);
+            },
+
+            _toComplete: function () {
+                this._state = MediaPlayer.STATE.COMPLETE;
+                this._emitEvent(MediaPlayer.EVENT.COMPLETE);
+            },
+
+            _toEmpty: function () {
+                this._wipe();
+                this._state = MediaPlayer.STATE.EMPTY;
+            },
+
+            _toError: function(errorMessage) {
+                this._wipe();
+                this._state = MediaPlayer.STATE.ERROR;
+                this._reportError(errorMessage);
+                throw 'ApiError: ' + errorMessage;
+            },
+
+            _setDisplayFullScreenForVideo: function() {
+                if (this._type === MediaPlayer.TYPE.VIDEO) {
+                    var dimensions = RuntimeContext.getDevice().getScreenSize();
+                    this._playerPlugin.SetDisplayArea(0, 0, dimensions.width, dimensions.height);
+                }
+            },
+
+            _isSuccessCode: function(code) {
+                var samsung2010ErrorCode = -1;
+                return code && code !== samsung2010ErrorCode;
+            },
+
+            /**
+             * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
+             * On a sample device (Samsung FoxP 2013), seeking by two seconds worked 90% of the time, but seeking
+             * by 2.5 seconds was always seen to work.
+             */
+            CURRENT_TIME_TOLERANCE: 2.5,
+            CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE: 10,
+            RANGE_UPDATE_TOLERANCE: 8
+        });
+
+        var instance = new Player();
+
+        // Mixin this MediaPlayer implementation, so that device.getMediaPlayer() returns the correct implementation for the device
+        Device.prototype.getMediaPlayer = function() {
+            return instance;
+        };
+
+        return Player;
+    }
+
+);
