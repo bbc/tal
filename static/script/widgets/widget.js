@@ -317,6 +317,20 @@ define(
                 } else {
                     throw new Error('Widget::moveTo called - the current widget has not yet been rendered.');
                 }
+            },
+
+            redraw: function () {
+                var output = this.outputElement;
+                var parent = output.parentElement;
+                var outputIndex = Array.prototype.indexOf.call(parent.children, output);
+                if (parent.children[outputIndex + 1]) {
+                    var nextElement = parent.children[outputIndex + 1];
+                    parent.removeChild(output);
+                    parent.insertBefore(output, nextElement);
+                } else {
+                    parent.removeChild(output);
+                    parent.appendChild(output);
+                }
             }
         });
     }
