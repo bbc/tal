@@ -1,27 +1,6 @@
 /**
- * @fileOverview Requirejs module containing device modifier for media playback on Samsung devices.
- *
- * @preserve Copyright (c) 2014 British Broadcasting Corporation
- * (http://www.bbc.co.uk) and TAL Contributors (1)
- *
- * (1) TAL Contributors are listed in the AUTHORS file and at
- *     https://github.com/fmtvp/TAL/AUTHORS - please extend this file,
- *     not this notice.
- *
- * @license Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * All rights reserved
- * Please contact us for an alternative licence
+ * @preserve Copyright (c) 2017-present British Broadcasting Corporation. All rights reserved.
+ * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
  */
 
 require.def(
@@ -35,7 +14,7 @@ require.def(
         "use strict";
 
         /**
-         * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Maple API.
+         * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Streaming API.
          * Use this device modifier if a device implements the Samsung Maple media playback standard.
          * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
          * Those objects must expose an API in accordance with the Samsung Maple media specification.
@@ -82,7 +61,7 @@ require.def(
                 this._currentTimeKnown = false;
                 this._updatingTime = false;
                 this._lastWindowRanged = false;
-
+                
                 try {
                     this._registerSamsungPlugins();
                 } catch (ignoreErr) {
@@ -94,9 +73,8 @@ require.def(
             * @inheritDoc
             */
             setSource: function (mediaType, url, mimeType) {
-                this.logger = RuntimeContext.getDevice().getLogger();
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
-
+                    this._logger = RuntimeContext.getDevice().getLogger();
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
@@ -269,7 +247,7 @@ require.def(
                 
                 //StartPlayback from live position 0 causes spoiler defect
                 if (seekingTo === 0 && this._isLiveMedia()) {
-                    seekingTo = this.CLAMP_OFFSET_FROM_END_OF_RANGE;
+                    seekingTo = this.CLAMP_OFFSET_FROM_START_OF_RANGE;
                 } else {
                     seekingTo = parseInt(Math.floor(seekingTo), 10);
                 }
@@ -380,7 +358,7 @@ require.def(
                 return this._range;
             },
             
-            isLiveRangeOutdated: function () {
+            _isLiveRangeOutdated: function () {
                 var time = Math.floor(this._currentTime);
                 if (time % 8 === 0 && !this._updatingTime && this._lastWindowRanged !== time) {
                     this._lastWindowRanged = time;
@@ -453,8 +431,9 @@ require.def(
                 this._currentTimeKnown = false;
             },
 
-            _tryPauseWithStateTransition: function() {
-                var success = this._isSuccessCode(this._playerPlugin.Execute("Pause"));
+            _tryPauseWithStateTransition: function() {                
+                var success = this._playerPlugin.Execute("Pause");
+                success = success && (success !== -1);
 
                 if (success) {
                     this._toPaused();
@@ -494,9 +473,6 @@ require.def(
 
 
             _onCurrentTime: function(timeInMillis) {
-
-                //this.logger.info("_onCurrentTime: "  + timeInMillis);
-
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
                 this._currentTimeKnown = true;
@@ -504,7 +480,7 @@ require.def(
                 //[optimisation] do not call player API periodically in HLS live
                 // - calculate range manually when possible
                 // - do not calculate range if player API was called less than RANGE_UPDATE_TOLERANCE seconds ago
-                if (this._isLiveMedia() && this.isLiveRangeOutdated()) {
+                if (this._isLiveMedia() && this._isLiveRangeOutdated()) {
                     this._range.start += 8;
                     this._range.end += 8;
                 }
@@ -570,7 +546,7 @@ require.def(
                 this._playerPlugin.OnEvent = function(eventType, param1, param2) {
 
                     if (eventType !== self.PlayerEventCodes.CURRENT_PLAYBACK_TIME) {
-                        //self.logger.info("Received event " + eventType + ' ' + param1);
+                        //self._logger.info("Received event " + eventType + ' ' + param1);
                     }
 
                     switch (eventType) {
@@ -766,11 +742,6 @@ require.def(
                 throw "ApiError: " + errorMessage;
             },
 
-            _isSuccessCode: function(code) {
-                var samsung2010ErrorCode = -1;
-                return code && code !== samsung2010ErrorCode;
-            },
-
             /**
              * @constant {Number} Time (in seconds) compared to current time within which seeking has no effect.
              * Jumping to time lower than 3s causes error in PlayFrom60 on HLS live - player jumps to previous chunk.
@@ -778,6 +749,7 @@ require.def(
              */
             CURRENT_TIME_TOLERANCE: 4,
             CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE: 10,
+            CLAMP_OFFSET_FROM_START_OF_RANGE: 1.1,
             RANGE_UPDATE_TOLERANCE: 8,
             RANGE_END_TOLERANCE: 100
         });
