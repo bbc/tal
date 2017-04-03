@@ -152,7 +152,7 @@
     };
 
     //---------------------
-    // Samsung Maple specific tests
+    // Samsung Streaming specific tests
     //---------------------
     
     var listenerEventCodes = {
