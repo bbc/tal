@@ -54,9 +54,20 @@
         unmockTime: function(/*mediaplayer*/) {
         }
     };
+    
+    
+//    for (var test in this.SamsungMapleMediaPlayerTests.prototype) {
+//            this.SamsungMaple2015MediaPlayerTests.prototype[test] = this.SamsungMapleMediaPlayerTests.prototype[test];
+//    }
 
     this.SamsungMaple2015MediaPlayerTests.prototype.setUp = function() {
-        this.sandbox = sinon.sandbox.create();
+        this.sandbox = sinon.sandbox.create();    
+    
+        //Event handlers are not removed after last test from SamsungMapleMediaPlayerTests
+        //Check if handler is undefined before running tests and remove if necessary
+        for (var i = 0; i < listenerFunctions.length; i++){
+            delete window[listenerFunctions[i]];
+        }
 
         playerPlugin = {
             self: this,
@@ -95,7 +106,7 @@
     };
 
     var runMediaPlayerTest = function (self, queue, action) {
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/samsung_maple', 'antie/devices/mediaplayer/mediaplayer'],
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/mediaplayer/samsung_maple_ls', 'antie/devices/mediaplayer/mediaplayer'],
                               function(application, MediaPlayerImpl, MediaPlayer) {
                                   self._device = application.getDevice();
                                   self.sandbox.stub(self._device, 'getScreenSize').returns(screenSize);
