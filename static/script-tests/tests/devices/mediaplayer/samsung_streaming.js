@@ -75,26 +75,26 @@
             Open: this.sandbox.stub(),
             Execute: function(command) {
                 switch (command) {
-                    case 'InitPlayer':
-                        return this._methods.InitPlayer(arguments[1]);
-                    case 'StartPlayback':
-                        return this._methods.StartPlayback(arguments[1]);
-                    case 'JumpForward':
-                        return this._methods.JumpForward(arguments[1]);
-                    case 'JumpBackward':
-                        return this._methods.JumpBackward(arguments[1]);
-                    case 'Pause':
-                        return this._methods.Pause();
-                    case 'Resume':
-                        return this._methods.Resume();
-                    case 'Stop':
-                        return this._methods.Stop();
-                    case 'GetDuration':
-                        return this._methods.GetDuration();
-                    case 'GetPlayingRange':
-                        return this._methods.GetPlayingRange();
-                    default:
-                        return -1;
+                case 'InitPlayer':
+                    return this._methods.InitPlayer(arguments[1]);
+                case 'StartPlayback':
+                    return this._methods.StartPlayback(arguments[1]);
+                case 'JumpForward':
+                    return this._methods.JumpForward(arguments[1]);
+                case 'JumpBackward':
+                    return this._methods.JumpBackward(arguments[1]);
+                case 'Pause':
+                    return this._methods.Pause();
+                case 'Resume':
+                    return this._methods.Resume();
+                case 'Stop':
+                    return this._methods.Stop();
+                case 'GetDuration':
+                    return this._methods.GetDuration();
+                case 'GetPlayingRange':
+                    return this._methods.GetPlayingRange();
+                default:
+                    return -1;
                 }
             },
             Close: this.sandbox.stub(),
@@ -275,7 +275,7 @@
             assert(playerPlugin._methods.StartPlayback.calledWith(0));
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
-   };
+    };
     this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -308,8 +308,8 @@
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
-   }; 
-   this.SamsungStreamingMediaPlayerTests.prototype.testStreamingPLayerOpenPluginThenHlsLivePlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    }; 
+    this.SamsungStreamingMediaPlayerTests.prototype.testStreamingPLayerOpenPluginThenHlsLivePlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
