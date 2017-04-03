@@ -4,7 +4,6 @@
  */
 
 (function() {
-    var self = this;
     this.SamsungStreamingMediaPlayerTests = AsyncTestCase('SamsungStreamingMediaPlayer');
 
     var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/samsung_streaming']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
@@ -76,23 +75,23 @@
             Open: this.sandbox.stub(),
             Execute: function(command) {
                 switch (command) {
-                    case "InitPlayer":
+                    case 'InitPlayer':
                         return this._methods.InitPlayer(arguments[1]);
-                    case "StartPlayback":
+                    case 'StartPlayback':
                         return this._methods.StartPlayback(arguments[1]);
-                    case "JumpForward":
+                    case 'JumpForward':
                         return this._methods.JumpForward(arguments[1]);
-                    case "JumpBackward":
+                    case 'JumpBackward':
                         return this._methods.JumpBackward(arguments[1]);
-                    case "Pause":
+                    case 'Pause':
                         return this._methods.Pause();
-                    case "Resume":
+                    case 'Resume':
                         return this._methods.Resume();
-                    case "Stop":
+                    case 'Stop':
                         return this._methods.Stop();
-                    case "GetDuration":
+                    case 'GetDuration':
                         return this._methods.GetDuration();
-                    case "GetPlayingRange":
+                    case 'GetPlayingRange':
                         return this._methods.GetPlayingRange();
                     default:
                         return -1;
@@ -122,7 +121,7 @@
         playerPlugin._methods.Pause.returns(1);
         playerPlugin._methods.Resume.returns(1);
         playerPlugin._methods.Stop.returns(1);
-        playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+        playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
         playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
 
         var originalGetElementById = document.getElementById;
@@ -259,13 +258,14 @@
     };
     
     
-    /*HLS specific tests START*/   this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    /*HLS specific tests START*/
+    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(9);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("Player", "1.010", "Player"));
+            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -275,14 +275,14 @@
             assert(playerPlugin._methods.StartPlayback.calledWith(0));
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
-   }; 
-   this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+   };
+    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("Player", "1.010", "Player"));
+            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -299,7 +299,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("StreamingPlayer", "1.0", "StreamingPlayer"));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -315,7 +315,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("StreamingPlayer", "1.0", "StreamingPlayer"));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -332,7 +332,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("StreamingPlayer", "1.0", "StreamingPlayer"));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -341,7 +341,7 @@
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
             //live playback started from 0 position causes spoiler defect
-            assertEquals(this._mediaPlayer.CLAMP_OFFSET_FROM_END_OF_RANGE, playerPlugin._methods.StartPlayback.args[0][0]);
+            assertEquals(this._mediaPlayer.CLAMP_OFFSET_FROM_START_OF_RANGE, playerPlugin._methods.StartPlayback.args[0][0]);
         });
     };
     
@@ -351,7 +351,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith("StreamingPlayer", "1.0", "StreamingPlayer"));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -372,7 +372,7 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 0);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             this._mediaPlayer._updatingTime = false;
             
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -384,7 +384,7 @@
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 22 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             
             assert(playerPlugin._methods.JumpForward.notCalled);
             this._mediaPlayer.playFrom(50);
@@ -403,7 +403,7 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 90 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             this._mediaPlayer._updatingTime = false;
             
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -415,7 +415,7 @@
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 122 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             
             assert(playerPlugin._methods.JumpBackward.notCalled);
             this._mediaPlayer.playFrom(10);
@@ -455,7 +455,7 @@
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 100 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
@@ -466,7 +466,7 @@
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 133 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
@@ -482,7 +482,7 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME,  this._mediaPlayer.CLAMP_OFFSET_FROM_END_OF_RANGE * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
             this._mediaPlayer._updatingTime = false;
@@ -492,7 +492,7 @@
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 15 * 1000);
-            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + "-" + playerPlugin._range.end);
+            playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
@@ -533,7 +533,7 @@
             
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[1][0].type);
-            assertEquals("Failed to initialize video: testUrl", eventHandler.args[1][0].errorMessage);
+            assertEquals('Failed to initialize video: testUrl', eventHandler.args[1][0].errorMessage);
         });
     };
 
@@ -543,7 +543,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assert(playerPlugin.Open.calledWith("Player", "1.010", "Player"));
+            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -561,7 +561,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assert(playerPlugin.Open.calledWith("Player", "1.010", "Player"));
+            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -594,7 +594,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            assert(playerPlugin.Open.calledWith("Player", "1.010", "Player"));
+            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -1193,7 +1193,7 @@
 
             assert(playerPlugin._methods.Stop.called);
             assert(playerPlugin._methods.StartPlayback.calledTwice);
-            debugger;assertEquals(58.9, playerPlugin._methods.StartPlayback.args[1][0]);
+            assertEquals(58.9, playerPlugin._methods.StartPlayback.args[1][0]);
         });
     };
 
