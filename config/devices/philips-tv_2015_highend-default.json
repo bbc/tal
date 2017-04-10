@@ -5,7 +5,7 @@
     "modifiers": [
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/playable",
+      "antie/devices/mediaplayer/live/seekable",
       "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/data/json2",
       "antie/devices/storage/cookie",
@@ -137,5 +137,15 @@
   }],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

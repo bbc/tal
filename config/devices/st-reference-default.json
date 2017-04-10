@@ -96,5 +96,9 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "serviceType": "other"
   }
 }

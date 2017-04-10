@@ -69,6 +69,7 @@
 		  "412": "REWIND",
 		  "461": "BACK",
 		  "457": "INFO",
+		  "403": "RED",
 		  "48": "0",
 		  "49": "1",
 		  "50": "2",
@@ -108,5 +109,16 @@
     ],
     "networking": {
         "supportsJSONP": true
-    }
+    },
+    "broadcast" : {
+        "currentChannelValidation": {
+            "enabled": true
+        }
+    },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "chromium"
+  }
 }

@@ -1,0 +1,101 @@
+{
+  "pageStrategy": "uwp",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/css3",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/restartable",
+      "antie/devices/exit/closewindow",
+      "antie/devices/data/nativejson",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "antie/devices/storage/cookie"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "displayQuality": "high",
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "203": "UP",
+      "204": "DOWN",
+      "205": "LEFT",
+      "206": "RIGHT",
+
+      "211": "UP",
+      "212": "DOWN",
+      "214": "LEFT",
+      "213": "RIGHT",
+
+      "195": "ENTER",
+      "196": "BACK",
+      "198": "SEARCH",
+
+      "202": "FAST_FWD",
+      "201": "REWIND",
+
+      "200": "PREV",
+      "199": "NEXT"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application\/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "module": "%application%/appui/layouts/1080p",
+      "classes": ["browserdevice1080p"]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true,
+    "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail"
+  }
+}

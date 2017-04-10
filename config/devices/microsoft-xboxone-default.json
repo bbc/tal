@@ -1,0 +1,79 @@
+{
+    "pageStrategy": "html5",
+    "modules": {
+      "base": "antie/devices/browserdevice",
+      "modifiers": [
+      "antie/devices/anim/styletopleft",
+      "antie/devices/mediaplayer/html5untyped",
+      "antie/devices/mediaplayer/live/restartable",
+      "antie/devices/data/nativejson",
+      "antie/devices/logging/onscreen",
+      "antie/devices/logging/xhr",
+      "antie/devices/logging/jstestdriver",
+      "xboxone/devices/storage/xboxpls"      ]
+      },
+      "logging": {
+        "level": "none"
+        },
+        "displayQuality": "high",
+        "streaming": {
+            "video": {
+              "mediaURIFormat": "%href%",
+              "supported": [
+              {
+                "protocols": [
+                "http"
+                ],
+                "encodings": [
+                "h264"
+                ],
+                "transferFormat": [
+                "hls"
+                ],
+                "maximumVideoLines": 1080
+              }
+              ]
+              },
+              "audio": {
+                "mediaURIFormat": "%href%",
+                "supported": [
+                {
+                  "protocols": [
+                  "http"
+                  ],
+                  "encodings": [
+                  "aac"
+                  ],
+                  "maximumBitRate": 192
+                }
+                ]
+              }
+              },
+              "input": {
+                "map": {}
+                },
+                "accessibility": {
+                  "captions": {
+                    "supported": [
+                    "application\/ttaf+xml"
+                    ]
+                  }
+                  },
+                  "layouts": [
+                  {
+                   "width": 1920,
+                   "height": 1080,
+                   "module": "%application%/appui/layouts/1080p",
+                   "classes": ["browserdevice1080p"]
+                 }
+                 ],
+                "networking": {
+                  "supportsJSONP": false,
+                  "supportsCORS": true
+                },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail"
+  }
+}

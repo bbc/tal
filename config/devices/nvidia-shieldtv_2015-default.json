@@ -5,7 +5,7 @@
         "modifiers": [
             "antie/devices/anim/css3",
             "antie/devices/mediaplayer/html5",
-            "antie/devices/mediaplayer/live/playable",
+            "antie/devices/mediaplayer/live/seekable",
             "antie/devices/data/nativejson",
             "antie/devices/logging/default",
             "antie/devices/logging/alert",
@@ -104,5 +104,10 @@
     "networking": {
         "supportsJSONP": true,
         "supportsCORS": true
-    }
+    },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail"
+  }
 }

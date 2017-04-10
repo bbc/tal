@@ -68,6 +68,7 @@
       "70": "STOP",
       "72": "FAST_FWD",
       "69": "REWIND",
+      "108" : "RED",
       "101": "1",
       "98": "2",
       "6": "3",
@@ -110,5 +111,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

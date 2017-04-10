@@ -95,5 +95,13 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [
+    "longVodAssetsUnsupported"
+  ],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

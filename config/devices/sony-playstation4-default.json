@@ -1,5 +1,4 @@
 {
-  "_comment": "mediasets property introduced to fix BBC Sport (Olympics) for launch in non-HD mode",
   "pageStrategy": "playstation3",
   "modules": {
     "base": "antie/devices/ps3base",
@@ -17,10 +16,6 @@
   },
   "logging": {
     "level": "none"
-  },
-  "mediasets": {
-    "tv": "stb-all-h264",
-    "radio": "stb-aac"
   },
   "streaming": {
     "video": {
@@ -66,7 +61,11 @@
       "37": "LEFT",
       "38": "UP",
       "39": "RIGHT",
-      "40": "DOWN"
+      "40": "DOWN",
+      "117": "NEXT",
+      "116": "PREV",
+      "119": "FAST_FWD",
+      "118": "REWIND"
     }
   },
   "accessibility": {
@@ -96,5 +95,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

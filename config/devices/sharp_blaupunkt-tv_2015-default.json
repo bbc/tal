@@ -1,0 +1,141 @@
+{
+  "pageStrategy": "html5hbbtvhybrid",
+  "modules": {
+    "base": "antie/devices/browserdevice",
+    "modifiers": [
+      "antie/devices/anim/noanim",
+      "antie/devices/mediaplayer/html5",
+      "antie/devices/mediaplayer/live/seekable",
+      "antie/devices/broadcastsource/hbbtvsource",
+      "antie/devices/data/json2",
+      "antie/devices/storage/cookie",
+      "antie/devices/logging/consumelog",
+      "antie/devices/exit/closewindow",
+      "antie/devices/parentalguidance/appdefaultpghandler"
+    ]
+  },
+  "logging": {
+    "level": "none"
+  },
+  "streaming": {
+    "video": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
+    },
+    "audio": {
+      "mediaURIFormat": "%href%",
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "aac"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
+    }
+  },
+  "input": {
+    "map": {
+      "13": "ENTER",
+      "37": "LEFT",
+      "38": "UP",
+      "39": "RIGHT",
+      "40": "DOWN",
+      "460": "SUBTITLE",
+      "27": "BACK",
+      "8": "BACK_SPACE",
+      "179": "PLAY_PAUSE",
+      "176": "NEXT",
+      "177": "PREV",
+      "178": "STOP",
+      "228": "FAST_FWD",
+      "227": "REWIND",
+      "156": "HELP",
+      "48": "0",
+      "49": "1",
+      "50": "2",
+      "51": "3",
+      "52": "4",
+      "53": "5",
+      "54": "6",
+      "55": "7",
+      "56": "8",
+      "57": "9",
+      "403": "RED",
+      "404": "GREEN",
+      "405": "YELLOW",
+      "406": "BLUE",
+      "457": "INFO",
+      "65":"A",
+      "66":"B",
+      "67":"C",
+      "68":"D",
+      "69":"E",
+      "70":"F",
+      "71":"G",
+      "72":"H",
+      "73":"I",
+      "74":"J",
+      "75":"K",
+      "76":"L",
+      "77":"M",
+      "78":"N",
+      "79":"O",
+      "80":"P",
+      "81":"Q",
+      "82":"R",
+      "83":"S",
+      "84":"T",
+      "85":"U",
+      "86":"V",
+      "87":"W",
+      "88":"X",
+      "89":"Y",
+      "90":"Z"
+    }
+  },
+  "accessibility": {
+    "captions": {
+      "supported": [
+        "application/ttaf+xml"
+      ]
+    }
+  },
+  "layouts": [
+    {
+      "width": 1280,
+      "height": 720,
+      "module": "%application%/appui/layouts/720p",
+      "classes": [
+        "browserdevice720p"
+      ]
+    }
+  ],
+  "networking": {
+    "supportsJSONP": true,
+    "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
+  }
+}

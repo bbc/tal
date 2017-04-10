@@ -118,5 +118,7 @@
   ],
   "networking": {
     "supportsJSONP": true
-  }
+  },
+  "capabilities": [],
+  "statLabels": {}
 }

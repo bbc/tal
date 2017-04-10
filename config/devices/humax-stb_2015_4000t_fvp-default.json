@@ -5,13 +5,13 @@
     "modifiers": [
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/restartable",
+      "antie/devices/mediaplayer/live/seekable",
       "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/data/nativejson",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
       "antie/devices/exit/closewindow",
-      "antie/devices/parentalguidance/appdefaultpghandler"   
+      "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
@@ -108,6 +108,14 @@
     "supportsCORS": true
   },
   "broadcast": {
-    "aitProfile": "hbbtv_20"
+    "aitProfile": "hbbtv_20",
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
   }
 }

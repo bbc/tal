@@ -121,5 +121,11 @@
   },
   "broadcast": {
     "aitProfile": "hbbtv_20"
+  },
+  "capabilities": ["uhd"],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "chromium"
   }
 }

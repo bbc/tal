@@ -111,5 +111,10 @@
   "networking": {
     "supportsJSONP": true,
 	"supportCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "managed_service"
   }
 }
