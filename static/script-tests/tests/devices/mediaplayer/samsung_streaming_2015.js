@@ -168,7 +168,7 @@
         CURRENT_PLAYBACK_TIME : 14
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionsAddedDuringSetSource = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             
@@ -180,7 +180,7 @@
         });
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnTransitionToErrorState = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionsRemovedOnTransitionToErrorState = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -196,7 +196,7 @@
         });
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionsRemovedOnReset = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionsRemovedOnReset = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -210,7 +210,7 @@
         });
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -222,7 +222,7 @@
         });
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnTransiitonToErrorState = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionReferencesOnObjectRemovedOnTransiitonToErrorState = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
@@ -239,7 +239,7 @@
         });
     };
 
-    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungMapleListenerFunctionReferencesOnObjectRemovedOnReset = function(queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testSamsungStreamingListenerFunctionReferencesOnObjectRemovedOnReset = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 

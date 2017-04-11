@@ -15,7 +15,7 @@ require.def(
         'use strict';
 
         /**
-         * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Streaming API.
+         * MediaPlayer implementation for Samsung 2015 devices supporting HLS Live Seek implementing the Streaming API.
          * Use this device modifier if a device implements the Samsung Maple media playback standard.
          * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
          * Those objects must expose an API in accordance with the Samsung Streaming media specification.
@@ -70,8 +70,8 @@ require.def(
             * @inheritDoc
             */
             setSource: function (mediaType, url, mimeType) {
-                //this.logger = RuntimeContext.getDevice().getLogger();
-                //this.logger.info('samsung_streaming_2015 ver: 0.003');
+                //this._logger = RuntimeContext.getDevice().getLogger();
+                //this._logger.info('samsung_streaming_2015 ver: 0.005');
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
 
                     this._type = mediaType;
@@ -103,7 +103,7 @@ require.def(
                     self.stop();
                     self.tvmwPlugin.SetSource(self.originalSource);
                 }, false);
-            },*/
+            },
             
             _openPlayerPlugin : function() {
                 if (this._currentPlayer !== undefined) {
@@ -112,7 +112,7 @@ require.def(
                 this._playerPlugin.Open('Player', '1.010', 'Player');
             },
             
-            /*_closePlugin: function() {
+            _closePlugin: function() {
                 this._playerPlugin.Close();
                 this._currentPlayer = undefined;
             },
@@ -224,11 +224,11 @@ require.def(
             /**
              * @inheritDoc
              */
-            beginPlaybackFrom: function(seconds) {
+            /*beginPlaybackFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
-                //this.logger.info('beginPlaybackFrom: ' + seekingTo);
+                //this._logger.info('beginPlaybackFrom: ' + seekingTo);
                 
                 if (seekingTo === 0 && this._isLiveMedia()) {
                     seekingTo = this.CLAMP_OFFSET_FROM_END_OF_RANGE;
@@ -247,7 +247,7 @@ require.def(
                     this._toError('Cannot beginPlayback while in the \'' + this.getState() + '\' state');
                     break;
                 }
-            },
+            },*/
 
             /**
             * @inheritDoc
@@ -355,19 +355,19 @@ require.def(
             /**
              * @inheritDoc
              */
-            _getMediaDuration: function() {
+            /*_getMediaDuration: function() {
                 if (this._range) {
                     return this._range.end;
                 }
                 return undefined;
-            },
+            },*/
 
             /**
             * @inheritDoc
             */
-            getState: function () {
+            /*getState: function () {
                 return this._state;
-            },
+            },*/
 
             /**
              * @inheritDoc
@@ -440,8 +440,8 @@ require.def(
                         start: Math.floor(range[0]/1000),
                         end: Math.floor(range[1]/1000)
                     };
-                    //this.logger.info('range start: ' + this._range.start);
-                    //this.logger.info('range end: ' + this._range.end);
+                    //this._logger.info('range start: ' + this._range.start);
+                    //this._logger.info('range end: ' + this._range.end);
                     //don't call range for the next 8 seconds
                     this._updatingTime = true;
                     setTimeout(function () {
@@ -459,7 +459,7 @@ require.def(
 
             /*_onCurrentTime: function(timeInMillis) {
 
-                //this.logger.info('_onCurrentTime: '  + timeInMillis);
+                //this._logger.info('_onCurrentTime: '  + timeInMillis);
 
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
@@ -503,7 +503,7 @@ require.def(
             },*/
 
             _getClampedTimeForPlayFrom: function (seconds) {
-                if (this._isHlsMimeType() && !this._updatingTime) {
+                if (this._isHlsMimeType() && this._isLiveMedia() && !this._updatingTime) {
                     this._updateRange();
                 }
                 var clampedTime = this._getClampedTime(seconds);
@@ -513,7 +513,7 @@ require.def(
                 return clampedTime;
             },
             
-            _getClampOffsetFromConfig: function() {
+            /*_getClampOffsetFromConfig: function() {
                 var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
                 if (config && config.streaming && config.streaming.overrides) {
@@ -531,7 +531,7 @@ require.def(
 
             _registerEventHandlers: function() {
                 var self = this;
-                this._playerPlugin.OnEvent = function(eventType, param1/*, param2*/) {
+                this._playerPlugin.OnEvent = function(eventType, param1, param2) {
 
                     if (eventType !== self.PlayerEventCodes.CURRENT_PLAYBACK_TIME) {
                         //self.logger.info('Received event ' + eventType + ' ' + param1);
@@ -608,7 +608,7 @@ require.def(
                 window.addEventListener('hide', this._onWindowHide, false);
                 window.addEventListener('unload', this._onWindowHide, false);
             },
-            /*_handlePlaying : function() {
+            _handlePlaying : function() {
                 this.bubbleEvent(new MediaEvent('playing', this));
             },
 
@@ -616,7 +616,7 @@ require.def(
                 this._playerPlugin.OnEvent = undefined;
                 window.removeEventListener('hide', this._onWindowHide, false);
                 window.removeEventListener('unload', this._onWindowHide, false);
-            },*/
+            },
 
             _wipe: function () {
                 this._stopPlayer();
@@ -635,7 +635,7 @@ require.def(
                 this._lastWindowRanged = false;
             },
 
-            /*_seekTo: function(seconds) {
+            _seekTo: function(seconds) {
                 var offset = seconds - this.getCurrentTime();
                 var success = this._jump(offset);
 
@@ -740,10 +740,10 @@ require.def(
              * Jumping to time lower than 3s causes error in PlayFrom60 on HLS live - player jumps to previous chunk.
              * Value set to 4s to be ahead of potential wrong player jumps.
              */
-            CURRENT_TIME_TOLERANCE: 4,
+            /*CURRENT_TIME_TOLERANCE: 4,
             CLAMP_OFFSET_FROM_END_OF_LIVE_RANGE: 10,
             RANGE_UPDATE_TOLERANCE: 8,
-            RANGE_END_TOLERANCE: 100
+            RANGE_END_TOLERANCE: 100*/
         });
 
         var instance = new Player();
