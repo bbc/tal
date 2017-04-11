@@ -7,4 +7,3 @@ static/script-tests/lib/*
 static/script-tests/jasmine/*
 static/script-tests/fixtures/*
 static/script-tests/api/*
-static/script/devices/mediaplayer/samsung_streaming.js
