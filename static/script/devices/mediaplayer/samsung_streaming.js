@@ -4,14 +4,14 @@
  */
 
 require.def(
-    "antie/devices/mediaplayer/samsung_streaming",
+    'antie/devices/mediaplayer/samsung_streaming',
     [
-        "antie/devices/device",
-        "antie/devices/mediaplayer/mediaplayer",
-        "antie/runtimecontext"
+        'antie/devices/device',
+        'antie/devices/mediaplayer/mediaplayer',
+        'antie/runtimecontext'
     ],
     function(Device, MediaPlayer, RuntimeContext) {
-        "use strict";
+        'use strict';
 
         /**
          * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Streaming API.
@@ -83,10 +83,10 @@ require.def(
 
                     if (this._isHlsMimeType()) {
                         if (this._isLiveMedia()) {
-                            this._source += "|HLSSLIDING|COMPONENT=HLS";
+                            this._source += '|HLSSLIDING|COMPONENT=HLS';
                             this._openStreamingPlayerPlugin();
                         } else {
-                            this._source += "|COMPONENT=HLS";
+                            this._source += '|COMPONENT=HLS';
                             this._openPlayerPlugin();
                         }
                     } else {
@@ -96,7 +96,7 @@ require.def(
                     this._initPlayer(this._source);
 
                 } else {
-                    this._toError("Cannot set source unless in the '" + MediaPlayer.STATE.EMPTY + "' state");
+                    this._toError('Cannot set source unless in the \'' + MediaPlayer.STATE.EMPTY + '\' state');
                 }
             },
 
@@ -117,7 +117,7 @@ require.def(
                 if (this._currentPlayer !== undefined) {
                     this._playerPlugin.Close();
                 }
-                this._playerPlugin.Open("Player", "1.010", "Player");
+                this._playerPlugin.Open('Player', '1.010', 'Player');
                 this._currentPlayer = this.PlayerEmps.Player;
             },
             
@@ -125,7 +125,7 @@ require.def(
                 if (this._currentPlayer !== undefined) {
                     this._playerPlugin.Close();
                 }
-                this._playerPlugin.Open("StreamingPlayer", "1.0", "StreamingPlayer");
+                this._playerPlugin.Open('StreamingPlayer', '1.0', 'StreamingPlayer');
                 this._currentPlayer = this.PlayerEmps.StreamingPlayer;
             },
             
@@ -135,10 +135,10 @@ require.def(
             },
 
             _initPlayer: function(source) {
-                var result = this._playerPlugin.Execute("InitPlayer", source);
+                var result = this._playerPlugin.Execute('InitPlayer', source);
                 
                 if (result !== 1) {
-                    this._toError("Failed to initialize video: " + this._source);
+                    this._toError('Failed to initialize video: ' + this._source);
                 }
             },
 
@@ -148,25 +148,25 @@ require.def(
             resume : function () {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.PLAYING:
-                        break;
+                case MediaPlayer.STATE.PLAYING:
+                    break;
 
-                    case MediaPlayer.STATE.BUFFERING:
-                        if (this._tryingToPause) {
-                            this._tryingToPause = false;
-                            this._toPlaying();
-                        }
-                        break;
-
-                    case MediaPlayer.STATE.PAUSED:
-                        var result = this._playerPlugin.Execute("Resume");
-
+                case MediaPlayer.STATE.BUFFERING:
+                    if (this._tryingToPause) {
+                        this._tryingToPause = false;
                         this._toPlaying();
-                        break;
+                    }
+                    break;
 
-                    default:
-                        this._toError("Cannot resume while in the '" + this.getState() + "' state");
-                        break;
+                case MediaPlayer.STATE.PAUSED:
+                    this._playerPlugin.Execute('Resume');
+
+                    this._toPlaying();
+                    break;
+
+                default:
+                    this._toError('Cannot resume while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -178,46 +178,46 @@ require.def(
                 var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;             
                 
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.BUFFERING:
+                case MediaPlayer.STATE.BUFFERING:
 //                        this._deferSeekingTo = seekingTo;
-                        this._nextSeekingTo = seekingTo;
-                        break;
+                    this._nextSeekingTo = seekingTo;
+                    break;
 
-                    case MediaPlayer.STATE.PLAYING:
-                        this._toBuffering();
-                        if (!this._currentTimeKnown) {
-                            this._deferSeekingTo = seekingTo;
-                        } else if (this._isNearToCurrentTime(seekingTo)) {
-                            this._toPlaying();
-                        } else {
-                            this._seekToWithFailureStateTransition(seekingTo);
-                        }
-                        break;
+                case MediaPlayer.STATE.PLAYING:
+                    this._toBuffering();
+                    if (!this._currentTimeKnown) {
+                        this._deferSeekingTo = seekingTo;
+                    } else if (this._isNearToCurrentTime(seekingTo)) {
+                        this._toPlaying();
+                    } else {
+                        this._seekToWithFailureStateTransition(seekingTo);
+                    }
+                    break;
 
 
-                    case MediaPlayer.STATE.PAUSED:
-                        this._toBuffering();
-                        if (!this._currentTimeKnown) {
-                            this._deferSeekingTo = seekingTo;
-                        } else if (this._isNearToCurrentTime(seekingTo)) {
-                            var result = this._playerPlugin.Execute("Resume");
-                            this._toPlaying();
-                        } else {
-                            this._seekToWithFailureStateTransition(seekingTo);
-                            var result = this._playerPlugin.Execute("Resume");
-                        }
-                        break;
+                case MediaPlayer.STATE.PAUSED:
+                    this._toBuffering();
+                    if (!this._currentTimeKnown) {
+                        this._deferSeekingTo = seekingTo;
+                    } else if (this._isNearToCurrentTime(seekingTo)) {
+                        this._playerPlugin.Execute('Resume');
+                        this._toPlaying();
+                    } else {
+                        this._seekToWithFailureStateTransition(seekingTo);
+                        this._playerPlugin.Execute('Resume');
+                    }
+                    break;
 
-                    case MediaPlayer.STATE.COMPLETE:
-                        var result = this._playerPlugin.Execute("Stop");
-                        this._initPlayer(this._source);
-                        var result = this._playerPlugin.Execute("StartPlayback", seekingTo);
-                        this._toBuffering();
-                        break;
+                case MediaPlayer.STATE.COMPLETE:
+                    this._playerPlugin.Execute('Stop');
+                    this._initPlayer(this._source);
+                    this._playerPlugin.Execute('StartPlayback', seekingTo);
+                    this._toBuffering();
+                    break;
 
-                    default:
-                        this._toError("Cannot playFrom while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot playFrom while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -227,14 +227,14 @@ require.def(
             beginPlayback: function() {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                        this._toBuffering();
-                        var result = this._playerPlugin.Execute("StartPlayback");
-                        break;
+                case MediaPlayer.STATE.STOPPED:
+                    this._toBuffering();
+                    this._playerPlugin.Execute('StartPlayback');
+                    break;
 
-                    default:
-                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot beginPlayback while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -253,15 +253,15 @@ require.def(
                 }
 
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                        var success = this._playerPlugin.Execute("StartPlayback", seekingTo);
+                case MediaPlayer.STATE.STOPPED:
+                    this._playerPlugin.Execute('StartPlayback', seekingTo);
 
-                        this._toBuffering();
-                        break;
+                    this._toBuffering();
+                    break;
 
-                    default:
-                        this._toError("Cannot beginPlayback while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot beginPlayback while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -271,17 +271,17 @@ require.def(
             pause: function () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.BUFFERING:
-                    case MediaPlayer.STATE.PAUSED:
-                        break;
+                case MediaPlayer.STATE.BUFFERING:
+                case MediaPlayer.STATE.PAUSED:
+                    break;
 
-                    case MediaPlayer.STATE.PLAYING:
-                        this._tryPauseWithStateTransition();
-                        break;
+                case MediaPlayer.STATE.PLAYING:
+                    this._tryPauseWithStateTransition();
+                    break;
 
-                    default:
-                        this._toError("Cannot pause while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot pause while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -290,20 +290,20 @@ require.def(
             */
             stop: function () {
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.STOPPED:
-                        break;
+                case MediaPlayer.STATE.STOPPED:
+                    break;
 
-                    case MediaPlayer.STATE.BUFFERING:
-                    case MediaPlayer.STATE.PLAYING:
-                    case MediaPlayer.STATE.PAUSED:
-                    case MediaPlayer.STATE.COMPLETE:
-                        this._stopPlayer();
-                        this._toStopped();
-                        break;
+                case MediaPlayer.STATE.BUFFERING:
+                case MediaPlayer.STATE.PLAYING:
+                case MediaPlayer.STATE.PAUSED:
+                case MediaPlayer.STATE.COMPLETE:
+                    this._stopPlayer();
+                    this._toStopped();
+                    break;
 
-                    default:
-                        this._toError("Cannot stop while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot stop while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -312,17 +312,17 @@ require.def(
             */
             reset: function () {
                 switch (this.getState()) {
-                    case MediaPlayer.STATE.EMPTY:
-                        break;
+                case MediaPlayer.STATE.EMPTY:
+                    break;
 
-                    case MediaPlayer.STATE.STOPPED:
-                    case MediaPlayer.STATE.ERROR:
-                        this._toEmpty();
-                        break;
+                case MediaPlayer.STATE.STOPPED:
+                case MediaPlayer.STATE.ERROR:
+                    this._toEmpty();
+                    break;
 
-                    default:
-                        this._toError("Cannot reset while in the '" + this.getState() + "' state");
-                        break;
+                default:
+                    this._toError('Cannot reset while in the \'' + this.getState() + '\' state');
+                    break;
                 }
             },
 
@@ -426,13 +426,13 @@ require.def(
             },
 
             _stopPlayer: function() {
-                var result = this._playerPlugin.Execute("Stop");
+                this._playerPlugin.Execute('Stop');
 
                 this._currentTimeKnown = false;
             },
 
             _tryPauseWithStateTransition: function() {                
-                var success = this._playerPlugin.Execute("Pause");
+                var success = this._playerPlugin.Execute('Pause');
                 success = success && (success !== -1);
 
                 if (success) {
@@ -452,7 +452,7 @@ require.def(
             _updateRange: function () {
                 var self = this;
                 if (this._currentPlayer === this.PlayerEmps.StreamingPlayer) {
-                    var range = this._playerPlugin.Execute("GetPlayingRange").split('-');
+                    var range = this._playerPlugin.Execute('GetPlayingRange').split('-');
                     this._range = {
                         start: Math.floor(range[0]),
                         end: Math.floor(range[1])
@@ -463,11 +463,11 @@ require.def(
                         self._updatingTime = false;
                     }, self.RANGE_UPDATE_TOLERANCE * 1000);
                 } else if (this._currentPlayer === this.PlayerEmps.Player) {
-                    var duration = this._playerPlugin.Execute("GetDuration")/1000;
+                    var duration = this._playerPlugin.Execute('GetDuration')/1000;
                     this._range = {
                         start: 0,
                         end: duration
-                    }
+                    };
                 }
             },
 
@@ -520,7 +520,7 @@ require.def(
                 }
                 var clampedTime = this._getClampedTime(seconds);
                 if (clampedTime !== seconds) {
-                    RuntimeContext.getDevice().getLogger().debug("playFrom " + seconds+ " clamped to " + clampedTime + " - seekable range is { start: " + this._range.start + ", end: " + this._range.end + " }");
+                    RuntimeContext.getDevice().getLogger().debug('playFrom ' + seconds+ ' clamped to ' + clampedTime + ' - seekable range is { start: ' + this._range.start + ', end: ' + this._range.end + ' }');
                 }
                 return clampedTime;
             },
@@ -543,73 +543,73 @@ require.def(
 
             _registerEventHandlers: function() {
                 var self = this;
-                this._playerPlugin.OnEvent = function(eventType, param1, param2) {
+                this._playerPlugin.OnEvent = function(eventType, param1/*, param2*/) {
 
                     if (eventType !== self.PlayerEventCodes.CURRENT_PLAYBACK_TIME) {
-                        //self._logger.info("Received event " + eventType + ' ' + param1);
+                        //self._logger.info('Received event ' + eventType + ' ' + param1);
                     }
 
                     switch (eventType) {
 
-                        case self.PlayerEventCodes.STREAM_INFO_READY:
-                            self._updateRange()
-                            break;
+                    case self.PlayerEventCodes.STREAM_INFO_READY:
+                        self._updateRange();
+                        break;
 
-                        case self.PlayerEventCodes.CURRENT_PLAYBACK_TIME:
-                            if (self._range && self._isLiveMedia()) {
-                                var seconds = Math.floor(param1/1000);
-                                //jump to previous current time if PTS out of range occurs
-                                if (seconds > self._range.end + self.RANGE_END_TOLERANCE) {
-                                    self.playFrom(self._currentTime);
-                                    break;
-                                //call GetPlayingRange() on SEF emp if current time is out of range
-                                } else if (!self._isCurrentTimeInRangeTolerance(seconds)) {
-                                    self._updateRange();
-                                }
+                    case self.PlayerEventCodes.CURRENT_PLAYBACK_TIME:
+                        if (self._range && self._isLiveMedia()) {
+                            var seconds = Math.floor(param1/1000);
+                            //jump to previous current time if PTS out of range occurs
+                            if (seconds > self._range.end + self.RANGE_END_TOLERANCE) {
+                                self.playFrom(self._currentTime);
+                                break;
+                            //call GetPlayingRange() on SEF emp if current time is out of range
+                            } else if (!self._isCurrentTimeInRangeTolerance(seconds)) {
+                                self._updateRange();
                             }
-                            self._onCurrentTime(param1);
-                            break;
+                        }
+                        self._onCurrentTime(param1);
+                        break;
 
-                        case self.PlayerEventCodes.BUFFERING_START:
-                        case self.PlayerEventCodes.BUFFERING_PROGRESS:
-                            self._onDeviceBuffering();
-                            break;
+                    case self.PlayerEventCodes.BUFFERING_START:
+                    case self.PlayerEventCodes.BUFFERING_PROGRESS:
+                        self._onDeviceBuffering();
+                        break;
 
-                        case self.PlayerEventCodes.BUFFERING_COMPLETE:
-                            //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
-                            //ignore BUFFERING_COMPLETE if player is already in COMPLETE state
-                            if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
-                                self._onFinishedBuffering();
-                            }
-                            break;
+                    case self.PlayerEventCodes.BUFFERING_COMPLETE:
+                        //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
+                        //ignore BUFFERING_COMPLETE if player is already in COMPLETE state
+                        if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                            self._onFinishedBuffering();
+                        }
+                        break;
 
-                        case self.PlayerEventCodes.RENDERING_COMPLETE:
-                            //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
-                            //ignore RENDERING_COMPLETE if player is already in COMPLETE state
-                            if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
-                                self._onEndOfMedia();
-                            }
-                            break;
+                    case self.PlayerEventCodes.RENDERING_COMPLETE:
+                        //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
+                        //ignore RENDERING_COMPLETE if player is already in COMPLETE state
+                        if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
+                            self._onEndOfMedia();
+                        }
+                        break;
 
-                        case self.PlayerEventCodes.CONNECTION_FAILED:
-                            self._onDeviceError("Media element emitted OnConnectionFailed");
-                            break;
-                            
-                        case self.PlayerEventCodes.NETWORK_DISCONNECTED:
-                            self._onDeviceError("Media element emitted OnNetworkDisconnected");
-                            break;
+                    case self.PlayerEventCodes.CONNECTION_FAILED:
+                        self._onDeviceError('Media element emitted OnConnectionFailed');
+                        break;
 
-                        case self.PlayerEventCodes.AUTHENTICATION_FAILED:
-                            self._onDeviceError("Media element emitted OnAuthenticationFailed");
-                            break;
+                    case self.PlayerEventCodes.NETWORK_DISCONNECTED:
+                        self._onDeviceError('Media element emitted OnNetworkDisconnected');
+                        break;
 
-                        case self.PlayerEventCodes.RENDER_ERROR:
-                            self._onDeviceError("Media element emitted OnRenderError");
-                            break;
+                    case self.PlayerEventCodes.AUTHENTICATION_FAILED:
+                        self._onDeviceError('Media element emitted OnAuthenticationFailed');
+                        break;
 
-                        case self.PlayerEventCodes.STREAM_NOT_FOUND:
-                            self._onDeviceError("Media element emitted OnStreamNotFound");
-                            break;
+                    case self.PlayerEventCodes.RENDER_ERROR:
+                        self._onDeviceError('Media element emitted OnRenderError');
+                        break;
+
+                    case self.PlayerEventCodes.STREAM_NOT_FOUND:
+                        self._onDeviceError('Media element emitted OnStreamNotFound');
+                        break;
                     }
                 };
 
@@ -619,9 +619,6 @@ require.def(
 
                 window.addEventListener('hide', this._onWindowHide, false);
                 window.addEventListener('unload', this._onWindowHide, false);
-            },
-            _handlePlaying : function() {
-                this.bubbleEvent(new MediaEvent("playing", this));
             },
 
             _unregisterEventHandlers: function() {
@@ -666,18 +663,19 @@ require.def(
             },
 
             _jump: function (offsetSeconds) {
+                var result;
                 if (offsetSeconds > 0) {
-                    var result = this._playerPlugin.Execute("JumpForward", offsetSeconds);
+                    result = this._playerPlugin.Execute('JumpForward', offsetSeconds);
                     return result;
                 } else {
-                    var result = this._playerPlugin.Execute("JumpBackward", Math.abs(offsetSeconds));
+                    result = this._playerPlugin.Execute('JumpBackward', Math.abs(offsetSeconds));
                     return result;
                 }
             },
 
             _isHlsMimeType: function () {
                 var mime = this._mimeType.toLowerCase();
-                return mime === "application/vnd.apple.mpegurl" || mime === "application/x-mpegurl";
+                return mime === 'application/vnd.apple.mpegurl' || mime === 'application/x-mpegurl';
             },
             
             _isCurrentTimeInRangeTolerance: function (seconds) {
@@ -739,7 +737,7 @@ require.def(
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
-                throw "ApiError: " + errorMessage;
+                throw 'ApiError: ' + errorMessage;
             },
 
             /**
