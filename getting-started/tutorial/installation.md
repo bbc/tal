@@ -11,6 +11,8 @@ title: Installation and Configuration
 Create a new directory to house your application and configure your web server to serve files from it.
 If you are going to make use of the (minimal) Node.js bootstrap code included within the framework, you will also need [Node.js](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) installed.
 
+If you intend to use IIS, you can install PHP from <http://php.iis.net/>, or via the Web Platform Installer. You must also enable the CGI feature in IIS (Control Pannel-->Turn Windows features on or off-->Internet Information Services-->World Wide Web Services-->Application Development Features-->CGI).
+
 Within the application directory, check out the TAL repo to a folder named 'antie' (the internal name for TAL)
 
     git clone https://github.com/fmtvp/tal.git antie
