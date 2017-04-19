@@ -243,7 +243,7 @@ require.def(
              */
             beginPlaybackFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+                var seekingTo = this.getSeekableRange() ? this._getClampedTimeForPlayFrom(seconds) : seconds;
                 
                 //StartPlayback from live position 0 causes spoiler defect
                 if (seekingTo === 0 && this._isLiveMedia()) {
@@ -355,7 +355,15 @@ require.def(
             * @inheritDoc
             */
             getSeekableRange: function () {
-                return this._range;
+                switch (this.getState()) {
+                case MediaPlayer.STATE.STOPPED:
+                case MediaPlayer.STATE.ERROR:
+                    break;
+
+                default:
+                    return this._range;
+                }
+                return undefined;
             },
             
             _isLiveRangeOutdated: function () {
