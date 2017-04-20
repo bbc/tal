@@ -722,6 +722,9 @@ require.def(
             },
 
             _toPlaying: function () {
+                if (this._isHlsMimeType() && this._isLiveMedia() && !this._updatingTime) {
+                    this._updateRange();
+                }
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
             },
