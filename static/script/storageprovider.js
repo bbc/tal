@@ -25,6 +25,15 @@ define(
             },
             clear: function() {
                 this._valueCache = {};
+            },
+            isEmpty: function() {
+                var prop;
+                for(prop in this._valueCache) {
+                    if(this._valueCache.hasOwnProperty(prop)) {
+                        return false;
+                    }
+                }
+                return true;
             }
         });
 

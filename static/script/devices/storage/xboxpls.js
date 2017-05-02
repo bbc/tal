@@ -46,6 +46,10 @@ define(
 
             clear: function() {
                 this._storage.clear();
+            },
+
+            isEmpty: function() {
+                return this._storage.Size === 0;
             }
         });
 

@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, text) {
+            init: function(id, text, enableHTML) {
                 // The current API states that if only one parameter is passed to
                 // use that value as the text and auto generate an internal id
                 if(arguments.length === 1) {
@@ -35,6 +35,7 @@ define(
                 }
                 this._truncationMode = Label.TRUNCATION_MODE_NONE;
                 this._maxLines = 0;
+                this._enableHTML = enableHTML || false;
                 this._width = 0;
                 this.addClass('label');
             },
@@ -81,9 +82,9 @@ define(
                 }
 
                 if(!this.outputElement) {
-                    this.outputElement = device.createLabel(this.id, this.getClasses(), s);
+                    this.outputElement = device.createLabel(this.id, this.getClasses(), s, this._enableHTML);
                 } else {
-                    device.setElementContent(this.outputElement, s);
+                    device.setElementContent(this.outputElement, s, this._enableHTML);
                 }
 
                 return this.outputElement;

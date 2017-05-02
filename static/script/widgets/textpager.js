@@ -26,8 +26,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id) {
-                this._super(id, '');
+            init: function(id, enableHTML) {
+                this._super(id, '', enableHTML);
                 this.addClass('textpager');
                 this._page = 1;
             },
@@ -44,7 +44,7 @@ define(
                     this.innerElement = device.createContainer(this.id + '_inner');
                     this.outputElement.appendChild(this.innerElement);
                 }
-                device.setElementContent(this.innerElement, s);
+                device.setElementContent(this.innerElement, s, this._enableHTML);
 
                 return this.outputElement;
             },

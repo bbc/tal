@@ -43,6 +43,12 @@ require(
                 storage.clear();
                 expect(mock().storage).toEqual({});
             });
+
+            it('is Empty', function() {
+                expect(storage.isEmpty()).toEqual(true);
+                storage.setItem('key', {value: true});
+                expect(storage.isEmpty()).toEqual(false);
+            });
         });
 
         function mock() {
@@ -57,17 +63,20 @@ require(
                                     values: {
                                         insert: function(key, value) {
                                             mock().storage[key] = value;
+                                            mock().storage.Size++;
                                         },
                                         lookup: function(key) {
                                             return mock().storage[key];
                                         },
                                         clear: function() {
                                             mock().storage = {};
+                                            mock().storage.Size = 0;
                                         },
                                         hasKey: function(key) {
                                             return mock().storage.hasOwnProperty(key);
                                         }
-                                    }
+                                    },
+                                    Size: 0
                                 }
                             }
                         }

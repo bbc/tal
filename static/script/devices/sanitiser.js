@@ -12,8 +12,8 @@ define('antie/devices/sanitiser', [], function () {
         this._string = string;
     }
 
-    Sanitiser.prototype.setElementContent = function (el) {
-        el.innerHTML = this._string;
+    Sanitiser.prototype.setElementContent = function (el, enableHTML) {
+        el[enableHTML? 'innerHTML' : 'textContent'] = this._string;
     };
 
     return Sanitiser;
