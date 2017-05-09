@@ -85,6 +85,9 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             }
             clock.restore();
             clock = undefined;
+        },
+        pause: function () {
+            mediaEventListeners.pause();
         }
     };
 
@@ -588,6 +591,18 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             self._mediaPlayer.pause();
 
             assert(stubCreateElementResults.video.pause.calledOnce);
+        });
+    };
+
+    // *********************
+    mixins.testPausePassedFromMediaElementToMediaPlayer = function(queue) {
+        expectAsserts(1);
+        var self = this;
+        runMediaPlayerTest(this, queue, function (MediaPlayer) {
+            getToPlaying(self, MediaPlayer);
+            deviceMockingHooks.pause();
+
+            assertState(self, MediaPlayer.STATE.PAUSED);
         });
     };
 

@@ -380,11 +380,9 @@ define(
             },
 
             _onPause: function() {
-                if (this.getState() === MediaPlayer.STATE.PAUSED) {
-                    return;
+                if (this.getState() !== MediaPlayer.STATE.PAUSED) {
+                    this._toPaused();
                 }
-
-                this._toPaused();
             },
 
             _onDeviceError: function() {
