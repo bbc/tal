@@ -424,4 +424,59 @@
             }, config);
     };
 
+    this.KeyboardTest.prototype.testKeyboardModalityHorizontal = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 2, ['a', 'b', 'c',
+                                                         'd', 'e', 'f'], 1, 0);
+
+                //a -> b
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //b -> c
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //c -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //a -> b
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                assertEquals('b', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
+            });
+    };
+
+    this.KeyboardTest.prototype.testKeyboardModalityVertical = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
+                                                         'd', 'e', 'f',
+                                                         'g', 'h', 'i'], 0, 1);
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> g
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //g -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                assertEquals('d', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
+            });
+    };
+
 })();
