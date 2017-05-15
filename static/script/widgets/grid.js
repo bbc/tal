@@ -24,17 +24,23 @@ define(
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {Integer} cols The number of columns in the grid.
          * @param {Integer} rows The number of rows in the grid.
+         * @param {boolean} horizontal_wrapping Enable or disable horizontal wrapping.
+         * @param {boolean} vertical_wrapping Enable or disable vertical wrapping.
          */
         var Grid = Container.extend(/** @lends antie.widgets.Grid.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function (id, cols, rows) {
+            init: function (id, cols, rows, horizontal_wrapping, vertical_wrapping) {
                 this._super(id);
                 this.addClass('grid');
+
                 this._cols = cols;
                 this._rows = rows;
+
+                this._horizontal_wrapping =  !!horizontal_wrapping;
+                this._vertical_wrapping = !!vertical_wrapping;
 
                 this._selectedRow = 0;
                 this._selectedCol = 0;
@@ -204,11 +210,37 @@ define(
                     } else if (evt.keyCode === KeyEvent.VK_RIGHT) {
                         _newSelectedCol++;
                     }
-                    if (_newSelectedCol < 0 || _newSelectedCol >= this._cols) {
-                        break;
+
+                    if (_newSelectedCol < 0) {
+                        if(this._horizontal_wrapping) {
+                            _newSelectedCol = this._cols - 1;
+                        } else {
+                            break;
+                        }
                     }
-                    if (_newSelectedRow < 0 || _newSelectedRow >= this._rows) {
-                        break;
+
+                    if(_newSelectedCol >= this._cols) {
+                        if(this._horizontal_wrapping) {
+                            _newSelectedCol = 0;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (_newSelectedRow < 0) {
+                        if(this._vertical_wrapping) {
+                            _newSelectedRow = this._rows - 1;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if(_newSelectedRow >= this._rows) {
+                        if(this._vertical_wrapping) {
+                            _newSelectedRow = 0;
+                        } else {
+                            break;
+                        }
                     }
 
                     var _newSelectedIndex = (_newSelectedRow * this._cols) + _newSelectedCol;
@@ -243,6 +275,18 @@ define(
                 }
             }
         });
+
+        Grid.WRAP_MODE = {
+            HORIZONTAL: {
+                ON: 1,
+                OFF: 0
+            },
+
+            VERTICAL: {
+                ON: 1,
+                OFF: 0
+            }
+        };
 
         return Grid;
     }

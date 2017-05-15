@@ -35,8 +35,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, cols, rows, keys) {
-                this._super(id, cols, rows);
+            init: function(id, cols, rows, keys, horizontal_wrapping, vertical_wrapping) {
+                this._super(id, cols, rows, horizontal_wrapping, vertical_wrapping);
 
                 this.addClass('keyboard');
 
