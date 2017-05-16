@@ -431,7 +431,7 @@
             queue,
             'lib/mockapplication',
             ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent, Grid) {
+            function(application, Keyboard, Grid, KeyEvent) {
                 var keyboard = new Keyboard('id', 3, 2, ['a', 'b', 'c',
                                                          'd', 'e', 'f'],
                                                          Grid.WRAP_MODE.HORIZONTAL.ON,
@@ -460,7 +460,7 @@
             queue,
             'lib/mockapplication',
             ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent, Grid) {
+            function(application, Keyboard, Grid, KeyEvent) {
                 var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
                                                          'd', 'e', 'f',
                                                          'g', 'h', 'i'],
@@ -490,7 +490,7 @@
             queue,
             'lib/mockapplication',
             ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent, Grid) {
+            function(application, Keyboard, Grid, KeyEvent) {
                 var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
                                                          'd', 'e', 'f',
                                                          'g', 'h', 'i'],
