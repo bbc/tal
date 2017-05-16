@@ -24,23 +24,23 @@ define(
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {Integer} cols The number of columns in the grid.
          * @param {Integer} rows The number of rows in the grid.
-         * @param {boolean} horizontal_wrapping Enable or disable horizontal wrapping.
-         * @param {boolean} vertical_wrapping Enable or disable vertical wrapping.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          */
         var Grid = Container.extend(/** @lends antie.widgets.Grid.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function (id, cols, rows, horizontal_wrapping, vertical_wrapping) {
+            init: function (id, cols, rows, horizontalWrapping, verticalWrapping) {
                 this._super(id);
                 this.addClass('grid');
 
                 this._cols = cols;
                 this._rows = rows;
 
-                this._horizontal_wrapping =  !!horizontal_wrapping;
-                this._vertical_wrapping = !!vertical_wrapping;
+                this._horizontalWrapping =  !!horizontalWrapping;
+                this._verticalWrapping = !!verticalWrapping;
 
                 this._selectedRow = 0;
                 this._selectedCol = 0;
@@ -212,7 +212,7 @@ define(
                     }
 
                     if (_newSelectedCol < 0) {
-                        if(this._horizontal_wrapping) {
+                        if(this._horizontalWrapping) {
                             _newSelectedCol = this._cols - 1;
                         } else {
                             break;
@@ -220,7 +220,7 @@ define(
                     }
 
                     if(_newSelectedCol >= this._cols) {
-                        if(this._horizontal_wrapping) {
+                        if(this._horizontalWrapping) {
                             _newSelectedCol = 0;
                         } else {
                             break;
@@ -228,7 +228,7 @@ define(
                     }
 
                     if (_newSelectedRow < 0) {
-                        if(this._vertical_wrapping) {
+                        if(this._verticalWrapping) {
                             _newSelectedRow = this._rows - 1;
                         } else {
                             break;
@@ -236,7 +236,7 @@ define(
                     }
 
                     if(_newSelectedRow >= this._rows) {
-                        if(this._vertical_wrapping) {
+                        if(this._verticalWrapping) {
                             _newSelectedRow = 0;
                         } else {
                             break;

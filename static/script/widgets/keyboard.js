@@ -25,6 +25,8 @@ define(
          * @param {Integer} cols The number of columns of keys on the keyboard.
          * @param {Integer} rows The number of rows of keys on the keyboard.
          * @param {String} keys A string of characters which make up the keys, starting top-left and working row-by-row to the bottom-right.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          *          Special characters include:
          *              "-" DEL
          *              " " SPACE
@@ -35,8 +37,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, cols, rows, keys, horizontal_wrapping, vertical_wrapping) {
-                this._super(id, cols, rows, horizontal_wrapping, vertical_wrapping);
+            init: function(id, cols, rows, keys, horizontalWrapping, verticalWrapping) {
+                this._super(id, cols, rows, horizontalWrapping, verticalWrapping);
 
                 this.addClass('keyboard');
 
