@@ -430,10 +430,12 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            ['antie/widgets/keyboard', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent) {
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent, Grid) {
                 var keyboard = new Keyboard('id', 3, 2, ['a', 'b', 'c',
-                                                         'd', 'e', 'f'], 1, 0);
+                                                         'd', 'e', 'f'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.ON,
+                                                         Grid.WRAP_MODE.VERTICAL.OFF);
 
                 //a -> b
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
@@ -457,11 +459,13 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            ['antie/widgets/keyboard', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent) {
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent, Grid) {
                 var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
                                                          'd', 'e', 'f',
-                                                         'g', 'h', 'i'], 0, 1);
+                                                         'g', 'h', 'i'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.OFF,
+                                                         Grid.WRAP_MODE.VERTICAL.ON);
 
                 //a -> d
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
@@ -485,11 +489,13 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            ['antie/widgets/keyboard', 'antie/events/keyevent'],
-            function(application, Keyboard, KeyEvent) {
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent, Grid) {
                 var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
                                                          'd', 'e', 'f',
-                                                         'g', 'h', 'i'], 1, 1);
+                                                         'g', 'h', 'i'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.ON,
+                                                         Grid.WRAP_MODE.VERTICAL.ON);
 
                 //a -> d
                 keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
