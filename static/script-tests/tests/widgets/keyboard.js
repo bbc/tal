@@ -479,4 +479,44 @@
             });
     };
 
+    this.KeyboardTest.prototype.testKeyboardModalityHorizontalVertical = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
+                                                         'd', 'e', 'f',
+                                                         'g', 'h', 'i'], 1, 1);
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> g
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //g -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> e
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //e -> f
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //f -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //d -> e
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                assertEquals('e', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
+            });
+    };
+
 })();
