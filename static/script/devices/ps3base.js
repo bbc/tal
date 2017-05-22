@@ -74,9 +74,6 @@ define(
                 var callbacks = this._nativeCallbacks[data.command];
                 if(callbacks && callbacks.length > 0) {
                     switch(data.command) {
-                    case 'networkStatusChange':
-                    case 'contentAvailable':
-                    case 'playerStatusChange':
                     case 'getContentParameters':
                     case 'contentAvailable':
                     case 'applicationStatusChange':
