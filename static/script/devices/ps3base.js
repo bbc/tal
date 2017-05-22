@@ -78,7 +78,6 @@ define(
                     case 'contentAvailable':
                     case 'playerStatusChange':
                     case 'getContentParameters':
-                    case 'externalParameter':
                     case 'contentAvailable':
                     case 'applicationStatusChange':
                     case 'networkStatusChange':
