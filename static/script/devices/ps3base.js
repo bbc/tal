@@ -74,10 +74,29 @@ define(
                 var callbacks = this._nativeCallbacks[data.command];
                 if(callbacks && callbacks.length > 0) {
                     switch(data.command) {
-                    case 'networkStatusChange':
-                    case 'contentAvailable':
-                    case 'playerStatusChange':
                     case 'getContentParameters':
+                    case 'contentAvailable':
+                    case 'applicationStatusChange':
+                    case 'networkStatusChange':
+                    case 'playerStatusChange':
+                    case 'playerSubtitle':
+                    case 'playerStreamingError':
+                    case 'playerError':
+                    case 'playerMessage':
+                    case 'externalParameter':
+                    case 'shutdownNotification':
+                    case 'fbAccessToken':
+                    case 'psnActivityFeedResponse':
+                    case 'onOskClose':
+                    case 'touchPanelEvent':
+                    case 'psnCommerceProductDataResponse':
+                    case 'psnCommerceCategoryDataResponse':
+                    case 'psnEntitlementList':
+                    case 'psnCommercePurchaseProductResponse':
+                    case 'psnCommerceCheckoutResponse':
+                    case 'lowBatteryNotification':
+                    case 'npAuthCodeResponse':
+                    case 'resetVrPosition':
                         // multiple event listeners may be listening for these events
                         for(var i = 0; i < callbacks.length; i++) {
                             callbacks[i](data);
