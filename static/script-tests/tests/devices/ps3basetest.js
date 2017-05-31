@@ -14,6 +14,7 @@ require(
         describe('antie.devices.PS3Base', function () {
             var device;
 
+            // accessfunction is the way playstation sends system events from the WebMAF to the DOM
             function example_accessfunction(json) {
                 // See: https://github.com/bbc/tal-page-strategies/blob/master/playstation3/body
                 device.nativeCallback(JSON.stringify(json));
@@ -57,6 +58,18 @@ require(
 
             it('should expose isHDEnabled as a method', function () {
                 expect(typeof device.isHDEnabled).toEqual('function');
+            });
+
+            it('should convert any system events into message events using window.postEvent', function (done) {
+                window.addEventListener('message', function(event) {
+                    expect(event.data.command).toEqual('externalParameter');
+                    expect(event.data.value).toEqual('some data');
+                    done();
+                });
+                example_accessfunction({
+                    command: 'externalParameter',
+                    value: 'some data'
+                });
             });
         });
     });
