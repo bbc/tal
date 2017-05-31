@@ -109,6 +109,10 @@ define(
                         break;
                     }
                 }
+
+                if (typeof window.postMessage === 'function') {
+                    window.postMessage(data, '*');
+                }
             },
             addNativeEventListener: function(name, callback) {
                 var callbacks;
