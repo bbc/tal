@@ -1,0 +1,3 @@
+This page strategy has been created to ensure that the required `oipfDrmAgent` object for HbbTV devices is inserted into the page.
+
+This object is used for DRM purposes and can be used to debug DRM errors.
