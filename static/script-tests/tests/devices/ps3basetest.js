@@ -5,7 +5,8 @@
 
 require(
     [
-        'antie/devices/ps3base'
+        'antie/devices/ps3base',
+        'antie/devices/data/nativejson'
     ],
     function (PS3Base) {
         'use strict';
@@ -13,8 +14,25 @@ require(
         describe('antie.devices.PS3Base', function () {
             var device;
 
+            function example_accessfunction(json) {
+                // See: https://github.com/bbc/tal-page-strategies/blob/master/playstation3/body
+                device.nativeCallback(JSON.stringify(json));
+            }
+
             beforeEach(function () {
                 device = new PS3Base(antie.framework.deviceConfiguration);
+            });
+
+            it('should respond to a registered system event', function (done) {
+                device.addNativeEventListener('externalParameter', function (data) {
+                    expect(data.command).toEqual('externalParameter');
+                    expect(data.value).toEqual('some data');
+                    done();
+                });
+                example_accessfunction({
+                    command: 'externalParameter',
+                    value: 'some data'
+                });
             });
 
             it('should expose nativeCallback as a method', function () {
