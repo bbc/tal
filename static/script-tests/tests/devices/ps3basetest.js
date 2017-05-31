@@ -19,7 +19,6 @@ require(
 
       it('should expose nativeCallback as a method', function () {
         expect(typeof device.nativeCallback).toEqual('function');
-        debugger;
       });
     })
   });
