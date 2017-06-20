@@ -265,7 +265,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -282,7 +282,7 @@
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
-            assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);

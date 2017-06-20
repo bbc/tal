@@ -82,12 +82,11 @@ require.def(
                     this._toStopped();
 
                     if (this._isHlsMimeType()) {
+                        this._openStreamingPlayerPlugin();
                         if (this._isLiveMedia()) {
                             this._source += '|HLSSLIDING|COMPONENT=HLS';
-                            this._openStreamingPlayerPlugin();
                         } else {
                             this._source += '|COMPONENT=HLS';
-                            this._openPlayerPlugin();
                         }
                     } else {
                         this._openPlayerPlugin();
