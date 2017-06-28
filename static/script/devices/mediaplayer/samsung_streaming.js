@@ -458,7 +458,7 @@ require.def(
 
             _updateRange: function () {
                 var self = this;
-                if (this._currentPlayer === this.PlayerEmps.StreamingPlayer) {
+                if (this._isHlsMimeType() && this._isLiveMedia()) {
                     var range = this._playerPlugin.Execute('GetPlayingRange').split('-');
                     this._range = {
                         start: Math.floor(range[0]),
@@ -469,7 +469,7 @@ require.def(
                     setTimeout(function () {
                         self._updatingTime = false;
                     }, self.RANGE_UPDATE_TOLERANCE * 1000);
-                } else if (this._currentPlayer === this.PlayerEmps.Player) {
+                } else {
                     var duration = this._playerPlugin.Execute('GetDuration')/1000;
                     this._range = {
                         start: 0,

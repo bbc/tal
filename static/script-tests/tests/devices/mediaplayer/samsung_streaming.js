@@ -259,7 +259,7 @@
 
 
     /*HLS specific tests START*/
-    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testPlayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(9);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
@@ -276,7 +276,7 @@
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
     };
-    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testPlayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
@@ -516,6 +516,19 @@
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
             assert(playerPlugin._methods.JumpForward.notCalled);
+        });
+    };
+
+    this.SamsungStreamingMediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetPlayingRange = function (queue) {
+        expectAsserts(4);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.beginPlaybackFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+
+            assert(playerPlugin._methods.GetPlayingRange.notCalled);
+            assert(playerPlugin._methods.GetDuration.calledOnce);
+            assertEquals(100, this._mediaPlayer.getDuration());
         });
     };
     /*HLS specific tests END*/
