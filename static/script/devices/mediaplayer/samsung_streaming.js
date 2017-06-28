@@ -245,7 +245,7 @@ require.def(
                 var seekingTo = this.getSeekableRange() ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
                 //StartPlayback from live position 0 causes spoiler defect
-                if (seekingTo === 0 && this._isLiveMedia()) {
+                if (seekingTo < this.CLAMP_OFFSET_FROM_START_OF_RANGE && this._isLiveMedia()) {
                     seekingTo = this.CLAMP_OFFSET_FROM_START_OF_RANGE;
                 } else {
                     seekingTo = parseInt(Math.floor(seekingTo), 10);

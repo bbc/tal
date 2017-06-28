@@ -345,6 +345,25 @@
         });
     };
 
+    this.SamsungStreamingMediaPlayerTests.prototype.testHlsLiveStartPlaybackFromNearStartUsesClampOffsetFromStartOfRange = function(queue) {
+        expectAsserts(9);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            assert(playerPlugin.Open.notCalled);
+            assert(playerPlugin._methods.InitPlayer.notCalled);
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
+            assert(playerPlugin.Open.calledOnce);
+            assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
+            assert(playerPlugin._methods.InitPlayer.calledOnce);
+
+            assert(playerPlugin._methods.StartPlayback.notCalled);
+            this._mediaPlayer.beginPlaybackFrom(0.1);
+            assert(playerPlugin._methods.StartPlayback.calledOnce);
+            //live playback started from 0 position causes spoiler defect
+            assertEquals(this._mediaPlayer.CLAMP_OFFSET_FROM_START_OF_RANGE, playerPlugin._methods.StartPlayback.args[0][0]);
+        });
+    };
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsLiveResumePlayCalledWithTimePassedIntoBeginPlaybackFrom = function(queue) {
         expectAsserts(9);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
