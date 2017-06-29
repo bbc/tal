@@ -146,7 +146,7 @@
                                   self.sandbox.stub(self._device, 'getScreenSize').returns(screenSize);
                                   self._errorLog = self.sandbox.stub(self._device.getLogger(), 'error');
                                   self._mediaPlayer = self._device.getMediaPlayer();
-            
+
                                   action.call(self, MediaPlayer);
                               }, config);
     };
@@ -154,7 +154,7 @@
     //---------------------
     // Samsung Streaming specific tests
     //---------------------
-    
+
     var listenerEventCodes = {
         CONNECTION_FAILED : 1,
         AUTHENTICATION_FAILED : 2,
@@ -174,7 +174,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            
+
             assertUndefined('Expecting playerPlaugin.OnEvent to be undefined', playerPlugin.OnEvent);
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
@@ -220,7 +220,7 @@
             assertUndefined(playerPlugin['OnEvent']);
 
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
-            
+
             assertFunction(playerPlugin['OnEvent']);
         });
     };
@@ -256,10 +256,10 @@
 
         });
     };
-    
-    
+
+
     /*HLS specific tests START*/
-    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testPlayerOpenPluginThenHlsStartPlaybackCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(9);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
@@ -269,14 +269,14 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledWith(0));
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
     };
-    this.SamsungStreamingMediaPlayerTests.prototype.testPLayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testPlayerOpenPluginThenHlsPlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
@@ -286,7 +286,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin._methods.StartPlayback.calledOnce);
@@ -303,12 +303,12 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
-    }; 
+    };
     this.SamsungStreamingMediaPlayerTests.prototype.testStreamingPLayerOpenPluginThenHlsLivePlayCalledOnDeviceWhenBeginPlaybackFromCalledInStoppedState = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -319,7 +319,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin._methods.StartPlayback.calledOnce);
@@ -336,7 +336,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
@@ -344,7 +344,26 @@
             assertEquals(this._mediaPlayer.CLAMP_OFFSET_FROM_START_OF_RANGE, playerPlugin._methods.StartPlayback.args[0][0]);
         });
     };
-    
+
+    this.SamsungStreamingMediaPlayerTests.prototype.testHlsLiveStartPlaybackFromNearStartUsesClampOffsetFromStartOfRange = function(queue) {
+        expectAsserts(9);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            assert(playerPlugin.Open.notCalled);
+            assert(playerPlugin._methods.InitPlayer.notCalled);
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
+            assert(playerPlugin.Open.calledOnce);
+            assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
+            assert(playerPlugin._methods.InitPlayer.calledOnce);
+
+            assert(playerPlugin._methods.StartPlayback.notCalled);
+            this._mediaPlayer.beginPlaybackFrom(0.1);
+            assert(playerPlugin._methods.StartPlayback.calledOnce);
+            //live playback started from 0 position causes spoiler defect
+            assertEquals(this._mediaPlayer.CLAMP_OFFSET_FROM_START_OF_RANGE, playerPlugin._methods.StartPlayback.args[0][0]);
+        });
+    };
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsLiveResumePlayCalledWithTimePassedIntoBeginPlaybackFrom = function(queue) {
         expectAsserts(9);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -355,14 +374,14 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(19);
             assert(playerPlugin._methods.StartPlayback.calledWith(19));
             assert(playerPlugin._methods.StartPlayback.calledOnce);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateCalledBeforeJumpForward = function (queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -374,18 +393,18 @@
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 0);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             this._mediaPlayer._updatingTime = false;
-            
+
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
-            
+
             playerPlugin._range = {
                 start: 24,
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 22 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
-            
+
             assert(playerPlugin._methods.JumpForward.notCalled);
             this._mediaPlayer.playFrom(50);
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
@@ -393,7 +412,7 @@
             assert(playerPlugin._methods.JumpForward.calledOnce);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateCalledBeforeJumpBackward = function (queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -405,18 +424,18 @@
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 90 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             this._mediaPlayer._updatingTime = false;
-            
+
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
-            
+
             playerPlugin._range = {
                 start: 24,
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 122 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
-            
+
             assert(playerPlugin._methods.JumpBackward.notCalled);
             this._mediaPlayer.playFrom(10);
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
@@ -424,7 +443,7 @@
             assert(playerPlugin._methods.JumpBackward.calledOnce);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateNotCalledWhileInRangeTolerance = function (queue) {
         expectAsserts(6);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -434,20 +453,20 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 100 * 1000);
-            
+
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.StartPlayback.calledOnce);
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
-            
+
             this._mediaPlayer.playFrom(10);
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
-            
+
             this._mediaPlayer._updatingTime = false;
             this._mediaPlayer.playFrom(20);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateOnCurrentTimeGreaterThanEndRangeTolerance = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -457,23 +476,23 @@
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 100 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            
+
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
             this._mediaPlayer._updatingTime = false;
-            
+
             this._mediaPlayer._range = {
                 start: 24,
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 133 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
-            
+
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
             assert(playerPlugin._methods.JumpBackward.notCalled);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateOnCurrentTimeLowerThanStartRangeTolerance = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -483,24 +502,37 @@
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME,  this._mediaPlayer.CLAMP_OFFSET_FROM_END_OF_RANGE * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
-            
+
             assert(playerPlugin._methods.GetPlayingRange.calledOnce);
             this._mediaPlayer._updatingTime = false;
-            
+
             this._mediaPlayer._range = {
                 start: 24,
                 end: 124
             };
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 15 * 1000);
             playerPlugin._methods.GetPlayingRange.returns(playerPlugin._range.start + '-' + playerPlugin._range.end);
-            
+
             assertEquals(this._mediaPlayer_range, playerPlugin._methods.GetPlayingRange.args[1][0]);
             assert(playerPlugin._methods.GetPlayingRange.calledTwice);
             assert(playerPlugin._methods.JumpForward.notCalled);
         });
     };
+
+    this.SamsungStreamingMediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetPlayingRange = function (queue) {
+        expectAsserts(4);
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.beginPlaybackFrom(0);
+            deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
+
+            assert(playerPlugin._methods.GetPlayingRange.notCalled);
+            assert(playerPlugin._methods.GetDuration.calledOnce);
+            assertEquals(100, this._mediaPlayer.getDuration());
+        });
+    };
     /*HLS specific tests END*/
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testSetSourceInitPlayerFailsReturningZero = function(queue) {
         var initPlayerReturnCode = 0;
         doTestSetSourceInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
@@ -522,15 +554,15 @@
             var eventHandler = self.sandbox.stub();
             self._mediaPlayer.addEventCallback(null, eventHandler);
             playerPlugin._methods.InitPlayer.returns(initPlayerReturnCode);
-            
+
             try {
                 self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
                 self._mediaPlayer.beginPlayback();
-            } catch (e) {}            
-            
+            } catch (e) {}
+
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.StartPlayback.notCalled);
-            
+
             assert(eventHandler.calledTwice);
             assertEquals(MediaPlayer.EVENT.ERROR, eventHandler.args[1][0].type);
             assertEquals('Failed to initialize video: testUrl', eventHandler.args[1][0].errorMessage);
@@ -547,7 +579,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(0);
             assert(playerPlugin._methods.StartPlayback.calledWith(0));
@@ -565,7 +597,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin._methods.StartPlayback.calledOnce);
@@ -598,7 +630,7 @@
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
             assert(playerPlugin._methods.InitPlayer.calledOnce);
-            
+
             assert(playerPlugin._methods.StartPlayback.notCalled);
             this._mediaPlayer.beginPlaybackFrom(19);
             assert(playerPlugin._methods.StartPlayback.calledWith(19));
@@ -633,7 +665,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
-            
+
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testUrl'));
             assert(playerPlugin._methods.StartPlayback.calledOnce);
@@ -767,7 +799,7 @@
             assert(playerPlugin._methods.JumpBackward.calledWith(30));
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPlayingThenPlayFromWhileBufferingSeeksAndPlays = function(queue) {
         expectAsserts(14);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -789,16 +821,16 @@
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             assert(playerPlugin._methods.JumpBackward.calledOnce);
             assert(playerPlugin._methods.JumpBackward.calledWith(30));
-            
+
             this._mediaPlayer.playFrom(10);
             assert(playerPlugin._methods.JumpBackward.calledOnce);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 20000);
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            
+
             assert(playerPlugin._methods.JumpBackward.calledTwice);
             assertEquals(10, playerPlugin._methods.JumpBackward.args[1][0]);
-            
+
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 10000);
             assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
@@ -935,7 +967,7 @@
             assertEquals(MediaPlayer.STATE.PAUSED, this._mediaPlayer.getState());
 
             assert(playerPlugin._methods.Resume.notCalled);
-            
+
             this._mediaPlayer.resume();
 
             assert(playerPlugin._methods.Resume.calledOnce);
@@ -1010,7 +1042,7 @@
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
-            
+
             playerPlugin.OnEvent(listenerEventCodes.RENDER_ERROR);
 
             var expectedError = 'Media element emitted OnRenderError';
@@ -1187,7 +1219,7 @@
             playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
-            
+
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
             this._mediaPlayer.playFrom(100);
 
@@ -1251,7 +1283,7 @@
             this._mediaPlayer.addEventCallback(null, callback);
 
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 10000);
-            
+
             assert(callback.calledOnce);
             assertEquals(10, callback.args[0][0].currentTime);
 
@@ -1476,7 +1508,7 @@
             assert(playerPlugin._methods.Stop.calledOnce);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaPlayerIgnorePeriodicRenderingCompleteEventInCompleteState = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
@@ -1485,55 +1517,55 @@
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 0);
-            
+
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
-            
+
             assert(eventHandler.notCalled);
             deviceMockingHooks.reachEndOfMedia(this._mediaPlayer);
             assertEquals(MediaPlayer.EVENT.COMPLETE, eventHandler.args[1][0].type);
             assert(eventHandler.calledTwice);
-            
+
             //if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
             //ignore BUFFERING_COMPLETE and RENDERING_COMPLETE if player is already in COMPLETE state
             playerPlugin.OnEvent(listenerEventCodes.BUFFERING_COMPLETE);
             playerPlugin.OnEvent(listenerEventCodes.RENDERING_COMPLETE);
-            
+
             assert(eventHandler.calledTwice);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testPluginCloseCalledOnReset = function(queue) {
         expectAsserts(6);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            assert(playerPlugin.Open.notCalled);            
+            assert(playerPlugin.Open.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             assert(playerPlugin.Open.calledOnce);
-            
-            assert(playerPlugin.Close.notCalled); 
+
+            assert(playerPlugin.Close.notCalled);
             this._mediaPlayer.reset();
             assert(playerPlugin.Close.calledOnce);
-                        
+
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             assert(playerPlugin.Close.calledOnce);
-            assert(playerPlugin.Open.calledTwice);            
+            assert(playerPlugin.Open.calledTwice);
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testPluginCloseNotCalledAfterStopCalledThenStartPlayback = function(queue) {
         expectAsserts(7);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            assert(playerPlugin.Open.notCalled);            
+            assert(playerPlugin.Open.notCalled);
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin.Open.calledOnce);
-             
+
             this._mediaPlayer.stop();
             assert(playerPlugin.Close.notCalled);
-                        
+
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin.Close.notCalled);
-            assert(playerPlugin.Open.calledOnce); 
+            assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledOnce);
             assert(playerPlugin._methods.StartPlayback.calledTwice);
         });
@@ -1606,6 +1638,20 @@
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 20000);
 
             assertEquals(20, this._mediaPlayer.getCurrentTime());
+        });
+    };
+
+    this.SamsungStreamingMediaPlayerTests.prototype.testRangeIsUpdatedByBufferingCompleteEvents = function(queue) {
+        runMediaPlayerTest(this, queue, function(MediaPlayer) {
+            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.beginPlaybackFrom(0);
+            playerPlugin._methods.GetPlayingRange.returns('0-60');
+            playerPlugin._methods.GetDuration.returns(60 * 1000);
+            deviceMockingHooks.finishBuffering(this._mediaPlayer);
+
+            assertEquals(MediaPlayer.STATE.PLAYING, this._mediaPlayer.getState());
+            assertEquals(60, this._mediaPlayer.getDuration());
+            assertEquals({ start: 0, end: 60 }, this._mediaPlayer.getSeekableRange());
         });
     };
 
@@ -1868,7 +1914,7 @@
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
-            
+
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
 
@@ -1909,7 +1955,7 @@
             assert(playerPlugin._methods.InitPlayer.calledWith('test/url|COMPONENT=HLS'));
         });
     };
-    
+
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsLiveFragmentAppended = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
