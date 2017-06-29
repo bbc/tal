@@ -244,7 +244,7 @@ require.def(
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this.getSeekableRange() ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
-                //StartPlayback from live position 0 causes spoiler defect
+                //StartPlayback from near start of range causes spoiler defect
                 if (seekingTo < this.CLAMP_OFFSET_FROM_START_OF_RANGE && this._isLiveMedia()) {
                     seekingTo = this.CLAMP_OFFSET_FROM_START_OF_RANGE;
                 } else {
@@ -583,6 +583,7 @@ require.def(
                         break;
 
                     case self.PlayerEventCodes.BUFFERING_COMPLETE:
+                        // For live HLS, don't update the range more than once every 8 seconds
                         if (!self._updatingTime) {
                             self._updateRange();
                         }
