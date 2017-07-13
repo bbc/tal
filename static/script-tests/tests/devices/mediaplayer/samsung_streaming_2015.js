@@ -377,7 +377,7 @@
             assert(playerPlugin._methods.JumpForward.notCalled);
         });
         
-        this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetLiveDuration = function (queue) {
+    this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetLiveDuration = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
@@ -388,7 +388,6 @@
             assert(playerPlugin._methods.GetDuration.calledOnce);
             assertEquals(100, this._mediaPlayer.getDuration());
         });
-    };
     };
     /*HLS specific tests END*/
 
