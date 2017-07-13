@@ -376,6 +376,7 @@
             assert(playerPlugin._methods.GetLiveDuration.calledTwice);
             assert(playerPlugin._methods.JumpForward.notCalled);
         });
+    };
         
     this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetLiveDuration = function (queue) {
         expectAsserts(4);
