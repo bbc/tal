@@ -17,7 +17,7 @@ require.def(
          * MediaPlayer implementation for Samsung devices supporting HLS Live Seek implementing the Streaming API.
          * Use this device modifier if a device implements the Samsung Maple media playback standard.
          * It must support creation of &lt;object&gt; elements with appropriate SAMSUNG_INFOLINK classids.
-         * Those objects must expose an API in accordance with the Samsung Maple media specification.
+         * Those objects must expose an API in accordance with the Samsung Streaming media specification.
          * @name antie.devices.mediaplayer.SamsungStreaming
          * @class
          * @extends antie.devices.mediaplayer.MediaPlayer
