@@ -24,25 +24,6 @@ require.def(
          * @extends antie.devices.mediaplayer.SamsungStreaming
          */
         var Player = SamsungStreaming.extend({
-            init: function() {
-                this._super();
-                this._state = MediaPlayer.STATE.EMPTY;
-                this._currentPlayer = undefined;
-                this._deferSeekingTo = null;
-                this._nextSeekingTo = null;
-                this._postBufferingState = null;
-                this._tryingToPause = false;
-                this._currentTimeKnown = false;
-                this._updatingTime = false;
-                this._lastWindowRanged = false;
-
-                try {
-                    this._registerSamsungPlugins();
-                } catch (ignoreErr) {
-                }
-            },
-
-
             /**
             * @inheritDoc
             */
