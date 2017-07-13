@@ -61,7 +61,7 @@ require.def(
                 this._currentTimeKnown = false;
                 this._updatingTime = false;
                 this._lastWindowRanged = false;
-                
+
                 try {
                     this._registerSamsungPlugins();
                 } catch (ignoreErr) {
@@ -82,12 +82,11 @@ require.def(
                     this._toStopped();
 
                     if (this._isHlsMimeType()) {
+                        this._openStreamingPlayerPlugin();
                         if (this._isLiveMedia()) {
                             this._source += '|HLSSLIDING|COMPONENT=HLS';
-                            this._openStreamingPlayerPlugin();
                         } else {
                             this._source += '|COMPONENT=HLS';
-                            this._openPlayerPlugin();
                         }
                     } else {
                         this._openPlayerPlugin();
@@ -112,7 +111,7 @@ require.def(
                     self.tvmwPlugin.SetSource(self.originalSource);
                 }, false);
             },
-            
+
             _openPlayerPlugin : function() {
                 if (this._currentPlayer !== undefined) {
                     this._playerPlugin.Close();
@@ -120,7 +119,7 @@ require.def(
                 this._playerPlugin.Open('Player', '1.010', 'Player');
                 this._currentPlayer = this.PlayerEmps.Player;
             },
-            
+
             _openStreamingPlayerPlugin : function() {
                 if (this._currentPlayer !== undefined) {
                     this._playerPlugin.Close();
@@ -128,7 +127,7 @@ require.def(
                 this._playerPlugin.Open('StreamingPlayer', '1.0', 'StreamingPlayer');
                 this._currentPlayer = this.PlayerEmps.StreamingPlayer;
             },
-            
+
             _closePlugin: function() {
                 this._playerPlugin.Close();
                 this._currentPlayer = undefined;
@@ -136,7 +135,7 @@ require.def(
 
             _initPlayer: function(source) {
                 var result = this._playerPlugin.Execute('InitPlayer', source);
-                
+
                 if (result !== 1) {
                     this._toError('Failed to initialize video: ' + this._source);
                 }
@@ -175,8 +174,8 @@ require.def(
             */
             playFrom: function (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
-                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;             
-                
+                var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
+
                 switch (this.getState()) {
                 case MediaPlayer.STATE.BUFFERING:
 //                        this._deferSeekingTo = seekingTo;
@@ -244,9 +243,9 @@ require.def(
             beginPlaybackFrom: function(seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this.getSeekableRange() ? this._getClampedTimeForPlayFrom(seconds) : seconds;
-                
-                //StartPlayback from live position 0 causes spoiler defect
-                if (seekingTo === 0 && this._isLiveMedia()) {
+
+                //StartPlayback from near start of range causes spoiler defect
+                if (seekingTo < this.CLAMP_OFFSET_FROM_START_OF_RANGE && this._isLiveMedia()) {
                     seekingTo = this.CLAMP_OFFSET_FROM_START_OF_RANGE;
                 } else {
                     seekingTo = parseInt(Math.floor(seekingTo), 10);
@@ -365,7 +364,7 @@ require.def(
                 }
                 return undefined;
             },
-            
+
             _isLiveRangeOutdated: function () {
                 var time = Math.floor(this._currentTime);
                 if (time % 8 === 0 && !this._updatingTime && this._lastWindowRanged !== time) {
@@ -404,7 +403,7 @@ require.def(
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 }
-                
+
                 if (!this._isInitialBufferingFinished() && this._nextSeekingTo !== null) {
                     this._deferSeekingTo = this._nextSeekingTo;
                     this._nextSeekingTo = null;
@@ -439,7 +438,7 @@ require.def(
                 this._currentTimeKnown = false;
             },
 
-            _tryPauseWithStateTransition: function() {                
+            _tryPauseWithStateTransition: function() {
                 var success = this._playerPlugin.Execute('Pause');
                 success = success && (success !== -1);
 
@@ -456,10 +455,10 @@ require.def(
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
             },
-            
+
             _updateRange: function () {
                 var self = this;
-                if (this._currentPlayer === this.PlayerEmps.StreamingPlayer) {
+                if (this._isHlsMimeType() && this._isLiveMedia()) {
                     var range = this._playerPlugin.Execute('GetPlayingRange').split('-');
                     this._range = {
                         start: Math.floor(range[0]),
@@ -470,7 +469,7 @@ require.def(
                     setTimeout(function () {
                         self._updatingTime = false;
                     }, self.RANGE_UPDATE_TOLERANCE * 1000);
-                } else if (this._currentPlayer === this.PlayerEmps.Player) {
+                } else {
                     var duration = this._playerPlugin.Execute('GetDuration')/1000;
                     this._range = {
                         start: 0,
@@ -492,7 +491,7 @@ require.def(
                     this._range.start += 8;
                     this._range.end += 8;
                 }
-                
+
                 if (this._nextSeekingTo !== null) {
                     this._deferSeekingTo = this._nextSeekingTo;
                     this._nextSeekingTo = null;
@@ -532,7 +531,7 @@ require.def(
                 }
                 return clampedTime;
             },
-            
+
             _getClampOffsetFromConfig: function() {
                 var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
@@ -584,6 +583,10 @@ require.def(
                         break;
 
                     case self.PlayerEventCodes.BUFFERING_COMPLETE:
+                        // For live HLS, don't update the range more than once every 8 seconds
+                        if (!self._updatingTime) {
+                            self._updateRange();
+                        }
                         //[optimisation] if Stop() is not called after RENDERING_COMPLETE then player sends periodically BUFFERING_COMPLETE and RENDERING_COMPLETE
                         //ignore BUFFERING_COMPLETE if player is already in COMPLETE state
                         if (self.getState() !== MediaPlayer.STATE.COMPLETE) {
@@ -685,7 +688,7 @@ require.def(
                 var mime = this._mimeType.toLowerCase();
                 return mime === 'application/vnd.apple.mpegurl' || mime === 'application/x-mpegurl';
             },
-            
+
             _isCurrentTimeInRangeTolerance: function (seconds) {
                 if (seconds > this._range.end + this.RANGE_UPDATE_TOLERANCE) {
                     return false;
@@ -695,7 +698,7 @@ require.def(
                     return true;
                 }
             },
-            
+
             _isInitialBufferingFinished: function () {
                 if (this._currentTime === undefined || this._currentTime === 0) {
                     return false;

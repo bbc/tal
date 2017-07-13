@@ -80,6 +80,9 @@ define(
                     this._wrapOnSourceError = function() {
                         self._onSourceError();
                     };
+                    this._wrapOnPause = function() {
+                        self._onPause();
+                    };
                     this._mediaElement.addEventListener('canplay', this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener('seeked', this._wrapOnFinishedBuffering, false);
                     this._mediaElement.addEventListener('playing', this._wrapOnFinishedBuffering, false);
@@ -88,6 +91,7 @@ define(
                     this._mediaElement.addEventListener('waiting', this._wrapOnDeviceBuffering, false);
                     this._mediaElement.addEventListener('timeupdate', this._wrapOnStatus, false);
                     this._mediaElement.addEventListener('loadedmetadata', this._wrapOnMetadata, false);
+                    this._mediaElement.addEventListener('pause', this._wrapOnPause, false);
 
                     var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
                     device.prependChildElement(appElement, this._mediaElement);
@@ -375,6 +379,12 @@ define(
                 this._exitBuffering();
             },
 
+            _onPause: function() {
+                if (this.getState() !== MediaPlayer.STATE.PAUSED) {
+                    this._toPaused();
+                }
+            },
+
             _onDeviceError: function() {
                 this._reportError('Media element error code: ' + this._mediaElement.error.code);
             },
@@ -482,6 +492,7 @@ define(
                     this._mediaElement.removeEventListener('waiting', this._wrapOnDeviceBuffering, false);
                     this._mediaElement.removeEventListener('timeupdate', this._wrapOnStatus, false);
                     this._mediaElement.removeEventListener('loadedmetadata', this._wrapOnMetadata, false);
+                    this._mediaElement.removeEventListener('pause', this._wrapOnPause, false);
                     this._sourceElement.removeEventListener('error', this._wrapOnSourceError, false);
 
                     var device = RuntimeContext.getDevice();
