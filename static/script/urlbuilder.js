@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(urlTemplate) {
+            init: function init (urlTemplate) {
                 this._urlTemplate = urlTemplate;
             },
             /**
@@ -32,7 +32,7 @@ define(
              * @param {Object} tags An object containing additional tags to replace.
              * @returns A URL built from the template and the passed values.
              */
-            getURL: function(href, tags) {
+            getURL: function getURL (href, tags) {
                 var url = this._urlTemplate.replace(/^%href%/, href);
 
                 url = url.replace(/%[a-z]+%/g, function(match) {

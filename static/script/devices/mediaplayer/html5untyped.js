@@ -25,11 +25,11 @@ define(
          * @extends antie.devices.mediaplayer.HTML5
          */
         var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.HTML5Untyped.prototype */ {
-            init: function() {
+            init: function init () {
                 this._super();
             },
 
-            _generateSourceElement: function(url) {
+            _generateSourceElement: function _generateSourceElement (url) {
                 var device = RuntimeContext.getDevice();
                 var sourceElement = device._createElement('source');
                 sourceElement.src = url;

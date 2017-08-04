@@ -15,13 +15,13 @@ define(
         var namespaces = {};
 
         var XboxStorage = StorageProvider.extend({
-            init: function() {
+            init: function init () {
                 /* global Windows: true */
                 this._storage = Windows.Storage.ApplicationData.current.localSettings.values;
 
             },
 
-            getItem: function (key) {
+            getItem: function getItem (key) {
                 if (this._storage.hasKey(key)) {
                     var value = this._storage.lookup(key);
                     var jsonifiedValue = Device.prototype.decodeJson(value);
@@ -35,20 +35,20 @@ define(
                 return undefined;
             },
 
-            setItem: function (key, value) {
+            setItem: function setItem (key, value) {
                 var stringifiedValue = Device.prototype.encodeJson(value);
                 this._storage.insert(key, stringifiedValue);
             },
 
-            removeItem: function(key) {
+            removeItem: function removeItem (key) {
                 this._storage.insert(key, null);
             },
 
-            clear: function() {
+            clear: function clear () {
                 this._storage.clear();
             },
 
-            isEmpty: function() {
+            isEmpty: function isEmpty () {
                 return this._storage.Size === 0;
             }
         });

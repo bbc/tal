@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(component, obj, func, args) {
+            init: function init (component, obj, func, args) {
                 this._request = null;
                 this._component = component;
                 this._obj = obj;
@@ -46,13 +46,13 @@ define(
              * Performs the request for data.
              * @param {Object} callbacks Object containing onSuccess and onError callback functions.
              */
-            load: function(callbacks) {
+            load: function load (callbacks) {
                 this._request = this._obj[this._func].apply(this._obj, [callbacks].concat(this._args || []));
             },
             /**
              * Aborts a currently loading request.
              */
-            abort: function() {
+            abort: function abort () {
                 if(this._request) {
                     this._request.abort();
                 }

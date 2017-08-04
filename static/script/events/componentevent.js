@@ -27,7 +27,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, container, component, args, state, fromBack) {
+            init: function init (type, container, component, args, state, fromBack) {
                 this.container = container;
                 this.component = component;
                 this.args = args;

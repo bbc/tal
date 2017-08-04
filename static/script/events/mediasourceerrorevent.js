@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, code, url, last) {
+            init: function init (target, code, url, last) {
                 this.url = url;
                 this.last = last;
 

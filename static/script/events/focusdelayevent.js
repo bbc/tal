@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target) {
+            init: function init (target) {
                 this.target = target;
                 this._super('focusdelay');
             }

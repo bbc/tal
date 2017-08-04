@@ -31,7 +31,7 @@ define('antie/widgets/horizontalcarousel',
              * @constructor
              * @ignore
              */
-            init: function (id, itemFormatter, dataSource, overrideAnimation, activeWidgetAlignment) {
+            init: function init (id, itemFormatter, dataSource, overrideAnimation, activeWidgetAlignment) {
                 this._prefixClones = 0;
                 this._wrapMode = HorizontalCarousel.WRAP_MODE_VISUAL;
                 this._viewportMode = HorizontalCarousel.VIEWPORT_MODE_NONE;
@@ -75,7 +75,7 @@ define('antie/widgets/horizontalcarousel',
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 // keep the element hidden until data is bound and items created
                 if (!this._maskElement) {
                     this._maskElement = device.createContainer(this.id + '_mask', ['horizontallistmask', 'notscrolling']);
@@ -120,7 +120,7 @@ define('antie/widgets/horizontalcarousel',
 
                 return this._maskElement;
             },
-            refreshViewport: function () {
+            refreshViewport: function refreshViewport () {
                 var _centerWidget = this._activeChildWidget || this._childWidgetOrder[0];
                 if (!_centerWidget) {
                     return;
@@ -237,7 +237,7 @@ define('antie/widgets/horizontalcarousel',
              * turns animation on/off
              * @param {Boolean} [reposition] Set to <code>true</code> if you want the carousel to animate
              */
-            setAnimationOverride: function (animationOn) {
+            setAnimationOverride: function setAnimationOverride (animationOn) {
                 this._overrideAnimation = !animationOn;
                 return this._overrideAnimation;
             },
@@ -248,7 +248,7 @@ define('antie/widgets/horizontalcarousel',
              * @param {Boolean} [reposition] Set to <code>true</code> if you want to scroll the carousel to the new item.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function (widget, reposition) {
+            setActiveChildWidget: function setActiveChildWidget (widget, reposition) {
                 var moved = this._super(widget);
 
                 if (this._activeChildWidget && this.outputElement && reposition) {
@@ -266,17 +266,17 @@ define('antie/widgets/horizontalcarousel',
              * @param {Integer} index Index of the child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildIndex: function (index, reposition) {
+            setActiveChildIndex: function setActiveChildIndex (index, reposition) {
                 if (index < 0 || index >= this._childWidgetOrder.length) {
                     throw new Error("HorizontalCarousel::setActiveChildIndex Index out of bounds. " + this.id + " contains " + this._childWidgetOrder.length + " children, but an index of " + index + " was specified.");
                 }
                 return this.setActiveChildWidget(this._childWidgetOrder[index], reposition);
             },
-            setDataSource: function (data) {
+            setDataSource: function setDataSource (data) {
                 this._prefixClones = 0;
                 this._super(data);
             },
-            rebindDataSource: function () {
+            rebindDataSource: function rebindDataSource () {
                 var device = this.getCurrentApplication().getDevice();
                 var config = device.getConfig();
                 var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
@@ -286,7 +286,7 @@ define('antie/widgets/horizontalcarousel',
                 device.hideElement({
                     el: this._maskElement,
                     skipAnim: !animate,
-                    onComplete: function () {
+                    onComplete: function onComplete () {
                         func.call(self);
                     }
                 });
@@ -295,7 +295,7 @@ define('antie/widgets/horizontalcarousel',
              * Handle key events to scroll the carousel.
              * @private
              */
-            _onKeyDown: function (evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 // This event handler is already bound (int HorizontalList), we override it to add wrapping logic
 
                 // Block all movement if the carousel is scrolling
@@ -329,7 +329,7 @@ define('antie/widgets/horizontalcarousel',
              * DataBound event handler. Clone carousel items to allow infinite scrolling.
              * @private
              */
-            _onDataBound: function (/*evt*/) {
+            _onDataBound: function _onDataBound (/*evt*/) {
                 var application = this.getCurrentApplication();
                 if (!application) {
                     // application has been destroyed, abort
@@ -462,7 +462,7 @@ define('antie/widgets/horizontalcarousel',
              * @param {String}    [options.easing=linear] Easing style for fade animation.
              * @returns Boolean true if animation was called, otherwise false
              */
-            show: function (options) {
+            show: function show (options) {
                 //  this._super( options );
                 var application = this.getCurrentApplication();
                 if (!application) {
@@ -488,7 +488,7 @@ define('antie/widgets/horizontalcarousel',
              *                Pass <code>HorizontalCarousel.WRAP_MODE_NAVIGATION_ONLY</code> to allow navigation to wrap.
              *                Pass <code>HorizontalCarousel.WRAP_MODE_VISUAL</code> to visually wrap the carousel (includes navigation).
              */
-            setWrapMode: function (wrapMode) {
+            setWrapMode: function setWrapMode (wrapMode) {
                 if (this._viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
                     if (wrapMode === HorizontalCarousel.WRAP_MODE_VISUAL) {
                         throw new Error('HorizontalCarousel::setWrapMode - VIEWPORT_MODE_DOM not supported for WRAP_MODE_VISUAL');
@@ -503,7 +503,7 @@ define('antie/widgets/horizontalcarousel',
              *                               <code>HorizontalCarousel.VIEWPORT_MODE_CLASSES</code>.
              * @param {Integer} size         Number of items in the viewport.
              */
-            setViewportMode: function (viewportMode, size) {
+            setViewportMode: function setViewportMode (viewportMode, size) {
                 if (this._wrapMode === HorizontalCarousel.WRAP_MODE_VISUAL) {
                     if (viewportMode === HorizontalCarousel.VIEWPORT_MODE_DOM) {
                         throw new Error('HorizontalCarousel::setViewportMode - VIEWPORT_MODE_DOM not supported for WRAP_MODE_VISUAL');
@@ -526,7 +526,7 @@ define('antie/widgets/horizontalcarousel',
              *                               <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or
              *                               <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
              */
-            setAlignment: function (align) {
+            setAlignment: function setAlignment (align) {
                 this._activeWidgetAlignment = align;
             },
             /**
@@ -535,49 +535,49 @@ define('antie/widgets/horizontalcarousel',
              *                               <code>HorizontalCarousel.ALIGNMENT_LEFT</code> or
              *                               <code>HorizontalCarousel.ALIGNMENT_RIGHT</code>.
              */
-            getAlignment: function () {
+            getAlignment: function getAlignment () {
                 return this._activeWidgetAlignment;
             },
             /**
              * Set the alignment offsetof the active item.
              * @param {Integer} offset
              */
-            setAlignmentOffset: function (offset) {
+            setAlignmentOffset: function setAlignmentOffset (offset) {
                 this._activeWidgetAlignmentOffset = offset;
             },
             /**
              * Get the current alignment offest of the active item.
              * @returns {Integer}
              */
-            getAlignmentOffset: function () {
+            getAlignmentOffset: function getAlignmentOffset () {
                 return this._activeWidgetAlignmentOffset;
             },
             /**
              * Set the frames per second of the active widget selection animation.
              * @param {Integer} fps
              */
-            setWidgetAnimationFPS: function (fps) {
+            setWidgetAnimationFPS: function setWidgetAnimationFPS (fps) {
                 this._activeWidgetAnimationFPS = fps;
             },
             /**
              * Get the frames per second of the active widget selection animation.
              * @returns {Integer}
              */
-            getWidgetAnimationFPS: function () {
+            getWidgetAnimationFPS: function getWidgetAnimationFPS () {
                 return this._activeWidgetAnimationFPS;
             },
             /**
              * Set the duration of the active widget selection animation.
              * @param {Integer} duration
              */
-            setWidgetAnimationDuration: function (duration) {
+            setWidgetAnimationDuration: function setWidgetAnimationDuration (duration) {
                 this._activeWidgetAnimationDuration = duration;
             },
             /**
              * Get the duration of the active widget selection animation.
              * @returns {Integer}
              */
-            getWidgetAnimationDuration: function () {
+            getWidgetAnimationDuration: function getWidgetAnimationDuration () {
                 return this._activeWidgetAnimationDuration;
             },
             /**
@@ -620,7 +620,7 @@ define('antie/widgets/horizontalcarousel',
              *            swingFromTo
              *
              */
-            setWidgetAnimationEasing: function (easing) {
+            setWidgetAnimationEasing: function setWidgetAnimationEasing (easing) {
                 this._activeWidgetAnimationEasing = easing;
             },
             /**
@@ -628,7 +628,7 @@ define('antie/widgets/horizontalcarousel',
              * @returns {String}
              *
              */
-            getWidgetAnimationEasing: function () {
+            getWidgetAnimationEasing: function getWidgetAnimationEasing () {
                 return this._activeWidgetAnimationEasing;
             },
             /**
@@ -636,7 +636,7 @@ define('antie/widgets/horizontalcarousel',
              * same width, we can enabled additional optimisations
              * @param {Boolean} multiWidthItems Pass <code>true</code> if the carousel contains items of differing widths.
              */
-            setHasMultiWidthItems: function (multiWidthItems) {
+            setHasMultiWidthItems: function setHasMultiWidthItems (multiWidthItems) {
                 this._multiWidthItems = multiWidthItems;
             },
 
@@ -648,31 +648,31 @@ define('antie/widgets/horizontalcarousel',
              * @param {Boolean} wrap Pass <code>true</code> to activate then scroll. Pass <code>false</code>
              *    to scroll then activate (default).
              */
-            setActivateThenScroll: function (activateThenScroll) {
+            setActivateThenScroll: function setActivateThenScroll (activateThenScroll) {
                 this._activateThenScroll = activateThenScroll;
             },
-            setKeepHidden: function (keepHidden) {
+            setKeepHidden: function setKeepHidden (keepHidden) {
                 this._keepHidden = keepHidden;
             },
 
             /**
              * Returns this index of the currently selected child widget.
              */
-            getSelectedChildWidgetIndex: function () {
+            getSelectedChildWidgetIndex: function getSelectedChildWidgetIndex () {
                 return this._selectedIndex;
             },
 
             /**
              * Moves the selection to the previous focusable child widget.
              */
-            selectPreviousChildWidget: function () {
+            selectPreviousChildWidget: function selectPreviousChildWidget () {
                 return this._moveChildWidgetSelection(HorizontalCarousel.SELECTION_DIRECTION_LEFT);
             },
 
             /**
              * Selects the next widget in the carousel.
              */
-            selectNextChildWidget: function () {
+            selectNextChildWidget: function selectNextChildWidget () {
                 return this._moveChildWidgetSelection(HorizontalCarousel.SELECTION_DIRECTION_RIGHT);
             },
 
@@ -680,7 +680,7 @@ define('antie/widgets/horizontalcarousel',
              * Finds a selectable widget in the specified direction and moves
              * the focus to it.
              */
-            _moveChildWidgetSelection: function (direction) {
+            _moveChildWidgetSelection: function _moveChildWidgetSelection (direction) {
                 var device = this.getCurrentApplication().getDevice();
 
                 if (this._scrollHandle) {
@@ -779,7 +779,7 @@ define('antie/widgets/horizontalcarousel',
                 }
             },
 
-            _getWrappedElement: function (direction, element) {
+            _getWrappedElement: function _getWrappedElement (direction, element) {
                 // Return the next/previous widget in the carousel - used to grab dummy widgets
                 // used in the visual wrapping mode.
                 do {
@@ -788,11 +788,11 @@ define('antie/widgets/horizontalcarousel',
                 return element;
             },
 
-            _isAnimationOverridden: function (animate) {
+            _isAnimationOverridden: function _isAnimationOverridden (animate) {
                 return this._overrideAnimation || !animate;
             },
 
-            _alignToElement: function (el, skipAnimation, onAnimationCompleteHandler) {
+            _alignToElement: function _alignToElement (el, skipAnimation, onAnimationCompleteHandler) {
                 var device = this.getCurrentApplication().getDevice();
                 var widgetpos = device.getElementOffset(el);
                 var widgetsize = device.getElementSize(el);

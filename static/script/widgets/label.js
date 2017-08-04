@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, text, enableHTML) {
+            init: function init (id, text, enableHTML) {
                 // The current API states that if only one parameter is passed to
                 // use that value as the text and auto generate an internal id
                 if(arguments.length === 1) {
@@ -44,7 +44,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function render (device) {
                 // TODO: is there a more efficient way of doing this?
                 var s = this.getTextAsRendered(device);
 
@@ -104,7 +104,7 @@ define(
              * Sets the text displayed by this label.
              * @param {String} text The new text to be displayed.
              */
-            setText: function(text) {
+            setText: function setText (text) {
                 this._text = text;
                 if(this.outputElement) {
                     this.render(this.getCurrentApplication().getDevice());
@@ -114,7 +114,7 @@ define(
              * Gets the current text displayed by this label.
              * @returns The current text displayed by this label.
              */
-            getText: function() {
+            getText: function getText () {
                 return this._text;
             },
             /**
@@ -123,21 +123,21 @@ define(
              * @deprecated TRUNCATION_MODE_RIGHT_ELLIPSIS relies on browserdevice.getTextHeight(), which can be inaccurate.
              * @param {String} mode The new truncation mode.
              */
-            setTruncationMode: function(mode) {
+            setTruncationMode: function setTruncationMode (mode) {
                 this._truncationMode = mode;
             },
             /**
              * Sets the maximum lines displayed when a truncation mode is set.
              * @param {String} lines The maximum number of lines to display.
              */
-            setMaximumLines: function(lines) {
+            setMaximumLines: function setMaximumLines (lines) {
                 this._maxLines = lines;
             },
             /**
              * Sets the width of this label for use with truncation only.
              * @param {Integer} width The width of this label in pixels
              */
-            setWidth: function(width) {
+            setWidth: function setWidth (width) {
                 this._width = width;
             }
         });

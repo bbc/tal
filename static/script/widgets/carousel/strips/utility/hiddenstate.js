@@ -13,35 +13,35 @@ define(
         'use strict';
         var RenderedState;
         RenderedState = State.extend({
-            init: function () {
+            init: function init () {
 
             },
 
-            append: function (context, parent, widget) {
+            append: function append (context, parent, widget) {
                 this._show(context, widget);
             },
 
-            prepend: function (context, parent, widget) {
+            prepend: function prepend (context, parent, widget) {
                 this._show(context, widget);
             },
 
-            detach: function (/*context, widget*/) {
+            detach: function detach (/*context, widget*/) {
 
             },
 
-            hasLength: function () {
+            hasLength: function hasLength () {
                 return true;
             },
 
-            inView: function () {
+            inView: function inView () {
                 return false;
             },
 
-            _getDevice: function (widget) {
+            _getDevice: function _getDevice (widget) {
                 return widget.getCurrentApplication().getDevice();
             },
 
-            _show: function (context, widget) {
+            _show: function _show (context, widget) {
                 widget.getCurrentApplication().getDevice().showElement({el: widget.outputElement, skipAnim: true});
                 context.setState('ATTACHED');
             }

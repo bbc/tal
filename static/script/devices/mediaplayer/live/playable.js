@@ -30,15 +30,15 @@ define(
          * @extends antie.Class
          */
         var PlayableLivePlayer = Class.extend({
-            init: function() {
+            init: function init () {
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             },
 
-            beginPlayback: function() {
+            beginPlayback: function beginPlayback () {
                 this._mediaPlayer.beginPlayback();
             },
 
-            setSource: function(mediaType, sourceUrl, mimeType) {
+            setSource: function setSource (mediaType, sourceUrl, mimeType) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
@@ -48,39 +48,39 @@ define(
                 this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
             },
 
-            stop: function() {
+            stop: function stop () {
                 this._mediaPlayer.stop();
             },
 
-            reset: function() {
+            reset: function reset () {
                 this._mediaPlayer.reset();
             },
 
-            getState: function() {
+            getState: function getState () {
                 return this._mediaPlayer.getState();
             },
 
-            getSource: function() {
+            getSource: function getSource () {
                 return this._mediaPlayer.getSource();
             },
 
-            getMimeType: function() {
+            getMimeType: function getMimeType () {
                 return this._mediaPlayer.getMimeType();
             },
 
-            addEventCallback: function(thisArg, callback) {
+            addEventCallback: function addEventCallback (thisArg, callback) {
                 this._mediaPlayer.addEventCallback(thisArg, callback);
             },
 
-            removeEventCallback: function(thisArg, callback) {
+            removeEventCallback: function removeEventCallback (thisArg, callback) {
                 this._mediaPlayer.removeEventCallback(thisArg, callback);
             },
 
-            removeAllEventCallbacks: function() {
+            removeAllEventCallbacks: function removeAllEventCallbacks () {
                 this._mediaPlayer.removeAllEventCallbacks();
             },
 
-            getPlayerElement: function() {
+            getPlayerElement: function getPlayerElement () {
                 return this._mediaPlayer.getPlayerElement();
             }
         });

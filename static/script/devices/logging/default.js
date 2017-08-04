@@ -18,19 +18,19 @@ define(
             /**
              * Sets the iterator pointer to the first item
              */
-            log: function() {
+            log: function log () {
                 console.log.apply(console, arguments);
             },
-            debug: function() {
+            debug: function debug () {
                 console.debug.apply(console, arguments);
             },
-            info: function() {
+            info: function info () {
                 console.info.apply(console, arguments);
             },
-            warn: function() {
+            warn: function warn () {
                 console.warn.apply(console, arguments);
             },
-            error: function() {
+            error: function error () {
                 console.error.apply(console, arguments);
             }
         };

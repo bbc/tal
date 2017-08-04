@@ -19,16 +19,16 @@ define(
     function (Class, KeyEvent) {
         'use strict';
         var Horizontal = Class.extend(/** @lends antie.widgets.carousel.orientations.Horizontal.prototype */ {
-            dimension: function () {
+            dimension: function dimension () {
                 return 'width';
             },
-            edge: function () {
+            edge: function edge () {
                 return 'left';
             },
-            styleClass: function () {
+            styleClass: function styleClass () {
                 return 'horizontal';
             },
-            defaultKeys: function () {
+            defaultKeys: function defaultKeys () {
                 return {
                     PREVIOUS: KeyEvent.VK_LEFT,
                     NEXT: KeyEvent.VK_RIGHT

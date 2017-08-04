@@ -79,7 +79,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(namespace, opts) {
+            init: function init (namespace, opts) {
                 this._super();
 
                 this._namespace = namespace;
@@ -96,15 +96,15 @@ define(
                     }
                 }
             },
-            setItem: function(key, value) {
+            setItem: function setItem (key, value) {
                 this._super(key, value);
                 this._save();
             },
-            removeItem: function(key) {
+            removeItem: function removeItem (key) {
                 this._super(key);
                 this._save();
             },
-            clear: function() {
+            clear: function clear () {
                 this._super();
                 this._save();
 
@@ -113,7 +113,7 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            _save: function() {
+            _save: function _save () {
                 if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {

@@ -16,7 +16,7 @@ define('antie/devices/parentalguidance/basepghandler',
              * Has the user already setup a PIN/Password for PG?
              * @returns {boolean}
              */
-            isChallengeActive: function() {
+            isChallengeActive: function isChallengeActive () {
                 throw new Error('IsChallengeActive method has not been implemented.');
             },
             /**
@@ -25,21 +25,21 @@ define('antie/devices/parentalguidance/basepghandler',
              * @param {Object} callback object containing onGuidanceChallengeResponse(response) function
              *                   where response is defined by object in pgchallengeresponse
              */
-            showChallenge: function() {
+            showChallenge: function showChallenge () {
                 throw new Error('ShowChallenge method has not been implemented.');
             },
             /**
              * Determines whether handler can display PG message as part of its PIN challenge
              * @returns {boolean}
              */
-            supportsMessage: function() {
+            supportsMessage: function supportsMessage () {
                 throw new Error('SupportsMessage method has not been implemented.');
             },
             /**
              * Determines whether handler can handle display of PG settings screen.
              * @returns {boolean}
              */
-            isConfigurable: function() {
+            isConfigurable: function isConfigurable () {
                 throw new Error('IsConfigurable method has not been implemented.');
             }
         });

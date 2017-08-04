@@ -136,7 +136,7 @@ define(
                 duration: options.duration || 840,
                 easing: options.easing || 'easeFromTo',
                 fps: options.fps || 25,
-                start: function() {
+                start: function start () {
                     if (options.className) {
                         self.removeClassFromElement(options.el, 'not' + options.className);
                         self.addClassToElement(options.el,  options.className);
@@ -147,10 +147,10 @@ define(
                         options.onStart();
                     }
                 },
-                step: function () {
+                step: function step () {
                     addTweenToQueue(opts, this);
                 },
-                callback: function () {
+                callback: function callback () {
                     if(options.className) {
                         self.removeClassFromElement(options.el, options.className);
                         self.addClassToElement(options.el, 'not' + options.className);

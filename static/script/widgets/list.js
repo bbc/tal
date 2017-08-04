@@ -36,7 +36,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (id, itemFormatter, dataSource) {
+            init: function init (id, itemFormatter, dataSource) {
                 this._selectedIndex = 0;
                 this._dataSource = dataSource;
                 this._itemFormatter = itemFormatter;
@@ -52,7 +52,7 @@ define(
              * Appends a child widget to this widget, creating a new list item.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (widget) {
+            appendChildWidget: function appendChildWidget (widget) {
                 if ((this._renderMode === List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
                     var li = new ListItem();
                     li.appendChildWidget(widget);
@@ -70,7 +70,7 @@ define(
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (index, widget) {
+            insertChildWidget: function insertChildWidget (index, widget) {
                 var w;
                 if ((this._renderMode === List.RENDER_MODE_LIST) && !(widget instanceof ListItem)) {
                     w = new ListItem();
@@ -95,7 +95,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function (widget) {
+            setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
                 if (this._super(widget)) {
                     this._selectedIndex = this.getIndexOfChildWidget(widget);
@@ -113,7 +113,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 if (!this._dataBound && this._dataSource && this._itemFormatter) {
                     this._createDataBoundItems();
                 }
@@ -126,7 +126,7 @@ define(
              * Create list items from the bound data.
              * @private
              */
-            _createDataBoundItems: function () {
+            _createDataBoundItems: function _createDataBoundItems () {
                 this._dataBound = true;
 
                 var self = this;
@@ -171,7 +171,7 @@ define(
              * the output will be updated to reflect the new data.
              * @param {antie.DataSource} dataSource The data source to bind to.
              */
-            setDataSource: function (dataSource) {
+            setDataSource: function setDataSource (dataSource) {
                 // abort currently processing data requests
                 if (this._dataSource && typeof(this._dataSource.abort) === 'function') {
                     this._dataSource.abort();
@@ -184,13 +184,13 @@ define(
             /**
              * Invalidates the data-related bindings - causing items to be re-created on next render;
              */
-            resetDataBindings: function () {
+            resetDataBindings: function resetDataBindings () {
                 this._dataBound = false;
             },
             /**
              * Re-iterates the data source, recreating list items.
              */
-            rebindDataSource: function () {
+            rebindDataSource: function rebindDataSource () {
                 this._dataBound = false;
                 this.setDataSource(this._dataSource);
             },
@@ -200,7 +200,7 @@ define(
              * list item. List.RENDER_MODE_LIST causes the list to be rendered as a list (e.g. &lt;ul&gt;), with list item elements (e.g. &lt;li&gt;) for each item.
              * @param {Integer} mode The rendering mode to use.
              */
-            setRenderMode: function (mode) {
+            setRenderMode: function setRenderMode (mode) {
                 this._renderMode = mode;
             },
             /**
@@ -209,7 +209,7 @@ define(
              * @param {Function} [formatterCallback] A function that tkes the current item index and the total number of items and returns
              *                    a string to popular the progress indicator's label.
              */
-            bindProgressIndicator: function (widget, formatterCallback) {
+            bindProgressIndicator: function bindProgressIndicator (widget, formatterCallback) {
                 var self = this;
 
                 this._updateProgressHandler = function (evt) {
@@ -273,7 +273,7 @@ define(
             /**
              * Unbinds a previously-bound progress indicator widget.
              */
-            unbindProgressIndicator: function () {
+            unbindProgressIndicator: function unbindProgressIndicator () {
                 if (this._updateProgressHandler) {
                     this.removeEventListener('selecteditemchange', this._updateProgressHandler);
                     this.removeEventListener('focus', this._updateProgressHandler);
@@ -282,7 +282,7 @@ define(
                 }
             },
 
-            removeChildWidget: function (widget) {
+            removeChildWidget: function removeChildWidget (widget) {
                 // TODO: Make this more generic - it will only work if carousel items contain a
                 // TODO: single item of data.
                 if (this._updateProgressHandler && (this._childWidgetOrder.length < this._totalDataItems)) {
@@ -302,7 +302,7 @@ define(
                 }
                 return retValue;
             },
-            removeChildWidgets: function () {
+            removeChildWidgets: function removeChildWidgets () {
                 for (var i = 0; i < this._childWidgetOrder.length; i++) {
                     this._childWidgetOrder[i].removeClass('listitem');
                 }
@@ -311,11 +311,11 @@ define(
                 return this._super();
             },
 
-            setDataBindingOrder: function (order) {
+            setDataBindingOrder: function setDataBindingOrder (order) {
                 this._dataBindingOrder = order;
             },
 
-            getDataBindingOrder: function () {
+            getDataBindingOrder: function getDataBindingOrder () {
                 return this._dataBindingOrder;
             }
         });

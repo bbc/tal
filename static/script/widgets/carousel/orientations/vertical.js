@@ -19,16 +19,16 @@ define(
     function (Class, KeyEvent) {
         'use strict';
         var Vertical = Class.extend(/** @lends antie.widgets.carousel.orientations.Vertical.prototype */{
-            dimension: function () {
+            dimension: function dimension () {
                 return 'height';
             },
-            edge: function () {
+            edge: function edge () {
                 return 'top';
             },
-            styleClass: function () {
+            styleClass: function styleClass () {
                 return 'vertical';
             },
-            defaultKeys: function () {
+            defaultKeys: function defaultKeys () {
                 return {
                     PREVIOUS: KeyEvent.VK_UP,
                     NEXT: KeyEvent.VK_DOWN

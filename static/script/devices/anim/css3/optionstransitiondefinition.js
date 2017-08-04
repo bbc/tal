@@ -18,7 +18,7 @@ define(
                  * @param animation options object
                  * @param config animation configuration object
                  */
-                init: function(options, config) {
+                init: function init (options, config) {
                     var property, timeEasing;
                     config = config || {};
                     this._super();

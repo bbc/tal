@@ -27,7 +27,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            setSource: function (mediaType, url, mimeType) {
+            setSource: function setSource (mediaType, url, mimeType) {
                 this._logger = RuntimeContext.getDevice().getLogger();
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
 
@@ -49,7 +49,7 @@ require.def(
                 }
             },
             
-            _updateRange: function () {
+            _updateRange: function _updateRange () {
                 var self = this;
                 if (this._isHlsMimeType() && this._isLiveMedia()) {
                     var range = this._playerPlugin.Execute('GetLiveDuration').split('|');
@@ -71,7 +71,7 @@ require.def(
                 }
             },
 
-            _getClampedTimeForPlayFrom: function (seconds) {
+            _getClampedTimeForPlayFrom: function _getClampedTimeForPlayFrom (seconds) {
                 if (this._isHlsMimeType() && this._isLiveMedia() && !this._updatingTime) {
                     this._updateRange();
                 }

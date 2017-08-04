@@ -25,18 +25,18 @@ define(
          * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
          */
         CullingStrip = WidgetStrip.extend(/** @lends antie.widgets.carousel.strips.CullingStrip.prototype */{
-            init: function (id, orientation) {
+            init: function init (id, orientation) {
                 this._super(id, orientation);
                 this.setAutoRenderChildren(false);
                 this._widgetContexts = [];
             },
 
-            append: function (widget, length) {
+            append: function append (widget, length) {
                 this._super(widget, length);
                 this._widgetContexts.push(this.createContext(widget, this));
             },
 
-            render: function (device) {
+            render: function render (device) {
                 var i, context;
                 if (!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
@@ -50,12 +50,12 @@ define(
                 return this.outputElement;
             },
 
-            insert: function (index, widget, length) {
+            insert: function insert (index, widget, length) {
                 this._super(index, widget, length);
                 this._widgetContexts.splice(index, 0, this.createContext(widget, this));
             },
 
-            remove: function (widget) {
+            remove: function remove (widget) {
                 var i, widgets, returnValue;
                 widgets = this.widgets();
                 for (i = 0; i !== widgets.length; i += 1) {
@@ -68,16 +68,16 @@ define(
                 return returnValue;
             },
 
-            removeAll: function () {
+            removeAll: function removeAll () {
                 this._widgetContexts = [];
                 this._super();
             },
 
-            needsVisibleIndices: function () {
+            needsVisibleIndices: function needsVisibleIndices () {
                 return this._widgetContexts.length > 0;
             },
 
-            attachIndexedWidgets: function (indexArray) {
+            attachIndexedWidgets: function attachIndexedWidgets (indexArray) {
                 var i, itemIndex, indexSet, firstIndexInView, preIndices, postIndices;
                 indexSet = {};
                 firstIndexInView = this._firstIndexInView();
@@ -111,7 +111,7 @@ define(
              * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
              * @throws {Error} if the indexed widget has not had a length set on append/insert or via setLengths
              */
-            getLengthToIndex: function (index) {
+            getLengthToIndex: function getLengthToIndex (index) {
                 var firstAttached, i, length, totalLength;
                 totalLength = 0;
                 firstAttached = this._firstIndexWithLength();
@@ -131,7 +131,7 @@ define(
              * @returns {Number} the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength
              * @throws {Error} if the indexed widget has not had a length set on append/insert or via setLengths
              */
-            lengthOfWidgetAtIndex: function (index) {
+            lengthOfWidgetAtIndex: function lengthOfWidgetAtIndex (index) {
                 if (this._lengths[index] !== undefined) {
                     return this._lengths[index];
                 } else {
@@ -139,11 +139,11 @@ define(
                 }
             },
 
-            createContext: function (widget, parent) {
+            createContext: function createContext (widget, parent) {
                 return new WidgetContext(widget, parent, STATES);
             },
 
-            _detatchWidgetsNotIndexed: function (indexSet) {
+            _detatchWidgetsNotIndexed: function _detatchWidgetsNotIndexed (indexSet) {
                 var i;
                 for (i = 0; i !== this._widgetContexts.length; i += 1) {
                     if (!indexSet.hasOwnProperty(i)) {
@@ -152,7 +152,7 @@ define(
                 }
             },
 
-            _firstIndexWithLength: function () {
+            _firstIndexWithLength: function _firstIndexWithLength () {
                 var i, attached, firstAttachedIndex;
                 i = 0;
                 attached = false;
@@ -164,7 +164,7 @@ define(
                 return firstAttachedIndex;
             },
 
-            _firstIndexInView: function () {
+            _firstIndexInView: function _firstIndexInView () {
                 var i, inView, firstInView;
                 i = 0;
                 inView = false;
@@ -176,7 +176,7 @@ define(
                 return firstInView;
             },
 
-            _throwNoLengthError: function () {
+            _throwNoLengthError: function _throwNoLengthError () {
                 throw new Error('You must set widget lengths before aligning culling strip');
             }
         });

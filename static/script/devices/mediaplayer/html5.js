@@ -25,7 +25,7 @@ define(
          */
         var Player = MediaPlayer.extend({
 
-            init: function() {
+            init: function init () {
                 this._super();
                 this._setSentinelLimits();
                 this._state = MediaPlayer.STATE.EMPTY;
@@ -35,7 +35,7 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function(mediaType, url, mimeType) {
+            setSource: function setSource (mediaType, url, mimeType) {
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._trustZeroes = false;
                     this._type = mediaType;
@@ -113,7 +113,7 @@ define(
             /**
              * @inheritDoc
              */
-            playFrom: function(seconds) {
+            playFrom: function playFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
@@ -151,7 +151,7 @@ define(
             /**
              * @inheritDoc
              */
-            beginPlayback: function() {
+            beginPlayback: function beginPlayback () {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelSeekTime = undefined;
                 switch (this.getState()) {
@@ -170,7 +170,7 @@ define(
             /**
              * @inheritDoc
              */
-            beginPlaybackFrom: function(seconds) {
+            beginPlaybackFrom: function beginPlaybackFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._targetSeekTime = seconds;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
@@ -191,7 +191,7 @@ define(
             /**
              * @inheritDoc
              */
-            pause: function() {
+            pause: function pause () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
                 case MediaPlayer.STATE.PAUSED:
@@ -247,7 +247,7 @@ define(
             /**
              * @inheritDoc
              */
-            stop: function() {
+            stop: function stop () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                     break;
@@ -269,7 +269,7 @@ define(
             /**
              * @inheritDoc
              */
-            reset: function() {
+            reset: function reset () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.EMPTY:
                     break;
@@ -288,21 +288,21 @@ define(
             /**
              * @inheritDoc
              */
-            getSource: function() {
+            getSource: function getSource () {
                 return this._source;
             },
 
             /**
              * @inheritDoc
              */
-            getMimeType: function() {
+            getMimeType: function getMimeType () {
                 return this._mimeType;
             },
 
             /**
              * @inheritDoc
              */
-            getCurrentTime: function() {
+            getCurrentTime: function getCurrentTime () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                 case MediaPlayer.STATE.ERROR:
@@ -320,7 +320,7 @@ define(
             /**
              * @inheritDoc
              */
-            getSeekableRange: function() {
+            getSeekableRange: function getSeekableRange () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                 case MediaPlayer.STATE.ERROR:
@@ -335,14 +335,14 @@ define(
             /**
              * @inheritDoc
              */
-            _getMediaDuration: function() {
+            _getMediaDuration: function _getMediaDuration () {
                 if (this._mediaElement && this._isReadyToPlayFrom()) {
                     return this._mediaElement.duration;
                 }
                 return undefined;
             },
 
-            _getSeekableRange: function() {
+            _getSeekableRange: function _getSeekableRange () {
                 if (this._mediaElement) {
                     if (this._isReadyToPlayFrom() && this._mediaElement.seekable && this._mediaElement.seekable.length > 0) {
                         return {
@@ -364,59 +364,59 @@ define(
             /**
              * @inheritDoc
              */
-            getState: function() {
+            getState: function getState () {
                 return this._state;
             },
 
             /**
              * @inheritDoc
              */
-            getPlayerElement: function() {
+            getPlayerElement: function getPlayerElement () {
                 return this._mediaElement;
             },
 
-            _onFinishedBuffering: function() {
+            _onFinishedBuffering: function _onFinishedBuffering () {
                 this._exitBuffering();
             },
 
-            _onPause: function() {
+            _onPause: function _onPause () {
                 if (this.getState() !== MediaPlayer.STATE.PAUSED) {
                     this._toPaused();
                 }
             },
 
-            _onDeviceError: function() {
+            _onDeviceError: function _onDeviceError () {
                 this._reportError('Media element error code: ' + this._mediaElement.error.code);
             },
 
-            _onSourceError: function() {
+            _onSourceError: function _onSourceError () {
                 this._reportError('Media source element error');
             },
 
             /**
              * @protected
              */
-            _onDeviceBuffering: function() {
+            _onDeviceBuffering: function _onDeviceBuffering () {
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._toBuffering();
                 }
             },
 
-            _onEndOfMedia: function() {
+            _onEndOfMedia: function _onEndOfMedia () {
                 this._toComplete();
             },
 
-            _onStatus: function() {
+            _onStatus: function _onStatus () {
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
             },
 
-            _onMetadata: function() {
+            _onMetadata: function _onMetadata () {
                 this._metadataLoaded();
             },
 
-            _exitBuffering: function () {
+            _exitBuffering: function _exitBuffering () {
                 this._metadataLoaded();
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
@@ -428,14 +428,14 @@ define(
                 }
             },
 
-            _metadataLoaded: function () {
+            _metadataLoaded: function _metadataLoaded () {
                 this._readyToPlayFrom = true;
                 if (this._waitingToPlayFrom()) {
                     this._deferredPlayFrom();
                 }
             },
 
-            _playFromIfReady: function() {
+            _playFromIfReady: function _playFromIfReady () {
                 if (this._isReadyToPlayFrom()) {
                     if (this._waitingToPlayFrom()) {
                         this._deferredPlayFrom();
@@ -443,11 +443,11 @@ define(
                 }
             },
 
-            _waitingToPlayFrom: function() {
+            _waitingToPlayFrom: function _waitingToPlayFrom () {
                 return this._targetSeekTime !== undefined;
             },
 
-            _deferredPlayFrom: function() {
+            _deferredPlayFrom: function _deferredPlayFrom () {
                 this._seekTo(this._targetSeekTime);
                 this._mediaElement.play();
                 if (this._postBufferingState === MediaPlayer.STATE.PAUSED) {
@@ -456,13 +456,13 @@ define(
                 this._targetSeekTime = undefined;
             },
 
-            _seekTo: function(seconds) {
+            _seekTo: function _seekTo (seconds) {
                 var clampedTime = this._getClampedTimeForPlayFrom(seconds);
                 this._mediaElement.currentTime = clampedTime;
                 this._sentinelSeekTime = clampedTime;
             },
 
-            _getClampedTimeForPlayFrom: function(seconds) {
+            _getClampedTimeForPlayFrom: function _getClampedTimeForPlayFrom (seconds) {
                 var clampedTime = this._getClampedTime(seconds);
                 if (clampedTime !== seconds) {
                     var range = this._getSeekableRange();
@@ -471,7 +471,7 @@ define(
                 return clampedTime;
             },
 
-            _wipe: function() {
+            _wipe: function _wipe () {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
@@ -482,7 +482,7 @@ define(
                 this._readyToPlayFrom = false;
             },
 
-            _destroyMediaElement: function() {
+            _destroyMediaElement: function _destroyMediaElement () {
                 if (this._mediaElement) {
                     this._mediaElement.removeEventListener('canplay', this._wrapOnFinishedBuffering, false);
                     this._mediaElement.removeEventListener('seeked', this._wrapOnFinishedBuffering, false);
@@ -506,7 +506,7 @@ define(
                 }
             },
 
-            _unloadMediaSrc: function() {
+            _unloadMediaSrc: function _unloadMediaSrc () {
                 // Reset source as advised by HTML5 video spec, section 4.8.10.15:
                 // http://www.w3.org/TR/2011/WD-html5-20110405/video.html#best-practices-for-authors-using-media-elements
                 this._mediaElement.removeAttribute('src');
@@ -516,7 +516,7 @@ define(
             /**
              * @protected
              */
-            _generateSourceElement: function(url, mimeType) {
+            _generateSourceElement: function _generateSourceElement (url, mimeType) {
                 var device = RuntimeContext.getDevice();
                 var sourceElement = device._createElement('source');
                 sourceElement.src = url;
@@ -524,54 +524,54 @@ define(
                 return sourceElement;
             },
 
-            _reportError: function(errorMessage) {
+            _reportError: function _reportError (errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._emitEvent(MediaPlayer.EVENT.ERROR, {'errorMessage': errorMessage});
             },
 
-            _toStopped: function() {
+            _toStopped: function _toStopped () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
                 this._setSentinels([]);
             },
 
-            _toBuffering: function() {
+            _toBuffering: function _toBuffering () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
                 this._setSentinels([ this._exitBufferingSentinel ]);
             },
 
-            _toPlaying: function() {
+            _toPlaying: function _toPlaying () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
                 this._setSentinels([ this._endOfMediaSentinel, this._shouldBeSeekedSentinel, this._enterBufferingSentinel ]);
             },
 
-            _toPaused: function() {
+            _toPaused: function _toPaused () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
                 this._setSentinels([ this._shouldBeSeekedSentinel, this._shouldBePausedSentinel ]);
             },
 
-            _toComplete: function() {
+            _toComplete: function _toComplete () {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
                 this._setSentinels([]);
             },
 
-            _toEmpty: function() {
+            _toEmpty: function _toEmpty () {
                 this._wipe();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function(errorMessage) {
+            _toError: function _toError (errorMessage) {
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
                 throw 'ApiError: ' + errorMessage;
             },
 
-            _setSentinelLimits: function() {
+            _setSentinelLimits: function _setSentinelLimits () {
                 this._sentinelLimits = {
                     pause: {
                         maximumAttempts: 2,
@@ -588,7 +588,7 @@ define(
                 };
             },
 
-            _enterBufferingSentinel: function() {
+            _enterBufferingSentinel: function _enterBufferingSentinel () {
                 var sentinelShouldFire = !this._hasSentinelTimeChangedWithinTolerance && !this._nearEndOfMedia ;
 
                 if (this.getCurrentTime() === 0) {
@@ -625,7 +625,7 @@ define(
                 return false;
             },
 
-            _exitBufferingSentinel: function() {
+            _exitBufferingSentinel: function _exitBufferingSentinel () {
                 function fireExitBufferingSentinel(self) {
                     self._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
                     self._exitBuffering();
@@ -642,7 +642,7 @@ define(
                 return false;
             },
 
-            _shouldBeSeekedSentinel: function() {
+            _shouldBeSeekedSentinel: function _shouldBeSeekedSentinel () {
                 if (this._sentinelSeekTime === undefined) {
                     return false;
                 }
@@ -664,7 +664,7 @@ define(
                 return sentinelActionTaken;
             },
 
-            _shouldBePausedSentinel: function() {
+            _shouldBePausedSentinel: function _shouldBePausedSentinel () {
                 var sentinelActionTaken = false;
                 if (this._hasSentinelTimeChangedWithinTolerance) {
                     var mediaElement = this._mediaElement;
@@ -676,7 +676,7 @@ define(
                 return sentinelActionTaken;
             },
 
-            _nextSentinelAttempt: function(sentinelInfo, attemptFn) {
+            _nextSentinelAttempt: function _nextSentinelAttempt (sentinelInfo, attemptFn) {
                 var currentAttemptCount, maxAttemptCount;
 
                 sentinelInfo.currentAttemptCount += 1;
@@ -696,7 +696,7 @@ define(
                 return false;
             },
 
-            _endOfMediaSentinel: function() {
+            _endOfMediaSentinel: function _endOfMediaSentinel () {
                 if (!this._hasSentinelTimeChangedWithinTolerance && this._nearEndOfMedia) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
                     this._onEndOfMedia();
@@ -705,11 +705,11 @@ define(
                 return false;
             },
 
-            _clearSentinels: function() {
+            _clearSentinels: function _clearSentinels () {
                 clearInterval(this._sentinelInterval);
             },
 
-            _setSentinels: function(sentinels) {
+            _setSentinels: function _setSentinels (sentinels) {
                 var self = this;
                 this._clearSentinels();
                 this._sentinelIntervalNumber = 0;
@@ -738,14 +738,14 @@ define(
 
             },
 
-            _isReadyToPlayFrom: function() {
+            _isReadyToPlayFrom: function _isReadyToPlayFrom () {
                 if (this._readyToPlayFrom !== undefined) {
                     return this._readyToPlayFrom;
                 }
                 return false;
             },
 
-            _setSeekSentinelTolerance: function() {
+            _setSeekSentinelTolerance: function _setSeekSentinelTolerance () {
                 var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
                 var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
 

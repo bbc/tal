@@ -22,7 +22,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, target) {
+            init: function init (type, target) {
                 this.target = target;
                 this._super(type);
             }

@@ -18,7 +18,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(currentUrl) {
+            init: function init (currentUrl) {
                 var i;
 
                 this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
@@ -32,7 +32,7 @@ define(
              * Returns a URL to navigate back to the previous application
              * @returns {String} The first history item in currentUrl as a non-encoded URL, or the empty string if there is no history.
              */
-            back: function() {
+            back: function back () {
                 var recent, remaining, fragmentSeparator, self;
                 self = this;
 
@@ -71,7 +71,7 @@ define(
              * @param {String} destinationUrl, The non uri-encoded destination url including route fragment if applicable.
              * @returns {String} A non encoded uri with history information appended, the exact format of this is subject to change and should not be depended upon.
              */
-            forward: function(destinationUrl) {
+            forward: function forward (destinationUrl) {
                 var fragmentSeparator, self;
                 self = this;
 
@@ -112,7 +112,7 @@ define(
              * Returns a string representation of the current history stack. This is not useful externally.
              * @returns {String} A string representing the current history stack, to be appended to the current route within the application.
              */
-            toString: function() {
+            toString: function toString () {
                 return this._historyArray.join('');
             },
 
@@ -120,7 +120,7 @@ define(
              * Returns a Boolean to indicate whether the history stack contains valid return URLs. This excludes the 'return to broadcast' special case.
              * @returns {Boolean} True if the history stack contains one or more valid return URLs.
              */
-            hasHistory: function() {
+            hasHistory: function hasHistory () {
                 var historyMinimumLength = this.hasBroadcastOrigin() ? 2 : 1;
                 return this._historyArray.length >= historyMinimumLength;
             },
@@ -129,7 +129,7 @@ define(
              * Returns a Boolean to indicate whether the first entry in the history stack is the special 'broadcast' entry.
              * @returns {Boolean} True if the first entry in the history stack is the special 'broadcast' entry.
              */
-            hasBroadcastOrigin: function() {
+            hasBroadcastOrigin: function hasBroadcastOrigin () {
                 return this._historyArray.length > 0 && this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
             }
         });

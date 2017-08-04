@@ -44,19 +44,19 @@ define(
             /**
              * Sets the iterator pointer to the first item
              */
-            log: function() {
+            log: function log () {
                 prependItem.call(this, '[LOG] ' + Array.prototype.join.call(arguments, '<br/>'));
             },
-            debug: function() {
+            debug: function debug () {
                 prependItem.call(this, '[DEBUG] ' +  Array.prototype.join.call(arguments, '<br/>'));
             },
-            info: function() {
+            info: function info () {
                 prependItem.call(this, '[INFO] ' +  Array.prototype.join.call(arguments, '<br/>'));
             },
-            warn: function() {
+            warn: function warn () {
                 prependItem.call(this, '[WARN] ' +  Array.prototype.join.call(arguments, '<br/>'));
             },
-            error: function() {
+            error: function error () {
                 prependItem.call(this, '[ERROR] ' +  Array.prototype.join.call(arguments, '<br/>'));
             }
         };

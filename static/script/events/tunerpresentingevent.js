@@ -22,7 +22,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(channelName) {
+            init: function init (channelName) {
                 this.channel = channelName;
                 this._super('tunerpresenting');
             }

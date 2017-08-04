@@ -13,12 +13,12 @@ define(
         'use strict';
         return TransitionDefinition.extend(
             {
-                init: function (transDef) {
+                init: function init (transDef) {
                     this._super();
                     this._copyToSelf(transDef);
                 },
                 
-                _copyToSelf: function(transDef) {
+                _copyToSelf: function _copyToSelf (transDef) {
                     var props, property, i;
                     props = transDef.getProperties();
                     for(i = 0; i !== props.length; i += 1) {
@@ -34,7 +34,7 @@ define(
                     }
                 },
                 
-                getPropertyDuration: function () {
+                getPropertyDuration: function getPropertyDuration () {
                     return 0;
                 }
             }

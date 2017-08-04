@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, keyCode) {
+            init: function init (type, keyCode) {
                 var index;
                 this.keyCode = keyCode;
 

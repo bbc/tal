@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (id, orientation) {
+            init: function init (id, orientation) {
                 this._super(id);
                 this.addClass(orientation.styleClass());
                 this._orientation = orientation;
@@ -41,7 +41,7 @@ define(
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-            append: function (widget, length) {
+            append: function append (widget, length) {
                 this._lengths.push(length);
                 return this.appendChildWidget(widget);
             },
@@ -55,7 +55,7 @@ define(
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-            insert: function (index, widget, length) {
+            insert: function insert (index, widget, length) {
                 this._lengths.splice(index, 0, length);
                 return this.insertChildWidget(index, widget);
             },
@@ -65,7 +65,7 @@ define(
              * @param {antie.widgets.Widget} widget. Widget to remove from the strip
              * @param {Boolean} [retainElement=false] whether to keep the widget's output element in the DOM after removing widget
              */
-            remove: function (widget, retainElement) {
+            remove: function remove (widget, retainElement) {
                 var i, widgets;
                 widgets = this.widgets();
                 for (i = 0; i !== widgets.length; i += 1) {
@@ -79,7 +79,7 @@ define(
             /**
              * Removes all widgets from the strip
              */
-            removeAll: function () {
+            removeAll: function removeAll () {
                 this._lengths = [];
                 return this.removeChildWidgets();
             },
@@ -88,7 +88,7 @@ define(
              * Get all the widgets in the strip.
              * @returns {Array} The widgets currently in the strip
              */
-            widgets: function () {
+            widgets: function widgets () {
                 return this.getChildWidgets();
             },
 
@@ -98,7 +98,7 @@ define(
              * @returns {Number} length in pixels along primary axis to primary edge of the provided index
              * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
              */
-            getLengthToIndex: function (index) {
+            getLengthToIndex: function getLengthToIndex (index) {
                 var suppliedLength;
 
                 suppliedLength = this._lengthToIndexUsingSuppliedValues(index);
@@ -115,7 +115,7 @@ define(
              * If provided with an array, the lengths will be set with the corresponding widgets (so the first number will be used
              * for the first widget's length, etc..)
              */
-            setLengths: function (lengths) {
+            setLengths: function setLengths (lengths) {
                 var widgetCount, i;
                 if (typeof lengths === 'number') {
                     widgetCount = this.getChildWidgetCount();
@@ -132,7 +132,7 @@ define(
              * Indicates whether the strip needs visible indices attaching before it is aligned
              * @returns {Boolean} true if visible indices required, false if not.
              */
-            needsVisibleIndices: function () {
+            needsVisibleIndices: function needsVisibleIndices () {
                 return false;
             },
 
@@ -140,11 +140,11 @@ define(
              * Strip should ensure all widgets indexed in the array are attached to the parent
              * @param {Array} indexArray
              */
-            attachIndexedWidgets: function (/*indexArray*/) {
+            attachIndexedWidgets: function attachIndexedWidgets (/*indexArray*/) {
 
             },
 
-            _lengthToIndexByCalculatingUsingElements: function (index) {
+            _lengthToIndexByCalculatingUsingElements: function _lengthToIndexByCalculatingUsingElements (index) {
                 var elements, widgets, endIndex, i;
                 elements = [];
                 widgets = this.getChildWidgets();
@@ -155,7 +155,7 @@ define(
                 return this._getOffsetToLastElementInArray(elements);
             },
 
-            _lengthToIndexUsingSuppliedValues: function (index) {
+            _lengthToIndexUsingSuppliedValues: function _lengthToIndexUsingSuppliedValues (index) {
                 var length, missingLengths, i;
                 length = 0;
                 for (i = 0; i !== Math.max(0, index); i += 1) {
@@ -178,7 +178,7 @@ define(
              * @param {Number} index The index of a widget currently appended to the carousel. Supplied index must be valid (i.e. correspond to a wiget currently in the strip)
              * @returns {Number} the length in pixels of the widget at the supplied index. Returns the length supplied at append or via setWidgetLength, if neither are specified attempts to calculate and return the length.
              */
-            lengthOfWidgetAtIndex: function (index) {
+            lengthOfWidgetAtIndex: function lengthOfWidgetAtIndex (index) {
                 var widget;
                 if (this._lengths[index] !== undefined) {
                     return this._lengths[index];
@@ -190,7 +190,7 @@ define(
             /**
              * Manually performs any processing required to put the carousel in a valid state after an append/insert
              */
-            recalculate: function () {
+            recalculate: function recalculate () {
 
             },
 
@@ -200,11 +200,11 @@ define(
              * Calculation is any strip defined processing required after an append/insert to put the carousel in a valid state
              * Autocalculation is on by default when a carousel is created.
              */
-            autoCalculate: function (/*on*/) {
+            autoCalculate: function autoCalculate (/*on*/) {
 
             },
 
-            _getValidatedIndex: function (array, index) {
+            _getValidatedIndex: function _getValidatedIndex (array, index) {
                 var endIndex;
                 endIndex = index;
                 if (index < 0) {
@@ -216,7 +216,7 @@ define(
                 return endIndex;
             },
 
-            _getOffsetToLastElementInArray: function (elementArray) {
+            _getOffsetToLastElementInArray: function _getOffsetToLastElementInArray (elementArray) {
                 var length, lastIndex;
                 length = 0;
                 lastIndex = elementArray.length - 1;
@@ -226,29 +226,29 @@ define(
                 return length;
             },
 
-            _getElementOffset: function (element) {
+            _getElementOffset: function _getElementOffset (element) {
                 var device;
                 device = this._getDevice();
                 return device.getElementOffset(element)[this._getEdge()];
             },
 
-            _getDevice: function () {
+            _getDevice: function _getDevice () {
                 return this.getCurrentApplication().getDevice();
             },
 
-            _getDimension: function () {
+            _getDimension: function _getDimension () {
                 return this._orientation.dimension();
             },
 
-            _getEdge: function () {
+            _getEdge: function _getEdge () {
                 return this._orientation.edge();
             },
 
-            _getWidgetLength: function (widget) {
+            _getWidgetLength: function _getWidgetLength (widget) {
                 return this._getElementLength(widget.outputElement);
             },
 
-            _getElementLength: function (element) {
+            _getElementLength: function _getElementLength (element) {
                 var device;
                 device = this._getDevice();
                 return device.getElementSize(element)[this._getDimension()];

@@ -32,7 +32,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (id, cols, rows, horizontalWrapping, verticalWrapping) {
+            init: function init (id, cols, rows, horizontalWrapping, verticalWrapping) {
                 this._super(id);
                 this.addClass('grid');
 
@@ -60,7 +60,7 @@ define(
              * @param {Integer} row The row the widget it in
              * @returns The widget in the specified column and row
              */
-            getWidgetAt: function (col, row) {
+            getWidgetAt: function getWidgetAt (col, row) {
                 return this._childWidgetOrder[(this._cols * row) + col];
             },
             /**
@@ -69,7 +69,7 @@ define(
              * @param {Integer} row The row to position the widget in
              * @param {antie.widgets.Widget} widget The widget to add
              */
-            setWidgetAt: function (col, row, widget) {
+            setWidgetAt: function setWidgetAt (col, row, widget) {
                 if (!this.hasChildWidget(widget.id)) {
                     this._childWidgets[widget.id] = widget;
                     this._childWidgetOrder[(this._cols * row) + col] = widget;
@@ -97,7 +97,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 if (!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
                 } else {
@@ -135,7 +135,7 @@ define(
              * Appends a child widget to this widget. Not supported for Grids - use setWidgetAt() instead.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (/*widget*/) {
+            appendChildWidget: function appendChildWidget (/*widget*/) {
                 throw new Error('Not supported for Grids - use setWidgetAt() instead.');
             },
             /**
@@ -143,7 +143,7 @@ define(
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (/*index, widget*/) {
+            insertChildWidget: function insertChildWidget (/*index, widget*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -151,7 +151,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
              */
-            removeChildWidget: function (/*widget, retainElement*/) {
+            removeChildWidget: function removeChildWidget (/*widget, retainElement*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -170,7 +170,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function (widget) {
+            setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
                 if (this._super(widget)) {
                     var selectedIndex = this.getIndexOfChildWidget(widget);
@@ -191,7 +191,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function (evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if (evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN &&
                     evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
@@ -262,7 +262,7 @@ define(
              * Broadcasts an event from the application level to every single
              * object it contains.
              */
-            broadcastEvent: function (evt) {
+            broadcastEvent: function broadcastEvent (evt) {
                 this.fireEvent(evt);
                 if (!evt.isPropagationStopped()) {
                     for (var i = 0; i < this._childWidgetOrder.length; i++) {

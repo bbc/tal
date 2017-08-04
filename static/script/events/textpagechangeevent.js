@@ -23,7 +23,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, page) {
+            init: function init (target, page) {
                 this.target = target;
                 this.page = page;
 

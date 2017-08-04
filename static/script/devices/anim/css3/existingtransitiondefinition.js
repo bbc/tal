@@ -13,7 +13,7 @@ define(
         'use strict';
         return TransitionDefinition.extend(
             {
-                init: function(transitionElement) {
+                init: function init (transitionElement) {
                     var properties, durations, delays, timingFns, i;
                     this._super();
                     properties = transitionElement.getProperties();

@@ -22,14 +22,14 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(array) {
+            init: function init (array) {
                 this._array = array || [];
                 this.reset();
             },
             /**
              * Sets the iterator pointer to the first item
              */
-            reset: function() {
+            reset: function reset () {
                 this._currentIndex = 0;
             },
             /**
@@ -37,7 +37,7 @@ define(
              * @returns Boolean true if the following call to next() will return an object.
              * @see #next
              */
-            hasNext: function() {
+            hasNext: function hasNext () {
                 return (this._currentIndex < this._array.length);
             },
             /**
@@ -45,7 +45,7 @@ define(
              * @returns The next item from the iterator, or undefined if there are no more items.
              * @see #next
              */
-            next: function() {
+            next: function next () {
                 if(this.hasNext()) {
                     return this._array[this._currentIndex++];
                 } else {
@@ -57,24 +57,24 @@ define(
              * @returns The next item from the iterator, or undefined if there are no more items.
              * @see #next
              */
-            peek: function() {
+            peek: function peek () {
                 return this._array[this._currentIndex];
             },
             /**
              * Returns the the pointer value.
              * @returns The pointer value
              */
-            getPointer: function() {
+            getPointer: function getPointer () {
                 return this._currentIndex;
             },
-            isEmpty: function() {
+            isEmpty: function isEmpty () {
                 return this._array.length === 0;
             },
             /**
              * Returns the length of the array.
              * @returns The length of the array
              */
-            getLength: function () {
+            getLength: function getLength () {
                 return this._array.length;
             }
         });

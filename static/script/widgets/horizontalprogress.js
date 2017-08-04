@@ -27,7 +27,7 @@ define('antie/widgets/horizontalprogress',
              * @constructor
              * @ignore
              */
-            init: function(id, showLabel, initialValue) {
+            init: function init (id, showLabel, initialValue) {
                 this._value = initialValue ? initialValue : 0;
                 this._moveHandle = false;
                 this._lastLeft = null;
@@ -45,7 +45,7 @@ define('antie/widgets/horizontalprogress',
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function render (device) {
                 this.outputElement = device.createContainer(this.id, this.getClasses());
                 this._leftElement = device.createContainer(this.id + '_left');
                 this._innerElement = device.createContainer(this.id + '_inner');
@@ -64,7 +64,7 @@ define('antie/widgets/horizontalprogress',
              * Moves the inner element to show the current value.
              * @private
              */
-            _moveInner: function() {
+            _moveInner: function _moveInner () {
                 var device = this.getCurrentApplication().getDevice();
                 var elsize = device.getElementSize(this._leftElement);
                 var handleSize = device.getElementSize(this._innerElement);
@@ -91,14 +91,14 @@ define('antie/widgets/horizontalprogress',
             /**
              * Returns the current value shown by the progress indicator.
              */
-            getValue: function() {
+            getValue: function getValue () {
                 return this._value;
             },
             /**
              * Sets the current value to be shown by the progress indicator.
              * @param {Float} val The value to show (between 0.0 and 1.0 inclusive).
              */
-            setValue: function(val) {
+            setValue: function setValue (val) {
                 this._value = val;
                 this._moveInner();
             },
@@ -106,7 +106,7 @@ define('antie/widgets/horizontalprogress',
              * Sets the text to show in the label.
              * @param {String} val The text to show.
              */
-            setText: function(val) {
+            setText: function setText (val) {
                 if (this._label) {
                     this._label.setText(val);
                 }

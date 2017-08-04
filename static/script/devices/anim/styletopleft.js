@@ -150,7 +150,7 @@ define(
                     fps: options.fps || animationDefaults.fps || 25,
                     duration: options.duration || animationDefaults.duration || 840,
                     easing: options.easing || animationDefaults.easing || 'linear',
-                    onComplete: function() {
+                    onComplete: function onComplete () {
                         options.el.style.visibility = 'hidden';
                         if (options.onComplete) {
                             options.onComplete();
@@ -185,7 +185,7 @@ define(
                     duration: options.duration || animationDefaults.duration || 840,
                     easing: options.easing || animationDefaults.easing || 'linear',
                     onComplete: options.onComplete,
-                    onStart: function () {
+                    onStart: function onStart () {
                         options.el.style.visibility = 'visible';
                     }
                 });

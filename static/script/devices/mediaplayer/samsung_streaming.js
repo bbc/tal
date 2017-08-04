@@ -50,7 +50,7 @@ require.def(
                 StreamingPlayer : 1
             },
 
-            init: function() {
+            init: function init () {
                 this._super();
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._currentPlayer = undefined;
@@ -72,7 +72,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            setSource: function (mediaType, url, mimeType) {
+            setSource: function setSource (mediaType, url, mimeType) {
                 this._logger = RuntimeContext.getDevice().getLogger();
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
@@ -128,12 +128,12 @@ require.def(
                 this._currentPlayer = this.PlayerEmps.StreamingPlayer;
             },
 
-            _closePlugin: function() {
+            _closePlugin: function _closePlugin () {
                 this._playerPlugin.Close();
                 this._currentPlayer = undefined;
             },
 
-            _initPlayer: function(source) {
+            _initPlayer: function _initPlayer (source) {
                 var result = this._playerPlugin.Execute('InitPlayer', source);
 
                 if (result !== 1) {
@@ -172,7 +172,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            playFrom: function (seconds) {
+            playFrom: function playFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this._range ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
@@ -223,7 +223,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            beginPlayback: function() {
+            beginPlayback: function beginPlayback () {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
@@ -240,7 +240,7 @@ require.def(
             /**
              * @inheritDoc
              */
-            beginPlaybackFrom: function(seconds) {
+            beginPlaybackFrom: function beginPlaybackFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 var seekingTo = this.getSeekableRange() ? this._getClampedTimeForPlayFrom(seconds) : seconds;
 
@@ -267,7 +267,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            pause: function () {
+            pause: function pause () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
                 case MediaPlayer.STATE.BUFFERING:
@@ -287,7 +287,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            stop: function () {
+            stop: function stop () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                     break;
@@ -309,7 +309,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            reset: function () {
+            reset: function reset () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.EMPTY:
                     break;
@@ -328,21 +328,21 @@ require.def(
             /**
             * @inheritDoc
             */
-            getSource: function () {
+            getSource: function getSource () {
                 return this._source;
             },
 
             /**
             * @inheritDoc
             */
-            getMimeType: function () {
+            getMimeType: function getMimeType () {
                 return this._mimeType;
             },
 
             /**
             * @inheritDoc
             */
-            getCurrentTime: function () {
+            getCurrentTime: function getCurrentTime () {
                 if (this.getState() === MediaPlayer.STATE.STOPPED) {
                     return undefined;
                 } else {
@@ -353,7 +353,7 @@ require.def(
             /**
             * @inheritDoc
             */
-            getSeekableRange: function () {
+            getSeekableRange: function getSeekableRange () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                 case MediaPlayer.STATE.ERROR:
@@ -365,7 +365,7 @@ require.def(
                 return undefined;
             },
 
-            _isLiveRangeOutdated: function () {
+            _isLiveRangeOutdated: function _isLiveRangeOutdated () {
                 var time = Math.floor(this._currentTime);
                 if (time % 8 === 0 && !this._updatingTime && this._lastWindowRanged !== time) {
                     this._lastWindowRanged = time;
@@ -378,7 +378,7 @@ require.def(
             /**
              * @inheritDoc
              */
-            _getMediaDuration: function() {
+            _getMediaDuration: function _getMediaDuration () {
                 if (this._range) {
                     return this._range.end;
                 }
@@ -388,18 +388,18 @@ require.def(
             /**
             * @inheritDoc
             */
-            getState: function () {
+            getState: function getState () {
                 return this._state;
             },
 
             /**
              * @inheritDoc
              */
-            getPlayerElement: function() {
+            getPlayerElement: function getPlayerElement () {
                 return this._playerPlugin;
             },
 
-            _onFinishedBuffering: function() {
+            _onFinishedBuffering: function _onFinishedBuffering () {
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
                     return;
                 }
@@ -418,27 +418,27 @@ require.def(
                 }
             },
 
-            _onDeviceError: function(message) {
+            _onDeviceError: function _onDeviceError (message) {
                 this._reportError(message);
             },
 
-            _onDeviceBuffering: function() {
+            _onDeviceBuffering: function _onDeviceBuffering () {
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._toBuffering();
                 }
             },
 
-            _onEndOfMedia: function() {
+            _onEndOfMedia: function _onEndOfMedia () {
                 this._toComplete();
             },
 
-            _stopPlayer: function() {
+            _stopPlayer: function _stopPlayer () {
                 this._playerPlugin.Execute('Stop');
 
                 this._currentTimeKnown = false;
             },
 
-            _tryPauseWithStateTransition: function() {
+            _tryPauseWithStateTransition: function _tryPauseWithStateTransition () {
                 var success = this._playerPlugin.Execute('Pause');
                 success = success && (success !== -1);
 
@@ -449,14 +449,14 @@ require.def(
                 this._tryingToPause = !success;
             },
 
-            _onStatus: function() {
+            _onStatus: function _onStatus () {
                 var state = this.getState();
                 if (state === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
             },
 
-            _updateRange: function () {
+            _updateRange: function _updateRange () {
                 var self = this;
                 if (this._isHlsMimeType() && this._isLiveMedia()) {
                     var range = this._playerPlugin.Execute('GetPlayingRange').split('-');
@@ -479,7 +479,7 @@ require.def(
             },
 
 
-            _onCurrentTime: function(timeInMillis) {
+            _onCurrentTime: function _onCurrentTime (timeInMillis) {
                 this._currentTime = timeInMillis / 1000;
                 this._onStatus();
                 this._currentTimeKnown = true;
@@ -506,7 +506,7 @@ require.def(
                 }
             },
 
-            _deferredSeek: function() {
+            _deferredSeek: function _deferredSeek () {
                 var clampedTime = this._getClampedTimeForPlayFrom(this._deferSeekingTo);
                 var isNearCurrentTime = this._isNearToCurrentTime(clampedTime);
 
@@ -521,7 +521,7 @@ require.def(
                 }
             },
 
-            _getClampedTimeForPlayFrom: function (seconds) {
+            _getClampedTimeForPlayFrom: function _getClampedTimeForPlayFrom (seconds) {
                 if (this._currentPlayer === this.PlayerEmps.StreamingPlayer && !this._updatingTime) {
                     this._updateRange();
                 }
@@ -532,7 +532,7 @@ require.def(
                 return clampedTime;
             },
 
-            _getClampOffsetFromConfig: function() {
+            _getClampOffsetFromConfig: function _getClampOffsetFromConfig () {
                 var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
                 if (config && config.streaming && config.streaming.overrides) {
@@ -548,7 +548,7 @@ require.def(
                 }
             },
 
-            _registerEventHandlers: function() {
+            _registerEventHandlers: function _registerEventHandlers () {
                 var self = this;
                 this._playerPlugin.OnEvent = function(eventType, param1/*, param2*/) {
 
@@ -632,13 +632,13 @@ require.def(
                 window.addEventListener('unload', this._onWindowHide, false);
             },
 
-            _unregisterEventHandlers: function() {
+            _unregisterEventHandlers: function _unregisterEventHandlers () {
                 this._playerPlugin.OnEvent = undefined;
                 window.removeEventListener('hide', this._onWindowHide, false);
                 window.removeEventListener('unload', this._onWindowHide, false);
             },
 
-            _wipe: function () {
+            _wipe: function _wipe () {
                 this._stopPlayer();
                 this._closePlugin();
                 this._unregisterEventHandlers();
@@ -655,7 +655,7 @@ require.def(
                 this._lastWindowRanged = false;
             },
 
-            _seekTo: function(seconds) {
+            _seekTo: function _seekTo (seconds) {
                 var offset = seconds - this.getCurrentTime();
                 var success = this._jump(offset);
 
@@ -666,14 +666,14 @@ require.def(
                 return success;
             },
 
-            _seekToWithFailureStateTransition: function(seconds) {
+            _seekToWithFailureStateTransition: function _seekToWithFailureStateTransition (seconds) {
                 var success = this._seekTo(seconds);
                 if (success !== 1) {
                     this._toPlaying();
                 }
             },
 
-            _jump: function (offsetSeconds) {
+            _jump: function _jump (offsetSeconds) {
                 var result;
                 if (offsetSeconds > 0) {
                     result = this._playerPlugin.Execute('JumpForward', offsetSeconds);
@@ -684,12 +684,12 @@ require.def(
                 }
             },
 
-            _isHlsMimeType: function () {
+            _isHlsMimeType: function _isHlsMimeType () {
                 var mime = this._mimeType.toLowerCase();
                 return mime === 'application/vnd.apple.mpegurl' || mime === 'application/x-mpegurl';
             },
 
-            _isCurrentTimeInRangeTolerance: function (seconds) {
+            _isCurrentTimeInRangeTolerance: function _isCurrentTimeInRangeTolerance (seconds) {
                 if (seconds > this._range.end + this.RANGE_UPDATE_TOLERANCE) {
                     return false;
                 } else if (seconds < this._range.start - this.RANGE_UPDATE_TOLERANCE) {
@@ -699,7 +699,7 @@ require.def(
                 }
             },
 
-            _isInitialBufferingFinished: function () {
+            _isInitialBufferingFinished: function _isInitialBufferingFinished () {
                 if (this._currentTime === undefined || this._currentTime === 0) {
                     return false;
                 } else {
@@ -707,24 +707,24 @@ require.def(
                 }
             },
 
-            _reportError: function(errorMessage) {
+            _reportError: function _reportError (errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._emitEvent(MediaPlayer.EVENT.ERROR, {'errorMessage': errorMessage});
             },
 
-            _toStopped: function () {
+            _toStopped: function _toStopped () {
                 this._currentTime = 0;
                 this._range = undefined;
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
             },
 
-            _toBuffering: function () {
+            _toBuffering: function _toBuffering () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
             },
 
-            _toPlaying: function () {
+            _toPlaying: function _toPlaying () {
                 if (this._isHlsMimeType() && this._isLiveMedia() && !this._updatingTime) {
                     this._updateRange();
                 }
@@ -732,22 +732,22 @@ require.def(
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
             },
 
-            _toPaused: function () {
+            _toPaused: function _toPaused () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
             },
 
-            _toComplete: function () {
+            _toComplete: function _toComplete () {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
             },
 
-            _toEmpty: function () {
+            _toEmpty: function _toEmpty () {
                 this._wipe();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function(errorMessage) {
+            _toError: function _toError (errorMessage) {
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);

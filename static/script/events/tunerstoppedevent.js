@@ -21,7 +21,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function() {
+            init: function init () {
                 this._super('tunerstopped');
             }
         });

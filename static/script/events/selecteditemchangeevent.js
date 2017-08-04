@@ -24,7 +24,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, item, index) {
+            init: function init (target, item, index) {
                 this.target = target;
                 this.item = item;
                 this.index = index;

@@ -25,26 +25,26 @@ define(
              * @constructor
              * @ignore
              */
-            init: function () {
+            init: function init () {
                 throw new Error('Abstract class constructor should not be called directly');
             },
             /**
              * Displays the currently tuned channel
              */
-            showCurrentChannel: function () {
+            showCurrentChannel: function showCurrentChannel () {
                 throw new Error('Device broadcast source does not override abstract method showCurrentChannel');
             },
             /**
              * Stops the currently playing programme and turns the screen black
              */
-            stopCurrentChannel: function () {
+            stopCurrentChannel: function stopCurrentChannel () {
                 throw new Error('Device broadcast source does not override abstract method stopCurrentChannel');
             },
             /**
              * Get the current channel name from broadcast and return as a string.
              * @returns A string with the name of the current channel.
              */
-            getCurrentChannelName: function () {
+            getCurrentChannelName: function getCurrentChannelName () {
                 throw new Error('Device broadcast source does not override abstract method getCurrentChannelName');
             },
             /**

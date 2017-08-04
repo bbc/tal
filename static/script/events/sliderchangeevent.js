@@ -24,7 +24,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, target, value) {
+            init: function init (type, target, value) {
                 this._super(type);
                 this.target = target;
                 this.value = value;

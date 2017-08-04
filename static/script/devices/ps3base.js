@@ -25,12 +25,12 @@ define(
         }
         if(!window.console) {
             window.console = {
-                log: function() {}
+                log: function log () {}
             };
         }
 
         return BrowserDevice.extend({
-            init: function(config) {
+            init: function init (config) {
                 this._super(config);
                 this._nativeCallbacks = [];
 
@@ -50,7 +50,7 @@ define(
                 });
                 this._endtag = endtag;
             },
-            nativeCallback: function(json) {
+            nativeCallback: function nativeCallback (json) {
                 var data = this.decodeJson(json);
 
                 if(enableDebugging) {
@@ -114,7 +114,7 @@ define(
                     window.postMessage(data, '*');
                 }
             },
-            addNativeEventListener: function(name, callback) {
+            addNativeEventListener: function addNativeEventListener (name, callback) {
                 var callbacks;
                 if(!(callbacks = this._nativeCallbacks[name])) {
                     callbacks = this._nativeCallbacks[name] = [];
@@ -123,7 +123,7 @@ define(
                 }
                 callbacks.push(callback);
             },
-            removeNativeEventListener: function(name, callback) {
+            removeNativeEventListener: function removeNativeEventListener (name, callback) {
                 var callbacks = this._nativeCallbacks[name];
                 if(callbacks) {
                     for(var i=0; i<callbacks.length; i++) {
@@ -134,7 +134,7 @@ define(
                     }
                 }
             },
-            nativeCommand: function(command, args, callback) {
+            nativeCommand: function nativeCommand (command, args, callback) {
                 var callbacks;
                 if(!(callbacks = this._nativeCallbacks[command])) {
                     callbacks = this._nativeCallbacks[command] = [];
@@ -177,7 +177,7 @@ define(
             /**
              * Loads a resource from a URL protected by device authentication
              */
-            loadAuthenticatedURL: function(url, opts) {
+            loadAuthenticatedURL: function loadAuthenticatedURL (url, opts) {
                 var collectedContentDocument = '';
                 var collectedBytes = 0;
                 var messageSize = 0;
@@ -228,7 +228,7 @@ define(
              * Checks to see if HD output is currently enabled.
              * @returns True if HD is currently enabled.
              */
-            isHDEnabled: function() {
+            isHDEnabled: function isHDEnabled () {
                 // HD should only be enabled when HDMI is used
                 return (this.outputPortType === 'HDMI');
             }

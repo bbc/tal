@@ -21,14 +21,14 @@ define(
 
         return BrowserDevice.extend({
             /* global nwf: true */
-            init: function(config) {
+            init: function init (config) {
                 this._super(config);
             },
             /**
              * Adds key event listeners to WiiU Gamepad and WiiRemote, Wii U Pro controller is
              * currently unsupported in NWF
              */
-            addKeyEventListener: function() {
+            addKeyEventListener: function addKeyEventListener () {
                 this._registerWiiUGamePadInputControls();
                 this._registerWiiRemoteInputControls();
             },
@@ -70,7 +70,7 @@ define(
                     break;
                 }
             },
-            _onGamePadButtonRelease: function(buttonEvent) {
+            _onGamePadButtonRelease: function _onGamePadButtonRelease (buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
                 case controllerButton.GAMEPAD_A:

@@ -17,19 +17,19 @@ define(
             /**
              * Sets the iterator pointer to the first item
              */
-            log: function() {
+            log: function log () {
                 alert('[LOG] ' +  Array.prototype.join.call(arguments, '\n'));
             },
-            debug: function() {
+            debug: function debug () {
                 alert('[DEBUG] ' +  Array.prototype.join.call(arguments, '\n'));
             },
-            info: function() {
+            info: function info () {
                 alert('[INFO] ' +  Array.prototype.join.call(arguments, '\n'));
             },
-            warn: function() {
+            warn: function warn () {
                 alert('[WARN] ' +  Array.prototype.join.call(arguments, '\n'));
             },
-            error: function() {
+            error: function error () {
                 alert('[ERROR] ' +  Array.prototype.join.call(arguments, '\n'));
             }
         };

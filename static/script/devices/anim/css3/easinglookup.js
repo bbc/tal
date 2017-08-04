@@ -17,7 +17,7 @@ define(
 
         return Class.extend(
             {
-                init: function() {},
+                init: function init () {},
                 // defaults
                 'linear'            : 'linear',
                 'ease'              : 'ease',
