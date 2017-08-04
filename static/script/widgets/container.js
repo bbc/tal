@@ -40,7 +40,7 @@ define(
                 this._activeChildWidget = null;
                 this._autoRenderChildren = true;
 
-                this._super(id);
+                init.base.call(this, id);
 
                 this.addClass('container');
             },

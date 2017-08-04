@@ -22,7 +22,7 @@ define(
         return BrowserDevice.extend({
             /* global nwf: true */
             init: function init (config) {
-                this._super(config);
+                init.base.call(this, config);
             },
             /**
              * Adds key event listeners to WiiU Gamepad and WiiRemote, Wii U Pro controller is

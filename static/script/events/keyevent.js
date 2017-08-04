@@ -40,7 +40,7 @@ define(
                     this.keyChar = String.fromCharCode('A'.charCodeAt(0) + index);
                 }
 
-                this._super(type);
+                init.base.call(this, type);
             }
         });
 

@@ -27,7 +27,7 @@ define(
              * @ignore
              */
             init: function init (id, enableHTML) {
-                this._super(id, '', enableHTML);
+                init.base.call(this, id, '', enableHTML);
                 this.addClass('textpager');
                 this._page = 1;
             },
@@ -91,7 +91,7 @@ define(
             },
 
             setText: function setText (text) {
-                this._super(text);
+                setText.base.call(this, text);
 
                 // Remove the bottom padding to allow the page count to be
                 // recalculated.

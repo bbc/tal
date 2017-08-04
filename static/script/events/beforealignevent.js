@@ -25,7 +25,7 @@ define('antie/events/beforealignevent',
             init: function init (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super('beforealign');
+                init.base.call(this, 'beforealign');
             }
         });
     }

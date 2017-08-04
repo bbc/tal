@@ -75,7 +75,7 @@ define(
              */
             setActiveChildWidget: function setActiveChildWidget (widget) {
                 if (widget === this._mask) {
-                    return this._super(widget);
+                    return setActiveChildWidget.base.call(this, widget);
                 } else {
                     return this.setActiveWidget(widget);
                 }
@@ -87,7 +87,7 @@ define(
              */
             hasChildWidget: function hasChildWidget (id) {
                 if (id === this._mask.id) {
-                    return this._super(id);
+                    return hasChildWidget.base.call(this, id);
                 } else {
                     return this._widgetStrip.hasChildWidget(id);
                 }

@@ -27,7 +27,7 @@ define('antie/widgets/component',
              * @ignore
              */
             init: function init (id) {
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('component');
                 this._isModal = false;
             },

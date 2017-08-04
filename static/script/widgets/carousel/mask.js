@@ -31,7 +31,7 @@ define(
              * @ignore
              */
             init: function init (id, widgetStrip, orientation) {
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass(orientation.styleClass());
                 this._orientation = orientation;
                 this.addClass('carouselmask');

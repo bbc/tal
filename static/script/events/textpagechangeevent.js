@@ -27,7 +27,7 @@ define(
                 this.target = target;
                 this.page = page;
 
-                this._super('textpagechange');
+                init.base.call(this, 'textpagechange');
             }
         });
     }

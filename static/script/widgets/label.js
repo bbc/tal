@@ -28,10 +28,10 @@ define(
                 // use that value as the text and auto generate an internal id
                 if(arguments.length === 1) {
                     this._text = id;
-                    this._super();
+                    init.base.call(this);
                 } else {
                     this._text = text;
-                    this._super(id);
+                    init.base.call(this, id);
                 }
                 this._truncationMode = Label.TRUNCATION_MODE_NONE;
                 this._maxLines = 0;

@@ -23,7 +23,7 @@ define(
          */
         return HorizontalSlider.extend(/** @lends antie.widgets.ScrubBar.prototype */ {
             init: function init (id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter) {
-                this._super(id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter);
+                init.base.call(this, id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter);
 
                 this._bufferedRange = {start: 0, end: 0};
                 this._lastBufferLeft = -1;
@@ -36,7 +36,7 @@ define(
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
             render: function render (device) {
-                this.outputElement = this._super(device);
+                this.outputElement = render.base.call(this, device);
                 this._buffer = device.createButton(this.id+'_buffer');
                 device.addClassToElement(this._buffer, 'scrubbarbuffer');
                 device.prependChildElement(this.outputElement, this._buffer);

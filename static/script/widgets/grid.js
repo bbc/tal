@@ -33,7 +33,7 @@ define(
              * @ignore
              */
             init: function init (id, cols, rows, horizontalWrapping, verticalWrapping) {
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('grid');
 
                 this._cols = cols;
@@ -172,7 +172,7 @@ define(
              */
             setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
-                if (this._super(widget)) {
+                if (setActiveChildWidget.base.call(this, widget)) {
                     var selectedIndex = this.getIndexOfChildWidget(widget);
                     this._selectedRow = Math.floor(selectedIndex / this._cols);
                     this._selectedCol = Math.floor(selectedIndex % this._cols);

@@ -26,7 +26,7 @@ define(
         var Player = MediaPlayer.extend({
 
             init: function init () {
-                this._super();
+                init.base.call(this);
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._playerPlugin = document.getElementById('playerPlugin');
                 this._deferSeekingTo = null;

@@ -29,7 +29,7 @@ define(
                 this.url = url;
                 this.last = last;
 
-                this._super(target, code);
+                init.base.call(this, target, code);
             }
         });
 

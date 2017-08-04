@@ -15,7 +15,7 @@ define(
             {
                 init: function init (transitionElement) {
                     var properties, durations, delays, timingFns, i;
-                    this._super();
+                    init.base.call(this);
                     properties = transitionElement.getProperties();
                     durations = transitionElement.getDurations();
                     delays = transitionElement.getDelays();

@@ -28,7 +28,7 @@ define(
                 this.target = target;
                 this.item = item;
                 this.index = index;
-                this._super('beforeselecteditemchange');
+                init.base.call(this, 'beforeselecteditemchange');
             }
         });
     }

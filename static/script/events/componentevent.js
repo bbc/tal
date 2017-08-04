@@ -33,7 +33,7 @@ define(
                 this.args = args;
                 this.state = state;
                 this.fromBack = fromBack;
-                this._super(type);
+                init.base.call(this, type);
             }
         });
     }

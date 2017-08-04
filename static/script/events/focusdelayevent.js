@@ -25,7 +25,7 @@ define(
              */
             init: function init (target) {
                 this.target = target;
-                this._super('focusdelay');
+                init.base.call(this, 'focusdelay');
             }
         });
     }

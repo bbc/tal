@@ -28,7 +28,7 @@ define(
              * @ignore
              */
             init: function init (id, src, size, renderMode) {
-                this._super(id);
+                init.base.call(this, id);
                 this._src = src;
                 this._size = size;
                 this._imageElement = null;
@@ -43,7 +43,7 @@ define(
             render: function render (device) {
                 this._imageElement = device.createImage(this.id + '_img', null, this._src, this._size);
                 if(this._renderMode === Image.RENDER_MODE_CONTAINER) {
-                    this.outputElement = this._super(device);
+                    this.outputElement = render.base.call(this, device);
                     if(this._size) {
                         device.setElementSize(this.outputElement, this._size);
                     }

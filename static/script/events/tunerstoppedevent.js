@@ -22,7 +22,7 @@ define(
              * @ignore
              */
             init: function init () {
-                this._super('tunerstopped');
+                init.base.call(this, 'tunerstopped');
             }
         });
     }

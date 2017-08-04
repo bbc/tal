@@ -38,7 +38,7 @@ define(
              * @ignore
              */
             init: function init (id, cols, rows, keys, horizontalWrapping, verticalWrapping) {
-                this._super(id, cols, rows, horizontalWrapping, verticalWrapping);
+                init.base.call(this, id, cols, rows, horizontalWrapping, verticalWrapping);
 
                 this.addClass('keyboard');
 

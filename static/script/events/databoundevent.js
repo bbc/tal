@@ -29,7 +29,7 @@ define(
                 this.target = target;
                 this.iterator = iterator;
                 this.error = error;
-                this._super(type);
+                init.base.call(this, type);
             }
         });
     }

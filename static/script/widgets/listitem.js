@@ -26,7 +26,7 @@ define(
              * @ignore
              */
             init: function init (id) {
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('listitem');
             },
             /**
@@ -38,7 +38,7 @@ define(
                 if(!this.outputElement) {
                     this.outputElement = device.createListItem(this.id, this.getClasses());
                 }
-                return this._super(device);
+                return render.base.call(this, device);
             }
         });
     }

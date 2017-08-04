@@ -26,7 +26,7 @@ define(
              */
             init: function init (target, code) {
                 this.code = code;
-                this._super('error', target);
+                init.base.call(this, 'error', target);
             }
         });
 

@@ -26,13 +26,13 @@ define(
          */
         CullingStrip = WidgetStrip.extend(/** @lends antie.widgets.carousel.strips.CullingStrip.prototype */{
             init: function init (id, orientation) {
-                this._super(id, orientation);
+                init.base.call(this, id, orientation);
                 this.setAutoRenderChildren(false);
                 this._widgetContexts = [];
             },
 
             append: function append (widget, length) {
-                this._super(widget, length);
+                append.base.call(this, widget, length);
                 this._widgetContexts.push(this.createContext(widget, this));
             },
 
@@ -51,7 +51,7 @@ define(
             },
 
             insert: function insert (index, widget, length) {
-                this._super(index, widget, length);
+                insert.base.call(this, index, widget, length);
                 this._widgetContexts.splice(index, 0, this.createContext(widget, this));
             },
 
@@ -63,14 +63,14 @@ define(
                         this._widgetContexts.splice(i, 1);
                     }
                 }
-                returnValue = this._super(widget, false);
+                returnValue = remove.base.call(this, widget, false);
 
                 return returnValue;
             },
 
             removeAll: function removeAll () {
                 this._widgetContexts = [];
-                this._super();
+                removeAll.base.call(this);
             },
 
             needsVisibleIndices: function needsVisibleIndices () {

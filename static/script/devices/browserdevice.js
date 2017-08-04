@@ -33,7 +33,7 @@ define(
              * @ignore
              */
             init: function init (config) {
-                this._super(config);
+                init.base.call(this, config);
                 this._textSizeCache = {};
 
                 this.addClassToElement(this.getTopLevelElement(), 'notanimating');

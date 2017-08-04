@@ -28,7 +28,7 @@ define(
              */
             indexAfter: function indexAfter (index) {
                 var potentialIndex;
-                potentialIndex = this._super(index);
+                potentialIndex = indexAfter.base.call(this, index);
                 return this._validateIndex(potentialIndex);
             },
 
@@ -38,7 +38,7 @@ define(
              */
             indexBefore: function indexBefore (index) {
                 var potentialIndex;
-                potentialIndex = this._super(index);
+                potentialIndex = indexBefore.base.call(this, index);
                 return this._validateIndex(potentialIndex);
             },
 

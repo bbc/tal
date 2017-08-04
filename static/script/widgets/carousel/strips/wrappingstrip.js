@@ -26,7 +26,7 @@ define(
              * @ignore
              */
             init: function init (id, orientation) {
-                this._super(id, orientation);
+                init.base.call(this, id, orientation);
                 this._clones = [];
                 this._prependedClones = [];
                 this._appendedClones = [];
@@ -65,7 +65,7 @@ define(
              * Note length only currently working with non-wrapping strips.
              */
             append: function append (widget, length) {
-                this._super(widget, length);
+                append.base.call(this, widget, length);
                 this._recalculateIfAuto();
             },
 
@@ -80,7 +80,7 @@ define(
              * Note length only currently working with non-wrapping strips.
              */
             insert: function insert (index, widget, length) {
-                this._super(index, widget, length);
+                insert.base.call(this, index, widget, length);
                 this._recalculateIfAuto();
             },
 
@@ -89,7 +89,7 @@ define(
              * @param {antie.widgets.Widget} widget. Widget to remove from the strip
              */
             remove: function remove (widget, retainElement) {
-                this._super(widget, retainElement);
+                remove.base.call(this, widget, retainElement);
                 this._recalculateIfAuto();
             },
 

@@ -24,7 +24,7 @@ define(
              */
             init: function init (type, target) {
                 this.target = target;
-                this._super(type);
+                init.base.call(this, type);
             }
         });
 

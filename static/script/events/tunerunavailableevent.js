@@ -23,7 +23,7 @@ define(
              * @ignore
              */
             init: function init () {
-                this._super('tunerunavailable');
+                init.base.call(this, 'tunerunavailable');
             }
         });
     }

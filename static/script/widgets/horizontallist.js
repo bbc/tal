@@ -32,7 +32,7 @@ define(
                 // we need to wrap our contents in a mask to support animation
                 this._maskElement = null;
 
-                this._super(id, itemFormatter, dataSource);
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('horizontallist');
 
                 var self = this;

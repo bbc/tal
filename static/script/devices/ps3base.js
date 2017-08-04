@@ -31,7 +31,7 @@ define(
 
         return BrowserDevice.extend({
             init: function init (config) {
-                this._super(config);
+                init.base.call(this, config);
                 this._nativeCallbacks = [];
 
                 this.addNativeEventListener('networkStatusChange', function(networkStatus) {

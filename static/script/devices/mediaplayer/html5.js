@@ -26,7 +26,7 @@ define(
         var Player = MediaPlayer.extend({
 
             init: function init () {
-                this._super();
+                init.base.call(this);
                 this._setSentinelLimits();
                 this._state = MediaPlayer.STATE.EMPTY;
 

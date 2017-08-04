@@ -26,7 +26,7 @@ define(
             init: function init (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super('afteralign');
+                init.base.call(this, 'afteralign');
             }
         });
     }

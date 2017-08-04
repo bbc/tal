@@ -51,7 +51,7 @@ require.def(
             },
 
             init: function init () {
-                this._super();
+                init.base.call(this);
                 this._state = MediaPlayer.STATE.EMPTY;
                 this._currentPlayer = undefined;
                 this._deferSeekingTo = null;

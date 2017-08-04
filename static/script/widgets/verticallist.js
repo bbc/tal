@@ -29,7 +29,7 @@ define(
              * @ignore
              */
             init: function init (id, itemFormatter, dataSource) {
-                this._super(id, itemFormatter, dataSource);
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('verticallist');
 
                 var self = this;

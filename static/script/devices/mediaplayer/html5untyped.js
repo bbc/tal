@@ -26,7 +26,7 @@ define(
          */
         var Player = HTML5MediaPlayer.extend( /** @lends antie.devices.mediaplayer.HTML5Untyped.prototype */ {
             init: function init () {
-                this._super();
+                init.base.call(this);
             },
 
             _generateSourceElement: function _generateSourceElement (url) {

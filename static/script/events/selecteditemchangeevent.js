@@ -28,7 +28,7 @@ define(
                 this.target = target;
                 this.item = item;
                 this.index = index;
-                this._super('selecteditemchange');
+                init.base.call(this, 'selecteditemchange');
             }
         });
     }

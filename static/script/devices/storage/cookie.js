@@ -80,7 +80,7 @@ define(
              * @ignore
              */
             init: function init (namespace, opts) {
-                this._super();
+                init.base.call(this);
 
                 this._namespace = namespace;
                 this._opts = opts || {};
@@ -97,15 +97,15 @@ define(
                 }
             },
             setItem: function setItem (key, value) {
-                this._super(key, value);
+                setItem.base.call(this, key, value);
                 this._save();
             },
             removeItem: function removeItem (key) {
-                this._super(key);
+                removeItem.base.call(this, key);
                 this._save();
             },
             clear: function clear () {
-                this._super();
+                clear.base.call(this);
                 this._save();
 
                 // delete it from the stored namespaces

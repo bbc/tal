@@ -35,7 +35,7 @@ define('antie/widgets/componentcontainer',
                 this._currentArgs = null;
                 this._historyStack = [];
                 this._previousFocus = null;
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('componentcontainer');
             },
             /**

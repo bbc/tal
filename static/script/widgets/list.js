@@ -45,7 +45,7 @@ define(
                 this._renderMode = List.RENDER_MODE_CONTAINER;
                 this._dataBindingOrder = List.DATA_BIND_FORWARD;
 
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('list');
             },
             /**
@@ -57,11 +57,11 @@ define(
                     var li = new ListItem();
                     li.appendChildWidget(widget);
                     li.setDataItem(widget.getDataItem());
-                    this._super(li);
+                    appendChildWidget.base.call(this, li);
                     return li;
                 } else {
                     widget.addClass('listitem');
-                    this._super(widget);
+                    appendChildWidget.base.call(this, widget);
                     return widget;
                 }
             },
@@ -76,10 +76,10 @@ define(
                     w = new ListItem();
                     w.appendChildWidget(widget);
                     w.setDataItem(widget.getDataItem());
-                    this._super(index, w);
+                    insertChildWidget.base.call(this, index, w);
                 } else {
                     widget.addClass('listitem');
-                    this._super(index, widget);
+                    insertChildWidget.base.call(this, index, widget);
                     w = widget;
                 }
                 if (index <= this._selectedIndex &&
@@ -97,7 +97,7 @@ define(
              */
             setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
-                if (this._super(widget)) {
+                if (setActiveChildWidget.base.call(this, widget)) {
                     this._selectedIndex = this.getIndexOfChildWidget(widget);
                     if (changed) {
                         this.bubbleEvent(new SelectedItemChangeEvent(this, widget, this._selectedIndex));
@@ -120,7 +120,7 @@ define(
                 if (!this.outputElement && (this._renderMode === List.RENDER_MODE_LIST)) {
                     this.outputElement = device.createList(this.id, this.getClasses());
                 }
-                return this._super(device);
+                return render.base.call(this, device);
             },
             /**
              * Create list items from the bound data.
@@ -294,7 +294,7 @@ define(
 
                 var ignore = this._childWidgetOrder.length - this._totalDataItems;
                 this._totalDataItems--;
-                var retValue = this._super(widget);
+                var retValue = removeChildWidget.base.call(this, widget);
                 widget.removeClass('listitem');
 
                 for (var i = 0; i < this._childWidgetOrder.length; i++) {
@@ -308,7 +308,7 @@ define(
                 }
 
                 this._totalDataItems = 0;
-                return this._super();
+                return removeChildWidgets.base.call(this);
             },
 
             setDataBindingOrder: function setDataBindingOrder (order) {

@@ -47,7 +47,7 @@ define('antie/devices/googletv',
 					return _selected;
 				};
 
-				this._super(config);
+				init.base.call(this, config);
 			}
 		});
 	}

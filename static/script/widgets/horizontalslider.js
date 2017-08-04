@@ -40,7 +40,7 @@ define(
                 this._lastLeft = -1;
                 this._keyPressTimer = null;
 
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('horizontalslider');
 
                 this._currentIncrementCount = 0;

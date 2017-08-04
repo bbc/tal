@@ -24,7 +24,7 @@ define(
              */
             init: function init (target) {
                 this.target = target;
-                this._super('select');
+                init.base.call(this, 'select');
             }
         });
     }

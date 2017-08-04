@@ -24,7 +24,7 @@ define(
              */
             init: function init (channelName) {
                 this.channel = channelName;
-                this._super('tunerpresenting');
+                init.base.call(this, 'tunerpresenting');
             }
         });
     }

@@ -48,7 +48,7 @@ define('antie/widgets/horizontalcarousel',
                 this._nodeOffset = 0;
                 this._childWidgetsInDocument = [];
                 this._paddingItemsCreated = false;
-                this._super(id, itemFormatter, dataSource);
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('horizontalcarousel');
 
                 var self = this;
@@ -85,7 +85,7 @@ define('antie/widgets/horizontalcarousel',
                 }
 
                 if (this._viewportMode !== HorizontalCarousel.VIEWPORT_MODE_DOM) {
-                    device.appendChildElement(this._maskElement, this._super(device));
+                    device.appendChildElement(this._maskElement, render.base.call(this, device));
                 } else {
                     if (!this._dataBound && this._dataSource && this._itemFormatter) {
                         this._createDataBoundItems(device);
@@ -249,7 +249,7 @@ define('antie/widgets/horizontalcarousel',
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
             setActiveChildWidget: function setActiveChildWidget (widget, reposition) {
-                var moved = this._super(widget);
+                var moved = setActiveChildWidget.base.call(this, widget);
 
                 if (this._activeChildWidget && this.outputElement && reposition) {
                     if (this._viewportMode !== HorizontalCarousel.VIEWPORT_MODE_DOM) {
@@ -274,7 +274,7 @@ define('antie/widgets/horizontalcarousel',
             },
             setDataSource: function setDataSource (data) {
                 this._prefixClones = 0;
-                this._super(data);
+                setDataSource.base.call(this, data);
             },
             rebindDataSource: function rebindDataSource () {
                 var device = this.getCurrentApplication().getDevice();
@@ -463,7 +463,6 @@ define('antie/widgets/horizontalcarousel',
              * @returns Boolean true if animation was called, otherwise false
              */
             show: function show (options) {
-                //  this._super( options );
                 var application = this.getCurrentApplication();
                 if (!application) {
                     return;

@@ -22,7 +22,7 @@ define (
         var StateViewContainer = Container.extend( {
 
             init: function init (controller) {
-                this._super();
+                init.base.call(this);
 
                 var self = this;
 

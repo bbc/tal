@@ -32,7 +32,7 @@ define(
                 this.button = button;
                 this.multitap = multitap;
 
-                this._super('textchange');
+                init.base.call(this, 'textchange');
             }
         });
     }

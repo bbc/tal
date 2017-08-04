@@ -32,7 +32,7 @@ define('antie/widgets/horizontalprogress',
                 this._moveHandle = false;
                 this._lastLeft = null;
 
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('horizontalprogress');
 
                 if (showLabel) {
