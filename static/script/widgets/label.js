@@ -46,6 +46,23 @@ define(
              */
             render: function(device) {
                 // TODO: is there a more efficient way of doing this?
+                var s = this.getTextAsRendered(device);
+
+                if(!this.outputElement) {
+                    this.outputElement = device.createLabel(this.id, this.getClasses(), s, this._enableHTML);
+                } else {
+                    device.setElementContent(this.outputElement, s, this._enableHTML);
+                }
+
+                return this.outputElement;
+            },
+            
+            /**
+             * Will return text as rendered on the device
+             * @param {antie.devices.Device} device The device to render to.
+             * @returns A string that will be displayed in the label after truncation, etc...
+             */
+            getTextAsRendered: function(device) {
                 var s;
                 if(this._width && this._maxLines && this._text && (this._truncationMode === Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
                     var h = device.getTextHeight('fW', this._width, this.getClasses());
@@ -80,15 +97,9 @@ define(
                 } else {
                     s = this._text;
                 }
-
-                if(!this.outputElement) {
-                    this.outputElement = device.createLabel(this.id, this.getClasses(), s, this._enableHTML);
-                } else {
-                    device.setElementContent(this.outputElement, s, this._enableHTML);
-                }
-
-                return this.outputElement;
+                return s;
             },
+            
             /**
              * Sets the text displayed by this label.
              * @param {String} text The new text to be displayed.
