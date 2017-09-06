@@ -128,7 +128,7 @@
         );
     };
 
-    this.CullingStripTest.prototype.testInitCallsSuper = function (queue) {
+    this.CullingStripTest.prototype.testInitCallsBase = function (queue) {
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
@@ -147,7 +147,7 @@
         );
     };
 
-    this.CullingStripTest.prototype.testAppendCallsSuper = function (queue) {
+    this.CullingStripTest.prototype.testAppendCallsBase = function (queue) {
         queuedApplicationInit(
             queue,
             'lib/mockapplication',

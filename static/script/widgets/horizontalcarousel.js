@@ -282,7 +282,7 @@ define('antie/widgets/horizontalcarousel',
                 var animate = !config.widgets || !config.widgets.horizontalcarousel || (config.widgets.horizontalcarousel.fade !== false);
 
                 var self = this;
-                var func = this._super;
+                var func = rebindDataSource.base;
                 device.hideElement({
                     el: this._maskElement,
                     skipAnim: !animate,

@@ -11,9 +11,9 @@
 
 require.def('fixtures/components/eventtestcomponent', ['antie/widgets/component'], function(Component) {
 	return Component.extend({
-		init: function() {
+		init: function init () {
 			var self = this;
-			this._super("onLoadTestComponent");
+			init.base.call(this, "onLoadTestComponent");
 			this.addEventListener("load", function(ev) { self._onEvent(ev); });
 			this.addEventListener("beforerender", function(ev) { self._onEvent(ev); });
 			this.addEventListener("beforeshow", function(ev) { self._onEvent(ev); });
@@ -24,7 +24,7 @@ require.def('fixtures/components/eventtestcomponent', ['antie/widgets/component'
 		_onEvent : function(ev) {
 			// Assuming a callback was passed to container.show() for this type of event, call it
 			var callback = ev.args[ev.type];
-			
+
 			if (callback && typeof callback === 'function') {
 				callback();
 			}

@@ -11,12 +11,12 @@ require.def("lib/mockapplication",
 	function(FrameworkApplication, Container) {
 
 		return FrameworkApplication.extend({
-			init: function(rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride, beforeInit, afterInit) {
+			init: function init (rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride, beforeInit, afterInit) {
 				if(beforeInit) {
 					beforeInit.apply(this);
 				}
 
-				this._super(rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride);
+				init.base.call(this, rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride);
 
 				if(afterInit) {
 					afterInit.apply(this);
@@ -30,4 +30,3 @@ require.def("lib/mockapplication",
 			}
 		});
 	});
-
