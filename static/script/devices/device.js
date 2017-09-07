@@ -821,7 +821,8 @@ define(
                 if (configSupportsCORS(this.getConfig())) {
                     modifiedOpts = {
                         onLoad: function (jsonResponse) {
-                            opts.onSuccess(self.decodeJson(jsonResponse));
+                            var json = jsonResponse ? self.decodeJson(jsonResponse) : {};
+                            opts.onSuccess(json);
                         },
                         onError: opts.onError
                     };
