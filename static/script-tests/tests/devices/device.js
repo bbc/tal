@@ -789,6 +789,25 @@ require(
         });
     };
 
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetDoesNotErrorOnEmptyResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
+        expectAsserts(3);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice({'networking': { 'supportsCORS': true }});
+            var testUrl = 'http://test';
+            var successSpy = this.sandbox.stub();
+
+            device.executeCrossDomainGet(testUrl, {onSuccess: successSpy});
+
+            assertEquals(1, this.requests.length);
+
+            this.requests[0].respond(204, { 'Content-Type': 'text/plain' }, '');
+
+            assert(successSpy.calledOnce);
+            assert(successSpy.calledWith({}));
+        });
+    };
+
     this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetHandlesErrorFromLoadUrlWhenCorsIsSupported = function(queue) {
         expectAsserts(2);
 
