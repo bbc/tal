@@ -129,16 +129,17 @@ define('antie/widgets/componentcontainer',
                     }
 
                     self = this;
+                    var transition;
                     if (!evt.isDefaultPrevented()) {
                         var config = device.getConfig();
                         var animate = !config.widgets || !config.widgets.componentcontainer || (config.widgets.componentcontainer.fade !== false);
-                        device.showElement({
+                        transition = device.showElement({
                             el: this._currentComponent.outputElement,
                             skipAnim: !animate
                         });
                     }
 
-                    self._currentComponent.bubbleEvent(new ComponentEvent('aftershow', self, self._currentComponent, args, state, fromBack));
+                    self._currentComponent.bubbleEvent(new ComponentEvent('aftershow', self, self._currentComponent, args, state, fromBack, transition));
 
                     var focusRemoved = self.setActiveChildWidget(self._currentComponent);
                     if (!focusRemoved) {
