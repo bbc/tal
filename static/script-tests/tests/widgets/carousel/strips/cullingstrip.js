@@ -128,47 +128,6 @@
         );
     };
 
-    this.CullingStripTest.prototype.testInitCallsBase = function (queue) {
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/strips/cullingstrip',
-                'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/carousel/strips/widgetstrip'
-            ],
-            function (application, CullingStrip, vertical, WidgetStrip) {
-                spyOn(WidgetStrip.prototype, 'init');
-
-                new CullingStrip('test', vertical);
-
-                expect(WidgetStrip.prototype.init).toHaveBeenCalledWith('test', vertical);
-            }
-        );
-    };
-
-    this.CullingStripTest.prototype.testAppendCallsBase = function (queue) {
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/strips/cullingstrip',
-                'antie/widgets/carousel/orientations/vertical',
-                'antie/widgets/carousel/strips/widgetstrip',
-                'antie/widgets/widget'
-            ],
-            function (application, CullingStrip, vertical, WidgetStrip, Widget) {
-                spyOn(Widget.prototype, 'init');
-                spyOn(Widget.prototype, 'addClass');
-                spyOn(WidgetStrip.prototype, 'append');
-                var strip = new CullingStrip('test', vertical);
-                var widget = new Widget();
-                strip.append(widget, 50);
-                expect(WidgetStrip.prototype.append).toHaveBeenCalledWith(widget, 50);
-            }
-        );
-    };
-
     this.CullingStripTest.prototype.testWidgetNotRenderedOnAppend = function (queue) {
         var self = this;
         queuedApplicationInit(
