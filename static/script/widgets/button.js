@@ -8,13 +8,11 @@ define(
     'antie/widgets/button',
     [
         'antie/widgets/container',
-        'antie/events/focusevent',
         'antie/events/focusdelayevent',
-        'antie/events/blurevent',
         'antie/events/keyevent',
         'antie/events/selectevent'
     ],
-    function(Container, FocusEvent, FocusDelayEvent, BlurEvent, KeyEvent, SelectEvent) {
+    function(Container, FocusDelayEvent, KeyEvent, SelectEvent) {
         'use strict';
 
         /**
@@ -22,9 +20,7 @@ define(
          * @name antie.widgets.Button
          * @class
          * @extends antie.widgets.Container
-         * @requires antie.events.FocusEvent
          * @requires antie.events.FocusDelayEvent
-         * @requires antie.events.BlurEvent
          * @requires antie.events.KeyEvent
          * @requires antie.events.SelectEvent
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).

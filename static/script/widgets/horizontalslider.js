@@ -8,13 +8,10 @@ define(
     'antie/widgets/horizontalslider',
     [
         'antie/widgets/button',
-        'antie/events/focusevent',
-        'antie/events/blurevent',
         'antie/events/keyevent',
-        'antie/events/selectevent',
         'antie/events/sliderchangeevent'
     ],
-    function(Button, FocusEvent, BlurEvent, KeyEvent, SelectEvent, SliderChangeEvent) {
+    function(Button, KeyEvent, SliderChangeEvent) {
         'use strict';
 
         /**
@@ -22,10 +19,7 @@ define(
          * @name antie.widgets.HorizontalSlider
          * @class
          * @extends antie.widgets.Container
-         * @requires antie.events.FocusEvent
-         * @requires antie.events.BlurEvent
          * @requires antie.events.KeyEvent
-         * @requires antie.events.SelectEvent
          * @requires antie.events.SliderChangeEvent
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {double} [initialValue] Initial value for the slider.

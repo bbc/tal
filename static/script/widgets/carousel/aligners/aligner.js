@@ -8,11 +8,9 @@ define(
     'antie/widgets/carousel/aligners/aligner',
     [
         'antie/class',
-        'antie/events/beforealignevent',
-        'antie/events/afteralignevent',
         'antie/widgets/carousel/aligners/alignmentqueue'
     ],
-    function (Class, BeforeAlignEvent, AfterAlignEvent, AlignmentQueue) {
+    function (Class, AlignmentQueue) {
         'use strict';
         /**
          * Converts simple index based alignment instructions to combinations of
