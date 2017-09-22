@@ -31,8 +31,8 @@ require.def(
     ],
     function(Component, RuntimeContext, MediaPlayer) {
         var ExampleMediaPlayer = Component.extend({
-            init : function() {
-                this._super("ExampleMediaPlayer");
+            init : function init () {
+                init.base.call(this, "ExampleMediaPlayer");
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             }
         });

@@ -22,21 +22,22 @@ require.def("sampleapp/appui/components/simple",
         "antie/widgets/label"
     ],
     function (Component, Button, Label) {
-        
+
         // All components extend Component
         return Component.extend({
-            init: function () {
+            init: function init () {
                 var self, label, button;
 
                 self = this;
+
                 // It is important to call the constructor of the superclass
-                this._super("simplecomponent");
-                
+                init.base.call(self, "simplecomponent");
+
                 // Hello World
                 label = new Label("Hello World");
                 this._button = new Button();
                 this._button.appendChildWidget(label);
-                
+
                 this.addEventListener("beforerender", function (ev) {
                     self._onBeforeRender(ev);
                 });
@@ -53,7 +54,7 @@ require.def("sampleapp/appui/components/simple",
             // if the component is hidden and subsequently reinstated.
             _onBeforeRender: function () {
                 this.appendChildWidget(this._button);
-            } 
+            }
         });
     }
 );

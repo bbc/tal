@@ -47,9 +47,9 @@ require.def('yourapplication/appui/events/yourevent',
                          * @constructor
                          * @ignore
                          */
-                        init: function(yourParam) {
+                        init: function init (yourParam) {
                                 this.yourParam = yourParam;
-                                this._super("youreventtype");
+                                init.base.call(this, "youreventtype");
                         }
                 });
         }
@@ -91,7 +91,7 @@ It is important to note that multiple BlurEvents and FocusEvents can be fired fo
     |   |-- Button1
     |   |-- Button2
     |--Button3 (focused)
-    
+
 When UP is pressed, the UI will become:
 
     VerticalList (root, focused)
@@ -99,7 +99,7 @@ When UP is pressed, the UI will become:
     |   |-- Button1 (focused)
     |   |-- Button2
     |--Button3
-    
+
 In this example, a BlurEvent will be fired on Button3 (as it loses focus) and a FocusEvent will be fired on Button1 and another on HorizontalList (as both become part of the focused path from root to focused Button). No events will be fired on VerticalList as its state has not changed (it was and still is in the focus path).
 
 ### DataBoundEvent

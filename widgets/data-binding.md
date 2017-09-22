@@ -17,9 +17,9 @@ Data Binding is a multi-stage process.
 4. Bind the _DataSource_ to the widget - the supplied data will now be used by the _Formatter_ and the widget populated
 
 ## Creating a DataSource
-The _DataSource_ object (antie/datasource) provides an interface for _List_ (or extensions from _List_ such as _HorizontalCarousel_) to obtain data. 
+The _DataSource_ object (antie/datasource) provides an interface for _List_ (or extensions from _List_ such as _HorizontalCarousel_) to obtain data.
 
-When creating a _DataSource_ you must supply 
+When creating a _DataSource_ you must supply
 
 1. A component which will take ownership of the data
 2. An object extended from antie/class. The object must contain a method that accepts a callback object as a parameter. The callback object contains `onSuccess()` and `onError()` callback functions. The method should invoke the `onSuccess()` callback with an array of data objects if data is obtained successfully, or invoke `onError()` if an error occurs.
@@ -81,7 +81,7 @@ A _Formatter_ must provide the `format()` method. `format()` should return a wid
 
 An item can be something simple like a _Button_ (see below), or a more complicated composite such as a _List_, _Carousel_ or _Container_ full of widgets.
 
-`format()` is supplied with an iterator with which to access the data it will use. 
+`format()` is supplied with an iterator with which to access the data it will use.
 You should call iterator.next() within the `format()` function to acquire a data item (one of the objects in the array defined by the feed).
 
 Here is a simple formatter that creates a labeled button for each item in the _SimpleFeed_:
@@ -124,31 +124,31 @@ require.def("myapp/simplecarouselcomponent",
     ],
     function (Component, DataSource, HorizontalCarousel, SimpleFormatter, SimpleFeed) {
         return Component.extend({
-            init: function() {
+            init: function init () {
                 var self, simpleFormatter, simpleFeed;
-                
-                // make sure you call _super()!
-                this._super("simplecarouselcomponent");
+
                 self = this;
-                
+
+                init.base.call(self, "simplecarouselcomponent");
+
                 // Create a new formatter and feed
                 simpleFormatter = new SimpleFormatter();
                 simpleFeed = new SimpleFeed();
-                
+
                 // Create a DataSource, this uses the feed to get data and presents it to the formatter
                 this._dataSource = new DataSource(this, simpleFeed, "loadData");
-                
+
                 // Create a new carousel with the formatter
                 this._carousel = new HorizontalCarousel("simplecarousel", simpleFormatter);
-                
+
                 // Add it to the component
                 this.appendChildWidget(this._carousel);
-                
+
                 // We want to rebind every time the component is pushed, so listen for beforerender.           
                 this.addEventListener(
-                    "beforerender", 
-                    function(ev) { 
-                        self._onBeforeRender(ev); 
+                    "beforerender",
+                    function(ev) {
+                        self._onBeforeRender(ev);
                     }
                 );
             },
@@ -184,4 +184,3 @@ The framework will not set default focus on a widget which is not 'focussable', 
 As data bound widgets are initially empty, when you need default focus to fall on a data bound widget, you may need to manually set focus post bind in some circumstances.
 
 This can be done using the `setActiveChildWidget()` method of _Component_ or a higher level _Container_ within a function that listens for the `databound` event on the widget in question.
-

@@ -36,9 +36,10 @@ require.def("<APPNAME>/appui/components/<COMPONENT>",
          * @requires ...
          */
         return Component.extend(/** @lends <APPNAME>.appui.components.<COMPONENT>.prototype */{
-            init: function() {
-                this._super("<COMPONENTID>");
+            init: function init () {
                 var self = this;
+
+                init.base.call(self, "<COMPONENTID>");
 
                 // Add component lifecycle event listeners
                 this.addEventListener("load", function(ev) { self._onLoad(ev); });
@@ -194,15 +195,15 @@ This event is fired each time a Component is shown. The Component will be in the
 _Note: If you wish to bind data to any widgets within a Component, beforerender is the correct place to do it. You should also update any Labels, Images, etc. with any content that varies based on the args property of this event._  
 
 ### beforeshow
-This event is fired each time a Component is shown. The Component will be in the UI graph and will have been rendered (outputElement will not be null). However it will not be visible (e.g. DOM element will have visibility: hidden) 
+This event is fired each time a Component is shown. The Component will be in the UI graph and will have been rendered (outputElement will not be null). However it will not be visible (e.g. DOM element will have visibility: hidden)
 
 ### aftershow
-This event is fired each time a Component is shown. This Component will be in the UI graph, will have been rendered, and will be visible to the user. 
+This event is fired each time a Component is shown. This Component will be in the UI graph, will have been rendered, and will be visible to the user.
 
 _Note: Either beforeshow or aftershow are the recommended places for overlays/modal Components to capture focus._  
 
 ### beforehide
-This event is fired each time a Component is hidden. The Component will be in the UI graph, will have been rendered, and will currently be visible to the user. 
+This event is fired each time a Component is hidden. The Component will be in the UI graph, will have been rendered, and will currently be visible to the user.
 
 _Note: You may call `preventDefault()` on this event to prevent the rendered output from being removed from the DOM. This is particularly useful if you wish to cross-fade, etc., however you MUST ensure the Component's DOM element is removed before the Component is shown again._  
 
@@ -216,4 +217,3 @@ The following sequence diagram illustrates loading Component A (defined in Modul
 Note how `ComponentContainer.showComponent(...)` is asynchronous. If the module has not yet been loaded, it calls RequireJS which loads the module asynchronously. If the module has already been loaded, `showComponent(...)` begins the process of showing the component asynchronously and returns instantly.
 
 ![Sequence Diagram][]
-

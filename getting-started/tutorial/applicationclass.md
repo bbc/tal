@@ -28,28 +28,28 @@ To launch the application, the module must be loaded by require, and the returne
 In the example index, the code below was added to load and instatiate the application:
 
 {% highlight javascript %}
-require( 
+require(
     [
         'sampleapp/appui/sampleapp'
     ],
     function(SampleApp) {
-    
+
         require.ready(function() {
-        
+
             function onReady() {
-                var staticLoadingScreen = document.getElementById('static-loading-screen'); 
-                staticLoadingScreen.parentNode.removeChild(staticLoadingScreen); 
+                var staticLoadingScreen = document.getElementById('static-loading-screen');
+                staticLoadingScreen.parentNode.removeChild(staticLoadingScreen);
             };
-                                
+
             new SampleApp(
-                document.getElementById('app'), 
-                'static/style/', 
+                document.getElementById('app'),
+                'static/style/',
                 'static/img/',
                 onReady
-            ); 
+            );
         });
     }
-); 
+);
 {% endhighlight %}
 
 The call to require does the following
@@ -68,14 +68,13 @@ require.def('sampleapp/appui/sampleapp',
         'antie/widgets/container'
     ],
     function(Application, Container) {
-    
+
         return Application.extend({
-            init: function(appDiv, styleDir, imgDir, callback) {
-                var self;
-                self = this;
-                
-                self._super(appDiv, styleDir, imgDir, callback);
-                
+            init: function init (appDiv, styleDir, imgDir, callback) {
+                var self = this;
+
+                init.base.call(self, appDiv, styleDir, imgDir, callback);
+
                 // Sets the root widget of the application to be
                 // an empty container
                 self._setRootContainer = function() {
@@ -84,7 +83,7 @@ require.def('sampleapp/appui/sampleapp',
                     self.setRootWidget(container);
                 };
             },
-            
+
             run: function() {
                 // Called from run() as we need the framework to be ready beforehand.
                 this._setRootContainer();
@@ -114,7 +113,7 @@ The newly created component will take the responsibility for calling the `ready(
 
 ## Running the application
 
-The `run()` function is called once by the framework, after the framework has finished initialising. 
+The `run()` function is called once by the framework, after the framework has finished initialising.
 
 The `_setRootContainer()` method defined in the constructor is called from `run()` to set the root widget of the application.
 
