@@ -67,7 +67,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id) {
+            init: function init (id) {
                 this._classNames = {'widget':true};
                 this.parentWidget = null;
                 this.outputElement = null;
@@ -87,14 +87,14 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(/*device*/) {
+            render: function render (/*device*/) {
                 throw new Error('Widget::render called - the subclass for widget \'' + this.id + '\' must have not overridden the render method.');
             },
             /**
              * Adds a CSS class to the widget if not already present.
              * @param {String} className The class name to add.
              */
-            addClass: function(className) {
+            addClass: function addClass (className) {
                 if (!this._classNames[className]) {
                     this._classNames[className] = true;
                     if (this.outputElement) {
@@ -107,9 +107,9 @@ define(
              * Removes a CSS class from the widget if present.
              * @param {String} className The class name to remove.
              */
-            removeClass: function(className) {
+            removeClass: function removeClass (className) {
                 if (this._classNames[className]) {
-                    this._classNames[className] = null;
+                    delete(this._classNames[className]);
                     if (this.outputElement) {
                         var device = this.getCurrentApplication().getDevice();
                         device.setElementClasses(this.outputElement, this.getClasses());
@@ -121,14 +121,14 @@ define(
              * @param {String} className The class name to check.
              * @returns Boolean true if the device has the className. Otherwise boolean false.
              */
-            hasClass: function(className) {
+            hasClass: function hasClass (className) {
                 return (this._classNames[className] ? true : false);
             },
             /**
              * Get an array of class names that this widget has.
              * @returns An array of class names (Strings)
              */
-            getClasses: function() {
+            getClasses: function getClasses () {
                 var _names = [];
                 for (var i in this._classNames) {
                     if(this._classNames.hasOwnProperty(i)) {
@@ -143,7 +143,7 @@ define(
              * @param {Function} func The handler to be called when the event is fired.
              * @see antie.events.Event
              */
-            addEventListener: function(ev, func) {
+            addEventListener: function addEventListener (ev, func) {
                 var listeners = this._eventListeners[ev];
                 if (typeof listeners === 'undefined') {
                     listeners = [];
@@ -159,7 +159,7 @@ define(
              * @param {Function} func The handler to be removed.
              * @see antie.events.Event
              */
-            removeEventListener: function(ev, func) {
+            removeEventListener: function removeEventListener (ev, func) {
                 var listeners = this._eventListeners[ev],
                     listener;
 
@@ -180,7 +180,7 @@ define(
              * @param {antie.events.Event} ev The event to fire.
              * @see antie.events.Event
              */
-            fireEvent: function(ev) {
+            fireEvent: function fireEvent (ev) {
                 var listeners = this._eventListeners[ev.type];
                 if (listeners) {
                     for (var func in listeners) {
@@ -202,7 +202,7 @@ define(
              * @param {antie.events.Event} ev The event to bubble.
              * @see antie.events.Event
              */
-            bubbleEvent: function(ev) {
+            bubbleEvent: function bubbleEvent (ev) {
                 this.fireEvent(ev);
                 if (!ev.isPropagationStopped()) {
                     if (this.parentWidget) {
@@ -221,7 +221,7 @@ define(
              * @param {antie.events.Event} ev The event to bubble.
              * @see antie.events.Event
              */
-            broadcastEvent: function(ev) {
+            broadcastEvent: function broadcastEvent (ev) {
                 this.fireEvent(ev);
             },
 
@@ -229,7 +229,7 @@ define(
              * Checks to see if a widget is focussable, i.e. contains an enabled button.
              * @see antie.widgets.Button
              */
-            isFocusable: function() {
+            isFocusable: function isFocusable () {
                 // a widget can receive focus if any of it's children or children-of-children are Buttons
                 // We're not a button and we have no children, so we're not.
                 return false;
@@ -238,7 +238,7 @@ define(
              * Gets a reference to the application responsible for creating the widget.
              * @see antie.RuntimeContext
              */
-            getCurrentApplication: function() {
+            getCurrentApplication: function getCurrentApplication () {
                 try {
                     return RuntimeContext.getCurrentApplication();
                 } catch (ex) {
@@ -248,20 +248,20 @@ define(
             /**
              * Get any data item associated with this widget.
              */
-            getDataItem: function() {
+            getDataItem: function getDataItem () {
                 return this._dataItem;
             },
             /**
              * Associate a data item with this widget.
              * @param {object} dataItem Object to associate with this widget.
              */
-            setDataItem: function(dataItem) {
+            setDataItem: function setDataItem (dataItem) {
                 this._dataItem = dataItem;
             },
             /**
              * Returns the component this widget is a descendant of
              */
-            getComponent: function() {
+            getComponent: function getComponent () {
                 var widget = this;
                 while (widget &amp;&amp; !(widget.isComponent())) {
                     widget = widget.parentWidget;
@@ -271,7 +271,7 @@ define(
             /**
              * Remove focus state from this widget.
              */
-            removeFocus: function() {
+            removeFocus: function removeFocus () {
                 this.removeClass('focus');
                 this._isFocussed = false;
             },
@@ -279,14 +279,14 @@ define(
              * Get if this widget is in the current focus path.
              * @returns Boolean true if this widget is in the focus path, otherwise false.
              */
-            isFocussed: function() {
+            isFocussed: function isFocussed () {
                 return this._isFocussed;
             },
             /**
              * Returns whether the widget is a Component.
              * @returns {Boolean} True if the widget is a Component.
              */
-            isComponent: function() {
+            isComponent: function isComponent () {
                 return false;
             },
             /**
@@ -359,13 +359,13 @@ define(
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

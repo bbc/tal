@@ -475,7 +475,7 @@
 	 * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
 	 */
 	Tweenable.prototype.formula = {
-		linear: function (pos) {
+		linear: function linear (pos) {
 			return pos;
 		}
 	};
@@ -488,99 +488,99 @@
 	 }(this));
 	 */
 	Tweenable.util.simpleCopy(Tweenable.prototype.formula, {
-		easeInQuad: function(pos) {
+		easeInQuad: function easeInQuad (pos) {
 			return Math.pow(pos, 2);
 		},
 
-		easeOutQuad: function(pos) {
+		easeOutQuad: function easeOutQuad (pos) {
 			return -(Math.pow((pos - 1), 2) - 1);
 		},
 
-		easeInOutQuad: function(pos) {
+		easeInOutQuad: function easeInOutQuad (pos) {
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(pos, 2);
 			return -0.5 * ((pos -= 2) * pos - 2);
 		},
 
-		easeInCubic: function(pos) {
+		easeInCubic: function easeInCubic (pos) {
 			return Math.pow(pos, 3);
 		},
 
-		easeOutCubic: function(pos) {
+		easeOutCubic: function easeOutCubic (pos) {
 			return (Math.pow((pos - 1), 3) + 1);
 		},
 
-		easeInOutCubic: function(pos) {
+		easeInOutCubic: function easeInOutCubic (pos) {
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(pos, 3);
 			return 0.5 * (Math.pow((pos - 2), 3) + 2);
 		},
 
-		easeInQuart: function(pos) {
+		easeInQuart: function easeInQuart (pos) {
 			return Math.pow(pos, 4);
 		},
 
-		easeOutQuart: function(pos) {
+		easeOutQuart: function easeOutQuart (pos) {
 			return -(Math.pow((pos - 1), 4) - 1)
 		},
 
-		easeInOutQuart: function(pos) {
+		easeInOutQuart: function easeInOutQuart (pos) {
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(pos, 4);
 			return -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2);
 		},
 
-		easeInQuint: function(pos) {
+		easeInQuint: function easeInQuint (pos) {
 			return Math.pow(pos, 5);
 		},
 
-		easeOutQuint: function(pos) {
+		easeOutQuint: function easeOutQuint (pos) {
 			return (Math.pow((pos - 1), 5) + 1);
 		},
 
-		easeInOutQuint: function(pos) {
+		easeInOutQuint: function easeInOutQuint (pos) {
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(pos, 5);
 			return 0.5 * (Math.pow((pos - 2), 5) + 2);
 		},
 
-		easeInSine: function(pos) {
+		easeInSine: function easeInSine (pos) {
 			return -Math.cos(pos * (Math.PI / 2)) + 1;
 		},
 
-		easeOutSine: function(pos) {
+		easeOutSine: function easeOutSine (pos) {
 			return Math.sin(pos * (Math.PI / 2));
 		},
 
-		easeInOutSine: function(pos) {
+		easeInOutSine: function easeInOutSine (pos) {
 			return (-.5 * (Math.cos(Math.PI * pos) - 1));
 		},
 
-		easeInExpo: function(pos) {
+		easeInExpo: function easeInExpo (pos) {
 			return (pos == 0) ? 0 : Math.pow(2, 10 * (pos - 1));
 		},
 
-		easeOutExpo: function(pos) {
+		easeOutExpo: function easeOutExpo (pos) {
 			return (pos == 1) ? 1 : -Math.pow(2, -10 * pos) + 1;
 		},
 
-		easeInOutExpo: function(pos) {
+		easeInOutExpo: function easeInOutExpo (pos) {
 			if (pos == 0) return 0;
 			if (pos == 1) return 1;
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(2, 10 * (pos - 1));
 			return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
 		},
 
-		easeInCirc: function(pos) {
+		easeInCirc: function easeInCirc (pos) {
 			return -(Math.sqrt(1 - (pos * pos)) - 1);
 		},
 
-		easeOutCirc: function(pos) {
+		easeOutCirc: function easeOutCirc (pos) {
 			return Math.sqrt(1 - Math.pow((pos - 1), 2))
 		},
 
-		easeInOutCirc: function(pos) {
+		easeInOutCirc: function easeInOutCirc (pos) {
 			if ((pos /= 0.5) &lt; 1) return -0.5 * (Math.sqrt(1 - pos * pos) - 1);
 			return 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1);
 		},
 
-		easeOutBounce: function(pos) {
+		easeOutBounce: function easeOutBounce (pos) {
 			if ((pos) &lt; (1 / 2.75)) {
 				return (7.5625 * pos * pos);
 			} else if (pos &lt; (2 / 2.75)) {
@@ -592,43 +592,43 @@
 			}
 		},
 
-		easeInBack: function(pos) {
+		easeInBack: function easeInBack (pos) {
 			var s = 1.70158;
 			return (pos) * pos * ((s + 1) * pos - s);
 		},
 
-		easeOutBack: function(pos) {
+		easeOutBack: function easeOutBack (pos) {
 			var s = 1.70158;
 			return (pos = pos - 1) * pos * ((s + 1) * pos + s) + 1;
 		},
 
-		easeInOutBack: function(pos) {
+		easeInOutBack: function easeInOutBack (pos) {
 			var s = 1.70158;
 			if ((pos /= 0.5) &lt; 1) return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));
 			return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
 		},
 
-		elastic: function(pos) {
+		elastic: function elastic (pos) {
 			return -1 * Math.pow(4, -8 * pos) * Math.sin((pos * 6 - 1) * (2 * Math.PI) / 2) + 1;
 		},
 
-		swingFromTo: function(pos) {
+		swingFromTo: function swingFromTo (pos) {
 			var s = 1.70158;
 			return ((pos /= 0.5) &lt; 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
 					0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
 		},
 
-		swingFrom: function(pos) {
+		swingFrom: function swingFrom (pos) {
 			var s = 1.70158;
 			return pos * pos * ((s + 1) * pos - s);
 		},
 
-		swingTo: function(pos) {
+		swingTo: function swingTo (pos) {
 			var s = 1.70158;
 			return (pos -= 1) * pos * ((s + 1) * pos + s) + 1;
 		},
 
-		bounce: function(pos) {
+		bounce: function bounce (pos) {
 			if (pos &lt; (1 / 2.75)) {
 				return (7.5625 * pos * pos);
 			} else if (pos &lt; (2 / 2.75)) {
@@ -640,7 +640,7 @@
 			}
 		},
 
-		bouncePast: function(pos) {
+		bouncePast: function bouncePast (pos) {
 			if (pos &lt; (1 / 2.75)) {
 				return (7.5625 * pos * pos);
 			} else if (pos &lt; (2 / 2.75)) {
@@ -652,16 +652,16 @@
 			}
 		},
 
-		easeFromTo: function(pos) {
+		easeFromTo: function easeFromTo (pos) {
 			if ((pos /= 0.5) &lt; 1) return 0.5 * Math.pow(pos, 4);
 			return -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2);
 		},
 
-		easeFrom: function(pos) {
+		easeFrom: function easeFrom (pos) {
 			return Math.pow(pos, 4);
 		},
 
-		easeTo: function(pos) {
+		easeTo: function easeTo (pos) {
 			return Math.pow(pos, 0.25);
 		}
 	});
@@ -730,13 +730,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

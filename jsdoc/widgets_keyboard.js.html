@@ -53,6 +53,8 @@ define(
          * @param {Integer} cols The number of columns of keys on the keyboard.
          * @param {Integer} rows The number of rows of keys on the keyboard.
          * @param {String} keys A string of characters which make up the keys, starting top-left and working row-by-row to the bottom-right.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          *          Special characters include:
          *              "-" DEL
          *              " " SPACE
@@ -63,8 +65,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, cols, rows, keys) {
-                this._super(id, cols, rows);
+            init: function init (id, cols, rows, keys, horizontalWrapping, verticalWrapping) {
+                init.base.call(this, id, cols, rows, horizontalWrapping, verticalWrapping);
 
                 this.addClass('keyboard');
 
@@ -97,7 +99,7 @@ define(
             },
 
             // Private function to append a properly-capitalised character to the end of the string.
-            _appendCharacter: function (letter) {
+            _appendCharacter: function _appendCharacter (letter) {
                 // allow no more characters to be appended if a maximum length has been reached
                 if((this._maximumLength !== null) &amp;&amp; (this._currentText.length >= this._maximumLength)) {
                     return false;
@@ -119,7 +121,7 @@ define(
                 return true;
             },
 
-            _correctTitleCase: function () {
+            _correctTitleCase: function _correctTitleCase () {
                 if(this._capitalisation === Keyboard.CAPITALISATION_TITLE) {
                     this._currentText = this._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
                         match = match.substring(0, 1).toUpperCase() + match.substring(1);
@@ -131,7 +133,7 @@ define(
                 }
             },
 
-            _onSelectHandler: function (evt) {
+            _onSelectHandler: function _onSelectHandler (evt) {
                 var letter = evt.target.getDataItem();
                 var changed = false;
                 switch(letter) {
@@ -156,11 +158,13 @@ define(
                 }
             },
 
-            _onKeyDownHandler: function (evt) {
+            _onKeyDownHandler: function _onKeyDownHandler (evt) {
                 if(evt.keyChar) {
                     evt.stopPropagation();
                     // If the device supports multitap, multitap is enabled and a number is pressed...
                     if(this._multitapConfig &amp;&amp; this._multiTap &amp;&amp; /[0-9]/.test(evt.keyChar)) {
+                        var atMaxLength = ((this._maximumLength !== null) &amp;&amp; (this._currentText.length >= this._maximumLength));
+
                         if(this._multiTapTimeout) {
                             clearTimeout(this._multiTapTimeout);
                         }
@@ -168,6 +172,9 @@ define(
                         var chars = this._multitapConfig[evt.keyChar];
                         if((evt.keyChar === this._multiTapLastKey) &amp;&amp; this._multiTapTimeout) {
                             this._currentText = this._currentText.substring(0, this._currentText.length - 1);
+                        } else if (atMaxLength){
+                            //at last character and trying to start a new multitap key
+                            return;
                         } else {
                             this._multiTapLastKeyIndex = -1;
                         }
@@ -224,7 +231,7 @@ define(
                 }
             },
 
-            _populateTheGridWithKeyButtons: function (id, cols, rows) {
+            _populateTheGridWithKeyButtons: function _populateTheGridWithKeyButtons (id, cols, rows) {
                 for(var col = 0; col &lt; cols; col++) {
                     for(var row = 0; row &lt; rows; row++) {
                         var keyIndexId = (row*cols)+col;
@@ -255,21 +262,21 @@ define(
              * Sets whether to support multi-tap on this keyboard. Note: the device must also support it.
              * @param {Boolean} multiTap Pass &lt;code>true&lt;/code> to enable multi-tap.
              */
-            setMultiTap: function(multiTap) {
+            setMultiTap: function setMultiTap (multiTap) {
                 this._multiTap = multiTap;
             },
             /**
              * Gets whether to multi-tap is supported by this keyboard.
              * @returns Boolean &lt;code>true&lt;/code> if multi-tap is supported by this keyboard.
              */
-            getMultiTap: function() {
+            getMultiTap: function getMultiTap () {
                 return this._multiTap;
             },
             /**
              * Sets the current text entered/to-be-edited by this keyboard.
              * @param {String} text String to be edited by this keyboard.
              */
-            setText: function(text) {
+            setText: function setText (text) {
                 this._currentText = text;
                 this._updateClasses();
             },
@@ -277,7 +284,7 @@ define(
              * Gets the text entered/edited by this keyboard.
              * @returns The text entered/edited by this keyboard.
              */
-            getText: function() {
+            getText: function getText () {
                 return this._currentText;
             },
             /**
@@ -285,28 +292,28 @@ define(
              * {@see Keyboard.CAPITALISATION_LOWER} and {@see Keyboard.CAPITALISATION_TITLE}
              * @param {Integer} capitalisation The capitalisation mode to use.
              */
-            setCapitalisation: function(capitalisation) {
+            setCapitalisation: function setCapitalisation (capitalisation) {
                 this._capitalisation = capitalisation;
             },
             /**
              * Gets the current capitalisation mode of the keyboard.
              * @returns The capitalisation mode of the keyboard.
              */
-            getCapitalisation: function() {
+            getCapitalisation: function getCapitalisation () {
                 return this._capitalisation;
             },
             /**
              * Sets the active child widget as the button for the specified character.
              * @param {String} character The character who's button should be the active child widget.
              */
-            setActiveChildKey: function(character) {
+            setActiveChildKey: function setActiveChildKey (character) {
                 this._focussedCharacter = character;
                 this.setActiveChildWidget(this._letterButtons[character]);
             },
-            focus: function() {
+            focus: function focus () {
                 this._letterButtons[this._focussedCharacter].focus();
             },
-            setFocusToActiveChildKey: function(character){
+            setFocusToActiveChildKey: function setFocusToActiveChildKey (character){
                 this.setActiveChildKey(character);
                 this.focus();
             },
@@ -314,18 +321,18 @@ define(
              * Sets the maximum number of characters that can be entered
              * @param {Integer} length The maxmimum number of characters that can be entered. Pass &lt;code>null&lt;/code> to allow infinite characters.
              */
-            setMaximumLength: function(length) {
+            setMaximumLength: function setMaximumLength (length) {
                 this._maximumLength = length;
             },
             /**
              * Gets the maximum number of characters that can be entered
              * @returns The maximum number of characters that can be entered
              */
-            getMaximumLength: function() {
+            getMaximumLength: function getMaximumLength () {
                 return this._maximumLength;
             },
 
-            _updateClasses: function() {
+            _updateClasses: function _updateClasses () {
                 if((this._maximumLength !== null) &amp;&amp; (this._currentText !== null) &amp;&amp; (this._currentText.length >= this._maximumLength)) {
                     this.addClass('maxlength');
                     // Move focus to the DEL key, as it's
@@ -357,13 +364,13 @@ define(
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

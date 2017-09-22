@@ -27,187 +27,1657 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** vim: et:ts=4:sw=4:sts=4
- * @license RequireJS 0.15.0 Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS 2.0.0 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
-//laxbreak is true to allow build pragmas to change some statements.
-/*jslint white: false, plusplus: false, nomen: false, laxbreak: true, regexp: false */
-/*global window: false, document: false, navigator: false,
-setTimeout: false, traceDeps: true, clearInterval: false, self: false,
-setInterval: false, importScripts: false, jQuery: false */
+/*jslint regexp: true, nomen: true */
+/*global window, navigator, document, importScripts, jQuery, setTimeout, opera */
 
+var requirejs, require, define;
+(function (global) {
+    'use strict';
 
-var require, define;
-(function () {
-    //Change this version number for each release.
-    var version = "0.15.0",
-            empty = {}, s,
-            i, defContextName = "_", contextLoads = [],
-            scripts, script, rePkg, src, m, dataMain, cfg = {}, setReadyState,
-            commentRegExp = /(\/\*([\s\S]*?)\*\/|\/\/(.*)$)/mg,
-            cjsRequireRegExp = /require\(["']([\w\!\-_\.\/]+)["']\)/g,
-            main,
-            isBrowser = !!(typeof window !== "undefined" &amp;&amp; navigator &amp;&amp; document),
-            isWebWorker = !isBrowser &amp;&amp; typeof importScripts !== "undefined",
-            //PS3 indicates loaded and complete, but need to wait for complete
-            //specifically. Sequence is "loading", "loaded", execution,
-            // then "complete". The UA check is unfortunate, but not sure how
-            //to feature test w/o causing perf issues.
-            isPS3 = isBrowser &amp;&amp; navigator.platform === 'PLAYSTATION 3',
-            readyRegExp = isPS3 ? /^complete$/ : /^(complete|loaded)$/,
-            ostring = Object.prototype.toString,
-            ap = Array.prototype,
-            aps = ap.slice, scrollIntervalId, req, baseElement,
-            defQueue = [], useInteractive = false, currentlyAddingScript;
+    var version = '2.0.0',
+        commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg,
+        cjsRequireRegExp = /require\s*\(\s*["']([^'"\s]+)["']\s*\)/g,
+        jsSuffixRegExp = /\.js$/,
+        currDirRegExp = /^\.\//,
+        ostring = Object.prototype.toString,
+        ap = Array.prototype,
+        aps = ap.slice,
+        apsp = ap.splice,
+        isBrowser = !!(typeof window !== 'undefined' &amp;&amp; navigator &amp;&amp; document),
+        isWebWorker = !isBrowser &amp;&amp; typeof importScripts !== 'undefined',
+        //PS3 indicates loaded and complete, but need to wait for complete
+        //specifically. Sequence is 'loading', 'loaded', execution,
+        // then 'complete'. The UA check is unfortunate, but not sure how
+        //to feature test w/o causing perf issues.
+        readyRegExp = isBrowser &amp;&amp; navigator.platform === 'PLAYSTATION 3' ?
+                      /^complete$/ : /^(complete|loaded)$/,
+        defContextName = '_',
+        //Oh the tragedy, detecting opera. See the usage of isOpera for reason.
+        isOpera = typeof opera !== 'undefined' &amp;&amp; opera.toString() === '[object Opera]',
+        contexts = {},
+        cfg = {},
+        globalDefQueue = [],
+        useInteractive = false,
+        req, s, head, baseElement, dataMain, src,
+        interactiveScript, currentlyAddingScript, mainScript, subPath;
 
     function isFunction(it) {
-        return ostring.call(it) === "[object Function]";
+        return ostring.call(it) === '[object Function]';
     }
 
-    //Check for an existing version of require. If so, then exit out. Only allow
-    //one version of require to be active in a page. However, allow for a require
-    //config object, just exit quickly if require is an actual function.
-    if (typeof require !== "undefined") {
-        if (isFunction(require)) {
-            return;
-        } else {
-            //assume it is a config object.
-            cfg = require;
-        }
-    }
-
-        /**
-     * Calls a method on a plugin. The obj object should have two property,
-     * name: the name of the method to call on the plugin
-     * args: the arguments to pass to the plugin method.
-     */
-    function callPlugin(prefix, context, obj) {
-        //Call the plugin, or load it.
-        var plugin = s.plugins.defined[prefix], waiting;
-        if (plugin) {
-            plugin[obj.name].apply(null, obj.args);
-        } else {
-            //Put the call in the waiting call BEFORE requiring the module,
-            //since the require could be synchronous in some environments,
-            //like builds
-            waiting = s.plugins.waiting[prefix] || (s.plugins.waiting[prefix] = []);
-            waiting.push(obj);
-
-            //Load the module
-            req(["require/" + prefix], context.contextName);
-        }
+    function isArray(it) {
+        return ostring.call(it) === '[object Array]';
     }
 
     /**
-     * Convenience method to call main for a require.def call that was put on
-     * hold in the defQueue.
+     * Helper function for iterating over an array. If the func returns
+     * a true value, it will break out of the loop.
      */
-    function callDefMain(args, context) {
-        main.apply(req, args);
-        //Mark the module loaded. Must do it here in addition
-        //to doing it in require.def in case a script does
-        //not call require.def
-        context.loaded[args[0]] = true;
-    }
-
-    /**
-     * Used to set up package paths from a packagePaths or packages config object.
-     * @param {Object} packages the object to store the new package config
-     * @param {Array} currentPackages an array of packages to configure
-     * @param {String} [dir] a prefix dir to use.
-     */
-    function configurePackageDir(packages, currentPackages, dir) {
-        var i, location, pkgObj;
-        for (i = 0; (pkgObj = currentPackages[i]); i++) {
-            pkgObj = typeof pkgObj === "string" ? { name: pkgObj } : pkgObj;
-            location = pkgObj.location;
-
-            //Add dir to the path, but avoid paths that start with a slash
-            //or have a colon (indicates a protocol)
-            if (dir &amp;&amp; (!location || (location.indexOf("/") !== 0 &amp;&amp; location.indexOf(":") === -1))) {
-                pkgObj.location = dir + "/" + (pkgObj.location || pkgObj.name);
-            }
-
-            //Normalize package paths.
-            pkgObj.location = pkgObj.location || pkgObj.name;
-            pkgObj.lib = pkgObj.lib || "lib";
-            pkgObj.main = pkgObj.main || "main";
-
-            packages[pkgObj.name] = pkgObj;
-        }
-    }
-
-    /**
-     * Determine if priority loading is done. If so clear the priorityWait
-     */
-    function isPriorityDone(context) {
-        var priorityDone = true,
-            priorityWait = context.config.priorityWait,
-            priorityName, i;
-        if (priorityWait) {
-            for (i = 0; (priorityName = priorityWait[i]); i++) {
-                if (!context.loaded[priorityName]) {
-                    priorityDone = false;
+    function each(ary, func) {
+        if (ary) {
+            var i;
+            for (i = 0; i &lt; ary.length; i += 1) {
+                if (func(ary[i], i, ary)) {
                     break;
                 }
             }
-            if (priorityDone) {
-                delete context.config.priorityWait;
-            }
         }
-        return priorityDone;
     }
 
     /**
-     * Resumes tracing of dependencies and then checks if everything is loaded.
+     * Helper function for iterating over an array backwards. If the func
+     * returns a true value, it will break out of the loop.
      */
-    function resume(context) {
-        var args, i, paused = s.paused;
-        if (context.scriptCount &lt;= 0) {
-            //Synchronous envs will push the number below zero with the
-            //decrement above, be sure to set it back to zero for good measure.
-            //require() calls that also do not end up loading scripts could
-            //push the number negative too.
-            context.scriptCount = 0;
+    function eachReverse(ary, func) {
+        if (ary) {
+            var i;
+            for (i = ary.length - 1; i > -1; i -= 1) {
+                if (func(ary[i], i, ary)) {
+                    break;
+                }
+            }
+        }
+    }
 
-            //Make sure any remaining defQueue items get properly processed.
-            while (defQueue.length) {
-                args = defQueue.shift();
-                if (args[0] === null) {
-                    req.onError(new Error('Mismatched anonymous require.def modules'));
-                } else {
-                    callDefMain(args, context);
+    function hasProp(obj, prop) {
+        return obj.hasOwnProperty(prop);
+    }
+
+    /**
+     * Cycles over properties in an object and calls a function for each
+     * property value. If the function returns a truthy value, then the
+     * iteration is stopped.
+     */
+    function eachProp(obj, func) {
+        var prop;
+        for (prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                if (func(obj[prop], prop)) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Simple function to mix in properties from source into target,
+     * but only if target does not already have a property of the same name.
+     * This is not robust in IE for transferring methods that match
+     * Object.prototype names, but the uses of mixin here seem unlikely to
+     * trigger a problem related to that.
+     */
+    function mixin(target, source, force) {
+        if (source) {
+            eachProp(source, function (value, prop) {
+                if (force || !hasProp(target, prop)) {
+                    target[prop] = value;
+                }
+            });
+        }
+    }
+
+    //Similar to Function.prototype.bind, but the 'this' object is specified
+    //first, since it is easier to read/figure out what 'this' will be.
+    function bind(obj, fn) {
+        return function () {
+            return fn.apply(obj, arguments);
+        };
+    }
+
+    function scripts() {
+        return document.getElementsByTagName('script');
+    }
+
+    //Allow getting a global that expressed in
+    //dot notation, like 'a.b.c'.
+    function getGlobal(value) {
+        if (!value) {
+            return value;
+        }
+        var g = global;
+        each(value.split('.'), function (part) {
+            g = g[part];
+        });
+        return g;
+    }
+
+    function makeContextModuleFunc(func, relMap, enableBuildCallback) {
+        return function () {
+            //A version of a require function that passes a moduleName
+            //value for items that may need to
+            //look up paths relative to the moduleName
+            var args = aps.call(arguments, 0), lastArg;
+            if (enableBuildCallback &amp;&amp;
+                isFunction((lastArg = args[args.length - 1]))) {
+                lastArg.__requireJsBuild = true;
+            }
+            args.push(relMap);
+            return func.apply(null, args);
+        };
+    }
+
+    function addRequireMethods(req, context, relMap) {
+        each([
+            ['toUrl'],
+            ['undef'],
+            ['defined', 'requireDefined'],
+            ['specified', 'requireSpecified']
+        ], function (item) {
+            req[item[0]] = makeContextModuleFunc(context[item[1] || item[0]], relMap);
+        });
+    }
+
+    /**
+     * Constructs an error with a pointer to an URL with more information.
+     * @param {String} id the error ID that maps to an ID on a web page.
+     * @param {String} message human readable error.
+     * @param {Error} [err] the original error, if there is one.
+     *
+     * @returns {Error}
+     */
+    function makeError(id, msg, err, requireModules) {
+        var e = new Error(msg + '\nhttp://requirejs.org/docs/errors.html#' + id);
+        e.requireType = id;
+        e.requireModules = requireModules;
+        if (err) {
+            e.originalError = err;
+        }
+        return e;
+    }
+
+    if (typeof define !== 'undefined') {
+        //If a define is already in play via another AMD loader,
+        //do not overwrite.
+        return;
+    }
+
+    if (typeof requirejs !== 'undefined') {
+        if (isFunction(requirejs)) {
+            //Do not overwrite and existing requirejs instance.
+            return;
+        }
+        cfg = requirejs;
+        requirejs = undefined;
+    }
+
+    //Allow for a require config object
+    if (typeof require !== 'undefined' &amp;&amp; !isFunction(require)) {
+        //assume it is a config object.
+        cfg = require;
+        require = undefined;
+    }
+
+    function newContext(contextName) {
+        var config = {
+                waitSeconds: 7,
+                baseUrl: './',
+                paths: {},
+                pkgs: {},
+                shim: {}
+            },
+            registry = {},
+            undefEvents = {},
+            defQueue = [],
+            defined = {},
+            urlMap = {},
+            urlFetched = {},
+            requireCounter = 1,
+            unnormalizedCounter = 1,
+            //Used to track the order in which modules
+            //should be executed, by the order they
+            //load. Important for consistent cycle resolution
+            //behavior.
+            waitAry = [],
+            inCheckLoaded, Module, context, handlers,
+            checkLoadedTimeoutId;
+
+        /**
+         * Trims the . and .. from an array of path segments.
+         * It will keep a leading path segment if a .. will become
+         * the first path segment, to help with module name lookups,
+         * which act like paths, but can be remapped. But the end result,
+         * all paths that use this function should look normalized.
+         * NOTE: this method MODIFIES the input array.
+         * @param {Array} ary the array of path segments.
+         */
+        function trimDots(ary) {
+            var i, part;
+            for (i = 0; ary[i]; i+= 1) {
+                part = ary[i];
+                if (part === '.') {
+                    ary.splice(i, 1);
+                    i -= 1;
+                } else if (part === '..') {
+                    if (i === 1 &amp;&amp; (ary[2] === '..' || ary[0] === '..')) {
+                        //End of the line. Keep at least one non-dot
+                        //path segment at the front so it can be mapped
+                        //correctly to disk. Otherwise, there is likely
+                        //no path mapping for a path starting with '..'.
+                        //This can still fail, but catches the most reasonable
+                        //uses of ..
+                        break;
+                    } else if (i > 0) {
+                        ary.splice(i - 1, 2);
+                        i -= 2;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Given a relative module name, like ./something, normalize it to
+         * a real name that can be mapped to a path.
+         * @param {String} name the relative name
+         * @param {String} baseName a real name that the name arg is relative
+         * to.
+         * @param {Boolean} applyMap apply the map config to the value. Should
+         * only be done if this normalization is for a dependency ID.
+         * @returns {String} normalized name
+         */
+        function normalize(name, baseName, applyMap) {
+            var baseParts = baseName &amp;&amp; baseName.split('/'),
+                map = config.map,
+                starMap = map &amp;&amp; map['*'],
+                pkgName, pkgConfig, mapValue, nameParts, i, j, nameSegment,
+                foundMap;
+
+            //Adjust any relative paths.
+            if (name &amp;&amp; name.charAt(0) === '.') {
+                //If have a base name, try to normalize against it,
+                //otherwise, assume it is a top-level require that will
+                //be relative to baseUrl in the end.
+                if (baseName) {
+                    if (config.pkgs[baseName]) {
+                        //If the baseName is a package name, then just treat it as one
+                        //name to concat the name with.
+                        baseParts = [baseName];
+                    } else {
+                        //Convert baseName to array, and lop off the last part,
+                        //so that . matches that 'directory' and not name of the baseName's
+                        //module. For instance, baseName of 'one/two/three', maps to
+                        //'one/two/three.js', but we want the directory, 'one/two' for
+                        //this normalization.
+                        baseParts = baseParts.slice(0, baseParts.length - 1);
+                    }
+
+                    name = baseParts.concat(name.split('/'));
+                    trimDots(name);
+
+                    //Some use of packages may use a . path to reference the
+                    //'main' module name, so normalize for that.
+                    pkgConfig = config.pkgs[(pkgName = name[0])];
+                    name = name.join('/');
+                    if (pkgConfig &amp;&amp; name === pkgName + '/' + pkgConfig.main) {
+                        name = pkgName;
+                    }
+                } else if (name.indexOf('./') === 0) {
+                    // No baseName, so this is ID is resolved relative
+                    // to baseUrl, pull off the leading dot.
+                    name = name.substring(2);
                 }
             }
 
-            //Skip the resume if current context is in priority wait.
-            if (context.config.priorityWait &amp;&amp; !isPriorityDone(context)) {
+            //Apply map config if available.
+            if (applyMap &amp;&amp; (baseParts || starMap) &amp;&amp; map) {
+                nameParts = name.split('/');
+
+                for (i = nameParts.length; i > 0; i -= 1) {
+                    nameSegment = nameParts.slice(0, i).join('/');
+
+                    if (baseParts) {
+                        //Find the longest baseName segment match in the config.
+                        //So, do joins on the biggest to smallest lengths of baseParts.
+                        for (j = baseParts.length; j > 0; j -= 1) {
+                            mapValue = map[baseParts.slice(0, j).join('/')];
+
+                            //baseName segment has  config, find if it has one for
+                            //this name.
+                            if (mapValue) {
+                                mapValue = mapValue[nameSegment];
+                                if (mapValue) {
+                                    //Match, update name to the new value.
+                                    foundMap = mapValue;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!foundMap &amp;&amp; starMap &amp;&amp; starMap[nameSegment]) {
+                        foundMap = starMap[nameSegment];
+                    }
+
+                    if (foundMap) {
+                        nameParts.splice(0, i, foundMap);
+                        name = nameParts.join('/');
+                        break;
+                    }
+                }
+            }
+
+            return name;
+        }
+
+        function removeScript(name) {
+            if (isBrowser) {
+                each(scripts(), function (scriptNode) {
+                    if (scriptNode.getAttribute('data-requiremodule') === name &amp;&amp;
+                        scriptNode.getAttribute('data-requirecontext') === context.contextName) {
+                        scriptNode.parentNode.removeChild(scriptNode);
+                        return true;
+                    }
+                });
+            }
+        }
+
+        function hasPathFallback(id) {
+            var pathConfig = config.paths[id];
+            if (pathConfig &amp;&amp; isArray(pathConfig) &amp;&amp; pathConfig.length > 1) {
+                removeScript(id);
+                //Pop off the first array value, since it failed, and
+                //retry
+                pathConfig.shift();
+                context.undef(id);
+                context.require([id]);
+                return true;
+            }
+        }
+
+        /**
+         * Creates a module mapping that includes plugin prefix, module
+         * name, and path. If parentModuleMap is provided it will
+         * also normalize the name via require.normalize()
+         *
+         * @param {String} name the module name
+         * @param {String} [parentModuleMap] parent module map
+         * for the module name, used to resolve relative names.
+         * @param {Boolean} isNormalized: is the ID already normalized.
+         * This is true if this call is done for a define() module ID.
+         * @param {Boolean} applyMap: apply the map config to the ID.
+         * Should only be true if this map is for a dependency.
+         *
+         * @returns {Object}
+         */
+        function makeModuleMap(name, parentModuleMap, isNormalized, applyMap) {
+            var index = name ? name.indexOf('!') : -1,
+                prefix = null,
+                parentName = parentModuleMap ? parentModuleMap.name : null,
+                originalName = name,
+                isDefine = true,
+                normalizedName, url, pluginModule, suffix;
+
+            //If no name, then it means it is a require call, generate an
+            //internal name.
+            if (!name) {
+                isDefine = false;
+                name = '_@r' + (requireCounter += 1);
+            }
+
+            if (index !== -1) {
+                prefix = name.substring(0, index);
+                name = name.substring(index + 1, name.length);
+            }
+
+            if (prefix) {
+                prefix = normalize(prefix, parentName, applyMap);
+            }
+
+            //Account for relative paths if there is a base name.
+            if (name) {
+                if (prefix) {
+                    pluginModule = defined[prefix];
+                    if (pluginModule &amp;&amp; pluginModule.normalize) {
+                        //Plugin is loaded, use its normalize method.
+                        normalizedName = pluginModule.normalize(name, function (name) {
+                            return normalize(name, parentName, applyMap);
+                        });
+                    } else {
+                        normalizedName = normalize(name, parentName, applyMap);
+                    }
+                } else {
+                    //A regular module.
+                    normalizedName = normalize(name, parentName, applyMap);
+
+                    url = urlMap[normalizedName];
+                    if (!url) {
+                        //Calculate url for the module, if it has a name.
+                        //Use name here since nameToUrl also calls normalize,
+                        //and for relative names that are outside the baseUrl
+                        //this causes havoc. Was thinking of just removing
+                        //parentModuleMap to avoid extra normalization, but
+                        //normalize() still does a dot removal because of
+                        //issue #142, so just pass in name here and redo
+                        //the normalization. Paths outside baseUrl are just
+                        //messy to support.
+                        url = context.nameToUrl(name, null, parentModuleMap);
+
+                        //Store the URL mapping for later.
+                        urlMap[normalizedName] = url;
+                    }
+                }
+            }
+
+            //If the id is a plugin id that cannot be determined if it needs
+            //normalization, stamp it with a unique ID so two matching relative
+            //ids that may conflict can be separate.
+            suffix = prefix &amp;&amp; !pluginModule &amp;&amp; !isNormalized ?
+                     '_unnormalized' + (unnormalizedCounter += 1) :
+                     '';
+
+            return {
+                prefix: prefix,
+                name: normalizedName,
+                parentMap: parentModuleMap,
+                unnormalized: !!suffix,
+                url: url,
+                originalName: originalName,
+                isDefine: isDefine,
+                id: (prefix ?
+                    prefix + '!' + (normalizedName || '') :
+                    normalizedName) + suffix
+            };
+        }
+
+        function getModule(depMap) {
+            var id = depMap.id,
+                mod = registry[id];
+
+            if (!mod) {
+                mod = registry[id] = new context.Module(depMap);
+            }
+
+            return mod;
+        }
+
+        function on(depMap, name, fn) {
+            var id = depMap.id,
+                mod = registry[id];
+
+            if (hasProp(defined, id) &amp;&amp;
+                (!mod || mod.defineEmitComplete)) {
+                if (name === 'defined') {
+                    fn(defined[id]);
+                }
+            } else {
+                getModule(depMap).on(name, fn);
+            }
+        }
+
+        function onError(err, errback) {
+            var ids = err.requireModules,
+                notified = false;
+
+            if (errback) {
+                errback(err);
+            } else {
+                each(ids, function (id) {
+                    var mod = registry[id];
+                    if (mod) {
+                        //Set error on module, so it skips timeout checks.
+                        mod.error = err;
+                        if (mod.events.error) {
+                            notified = true;
+                            mod.emit('error', err);
+                        }
+                    }
+                });
+
+                if (!notified) {
+                    req.onError(err);
+                }
+            }
+        }
+
+        /**
+         * Internal method to transfer globalQueue items to this context's
+         * defQueue.
+         */
+        function takeGlobalQueue() {
+            //Push all the globalDefQueue items into the context's defQueue
+            if (globalDefQueue.length) {
+                //Array splice in the values since the context code has a
+                //local var ref to defQueue, so cannot just reassign the one
+                //on context.
+                apsp.apply(defQueue,
+                           [defQueue.length - 1, 0].concat(globalDefQueue));
+                globalDefQueue = [];
+            }
+        }
+
+        /**
+         * Helper function that creates a require function object to give to
+         * modules that ask for it as a dependency. It needs to be specific
+         * per module because of the implication of path mappings that may
+         * need to be relative to the module name.
+         */
+        function makeRequire(mod, enableBuildCallback, altRequire) {
+            var relMap = mod &amp;&amp; mod.map,
+                modRequire = makeContextModuleFunc(altRequire || context.require,
+                                                   relMap,
+                                                   enableBuildCallback);
+
+            addRequireMethods(modRequire, context, relMap);
+
+            return modRequire;
+        }
+
+        handlers = {
+            'require': function (mod) {
+                return makeRequire(mod);
+            },
+            'exports': function (mod) {
+                mod.usingExports = true;
+                if (mod.map.isDefine) {
+                    return (mod.exports = defined[mod.map.id] = {});
+                }
+            },
+            'module': function (mod) {
+                return (mod.module = {
+                    id: mod.map.id,
+                    uri: mod.map.url,
+                    config: function () {
+                        return (config.config &amp;&amp; config.config[mod.map.id]) || {};
+                    },
+                    exports: defined[mod.map.id]
+                });
+            }
+        };
+
+        function removeWaiting(id) {
+            //Clean up machinery used for waiting modules.
+            delete registry[id];
+
+            each(waitAry, function (mod, i) {
+                if (mod.map.id === id) {
+                    waitAry.splice(i, 1);
+                    if (!mod.defined) {
+                        context.waitCount -= 1;
+                    }
+                    return true;
+                }
+            });
+        }
+
+        function findCycle(mod, traced) {
+            var id = mod.map.id,
+                depArray = mod.depMaps,
+                foundModule;
+
+            //Do not bother with unitialized modules or not yet enabled
+            //modules.
+            if (!mod.inited) {
                 return;
             }
 
-            if (paused.length) {
-                //Reset paused since this loop will process current set.
-                s.paused = [];
+            //Found the cycle.
+            if (traced[id]) {
+                return mod;
+            }
 
-                for (i = 0; (args = paused[i]); i++) {
-                    req.checkDeps.apply(req, args);
+            traced[id] = true;
+
+            //Trace through the dependencies.
+            each(depArray, function (depMap) {
+                var depId = depMap.id,
+                    depMod = registry[depId];
+
+                if (!depMod) {
+                    return;
+                }
+
+                if (!depMod.inited || !depMod.enabled) {
+                    //Dependency is not inited, so this cannot
+                    //be used to determine a cycle.
+                    foundModule = null;
+                    delete traced[id];
+                    return true;
+                }
+
+                return (foundModule = findCycle(depMod, traced));
+            });
+
+            return foundModule;
+        }
+
+        function forceExec(mod, traced, uninited) {
+            var id = mod.map.id,
+                depArray = mod.depMaps;
+
+            if (!mod.inited || !mod.map.isDefine) {
+                return;
+            }
+
+            if (traced[id]) {
+                return defined[id];
+            }
+
+            traced[id] = mod;
+
+            each(depArray, function(depMap) {
+                var depId = depMap.id,
+                    depMod = registry[depId],
+                    value;
+
+                if (handlers[depId]) {
+                    return;
+                }
+
+                if (depMod) {
+                    if (!depMod.inited || !depMod.enabled) {
+                        //Dependency is not inited,
+                        //so this module cannot be
+                        //given a forced value yet.
+                        uninited[id] = true;
+                        return;
+                    }
+
+                    //Get the value for the current dependency
+                    value = forceExec(depMod, traced, uninited);
+
+                    //Even with forcing it may not be done,
+                    //in particular if the module is waiting
+                    //on a plugin resource.
+                    if (!uninited[depId]) {
+                        mod.defineDepById(depId, value);
+                    }
+                }
+            });
+
+            mod.check(true);
+
+            return defined[id];
+        }
+
+        function modCheck(mod) {
+            mod.check();
+        }
+
+        function checkLoaded() {
+            var waitInterval = config.waitSeconds * 1000,
+                //It is possible to disable the wait interval by using waitSeconds of 0.
+                expired = waitInterval &amp;&amp; (context.startTime + waitInterval) &lt; new Date().getTime(),
+                noLoads = [],
+                stillLoading = false,
+                needCycleCheck = true,
+                map, modId, err, usingPathFallback;
+
+            //Do not bother if this call was a result of a cycle break.
+            if (inCheckLoaded) {
+                return;
+            }
+
+            inCheckLoaded = true;
+
+            //Figure out the state of all the modules.
+            eachProp(registry, function (mod) {
+                map = mod.map;
+                modId = map.id;
+
+                //Skip things that are not enabled or in error state.
+                if (!mod.enabled) {
+                    return;
+                }
+
+                if (!mod.error) {
+                    //If the module should be executed, and it has not
+                    //been inited and time is up, remember it.
+                    if (!mod.inited &amp;&amp; expired) {
+                        if (hasPathFallback(modId)) {
+                            usingPathFallback = true;
+                            stillLoading = true;
+                        } else {
+                            noLoads.push(modId);
+                            removeScript(modId);
+                        }
+                    } else if (!mod.inited &amp;&amp; mod.fetched &amp;&amp; map.isDefine) {
+                        stillLoading = true;
+                        if (!map.prefix) {
+                            //No reason to keep looking for unfinished
+                            //loading. If the only stillLoading is a
+                            //plugin resource though, keep going,
+                            //because it may be that a plugin resource
+                            //is waiting on a non-plugin cycle.
+                            return (needCycleCheck = false);
+                        }
+                    }
+                }
+            });
+
+            if (expired &amp;&amp; noLoads.length) {
+                //If wait time expired, throw error of unloaded modules.
+                err = makeError('timeout', 'Load timeout for modules: ' + noLoads, null, noLoads);
+                err.contextName = context.contextName;
+                return onError(err);
+            }
+
+            //Not expired, check for a cycle.
+            if (needCycleCheck) {
+
+                each(waitAry, function (mod) {
+                    if (mod.defined) {
+                        return;
+                    }
+
+                    var cycleMod = findCycle(mod, {}),
+                        traced = {};
+
+                    if (cycleMod) {
+                        forceExec(cycleMod, traced, {});
+
+                        //traced modules may have been
+                        //removed from the registry, but
+                        //their listeners still need to
+                        //be called.
+                        eachProp(traced, modCheck);
+                    }
+                });
+
+                //Now that dependencies have
+                //been satisfied, trigger the
+                //completion check that then
+                //notifies listeners.
+                eachProp(registry, modCheck);
+            }
+
+            //If still waiting on loads, and the waiting load is something
+            //other than a plugin resource, or there are still outstanding
+            //scripts, then just try back later.
+            if ((!expired || usingPathFallback) &amp;&amp; stillLoading) {
+                //Something is still waiting to load. Wait for it, but only
+                //if a timeout is not already in effect.
+                if ((isBrowser || isWebWorker) &amp;&amp; !checkLoadedTimeoutId) {
+                    checkLoadedTimeoutId = setTimeout(function () {
+                        checkLoadedTimeoutId = 0;
+                        checkLoaded();
+                    }, 50);
                 }
             }
 
-            if (isWebWorker) {
-                //In a web worker, since importScripts is synchronous,
-                //it may think all dependencies are loaded, but still
-                //in the middle of a list of dependency fetches, so
-                //delay the checkLoaded in a timeout for the items to complete.
-                //This is really hacky though, time for a rewrite.
-                setTimeout(function () {
-                    req.checkLoaded(s.ctxName);
-                }, 30);
+            inCheckLoaded = false;
+        }
+
+        Module = function (map) {
+            this.events = undefEvents[map.id] || {};
+            this.map = map;
+            this.shim = config.shim[map.id];
+            this.depExports = [];
+            this.depMaps = [];
+            this.depMatched = [];
+            this.pluginMaps = {};
+            this.depCount = 0;
+
+            /* this.exports this.factory
+               this.depMaps = [],
+               this.enabled, this.fetched
+            */
+        };
+
+        Module.prototype = {
+            init: function(depMaps, factory, errback, options) {
+                options = options || {};
+
+                //Do not do more inits if already done. Can happen if there
+                //are multiple define calls for the same module. That is not
+                //a normal, common case, but it is also not unexpected.
+                if (this.inited) {
+                    return;
+                }
+
+                this.factory = factory;
+
+                if (errback) {
+                    //Register for errors on this module.
+                    this.on('error', errback);
+                } else if (this.events.error) {
+                    //If no errback already, but there are error listeners
+                    //on this module, set up an errback to pass to the deps.
+                    errback = bind(this, function (err) {
+                        this.emit('error', err);
+                    });
+                }
+
+                each(depMaps, bind(this, function (depMap, i) {
+                    if (typeof depMap === 'string') {
+                        depMap = makeModuleMap(depMap,
+                                               (this.map.isDefine ? this.map : this.map.parentMap),
+                                               false,
+                                               true);
+                        this.depMaps.push(depMap);
+                    }
+
+                    var handler = handlers[depMap.id];
+
+                    if (handler) {
+                        this.depExports[i] = handler(this);
+                        return;
+                    }
+
+                    this.depCount += 1;
+
+                    on(depMap, 'defined', bind(this, function (depExports) {
+                        this.defineDep(i, depExports);
+                        this.check();
+                    }));
+
+                    if (errback) {
+                        on(depMap, 'error', errback);
+                    }
+                }));
+
+                //Indicate this module has be initialized
+                this.inited = true;
+
+                this.ignore = options.ignore;
+
+                //Could have option to init this module in enabled mode,
+                //or could have been previously marked as enabled. However,
+                //the dependencies are not known until init is called. So
+                //if enabled previously, now trigger dependencies as enabled.
+                if (options.enabled || this.enabled) {
+                    //Enable this module and dependencies.
+                    //Will call this.check()
+                    this.enable();
+                } else {
+                    this.check();
+                }
+            },
+
+            defineDepById: function (id, depExports) {
+                var i;
+
+                //Find the index for this dependency.
+                each(this.depMaps, function (map, index) {
+                    if (map.id === id) {
+                        i = index;
+                        return true;
+                    }
+                });
+
+                return this.defineDep(i, depExports);
+            },
+
+            defineDep: function (i, depExports) {
+                //Because of cycles, defined callback for a given
+                //export can be called more than once.
+                if (!this.depMatched[i]) {
+                    this.depMatched[i] = true;
+                    this.depCount -= 1;
+                    this.depExports[i] = depExports;
+                }
+            },
+
+            fetch: function () {
+                if (this.fetched) {
+                    return;
+                }
+                this.fetched = true;
+
+                context.startTime = (new Date()).getTime();
+
+                var map = this.map;
+
+                //If the manager is for a plugin managed resource,
+                //ask the plugin to load it now.
+                if (map.prefix) {
+                    this.callPlugin();
+                } else if (this.shim) {
+                    makeRequire(this, true)(this.shim.deps || [], bind(this, function () {
+                        this.load();
+                    }));
+                } else {
+                    //Regular dependency.
+                    this.load();
+                }
+            },
+
+            load: function() {
+                var url = this.map.url;
+
+                //Regular dependency.
+                if (!urlFetched[url]) {
+                    urlFetched[url] = true;
+                    context.load(this.map.id, url);
+                }
+            },
+
+            /**
+             * Checks is the module is ready to define itself, and if so,
+             * define it. If the silent argument is true, then it will just
+             * define, but not notify listeners, and not ask for a context-wide
+             * check of all loaded modules. That is useful for cycle breaking.
+             */
+            check: function (silent) {
+                if (!this.enabled) {
+                    return;
+                }
+
+                var id = this.map.id,
+                    depExports = this.depExports,
+                    exports = this.exports,
+                    factory = this.factory,
+                    err, cjsModule;
+
+                if (!this.inited) {
+                    this.fetch();
+                } else if (this.error) {
+                    this.emit('error', this.error);
+                } else if (!this.defining) {
+                    //The factory could trigger another require call
+                    //that would result in checking this module to
+                    //define itself again. If already in the process
+                    //of doing that, skip this work.
+                    this.defining = true;
+
+                    if (this.depCount &lt; 1 &amp;&amp; !this.defined) {
+                        if (isFunction(factory)) {
+                            //If there is an error listener, favor passing
+                            //to that instead of throwing an error.
+                            if (this.events.error) {
+                                try {
+                                    exports = context.execCb(id, factory, depExports, exports);
+                                } catch (e) {
+                                    err = e;
+                                }
+                            } else {
+                                exports = context.execCb(id, factory, depExports, exports);
+                            }
+
+                            if (this.map.isDefine) {
+                                //If setting exports via 'module' is in play,
+                                //favor that over return value and exports. After that,
+                                //favor a non-undefined return value over exports use.
+                                cjsModule = this.module;
+                                if (cjsModule &amp;&amp;
+                                    cjsModule.exports !== undefined &amp;&amp;
+                                    //Make sure it is not already the exports value
+                                    cjsModule.exports !== this.exports) {
+                                    exports = cjsModule.exports;
+                                } else if (exports === undefined &amp;&amp; this.usingExports) {
+                                    //exports already set the defined value.
+                                    exports = this.exports;
+                                }
+                            }
+
+                            if (err) {
+                                err.requireMap = this.map;
+                                err.requireModules = [this.map.id];
+                                err.requireType = 'define';
+                                return onError((this.error = err));
+                            }
+
+                        } else {
+                            //Just a literal value
+                            exports = factory;
+                        }
+
+                        this.exports = exports;
+
+                        if (this.map.isDefine &amp;&amp; !this.ignore) {
+                            defined[id] = exports;
+
+                            if (req.onResourceLoad) {
+                                req.onResourceLoad(context, this.map, this.depMaps);
+                            }
+                        }
+
+                        //Clean up
+                        delete registry[id];
+
+                        this.defined = true;
+                        context.waitCount -= 1;
+                        if (context.waitCount === 0) {
+                            //Clear the wait array used for cycles.
+                            waitAry = [];
+                        }
+                    }
+
+                    //Finished the define stage. Allow calling check again
+                    //to allow define notifications below in the case of a
+                    //cycle.
+                    this.defining = false;
+
+                    if (!silent) {
+                        if (this.defined &amp;&amp; !this.defineEmitted) {
+                            this.defineEmitted = true;
+                            this.emit('defined', this.exports);
+                            this.defineEmitComplete = true;
+                        }
+                    }
+                }
+            },
+
+            callPlugin: function() {
+                var map = this.map,
+                    id = map.id,
+                    pluginMap = makeModuleMap(map.prefix, null, false, true);
+
+                on(pluginMap, 'defined', bind(this, function (plugin) {
+                    var name = this.map.name,
+                        parentName = this.map.parentMap ? this.map.parentMap.name : null,
+                        load, normalizedMap, normalizedMod;
+
+                    //If current map is not normalized, wait for that
+                    //normalized name to load instead of continuing.
+                    if (this.map.unnormalized) {
+                        //Normalize the ID if the plugin allows it.
+                        if (plugin.normalize) {
+                            name = plugin.normalize(name, function (name) {
+                                return normalize(name, parentName, true);
+                            });
+                        }
+
+                        normalizedMap = makeModuleMap(map.prefix + '!' + name);
+                        on(normalizedMap,
+                           'defined', bind(this, function (value) {
+                            this.init([], function () { return value; }, null, {
+                                enabled: true,
+                                ignore: true
+                            });
+                        }));
+                        normalizedMod = registry[normalizedMap.id];
+                        if (normalizedMod) {
+                            if (this.events.error) {
+                                normalizedMod.on('error', bind(this, function (err) {
+                                    this.emit('error', err);
+                                }));
+                            }
+                            normalizedMod.enable();
+                        }
+
+                        return;
+                    }
+
+                    load = bind(this, function (value) {
+                        this.init([], function () { return value; }, null, {
+                            enabled: true
+                        });
+                    });
+
+                    load.error = bind(this, function (err) {
+                        this.inited = true;
+                        this.error = err;
+                        err.requireModules = [id];
+
+                        //Remove temp unnormalized modules for this module,
+                        //since they will never be resolved otherwise now.
+                        eachProp(registry, function (mod) {
+                            if (mod.map.id.indexOf(id + '_unnormalized') === 0) {
+                                removeWaiting(mod.map.id);
+                            }
+                        });
+
+                        onError(err);
+                    });
+
+                    //Allow plugins to load other code without having to know the
+                    //context or how to 'complete' the load.
+                    load.fromText = function (moduleName, text) {
+                        /*jslint evil: true */
+                        var hasInteractive = useInteractive;
+
+                        //Turn off interactive script matching for IE for any define
+                        //calls in the text, then turn it back on at the end.
+                        if (hasInteractive) {
+                            useInteractive = false;
+                        }
+
+                        req.exec(text);
+
+                        if (hasInteractive) {
+                            useInteractive = true;
+                        }
+
+                        //Support anonymous modules.
+                        context.completeLoad(moduleName);
+                    };
+
+                    //Use parentName here since the plugin's name is not reliable,
+                    //could be some weird string with no path that actually wants to
+                    //reference the parentName's path.
+                    plugin.load(map.name, makeRequire(map.parentMap, true, function (deps, cb) {
+                        return context.require(deps, cb);
+                    }), load, config);
+                }));
+
+                context.enable(pluginMap, this);
+                this.pluginMaps[pluginMap.id] = pluginMap;
+            },
+
+            enable: function () {
+                this.enabled = true;
+
+                if (!this.waitPushed) {
+                    waitAry.push(this);
+                    context.waitCount += 1;
+                    this.waitPushed = true;
+                }
+
+                //Enable each dependency
+                each(this.depMaps, bind(this, function (map) {
+                    var id = map.id,
+                        mod = registry[id];
+                    //Skip special modules like 'require', 'exports', 'module'
+                    //Also, don't call enable if it is already enabled,
+                    //important in circular dependency cases.
+                    if (!handlers[id] &amp;&amp; mod &amp;&amp; !mod.enabled) {
+                        context.enable(map, this);
+                    }
+                }));
+
+                //Enable each plugin that is used in
+                //a dependency
+                eachProp(this.pluginMaps, bind(this, function (pluginMap) {
+                    var mod = registry[pluginMap.id];
+                    if (mod &amp;&amp; !mod.enabled) {
+                        context.enable(pluginMap, this);
+                    }
+                }));
+
+                this.check();
+            },
+
+            on: function(name, cb) {
+                var cbs = this.events[name];
+                if (!cbs) {
+                    cbs = this.events[name] = [];
+                }
+                cbs.push(cb);
+            },
+
+            emit: function (name, evt) {
+                each(this.events[name], function (cb) {
+                    cb(evt);
+                });
+                if (name === 'error') {
+                    //Now that the error handler was triggered, remove
+                    //the listeners, since this broken Module instance
+                    //can stay around for a while in the registry/waitAry.
+                    delete this.events[name];
+                }
+            }
+        };
+
+        function callGetModule(args) {
+            getModule(makeModuleMap(args[0], null, true)).init(args[1], args[2]);
+        }
+
+        function removeListener(node, func, name, ieName) {
+            //Favor detachEvent because of IE9
+            //issue, see attachEvent/addEventListener comment elsewhere
+            //in this file.
+            if (node.detachEvent &amp;&amp; !isOpera) {
+                //Probably IE. If not it will throw an error, which will be
+                //useful to know.
+                if (ieName) {
+                    node.detachEvent(ieName, func);
+                }
             } else {
-                req.checkLoaded(s.ctxName);
+                node.removeEventListener(name, func, false);
             }
         }
+
+        /**
+         * Given an event from a script node, get the requirejs info from it,
+         * and then removes the event listeners on the node.
+         * @param {Event} evt
+         * @returns {Object}
+         */
+        function getScriptData(evt) {
+            //Using currentTarget instead of target for Firefox 2.0's sake. Not
+            //all old browsers will be supported, but this one was easy enough
+            //to support and still makes sense.
+            var node = evt.currentTarget || evt.srcElement;
+
+            //Remove the listeners once here.
+            removeListener(node, context.onScriptLoad, 'load', 'onreadystatechange');
+            removeListener(node, context.onScriptError, 'error');
+
+            return {
+                node: node,
+                id: node &amp;&amp; node.getAttribute('data-requiremodule')
+            };
+        }
+
+        return (context = {
+            config: config,
+            contextName: contextName,
+            registry: registry,
+            defined: defined,
+            urlMap: urlMap,
+            urlFetched: urlFetched,
+            waitCount: 0,
+            defQueue: defQueue,
+            Module: Module,
+            makeModuleMap: makeModuleMap,
+
+            /**
+             * Set a configuration for the context.
+             * @param {Object} cfg config object to integrate.
+             */
+            configure: function (cfg) {
+                //Make sure the baseUrl ends in a slash.
+                if (cfg.baseUrl) {
+                    if (cfg.baseUrl.charAt(cfg.baseUrl.length - 1) !== '/') {
+                        cfg.baseUrl += '/';
+                    }
+                }
+
+                //Save off the paths and packages since they require special processing,
+                //they are additive.
+                var paths = config.paths,
+                    pkgs = config.pkgs,
+                    shim = config.shim,
+                    map = config.map || {};
+
+                //Mix in the config values, favoring the new values over
+                //existing ones in context.config.
+                mixin(config, cfg, true);
+
+                //Merge paths.
+                mixin(paths, cfg.paths, true);
+                config.paths = paths;
+
+                //Merge map
+                if (cfg.map) {
+                    mixin(map, cfg.map, true);
+                    config.map = map;
+                }
+
+                //Merge shim
+                if (cfg.shim) {
+                    eachProp(cfg.shim, function (value, id) {
+                        //Normalize the structure
+                        if (isArray(value)) {
+                            value = {
+                                deps: value
+                            };
+                        }
+                        if (value.exports &amp;&amp; !value.exports.__buildReady) {
+                            value.exports = context.makeShimExports(value.exports);
+                        }
+                        shim[id] = value;
+                    });
+                    config.shim = shim;
+                }
+
+                //Adjust packages if necessary.
+                if (cfg.packages) {
+                    each(cfg.packages, function (pkgObj) {
+                        var location;
+
+                        pkgObj = typeof pkgObj === 'string' ? { name: pkgObj } : pkgObj;
+                        location = pkgObj.location;
+
+                        //Create a brand new object on pkgs, since currentPackages can
+                        //be passed in again, and config.pkgs is the internal transformed
+                        //state for all package configs.
+                        pkgs[pkgObj.name] = {
+                            name: pkgObj.name,
+                            location: location || pkgObj.name,
+                            //Remove leading dot in main, so main paths are normalized,
+                            //and remove any trailing .js, since different package
+                            //envs have different conventions: some use a module name,
+                            //some use a file name.
+                            main: (pkgObj.main || 'main')
+                                  .replace(currDirRegExp, '')
+                                  .replace(jsSuffixRegExp, '')
+                        };
+                    });
+
+                    //Done with modifications, assing packages back to context config
+                    config.pkgs = pkgs;
+                }
+
+                //If a deps array or a config callback is specified, then call
+                //require with those args. This is useful when require is defined as a
+                //config object before require.js is loaded.
+                if (cfg.deps || cfg.callback) {
+                    context.require(cfg.deps || [], cfg.callback);
+                }
+            },
+
+            makeShimExports: function (exports) {
+                var func;
+                if (typeof exports === 'string') {
+                    func = function () {
+                        return getGlobal(exports);
+                    };
+                    //Save the exports for use in nodefine checking.
+                    func.exports = exports;
+                    return func;
+                } else {
+                    return function () {
+                        return exports.apply(global, arguments);
+                    };
+                }
+            },
+
+            requireDefined: function (id, relMap) {
+                return hasProp(defined, makeModuleMap(id, relMap, false, true).id);
+            },
+
+            requireSpecified: function (id, relMap) {
+                id = makeModuleMap(id, relMap, false, true).id;
+                return hasProp(defined, id) || hasProp(registry, id);
+            },
+
+            require: function (deps, callback, errback, relMap) {
+                var moduleName, id, map, requireMod, args;
+                if (typeof deps === 'string') {
+                    if (isFunction(callback)) {
+                        //Invalid call
+                        return onError(makeError('requireargs', 'Invalid require call'), errback);
+                    }
+
+                    //Synchronous access to one module. If require.get is
+                    //available (as in the Node adapter), prefer that.
+                    //In this case deps is the moduleName and callback is
+                    //the relMap
+                    if (req.get) {
+                        return req.get(context, deps, callback);
+                    }
+
+                    //Just return the module wanted. In this scenario, the
+                    //second arg (if passed) is just the relMap.
+                    moduleName = deps;
+                    relMap = callback;
+
+                    //Normalize module name, if it contains . or ..
+                    map = makeModuleMap(moduleName, relMap, false, true);
+                    id = map.id;
+
+                    if (!hasProp(defined, id)) {
+                        return onError(makeError('notloaded', 'Module name "' +
+                                    id +
+                                    '" has not been loaded yet for context: ' +
+                                    contextName));
+                    }
+                    return defined[id];
+                }
+
+                //Callback require. Normalize args. if callback or errback is
+                //not a function, it means it is a relMap. Test errback first.
+                if (errback &amp;&amp; !isFunction(errback)) {
+                    relMap = errback;
+                    errback = undefined;
+                }
+                if (callback &amp;&amp; !isFunction(callback)) {
+                    relMap = callback;
+                    callback = undefined;
+                }
+
+                //Any defined modules in the global queue, intake them now.
+                takeGlobalQueue();
+
+                //Make sure any remaining defQueue items get properly processed.
+                while (defQueue.length) {
+                    args = defQueue.shift();
+                    if (args[0] === null) {
+                        return onError(makeError('mismatch', 'Mismatched anonymous define() module: ' + args[args.length - 1]));
+                    } else {
+                        //args are id, deps, factory. Should be normalized by the
+                        //define() function.
+                        callGetModule(args);
+                    }
+                }
+
+                //Mark all the dependencies as needing to be loaded.
+                requireMod = getModule(makeModuleMap(null, relMap));
+
+                requireMod.init(deps, callback, errback, {
+                    enabled: true
+                });
+
+                checkLoaded();
+
+                return context.require;
+            },
+
+            undef: function (id) {
+                var map = makeModuleMap(id, null, true),
+                    mod = registry[id];
+
+                delete defined[id];
+                delete urlMap[id];
+                delete urlFetched[map.url];
+                delete undefEvents[id];
+
+                if (mod) {
+                    //Hold on to listeners in case the
+                    //module will be attempted to be reloaded
+                    //using a different config.
+                    if (mod.events.defined) {
+                        undefEvents[id] = mod.events;
+                    }
+
+                    removeWaiting(id);
+                }
+            },
+
+            /**
+             * Called to enable a module if it is still in the registry
+             * awaiting enablement. parent module is passed in for context,
+             * used by the optimizer.
+             */
+            enable: function (depMap, parent) {
+                var mod = registry[depMap.id];
+                if (mod) {
+                    getModule(depMap).enable();
+                }
+            },
+
+            /**
+             * Internal method used by environment adapters to complete a load event.
+             * A load event could be a script load or just a load pass from a synchronous
+             * load call.
+             * @param {String} moduleName the name of the module to potentially complete.
+             */
+            completeLoad: function (moduleName) {
+                var shim = config.shim[moduleName] || {},
+                shExports = shim.exports &amp;&amp; shim.exports.exports,
+                found, args, mod;
+
+                takeGlobalQueue();
+
+                while (defQueue.length) {
+                    args = defQueue.shift();
+                    if (args[0] === null) {
+                        args[0] = moduleName;
+                        //If already found an anonymous module and bound it
+                        //to this name, then this is some other anon module
+                        //waiting for its completeLoad to fire.
+                        if (found) {
+                            break;
+                        }
+                        found = true;
+                    } else if (args[0] === moduleName) {
+                        //Found matching define call for this script!
+                        found = true;
+                    }
+
+                    callGetModule(args);
+                }
+
+                //Do this after the cycle of callGetModule in case the result
+                //of those calls/init calls changes the registry.
+                mod = registry[moduleName];
+
+                if (!found &amp;&amp;
+                    !defined[moduleName] &amp;&amp;
+                    mod &amp;&amp; !mod.inited) {
+                    if (config.enforceDefine &amp;&amp; (!shExports || !getGlobal(shExports))) {
+                        if (hasPathFallback(moduleName)) {
+                            return;
+                        } else {
+                            return onError(makeError('nodefine',
+                                             'No define call for ' + moduleName,
+                                             null,
+                                             [moduleName]));
+                        }
+                    } else {
+                        //A script that does not call define(), so just simulate
+                        //the call for it.
+                        callGetModule([moduleName, (shim.deps || []), shim.exports]);
+                    }
+                }
+
+                checkLoaded();
+            },
+
+            /**
+             * Converts a module name + .extension into an URL path.
+             * *Requires* the use of a module name. It does not support using
+             * plain URLs like nameToUrl.
+             */
+            toUrl: function (moduleNamePlusExt, relModuleMap) {
+                var index = moduleNamePlusExt.lastIndexOf('.'),
+                    ext = null;
+
+                if (index !== -1) {
+                    ext = moduleNamePlusExt.substring(index, moduleNamePlusExt.length);
+                    moduleNamePlusExt = moduleNamePlusExt.substring(0, index);
+                }
+
+                return context.nameToUrl(moduleNamePlusExt, ext, relModuleMap);
+            },
+
+            /**
+             * Converts a module name to a file path. Supports cases where
+             * moduleName may actually be just an URL.
+             */
+            nameToUrl: function (moduleName, ext, relModuleMap) {
+                var paths, pkgs, pkg, pkgPath, syms, i, parentModule, url,
+                    parentPath;
+
+                //Normalize module name if have a base relative module name to work from.
+                moduleName = normalize(moduleName, relModuleMap &amp;&amp; relModuleMap.id, true);
+
+                //If a colon is in the URL, it indicates a protocol is used and it is just
+                //an URL to a file, or if it starts with a slash, contains a query arg (i.e. ?)
+                //or ends with .js, then assume the user meant to use an url and not a module id.
+                //The slash is important for protocol-less URLs as well as full paths.
+                if (req.jsExtRegExp.test(moduleName)) {
+                    //Just a plain path, not module name lookup, so just return it.
+                    //Add extension if it is included. This is a bit wonky, only non-.js things pass
+                    //an extension, this method probably needs to be reworked.
+                    url = moduleName + (ext || '');
+                } else {
+                    //A module that needs to be converted to a path.
+                    paths = config.paths;
+                    pkgs = config.pkgs;
+
+                    syms = moduleName.split('/');
+                    //For each module name segment, see if there is a path
+                    //registered for it. Start with most specific name
+                    //and work up from it.
+                    for (i = syms.length; i > 0; i -= 1) {
+                        parentModule = syms.slice(0, i).join('/');
+                        pkg = pkgs[parentModule];
+                        parentPath = paths[parentModule];
+                        if (parentPath) {
+                            //If an array, it means there are a few choices,
+                            //Choose the one that is desired
+                            if (isArray(parentPath)) {
+                                parentPath = parentPath[0];
+                            }
+                            syms.splice(0, i, parentPath);
+                            break;
+                        } else if (pkg) {
+                            //If module name is just the package name, then looking
+                            //for the main module.
+                            if (moduleName === pkg.name) {
+                                pkgPath = pkg.location + '/' + pkg.main;
+                            } else {
+                                pkgPath = pkg.location;
+                            }
+                            syms.splice(0, i, pkgPath);
+                            break;
+                        }
+                    }
+
+                    //Join the path parts together, then figure out if baseUrl is needed.
+                    url = syms.join('/') + (ext || '.js');
+                    url = (url.charAt(0) === '/' || url.match(/^[\w\+\.\-]+:/) ? '' : config.baseUrl) + url;
+                }
+
+                return config.urlArgs ? url +
+                                        ((url.indexOf('?') === -1 ? '?' : '&amp;') +
+                                         config.urlArgs) : url;
+            },
+
+            //Delegates to req.load. Broken out as a separate function to
+            //allow overriding in the optimizer.
+            load: function (id, url) {
+                req.load(context, id, url);
+            },
+
+            /**
+             * Executes a module callack function. Broken out as a separate function
+             * solely to allow the build system to sequence the files in the built
+             * layer in the right sequence.
+             *
+             * @private
+             */
+            execCb: function (name, callback, args, exports) {
+                return callback.apply(exports, args);
+            },
+
+            /**
+             * callback for script loads, used to check status of loading.
+             *
+             * @param {Event} evt the event from the browser for the script
+             * that was loaded.
+             */
+            onScriptLoad: function (evt) {
+                //Using currentTarget instead of target for Firefox 2.0's sake. Not
+                //all old browsers will be supported, but this one was easy enough
+                //to support and still makes sense.
+                if (evt.type === 'load' ||
+                    (readyRegExp.test((evt.currentTarget || evt.srcElement).readyState))) {
+                    //Reset interactive script so a script node is not held onto for
+                    //to long.
+                    interactiveScript = null;
+
+                    //Pull out the name of the module and the context.
+                    var data = getScriptData(evt);
+                    context.completeLoad(data.id);
+                }
+            },
+
+            /**
+             * Callback for script errors.
+             */
+            onScriptError: function (evt) {
+                var data = getScriptData(evt);
+                if (!hasPathFallback(data.id)) {
+                    return onError(makeError('scripterror', 'Script error', evt, [data.id]));
+                }
+            }
+        });
     }
 
     /**
@@ -219,54 +1689,93 @@ var require, define;
      * If the first argument is an array, then it will be treated as an array
      * of dependency string names to fetch. An optional function callback can
      * be specified to execute when all of those dependencies are available.
+     *
+     * Make a local req variable to help Caja compliance (it assumes things
+     * on a require that are not standardized), and to give a short
+     * name for minification/local scope use.
      */
-    require = function (deps, callback, contextName, relModuleName) {
-        var context, config;
-        if (typeof deps === "string" &amp;&amp; !isFunction(callback)) {
-            //Just return the module wanted. In this scenario, the
-            //second arg (if passed) is just the contextName.
-            return require.get(deps, callback, contextName, relModuleName);
-        }
-        // Dependencies first
-        if (!require.isArray(deps)) {
+    req = requirejs = function (deps, callback, errback, optional) {
+
+        //Find the right context, use default
+        var contextName = defContextName,
+            context, config;
+
+        // Determine if have config object in the call.
+        if (!isArray(deps) &amp;&amp; typeof deps !== 'string') {
             // deps is a config object
             config = deps;
-            if (require.isArray(callback)) {
+            if (isArray(callback)) {
                 // Adjust args if there are dependencies
                 deps = callback;
-                callback = contextName;
-                contextName = relModuleName;
-                relModuleName = arguments[4];
+                callback = errback;
+                errback = optional;
             } else {
                 deps = [];
             }
         }
 
-        main(null, deps, callback, config, contextName, relModuleName);
-
-        //If the require call does not trigger anything new to load,
-        //then resume the dependency processing. Context will be undefined
-        //on first run of require.
-        context = s.contexts[(contextName || (config &amp;&amp; config.context) || s.ctxName)];
-        if (context &amp;&amp; context.scriptCount === 0) {
-            resume(context);
+        if (config &amp;&amp; config.context) {
+            contextName = config.context;
         }
-        //Returning undefined for Spidermonky strict checking in Komodo
-        return undefined;
+
+        context = contexts[contextName];
+        if (!context) {
+            context = contexts[contextName] = req.s.newContext(contextName);
+        }
+
+        if (config) {
+            context.configure(config);
+        }
+
+        return context.require(deps, callback, errback);
     };
 
-    //Alias for caja compliance internally -
-    //specifically: "Dynamically computed names should use require.async()"
-    //even though this spec isn't really decided on.
-    //Since it is here, use this alias to make typing shorter.
-    req = require;
+    /**
+     * Support require.config() to make it easier to cooperate with other
+     * AMD loaders on globally agreed names.
+     */
+    req.config = function (config) {
+        return req(config);
+    };
+
+    /**
+     * Export require as a global, but only if it does not already exist.
+     */
+    if (!require) {
+        require = req;
+    }
+
+    req.version = version;
+
+    //Used to filter out dependencies that are already paths.
+    req.jsExtRegExp = /^\/|:|\?|\.js$/;
+    req.isBrowser = isBrowser;
+    s = req.s = {
+        contexts: contexts,
+        newContext: newContext
+    };
+
+    //Create default context.
+    req({});
+
+    //Exports some context-sensitive methods on global require, using
+    //default context if no context specified.
+    addRequireMethods(req, contexts[defContextName]);
+
+    if (isBrowser) {
+        head = s.head = document.getElementsByTagName('head')[0];
+        //If BASE tag is in play, using appendChild is a problem for IE6.
+        //When that browser dies, this can be removed. Details in this jQuery bug:
+        //http://dev.jquery.com/ticket/2709
+        baseElement = document.getElementsByTagName('base')[0];
+        if (baseElement) {
+            head = s.head = baseElement.parentNode;
+        }
+    }
 
     /**
      * Any errors that require explicitly generates will be passed to this
      * function. Intercept/override it if you want custom error handling.
-     * If you do override it, this method should *always* throw an error
-     * to stop the execution flow correctly. Otherwise, other weird errors
-     * will occur.
      * @param {Error} err the error object.
      */
     req.onError = function (err) {
@@ -274,1322 +1783,56 @@ var require, define;
     };
 
     /**
-     * The function that handles definitions of modules. Differs from
-     * require() in that a string for the module should be the first argument,
-     * and the function to execute after dependencies are loaded should
-     * return a value to define the module corresponding to the first argument's
-     * name.
-     */
-    define = req.def = function (name, deps, callback, contextName) {
-        var i, scripts, script, node = currentlyAddingScript;
-
-        //Allow for anonymous functions
-        if (typeof name !== 'string') {
-            //Adjust args appropriately
-            contextName = callback;
-            callback = deps;
-            deps = name;
-            name = null;
-        }
-
-        //This module may not have dependencies
-        if (!req.isArray(deps)) {
-            contextName = callback;
-            callback = deps;
-            deps = [];
-        }
-
-        //If no name, and callback is a function, then figure out if it a
-        //CommonJS thing with dependencies.
-        if (!name &amp;&amp; !deps.length &amp;&amp; req.isFunction(callback)) {
-            //Remove comments from the callback string,
-            //look for require calls, and pull them into the dependencies.
-            callback
-                .toString()
-                .replace(commentRegExp, "")
-                .replace(cjsRequireRegExp, function (match, dep) {
-                    deps.push(dep);
-                });
-
-            //May be a CommonJS thing even without require calls, but still
-            //could use exports, and such, so always add those as dependencies.
-            //This is a bit wasteful for RequireJS modules that do not need
-            //an exports or module object, but erring on side of safety.
-            //REQUIRES the function to expect the CommonJS variables in the
-            //order listed below.
-            deps = ["require", "exports", "module"].concat(deps);
-        }
-
-        //If in IE 6-8 and hit an anonymous require.def call, do the interactive/
-        //currentlyAddingScript scripts stuff.
-        if (!name &amp;&amp; useInteractive) {
-            scripts = document.getElementsByTagName('script');
-            for (i = scripts.length - 1; i > -1 &amp;&amp; (script = scripts[i]); i--) {
-                if (script.readyState === 'interactive') {
-                    node = script;
-                    break;
-                }
-            }
-            if (!node) {
-                req.onError(new Error("ERROR: No matching script interactive for " + callback));
-            }
-
-            name = node.getAttribute("data-requiremodule");
-        }
-
-        if (typeof name === 'string') {
-            //Do not try to auto-register a jquery later.
-            //Do this work here and in main, since for IE/useInteractive, this function
-            //is the earliest touch-point.
-            s.contexts[s.ctxName].jQueryDef = (name === "jquery");
-        }
-
-        //Always save off evaluating the def call until the script onload handler.
-        //This allows multiple modules to be in a file without prematurely
-        //tracing dependencies, and allows for anonymous module support,
-        //where the module name is not known until the script onload event
-        //occurs.
-        defQueue.push([name, deps, callback, null, contextName]);
-    };
-
-    //Simulate modern require for newer libraries
-    define.amd = { jQuery: false };
-
-    main = function (name, deps, callback, config, contextName, relModuleName) {
-        //Grab the context, or create a new one for the given context name.
-        var context, newContext, loaded, pluginPrefix,
-            canSetContext, prop, newLength, outDeps, mods, paths, index, i,
-            deferMods, deferModArgs, lastModArg, waitingName, packages,
-            packagePaths;
-
-        contextName = contextName ? contextName : (config &amp;&amp; config.context ? config.context : s.ctxName);
-        context = s.contexts[contextName];
-
-        if (name) {
-                        // Pull off any plugin prefix.
-            index = name.indexOf("!");
-            if (index !== -1) {
-                pluginPrefix = name.substring(0, index);
-                name = name.substring(index + 1, name.length);
-            } else {
-                //Could be that the plugin name should be auto-applied.
-                //Used by i18n plugin to enable anonymous i18n modules, but
-                //still associating the auto-generated name with the i18n plugin.
-                pluginPrefix = context.defPlugin[name];
-            }
-
-
-            //If module already defined for context, or already waiting to be
-            //evaluated, leave.
-            waitingName = context.waiting[name];
-            if (context &amp;&amp; (context.defined[name] || (waitingName &amp;&amp; waitingName !== ap[name]))) {
-                return;
-            }
-        }
-
-        if (contextName !== s.ctxName) {
-            //If nothing is waiting on being loaded in the current context,
-            //then switch s.ctxName to current contextName.
-            loaded = (s.contexts[s.ctxName] &amp;&amp; s.contexts[s.ctxName].loaded);
-            canSetContext = true;
-            if (loaded) {
-                for (prop in loaded) {
-                    if (!(prop in empty)) {
-                        if (!loaded[prop]) {
-                            canSetContext = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (canSetContext) {
-                s.ctxName = contextName;
-            }
-        }
-
-        if (!context) {
-            newContext = {
-                contextName: contextName,
-                config: {
-                    waitSeconds: 7,
-                    baseUrl: s.baseUrl || "./",
-                    paths: {},
-                    packages: {}
-                },
-                waiting: [],
-                specified: {
-                    "require": true,
-                    "exports": true,
-                    "module": true
-                },
-                loaded: {},
-                scriptCount: 0,
-                urlFetched: {},
-                defPlugin: {},
-                defined: {},
-                modifiers: {}
-            };
-
-                        if (s.plugins.newContext) {
-                s.plugins.newContext(newContext);
-            }
-
-            context = s.contexts[contextName] = newContext;
-        }
-
-        //If have a config object, update the context's config object with
-        //the config values.
-        if (config) {
-            //Make sure the baseUrl ends in a slash.
-            if (config.baseUrl) {
-                if (config.baseUrl.charAt(config.baseUrl.length - 1) !== "/") {
-                    config.baseUrl += "/";
-                }
-            }
-
-            //Save off the paths and packages since they require special processing,
-            //they are additive.
-            paths = context.config.paths;
-            packages = context.config.packages;
-
-            //Mix in the config values, favoring the new values over
-            //existing ones in context.config.
-            req.mixin(context.config, config, true);
-
-            //Adjust paths if necessary.
-            if (config.paths) {
-                for (prop in config.paths) {
-                    if (!(prop in empty)) {
-                        paths[prop] = config.paths[prop];
-                    }
-                }
-                context.config.paths = paths;
-            }
-
-            packagePaths = config.packagePaths;
-            if (packagePaths || config.packages) {
-                //Convert packagePaths into a packages config.
-                if (packagePaths) {
-                    for (prop in packagePaths) {
-                        if (!(prop in empty)) {
-                            configurePackageDir(packages, packagePaths[prop], prop);
-                        }
-                    }
-                }
-
-                //Adjust packages if necessary.
-                if (config.packages) {
-                    configurePackageDir(packages, config.packages);
-                }
-
-                //Done with modifications, assing packages back to context config
-                context.config.packages = packages;
-            }
-
-            //If priority loading is in effect, trigger the loads now
-            if (config.priority) {
-                //Create a separate config property that can be
-                //easily tested for config priority completion.
-                //Do this instead of wiping out the config.priority
-                //in case it needs to be inspected for debug purposes later.
-                req(config.priority);
-                context.config.priorityWait = config.priority;
-            }
-
-            //If a deps array or a config callback is specified, then call
-            //require with those args. This is useful when require is defined as a
-            //config object before require.js is loaded.
-            if (config.deps || config.callback) {
-                req(config.deps || [], config.callback);
-            }
-
-                        //Set up ready callback, if asked. Useful when require is defined as a
-            //config object before require.js is loaded.
-            if (config.ready) {
-                req.ready(config.ready);
-            }
-
-            //If it is just a config block, nothing else,
-            //then return.
-            if (!deps) {
-                return;
-            }
-        }
-
-        //Normalize dependency strings: need to determine if they have
-        //prefixes and to also normalize any relative paths. Replace the deps
-        //array of strings with an array of objects.
-        if (deps) {
-            outDeps = deps;
-            deps = [];
-            for (i = 0; i &lt; outDeps.length; i++) {
-                deps[i] = req.splitPrefix(outDeps[i], (name || relModuleName), context);
-            }
-        }
-
-        //Store the module for later evaluation
-        newLength = context.waiting.push({
-            name: name,
-            deps: deps,
-            callback: callback
-        });
-
-        if (name) {
-            //Store index of insertion for quick lookup
-            context.waiting[name] = newLength - 1;
-
-            //Mark the module as specified so no need to fetch it again.
-            //Important to set specified here for the
-            //pause/resume case where there are multiple modules in a file.
-            context.specified[name] = true;
-
-                        //Load any modifiers for the module.
-            mods = context.modifiers[name];
-            if (mods) {
-                req(mods, contextName);
-                deferMods = mods.__deferMods;
-                if (deferMods) {
-                    for (i = 0; i &lt; deferMods.length; i++) {
-                        deferModArgs = deferMods[i];
-
-                        //Add the context name to the def call.
-                        lastModArg = deferModArgs[deferModArgs.length - 1];
-                        if (lastModArg === undefined) {
-                            deferModArgs[deferModArgs.length - 1] = contextName;
-                        } else if (typeof lastModArg === "string") {
-                            deferMods.push(contextName);
-                        }
-
-                        require.def.apply(require, deferModArgs);
-                    }
-                }
-            }
-                    }
-
-        //If the callback is not an actual function, it means it already
-        //has the definition of the module as a literal value.
-        if (name &amp;&amp; callback &amp;&amp; !req.isFunction(callback)) {
-            context.defined[name] = callback;
-        }
-
-        //If a pluginPrefix is available, call the plugin, or load it.
-                if (pluginPrefix) {
-            callPlugin(pluginPrefix, context, {
-                name: "require",
-                args: [name, deps, callback, context]
-            });
-        }
-
-        //Hold on to the module until a script load or other adapter has finished
-        //evaluating the whole file. This helps when a file has more than one
-        //module in it -- dependencies are not traced and fetched until the whole
-        //file is processed.
-        s.paused.push([pluginPrefix, name, deps, context]);
-
-        //Set loaded here for modules that are also loaded
-        //as part of a layer, where onScriptLoad is not fired
-        //for those cases. Do this after the inline define and
-        //dependency tracing is done.
-        //Also check if auto-registry of jQuery needs to be skipped.
-        if (name) {
-            context.loaded[name] = true;
-            context.jQueryDef = (name === "jquery");
-        }
-    };
-
-    /**
-     * Simple function to mix in properties from source into target,
-     * but only if target does not already have a property of the same name.
-     */
-    req.mixin = function (target, source, force) {
-        for (var prop in source) {
-            if (!(prop in empty) &amp;&amp; (!(prop in target) || force)) {
-                target[prop] = source[prop];
-            }
-        }
-        return req;
-    };
-
-    req.version = version;
-
-    //Set up page state.
-    s = req.s = {
-        ctxName: defContextName,
-        contexts: {},
-        paused: [],
-                plugins: {
-            defined: {},
-            callbacks: {},
-            waiting: {}
-        },
-                //Stores a list of URLs that should not get async script tag treatment.
-        skipAsync: {},
-        isBrowser: isBrowser,
-        isPageLoaded: !isBrowser,
-        readyCalls: [],
-        doc: isBrowser ? document : null
-    };
-
-    req.isBrowser = s.isBrowser;
-    if (isBrowser) {
-        s.head = document.getElementsByTagName("head")[0];
-        //If BASE tag is in play, using appendChild is a problem for IE6.
-        //When that browser dies, this can be removed. Details in this jQuery bug:
-        //http://dev.jquery.com/ticket/2709
-        baseElement = document.getElementsByTagName("base")[0];
-        if (baseElement) {
-            s.head = baseElement.parentNode;
-        }
-    }
-
-        /**
-     * Sets up a plugin callback name. Want to make it easy to test if a plugin
-     * needs to be called for a certain lifecycle event by testing for
-     * if (s.plugins.onLifeCyleEvent) so only define the lifecycle event
-     * if there is a real plugin that registers for it.
-     */
-    function makePluginCallback(name, returnOnTrue) {
-        var cbs = s.plugins.callbacks[name] = [];
-        s.plugins[name] = function () {
-            for (var i = 0, cb; (cb = cbs[i]); i++) {
-                if (cb.apply(null, arguments) === true &amp;&amp; returnOnTrue) {
-                    return true;
-                }
-            }
-            return false;
-        };
-    }
-
-    /**
-     * Registers a new plugin for require.
-     */
-    req.plugin = function (obj) {
-        var i, prop, call, prefix = obj.prefix, cbs = s.plugins.callbacks,
-            waiting = s.plugins.waiting[prefix], generics,
-            defined = s.plugins.defined, contexts = s.contexts, context;
-
-        //Do not allow redefinition of a plugin, there may be internal
-        //state in the plugin that could be lost.
-        if (defined[prefix]) {
-            return req;
-        }
-
-        //Save the plugin.
-        defined[prefix] = obj;
-
-        //Set up plugin callbacks for methods that need to be generic to
-        //require, for lifecycle cases where it does not care about a particular
-        //plugin, but just that some plugin work needs to be done.
-        generics = ["newContext", "isWaiting", "orderDeps"];
-        for (i = 0; (prop = generics[i]); i++) {
-            if (!s.plugins[prop]) {
-                makePluginCallback(prop, prop === "isWaiting");
-            }
-            cbs[prop].push(obj[prop]);
-        }
-
-        //Call newContext for any contexts that were already created.
-        if (obj.newContext) {
-            for (prop in contexts) {
-                if (!(prop in empty)) {
-                    context = contexts[prop];
-                    obj.newContext(context);
-                }
-            }
-        }
-
-        //If there are waiting requests for a plugin, execute them now.
-        if (waiting) {
-            for (i = 0; (call = waiting[i]); i++) {
-                if (obj[call.name]) {
-                    obj[call.name].apply(null, call.args);
-                }
-            }
-            delete s.plugins.waiting[prefix];
-        }
-
-        return req;
-    };
-
-    /**
-     * As of jQuery 1.4.3, it supports a readyWait property that will hold off
-     * calling jQuery ready callbacks until all scripts are loaded. Be sure
-     * to track it if readyWait is available. Also, since jQuery 1.4.3 does
-     * not register as a module, need to do some global inference checking.
-     * Even if it does register as a module, not guaranteed to be the precise
-     * name of the global. If a jQuery is tracked for this context, then go
-     * ahead and register it as a module too, if not already in process.
-     */
-    function jQueryCheck(context, jqCandidate) {
-        if (!context.jQuery) {
-            var $ = jqCandidate || (typeof jQuery !== "undefined" ? jQuery : null);
-            if ($ &amp;&amp; "readyWait" in $) {
-                context.jQuery = $;
-
-                //Manually create a "jquery" module entry if not one already
-                //or in process.
-                if (!context.defined.jquery &amp;&amp; !context.jQueryDef) {
-                    context.defined.jquery = $;
-                }
-
-                //Make sure
-                if (context.scriptCount) {
-                    $.readyWait += 1;
-                    context.jQueryIncremented = true;
-                }
-            }
-        }
-    }
-
-    /**
-     * Internal method used by environment adapters to complete a load event.
-     * A load event could be a script load or just a load pass from a synchronous
-     * load call.
-     * @param {String} moduleName the name of the module to potentially complete.
-     * @param {Object} context the context object
-     */
-    req.completeLoad = function (moduleName, context) {
-        //If there is a waiting require.def call
-        var args;
-        while (defQueue.length) {
-            args = defQueue.shift();
-            if (args[0] === null) {
-                args[0] = moduleName;
-                break;
-            } else if (args[0] === moduleName) {
-                //Found matching require.def call for this script!
-                break;
-            } else {
-                //Some other named require.def call, most likely the result
-                //of a build layer that included many require.def calls.
-                callDefMain(args, context);
-            }
-        }
-        if (args) {
-            callDefMain(args, context);
-        }
-
-        //Mark the script as loaded. Note that this can be different from a
-        //moduleName that maps to a require.def call. This line is important
-        //for traditional browser scripts.
-        context.loaded[moduleName] = true;
-
-        //If a global jQuery is defined, check for it. Need to do it here
-        //instead of main() since stock jQuery does not register as
-        //a module via define.
-        jQueryCheck(context);
-
-        context.scriptCount -= 1;
-        resume(context);
-    };
-
-    /**
-     * Legacy function, remove at some point
-     */
-    req.pause = req.resume = function () {};
-
-    /**
-     * Trace down the dependencies to see if they are loaded. If not, trigger
-     * the load.
-     * @param {String} pluginPrefix the plugin prefix, if any associated with the name.
+     * Does the request to load a module for the browser case.
+     * Make this a separate function to allow other environments
+     * to override it.
      *
-     * @param {String} name: the name of the module that has the dependencies.
-     *
-     * @param {Array} deps array of dependencies.
-     *
-     * @param {Object} context: the loading context.
-     *
-     * @private
-     */
-    req.checkDeps = function (pluginPrefix, name, deps, context) {
-        //Figure out if all the modules are loaded. If the module is not
-        //being loaded or already loaded, add it to the "to load" list,
-        //and request it to be loaded.
-        var i, dep;
-
-        if (pluginPrefix) {
-                        callPlugin(pluginPrefix, context, {
-                name: "checkDeps",
-                args: [name, deps, context]
-            });
-                    } else {
-            for (i = 0; (dep = deps[i]); i++) {
-                if (!context.specified[dep.fullName]) {
-                    context.specified[dep.fullName] = true;
-
-                    //Reset the start time to use for timeouts
-                    context.startTime = (new Date()).getTime();
-
-                    //If a plugin, call its load method.
-                    if (dep.prefix) {
-                                                callPlugin(dep.prefix, context, {
-                            name: "load",
-                            args: [dep.name, context.contextName]
-                        });
-                                            } else {
-                        req.load(dep.name, context.contextName);
-                    }
-                }
-            }
-        }
-    };
-
-        /**
-     * Register a module that modifies another module. The modifier will
-     * only be called once the target module has been loaded.
-     *
-     * First syntax:
-     *
-     * require.modify({
-     *     "some/target1": "my/modifier1",
-     *     "some/target2": "my/modifier2",
-     * });
-     *
-     * With this syntax, the my/modifier1 will only be loaded when
-     * "some/target1" is loaded.
-     *
-     * Second syntax, defining a modifier.
-     *
-     * require.modify("some/target1", "my/modifier",
-     *                        ["some/target1", "some/other"],
-     *                        function (target, other) {
-     *                            //Modify properties of target here.
-     *                            Only properties of target can be modified, but
-     *                            target cannot be replaced.
-     *                        }
-     * );
-     */
-    req.modify = function (target, name, deps, callback, contextName) {
-        var prop, modifier, list,
-                cName = (typeof target === "string" ? contextName : name) || s.ctxName,
-                context = s.contexts[cName],
-                mods = context.modifiers;
-
-        if (typeof target === "string") {
-            //A modifier module.
-            //First store that it is a modifier.
-            list = mods[target] || (mods[target] = []);
-            if (!list[name]) {
-                list.push(name);
-                list[name] = true;
-            }
-
-            //Trigger the normal module definition logic if the target
-            //is already in the system.
-            if (context.specified[target]) {
-                req.def(name, deps, callback, contextName);
-            } else {
-                //Hold on to the execution/dependency checks for the modifier
-                //until the target is fetched.
-                (list.__deferMods || (list.__deferMods = [])).push([name, deps, callback, contextName]);
-            }
-        } else {
-            //A list of modifiers. Save them for future reference.
-            for (prop in target) {
-                if (!(prop in empty)) {
-                    //Store the modifier for future use.
-                    modifier = target[prop];
-                    list = mods[prop] || (context.modifiers[prop] = []);
-                    if (!list[modifier]) {
-                        list.push(modifier);
-                        list[modifier] = true;
-
-                        if (context.specified[prop]) {
-                            //Load the modifier right away.
-                            req([modifier], cName);
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    req.isArray = function (it) {
-        return ostring.call(it) === "[object Array]";
-    };
-
-    req.isFunction = isFunction;
-
-    /**
-     * Gets one module's exported value. This method is used by require().
-     * It is broken out as a separate function to allow a host environment
-     * shim to overwrite this function with something appropriate for that
-     * environment.
-     *
+     * @param {Object} context the require context to find state.
      * @param {String} moduleName the name of the module.
-     * @param {String} [contextName] the name of the context to use. Uses
-     * default context if no contextName is provided. You should never
-     * pass the contextName explicitly -- it is handled by the require() code.
-     * @param {String} [relModuleName] a module name to use for relative
-     * module name lookups. You should never pass this argument explicitly --
-     * it is handled by the require() code.
-     *
-     * @returns {Object} the exported module value.
+     * @param {Object} url the URL to the module.
      */
-    req.get = function (moduleName, contextName, relModuleName) {
-        if (moduleName === "require" || moduleName === "exports" || moduleName === "module") {
-            req.onError(new Error("Explicit require of " + moduleName + " is not allowed."));
-        }
-        contextName = contextName || s.ctxName;
-
-        var ret, context = s.contexts[contextName], nameProps;
-
-        //Normalize module name, if it contains . or ..
-        nameProps = req.splitPrefix(moduleName, relModuleName, context);
-
-        ret = context.defined[nameProps.name];
-        if (ret === undefined) {
-            req.onError(new Error("require: module name '" +
-                        moduleName +
-                        "' has not been loaded yet for context: " +
-                        contextName));
-        }
-        return ret;
-    };
-
-    /**
-     * Makes the request to load a module. May be an async load depending on
-     * the environment and the circumstance of the load call. Override this
-     * method in a host environment shim to do something specific for that
-     * environment.
-     *
-     * @param {String} moduleName the name of the module.
-     * @param {String} contextName the name of the context to use.
-     */
-    req.load = function (moduleName, contextName) {
-        var context = s.contexts[contextName],
-            urlFetched = context.urlFetched,
-            loaded = context.loaded, url;
-        s.isDone = false;
-
-        //Only set loaded to false for tracking if it has not already been set.
-        if (!loaded[moduleName]) {
-            loaded[moduleName] = false;
-        }
-
-        if (contextName !== s.ctxName) {
-            //Not in the right context now, hold on to it until
-            //the current context finishes all its loading.
-            contextLoads.push(arguments);
-        } else {
-            //First derive the path name for the module.
-            url = req.nameToUrl(moduleName, null, contextName);
-            if (!urlFetched[url]) {
-                context.scriptCount += 1;
-                req.attach(url, contextName, moduleName);
-                urlFetched[url] = true;
-
-                //If tracking a jQuery, then make sure its readyWait
-                //is incremented to prevent its ready callbacks from
-                //triggering too soon.
-                if (context.jQuery &amp;&amp; !context.jQueryIncremented) {
-                    context.jQuery.readyWait += 1;
-                    context.jQueryIncremented = true;
-                }
-            }
-        }
-    };
-
-    req.jsExtRegExp = /^\/|:|\?|\.js$/;
-
-    /**
-     * Given a relative module name, like ./something, normalize it to
-     * a real name that can be mapped to a path.
-     * @param {String} name the relative name
-     * @param {String} baseName a real name that the name arg is relative
-     * to.
-     * @param {Object} context
-     * @returns {String} normalized name
-     */
-    req.normalizeName = function (name, baseName, context) {
-        //Adjust any relative paths.
-        var part;
-        if (name.charAt(0) === ".") {
-            //If have a base name, try to normalize against it,
-            //otherwise, assume it is a top-level require that will
-            //be relative to baseUrl in the end.
-            if (baseName) {
-                if (context.config.packages[baseName]) {
-                    //If the baseName is a package name, then just treat it as one
-                    //name to concat the name with.
-                    baseName = [baseName];
-                } else {
-                    //Convert baseName to array, and lop off the last part,
-                    //so that . matches that "directory" and not name of the baseName's
-                    //module. For instance, baseName of "one/two/three", maps to
-                    //"one/two/three.js", but we want the directory, "one/two" for
-                    //this normalization.
-                    baseName = baseName.split("/");
-                    baseName = baseName.slice(0, baseName.length - 1);
-                }
-
-                name = baseName.concat(name.split("/"));
-                for (i = 0; (part = name[i]); i++) {
-                    if (part === ".") {
-                        name.splice(i, 1);
-                        i -= 1;
-                    } else if (part === "..") {
-                        if (i === 1) {
-                            //End of the line. Keep at least one non-dot
-                            //path segment at the front so it can be mapped
-                            //correctly to disk. Otherwise, there is likely
-                            //no path mapping for '..'.
-                            break;
-                        } else if (i > 1) {
-                            name.splice(i - 1, 2);
-                            i -= 2;
-                        }
-                    }
-                }
-                name = name.join("/");
-            }
-        }
-        return name;
-    };
-
-    /**
-     * Splits a name into a possible plugin prefix and
-     * the module name. If baseName is provided it will
-     * also normalize the name via require.normalizeName()
-     *
-     * @param {String} name the module name
-     * @param {String} [baseName] base name that name is
-     * relative to.
-     * @param {Object} context
-     *
-     * @returns {Object} with properties, 'prefix' (which
-     * may be null), 'name' and 'fullName', which is a combination
-     * of the prefix (if it exists) and the name.
-     */
-    req.splitPrefix = function (name, baseName, context) {
-        var index = name.indexOf("!"), prefix = null;
-        if (index !== -1) {
-            prefix = name.substring(0, index);
-            name = name.substring(index + 1, name.length);
-        }
-
-        //Account for relative paths if there is a base name.
-        name = req.normalizeName(name, baseName, context);
-
-        return {
-            prefix: prefix,
-            name: name,
-            fullName: prefix ? prefix + "!" + name : name
-        };
-    };
-
-    /**
-     * Start of a public API replacement for nameToUrl. For now, just leverage
-     * nameToUrl, but know that nameToUrl will go away in the future.
-     * moduleNamePlusExt is of format "some/module/thing.html". It only works
-     * for module-like names and will not work with any dependency name in the
-     * future (for instance, passing "http://a.com/some/thing.html" will not
-     * make any sense)
-     */
-    //TODO: what does requ.toUrl("packageName") resolve to? base package
-    //dir or lib? Probably base package dir.
-    /*
-    req.toUrl = function (moduleNamePlusExt, contextName, relModuleName) {
-        var index = moduleNamePlusExt.lastIndexOf('.'),
-            ext = null;
-
-        if (index !== -1) {
-            ext = moduleNamePlusExt.substring(index, moduleNamePlusExt.length);
-            moduleNamePlusExt = moduleNamePlusExt.substring(0, index);
-        }
-
-        return req.nameToUrl(moduleNamePlusExt, ext, contextName, relModuleName);
-    };
-    */
-
-    /**
-     * Converts a module name to a file path.
-     */
-    req.nameToUrl = function (moduleName, ext, contextName, relModuleName) {
-        var paths, packages, pkg, pkgPath, syms, i, parentModule, url,
-            context = s.contexts[contextName],
-            config = context.config;
-
-        //Normalize module name if have a base relative module name to work from.
-        moduleName = req.normalizeName(moduleName, relModuleName, context);
-
-        //If a colon is in the URL, it indicates a protocol is used and it is just
-        //an URL to a file, or if it starts with a slash or ends with .js, it is just a plain file.
-        //The slash is important for protocol-less URLs as well as full paths.
-        if (req.jsExtRegExp.test(moduleName)) {
-            //Just a plain path, not module name lookup, so just return it.
-            //Add extension if it is included. This is a bit wonky, only non-.js things pass
-            //an extension, this method probably needs to be reworked.
-            url = moduleName + (ext ? ext : "");
-        } else {
-            //A module that needs to be converted to a path.
-            paths = config.paths;
-            packages = config.packages;
-
-            syms = moduleName.split("/");
-            //For each module name segment, see if there is a path
-            //registered for it. Start with most specific name
-            //and work up from it.
-            for (i = syms.length; i > 0; i--) {
-                parentModule = syms.slice(0, i).join("/");
-                if (paths[parentModule]) {
-                    syms.splice(0, i, paths[parentModule]);
-                    break;
-                } else if ((pkg = packages[parentModule])) {
-                    //pkg can have just a string value to the path
-                    //or can be an object with props:
-                    //main, lib, name, location.
-                    pkgPath = pkg.location + '/' + pkg.lib;
-                    //If module name is just the package name, then looking
-                    //for the main module.
-                    if (moduleName === pkg.name) {
-                        pkgPath += '/' + pkg.main;
-                    }
-                    syms.splice(0, i, pkgPath);
-                    break;
-                }
-            }
-
-            //Join the path parts together, then figure out if baseUrl is needed.
-            url = syms.join("/") + (ext || ".js");
-            url = (url.charAt(0) === '/' || url.match(/^\w+:/) ? "" : config.baseUrl) + url;
-        }
-        return config.urlArgs ? url +
-                                ((url.indexOf('?') === -1 ? '?' : '&amp;') +
-                                 config.urlArgs) : url;
-    };
-
-    //In async environments, checkLoaded can get called a few times in the same
-    //call stack. Allow only one to do the finishing work. Set to false
-    //for sync environments.
-    req.blockCheckLoaded = true;
-
-    /**
-     * Checks if all modules for a context are loaded, and if so, evaluates the
-     * new ones in right dependency order.
-     *
-     * @private
-     */
-    req.checkLoaded = function (contextName) {
-        var context = s.contexts[contextName || s.ctxName],
-                waitInterval = context.config.waitSeconds * 1000,
-                //It is possible to disable the wait interval by using waitSeconds of 0.
-                expired = waitInterval &amp;&amp; (context.startTime + waitInterval) &lt; new Date().getTime(),
-                loaded, defined = context.defined,
-                modifiers = context.modifiers, waiting, noLoads = "",
-                hasLoadedProp = false, stillLoading = false, prop,
-
-                                pIsWaiting = s.plugins.isWaiting, pOrderDeps = s.plugins.orderDeps,
-
-                i, module, allDone, loads, loadArgs, err;
-
-        //If already doing a checkLoaded call,
-        //then do not bother checking loaded state.
-        if (context.isCheckLoaded) {
-            return;
-        }
-
-        //Determine if priority loading is done. If so clear the priority. If
-        //not, then do not check
-        if (context.config.priorityWait) {
-            if (isPriorityDone(context)) {
-                //Call resume, since it could have
-                //some waiting dependencies to trace.
-                resume(context);
-            } else {
-                return;
-            }
-        }
-
-        //Signal that checkLoaded is being require, so other calls that could be triggered
-        //by calling a waiting callback that then calls require and then this function
-        //should not proceed. At the end of this function, if there are still things
-        //waiting, then checkLoaded will be called again.
-        context.isCheckLoaded = req.blockCheckLoaded;
-
-        //Grab waiting and loaded lists here, since it could have changed since
-        //this function was first called.
-        waiting = context.waiting;
-        loaded = context.loaded;
-
-        //See if anything is still in flight.
-        for (prop in loaded) {
-            if (!(prop in empty)) {
-                hasLoadedProp = true;
-                if (!loaded[prop]) {
-                    if (expired) {
-                        noLoads += prop + " ";
-                    } else {
-                        stillLoading = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        //Check for exit conditions.
-        if (!hasLoadedProp &amp;&amp; !waiting.length
-                        &amp;&amp; (!pIsWaiting || !pIsWaiting(context))
-                       ) {
-            //If the loaded object had no items, then the rest of
-            //the work below does not need to be done.
-            context.isCheckLoaded = false;
-            return;
-        }
-        if (expired &amp;&amp; noLoads) {
-            //If wait time expired, throw error of unloaded modules.
-            err = new Error("require.js load timeout for modules: " + noLoads);
-            err.requireType = "timeout";
-            err.requireModules = noLoads;
-            req.onError(err);
-        }
-        if (stillLoading) {
-            //Something is still waiting to load. Wait for it.
-            context.isCheckLoaded = false;
-            if (!isPS3 &amp;&amp; (isBrowser || isWebWorker)) {
-                setTimeout(function () {
-                    req.checkLoaded(contextName);
-                }, 50);
-            }
-            return;
-        }
-
-        //Order the dependencies. Also clean up state because the evaluation
-        //of modules might create new loading tasks, so need to reset.
-        //Be sure to call plugins too.
-        context.waiting = [];
-        context.loaded = {};
-
-                //Call plugins to order their dependencies, do their
-        //module definitions.
-        if (pOrderDeps) {
-            pOrderDeps(context);
-        }
-
-                //Before defining the modules, give priority treatment to any modifiers
-        //for modules that are already defined.
-        for (prop in modifiers) {
-            if (!(prop in empty)) {
-                if (defined[prop]) {
-                    req.execModifiers(prop, {}, waiting, context);
-                }
-            }
-        }
-
-        //Define the modules, doing a depth first search.
-        for (i = 0; (module = waiting[i]); i++) {
-            req.exec(module, {}, waiting, context);
-        }
-
-        //Indicate checkLoaded is now done.
-        context.isCheckLoaded = false;
-
-        if (context.waiting.length
-                        || (pIsWaiting &amp;&amp; pIsWaiting(context))
-                       ) {
-            //More things in this context are waiting to load. They were probably
-            //added while doing the work above in checkLoaded, calling module
-            //callbacks that triggered other require calls.
-            req.checkLoaded(contextName);
-        } else if (contextLoads.length) {
-            //Check for other contexts that need to load things.
-            //First, make sure current context has no more things to
-            //load. After defining the modules above, new require calls
-            //could have been made.
-            loaded = context.loaded;
-            allDone = true;
-            for (prop in loaded) {
-                if (!(prop in empty)) {
-                    if (!loaded[prop]) {
-                        allDone = false;
-                        break;
-                    }
-                }
-            }
-
-            if (allDone) {
-                s.ctxName = contextLoads[0][1];
-                loads = contextLoads;
-                //Reset contextLoads in case some of the waiting loads
-                //are for yet another context.
-                contextLoads = [];
-                for (i = 0; (loadArgs = loads[i]); i++) {
-                    req.load.apply(req, loadArgs);
-                }
-            }
-        } else {
-            //Make sure we reset to default context.
-            s.ctxName = defContextName;
-            s.isDone = true;
-            if (req.callReady) {
-                req.callReady();
-            }
-        }
-    };
-
-    /**
-     * Helper function that creates a setExports function for a "module"
-     * CommonJS dependency. Do this here to avoid creating a closure that
-     * is part of a loop in require.exec.
-     */
-    function makeSetExports(moduleObj) {
-        return function (exports) {
-            moduleObj.exports = exports;
-        };
-    }
-
-    function makeContextModuleFunc(name, contextName, moduleName) {
-        return function () {
-            //A version of a require function that forces a contextName value
-            //and also passes a moduleName value for items that may need to
-            //look up paths relative to the moduleName
-            var args = [].concat(aps.call(arguments, 0));
-            args.push(contextName, moduleName);
-            return (name ? require[name] : require).apply(null, args);
-        };
-    }
-
-    /**
-     * Helper function that creates a require function object to give to
-     * modules that ask for it as a dependency. It needs to be specific
-     * per module because of the implication of path mappings that may
-     * need to be relative to the module name.
-     */
-    function makeRequire(context, moduleName) {
-        var contextName = context.contextName,
-            modRequire = makeContextModuleFunc(null, contextName, moduleName);
-
-        req.mixin(modRequire, {
-                        modify: makeContextModuleFunc("modify", contextName, moduleName),
-                        def: makeContextModuleFunc("def", contextName, moduleName),
-            get: makeContextModuleFunc("get", contextName, moduleName),
-            nameToUrl: makeContextModuleFunc("nameToUrl", contextName, moduleName),
-            toUrl: makeContextModuleFunc("toUrl", contextName, moduleName),
-            ready: req.ready,
-            context: context,
-            config: context.config,
-            isBrowser: s.isBrowser
-        });
-        return modRequire;
-    }
-
-    /**
-     * Executes the modules in the correct order.
-     *
-     * @private
-     */
-    req.exec = function (module, traced, waiting, context) {
-        //Some modules are just plain script files, abddo not have a formal
-        //module definition,
-        if (!module) {
-            //Returning undefined for Spidermonky strict checking in Komodo
-            return undefined;
-        }
-
-        var name = module.name, cb = module.callback, deps = module.deps, j, dep,
-            defined = context.defined, ret, args = [], depModule, cjsModule,
-            usingExports = false, depName;
-
-        //If already traced or defined, do not bother a second time.
-        if (name) {
-            if (traced[name] || name in defined) {
-                return defined[name];
-            }
-
-            //Mark this module as being traced, so that it is not retraced (as in a circular
-            //dependency)
-            traced[name] = true;
-        }
-
-        if (deps) {
-            for (j = 0; (dep = deps[j]); j++) {
-                depName = dep.name;
-                if (depName === "require") {
-                    depModule = makeRequire(context, name);
-                } else if (depName === "exports") {
-                    //CommonJS module spec 1.1
-                    depModule = defined[name] = {};
-                    usingExports = true;
-                } else if (depName === "module") {
-                    //CommonJS module spec 1.1
-                    cjsModule = depModule = {
-                        id: name,
-                        uri: name ? req.nameToUrl(name, null, context.contextName) : undefined
-                    };
-                    cjsModule.setExports = makeSetExports(cjsModule);
-                } else {
-                    //Get dependent module. It could not exist, for a circular
-                    //dependency or if the loaded dependency does not actually call
-                    //require. Favor not throwing an error here if undefined because
-                    //we want to allow code that does not use require as a module
-                    //definition framework to still work -- allow a web site to
-                    //gradually update to contained modules. That is more
-                    //important than forcing a throw for the circular dependency case.
-                    depModule = depName in defined ? defined[depName] : (traced[depName] ? undefined : req.exec(waiting[waiting[depName]], traced, waiting, context));
-                }
-
-                args.push(depModule);
-            }
-        }
-
-        //Call the callback to define the module, if necessary.
-        cb = module.callback;
-        if (cb &amp;&amp; req.isFunction(cb)) {
-            ret = req.execCb(name, cb, args);
-            if (name) {
-                //If using exports and the function did not return a value,
-                //and the "module" object for this definition function did not
-                //define an exported value, then use the exports object.
-                if (usingExports &amp;&amp; ret === undefined &amp;&amp; (!cjsModule || !("exports" in cjsModule))) {
-                    ret = defined[name];
-                } else {
-                    if (cjsModule &amp;&amp; "exports" in cjsModule) {
-                        ret = defined[name] = cjsModule.exports;
-                    } else {
-                        if (name in defined &amp;&amp; !usingExports) {
-                            req.onError(new Error(name + " has already been defined"));
-                        }
-                        defined[name] = ret;
-                    }
-                }
-            }
-        }
-
-                //Execute modifiers, if they exist.
-        req.execModifiers(name, traced, waiting, context);
-
-        return ret;
-    };
-
-    /**
-     * Executes a module callack function. Broken out as a separate function
-     * solely to allow the build system to sequence the files in the built
-     * layer in the right sequence.
-     * @param {String} name the module name.
-     * @param {Function} cb the module callback/definition function.
-     * @param {Array} args The arguments (dependent modules) to pass to callback.
-     *
-     * @private
-     */
-    req.execCb = function (name, cb, args) {
-        return cb.apply(null, args);
-    };
-
-        /**
-     * Executes modifiers for the given module name.
-     * @param {String} target
-     * @param {Object} traced
-     * @param {Object} context
-     *
-     * @private
-     */
-    req.execModifiers = function (target, traced, waiting, context) {
-        var modifiers = context.modifiers, mods = modifiers[target], mod, i;
-        if (mods) {
-            for (i = 0; i &lt; mods.length; i++) {
-                mod = mods[i];
-                //Not all modifiers define a module, they might collect other modules.
-                //If it is just a collection it will not be in waiting.
-                if (mod in waiting) {
-                    req.exec(waiting[waiting[mod]], traced, waiting, context);
-                }
-            }
-            delete modifiers[target];
-        }
-    };
-
-    /**
-     * callback for script loads, used to check status of loading.
-     *
-     * @param {Event} evt the event from the browser for the script
-     * that was loaded.
-     *
-     * @private
-     */
-    req.onScriptLoad = function (evt) {
-        //Using currentTarget instead of target for Firefox 2.0's sake. Not
-        //all old browsers will be supported, but this one was easy enough
-        //to support and still makes sense.
-        var node = evt.currentTarget || evt.srcElement, contextName, moduleName,
-            context;
-        if (evt.type === "load" || readyRegExp.test(node.readyState)) {
-            //Pull out the name of the module and the context.
-            contextName = node.getAttribute("data-requirecontext");
-            moduleName = node.getAttribute("data-requiremodule");
-            context = s.contexts[contextName];
-
-            req.completeLoad(moduleName, context);
-
-            //Clean up script binding.
-            if (node.removeEventListener) {
-                node.removeEventListener("load", req.onScriptLoad, false);
-            } else {
-                //Probably IE. If not it will throw an error, which will be
-                //useful to know.
-                node.detachEvent("onreadystatechange", req.onScriptLoad);
-            }
-        }
-    };
-
-    /**
-     * Attaches the script represented by the URL to the current
-     * environment. Right now only supports browser loading,
-     * but can be redefined in other environments to do the right thing.
-     * @param {String} url the url of the script to attach.
-     * @param {String} contextName the name of the context that wants the script.
-     * @param {moduleName} the name of the module that is associated with the script.
-     * @param {Function} [callback] optional callback, defaults to require.onScriptLoad
-     * @param {String} [type] optional type, defaults to text/javascript
-     */
-    req.attach = function (url, contextName, moduleName, callback, type) {
-        var node, loaded, context;
+    req.load = function (context, moduleName, url) {
+        var config = (context &amp;&amp; context.config) || {},
+            node;
         if (isBrowser) {
             //In the browser so use a script tag
-            callback = callback || req.onScriptLoad;
-            node = document.createElement("script");
-            node.type = type || "text/javascript";
-            node.charset = "utf-8";
-            //Use async so Gecko does not block on executing the script if something
-            //like a long-polling comet tag is being run first. Gecko likes
-            //to evaluate scripts in DOM order, even for dynamic scripts.
-            //It will fetch them async, but only evaluate the contents in DOM
-            //order, so a long-polling script tag can delay execution of scripts
-            //after it. But telling Gecko we expect async gets us the behavior
-            //we want -- execute it whenever it is finished downloading. Only
-            //Helps Firefox 3.6+
-            //Allow some URLs to not be fetched async. Mostly helps the order!
-            //plugin
-            node.async = !s.skipAsync[url];
 
-            node.setAttribute("data-requirecontext", contextName);
-            node.setAttribute("data-requiremodule", moduleName);
+            // node = config.xhtml ?
+            //        document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+            //        document.createElement('script');
+            node = document.createElement('script');
 
-            //Set up load listener.
-            if (node.addEventListener) {
-                node.addEventListener("load", callback, false);
-            } else {
-                //Probably IE. If not it will throw an error, which will be
-                //useful to know. IE (at least 6-8) do not fire
-                //script onload right after executing the script, so
-                //we cannot tie the anonymous require.def call to a name.
-                //However, IE reports the script as being in "interactive"
-                //readyState at the time of the require.def call.
-                useInteractive = true;
-                node.attachEvent("onreadystatechange", callback);
-            }
+            node.type = config.scriptType || 'text/javascript';
+            node.charset = 'utf-8';
+
+            node.setAttribute('data-requirecontext', context.contextName);
+            node.setAttribute('data-requiremodule', moduleName);
+
+            //Set up load listener. Test attachEvent first because IE9 has
+            //a subtle issue in its addEventListener and script onload firings
+            //that do not match the behavior of all other browsers with
+            //addEventListener support, which fire the onload event for a
+            //script right after the script execution. See:
+            //https://connect.microsoft.com/IE/feedback/details/648057/script-onload-event-is-not-fired-immediately-after-script-execution
+            //UNFORTUNATELY Opera implements attachEvent but does not follow the script
+            //script execution mode.
+            node.addEventListener('load', context.onScriptLoad, false);
+            node.addEventListener('error', context.onScriptError, false);
+
             node.src = url;
 
             //For some cache cases in IE 6-8, the script executes before the end
-            //of the appendChild execution, so to tie an anonymous require.def
+            //of the appendChild execution, so to tie an anonymous define
             //call to the module name (which is stored on the node), hold on
             //to a reference to this node, but clear after the DOM insertion.
             currentlyAddingScript = node;
             if (baseElement) {
-                s.head.insertBefore(node, baseElement);
+                head.insertBefore(node, baseElement);
             } else {
-                s.head.appendChild(node);
+                head.appendChild(node);
             }
             currentlyAddingScript = null;
+
             return node;
         } else if (isWebWorker) {
             //In a web worker, use importScripts. This is not a very
@@ -1598,862 +1841,152 @@ var require, define;
             //are in play, the expectation that a build has been done so that
             //only one script needs to be loaded anyway. This may need to be
             //reevaluated if other use cases become common.
-            context = s.contexts[contextName];
-            loaded = context.loaded;
-            loaded[moduleName] = false;
-
             importScripts(url);
 
             //Account for anonymous modules
-            req.completeLoad(moduleName, context);
+            context.completeLoad(moduleName);
         }
-        return null;
     };
 
-    //Determine what baseUrl should be if not already defined via a require config object
-    s.baseUrl = cfg.baseUrl;
-    if (isBrowser &amp;&amp; (!s.baseUrl || !s.head)) {
+    function getInteractiveScript() {
+        if (interactiveScript &amp;&amp; interactiveScript.readyState === 'interactive') {
+            return interactiveScript;
+        }
+
+        eachReverse(scripts(), function (script) {
+            if (script.readyState === 'interactive') {
+                return (interactiveScript = script);
+            }
+        });
+        return interactiveScript;
+    }
+
+    //Look for a data-main script attribute, which could also adjust the baseUrl.
+    if (isBrowser) {
         //Figure out baseUrl. Get it from the script tag with require.js in it.
-        scripts = document.getElementsByTagName("script");
-        if (cfg.baseUrlMatch) {
-            rePkg = cfg.baseUrlMatch;
-        } else {
-
-
-
-                        rePkg = /(allplugins-)?require\.js(\W|$)/i;
-
-                    }
-
-        for (i = scripts.length - 1; i > -1 &amp;&amp; (script = scripts[i]); i--) {
-            //Set the "head" where we can append children by
+        eachReverse(scripts(), function (script) {
+            //Set the 'head' where we can append children by
             //using the script's parent.
-            if (!s.head) {
-                s.head = script.parentNode;
+            if (!head) {
+                head = script.parentNode;
             }
 
             //Look for a data-main attribute to set main script for the page
-            //to load.
-            if (!dataMain &amp;&amp; (dataMain = script.getAttribute('data-main'))) {
+            //to load. If it is there, the path to data main becomes the
+            //baseUrl, if it is not already set.
+            dataMain = script.getAttribute('data-main');
+            if (dataMain) {
+                if (!cfg.baseUrl) {
+                    //Pull off the directory of data-main for use as the
+                    //baseUrl.
+                    src = dataMain.split('/');
+                    mainScript = src.pop();
+                    subPath = src.length ? src.join('/')  + '/' : './';
+
+                    //Set final config.
+                    cfg.baseUrl = subPath;
+                    //Strip off any trailing .js since dataMain is now
+                    //like a module name.
+                    dataMain = mainScript.replace(jsSuffixRegExp, '');
+                }
+
+                //Put the data-main script in the files to load.
                 cfg.deps = cfg.deps ? cfg.deps.concat(dataMain) : [dataMain];
 
-                //Favor using data-main tag as the base URL instead of
-                //trying to pattern-match src values.
-                if (!cfg.baseUrl &amp;&amp; (src = script.src)) {
-                    src = src.split('/');
-                    src.pop();
-                    //Make sure current config gets the value.
-                    s.baseUrl = cfg.baseUrl = src.length ? src.join('/') : './';
-                }
+                return true;
             }
-
-            //Using .src instead of getAttribute to get an absolute URL.
-            //While using a relative URL will be fine for script tags, other
-            //URLs used for text! resources that use XHR calls might benefit
-            //from an absolute URL.
-            if (!s.baseUrl &amp;&amp; (src = script.src)) {
-                m = src.match(rePkg);
-                if (m) {
-                    s.baseUrl = src.substring(0, m.index);
-                    break;
-                }
-            }
-        }
+        });
     }
 
-        //****** START page load functionality ****************
     /**
-     * Sets the page as loaded and triggers check for all modules loaded.
+     * The function that handles definitions of modules. Differs from
+     * require() in that a string for the module should be the first argument,
+     * and the function to execute after dependencies are loaded should
+     * return a value to define the module corresponding to the first argument's
+     * name.
      */
-    req.pageLoaded = function () {
-        if (!s.isPageLoaded) {
-            s.isPageLoaded = true;
-            if (scrollIntervalId) {
-                clearInterval(scrollIntervalId);
-            }
+    define = function (name, deps, callback) {
+        var node, context;
 
-            //Part of a fix for FF &lt; 3.6 where readyState was not set to
-            //complete so libraries like jQuery that check for readyState
-            //after page load where not getting initialized correctly.
-            //Original approach suggested by Andrea Giammarchi:
-            //http://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
-            //see other setReadyState reference for the rest of the fix.
-            if (setReadyState) {
-                document.readyState = "complete";
-            }
-
-            req.callReady();
+        //Allow for anonymous functions
+        if (typeof name !== 'string') {
+            //Adjust args appropriately
+            callback = deps;
+            deps = name;
+            name = null;
         }
-    };
 
-    /**
-     * Internal function that calls back any ready functions. If you are
-     * integrating RequireJS with another library without require.ready support,
-     * you can define this method to call your page ready code instead.
-     */
-    req.callReady = function () {
-        var callbacks = s.readyCalls, i, callback, contexts, context, prop;
+        //This module may not have dependencies
+        if (!isArray(deps)) {
+            callback = deps;
+            deps = [];
+        }
 
-        if (s.isPageLoaded &amp;&amp; s.isDone) {
-            if (callbacks.length) {
-                s.readyCalls = [];
-                for (i = 0; (callback = callbacks[i]); i++) {
-                    callback();
+        //If no name, and callback is a function, then figure out if it a
+        //CommonJS thing with dependencies.
+        if (!deps.length &amp;&amp; isFunction(callback)) {
+            //Remove comments from the callback string,
+            //look for require calls, and pull them into the dependencies,
+            //but only if there are function args.
+            if (callback.length) {
+                callback
+                    .toString()
+                    .replace(commentRegExp, '')
+                    .replace(cjsRequireRegExp, function (match, dep) {
+                        deps.push(dep);
+                    });
+
+                //May be a CommonJS thing even without require calls, but still
+                //could use exports, and module. Avoid doing exports and module
+                //work though if it just needs require.
+                //REQUIRES the function to expect the CommonJS variables in the
+                //order listed below.
+                deps = (callback.length === 1 ? ['require'] : ['require', 'exports', 'module']).concat(deps);
+            }
+        }
+
+        //If in IE 6-8 and hit an anonymous define() call, do the interactive
+        //work.
+        if (useInteractive) {
+            node = currentlyAddingScript || getInteractiveScript();
+            if (node) {
+                if (!name) {
+                    name = node.getAttribute('data-requiremodule');
                 }
-            }
-
-            //If jQuery with readyWait is being tracked, updated its
-            //readyWait count.
-            contexts = s.contexts;
-            for (prop in contexts) {
-                if (!(prop in empty)) {
-                    context = contexts[prop];
-                    if (context.jQueryIncremented) {
-                        context.jQuery.readyWait -= 1;
-                        context.jQueryIncremented = false;
-                    }
-                }
+                context = contexts[node.getAttribute('data-requirecontext')];
             }
         }
+
+        //Always save off evaluating the def call until the script onload handler.
+        //This allows multiple modules to be in a file without prematurely
+        //tracing dependencies, and allows for anonymous module support,
+        //where the module name is not known until the script onload event
+        //occurs. If no context, use the global queue, and get it processed
+        //in the onscript load callback.
+        (context ? context.defQueue : globalDefQueue).push([name, deps, callback]);
     };
+
+    define.amd = {
+        jQuery: false
+    };
+
 
     /**
-     * Registers functions to call when the page is loaded
+     * Executes the text. Normally just uses eval, but can be modified
+     * to use a better, environment-specific call. Only used for transpiling
+     * loader plugins, not for plain JS modules.
+     * @param {String} text the text to execute/evaluate.
      */
-    req.ready = function (callback) {
-        if (s.isPageLoaded &amp;&amp; s.isDone) {
-            callback();
-        } else {
-            s.readyCalls.push(callback);
-        }
-        return req;
+    req.exec = function (text) {
+        /*jslint evil: true */
+        return eval(text);
     };
 
-    if (isBrowser) {
-        if (document.addEventListener) {
-            //Standards. Hooray! Assumption here that if standards based,
-            //it knows about DOMContentLoaded.
-            document.addEventListener("DOMContentLoaded", req.pageLoaded, false);
-            window.addEventListener("load", req.pageLoaded, false);
-            //Part of FF &lt; 3.6 readystate fix (see setReadyState refs for more info)
-            if (!document.readyState) {
-                setReadyState = true;
-                document.readyState = "loading";
-            }
-        } else if (window.attachEvent) {
-            window.attachEvent("onload", req.pageLoaded);
-
-            //DOMContentLoaded approximation, as found by Diego Perini:
-            //http://javascript.nwbox.com/IEContentLoaded/
-            if (self === self.top) {
-                scrollIntervalId = setInterval(function () {
-                    try {
-                        //From this ticket:
-                        //http://bugs.dojotoolkit.org/ticket/11106,
-                        //In IE HTML Application (HTA), such as in a selenium test,
-                        //javascript in the iframe can't see anything outside
-                        //of it, so self===self.top is true, but the iframe is
-                        //not the top window and doScroll will be available
-                        //before document.body is set. Test document.body
-                        //before trying the doScroll trick.
-                        if (document.body) {
-                            document.documentElement.doScroll("left");
-                            req.pageLoaded();
-                        }
-                    } catch (e) {}
-                }, 30);
-            }
-        }
-
-        //Check if document already complete, and if so, just trigger page load
-        //listeners. NOTE: does not work with Firefox before 3.6. To support
-        //those browsers, manually call require.pageLoaded().
-        if (document.readyState === "complete") {
-            req.pageLoaded();
-        }
-    }
-    //****** END page load functionality ****************
-
-    //Set up default context. If require was a configuration object, use that as base config.
+    //Set up with config info.
     req(cfg);
+}(this));
 
-    //If modules are built into require.js, then need to make sure dependencies are
-    //traced. Use a setTimeout in the browser world, to allow all the modules to register
-    //themselves. In a non-browser env, assume that modules are not built into require.js,
-    //which seems odd to do on the server.
-    if (typeof setTimeout !== "undefined") {
-        setTimeout(function () {
-            var ctx = s.contexts[(cfg.context || defContextName)];
-            //Allow for jQuery to be loaded/already in the page, and if jQuery 1.4.3,
-            //make sure to hold onto it for readyWait triggering.
-            jQueryCheck(ctx);
-            resume(ctx);
-        }, 0);
-    }
-}());
-
-/**
- * @license RequireJS i18n Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/requirejs for details
- */
-/*jslint white: false, regexp: false, nomen: false, plusplus: false */
-/*global require: false, navigator: false */
-
-
-/**
- * This plugin handles i18n! prefixed modules. It does the following:
- *
- * 1) A regular module can have a dependency on an i18n bundle, but the regular
- * module does not want to specify what locale to load. So it just specifies
- * the top-level bundle, like "i18n!nls/colors".
- *
- * This plugin will load the i18n bundle at nls/colors, see that it is a root/master
- * bundle since it does not have a locale in its name. It will then try to find
- * the best match locale available in that master bundle, then request all the
- * locale pieces for that best match locale. For instance, if the locale is "en-us",
- * then the plugin will ask for the "en-us", "en" and "root" bundles to be loaded
- * (but only if they are specified on the master bundle).
- *
- * Once all the bundles for the locale pieces load, then it mixes in all those
- * locale pieces into each other, then finally sets the context.defined value
- * for the nls/colors bundle to be that mixed in locale.
- *
- * 2) A regular module specifies a specific locale to load. For instance,
- * i18n!nls/fr-fr/colors. In this case, the plugin needs to load the master bundle
- * first, at nls/colors, then figure out what the best match locale is for fr-fr,
- * since maybe only fr or just root is defined for that locale. Once that best
- * fit is found, all of its locale pieces need to have their bundles loaded.
- *
- * Once all the bundles for the locale pieces load, then it mixes in all those
- * locale pieces into each other, then finally sets the context.defined value
- * for the nls/fr-fr/colors bundle to be that mixed in locale.
- */
-(function () {
-    //regexp for reconstructing the master bundle name from parts of the regexp match
-    //nlsRegExp.exec("foo/bar/baz/nls/en-ca/foo") gives:
-    //["foo/bar/baz/nls/en-ca/foo", "foo/bar/baz/nls/", "/", "/", "en-ca", "foo"]
-    //nlsRegExp.exec("foo/bar/baz/nls/foo") gives:
-    //["foo/bar/baz/nls/foo", "foo/bar/baz/nls/", "/", "/", "foo", ""]
-    //so, if match[5] is blank, it means this is the top bundle definition.
-    var nlsRegExp = /(^.*(^|\/)nls(\/|$))([^\/]*)\/?([^\/]*)/,
-        empty = {};
-
-    function getWaiting(name, context) {
-        var nlswAry = context.nlsWaiting;
-        return nlswAry[name] ||
-               //Push a new waiting object on the nlsWaiting array, but also put
-               //a shortcut lookup by name to the object on the array.
-               (nlswAry[name] = nlswAry[(nlswAry.push({ _name: name}) - 1)]);
-    }
-
-    /**
-     * Makes sure all the locale pieces are loaded, and finds the best match
-     * for the requested locale.
-     */
-    function resolveLocale(masterName, bundle, locale, context) {
-        //Break apart the locale to get the parts.
-        var i, parts, toLoad, nlsw, loc, val, bestLoc = "root";
-
-        parts = locale.split("-");
-
-        //Now see what bundles exist for each country/locale.
-        //Want to walk up the chain, so if locale is en-us-foo,
-        //look for en-us-foo, en-us, en, then root.
-        toLoad = [];
-
-        nlsw = getWaiting(masterName, context);
-
-        for (i = parts.length; i > -1; i--) {
-            loc = i ? parts.slice(0, i).join("-") : "root";
-            val = bundle[loc];
-            if (val) {
-                //Store which bundle to use for the default bundle definition.
-                if (locale === context.config.locale &amp;&amp; !nlsw._match) {
-                    nlsw._match = loc;
-                }
-
-                //Store the best match for the target locale
-                if (bestLoc === "root") {
-                    bestLoc = loc;
-                }
-
-                //Track that the locale needs to be resolved with its parts.
-                //Mark what locale should be used when resolving.
-                nlsw[loc] = loc;
-
-                //If locale value is true, it means it is a resource that
-                //needs to be loaded. Track it to load if it has not already
-                //been asked for.
-                if (val === true) {
-                    //split off the bundl name from master name and insert the
-                    //locale before the bundle name. So, if masterName is
-                    //some/path/nls/colors, then the locale fr-fr's bundle name should
-                    //be some/path/nls/fr-fr/colors
-                    val = masterName.split("/");
-                    val.splice(-1, 0, loc);
-                    val = val.join("/");
-
-                    if (!context.specified[val] &amp;&amp; !(val in context.loaded) &amp;&amp; !context.defined[val]) {
-                        context.defPlugin[val] = 'i18n';
-                        toLoad.push(val);
-                    }
-                }
-            }
-        }
-
-        //If locale was not an exact match, store the closest match for it.
-        if (bestLoc !== locale) {
-            if (context.defined[bestLoc]) {
-                //Already got it. Easy peasy lemon squeezy.
-                context.defined[locale] = context.defined[bestLoc];
-            } else {
-                //Need to wait for things to load then define it.
-                nlsw[locale] = bestLoc;
-            }
-        }
-
-        //Load any bundles that are still needed.
-        if (toLoad.length) {
-            require(toLoad, context.contextName);
-        }
-    }
-
-    require.plugin({
-        prefix: "i18n",
-
-        /**
-         * This callback is prefix-specific, only gets called for this prefix
-         */
-        require: function (name, deps, callback, context) {
-            var i, match, nlsw, bundle, master, toLoad, obj = context.defined[name];
-
-            //All i18n modules must match the nls module name structure.
-            match = nlsRegExp.exec(name);
-            //If match[5] is blank, it means this is the top bundle definition,
-            //so it does not have to be handled. Only deal with ones that have a locale
-            //(a match[4] value but no match[5])
-            if (match[5]) {
-                master = match[1] + match[5];
-
-                //Track what locale bundle need to be generated once all the modules load.
-                nlsw = getWaiting(master, context);
-                nlsw[match[4]] = match[4];
-
-                bundle = context.nls[master];
-                if (!bundle) {
-                    //No master bundle yet, ask for it.
-                    context.defPlugin[master] = 'i18n';
-                    require([master], context.contextName);
-                    bundle = context.nls[master] = {};
-                }
-                //For nls modules, the callback is just a regular object,
-                //so save it off in the bundle now.
-                bundle[match[4]] = callback;
-            } else {
-                //Integrate bundle into the nls area.
-                bundle = context.nls[name];
-                if (bundle) {
-                    //A specific locale already started the bundle object.
-                    //Do a mixin (which will not overwrite the locale property
-                    //on the bundle that has the previously loaded locale's info)
-                    require.mixin(bundle, obj);
-                } else {
-                    bundle = context.nls[name] = obj;
-                }
-                context.nlsRootLoaded[name] = true;
-
-                //Make sure there are no locales waiting to be resolved.
-                toLoad = context.nlsToLoad[name];
-                if (toLoad) {
-                    delete context.nlsToLoad[name];
-                    for (i = 0; i &lt; toLoad.length; i++) {
-                        resolveLocale(name, bundle, toLoad[i], context);
-                    }
-                }
-
-                resolveLocale(name, bundle, context.config.locale, context);
-            }
-        },
-
-        /**
-         * Called when a new context is defined. Use this to store
-         * context-specific info on it.
-         */
-        newContext: function (context) {
-            require.mixin(context, {
-                nlsWaiting: [],
-                nls: {},
-                nlsRootLoaded: {},
-                nlsToLoad: {}
-            });
-            if (!context.config.locale) {
-                context.config.locale = typeof navigator === "undefined" ? "root" :
-                        (navigator.language || navigator.userLanguage || "root").toLowerCase();
-            }
-        },
-
-        /**
-         * Called when a dependency needs to be loaded.
-         */
-        load: function (name, contextName) {
-            //Make sure the root bundle is loaded, to check if we can support
-            //loading the requested locale, or if a different one needs
-            //to be chosen.
-            var masterName, context = require.s.contexts[contextName], bundle,
-                match = nlsRegExp.exec(name), locale = match[4];
-
-            //If match[5] is blank, it means this is the top bundle definition,
-            //so it does not have to be handled. Only deal with ones that have a locale
-            //(a match[4] value but no match[5])
-            if (match[5]) {
-                //locale-specific bundle
-                masterName = match[1] + match[5];
-                bundle = context.nls[masterName];
-                if (context.nlsRootLoaded[masterName] &amp;&amp; bundle) {
-                    resolveLocale(masterName, bundle, locale, context);
-                } else {
-                    //Store this locale to figure out after masterName is loaded and load masterName.
-                    (context.nlsToLoad[masterName] || (context.nlsToLoad[masterName] = [])).push(locale);
-                    context.defPlugin[masterName] = 'i18n';
-                    require([masterName], contextName);
-                }
-            } else {
-                //Top-level bundle. Just call regular load, if not already loaded
-                if (!context.nlsRootLoaded[name]) {
-                    context.defPlugin[name] = 'i18n';
-                    require.load(name, contextName);
-                }
-            }
-        },
-
-        /**
-         * Called when the dependencies of a module are checked.
-         */
-        checkDeps: function (name, deps, context) {
-            //i18n bundles are always defined as objects for their "dependencies",
-            //and that object is already processed in the require method, no need to
-            //do work in here.
-        },
-
-        /**
-         * Called to determine if a module is waiting to load.
-         */
-        isWaiting: function (context) {
-            return !!context.nlsWaiting.length;
-        },
-
-        /**
-         * Called when all modules have been loaded.
-         */
-        orderDeps: function (context) {
-            //Clear up state since further processing could
-            //add more things to fetch.
-            var i, j, master, msWaiting, bundle, parts, moduleSuffix, mixed,
-                modulePrefix, loc, defLoc, locPart, nlsWaiting = context.nlsWaiting,
-                bestFit;
-            context.nlsWaiting = [];
-            context.nlsToLoad = {};
-
-            //First, properly mix in any nls bundles waiting to happen.
-            for (i = 0; (msWaiting = nlsWaiting[i]); i++) {
-                //Each property is a master bundle name.
-                master = msWaiting._name;
-                bundle = context.nls[master];
-                defLoc = null;
-
-                //Create the module name parts from the master name. So, if master
-                //is foo/nls/bar, then the parts should be prefix: "foo/nls",
-                // suffix: "bar", and the final locale's module name will be foo/nls/locale/bar
-                parts = master.split("/");
-                modulePrefix = parts.slice(0, parts.length - 1).join("/");
-                moduleSuffix = parts[parts.length - 1];
-                //Cycle through the locale props on the waiting object and combine
-                //the locales together.
-                for (loc in msWaiting) {
-                    if (loc !== "_name" &amp;&amp; !(loc in empty)) {
-                        if (loc === "_match") {
-                            //Found default locale to use for the top-level bundle name.
-                            defLoc = msWaiting[loc];
-
-                        } else if (msWaiting[loc] !== loc) {
-                            //A "best fit" locale, store it off to the end and handle
-                            //it at the end by just assigning the best fit value, since
-                            //after this for loop, the best fit locale will be defined.
-                            (bestFit || (bestFit = {}))[loc] = msWaiting[loc];
-                        } else {
-                            //Mix in the properties of this locale together.
-                            //Split the locale into pieces.
-                            mixed = {};
-                            parts = loc.split("-");
-                            for (j = parts.length; j > 0; j--) {
-                                locPart = parts.slice(0, j).join("-");
-                                if (locPart !== "root" &amp;&amp; bundle[locPart]) {
-                                    require.mixin(mixed, bundle[locPart]);
-                                }
-                            }
-                            if (bundle.root) {
-                                require.mixin(mixed, bundle.root);
-                            }
-
-                            context.defined[modulePrefix + "/" + loc + "/" + moduleSuffix] = mixed;
-                        }
-                    }
-                }
-
-                //Finally define the default locale. Wait to the end of the property
-                //loop above so that the default locale bundle has been properly mixed
-                //together.
-                context.defined[master] = context.defined[modulePrefix + "/" + defLoc + "/" + moduleSuffix];
-
-                //Handle any best fit locale definitions.
-                if (bestFit) {
-                    for (loc in bestFit) {
-                        if (!(loc in empty)) {
-                            context.defined[modulePrefix + "/" + loc + "/" + moduleSuffix] = context.defined[modulePrefix + "/" + bestFit[loc] + "/" + moduleSuffix];
-                        }
-                    }
-                }
-            }
-        }
-    });
-}());
-/**
- * @license RequireJS text Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/requirejs for details
- */
-/*jslint white: false, regexp: false, nomen: false, plusplus: false */
-/*global require: false, XMLHttpRequest: false, ActiveXObject: false */
-
-
-(function () {
-    var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
-        xmlRegExp = /^\s*&lt;\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im,
-        bodyRegExp = /&lt;body[^>]*>\s*([\s\S]+)\s*&lt;\/body>/im;
-
-    if (!require.textStrip) {
-        require.textStrip = function (text) {
-            //Strips &lt;?xml ...?> declarations so that external SVG and XML
-            //documents can be added to a document without worry. Also, if the string
-            //is an HTML document, only the part inside the body tag is returned.
-            if (text) {
-                text = text.replace(xmlRegExp, "");
-                var matches = text.match(bodyRegExp);
-                if (matches) {
-                    text = matches[1];
-                }
-            } else {
-                text = "";
-            }
-            return text;
-        };
-    }
-
-    //Upgrade require to add some methods for XHR handling. But it could be that
-    //this require is used in a non-browser env, so detect for existing method
-    //before attaching one.
-    if (!require.getXhr) {
-        require.getXhr = function () {
-            //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
-            var xhr, i, progId;
-            if (typeof XMLHttpRequest !== "undefined") {
-                return new XMLHttpRequest();
-            } else {
-                for (i = 0; i &lt; 3; i++) {
-                    progId = progIds[i];
-                    try {
-                        xhr = new ActiveXObject(progId);
-                    } catch (e) {}
-
-                    if (xhr) {
-                        progIds = [progId];  // so faster next time
-                        break;
-                    }
-                }
-            }
-
-            if (!xhr) {
-                throw new Error("require.getXhr(): XMLHttpRequest not available");
-            }
-
-            return xhr;
-        };
-    }
-
-    if (!require.fetchText) {
-        require.fetchText = function (url, callback) {
-            var xhr = require.getXhr();
-            xhr.open('GET', url, true);
-            xhr.onreadystatechange = function (evt) {
-                //Do not explicitly handle errors, those should be
-                //visible via console output in the browser.
-                if (xhr.readyState === 4) {
-                    callback(xhr.responseText);
-                }
-            };
-            xhr.send(null);
-        };
-    }
-
-    require.plugin({
-        prefix: "text",
-
-        /**
-         * This callback is prefix-specific, only gets called for this prefix
-         */
-        require: function (name, deps, callback, context) {
-            //No-op, require never gets these text items, they are always
-            //a dependency, see load for the action.
-        },
-
-        /**
-         * Called when a new context is defined. Use this to store
-         * context-specific info on it.
-         */
-        newContext: function (context) {
-            require.mixin(context, {
-                text: {},
-                textWaiting: []
-            });
-        },
-
-        /**
-         * Called when a dependency needs to be loaded.
-         */
-        load: function (name, contextName) {
-            //Name has format: some.module!filext!strip!text
-            //The strip and text parts are optional.
-            //if strip is present, then that means only get the string contents
-            //inside a body tag in an HTML string. For XML/SVG content it means
-            //removing the &lt;?xml ...?> declarations so the content can be inserted
-            //into the current doc without problems.
-            //If text is present, it is the actual text of the file.
-            var strip = false, text = null, key, url, index = name.indexOf("."),
-                modName = name.substring(0, index), fullKey,
-                ext = name.substring(index + 1, name.length),
-                context = require.s.contexts[contextName],
-                tWaitAry = context.textWaiting;
-
-            index = ext.indexOf("!");
-            if (index !== -1) {
-                //Pull off the strip arg.
-                strip = ext.substring(index + 1, ext.length);
-                ext = ext.substring(0, index);
-                index = strip.indexOf("!");
-                if (index !== -1 &amp;&amp; strip.substring(0, index) === "strip") {
-                    //Pull off the text.
-                    text = strip.substring(index + 1, strip.length);
-                    strip = "strip";
-                } else if (strip !== "strip") {
-                    //strip is actually the inlined text.
-                    text = strip;
-                    strip = null;
-                }
-            }
-            key = modName + "!" + ext;
-            fullKey = strip ? key + "!" + strip : key;
-
-            //Store off text if it is available for the given key and be done.
-            if (text !== null &amp;&amp; !context.text[key]) {
-                context.defined[name] = context.text[key] = text;
-                return;
-            }
-
-            //If text is not available, load it.
-            if (!context.text[key] &amp;&amp; !context.textWaiting[key] &amp;&amp; !context.textWaiting[fullKey]) {
-                //Keep track that the fullKey needs to be resolved, during the
-                //orderDeps stage.
-                if (!tWaitAry[fullKey]) {
-                    tWaitAry[fullKey] = tWaitAry[(tWaitAry.push({
-                        name: name,
-                        key: key,
-                        fullKey: fullKey,
-                        strip: !!strip
-                    }) - 1)];
-                }
-
-                //Load the text.
-                url = require.nameToUrl(modName, "." + ext, contextName);
-                context.loaded[name] = false;
-                require.fetchText(url, function (text) {
-                    context.text[key] = text;
-                    context.loaded[name] = true;
-                });
-            }
-        },
-
-        /**
-         * Called when the dependencies of a module are checked.
-         */
-        checkDeps: function (name, deps, context) {
-            //No-op, checkDeps never gets these text items, they are always
-            //a dependency, see load for the action.
-        },
-
-        /**
-         * Called to determine if a module is waiting to load.
-         */
-        isWaiting: function (context) {
-            return !!context.textWaiting.length;
-        },
-
-        /**
-         * Called when all modules have been loaded.
-         */
-        orderDeps: function (context) {
-            //Clear up state since further processing could
-            //add more things to fetch.
-            var i, dep, text, tWaitAry = context.textWaiting;
-            context.textWaiting = [];
-            for (i = 0; (dep = tWaitAry[i]); i++) {
-                text = context.text[dep.key];
-                context.defined[dep.name] = dep.strip ? require.textStrip(text) : text;
-            }
-        }
-    });
-}());
-/**
- * @license RequireJS order Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/requirejs for details
- */
-/*jslint white: false, nomen: false, plusplus: false */
-/*global require: false, window: false, document: false, setTimeout: false */
-
-
-(function () {
-    //Sadly necessary browser inference due to differences in the way
-    //that browsers load and execute dynamically inserted javascript
-    //and whether the script/cache method works.
-    //Currently, Gecko and Opera do not load/fire onload for scripts with
-    //type="script/cache" but they execute injected scripts in order
-    //unless the 'async' flag is present.
-    //However, this is all changing in latest browsers implementing HTML5
-    //spec. Firefox nightly supports using the .async true by default, and
-    //if false, then it will execute in order. Favor that test first for forward
-    //compatibility. However, it is unclear if webkit/IE will follow suit.
-    //Latest webkit breaks the script/cache trick.
-    var supportsInOrderExecution = (document.createElement("script").async ||
-                               (window.opera &amp;&amp; Object.prototype.toString.call(window.opera) === "[object Opera]") ||
-                               //If Firefox 2 does not have to be supported, then
-                               //a better check may be:
-                               //('mozIsLocallyAvailable' in window.navigator)
-                               ("MozAppearance" in document.documentElement.style)),
-        readyRegExp = /^(complete|loaded)$/;
-
-    //Callback used by the type="script/cache" callback that indicates a script
-    //has finished downloading.
-    function scriptCacheCallback(evt) {
-        var node = evt.currentTarget || evt.srcElement, i,
-            context, contextName, moduleName, waiting, cached;
-
-        if (evt.type === "load" || readyRegExp.test(node.readyState)) {
-            //Pull out the name of the module and the context.
-            contextName = node.getAttribute("data-requirecontext");
-            moduleName = node.getAttribute("data-requiremodule");
-            context = require.s.contexts[contextName];
-            waiting = context.orderWaiting;
-            cached = context.orderCached;
-
-            //Mark this cache request as loaded
-            cached[moduleName] = true;
-
-            //Find out how many ordered modules have loaded
-            for (i = 0; cached[waiting[i]]; i++) {}
-            if (i > 0) {
-                require(waiting.splice(0, i), contextName);
-            }
-
-            //If no other order cache items are in the queue, do some cleanup.
-            if (!waiting.length) {
-                context.orderCached = {};
-            }
-
-            //Remove this script tag from the DOM
-            //Use a setTimeout for cleanup because some older IE versions vomit
-            //if removing a script node while it is being evaluated.
-            setTimeout(function () {
-                node.parentNode.removeChild(node);
-            }, 15);
-        }
-    }
-
-    require.plugin({
-        prefix: "order",
-
-        /**
-         * This callback is prefix-specific, only gets called for this prefix
-         */
-        require: function (name, deps, callback, context) {
-            //No-op, require never gets these order items, they are always
-            //a dependency, see load for the action.
-        },
-
-        /**
-         * Called when a new context is defined. Use this to store
-         * context-specific info on it.
-         */
-        newContext: function (context) {
-            require.mixin(context, {
-                orderWaiting: [],
-                orderCached: {}
-            });
-        },
-
-        /**
-         * Called when a dependency needs to be loaded.
-         */
-        load: function (name, contextName) {
-            var context = require.s.contexts[contextName],
-                url = require.nameToUrl(name, null, contextName);
-
-            //Make sure the async attribute is not set for any pathway involving
-            //this script.
-            require.s.skipAsync[url] = true;
-            if (supportsInOrderExecution) {
-                //Just a normal script tag append, but without async attribute
-                //on the script.
-                require([name], contextName);
-            } else {
-                //Credit to LABjs author Kyle Simpson for finding that scripts
-                //with type="script/cache" allow scripts to be downloaded into
-                //browser cache but not executed. Use that
-                //so that subsequent addition of a real type="text/javascript"
-                //tag will cause the scripts to be executed immediately in the
-                //correct order.
-                context.orderWaiting.push(name);
-                context.loaded[name] = false;
-                require.attach(url, contextName, name, scriptCacheCallback, "script/cache");
-            }
-        },
-
-        /**
-         * Called when the dependencies of a module are checked.
-         */
-        checkDeps: function (name, deps, context) {
-            //No-op, checkDeps never gets these order items, they are always
-            //a dependency, see load for the action.
-        },
-
-        /**
-         * Called to determine if a module is waiting to load.
-         */
-        isWaiting: function (context) {
-            return !!context.orderWaiting.length;
-        },
-
-        /**
-         * Called when all modules have been loaded. Not needed for this plugin.
-         * State is reset as part of scriptCacheCallback.
-         */
-        orderDeps: function (context) {
-        }
-    });
-}());
-
-//Target build file for a require.js that has all of require's functionality,
-//and includes specific plugins: i18n and text.
+require.def = define;
 </code></pre>
         </article>
     </section>
@@ -2464,13 +1997,13 @@ var require, define;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

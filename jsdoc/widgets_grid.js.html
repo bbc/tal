@@ -52,17 +52,23 @@ define(
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {Integer} cols The number of columns in the grid.
          * @param {Integer} rows The number of rows in the grid.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          */
         var Grid = Container.extend(/** @lends antie.widgets.Grid.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function (id, cols, rows) {
-                this._super(id);
+            init: function init (id, cols, rows, horizontalWrapping, verticalWrapping) {
+                init.base.call(this, id);
                 this.addClass('grid');
+
                 this._cols = cols;
                 this._rows = rows;
+
+                this._horizontalWrapping =  !!horizontalWrapping;
+                this._verticalWrapping = !!verticalWrapping;
 
                 this._selectedRow = 0;
                 this._selectedCol = 0;
@@ -82,16 +88,16 @@ define(
              * @param {Integer} row The row the widget it in
              * @returns The widget in the specified column and row
              */
-            getWidgetAt: function (col, row) {
+            getWidgetAt: function getWidgetAt (col, row) {
                 return this._childWidgetOrder[(this._cols * row) + col];
             },
             /**
              * Positions a widget at the specified column and row.
              * @param {Integer} col The column to position the widget in
              * @param {Integer} row The row to position the widget in
-             * @returns The widget to position
+             * @param {antie.widgets.Widget} widget The widget to add
              */
-            setWidgetAt: function (col, row, widget) {
+            setWidgetAt: function setWidgetAt (col, row, widget) {
                 if (!this.hasChildWidget(widget.id)) {
                     this._childWidgets[widget.id] = widget;
                     this._childWidgetOrder[(this._cols * row) + col] = widget;
@@ -119,7 +125,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 if (!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
                 } else {
@@ -154,18 +160,18 @@ define(
                 return this.outputElement;
             },
             /**
-             * Appends a child widget to this widget. Not supported for Grids.
+             * Appends a child widget to this widget. Not supported for Grids - use setWidgetAt() instead.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (/*widget*/) {
-                throw new Error('Not supported');
+            appendChildWidget: function appendChildWidget (/*widget*/) {
+                throw new Error('Not supported for Grids - use setWidgetAt() instead.');
             },
             /**
              * Inserts a child widget at the specified index. Not supported for Grids.
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (/*index, widget*/) {
+            insertChildWidget: function insertChildWidget (/*index, widget*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -173,7 +179,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass &lt;code>true&lt;/code> to retain the child output element of the given widget
              */
-            removeChildWidget: function (/*widget, retainElement*/) {
+            removeChildWidget: function removeChildWidget (/*widget, retainElement*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -192,9 +198,9 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function (widget) {
+            setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
-                if (this._super(widget)) {
+                if (setActiveChildWidget.base.call(this, widget)) {
                     var selectedIndex = this.getIndexOfChildWidget(widget);
                     this._selectedRow = Math.floor(selectedIndex / this._cols);
                     this._selectedCol = Math.floor(selectedIndex % this._cols);
@@ -213,7 +219,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function (evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if (evt.keyCode !== KeyEvent.VK_UP &amp;&amp; evt.keyCode !== KeyEvent.VK_DOWN &amp;&amp;
                     evt.keyCode !== KeyEvent.VK_LEFT &amp;&amp; evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
@@ -232,11 +238,37 @@ define(
                     } else if (evt.keyCode === KeyEvent.VK_RIGHT) {
                         _newSelectedCol++;
                     }
-                    if (_newSelectedCol &lt; 0 || _newSelectedCol >= this._cols) {
-                        break;
+
+                    if (_newSelectedCol &lt; 0) {
+                        if(this._horizontalWrapping) {
+                            _newSelectedCol = this._cols - 1;
+                        } else {
+                            break;
+                        }
                     }
-                    if (_newSelectedRow &lt; 0 || _newSelectedRow >= this._rows) {
-                        break;
+
+                    if(_newSelectedCol >= this._cols) {
+                        if(this._horizontalWrapping) {
+                            _newSelectedCol = 0;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (_newSelectedRow &lt; 0) {
+                        if(this._verticalWrapping) {
+                            _newSelectedRow = this._rows - 1;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if(_newSelectedRow >= this._rows) {
+                        if(this._verticalWrapping) {
+                            _newSelectedRow = 0;
+                        } else {
+                            break;
+                        }
                     }
 
                     var _newSelectedIndex = (_newSelectedRow * this._cols) + _newSelectedCol;
@@ -258,7 +290,7 @@ define(
              * Broadcasts an event from the application level to every single
              * object it contains.
              */
-            broadcastEvent: function (evt) {
+            broadcastEvent: function broadcastEvent (evt) {
                 this.fireEvent(evt);
                 if (!evt.isPropagationStopped()) {
                     for (var i = 0; i &lt; this._childWidgetOrder.length; i++) {
@@ -271,6 +303,18 @@ define(
                 }
             }
         });
+
+        Grid.WRAP_MODE = {
+            HORIZONTAL: {
+                ON: 1,
+                OFF: 0
+            },
+
+            VERTICAL: {
+                ON: 1,
+                OFF: 0
+            }
+        };
 
         return Grid;
     }
@@ -285,13 +329,13 @@ define(
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

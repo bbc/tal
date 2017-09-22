@@ -40,7 +40,7 @@
 
     
 
-    <h4 class="name" id="Keyboard"><span class="type-signature"></span>new Keyboard<span class="signature">(id<span class="signature-attributes">opt</span>, cols, rows, keys)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Keyboard"><span class="type-signature"></span>new Keyboard<span class="signature">(id<span class="signature-attributes">opt</span>, cols, rows, keys, horizontalWrapping, verticalWrapping)</span><span class="type-signature"></span></h4>
 
     
 
@@ -204,7 +204,69 @@
 
             
 
-            <td class="description last">A string of characters which make up the keys, starting top-left and working row-by-row to the bottom-right.
+            <td class="description last">A string of characters which make up the keys, starting top-left and working row-by-row to the bottom-right.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>horizontalWrapping</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Enable or disable horizontal wrapping.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>verticalWrapping</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Enable or disable vertical wrapping.
          Special characters include:
              "-" DEL
              " " SPACE
@@ -416,7 +478,7 @@ spatial navigation out of the list.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line188">line 188</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -756,7 +818,7 @@ spatial navigation out of the list.
 
 
 <div class="description">
-    Appends a child widget to this widget. Not supported for Grids.
+    Appends a child widget to this widget. Not supported for Grids - use setWidgetAt() instead.
 </div>
 
 
@@ -854,7 +916,7 @@ spatial navigation out of the list.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line132">line 132</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -942,7 +1004,7 @@ object it contains.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line233">line 233</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -1509,7 +1571,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line267">line 267</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line274">line 274</a>
     </li></ul></dd>
     
 
@@ -2306,7 +2368,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line296">line 296</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line303">line 303</a>
     </li></ul></dd>
     
 
@@ -2398,7 +2460,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line237">line 237</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -2490,7 +2552,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line252">line 252</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line259">line 259</a>
     </li></ul></dd>
     
 
@@ -2659,7 +2721,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line57">line 57</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -3477,7 +3539,7 @@ the current 'active' path.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line140">line 140</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -4460,7 +4522,7 @@ add.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line148">line 148</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line154">line 154</a>
     </li></ul></dd>
     
 
@@ -5072,7 +5134,7 @@ add.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line94">line 94</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -5366,7 +5428,7 @@ add.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line274">line 274</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -5512,7 +5574,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line167">line 167</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line173">line 173</a>
     </li></ul></dd>
     
 
@@ -5654,7 +5716,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line260">line 260</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line267">line 267</a>
     </li></ul></dd>
     
 
@@ -5921,7 +5983,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line289">line 289</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line296">line 296</a>
     </li></ul></dd>
     
 
@@ -6052,7 +6114,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line230">line 230</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -6183,7 +6245,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line244">line 244</a>
+        <a href="widgets_keyboard.js.html">widgets/keyboard.js</a>, <a href="widgets_keyboard.js.html#line251">line 251</a>
     </li></ul></dd>
     
 
@@ -6214,7 +6276,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
 
     
 
-    <h4 class="name" id="setWidgetAt"><span class="type-signature"></span>setWidgetAt<span class="signature">(col, row)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setWidgetAt"><span class="type-signature"></span>setWidgetAt<span class="signature">(col, row, widget)</span><span class="type-signature"></span></h4>
 
     
 
@@ -6300,6 +6362,29 @@ Classes 'active' and 'focus' are appended to widgets with these states.
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>widget</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="antie.widgets.Widget.html">antie.widgets.Widget</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The widget to add</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -6342,7 +6427,7 @@ Classes 'active' and 'focus' are appended to widgets with these states.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line66">line 66</a>
+        <a href="widgets_grid.js.html">widgets/grid.js</a>, <a href="widgets_grid.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -6365,16 +6450,6 @@ Classes 'active' and 'focus' are appended to widgets with these states.
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The widget to position
-</div>
-
-
-
-    
 
 
 
@@ -6761,13 +6836,13 @@ Classes 'active' and 'focus' are appended to widgets with these states.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.Application.html">Application</a></li><li><a href="antie.AudioSource.html">AudioSource</a></li><li><a href="antie.CallbackManager.html">CallbackManager</a></li><li><a href="antie.Class.html">Class</a></li><li><a href="antie.DataSource.html">DataSource</a></li><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.Formatter.html">Formatter</a></li><li><a href="antie.Iterator.html">Iterator</a></li><li><a href="antie.MediaSource.html">MediaSource</a></li><li><a href="antie.URLBuilder.html">URLBuilder</a></li><li><a href="antie.VideoSource.html">VideoSource</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#back">back</a></li><li><a href="global.html#checkDeps">checkDeps</a></li><li><a href="global.html#forward">forward</a></li><li><a href="global.html#hasBroadcastOrigin">hasBroadcastOrigin</a></li><li><a href="global.html#hasHistory">hasHistory</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#isWaiting">isWaiting</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#newContext">newContext</a></li><li><a href="global.html#orderDeps">orderDeps</a></li><li><a href="global.html#require">require</a></li><li><a href="global.html#toString">toString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="antie.devices.BrowserDevice.html">BrowserDevice</a></li><li><a href="antie.devices.Device.html">Device</a></li><li><a href="antie.events.AfterAlignEvent.html">AfterAlignEvent</a></li><li><a href="antie.events.BeforeAlignEvent.html">BeforeAlignEvent</a></li><li><a href="antie.events.BeforeSelectedItemChangeEvent.html">BeforeSelectedItemChangeEvent</a></li><li><a href="antie.events.BlurEvent.html">BlurEvent</a></li><li><a href="antie.events.ComponentEvent.html">ComponentEvent</a></li><li><a href="antie.events.DataBoundEvent.html">DataBoundEvent</a></li><li><a href="antie.events.Event.html">Event</a></li><li><a href="antie.events.FocusDelayEvent.html">FocusDelayEvent</a></li><li><a href="antie.events.FocusEvent.html">FocusEvent</a></li><li><a href="antie.events.KeyEvent.html">KeyEvent</a></li><li><a href="antie.events.MediaErrorEvent.html">MediaErrorEvent</a></li><li><a href="antie.events.MediaEvent.html">MediaEvent</a></li><li><a href="antie.events.MediaSourceErrorEvent.html">MediaSourceErrorEvent</a></li><li><a href="antie.events.NetworkStatusChangeEvent.html">NetworkStatusChangeEvent</a></li><li><a href="antie.events.PageChangeEvent.html">PageChangeEvent</a></li><li><a href="antie.events.SelectedItemChangeEvent.html">SelectedItemChangeEvent</a></li><li><a href="antie.events.SelectEvent.html">SelectEvent</a></li><li><a href="antie.events.SliderChangeEvent.html">SliderChangeEvent</a></li><li><a href="antie.events.TextChangeEvent.html">TextChangeEvent</a></li><li><a href="antie.events.TextPageChangeEvent.html">TextPageChangeEvent</a></li><li><a href="antie.events.TunerPresentingEvent.html">TunerPresentingEvent</a></li><li><a href="antie.events.TunerStoppedEvent.html">TunerStoppedEvent</a></li><li><a href="antie.events.TunerUnavailableEvent.html">TunerUnavailableEvent</a></li><li><a href="antie.widgets.Button.html">Button</a></li><li><a href="antie.widgets.Carousel.html">Carousel</a></li><li><a href="antie.widgets.Component.html">Component</a></li><li><a href="antie.widgets.ComponentContainer.html">ComponentContainer</a></li><li><a href="antie.widgets.Container.html">Container</a></li><li><a href="antie.widgets.Grid.html">Grid</a></li><li><a href="antie.widgets.HorizontalCarousel.html">HorizontalCarousel</a></li><li><a href="antie.widgets.HorizontalList.html">HorizontalList</a></li><li><a href="antie.widgets.HorizontalProgress.html">HorizontalProgress</a></li><li><a href="antie.widgets.HorizontalSlider.html">HorizontalSlider</a></li><li><a href="antie.widgets.Image.html">Image</a></li><li><a href="antie.widgets.Keyboard.html">Keyboard</a></li><li><a href="antie.widgets.Label.html">Label</a></li><li><a href="antie.widgets.List.html">List</a></li><li><a href="antie.widgets.ScrubBar.html">ScrubBar</a></li><li><a href="antie.widgets.TextPager.html">TextPager</a></li><li><a href="antie.widgets.VerticalList.html">VerticalList</a></li><li><a href="antie.widgets.Widget.html">Widget</a></li></ul><h3>Namespaces</h3><ul><li><a href="antie.devices.html">devices</a></li><li><a href="antie.devices.anim.html">anim</a></li><li><a href="antie.devices.broadcastsource.html">broadcastsource</a></li><li><a href="antie.devices.media.html">media</a></li><li><a href="antie.devices.net.html">net</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_registerWiiRemoteInputControls">_registerWiiRemoteInputControls</a></li><li><a href="global.html#_registerWiiUGamePadInputControls">_registerWiiUGamePadInputControls</a></li><li><a href="global.html#addKeyEventListener">addKeyEventListener</a></li><li><a href="global.html#isHDEnabled">isHDEnabled</a></li><li><a href="global.html#loadAuthenticatedURL">loadAuthenticatedURL</a></li><li><a href="global.html#requirejs">requirejs</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Thu Sep 29 2016 14:50:16 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Sep 22 2017 16:04:10 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>
