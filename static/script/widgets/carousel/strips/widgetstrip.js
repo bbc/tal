@@ -62,8 +62,8 @@ define(
 
             /**
              * Removes a widget from the strip
-             * @param {antie.widgets.Widget} widget. Widget to remove from the strip
-             * @param {Boolean} [retainElement=false] whether to keep the widget's output element in the DOM after removing widget
+             * @param {antie.widgets.Widget} widget Widget to remove from the strip
+             * @param {Boolean} [retainElement=false] Whether to keep the widget's output element in the DOM after removing widget
              */
             remove: function remove (widget, retainElement) {
                 var i, widgets;
