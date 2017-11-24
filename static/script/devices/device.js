@@ -497,12 +497,14 @@ define(
             },
             /**
              * Encodes an object as JSON.
+             * @deprecated since version 8.1.0, use JSON.stringify
              * @param {object} obj Object to encode.
              */
             encodeJson: function encodeJson (/*obj*/) {
             },
             /**
              * Decodes JSON.
+             * @deprecated since version 8.1.0, use JSON.parse
              * @param {String} json JSON to decode.
              */
             decodeJson: function decodeJson (/*json*/) {

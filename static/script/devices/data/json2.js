@@ -1,5 +1,6 @@
 /*
  * @fileOverview Requirejs modifier to use J Crockford's JSON2 implementation.
+ * @deprecated since version 8.1.0, use a JSON polyfill if needed.
  */
 
 define(
