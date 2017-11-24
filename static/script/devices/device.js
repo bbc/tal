@@ -817,13 +817,12 @@ define(
              * for JSON-P call. Default: callback
              */
             executeCrossDomainGet: function executeCrossDomainGet (url, opts, jsonpOptions) {
-                var self, callbackKey, callbackQuery, modifiedOpts;
-                self = this;
+                var callbackKey, callbackQuery, modifiedOpts;
                 jsonpOptions = jsonpOptions || {};
                 if (configSupportsCORS(this.getConfig())) {
                     modifiedOpts = {
                         onLoad: function onLoad (jsonResponse) {
-                            var json = jsonResponse ? self.decodeJson(jsonResponse) : {};
+                            var json = jsonResponse ? JSON.parse(jsonResponse) : {};
                             opts.onSuccess(json);
                         },
                         onError: opts.onError
@@ -867,7 +866,7 @@ define(
              */
             executeCrossDomainPost: function executeCrossDomainPost (url, data, opts) {
                 var payload, modifiedOpts, formData;
-                payload = this.encodeJson(data);
+                payload = JSON.stringify(data);
                 if (configSupportsCORS(this.getConfig())) {
                     modifiedOpts = {
                         onLoad: opts.onLoad,

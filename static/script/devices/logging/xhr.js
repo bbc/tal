@@ -56,9 +56,7 @@ define(
         function xhrPost(url, opts, messageObject) {
 
             var http = new XMLHttpRequest();
-
-            var device = RuntimeContext.getCurrentApplication().getDevice();
-            var jsonMessage = device.encodeJson( messageObject );
+            var jsonMessage = JSON.stringify(messageObject);
 
             http.open('POST', url, true);
 

@@ -51,7 +51,7 @@ define(
                 this._endtag = endtag;
             },
             nativeCallback: function nativeCallback (json) {
-                var data = this.decodeJson(json);
+                var data = JSON.parse(json);
 
                 if(enableDebugging) {
                     if(!debug) {

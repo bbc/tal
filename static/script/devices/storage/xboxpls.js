@@ -24,7 +24,7 @@ define(
             getItem: function getItem (key) {
                 if (this._storage.hasKey(key)) {
                     var value = this._storage.lookup(key);
-                    var jsonifiedValue = Device.prototype.decodeJson(value);
+                    var jsonifiedValue = JSON.parse(value);
 
                     if (jsonifiedValue === null) {
                         return undefined;
@@ -36,8 +36,7 @@ define(
             },
 
             setItem: function setItem (key, value) {
-                var stringifiedValue = Device.prototype.encodeJson(value);
-                this._storage.insert(key, stringifiedValue);
+                this._storage.insert(key, JSON.stringify(value));
             },
 
             removeItem: function removeItem (key) {
