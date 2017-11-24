@@ -88,7 +88,9 @@ define(
                 var cookie = readCookie(namespace);
 
                 if(cookie) {
-                    this._valueCache = Device.prototype.decodeJson(cookie);
+                    try {
+                        this._valueCache = JSON.parse(cookie);
+                    } catch (e) { /* couldn't parse cookie, just ignore it */ }
                     if(this._valueCache) {
                         this._save();
                     } else {
