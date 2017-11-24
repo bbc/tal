@@ -12,7 +12,7 @@ define(
         'antie/runtimecontext',
         'antie/devices/device'
     ],
-    function( Module, RuntimeContext, Device) {
+    function(Module, RuntimeContext, Device) {
         'use strict';
 
         function zeroFill(number, width) {
