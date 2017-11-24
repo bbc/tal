@@ -88,7 +88,9 @@ define(
                 var cookie = readCookie(namespace);
 
                 if(cookie) {
-                    this._valueCache = Device.prototype.decodeJson(cookie);
+                    try {
+                        this._valueCache = JSON.parse(cookie);
+                    } catch (e) { /* couldn't parse cookie, just ignore it */ }
                     if(this._valueCache) {
                         this._save();
                     } else {
@@ -117,7 +119,7 @@ define(
                 if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {
-                    var json = Device.prototype.encodeJson(this._valueCache);
+                    var json = JSON.stringify(this._valueCache);
                     createCookie(this._namespace, json, undefined, this._opts);
                 }
             }
