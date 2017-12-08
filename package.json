@@ -35,6 +35,8 @@
     "tal-page-strategies": "1.1.7"
   },
   "scripts": {
-    "test": "grunt full --verbose"
+    "test": "grunt full --verbose",
+    "test:unit": "grunt jasmine",
+    "test:lint": "grunt lint"
   }
 }
