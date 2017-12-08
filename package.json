@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
-    "tal-page-strategies": "fmtvp/tal-page-strategies"
+    "tal-page-strategies": "1.1.7"
   },
   "scripts": {
     "test": "grunt full --verbose"
