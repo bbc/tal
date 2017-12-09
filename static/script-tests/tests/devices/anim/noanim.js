@@ -40,18 +40,18 @@
     };
 
     this.NoAnimAnimationTest.prototype.testScrollElementTo = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = getConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             var div = device.createContainer('id_mask');
             var inner = device.createContainer('id');
             device.appendChildElement(div, inner);
 
             var onComplete = this.sandbox.stub();
-            device.scrollElementTo({
+            var animHandle = device.scrollElementTo({
                 el: div,
                 style: div.style,
                 to: {
@@ -60,7 +60,7 @@
                 },
                 onComplete: onComplete
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals(-100, parseFloat(inner.style.left.replace(/px$/, '')));
             assertEquals(-200, parseFloat(inner.style.top.replace(/px$/, '')));
             assert(onComplete.calledOnce);
@@ -68,16 +68,16 @@
     };
 
     this.NoAnimAnimationTest.prototype.testMoveElementTo = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = getConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             var div = device.createContainer('id');
 
             var onComplete = this.sandbox.stub();
-            device.moveElementTo({
+            var animHandle = device.moveElementTo({
                 el: div,
                 style: div.style,
                 to: {
@@ -87,7 +87,7 @@
                 skipAnim: true,
                 onComplete: onComplete
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals(100, parseFloat(div.style.left.replace(/px$/, '')));
             assertEquals(200, parseFloat(div.style.top.replace(/px$/, '')));
             assert(onComplete.calledOnce);
@@ -96,21 +96,21 @@
     };
 
     this.NoAnimAnimationTest.prototype.testHideElement = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = getConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             var div = device.createContainer();
 
             var onComplete = this.sandbox.stub();
 
-            device.hideElement({
+            var animHandle = device.hideElement({
                 el: div,
                 onComplete: onComplete
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals(0, parseFloat(div.style.opacity));
             assertEquals('hidden', div.style.visibility);
             assert(onComplete.calledOnce);
@@ -119,21 +119,21 @@
     };
 
     this.NoAnimAnimationTest.prototype.testShowElement = function(queue) {
-        expectAsserts(3);
+        expectAsserts(4);
 
         var config = getConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             var div = device.createContainer();
 
             var onComplete = this.sandbox.stub();
 
-            device.showElement({
+            var animHandle = device.showElement({
                 el: div,
                 onComplete: onComplete
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals(1, parseFloat(div.style.opacity));
             assertEquals('visible', div.style.visibility);
             assert(onComplete.calledOnce);
@@ -191,11 +191,11 @@
     };
 
     this.NoAnimAnimationTest.prototype.testTweenElementFiresCallback = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
         var config;
         config = getConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application){
-            var device, div, options, spy;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle){
+            var device, div, options, spy, animHandle;
             device = application.getDevice();
             div = device.createContainer();
             options = {
@@ -206,7 +206,8 @@
             };
 
             spy = this.sandbox.spy(options, 'onComplete');
-            device.tweenElementStyle(options);
+            animHandle = device.tweenElementStyle(options);
+            assertInstanceOf(AnimationHandle, animHandle);
             assertTrue('onComplete fired', spy.calledOnce);
         }, config);
     };

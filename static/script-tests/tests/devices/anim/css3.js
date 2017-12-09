@@ -102,17 +102,17 @@
     };
 
     this.CSS3AnimationTest.prototype.testScrollElementTo = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         var self = this;
         var config;
         config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, inner;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, inner, animHandle;
             device = application.getDevice();
             inner = createScrollableDiv(self,device);
-            device.scrollElementTo({
+            animHandle = device.scrollElementTo({
                 el: self.div,
                 to: {
                     left: 100,
@@ -123,6 +123,7 @@
 
             assertEquals('-100px', inner.style.getPropertyValue('left'));
             assertEquals('-200px', inner.style.getPropertyValue('top'));
+            assertInstanceOf(AnimationHandle, animHandle);
         }, config);
     };
 
@@ -203,18 +204,18 @@
     };
 
     this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
             device = application.getDevice();
             createScrollableDiv(self,device);
             onCompleteStub = self.sandbox.stub();
 
-            device.scrollElementTo({
+            animHandle = device.scrollElementTo({
                 el: self.div,
                 to: {
                     left: 100,
@@ -223,25 +224,25 @@
                 skipAnim: true,
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertTrue(onCompleteStub.calledOnce);
         }, config);
     };
 
     this.CSS3AnimationTest.prototype.testScrollElementToWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
         config.animationDisabled = 'true';
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
             device = application.getDevice();
             createScrollableDiv(self,device);
             onCompleteStub = self.sandbox.stub();
 
-            device.scrollElementTo({
+            animHandle = device.scrollElementTo({
                 el: self.div,
                 to: {
                     left: 100,
@@ -249,7 +250,7 @@
                 },
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertTrue(onCompleteStub.calledOnce);
         }, config);
     };
@@ -338,17 +339,17 @@
     };
 
     this.CSS3AnimationTest.prototype.testMoveElementTo = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
 
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, div, animHandle;
             device = application.getDevice();
             div = createScrollableDiv(self,device);
 
-            device.moveElementTo({
+            animHandle = device.moveElementTo({
                 el: div,
                 to: {
                     left: 100,
@@ -356,7 +357,7 @@
                 },
                 skipAnim: false
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals('100px', div.style.getPropertyValue('left'));
             assertEquals('200px', div.style.getPropertyValue('top'));
         }, config);
@@ -365,18 +366,18 @@
     // TODO: need to test that moveElementTo() with skipAnim = false calls onComplete eventually
 
     this.CSS3AnimationTest.prototype.testMoveElementToWithAnimDoesNotCallOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, div, onCompleteStub, animHandle;
             device = application.getDevice();
             div = createScrollableDiv(self,device);
             onCompleteStub = self.sandbox.stub();
 
-            device.moveElementTo({
+            animHandle = device.moveElementTo({
                 el: div,
                 to: {
                     left: 100,
@@ -385,24 +386,24 @@
                 skipAnim: false,
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assert(onCompleteStub.notCalled);
         }, config);
     };
 
     this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, div, onCompleteStub, animHandle;
             device = application.getDevice();
             div = createScrollableDiv(self,device);
             onCompleteStub = self.sandbox.stub();
 
-            device.moveElementTo({
+            animHandle = device.moveElementTo({
                 el: div,
                 to: {
                     left: 100,
@@ -411,25 +412,25 @@
                 skipAnim: true,
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assert(onCompleteStub.calledOnce);
         }, config);
     };
 
     this.CSS3AnimationTest.prototype.testMoveElementToWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
         config.animationDisabled = 'true';
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, div, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, div, onCompleteStub, animHandle;
             device = application.getDevice();
             div = createScrollableDiv(self,device);
             onCompleteStub = self.sandbox.stub();
 
-            device.moveElementTo({
+            animHandle = device.moveElementTo({
                 el: div,
                 to: {
                     left: 100,
@@ -437,26 +438,26 @@
                 },
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assert(onCompleteStub.calledOnce);
         }, config);
     };
 
     this.CSS3AnimationTest.prototype.testHideElement = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
         var self = this;
 
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             createScrollableDiv(self,device);
 
-            device.hideElement({
+            var animHandle = device.hideElement({
                 el: self.div,
                 skipAnim: false
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals('hidden', self.div.style.visibility);
             assertEquals(0, parseFloat(self.div.style.opacity));
         }, config);
@@ -465,64 +466,64 @@
     // TODO: need to test that hideElement() with skipAnim = false calls onComplete eventually
 
     this.CSS3AnimationTest.prototype.testHideElementWithNoAnimCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
-
-        var self = this;
-        var config = getDefaultCssConfig();
-
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
-            device = application.getDevice();
-            onCompleteStub = self.sandbox.stub();
-            createScrollableDiv(self,device);
-
-            device.hideElement({
-                el: self.div,
-                skipAnim: true,
-                onComplete: onCompleteStub
-            });
-
-            assert(onCompleteStub.calledOnce);
-        }, config);
-    };
-
-    this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
-
-        var self = this;
-        var config = getDefaultCssConfig();
-        config.animationDisabled = 'true';
-
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
-            device = application.getDevice();
-            onCompleteStub = self.sandbox.stub();
-            createScrollableDiv(self,device);
-
-            device.hideElement({
-                el: self.div,
-                onComplete: onCompleteStub
-            });
-
-            assert(onCompleteStub.calledOnce);
-        }, config);
-    };
-
-    this.CSS3AnimationTest.prototype.testShowElement = function(queue) {
         expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
+            device = application.getDevice();
+            onCompleteStub = self.sandbox.stub();
+            createScrollableDiv(self,device);
+
+            animHandle = device.hideElement({
+                el: self.div,
+                skipAnim: true,
+                onComplete: onCompleteStub
+            });
+            assertInstanceOf(AnimationHandle, animHandle);
+            assert(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testHideElementWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
+        expectAsserts(2);
+
+        var self = this;
+        var config = getDefaultCssConfig();
+        config.animationDisabled = 'true';
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
+            device = application.getDevice();
+            onCompleteStub = self.sandbox.stub();
+            createScrollableDiv(self,device);
+
+            animHandle = device.hideElement({
+                el: self.div,
+                onComplete: onCompleteStub
+            });
+            assertInstanceOf(AnimationHandle, animHandle);
+            assert(onCompleteStub.calledOnce);
+        }, config);
+    };
+
+    this.CSS3AnimationTest.prototype.testShowElement = function(queue) {
+        expectAsserts(3);
+
+        var self = this;
+        var config = getDefaultCssConfig();
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             createScrollableDiv(self,device);
 
-            device.showElement({
+            var animHandle = device.showElement({
                 el: self.div,
                 skipAnim: false
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assertEquals('visible', self.div.style.visibility);
             assertEquals(1, parseFloat(self.div.style.opacity));
         }, config);
@@ -531,45 +532,45 @@
     // TODO: need to test that showElement() with skipAnim = false calls onComplete eventually
 
     this.CSS3AnimationTest.prototype.testShowElementWithNoAnimCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
             device = application.getDevice();
             onCompleteStub = self.sandbox.stub();
             createScrollableDiv(self,device);
 
-            device.showElement({
+            animHandle = device.showElement({
                 el: self.div,
                 skipAnim: true,
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assert(onCompleteStub.calledOnce);
         }, config);
     };
 
     this.CSS3AnimationTest.prototype.testShowElementWithNoAnimInConfigCallsOnCompleteImmediately = function(queue) {
-        expectAsserts(1);
+        expectAsserts(2);
 
         var self = this;
         var config = getDefaultCssConfig();
         config.animationDisabled = 'true';
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
-            var device, onCompleteStub;
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
+            var device, onCompleteStub, animHandle;
             device = application.getDevice();
             onCompleteStub = self.sandbox.stub();
             createScrollableDiv(self,device);
 
-            device.showElement({
+            animHandle = device.showElement({
                 el: self.div,
                 onComplete: onCompleteStub
             });
-
+            assertInstanceOf(AnimationHandle, animHandle);
             assert(onCompleteStub.calledOnce);
         }, config);
     };
@@ -783,7 +784,7 @@
     };
 
     this.CSS3AnimationTest.prototype.testTweenElementStyleSetsStartAndEnd = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         var self = this;
         var config = getDefaultCssConfig();
@@ -791,9 +792,9 @@
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
-            ['antie/devices/anim/css3/transitionelement'],
-            function(application, TransitionElement) {
-                var device, el, options, setSpy;
+            ['antie/devices/anim/css3/transitionelement', 'antie/devices/anim/shared/animationhandle'],
+            function(application, TransitionElement, AnimationHandle) {
+                var device, el, options, setSpy, animHandle;
                 device = application.getDevice();
                 el = getElement({
                     width: '10px',
@@ -810,7 +811,8 @@
 
                 self.sandbox.stub(TransitionElement.prototype, 'getComputedStyle');
 
-                device.tweenElementStyle(options);
+                animHandle = device.tweenElementStyle(options);
+                assertInstanceOf(AnimationHandle, animHandle);
                 assertTrue('From value set on element', setSpy.calledWith('width', '60px'));
                 assertTrue('To value set on element', setSpy.calledWith('width', '100px'));
             },

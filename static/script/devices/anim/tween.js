@@ -8,9 +8,10 @@ define(
     'antie/devices/anim/tween',
     [
         'antie/devices/browserdevice',
-        'antie/lib/shifty'
+        'antie/lib/shifty',
+        'antie/devices/anim/shared/animationhandle'
     ],
-    function(Device, Tweenable) {
+    function(Device, Tweenable, AnimationHandle) {
         'use strict';
 
         // A set of queues of DOM updates to perform. Each animation framerate gets its own queue
@@ -171,7 +172,9 @@ define(
 
             anim.tween(opts);
 
-            return anim;
+            return new AnimationHandle(function(gotoEnd){
+                anim.stop(gotoEnd);
+            });
         };
     }
 );

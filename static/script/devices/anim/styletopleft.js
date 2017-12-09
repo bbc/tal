@@ -9,10 +9,13 @@ define(
     [
         'antie/devices/browserdevice',
         'antie/devices/anim/shared/transitionendpoints',
+        'antie/devices/anim/shared/animationhandle',
         'antie/devices/anim/tween'
     ],
-    function(Device, TransitionEndPoints)  {
+    function(Device, TransitionEndPoints, AnimationHandle)  {
         'use strict';
+
+        var skippedAnimationHandle = new AnimationHandle();
 
         function movesScroll( startLeft, startTop, changeLeft, changeTop, options ){
             var to, from;
@@ -20,7 +23,7 @@ define(
                 if (options.onComplete) {
                     options.onComplete();
                 }
-                return null;
+                return skippedAnimationHandle;
             }
 
             if (this.getConfig().animationDisabled || options.skipAnim) {
@@ -34,7 +37,7 @@ define(
                 if (options.onComplete) {
                     options.onComplete();
                 }
-                return null;
+                return skippedAnimationHandle;
             } else {
                 from = {};
                 if (startTop !== undefined) {
@@ -87,13 +90,13 @@ define(
             // Check validity of call and use child element as the real target
             if (new RegExp('_mask$').test(options.el.id)) {
                 if (options.el.childNodes.length === 0) {
-                    return null;
+                    return skippedAnimationHandle;
                 }
                 options.el.style.position = 'relative';
                 newOptions.el = options.el.childNodes[0];
                 newOptions.el.style.position = 'relative';
             } else {
-                return null;
+                return skippedAnimationHandle;
             }
 
             // Make a copy of the 'to' property, with the sign of the 'top' and 'left' properties flipped.
@@ -135,7 +138,7 @@ define(
                 if (typeof options.onComplete === 'function') {
                     options.onComplete();
                 }
-                return null;
+                return skippedAnimationHandle;
             } else {
                 animationDefaults = this.getConfig().defaults && this.getConfig().defaults.hideElementFade || {};
                 return this._tween({
@@ -169,7 +172,7 @@ define(
                 if (typeof options.onComplete === 'function') {
                     options.onComplete();
                 }
-                return undefined;
+                return skippedAnimationHandle;
             } else {
                 animationDefaults = this.getConfig().defaults && this.getConfig().defaults.showElementFade || {};
                 return this._tween({
@@ -238,13 +241,13 @@ define(
 
             if(endPoints.toAndFromAllEqual()) {
                 fireComplete();
-                return null;
+                return skippedAnimationHandle;
             }
 
             if(options.skipAnim  || this.getConfig().animationDisabled) {
                 skipAnimation();
                 fireComplete();
-                return undefined;
+                return skippedAnimationHandle;
             }
 
             return this._tween(getTweenOptions());

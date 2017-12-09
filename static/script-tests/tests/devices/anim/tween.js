@@ -25,17 +25,17 @@
     };
 
     this.TweenAnimationTest.prototype.testTween = function(queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
 
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/anim/shared/animationhandle'], function(application, AnimationHandle) {
             var device = application.getDevice();
             var div = device.createContainer();
 
             var clock = sinon.useFakeTimers();
 
-            device._tween({
+            var animHandle = device._tween({
                 el: div,
                 style: div.style,
                 from: {
@@ -47,6 +47,8 @@
                 className: null
             });
 
+            assertInstanceOf(AnimationHandle, animHandle);
+            
             assertEquals(0, Math.round(parseFloat(div.style.top.replace(/px$/,''))));
 
             clock.tick(DEFAULT_TWEEN_TIME);

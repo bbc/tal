@@ -8,22 +8,25 @@ define(
     'antie/devices/anim/noanim',
     [
         'antie/devices/browserdevice',
-        'antie/devices/anim/shared/transitionendpoints'
+        'antie/devices/anim/shared/transitionendpoints',
+        'antie/devices/anim/shared/animationhandle'
     ],
-    function(Device, TransitionEndPoints) {
+    function(Device, TransitionEndPoints, AnimationHandle) {
         'use strict';
 
+        var nullObjectAnimHandle = new AnimationHandle();
+        
         /* documented in antie.devices.Device */
         Device.prototype.scrollElementTo = function(options) {
             if(new RegExp('_mask$').test(options.el.id)) {
                 if (options.el.childNodes.length === 0) {
-                    return null;
+                    return nullObjectAnimHandle;
                 }
                 options.el.style.position = 'relative';
                 options.el = options.el.childNodes[0];
                 options.el.style.position = 'relative';
             } else {
-                return null;
+                return nullObjectAnimHandle;
             }
             var startLeft = Math.abs(options.el.style.left.replace(/px/, '')) || 0;
             var changeLeft = (options.to.left !== undefined) ? (options.to.left - startLeft) : 0;
@@ -33,7 +36,7 @@ define(
                 if (options.onComplete) {
                     options.onComplete();
                 }
-                return null;
+                return nullObjectAnimHandle;
             }
 
             if (options.to.left !== undefined) {
@@ -46,7 +49,7 @@ define(
                 options.onComplete();
             }
 
-            return null;
+            return nullObjectAnimHandle;
         };
 
         /* documented in antie.devices.Device */
@@ -63,7 +66,7 @@ define(
                 if (options.onComplete) {
                     options.onComplete();
                 }
-                return null;
+                return nullObjectAnimHandle;
             }
 
             if (options.to.left !== undefined) {
@@ -75,6 +78,8 @@ define(
             if (options.onComplete) {
                 options.onComplete();
             }
+
+            return nullObjectAnimHandle;
         };
 
         /* documented in antie.devices.device */
@@ -84,6 +89,7 @@ define(
             if (typeof options.onComplete === 'function') {
                 options.onComplete();
             }
+            return nullObjectAnimHandle;
         };
 
         /* documented in antie.devices.device */
@@ -93,6 +99,7 @@ define(
             if (typeof options.onComplete === 'function') {
                 options.onComplete();
             }
+            return nullObjectAnimHandle;
         };
 
         Device.prototype.tweenElementStyle = function(options) {
@@ -116,6 +123,7 @@ define(
             if (typeof options.onComplete === 'function') {
                 options.onComplete();
             }
+            return nullObjectAnimHandle;
         };
 
         /* documented in antie.devices.device */
