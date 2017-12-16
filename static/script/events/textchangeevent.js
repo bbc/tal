@@ -26,13 +26,13 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, text, button, multitap) {
+            init: function init (target, text, button, multitap) {
                 this.target = target;
                 this.text = text;
                 this.button = button;
                 this.multitap = multitap;
 
-                this._super('textchange');
+                init.base.call(this, 'textchange');
             }
         });
     }

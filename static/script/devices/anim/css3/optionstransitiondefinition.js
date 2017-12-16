@@ -18,10 +18,10 @@ define(
                  * @param animation options object
                  * @param config animation configuration object
                  */
-                init: function(options, config) {
+                init: function init (options, config) {
                     var property, timeEasing;
                     config = config || {};
-                    this._super();
+                    init.base.call(this);
                     for(property in options.to) {
                         if(options.to.hasOwnProperty(property)) {
                             timeEasing = options.easing || config.easing;

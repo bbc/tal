@@ -24,7 +24,7 @@ define(
              * by the source is reached.
              * @param widget The parent of the widgets to be created.
              */
-            appendAllTo: function (widget) {
+            appendAllTo: function appendAllTo (widget) {
                 this._bindAll(
                     widget,
                     this._appendItem,
@@ -33,11 +33,11 @@ define(
                 );
             },
 
-            _disableAutoCalc: function (ev) {
+            _disableAutoCalc: function _disableAutoCalc (ev) {
                 ev.target.autoCalculate(false);
             },
 
-            _enableAutoCalc: function (ev) {
+            _enableAutoCalc: function _enableAutoCalc (ev) {
                 ev.target.autoCalculate(true);
                 ev.target.recalculate();
             }

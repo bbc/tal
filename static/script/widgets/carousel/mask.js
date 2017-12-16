@@ -30,8 +30,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (id, widgetStrip, orientation) {
-                this._super(id);
+            init: function init (id, widgetStrip, orientation) {
+                init.base.call(this, id);
                 this.addClass(orientation.styleClass());
                 this._orientation = orientation;
                 this.addClass('carouselmask');
@@ -50,11 +50,11 @@ define(
              * @param index Index of the widget to be aligned
              * @param options
              */
-            alignToIndex: function (index, options) {
+            alignToIndex: function alignToIndex (index, options) {
                 this._doAlign(index, options, this._alignmentPoint);
             },
 
-            _doAlign: function (index, options, alignPoint) {
+            _doAlign: function _doAlign (index, options, alignPoint) {
                 var distanceContentsMustMoveBack;
                 distanceContentsMustMoveBack = this._widgetStrip.getLengthToIndex(index);
                 distanceContentsMustMoveBack -= this._getAlignmentPoint();
@@ -64,7 +64,7 @@ define(
 
             },
 
-            _resetAlignment: function () {
+            _resetAlignment: function _resetAlignment () {
                 if (this._lastAlignIndex !== null) {
                     this._doAlign(this._lastAlignIndex, {skipAnim: true}, this._currentAlignPoint);
                 }
@@ -76,7 +76,7 @@ define(
              * (left for horizontal, top for vertical)
              * @param {Number} pixelsFromEdge
              */
-            setAlignPoint: function (pixelsFromEdge) {
+            setAlignPoint: function setAlignPoint (pixelsFromEdge) {
                 this._alignmentPoint = pixelsFromEdge;
                 this._normalisedAlignmentPoint = 0;
             },
@@ -86,7 +86,7 @@ define(
              * with 0 being the top or left edge and 1 being the bottom or right edge
              * @param fractionOfMaskLength Value between 0 and 1, will be clamped to 0 or 1 if outside this range.
              */
-            setNormalisedAlignPoint: function (fractionOfMaskLength) {
+            setNormalisedAlignPoint: function setNormalisedAlignPoint (fractionOfMaskLength) {
                 var clampedFraction = this._clampBetweenZeroAndOne(fractionOfMaskLength);
                 this._normalisedAlignmentPoint = clampedFraction;
             },
@@ -96,14 +96,14 @@ define(
              * with 0 being the top or left of the widget and 1 being the bottom or right.
              * @param fractionOfWidgetLength Value between 0 and 1, will be clamped to 0 or 1 if outside this range.
              */
-            setNormalisedWidgetAlignPoint: function (fractionOfWidgetLength) {
+            setNormalisedWidgetAlignPoint: function setNormalisedWidgetAlignPoint (fractionOfWidgetLength) {
                 this._normalisedWidgetAlignPoint = this._clampBetweenZeroAndOne(fractionOfWidgetLength);
             },
 
             /**
              * @returns {Object} the widget strip currently being masked
              */
-            getWidgetStrip: function () {
+            getWidgetStrip: function getWidgetStrip () {
                 return this._widgetStrip;
             },
 
@@ -111,7 +111,7 @@ define(
              * Sets the widget strip to mask and align
              * @param widgetStrip an instance of antie.widgets.carousel.strips.WidgetStrip
              */
-            setWidgetStrip: function (widgetStrip) {
+            setWidgetStrip: function setWidgetStrip (widgetStrip) {
                 if (this._widgetStrip) {
                     this.removeChildWidget(this._widgetStrip);
                 }
@@ -119,7 +119,7 @@ define(
                 this.appendChildWidget(this._widgetStrip);
             },
 
-            setLength: function (length) {
+            setLength: function setLength (length) {
                 this._length = length;
             },
 
@@ -127,7 +127,7 @@ define(
              * @returns {Number} The length in pixels of the primary dimension of the mask
              * (Width for horizontal, height for vertical)
              */
-            getLength: function () {
+            getLength: function getLength () {
                 var device, size;
                 if (this._length) {
                     return this._length;
@@ -143,7 +143,7 @@ define(
              * @returns {Array} An array of indices corresponding to the widgets visible
              * when the specified index is aligned to the current alignment point.
              */
-            indicesVisibleWhenAlignedToIndex: function (index) {
+            indicesVisibleWhenAlignedToIndex: function indicesVisibleWhenAlignedToIndex (index) {
                 var maskLength, visibleIndices;
                 maskLength = this.getLength();
                 visibleIndices = this._visibleIndixesBefore(index, maskLength).concat(
@@ -156,11 +156,11 @@ define(
              * Completes any current alignment operation instantly, firing any associated
              * onComplete callback
              */
-            stopAnimation: function () {
+            stopAnimation: function stopAnimation () {
                 this._spinner.stopAnimation();
             },
 
-            beforeAlignTo: function (currentIndex, newIndex) {
+            beforeAlignTo: function beforeAlignTo (currentIndex, newIndex) {
                 if (this._widgetStrip.needsVisibleIndices()) {
                     this._widgetStrip.attachIndexedWidgets(this._visibleIndicesBetween(currentIndex, newIndex));
                     this._resetAlignment();
@@ -168,7 +168,7 @@ define(
                 this._widgetStrip.bubbleEvent(new BeforeAlignEvent(this._widgetStrip, newIndex));
             },
 
-            afterAlignTo: function (index) {
+            afterAlignTo: function afterAlignTo (index) {
                 this._lastAlignIndex = index;
                 if (this._widgetStrip.needsVisibleIndices()) {
                     this._widgetStrip.attachIndexedWidgets(this.indicesVisibleWhenAlignedToIndex(index));
@@ -177,14 +177,14 @@ define(
                 this._widgetStrip.bubbleEvent(new AfterAlignEvent(this._widgetStrip, index));
             },
 
-            _clampBetweenZeroAndOne: function (value) {
+            _clampBetweenZeroAndOne: function _clampBetweenZeroAndOne (value) {
                 var clampedValue = value;
                 clampedValue = Math.max(0, clampedValue);
                 clampedValue = Math.min(1, clampedValue);
                 return clampedValue;
             },
 
-            _getWidgetAlignmentPoint: function (index) {
+            _getWidgetAlignmentPoint: function _getWidgetAlignmentPoint (index) {
                 var widgetLength, widgetAlignmentPoint;
                 if (this._normalisedWidgetAlignPoint === 0) {
                     widgetAlignmentPoint = 0;
@@ -196,7 +196,7 @@ define(
                 return widgetAlignmentPoint;
             },
 
-            _getAlignmentPoint: function () {
+            _getAlignmentPoint: function _getAlignmentPoint () {
                 var alignmentPoint;
                 if (this._normalisedAlignmentPoint === 0) {
                     alignmentPoint = this._alignmentPoint;
@@ -206,7 +206,7 @@ define(
                 return alignmentPoint;
             },
 
-            _visibleIndixesBefore: function (index, maskLength) {
+            _visibleIndixesBefore: function _visibleIndixesBefore (index, maskLength) {
                 var distanceToMaskStart, currentIndex, indices;
                 indices = [];
                 currentIndex = index - 1;
@@ -221,7 +221,7 @@ define(
                 return indices;
             },
 
-            _visibleIndicesFrom: function (index, maskLength) {
+            _visibleIndicesFrom: function _visibleIndicesFrom (index, maskLength) {
                 var widgetCount, distanceToMaskEnd, currentIndex, indices;
                 indices = [];
                 widgetCount = this.getWidgetStrip().getChildWidgetCount();
@@ -237,7 +237,7 @@ define(
                 return indices;
             },
 
-            _visibleIndicesBetween: function (start, end) {
+            _visibleIndicesBetween: function _visibleIndicesBetween (start, end) {
                 var startIndices, endIndices, combinedIndices, visibleIndices, first, last, i;
 
                 startIndices = (start === null) ? [] : this.indicesVisibleWhenAlignedToIndex(start);
@@ -255,7 +255,7 @@ define(
                 return visibleIndices;
             },
 
-            _deDuplicateAndSortArray: function (arr) {
+            _deDuplicateAndSortArray: function _deDuplicateAndSortArray (arr) {
                 var i, deDuped;
                 arr.sort(this._numericalSort);
                 deDuped = [];
@@ -267,15 +267,15 @@ define(
                 return deDuped;
             },
 
-            _numericalSort: function (a, b) {
+            _numericalSort: function _numericalSort (a, b) {
                 return a - b;
             },
 
-            _moveContentsTo: function (relativePixels, options) {
+            _moveContentsTo: function _moveContentsTo (relativePixels, options) {
                 this._spinner.moveContentsTo(relativePixels, options);
             },
 
-            _getDimension: function () {
+            _getDimension: function _getDimension () {
                 return this._orientation.dimension();
             }
         });

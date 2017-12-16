@@ -26,9 +26,9 @@ define(
              * @param index
              * @returns {Number} the first focussable index after that supplied
              */
-            indexAfter: function (index) {
+            indexAfter: function indexAfter (index) {
                 var potentialIndex;
-                potentialIndex = this._super(index);
+                potentialIndex = indexAfter.base.call(this, index);
                 return this._validateIndex(potentialIndex);
             },
 
@@ -36,19 +36,19 @@ define(
              * @param index
              * @returns {Number} the first focussable index before that supplied
              */
-            indexBefore: function (index) {
+            indexBefore: function indexBefore (index) {
                 var potentialIndex;
-                potentialIndex = this._super(index);
+                potentialIndex = indexBefore.base.call(this, index);
                 return this._validateIndex(potentialIndex);
             },
 
-            _isValidIndex: function (index) {
+            _isValidIndex: function _isValidIndex (index) {
                 var stripLength;
                 stripLength = this._container.getChildWidgetCount();
                 return (typeof index === 'number' && (index < stripLength) && index >= 0);
             },
 
-            _validateIndex: function (potentialIndex) {
+            _validateIndex: function _validateIndex (potentialIndex) {
                 var index;
                 index = null;
                 if (this._isValidIndex(potentialIndex)) {

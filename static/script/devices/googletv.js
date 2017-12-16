@@ -13,7 +13,7 @@ define('antie/devices/googletv',
 		'use strict';
 
 		return BrowserDevice.extend({
-			init: function(config) {
+			init: function init (config) {
 				// Change Application::getBestFitLayout to find the layout with a size
 				// closest to that of the browser resolution, then use CSS zoom to fit
 				// it to the exact screen size.
@@ -47,7 +47,7 @@ define('antie/devices/googletv',
 					return _selected;
 				};
 
-				this._super(config);
+				init.base.call(this, config);
 			}
 		});
 	}

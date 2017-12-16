@@ -24,9 +24,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, code) {
+            init: function init (target, code) {
                 this.code = code;
-                this._super('error', target);
+                init.base.call(this, 'error', target);
             }
         });
 

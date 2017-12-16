@@ -30,7 +30,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id) {
+            init: function init (id) {
                 /*
                  * Performance consideration - do we need to store 2 references to each child widget?
                  * One keyed by ID, one in an array to maintain order?
@@ -40,7 +40,7 @@ define(
                 this._activeChildWidget = null;
                 this._autoRenderChildren = true;
 
-                this._super(id);
+                init.base.call(this, id);
 
                 this.addClass('container');
             },
@@ -49,7 +49,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function render (device) {
                 var i;
                 if(!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
@@ -65,7 +65,7 @@ define(
              * Appends a child widget to this widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function(widget) {
+            appendChildWidget: function appendChildWidget (widget) {
                 if(!this.hasChildWidget(widget.id)) {
                     this._childWidgets[widget.id] = widget;
                     this._childWidgetOrder.push(widget);
@@ -91,7 +91,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to
              * add.
              */
-            prependWidget: function(widget) {
+            prependWidget: function prependWidget (widget) {
                 // Find the current widget's order.
                 if(this.parentWidget instanceof Container) {
                     var widgetOrder, insertionIndex;
@@ -113,7 +113,7 @@ define(
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function(index, widget) {
+            insertChildWidget: function insertChildWidget (index, widget) {
                 if(!this.hasChildWidget(widget.id)) {
                     if(index >= this._childWidgetOrder.length) {
                         return this.appendChildWidget(widget);
@@ -145,7 +145,7 @@ define(
             /**
              * Remove all child widgets from this widget.
              */
-            removeChildWidgets: function() {
+            removeChildWidgets: function removeChildWidgets () {
                 if(this._isFocussed && this._activeChildWidget) {
                     var logger = this.getCurrentApplication().getDevice().getLogger();
                     logger.warn('Removing widget that currently has focus: ' + this._activeChildWidget.id);
@@ -168,7 +168,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
              */
-            removeChildWidget: function(widget, retainElement) {
+            removeChildWidget: function removeChildWidget (widget, retainElement) {
                 if(!widget) {
                     return;
                 }
@@ -198,7 +198,7 @@ define(
              * Checks to see if a specific widget is a direct child of this widget.
              * @param {String} id The widget id of the widget to check to see if it is a direct child of this widget.
              */
-            hasChildWidget: function(id) {
+            hasChildWidget: function hasChildWidget (id) {
                 return !!this._childWidgets[id];
             },
             /**
@@ -206,17 +206,17 @@ define(
              * @param {String} id The id of the child widget to return.
              * @returns antie.widgets.Widget of the widget with the given ID, otherwise undefined if the child does not exist.
              */
-            getChildWidget: function(id) {
+            getChildWidget: function getChildWidget (id) {
                 return this._childWidgets[id];
             },
             /**
              * Get an array of all this widget's children.
              * @returns An array of all this widget's children.
              */
-            getChildWidgets: function() {
+            getChildWidgets: function getChildWidgets () {
                 return this._childWidgetOrder;
             },
-            getIndexOfChildWidget: function(widget) {
+            getIndexOfChildWidget: function getIndexOfChildWidget (widget) {
                 return this._childWidgetOrder.indexOf(widget);
             },
             /**
@@ -235,7 +235,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function(widget) {
+            setActiveChildWidget: function setActiveChildWidget (widget) {
                 if (!widget) {
                     return false;
                 }
@@ -269,7 +269,7 @@ define(
              * @param {Integer} index Index of the child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildIndex: function(index) {
+            setActiveChildIndex: function setActiveChildIndex (index) {
                 if(index < 0 || index >= this._childWidgetOrder.length) {
                     throw new Error('Widget::setActiveChildIndex Index out of bounds. ' + this.id + ' contains ' + this._childWidgetOrder.length + ' children, but an index of ' + index + ' was specified.');
                 }
@@ -279,7 +279,7 @@ define(
              * Get the current active widget.
              * @returns The current active widget
              */
-            getActiveChildWidget: function() {
+            getActiveChildWidget: function getActiveChildWidget () {
                 return this._activeChildWidget;
             },
             /**
@@ -287,7 +287,7 @@ define(
              * @param {Boolean} focus True if the active child is to be focussed, False if the active child is to be blurred.
              * @private
              */
-            _setActiveChildFocussed: function(focus) {
+            _setActiveChildFocussed: function _setActiveChildFocussed (focus) {
                 if(this._activeChildWidget && (this._activeChildWidget._isFocussed !== focus)) {
                     this._activeChildWidget._isFocussed = focus;
                     if(focus) {
@@ -306,14 +306,14 @@ define(
              * Gets the number of direct child widgets.
              * @returns The number of direct child widgets.
              */
-            getChildWidgetCount: function() {
+            getChildWidgetCount: function getChildWidgetCount () {
                 return this._childWidgetOrder.length;
             },
             /**
              * Checks to see if a widget is focussable, i.e. contains an enabled button.
              * @see antie.widgets.Button
              */
-            isFocusable: function() {
+            isFocusable: function isFocusable () {
                 for(var i=0; i<this._childWidgetOrder.length; i++) {
                     if(this._childWidgetOrder[i].isFocusable()) {
                         if(!this._activeChildWidget) {
@@ -325,7 +325,7 @@ define(
                 }
                 return false;
             },
-            setAutoRenderChildren: function(autoRenderChildren) {
+            setAutoRenderChildren: function setAutoRenderChildren (autoRenderChildren) {
                 this._autoRenderChildren = autoRenderChildren;
             },
 
@@ -333,7 +333,7 @@ define(
              * Broadcasts an event from the application level to every single
              * object it contains.
              */
-            broadcastEvent: function(evt) {
+            broadcastEvent: function broadcastEvent (evt) {
                 this.fireEvent(evt);
                 if(!evt.isPropagationStopped()) {
                     for(var i=0; i<this._childWidgetOrder.length; i++) {
@@ -346,7 +346,7 @@ define(
              * the current 'active' path.
              * @returns Boolean true if focus has been moved to a button. Otherwise returns false.
              */
-            focus: function() {
+            focus: function focus () {
                 if(this._activeChildWidget) {
                     return this._activeChildWidget.focus();
                 }

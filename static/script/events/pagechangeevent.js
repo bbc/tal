@@ -22,10 +22,10 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(countername, labels) {
+            init: function init (countername, labels) {
                 this.countername = countername;
                 this.labels = labels;
-                this._super('pagechange');
+                init.base.call(this, 'pagechange');
                 if (window.log) {
                     window.log('Page change:', countername, labels);
                 }

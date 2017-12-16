@@ -24,7 +24,7 @@ define('antie/widgets/carousel/strips/hidingstrip',
          * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
          */
         HidingStrip = CullingStrip.extend(/** @lends antie.widgets.carousel.strips.HidingStrip.prototype */{
-            createContext: function (widget, parent) {
+            createContext: function createContext (widget, parent) {
                 return new WidgetContext(widget, parent, VISIBILITY_STATES);
             }
         });

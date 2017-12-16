@@ -36,7 +36,7 @@ define('antie/application',
              * @ignore
              */
 
-            init: function (rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride) {
+            init: function init (rootElement, styleBaseUrl, imageBaseUrl, onReadyHandler, configOverride) {
                 RuntimeContext.setCurrentApplication(this);
 
                 this._rootElement = rootElement;
@@ -50,7 +50,7 @@ define('antie/application',
                 if (!this._device) {
                     Device.load(_configuration, {
                         onSuccess: deviceLoaded,
-                        onError: function (err) {
+                        onError: function onError (err) {
                             console.error('Unable to load device', err);
                         }
                     });
@@ -84,13 +84,13 @@ define('antie/application',
             /**
              * Called once application startup is ready (i.e. config has been loaded).
              */
-            run: function () {
+            run: function run () {
                 // intentionally left blank
             },
             /**
              * Must be called when the application startup is complete and application can accept user input.
              */
-            ready: function () {
+            ready: function ready () {
                 if (this._onReadyHandler) {
                     var self = this;
                     // Run this after the current execution path is complete
@@ -103,7 +103,7 @@ define('antie/application',
              * Gets the largest supported layout that fits within the available screen resolution.
              * @returns An object literal describing which layout module to load.
              */
-            getBestFitLayout: function () {
+            getBestFitLayout: function getBestFitLayout () {
                 var i;
                 var _screenSize = this._device.getScreenSize();
                 var _layouts = this._device.getConfig().layouts;
@@ -141,7 +141,7 @@ define('antie/application',
              * @param {Array} [additionalPreloadImages] Additional images to preload.
              * @param {function()} [callback] Callback function to call when layout has been fully loaded.
              */
-            setLayout: function (layout, styleBaseUrl, imageBaseUrl, additionalCSS, additionalClasses, additionalPreloadImages, callback) {
+            setLayout: function setLayout (layout, styleBaseUrl, imageBaseUrl, additionalCSS, additionalClasses, additionalPreloadImages, callback) {
                 var i;
                 this._layout = layout;
                 var tle = this._device.getTopLevelElement();
@@ -187,14 +187,14 @@ define('antie/application',
              * Gets the current layout as set by {@see #setLayout}.
              * @returns An application-specific object literal describing layout-specific properties.
              */
-            getLayout: function () {
+            getLayout: function getLayout () {
                 return this._layout;
             },
             /**
              * Set the root widget of the application.
              * @param {antie.widgets.Widget} widget The new root widget.
              */
-            setRootWidget: function (widget) {
+            setRootWidget: function setRootWidget (widget) {
                 widget.addClass('rootwidget');
                 if (widget instanceof List) {
                     widget.setRenderMode(List.RENDER_MODE_CONTAINER);
@@ -216,7 +216,7 @@ define('antie/application',
              * Get the root widget of the application.
              * @return The root widget of the application.
              */
-            getRootWidget: function () {
+            getRootWidget: function getRootWidget () {
                 return this._rootWidget;
             },
             /**
@@ -225,7 +225,7 @@ define('antie/application',
              * @param {String} [modules] The requirejs module name of the component to pre-load.
              * @param {Object} [args] An optional object to pass arguments into any pre-loaded component.
              */
-            addComponentContainer: function (id, module, args) {
+            addComponentContainer: function addComponentContainer (id, module, args) {
                 var container = new ComponentContainer(id);
                 this._rootWidget.appendChildWidget(container);
 
@@ -242,7 +242,7 @@ define('antie/application',
              * @param {String} modules The requirejs module name of the component to show.
              * @param {Object} [args] An optional object to pass arguments to the component.
              */
-            showComponent: function (id, module, args) {
+            showComponent: function showComponent (id, module, args) {
                 this._rootWidget.getChildWidget(id).show(module, args);
             },
             /**
@@ -251,49 +251,49 @@ define('antie/application',
              * @param {String} modules The requirejs module name of the component to show.
              * @param {Object} [args] An optional object to pass arguments to the component.
              */
-            pushComponent: function (id, module, args) {
+            pushComponent: function pushComponent (id, module, args) {
                 this._rootWidget.getChildWidget(id).pushComponent(module, args);
             },
             /**
              * Pops a component from the history stack of a container (if a previous component exists)
              * @param {String} id The ID of the container that contains the component to pop.
              */
-            popComponent: function (id) {
+            popComponent: function popComponent (id) {
                 this._rootWidget.getChildWidget(id).back();
             },
             /**
              * Hides a component.
              * @param {String} id The ID of the container that contains the component to hide.
              */
-            hideComponent: function (id) {
+            hideComponent: function hideComponent (id) {
                 this._rootWidget.getChildWidget(id).hide();
             },
             /**
              * Gets a component by ID.
              * @param {String} id The ID of the container to return.
              */
-            getComponent: function (id) {
+            getComponent: function getComponent (id) {
                 return this._rootWidget.getChildWidget(id);
             },
             /**
              * Sets the active focus to the specified component.
              * @param {String} id The ID of the container that contains the component to set focus on.
              */
-            setActiveComponent: function (id) {
+            setActiveComponent: function setActiveComponent (id) {
                 return this._rootWidget.setActiveChildWidget(this._rootWidget.getChildWidget(id));
             },
             /**
              * Returns the Device object currently running this application.
              * @returns The antie.devices.Device object currently running this application.
              */
-            getDevice: function () {
+            getDevice: function getDevice () {
                 return this._device;
             },
             /**
              * Bubbles an event from the currently focussed widget up through the widget tree.
              * @param {antie.events.Event} evt The event to bubble.
              */
-            bubbleEvent: function (evt) {
+            bubbleEvent: function bubbleEvent (evt) {
                 if (this._focussedWidget) {
                     this._focussedWidget.bubbleEvent(evt);
                 }
@@ -304,7 +304,7 @@ define('antie/application',
              * object it contains.
              * @param {antie.events.Event} evt The event to broadcast.
              */
-            broadcastEvent: function (evt) {
+            broadcastEvent: function broadcastEvent (evt) {
                 if (evt.sentDown) {
                     return;
                 }
@@ -315,7 +315,7 @@ define('antie/application',
              * Returns the currently-focussed Button.
              * @returns The antie.widgets.Button which currently has focus.
              */
-            getFocussedWidget: function () {
+            getFocussedWidget: function getFocussedWidget () {
                 return this._focussedWidget;
             },
             /**
@@ -323,7 +323,7 @@ define('antie/application',
              * @param {antie.widgets.Button} widget The antie.widgets.Button that has recieved focus.
              * @private
              */
-            _setFocussedWidget: function (widget) {
+            _setFocussedWidget: function _setFocussedWidget (widget) {
                 // Check to see the widget is a Button and itself has correct focus state before recording
                 // it as the focussed widget.
                 if ((widget instanceof Button) && widget.isFocussed()) {
@@ -336,7 +336,7 @@ define('antie/application',
              * @param {String} evt The event to handle.
              * @param {function(Event)} handler The handler function to call when the event hits the root widget.
              */
-            addEventListener: function (evt, handler) {
+            addEventListener: function addEventListener (evt, handler) {
                 this._rootWidget.addEventListener(evt, handler);
             },
             /**
@@ -344,21 +344,21 @@ define('antie/application',
              * @param {String} evt The event to handle.
              * @param {function(Event)} handler The handler function to remove.
              */
-            removeEventListener: function (evt, handler) {
+            removeEventListener: function removeEventListener (evt, handler) {
                 this._rootWidget.removeEventListener(evt, handler);
             },
             /**
              * Gets the current route (a reference pointing to a location within the application).
              * @returns The current route (location within the application).
              */
-            getCurrentRoute: function () {
+            getCurrentRoute: function getCurrentRoute () {
                 return this._device.getCurrentRoute();
             },
             /**
              * Sets the current route (a reference pointing to a location within the application).
              * @param {Array} route A route pointing to a location within the application.
              */
-            setCurrentRoute: function (route) {
+            setCurrentRoute: function setCurrentRoute (route) {
                 this._referer = this._device.getCurrentRoute();
                 this._device.setCurrentRoute(route);
             },
@@ -367,14 +367,14 @@ define('antie/application',
              * the previous location within the application.
              * @returns A reference (e.g. URL) of the previous location.
              */
-            getReferer: function () {
+            getReferer: function getReferer () {
                 return this._referer || this._device.getReferrer();
             },
             /**
              * Called after {@link #run} to launch the application at a specific location.
              * @param {Array} route Location of application.
              */
-            route: function (/*route*/) {
+            route: function route (/*route*/) {
                 // intentionally left blank
             },
             /**
@@ -385,7 +385,7 @@ define('antie/application',
              * @param {Array}   [route]     Route for new application (a reference pointing to a new location within the application). @see getCurrentRoute(), @see setCurrentRoute()
              * @param {Boolean} [overwrite] Set true to overwrite the query parameters of the current application location. Default behaviour is to merge the values passed in the 'data' param.
              */
-            launchAppFromURL: function (url, data, route, overwrite) {
+            launchAppFromURL: function launchAppFromURL (url, data, route, overwrite) {
                 var query = '';
                 var hash = '';
                 var key;
@@ -433,7 +433,7 @@ define('antie/application',
              * @see getCurrentRoute(), @see getCurrentAppURLParameters().
              * @returns {String} URL of the current application, including protocol, host and port.
              */
-            getCurrentAppURL: function () {
+            getCurrentAppURL: function getCurrentAppURL () {
                 var location = this.getDevice().getWindowLocation();
                 return location.protocol + '//' + location.host + location.pathname;
             },
@@ -444,7 +444,7 @@ define('antie/application',
              * represented in the object as a property with an empty string value.
              * @returns {Object} Object containing properties held in the query string.
              */
-            getCurrentAppURLParameters: function () {
+            getCurrentAppURLParameters: function getCurrentAppURLParameters () {
                 var location = this.getDevice().getWindowLocation();
                 if (!location.search) {
                     return {};
@@ -470,7 +470,7 @@ define('antie/application',
              * Destroys the application, allowing you to run another. This is mainly for use when building
              * unit or BDD tests.
              */
-            destroy: function () {
+            destroy: function destroy () {
                 RuntimeContext.clearCurrentApplication();
                 ComponentContainer.destroy();
             },
@@ -478,7 +478,7 @@ define('antie/application',
             /**
              * Navigates back to whatever launched the application (a parent TAL application, broadcast, or exit).
              */
-            back: function () {
+            back: function back () {
                 var historian = this.getDevice().getHistorian();
                 if (historian.hasHistory()) {
                     this.getDevice().setWindowLocationUrl(historian.back());
@@ -491,7 +491,7 @@ define('antie/application',
              * Returns a Boolean value to indicate whether the application can go back to a parent TAL application.
              * @returns {Boolean} True if the application can return to a parent TAL application.
              */
-            hasHistory: function () {
+            hasHistory: function hasHistory () {
                 return this.getDevice().getHistorian().hasHistory();
             },
 
@@ -500,7 +500,7 @@ define('antie/application',
              * application in the history stack. Will exit to broadcast if the first TAL application was launched from
              * broadcast and a broadcast exit modifier is loaded.
              */
-            exit: function () {
+            exit: function exit () {
                 if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
                     this.getDevice().exitToBroadcast();
                 } else {

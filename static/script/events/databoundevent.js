@@ -25,11 +25,11 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, target, iterator, error) {
+            init: function init (type, target, iterator, error) {
                 this.target = target;
                 this.iterator = iterator;
                 this.error = error;
-                this._super(type);
+                init.base.call(this, type);
             }
         });
     }

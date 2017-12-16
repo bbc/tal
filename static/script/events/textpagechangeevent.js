@@ -23,11 +23,11 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, page) {
+            init: function init (target, page) {
                 this.target = target;
                 this.page = page;
 
-                this._super('textpagechange');
+                init.base.call(this, 'textpagechange');
             }
         });
     }

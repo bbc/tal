@@ -23,7 +23,7 @@ define(
              * Get the media type of this source. In this case <code>MediaType.MEDIA_TYPE_VIDEO</code>.
              * @returns The media type of this content.
              */
-            getMediaType: function() {
+            getMediaType: function getMediaType () {
                 return MediaSource.MEDIA_TYPE_VIDEO;
             }
         });

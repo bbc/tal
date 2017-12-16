@@ -22,9 +22,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(networkStatus) {
+            init: function init (networkStatus) {
                 this.networkStatus = networkStatus;
-                this._super('networkstatuschange');
+                init.base.call(this, 'networkstatuschange');
             }
         });
 

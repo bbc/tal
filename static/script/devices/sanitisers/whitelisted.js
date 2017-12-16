@@ -39,19 +39,19 @@ define(
 
             _whitelist: ['p', 'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'br'],
 
-            setElementContent: function (el) {
+            setElementContent: function setElementContent (el) {
                 var dom = this._createDom();
                 this._clearElement(el);
                 this._processDomElement(dom.firstChild, el);
             },
 
-            _clearElement: function(el) {
+            _clearElement: function _clearElement (el) {
                 for (var i = el.childNodes.length - 1; i >= 0; i--) {
                     el.removeChild(el.childNodes[i]);
                 }
             },
 
-            _createDom: function () {
+            _createDom: function _createDom () {
                 var xmlDoc,
                     string = '<content>' + this._string + '</content>';
 
@@ -69,7 +69,7 @@ define(
                 return xmlDoc;
             },
 
-            _replaceEntities: function (string) {
+            _replaceEntities: function _replaceEntities (string) {
 
                 var replaced = {},
                     regexp,
@@ -94,7 +94,7 @@ define(
 
             },
 
-            _processDomElement: function (element, originalDom) {
+            _processDomElement: function _processDomElement (element, originalDom) {
 
                 var content = element.childNodes,
                     el;

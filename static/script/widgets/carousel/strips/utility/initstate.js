@@ -13,40 +13,40 @@ define(
         'use strict';
         var InitState;
         InitState = State.extend({
-            init: function () {
+            init: function init () {
             },
 
-            append: function (context, parent, widget) {
+            append: function append (context, parent, widget) {
                 this._render(widget);
                 this._attach(context, parent, widget, 'appendChildElement');
             },
 
-            prepend: function (context, parent, widget) {
+            prepend: function prepend (context, parent, widget) {
                 this._render(widget);
                 this._attach(context, parent, widget, 'prependChildElement');
             },
 
-            detach: function (/*context, widget*/) {
+            detach: function detach (/*context, widget*/) {
             },
 
-            hasLength: function () {
+            hasLength: function hasLength () {
                 return false;
             },
 
-            inView: function () {
+            inView: function inView () {
                 return false;
             },
 
-            _getDevice: function (widget) {
+            _getDevice: function _getDevice (widget) {
                 return widget.getCurrentApplication().getDevice();
             },
 
-            _render: function (widget) {
+            _render: function _render (widget) {
                 var device = this._getDevice(widget);
                 widget.render(device);
             },
 
-            _attach: function (context, parent, widget, attachMethodName) {
+            _attach: function _attach (context, parent, widget, attachMethodName) {
                 var device = this._getDevice(widget);
                 device[attachMethodName](parent.outputElement, widget.outputElement);
                 context.setState('ATTACHED');

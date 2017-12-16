@@ -26,15 +26,15 @@ define('antie/widgets/component',
              * @constructor
              * @ignore
              */
-            init: function(id) {
-                this._super(id);
+            init: function init (id) {
+                init.base.call(this, id);
                 this.addClass('component');
                 this._isModal = false;
             },
             /**
              * Hide the component.
              */
-            hide: function() {
+            hide: function hide () {
                 if(this.parentWidget) {
                     this.parentWidget.hide();
                 }
@@ -43,19 +43,19 @@ define('antie/widgets/component',
              * Returns any state information required (in addition to the initial arguments) that is required to restore this component.
              * @returns State information
              */
-            getCurrentState: function() {
+            getCurrentState: function getCurrentState () {
                 return null;
             },
 
-            getIsModal: function() {
+            getIsModal: function getIsModal () {
                 return this._isModal;
             },
 
-            setIsModal: function(modal) {
+            setIsModal: function setIsModal (modal) {
                 this._isModal = modal;
             },
 
-            getConfig: function() {
+            getConfig: function getConfig () {
                 return RuntimeContext.getDevice().getConfig();
             },
 
@@ -63,7 +63,7 @@ define('antie/widgets/component',
              * Returns whether the widget is a Component.
              * @returns {Boolean} True if the widget is a Component.
              */
-            isComponent: function() {
+            isComponent: function isComponent () {
                 return true;
             }
         });

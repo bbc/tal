@@ -13,27 +13,27 @@ define(
         'use strict';
         var State;
         State = Class.extend({
-            init: function () {
+            init: function init () {
                 // implement in child
             },
 
-            append: function (/*context, parent, widget*/) {
+            append: function append (/*context, parent, widget*/) {
                 // implement in child
             },
 
-            prepend: function (/*context, parent, widget*/) {
+            prepend: function prepend (/*context, parent, widget*/) {
                 // implement in child
             },
 
-            detach: function (/*context, widget*/) {
+            detach: function detach (/*context, widget*/) {
                 // implement in child
             },
 
-            hasLength: function () {
+            hasLength: function hasLength () {
                 // implement in child
             },
 
-            inView: function () {
+            inView: function inView () {
                 // implement in child
             }
         });

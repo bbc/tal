@@ -26,25 +26,25 @@ define(
         };
 
         var loggingMethods = {
-            log: function() {
+            log: function log () {
                 saveData('LOG', arguments);
             },
-            debug: function() {
+            debug: function debug () {
                 saveData('DEBUG', arguments);
             },
-            info: function() {
+            info: function info () {
                 saveData('INFO', arguments);
             },
-            warn: function() {
+            warn: function warn () {
                 saveData('WARN', arguments);
             },
-            error: function() {
+            error: function error () {
                 saveData('ERROR', arguments);
             }
         };
 
         Device.addLoggingStrategy(Module.id, loggingMethods);
-        return { getLogItems: function () {
+        return { getLogItems: function getLogItems () {
             var data = logItems.slice(0);
             logItems = [];
             return data;

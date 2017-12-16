@@ -39,7 +39,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id) {
+            init: function init (id) {
                 this._classNames = {'widget':true};
                 this.parentWidget = null;
                 this.outputElement = null;
@@ -59,14 +59,14 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(/*device*/) {
+            render: function render (/*device*/) {
                 throw new Error('Widget::render called - the subclass for widget \'' + this.id + '\' must have not overridden the render method.');
             },
             /**
              * Adds a CSS class to the widget if not already present.
              * @param {String} className The class name to add.
              */
-            addClass: function(className) {
+            addClass: function addClass (className) {
                 if (!this._classNames[className]) {
                     this._classNames[className] = true;
                     if (this.outputElement) {
@@ -79,7 +79,7 @@ define(
              * Removes a CSS class from the widget if present.
              * @param {String} className The class name to remove.
              */
-            removeClass: function(className) {
+            removeClass: function removeClass (className) {
                 if (this._classNames[className]) {
                     delete(this._classNames[className]);
                     if (this.outputElement) {
@@ -93,14 +93,14 @@ define(
              * @param {String} className The class name to check.
              * @returns Boolean true if the device has the className. Otherwise boolean false.
              */
-            hasClass: function(className) {
+            hasClass: function hasClass (className) {
                 return (this._classNames[className] ? true : false);
             },
             /**
              * Get an array of class names that this widget has.
              * @returns An array of class names (Strings)
              */
-            getClasses: function() {
+            getClasses: function getClasses () {
                 var _names = [];
                 for (var i in this._classNames) {
                     if(this._classNames.hasOwnProperty(i)) {
@@ -115,7 +115,7 @@ define(
              * @param {Function} func The handler to be called when the event is fired.
              * @see antie.events.Event
              */
-            addEventListener: function(ev, func) {
+            addEventListener: function addEventListener (ev, func) {
                 var listeners = this._eventListeners[ev];
                 if (typeof listeners === 'undefined') {
                     listeners = [];
@@ -131,7 +131,7 @@ define(
              * @param {Function} func The handler to be removed.
              * @see antie.events.Event
              */
-            removeEventListener: function(ev, func) {
+            removeEventListener: function removeEventListener (ev, func) {
                 var listeners = this._eventListeners[ev],
                     listener;
 
@@ -152,7 +152,7 @@ define(
              * @param {antie.events.Event} ev The event to fire.
              * @see antie.events.Event
              */
-            fireEvent: function(ev) {
+            fireEvent: function fireEvent (ev) {
                 var listeners = this._eventListeners[ev.type];
                 if (listeners) {
                     for (var func in listeners) {
@@ -174,7 +174,7 @@ define(
              * @param {antie.events.Event} ev The event to bubble.
              * @see antie.events.Event
              */
-            bubbleEvent: function(ev) {
+            bubbleEvent: function bubbleEvent (ev) {
                 this.fireEvent(ev);
                 if (!ev.isPropagationStopped()) {
                     if (this.parentWidget) {
@@ -193,7 +193,7 @@ define(
              * @param {antie.events.Event} ev The event to bubble.
              * @see antie.events.Event
              */
-            broadcastEvent: function(ev) {
+            broadcastEvent: function broadcastEvent (ev) {
                 this.fireEvent(ev);
             },
 
@@ -201,7 +201,7 @@ define(
              * Checks to see if a widget is focussable, i.e. contains an enabled button.
              * @see antie.widgets.Button
              */
-            isFocusable: function() {
+            isFocusable: function isFocusable () {
                 // a widget can receive focus if any of it's children or children-of-children are Buttons
                 // We're not a button and we have no children, so we're not.
                 return false;
@@ -210,7 +210,7 @@ define(
              * Gets a reference to the application responsible for creating the widget.
              * @see antie.RuntimeContext
              */
-            getCurrentApplication: function() {
+            getCurrentApplication: function getCurrentApplication () {
                 try {
                     return RuntimeContext.getCurrentApplication();
                 } catch (ex) {
@@ -220,20 +220,20 @@ define(
             /**
              * Get any data item associated with this widget.
              */
-            getDataItem: function() {
+            getDataItem: function getDataItem () {
                 return this._dataItem;
             },
             /**
              * Associate a data item with this widget.
              * @param {object} dataItem Object to associate with this widget.
              */
-            setDataItem: function(dataItem) {
+            setDataItem: function setDataItem (dataItem) {
                 this._dataItem = dataItem;
             },
             /**
              * Returns the component this widget is a descendant of
              */
-            getComponent: function() {
+            getComponent: function getComponent () {
                 var widget = this;
                 while (widget && !(widget.isComponent())) {
                     widget = widget.parentWidget;
@@ -243,7 +243,7 @@ define(
             /**
              * Remove focus state from this widget.
              */
-            removeFocus: function() {
+            removeFocus: function removeFocus () {
                 this.removeClass('focus');
                 this._isFocussed = false;
             },
@@ -251,14 +251,14 @@ define(
              * Get if this widget is in the current focus path.
              * @returns Boolean true if this widget is in the focus path, otherwise false.
              */
-            isFocussed: function() {
+            isFocussed: function isFocussed () {
                 return this._isFocussed;
             },
             /**
              * Returns whether the widget is a Component.
              * @returns {Boolean} True if the widget is a Component.
              */
-            isComponent: function() {
+            isComponent: function isComponent () {
                 return false;
             },
             /**

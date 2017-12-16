@@ -25,8 +25,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (id, orientation) {
-                this._super(id, orientation);
+            init: function init (id, orientation) {
+                init.base.call(this, id, orientation);
                 this._clones = [];
                 this._prependedClones = [];
                 this._appendedClones = [];
@@ -42,7 +42,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 var i;
                 if (!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
@@ -64,8 +64,8 @@ define(
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-            append: function (widget, length) {
-                this._super(widget, length);
+            append: function append (widget, length) {
+                append.base.call(this, widget, length);
                 this._recalculateIfAuto();
             },
 
@@ -79,17 +79,18 @@ define(
              * positioning calculations rather then a calculated value (can be useful when widgets change size)
              * Note length only currently working with non-wrapping strips.
              */
-            insert: function (index, widget, length) {
-                this._super(index, widget, length);
+            insert: function insert (index, widget, length) {
+                insert.base.call(this, index, widget, length);
                 this._recalculateIfAuto();
             },
 
             /**
              * Removes a widget from the strip
-             * @param {antie.widgets.Widget} widget. Widget to remove from the strip
+             * @param {antie.widgets.Widget} widget Widget to remove from the strip
+             * @param {Boolean} [retainElement=false] Whether to keep the widget's output element in the DOM after removing widget
              */
-            remove: function (widget, retainElement) {
-                this._super(widget, retainElement);
+            remove: function remove (widget, retainElement) {
+                remove.base.call(this, widget, retainElement);
                 this._recalculateIfAuto();
             },
 
@@ -98,7 +99,7 @@ define(
              * @returns {Number} length in pixels along primary axis to primary edge of the provided index
              * i.e. from the left edge of the strip to the left edge of the widget in a horizontal carousel
              */
-            getLengthToIndex: function (index) {
+            getLengthToIndex: function getLengthToIndex (index) {
                 var suppliedLength;
                 suppliedLength = this._lengthToIndexUsingSuppliedValues(index);
                 if (suppliedLength !== null) {
@@ -111,14 +112,14 @@ define(
             /**
              * @returns {Array} elements an array of all elements appended to the strip (including clones)
              */
-            getChildElements: function () {
+            getChildElements: function getChildElements () {
                 return this._elements;
             },
 
             /**
              * Removes any existing clones and appends sufficient clones to either end to allow for visual wrapping
              */
-            recalculate: function () {
+            recalculate: function recalculate () {
                 this._removeClones();
                 this._createClones(this._getMaskLength());
             },
@@ -128,7 +129,7 @@ define(
              * @param {Boolean} on If on === true clones will be recalculated after append, remove or insert. If set false
              * they will not be recalculated unless recalculate is called.
              */
-            autoCalculate: function (on) {
+            autoCalculate: function autoCalculate (on) {
                 if (typeof on === 'boolean') {
                     this._autoCalculate = on;
                 }
@@ -138,7 +139,7 @@ define(
              * @param index
              * @returns {Number} The primary length of the widget at the specified index. (width for horizontal, height for vertical)
              */
-            lengthOfWidgetAtIndex: function (index) {
+            lengthOfWidgetAtIndex: function lengthOfWidgetAtIndex (index) {
                 var providedLength;
                 providedLength = this._lengthOfWidgetAtIndexUsingSuppliedValues(index);
                 if (typeof providedLength === 'number') {
@@ -147,15 +148,15 @@ define(
                 return this._getElementLength(this._elements[index + this._elementIndexOffset]);
             },
 
-            _lengthToIndexUsingSuppliedValues: function (/*index*/) {
+            _lengthToIndexUsingSuppliedValues: function _lengthToIndexUsingSuppliedValues (/*index*/) {
                 return null;
             },
 
-            _lengthOfWidgetAtIndexUsingSuppliedValues: function (/*index*/) {
+            _lengthOfWidgetAtIndexUsingSuppliedValues: function _lengthOfWidgetAtIndexUsingSuppliedValues (/*index*/) {
                 return null;
             },
 
-            _refereshWidgetElements: function () {
+            _refereshWidgetElements: function _refereshWidgetElements () {
                 var widgets, i;
                 this._widgetElements = [];
                 widgets = this.getChildWidgets();
@@ -164,26 +165,26 @@ define(
                 }
             },
 
-            _recalculateIfAuto: function () {
+            _recalculateIfAuto: function _recalculateIfAuto () {
                 if (this._autoCalculate === true) {
                     this.recalculate();
                 }
             },
 
-            _refreshElements: function () {
+            _refreshElements: function _refreshElements () {
                 this._refereshWidgetElements();
                 this._elements = this._prependedClones.concat(this._widgetElements.concat(this._appendedClones));
                 this._elementIndexOffset = this._getPrependedClones().length;
             },
 
-            _getLengthOfElementArrayUpToIndex: function (elementArray, index) {
+            _getLengthOfElementArrayUpToIndex: function _getLengthOfElementArrayUpToIndex (elementArray, index) {
                 var elementsUpToIndex, endIndex;
                 endIndex = this._getValidatedIndex(elementArray, index);
                 elementsUpToIndex = elementArray.slice(0, endIndex + 1);
                 return this._getOffsetToLastElementInArray(elementsUpToIndex);
             },
 
-            _firstFocusableIndex: function (widgets) {
+            _firstFocusableIndex: function _firstFocusableIndex (widgets) {
                 var i, focusableIndex;
                 i = 0;
                 focusableIndex = null;
@@ -194,7 +195,7 @@ define(
                 return focusableIndex;
             },
 
-            _createClones: function (maskLength) {
+            _createClones: function _createClones (maskLength) {
                 var widgets, device, clonesOfFrontItems, clonesOfRearItems, i;
                 device = this.getCurrentApplication().getDevice();
                 widgets = this.getChildWidgets();
@@ -214,7 +215,7 @@ define(
                 this._refreshElements();
             },
 
-            _cloneFrontItems: function (widgets, maskLength) {
+            _cloneFrontItems: function _cloneFrontItems (widgets, maskLength) {
                 var firstFocusableIndex, requiredLength, clones;
                 clones = [];
                 firstFocusableIndex = this._firstFocusableIndex(widgets);
@@ -225,7 +226,7 @@ define(
                 return clones;
             },
 
-            _cloneRearItems: function (widgets, maskLength) {
+            _cloneRearItems: function _cloneRearItems (widgets, maskLength) {
                 function shallowCloneArray(arr) {
                     return arr.slice(0);
                 }
@@ -235,7 +236,7 @@ define(
                 return this._cloneFrontItems(reversedWidgets, maskLength);
             },
 
-            _cloneFromIndexToLength: function (widgets, startIndex, length) {
+            _cloneFromIndexToLength: function _cloneFromIndexToLength (widgets, startIndex, length) {
                 var clones, clonedLength, i, widget;
                 clones = [];
                 clonedLength = 0;
@@ -252,11 +253,11 @@ define(
                 return clones;
             },
 
-            _cloneWidget: function (widget) {
+            _cloneWidget: function _cloneWidget (widget) {
                 return this._cloneElement(widget.outputElement);
             },
 
-            _cloneElement: function (element) {
+            _cloneElement: function _cloneElement (element) {
                 var device, clone;
                 device = this._getDevice();
                 clone = device.cloneElement(element, true, 'carouselclone', '_CarouselClone');
@@ -264,7 +265,7 @@ define(
                 return clone;
             },
 
-            _removeStateStylesFromElement: function (element) {
+            _removeStateStylesFromElement: function _removeStateStylesFromElement (element) {
                 var device;
                 device = this.getCurrentApplication().getDevice();
                 device.removeClassFromElement(element, 'focus', true);
@@ -272,7 +273,7 @@ define(
                 device.removeClassFromElement(element, 'buttonFocussed', true);
             },
 
-            _removeClones: function () {
+            _removeClones: function _removeClones () {
                 var i, clone, device;
                 device = this.getCurrentApplication().getDevice();
 
@@ -286,19 +287,19 @@ define(
                 this._refreshElements();
             },
 
-            _getPrependedClones: function () {
+            _getPrependedClones: function _getPrependedClones () {
                 return this._prependedClones;
             },
 
-            _getAppendedClones: function () {
+            _getAppendedClones: function _getAppendedClones () {
                 return this._appendedClones;
             },
 
-            _getClones: function () {
+            _getClones: function _getClones () {
                 return this._clones;
             },
 
-            _getMaskLength: function () {
+            _getMaskLength: function _getMaskLength () {
                 return this.parentWidget.getLength();
             }
         });

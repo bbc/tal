@@ -28,8 +28,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, itemFormatter, dataSource) {
-                this._super(id, itemFormatter, dataSource);
+            init: function init (id, itemFormatter, dataSource) {
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('verticallist');
 
                 var self = this;
@@ -43,7 +43,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function(evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if(evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN) {
                     return;
                 }

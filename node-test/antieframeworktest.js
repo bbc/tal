@@ -10,14 +10,14 @@ var AntieFrameworkTest = function() {
 		'Generic TV1 Device has no Headers' : function(test) {
 			setUpNormalConfig();
 			var headers = framework.getDeviceHeaders(getGenericDevice1Config());
-			test.ok(!headers, "The device headers are not empty. It contains: " + headers);
+			test.ok(!headers.trim(), "The device headers are not empty. It contains: " + headers);
 			test.done();
 		},
 
 		'Generic TV1 Device has no body'  : function(test) {
 			setUpNormalConfig();
 			body = framework.getDeviceBody(getGenericDevice1Config());
-			test.ok(!body, "The device body is not empty. It contains: " + body);
+			test.ok(!body.trim(), "The device body is not empty. It contains: " + body);
 			test.done();
 		},
 
@@ -152,5 +152,3 @@ var AntieFrameworkTest = function() {
 
 }
 var test = new AntieFrameworkTest();
-
-

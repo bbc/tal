@@ -23,10 +23,10 @@ define('antie/devices/broadcastsource/stubbedsource',
              * @constructor
              * @ignore
              */
-            init: function () {},
-            showCurrentChannel: function () {},
-            stopCurrentChannel: function () {},
-            getCurrentChannelName: function () {
+            init: function init () {},
+            showCurrentChannel: function showCurrentChannel () {},
+            stopCurrentChannel: function stopCurrentChannel () {},
+            getCurrentChannelName: function getCurrentChannelName () {
                 return 'BBC ONE N West';
             },
             getChannelNameList : function () {

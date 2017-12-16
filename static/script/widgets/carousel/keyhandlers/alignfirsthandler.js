@@ -19,7 +19,7 @@ define(
     function (KeyHandler) {
         'use strict';
         return KeyHandler.extend(/** @lends antie.widgets.carousel.keyhandlers.AlignFirstHandler.prototype */{
-            _addAlignmentListeners: function () {
+            _addAlignmentListeners: function _addAlignmentListeners () {
                 var carousel = this._carousel;
                 carousel.addEventListener('afteralign', function (ev) {
                     if (ev.target === carousel) {

@@ -11,22 +11,22 @@ define(
         'use strict';
 
         var StorageProvider = Class.extend({
-            init: function() {
+            init: function init () {
                 this._valueCache = {};
             },
-            getItem: function(key) {
+            getItem: function getItem (key) {
                 return this._valueCache[key];
             },
-            setItem: function(key, value) {
+            setItem: function setItem (key, value) {
                 this._valueCache[key] = value;
             },
-            removeItem: function(key) {
+            removeItem: function removeItem (key) {
                 delete this._valueCache[key];
             },
-            clear: function() {
+            clear: function clear () {
                 this._valueCache = {};
             },
-            isEmpty: function() {
+            isEmpty: function isEmpty () {
                 var prop;
                 for(prop in this._valueCache) {
                     if(this._valueCache.hasOwnProperty(prop)) {

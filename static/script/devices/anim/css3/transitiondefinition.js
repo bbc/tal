@@ -20,11 +20,11 @@ define(
          * (these are handled by TransitionEndPoints)
          */
         TransitionDefinition = Class.extend({
-            init: function(){
+            init: function init (){
                 this.properties = {};
             },
 
-            setProperty: function(property, attributes){
+            setProperty: function setProperty (property, attributes){
                 if(attributes) {
                     this.properties[property] = {
                         duration: (attributes.duration !== undefined ? attributes.duration : TransitionDefinition.defaults.duration),
@@ -40,11 +40,11 @@ define(
                 }
             },
 
-            hasProperty: function(property) {
+            hasProperty: function hasProperty (property) {
                 return this.properties.hasOwnProperty(property);
             },
 
-            getProperties: function() {
+            getProperties: function getProperties () {
                 var prop, propArr;
                 propArr = [];
                 for (prop in this.properties) {
@@ -55,7 +55,7 @@ define(
                 return propArr;
             },
 
-            removeProperty: function(property) {
+            removeProperty: function removeProperty (property) {
                 if(this.hasProperty(property)) {
                     delete this.properties[property];
                     return true;
@@ -63,20 +63,20 @@ define(
                 return false;
             },
 
-            getPropertyDuration: function(property) {
+            getPropertyDuration: function getPropertyDuration (property) {
                 return this._getPropertyAttribute(property, 'duration');
 
             },
 
-            getPropertyDelay: function(property) {
+            getPropertyDelay: function getPropertyDelay (property) {
                 return this._getPropertyAttribute(property, 'delay');
             },
 
-            getPropertyTimingFn: function(property) {
+            getPropertyTimingFn: function getPropertyTimingFn (property) {
                 return this._getPropertyAttribute(property, 'timingFn');
             },
 
-            setPropertyDuration: function(property, duration) {
+            setPropertyDuration: function setPropertyDuration (property, duration) {
                 if (this.hasProperty(property)) {
                     this.properties[property].duration = duration;
                 } else {
@@ -86,7 +86,7 @@ define(
                 }
             },
 
-            setPropertyDelay: function(property, delay) {
+            setPropertyDelay: function setPropertyDelay (property, delay) {
                 if (this.hasProperty(property)) {
                     this.properties[property].delay = delay;
                 } else {
@@ -96,7 +96,7 @@ define(
                 }
             },
 
-            setPropertyTimingFn: function(property, timingFn) {
+            setPropertyTimingFn: function setPropertyTimingFn (property, timingFn) {
                 if (this.hasProperty(property)) {
                     this.properties[property].timingFn = timingFn;
                 } else {
@@ -106,7 +106,7 @@ define(
                 }
             },
 
-            addIn: function(transitionDefinition) {
+            addIn: function addIn (transitionDefinition) {
                 var property, addProps, i;
                 addProps = transitionDefinition.getProperties();
                 for (i = 0; i !== addProps.length; i += 1) {
@@ -119,7 +119,7 @@ define(
                 }
             },
 
-            takeOut: function(transitionDefinition) {
+            takeOut: function takeOut (transitionDefinition) {
                 var subProps, i;
                 subProps = transitionDefinition.getProperties();
                 for (i = 0; i !== subProps.length; i += 1) {
@@ -129,7 +129,7 @@ define(
                 }
             },
 
-            areAllDurationsZero: function() {
+            areAllDurationsZero: function areAllDurationsZero () {
                 var property, subProps, i, allZeros;
                 allZeros = true;
                 subProps = this.getProperties();
@@ -142,7 +142,7 @@ define(
                 return allZeros;
             },
 
-            _getPropertyAttribute: function(property, attribute) {
+            _getPropertyAttribute: function _getPropertyAttribute (property, attribute) {
                 if(this.hasProperty(property)) {
                     return this.properties[property][attribute];
                 }

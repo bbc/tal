@@ -12,7 +12,7 @@ define(
         'antie/runtimecontext',
         'antie/devices/device'
     ],
-    function( Module, RuntimeContext, Device) {
+    function(Module, RuntimeContext, Device) {
         'use strict';
 
         function zeroFill(number, width) {
@@ -34,19 +34,19 @@ define(
             /**
              * Sets the iterator pointer to the first item
              */
-            log: function() {
+            log: function log () {
                 sendXHRLogMessage('LOG', Array.prototype.join.call(arguments, '\n'));
             },
-            debug: function() {
+            debug: function debug () {
                 sendXHRLogMessage( 'DEBUG', Array.prototype.join.call(arguments, '\n'));
             },
-            info: function() {
+            info: function info () {
                 sendXHRLogMessage('INFO', Array.prototype.join.call(arguments, '\n'));
             },
-            warn: function() {
+            warn: function warn () {
                 sendXHRLogMessage('WARN', Array.prototype.join.call(arguments, '\n'));
             },
-            error: function() {
+            error: function error () {
                 sendXHRLogMessage('ERROR', Array.prototype.join.call(arguments, '\n'));
             }
         };
@@ -56,9 +56,7 @@ define(
         function xhrPost(url, opts, messageObject) {
 
             var http = new XMLHttpRequest();
-
-            var device = RuntimeContext.getCurrentApplication().getDevice();
-            var jsonMessage = device.encodeJson( messageObject );
+            var jsonMessage = JSON.stringify(messageObject);
 
             http.open('POST', url, true);
 

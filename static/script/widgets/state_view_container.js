@@ -21,8 +21,8 @@ define (
 
         var StateViewContainer = Container.extend( {
 
-            init:function(controller) {
-                this._super();
+            init: function init (controller) {
+                init.base.call(this);
 
                 var self = this;
 
@@ -52,7 +52,7 @@ define (
                 });
 
             },
-            focusHack: function() {
+            focusHack: function focusHack () {
                 this._isFocussed = true;
                 this.focusButtonHack.focus();
             }

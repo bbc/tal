@@ -79,8 +79,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(namespace, opts) {
-                this._super();
+            init: function init (namespace, opts) {
+                init.base.call(this);
 
                 this._namespace = namespace;
                 this._opts = opts || {};
@@ -88,7 +88,9 @@ define(
                 var cookie = readCookie(namespace);
 
                 if(cookie) {
-                    this._valueCache = Device.prototype.decodeJson(cookie);
+                    try {
+                        this._valueCache = JSON.parse(cookie);
+                    } catch (e) { /* couldn't parse cookie, just ignore it */ }
                     if(this._valueCache) {
                         this._save();
                     } else {
@@ -96,16 +98,16 @@ define(
                     }
                 }
             },
-            setItem: function(key, value) {
-                this._super(key, value);
+            setItem: function setItem (key, value) {
+                setItem.base.call(this, key, value);
                 this._save();
             },
-            removeItem: function(key) {
-                this._super(key);
+            removeItem: function removeItem (key) {
+                removeItem.base.call(this, key);
                 this._save();
             },
-            clear: function() {
-                this._super();
+            clear: function clear () {
+                clear.base.call(this);
                 this._save();
 
                 // delete it from the stored namespaces
@@ -113,11 +115,11 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            _save: function() {
+            _save: function _save () {
                 if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {
-                    var json = Device.prototype.encodeJson(this._valueCache);
+                    var json = JSON.stringify(this._valueCache);
                     createCookie(this._namespace, json, undefined, this._opts);
                 }
             }

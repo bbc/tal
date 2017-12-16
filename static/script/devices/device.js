@@ -63,7 +63,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(config) {
+            init: function init (config) {
                 var kc;
 
                 this._application = null;
@@ -234,28 +234,28 @@ define(
              * Set a reference to the application the device is running.
              * @param {antie.Application} application The application the device is running.
              */
-            setApplication: function(application) {
+            setApplication: function setApplication (application) {
                 this._application = application;
             },
             /**
              * Gets the current device configuration.
              * @returns The current device configuration document.
              */
-            getConfig: function() {
+            getConfig: function getConfig () {
                 return this._config;
             },
             /**
              * Gets the available screen size.
              * @returns An object with width and height properties.
              */
-            getScreenSize: function() {
+            getScreenSize: function getScreenSize () {
                 throw new Error('Device::getScreenSize not implemented by current Device subclass.');
             },
             /**
              * Get the logging object for the current device.
              * @returns The current device logging object.
              */
-            getLogger: function() {
+            getLogger: function getLogger () {
                 return this.filteredLoggingMethods;
             },
             /**
@@ -266,7 +266,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A container element within the device's user-agent.
              */
-            createContainer: function(/*id, classNames*/) {
+            createContainer: function createContainer (/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a label (an element that only contains text) in the device's user-agent.
@@ -277,7 +277,7 @@ define(
              * @param {String} [text] The text within the label.
              * @returns A label within the device's user-agent.
              */
-            createLabel: function(/*id, classNames, text*/) {
+            createLabel: function createLabel (/*id, classNames, text*/) {
             },
             /**
              * -PROTECTED- Creates a button (an element that can be selected by the user to perform an action) in the device's user-agent.
@@ -287,7 +287,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A button within the device's user-agent.
              */
-            createButton: function(/*id, classNames*/) {
+            createButton: function createButton (/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a list in the device's user-agent.
@@ -297,7 +297,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list within the device's user-agent.
              */
-            createList: function(/*id, classNames*/) {
+            createList: function createList (/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates a list item in the device's user-agent.
@@ -307,7 +307,7 @@ define(
              * @param {Array} [classNames] An array of class names to apply to the element.
              * @returns A list item within the device's user-agent.
              */
-            createListItem: function(/*id, classNames*/) {
+            createListItem: function createListItem (/*id, classNames*/) {
             },
             /**
              * -PROTECTED- Creates an image in the device's user-agent.
@@ -318,21 +318,21 @@ define(
              * @param {String} src The source URL of the image.
              * @returns An image within the device's user-agent.
              */
-            createImage: function(/*id, classNames, src*/) {
+            createImage: function createImage (/*id, classNames, src*/) {
             },
             /**
              * Appends an element as a child of another.
              * @param {Element} to Append as a child of this element.
              * @param {Element} el The new child element.
              */
-            appendChildElement: function(/*to, el*/) {
+            appendChildElement: function appendChildElement (/*to, el*/) {
             },
             /**
              * Sets the classes of an element.
              * @param {Element} el The element which will receive new class names.
              * @param {Array} classNames An array of class names.
              */
-            setElementClasses: function(/*el, classNames*/) {
+            setElementClasses: function setElementClasses (/*el, classNames*/) {
             },
             /**
              * Removes a class from an element (and optionally descendants)
@@ -340,14 +340,14 @@ define(
              * @param {String} className The class to remove.
              * @param {Boolean} [deep] If true, and this element has the given class, remove the class from it's children recursively.
              */
-            removeClassFromElement: function(/*el, className, deep*/) {
+            removeClassFromElement: function removeClassFromElement (/*el, className, deep*/) {
             },
             /**
              * Adds a class name to an element
              * @param {Element} el The element which will receive new class name.
              * @param {String} className The new class name to add.
              */
-            addClassToElement: function(/*el, className*/) {
+            addClassToElement: function addClassToElement (/*el, className*/) {
             },
             /**
              * Adds global key event listener(s) to the user-agent.
@@ -360,7 +360,7 @@ define(
              *     self._application.bubbleEvent(new KeyEvent("keydown", keyMap[e.keyCode]));
              * };
              */
-            addKeyEventListener: function() {
+            addKeyEventListener: function addKeyEventListener () {
             },
             /**
              * Returns all direct children of an element which have the provided tagName.
@@ -368,40 +368,40 @@ define(
              * @param {String} tagName The tag name you are looking for.
              * @returns An array of elements having the provided tag name.
              */
-            getChildElementsByTagName: function(/*el, tagName*/) {
+            getChildElementsByTagName: function getChildElementsByTagName (/*el, tagName*/) {
             },
             /**
              * Returns the top-level element. This is the target of layout class names.
              * @return The top-level DOM element.
              */
-            getTopLevelElement: function() {
+            getTopLevelElement: function getTopLevelElement () {
             },
             /**
              * Returns all the loaded stylesheet elements.
              * @return An array containing all loaded stylesheet elements (link and style elements)
              */
-            getStylesheetElements: function() {
+            getStylesheetElements: function getStylesheetElements () {
             },
             /**
              * Returns the offset of the element within its offset container.
              * @param {Element} el The element you wish to know the offset of.
              * @return An literal object containing properties, top and left.
              */
-            getElementOffset: function(/*el*/) {
+            getElementOffset: function getElementOffset (/*el*/) {
             },
             /**
              * Gets the size of an element.
              * @param {Element} el The element of which to return the size.
              * @returns A size object containing the width and height of the element.
              */
-            getElementSize: function(/*el*/) {
+            getElementSize: function getElementSize (/*el*/) {
             },
             /**
              * Sets the size of an element.
              * @param {Element} el The element of which to set the size.
              * @param {Size} size The new size of the element.
              */
-            setElementSize: function(/*el, size*/) {
+            setElementSize: function setElementSize (/*el, size*/) {
             },
             /**
              * Scroll an element (within some masking container) so that its top-left corner is at the given position.
@@ -419,7 +419,7 @@ define(
              * @returns {Object} A handle to any animation started
              * @see antie.devices.Device#stopAnimation
              */
-            scrollElementTo: function(/*options*/) {
+            scrollElementTo: function scrollElementTo (/*options*/) {
             },
             /**
              * Moves an element so that its top-left corner is at the given position.
@@ -437,7 +437,7 @@ define(
              * @returns {Object} A handle to any animation started
              * @see #stopAnimation
              */
-            moveElementTo: function(/*options*/) {
+            moveElementTo: function moveElementTo (/*options*/) {
             },
             /**
              * Hides an element.
@@ -453,7 +453,7 @@ define(
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            hideElement: function(/*options*/) {
+            hideElement: function hideElement (/*options*/) {
             },
             /**
              * Shows an element.
@@ -469,7 +469,7 @@ define(
              * @returns {Object} A handle to any animation started.
              * @see #stopAnimation
              */
-            showElement: function(/*options*/) {
+            showElement: function showElement (/*options*/) {
             },
             /**
              * Tweens a property (or properties) of an element's style from one value to another.
@@ -486,32 +486,34 @@ define(
              * @param {Number} [options.fps] Frames per second of animation (styletopleft only)
              * @returns {Object} A handle to animation started. This should only be used for passing to stopAnimation and nothing else should be inferred by its value. If no animation occurs, null may be returned but should not be used as an indicator.
              */
-            tweenElementStyle: function(/*options*/){
+            tweenElementStyle: function tweenElementStyle (/*options*/){
 
             },
             /**
              * Stops the specified animation. The any completeHandler for the animation will be executed.
              * @param {object} anim A handle to the animation you wish to stop.
              */
-            stopAnimation: function(/*anim*/) {
+            stopAnimation: function stopAnimation (/*anim*/) {
             },
             /**
              * Encodes an object as JSON.
+             * @deprecated since version 8.1.0, use JSON.stringify
              * @param {object} obj Object to encode.
              */
-            encodeJson: function(/*obj*/) {
+            encodeJson: function encodeJson (/*obj*/) {
             },
             /**
              * Decodes JSON.
+             * @deprecated since version 8.1.0, use JSON.parse
              * @param {String} json JSON to decode.
              */
-            decodeJson: function(/*json*/) {
+            decodeJson: function decodeJson (/*json*/) {
             },
             /**
              * Gets the current key map from the device configuration.
              * @returns The current key map.
              */
-            getKeyMap: function() {
+            getKeyMap: function getKeyMap () {
                 return this._keyMap;
             },
             /**
@@ -521,48 +523,48 @@ define(
              * @param mediaType Type of media. "audio" or "video"
              * @param eventCallback Function that is called to processes media events.
              */
-            createMediaInterface: function(/*id, mediaType, eventCallback*/) {
+            createMediaInterface: function createMediaInterface (/*id, mediaType, eventCallback*/) {
             },
             /**
              * Get the media player.
              * This will return the correct implementation for the current device.
              * @returns {antie.devices.mediaplayer.MediaPlayer} Media player for the current device.
              */
-            getMediaPlayer: function () {
+            getMediaPlayer: function getMediaPlayer () {
             },
             /**
              * Get the live media player.
              * This will return the correct implementation for the current device.
              * @returns {antie.devices.mediaplayer.MediaPlayer} Live media player for the current device.
              */
-            getLivePlayer: function () {
+            getLivePlayer: function getLivePlayer () {
             },
             /**
              * Get the level of live support.
              * This will return the correct level of support for the current device.
              * @returns {String} Live support level matching a value in {antie.devices.mediaplayer.MediaPlayer.LIVE_SUPPORT}.
              */
-            getLiveSupport: function () {
+            getLiveSupport: function getLiveSupport () {
             },
             /**
              * Gets the player embed mode for the current device
              * @param {String} mediaType "video" or "radio".
              * @returns The embed mode of the current player
              */
-            getPlayerEmbedMode: function(/*mediaType*/) {
+            getPlayerEmbedMode: function getPlayerEmbedMode (/*mediaType*/) {
                 // mediaType: video or audio
             },
             /**
              * Sets the current route (a reference pointing to a location within the application).
              * @param {Array} route A route pointing to a location within the application.
              */
-            setCurrentRoute: function(/*route*/) {
+            setCurrentRoute: function setCurrentRoute (/*route*/) {
             },
             /**
              * Gets the current route (a reference pointing to a location within the application).
              * @returns The current route (location within the application).
              */
-            getCurrentRoute: function() {
+            getCurrentRoute: function getCurrentRoute () {
             },
             /**
              * Get an object giving access to the current URL, query string, hash etc.
@@ -572,20 +574,20 @@ define(
              * Use getCurrentAppURL(), getCurrentAppURLParams() and getCurrentRoute() to get
              * this information in a more generic way.
              */
-            getWindowLocation: function() {
+            getWindowLocation: function getWindowLocation () {
             },
             /**
              * Browse to the specified location. Use launchAppFromURL() and setCurrentRoute() under Application
              * to manipulate the current location more easily.
              * @param {String} url Full URL to navigate to, including search and hash if applicable.
              */
-            setWindowLocationUrl: function(/*url*/) {
+            setWindowLocationUrl: function setWindowLocationUrl (/*url*/) {
             },
             /**
              * Gets the reference (e.g. URL) of the resource that launched the application.
              * @returns A reference (e.g. URL) of the resource that launched the application.
              */
-            getReferrer: function() {
+            getReferrer: function getReferrer () {
             },
             /**
             * Loads an external script that calls a specified callback function.
@@ -597,7 +599,7 @@ define(
             * @param {String} [callbackSuffix] Suffix to append to end of callback function name.
             * @returns The script element that will load the script.
             */
-            loadScript: function (url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) {
+            loadScript: function loadScript (url, callbackFunctionRegExp, callbacks, timeout, callbackSuffix) {
                 var self = this;
                 var script = null;
                 var funcName = '_antie_callback_' + (callbackSuffix || ((new Date() * 1) + '_' + Math.floor(Math.random() * 10000000)));
@@ -641,7 +643,7 @@ define(
              * @param {function(String)} [callback] Callback function when style has loaded/failed
              * @returns The link element that will load the style sheet.
              */
-            loadStyleSheet: function(/*url, callback*/) {
+            loadStyleSheet: function loadStyleSheet (/*url, callback*/) {
             },
              /**
               * Loads a resource from a URL protected by device authentication.
@@ -649,7 +651,7 @@ define(
               * @param {Object} opts Object containing onLoad and onError callback functions.
               * @returns The request object used to load the resource.
               */
-            loadAuthenticatedURL: function (url, opts) {
+            loadAuthenticatedURL: function loadAuthenticatedURL (url, opts) {
                 // Simple implementation - assuming XHR in browser can perform client-authenticated SSL requests
                 return this.loadURL(url, opts);
             },
@@ -658,7 +660,7 @@ define(
              * @returns {XMLHttpRequest} a new instance
              * @private
              */
-            _newXMLHttpRequest: function() {
+            _newXMLHttpRequest: function _newXMLHttpRequest () {
                 return new XMLHttpRequest();
             },
 
@@ -668,7 +670,7 @@ define(
              * @param {Object} opts Object containing onLoad and onError callback functions.
              * @returns {XMLHttpRequest} The request object used to load the resource.
              */
-            loadURL: function (url, opts) {
+            loadURL: function loadURL (url, opts) {
                 var xhr = this._newXMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
@@ -710,7 +712,7 @@ define(
              * @param {Object} data Associative array of fields/values to post.
              * @param {Object} opts Object containing onLoad and onError callback functions.
              */
-            crossDomainPost: function (url, data, opts) {
+            crossDomainPost: function crossDomainPost (url, data, opts) {
                 var iframe, form;
                 var postRequestHasBeenSent = false;
                 var blankPageToLoad = opts.blankUrl || 'blank.html';
@@ -814,14 +816,14 @@ define(
              * @param {String} [jsonpOptions.callbackKey=callback] Key to use in query string when passing callback function name
              * for JSON-P call. Default: callback
              */
-            executeCrossDomainGet: function (url, opts, jsonpOptions) {
-                var self, callbackKey, callbackQuery, modifiedOpts;
-                self = this;
+            executeCrossDomainGet: function executeCrossDomainGet (url, opts, jsonpOptions) {
+                var callbackKey, callbackQuery, modifiedOpts;
                 jsonpOptions = jsonpOptions || {};
                 if (configSupportsCORS(this.getConfig())) {
                     modifiedOpts = {
-                        onLoad: function (jsonResponse) {
-                            opts.onSuccess(self.decodeJson(jsonResponse));
+                        onLoad: function onLoad (jsonResponse) {
+                            var json = jsonResponse ? JSON.parse(jsonResponse) : {};
+                            opts.onSuccess(json);
                         },
                         onError: opts.onError
                     };
@@ -862,9 +864,9 @@ define(
              * for form requests the token is included as a bearerToken form field value. If not specified, no token is included
              * in the request.
              */
-            executeCrossDomainPost: function (url, data, opts) {
+            executeCrossDomainPost: function executeCrossDomainPost (url, data, opts) {
                 var payload, modifiedOpts, formData;
-                payload = this.encodeJson(data);
+                payload = JSON.stringify(data);
                 if (configSupportsCORS(this.getConfig())) {
                     modifiedOpts = {
                         onLoad: opts.onLoad,
@@ -900,24 +902,24 @@ define(
              * Forces the device to pre-load an image.
              * @param {String} url The URL of the image to preload.
              */
-            preloadImage: function(/*url*/) {
+            preloadImage: function preloadImage (/*url*/) {
             },
             /**
              * Checks to see if HD output is currently enabled.
              * @returns True if HD is currently enabled.
              */
-            isHDEnabled: function() {
+            isHDEnabled: function isHDEnabled () {
             },
             /**
              * Exits the application directly - no history.
              */
-            exit: function() {
+            exit: function exit () {
                 throw new Error('Not supported on this device.');
             },
             /**
              * Exits to broadcast if this function has been overloaded by a modifier. Otherwise, calls exit().
              */
-            exitToBroadcast: function() {
+            exitToBroadcast: function exitToBroadcast () {
                 this.exit();
             },
             /**
@@ -926,7 +928,7 @@ define(
              * @param {String} namespace The storage namespace.
              * @returns StorageProvider object.
              */
-            getStorage: function(storageType, namespace, opts) {
+            getStorage: function getStorage (storageType, namespace, opts) {
                 if (storageType === StorageProvider.STORAGE_TYPE_SESSION) {
                     return SessionStorage.getNamespace(namespace);
                 } else if (storageType === StorageProvider.STORAGE_TYPE_PERSISTENT) {
@@ -937,38 +939,38 @@ define(
              * Check to see if volume control is supported on this device.
              * @returns Boolean true if volume control is supported.
              */
-            isVolumeControlSupported: function() {
+            isVolumeControlSupported: function isVolumeControlSupported () {
                 return false;
             },
             /**
              * Get the current volume.
              * @returns The current volume (0.0 to 1.0)
              */
-            getVolume: function() {
+            getVolume: function getVolume () {
             },
             /**
              * Set the current volume.
              * @param {Float} volume The new volume level (0.0 to 1.0).
              */
-            setVolume: function(/*volume*/) {
+            setVolume: function setVolume (/*volume*/) {
             },
             /**
              * Check to see if the volume is currently muted.
              * @returns Boolean true if the device is currently muted. Otherwise false.
              */
-            getMuted: function() {
+            getMuted: function getMuted () {
             },
             /**
              * Mute or unmute the device.
              * @param {Boolean} muted The new muted state. Boolean true to mute, false to unmute.
              */
-            setMuted: function(/*muted*/) {
+            setMuted: function setMuted (/*muted*/) {
             },
             /**
              * Check to see whether device has disabled animation.
              * @returns {Boolean} true if animation is disabled, false if animation is not disabled.
              */
-            isAnimationDisabled: function() {
+            isAnimationDisabled: function isAnimationDisabled () {
             },
             /**
              * Create a new widget giving control over broadcast television. Check whether
@@ -976,14 +978,14 @@ define(
              * @see antie.widgets.broadcastsource
              * @returns {Object} Device-specific implementation of antie.widgets.broadcastsource
              */
-            createBroadcastSource: function() {
+            createBroadcastSource: function createBroadcastSource () {
                 throw new Error('Broadcast API not available on this device.');
             },
             /**
              * Check to see whether the device has an API to control broadcast television.
              * @returns {Boolean} true if the API is available, false if not.
              */
-            isBroadcastSourceSupported: function() {
+            isBroadcastSourceSupported: function isBroadcastSourceSupported () {
                 return false;
             }
         });

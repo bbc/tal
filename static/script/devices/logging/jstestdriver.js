@@ -20,19 +20,19 @@ define(
             /**
              * Sets the iterator pointer to the first item
              */
-            log: function() {
+            log: function log () {
                 jstestdriver.console.log.apply(jstestdriver.console, arguments);
             },
-            debug: function() {
+            debug: function debug () {
                 jstestdriver.console.debug.apply(jstestdriver.console, arguments);
             },
-            info: function() {
+            info: function info () {
                 jstestdriver.console.info.apply(jstestdriver.console, arguments);
             },
-            warn: function() {
+            warn: function warn () {
                 jstestdriver.console.warn.apply(jstestdriver.console, arguments);
             },
-            error: function() {
+            error: function error () {
                 jstestdriver.console.error.apply(jstestdriver.console, arguments);
             }
         };

@@ -54,21 +54,38 @@ define(
                     to: {
                         opacity: 1
                     },
+                    from: {
+                        opacity: 0
+                    },
+                    duration: options.duration,
+                    easing: options.easing || 'linear',
                     onComplete: options.onComplete,
                     skipAnim: options.skipAnim
                 };
 
-                options.el.style.opacity = 0;
                 options.el.style.visibility = 'visible';
                 return this.tweenElementStyle(fadeOptions);
             };
 
             target.hideElement = function (options) {
-                options.el.style.visibility = 'hidden';
-                options.el.style.opacity = 0;
-                if (options.onComplete) {
-                    options.onComplete();
+                function onComplete () {
+                    options.el.style.visibility = 'hidden';
+                    if (options.onComplete) {
+                        options.onComplete();
+                    }
                 }
+                var fadeOptions = {
+                    el: options.el,
+                    to: {
+                        opacity: 0
+                    },
+                    duration: options.duration,
+                    easing: options.easing || 'linear',
+                    onComplete: onComplete,
+                    skipAnim: options.skipAnim
+                };
+
+                return this.tweenElementStyle(fadeOptions);
             };
 
             target.isAnimationDisabled = function () {

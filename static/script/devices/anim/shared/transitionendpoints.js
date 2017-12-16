@@ -19,7 +19,7 @@ define(
          */
         TransitionEndPoints = Class.extend(
             {
-                init: function(options) {
+                init: function init (options) {
                     this._to = {};
                     this._from = {};
                     this._onComplete = function() {};
@@ -28,7 +28,7 @@ define(
                     }
                 },
 
-                setFromOptions: function(options) {
+                setFromOptions: function setFromOptions (options) {
                     var property;
                     this.units = options.units || {};
                     this._skipAnim = options.skipAnim;
@@ -42,7 +42,7 @@ define(
                     this.onStart = options.onStart || this.onStart;
                 },
 
-                addUnitsToPropertyValue: function(property, value, unit) {
+                addUnitsToPropertyValue: function addUnitsToPropertyValue (property, value, unit) {
                     unit = unit || this.units[property] || TransitionEndPoints.defaultUnits[property];
                     if(unit !== undefined) {
                         return value + unit;
@@ -50,11 +50,11 @@ define(
                     return value;
                 },
 
-                hasProperty: function(property) {
+                hasProperty: function hasProperty (property) {
                     return this._to.hasOwnProperty(property);
                 },
 
-                getProperties: function() {
+                getProperties: function getProperties () {
                     var prop, propArray;
                     propArray = [];
                     for (prop in this._to) {
@@ -65,29 +65,29 @@ define(
                     return propArray;
                 },
 
-                getPropertyDestination: function (prop) {
+                getPropertyDestination: function getPropertyDestination (prop) {
                     if(this._to.hasOwnProperty(prop)) {
                         return this._to[prop];
                     }
                     return undefined;
                 },
 
-                getPropertyOrigin: function (prop) {
+                getPropertyOrigin: function getPropertyOrigin (prop) {
                     if(this._from.hasOwnProperty(prop)) {
                         return this._from[prop];
                     }
                     return undefined;
                 },
 
-                getOnCompleteCallback: function() {
+                getOnCompleteCallback: function getOnCompleteCallback () {
                     return this._onComplete;
                 },
 
-                shouldSkip: function() {
+                shouldSkip: function shouldSkip () {
                     return (!!this._skipAnim || this.toAndFromAllEqual());
                 },
 
-                toAndFromAllEqual: function() {
+                toAndFromAllEqual: function toAndFromAllEqual () {
                     var prop, equal;
                     equal = true;
 
@@ -101,7 +101,7 @@ define(
                     return equal;
                 },
 
-                completeOriginsUsingElement: function(el) {
+                completeOriginsUsingElement: function completeOriginsUsingElement (el) {
                     function shouldReplace() {
                         return (elementValue !== null && elementValue !== undefined && self._from[property] === undefined);
                     }
@@ -119,7 +119,7 @@ define(
                     }
                 },
 
-                _addValuesToFrom: function(property, options) {
+                _addValuesToFrom: function _addValuesToFrom (property, options) {
                     if(options.from && options.from.hasOwnProperty(property)) {
                         this._from[property] = this.addUnitsToPropertyValue(property, options.from[property]);
                     }

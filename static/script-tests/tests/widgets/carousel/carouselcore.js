@@ -15,42 +15,6 @@
         this.sandbox.restore();
     };
 
-    this.CarouselCoreTest.prototype.testCarouselCreatesOneMaskWithCorrectId = function (queue) {
-        var self = this;
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/carouselcore',
-                'antie/widgets/widget'
-            ],
-            function (application, CarouselCore, Widget) {
-                var createWidgetSpy;
-                createWidgetSpy = self.sandbox.spy(Widget.prototype, 'init').withArgs('myCarousel_CarouselMask');
-                new CarouselCore('myCarousel');
-                assertTrue(createWidgetSpy.calledOnce);
-            }
-        );
-    };
-
-    this.CarouselCoreTest.prototype.testCarouselCreatesOneWidgetStripWithCorrectId = function (queue) {
-        var self = this;
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/carouselcore',
-                'antie/widgets/container'
-            ],
-            function (application, CarouselCore, Container) {
-                var createContainerStub;
-                createContainerStub = self.sandbox.spy(Container.prototype, 'init').withArgs('myCarousel_WidgetStrip');
-                new CarouselCore('myCarousel');
-                assertTrue(createContainerStub.calledOnce);
-            }
-        );
-    };
-
     this.CarouselCoreTest.prototype.testMaskAddedAsChildOfCarousel = function (queue) {
         queuedApplicationInit(queue,
                               'lib/mockapplication',

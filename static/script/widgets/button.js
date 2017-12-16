@@ -8,13 +8,11 @@ define(
     'antie/widgets/button',
     [
         'antie/widgets/container',
-        'antie/events/focusevent',
         'antie/events/focusdelayevent',
-        'antie/events/blurevent',
         'antie/events/keyevent',
         'antie/events/selectevent'
     ],
-    function(Container, FocusEvent, FocusDelayEvent, BlurEvent, KeyEvent, SelectEvent) {
+    function(Container, FocusDelayEvent, KeyEvent, SelectEvent) {
         'use strict';
 
         /**
@@ -22,9 +20,7 @@ define(
          * @name antie.widgets.Button
          * @class
          * @extends antie.widgets.Container
-         * @requires antie.events.FocusEvent
          * @requires antie.events.FocusDelayEvent
-         * @requires antie.events.BlurEvent
          * @requires antie.events.KeyEvent
          * @requires antie.events.SelectEvent
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
@@ -35,9 +31,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, animationEnabled) {
+            init: function init (id, animationEnabled) {
                 //TODO refactor this to set focusDelay explicitly rather than using animationEnabled with fixed focusDelay
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('button');
                 this.addClass('buttonBlurred');
 
@@ -65,7 +61,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function render (device) {
                 this.outputElement = device.createButton(this.id, this.getClasses(), '#');
                 for(var i=0; i<this._childWidgetOrder.length; i++) {
                     device.appendChildElement(this.outputElement, this._childWidgetOrder[i].render(device));
@@ -77,7 +73,7 @@ define(
              * @see antie.widgets.Button
              * @returns {Boolean} True if the button is enabled.
              */
-            isFocusable: function() {
+            isFocusable: function isFocusable () {
                 // a widget can receive focus if it or any of it's descendants are Buttons
                 // We're a button, so we are
                 return !this._disabled;
@@ -86,7 +82,7 @@ define(
              * Set the button to be disabled and therefore not focusable. Adds buttonDisabled class.
              * @param {Boolean} disabled True if the button is to be disabled.
              */
-            setDisabled: function(disabled) {
+            setDisabled: function setDisabled (disabled) {
                 this._disabled = disabled;
                 if(disabled) {
                     this.addClass('buttonDisabled');
@@ -100,7 +96,7 @@ define(
              * @param {Boolean} [force] Pass <code>true</code> to force focus to a disabled button.
              * @returns Boolean true if focus has been moved to the button. Otherwise returns false.
              */
-            focus: function(force) {
+            focus: function focus (force) {
                 var origDisabled = this._disabled;
                 if(force) {
                     this._disabled = false;
@@ -119,7 +115,7 @@ define(
 
                 return focusChanged;
             },
-            select: function() {
+            select: function select () {
                 this.bubbleEvent(new SelectEvent(this));
             },
             /**
@@ -127,7 +123,7 @@ define(
              * @param {Boolean} focus True if the active child is to be focussed, False if the active child is to be blurred.
              * @private
              */
-            _setActiveChildFocussed: function(focus) {
+            _setActiveChildFocussed: function _setActiveChildFocussed (focus) {
                 if(this._focusDelayHandle) {
                     clearTimeout(this._focusDelayHandle);
                 }
@@ -147,8 +143,8 @@ define(
                     this.addClass('buttonBlurred');
                 }
             },
-            removeFocus: function() {
-                this._super();
+            removeFocus: function removeFocus () {
+                removeFocus.base.call(this);
                 this.removeClass('buttonFocussed');
                 this.addClass('buttonBlurred');
             }

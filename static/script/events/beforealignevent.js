@@ -22,10 +22,10 @@ define('antie/events/beforealignevent',
              * @constructor
              * @ignore
              */
-            init: function (target, alignedIndex) {
+            init: function init (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super('beforealign');
+                init.base.call(this, 'beforealign');
             }
         });
     }

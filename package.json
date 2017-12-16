@@ -1,7 +1,7 @@
 {
   "name": "tal",
   "license": "Apache-2.0",
-  "version": "6.4.0",
+  "version": "8.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/bbc/tal.git"
@@ -13,8 +13,8 @@
     "config": "./config",
     "static": "./static/script"
   },
-  "engines" : {
-    "npm" : "~3.10.3"
+  "engines": {
+    "npm": "~3.10.3"
   },
   "devDependencies": {
     "eslint-plugin-jasmine": "^1.6.0",
@@ -32,9 +32,11 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
-    "tal-page-strategies": "fmtvp/tal-page-strategies"
+    "tal-page-strategies": "1.1.7"
   },
   "scripts": {
-    "test": "grunt full --verbose"
+    "test": "grunt full --verbose",
+    "test:unit": "grunt jasmine",
+    "test:lint": "grunt lint"
   }
 }

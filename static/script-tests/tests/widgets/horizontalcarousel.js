@@ -117,9 +117,7 @@
                 widget._activeWidgetAnimationDuration = 300;
                 widget._activeWidgetAnimationEasing = 'easeOutBounce';
                 var device = application.getDevice();
-                var deviceCreateListSpy = this.sandbox.spy(device, 'createList');
                 widget.render(device);
-                assert(deviceCreateListSpy.called);
                 assertEquals(widget._activeWidgetAnimationFPS, 10);
                 assertEquals(widget._activeWidgetAnimationDuration, 300);
                 assertEquals(widget._activeWidgetAnimationEasing, 'easeOutBounce');

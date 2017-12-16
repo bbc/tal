@@ -25,8 +25,8 @@ define(
          */
         var Player = MediaPlayer.extend({
 
-            init: function() {
-                this._super();
+            init: function init () {
+                init.base.call(this);
                 this._setSentinelLimits();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
@@ -34,7 +34,7 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function (mediaType, url, mimeType) {
+            setSource: function setSource (mediaType, url, mimeType) {
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
                     this._source = url;
@@ -75,7 +75,7 @@ define(
             /**
              * @inheritDoc
              */
-            playFrom: function (seconds) {
+            playFrom: function playFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
                 switch (this.getState()) {
@@ -112,7 +112,7 @@ define(
             /**
              * @inheritDoc
              */
-            beginPlayback: function() {
+            beginPlayback: function beginPlayback () {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
@@ -129,7 +129,7 @@ define(
             /**
              * @inheritDoc
              */
-            beginPlaybackFrom: function(seconds) {
+            beginPlaybackFrom: function beginPlaybackFrom (seconds) {
                 this._postBufferingState = MediaPlayer.STATE.PLAYING;
                 this._sentinelLimits.seek.currentAttemptCount = 0;
 
@@ -149,7 +149,7 @@ define(
             /**
              * @inheritDoc
              */
-            pause: function () {
+            pause: function pause () {
                 this._postBufferingState = MediaPlayer.STATE.PAUSED;
                 switch (this.getState()) {
                 case MediaPlayer.STATE.BUFFERING:
@@ -170,7 +170,7 @@ define(
             /**
              * @inheritDoc
              */
-            stop: function () {
+            stop: function stop () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                     break;
@@ -193,7 +193,7 @@ define(
             /**
              * @inheritDoc
              */
-            reset: function () {
+            reset: function reset () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.EMPTY:
                     break;
@@ -212,21 +212,21 @@ define(
             /**
              * @inheritDoc
              */
-            getSource: function () {
+            getSource: function getSource () {
                 return this._source;
             },
 
             /**
              * @inheritDoc
              */
-            getMimeType: function () {
+            getMimeType: function getMimeType () {
                 return this._mimeType;
             },
 
             /**
              * @inheritDoc
              */
-            getCurrentTime: function () {
+            getCurrentTime: function getCurrentTime () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                 case MediaPlayer.STATE.ERROR:
@@ -250,7 +250,7 @@ define(
             /**
              * @inheritDoc
              */
-            getSeekableRange: function () {
+            getSeekableRange: function getSeekableRange () {
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
                 case MediaPlayer.STATE.ERROR:
@@ -265,7 +265,7 @@ define(
             /**
              * @inheritDoc
              */
-            _getMediaDuration: function() {
+            _getMediaDuration: function _getMediaDuration () {
                 if (this._range) {
                     return this._range.end;
                 }
@@ -275,18 +275,18 @@ define(
             /**
              * @inheritDoc
              */
-            getState: function () {
+            getState: function getState () {
                 return this._state;
             },
 
             /**
              * @inheritDoc
              */
-            getPlayerElement: function() {
+            getPlayerElement: function getPlayerElement () {
                 return this._mediaElement;
             },
 
-            _onFinishedBuffering: function() {
+            _onFinishedBuffering: function _onFinishedBuffering () {
                 this._cacheRange();
 
                 if (this.getState() !== MediaPlayer.STATE.BUFFERING) {
@@ -304,29 +304,29 @@ define(
                 }
             },
 
-            _onDeviceError: function() {
+            _onDeviceError: function _onDeviceError () {
                 this._reportError('Media element error code: ' + this._mediaElement.error);
             },
 
-            _onDeviceBuffering: function() {
+            _onDeviceBuffering: function _onDeviceBuffering () {
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._toBuffering();
                 }
             },
 
-            _onEndOfMedia: function() {
+            _onEndOfMedia: function _onEndOfMedia () {
                 if (this.getState() !== MediaPlayer.STATE.COMPLETE) {
                     this._toComplete();
                 }
             },
 
-            _onStatus: function() {
+            _onStatus: function _onStatus () {
                 if (this.getState() === MediaPlayer.STATE.PLAYING) {
                     this._emitEvent(MediaPlayer.EVENT.STATUS);
                 }
             },
 
-            _createElement: function() {
+            _createElement: function _createElement () {
                 var device = RuntimeContext.getDevice();
                 this._mediaElement = device._createElement('object', 'mediaPlayer');
                 this._mediaElement.type = this._mimeType;
@@ -337,7 +337,7 @@ define(
                 this._mediaElement.style.height = '100%';
             },
 
-            _registerEventHandlers: function() {
+            _registerEventHandlers: function _registerEventHandlers () {
                 var self = this;
                 var DEVICE_UPDATE_PERIOD_MS = 500;
 
@@ -372,13 +372,13 @@ define(
                 }, DEVICE_UPDATE_PERIOD_MS);
             },
 
-            _addElementToDOM: function() {
+            _addElementToDOM: function _addElementToDOM () {
                 var device = RuntimeContext.getDevice();
                 var body = document.getElementsByTagName('body')[0];
                 device.prependChildElement(body, this._mediaElement);
             },
 
-            _cacheRange: function() {
+            _cacheRange: function _cacheRange () {
                 if(this._mediaElement) {
                     this._range =  {
                         start: 0,
@@ -387,23 +387,23 @@ define(
                 }
             },
 
-            _playAndSetDeferredSeek: function(seconds) {
+            _playAndSetDeferredSeek: function _playAndSetDeferredSeek (seconds) {
                 this._mediaElement.play(1);
                 if (seconds > 0) {
                     this._deferSeekingTo = seconds;
                 }
             },
 
-            _waitingToSeek: function() {
+            _waitingToSeek: function _waitingToSeek () {
                 return (this._deferSeekingTo !== undefined);
             },
 
-            _performDeferredSeek: function() {
+            _performDeferredSeek: function _performDeferredSeek () {
                 this._seekTo(this._deferSeekingTo);
                 this._deferSeekingTo = undefined;
             },
 
-            _seekTo: function(seconds) {
+            _seekTo: function _seekTo (seconds) {
                 var clampedTime = this._getClampedTime(seconds);
                 if (clampedTime !== seconds) {
                     RuntimeContext.getDevice().getLogger().debug('playFrom ' + seconds + ' clamped to ' + clampedTime + ' - seekable range is { start: ' + this._range.start + ', end: ' + this._range.end + ' }');
@@ -412,11 +412,11 @@ define(
                 return this._mediaElement.seek(clampedTime * 1000);
             },
 
-            _waitingToPause: function() {
+            _waitingToPause: function _waitingToPause () {
                 return (this._postBufferingState === MediaPlayer.STATE.PAUSED);
             },
 
-            _wipe: function () {
+            _wipe: function _wipe () {
                 this._type = undefined;
                 this._source = undefined;
                 this._mimeType = undefined;
@@ -429,19 +429,19 @@ define(
                 }
             },
 
-            _destroyMediaElement: function() {
+            _destroyMediaElement: function _destroyMediaElement () {
                 var device = RuntimeContext.getDevice();
                 delete this._mediaElement.onPlayStateChange;
                 device.removeElement(this._mediaElement);
                 this._mediaElement = undefined;
             },
 
-            _reportError: function(errorMessage) {
+            _reportError: function _reportError (errorMessage) {
                 RuntimeContext.getDevice().getLogger().error(errorMessage);
                 this._emitEvent(MediaPlayer.EVENT.ERROR, {'errorMessage': errorMessage});
             },
 
-            _toStopped: function () {
+            _toStopped: function _toStopped () {
                 this._state = MediaPlayer.STATE.STOPPED;
                 this._emitEvent(MediaPlayer.EVENT.STOPPED);
                 if (this._sentinelInterval) {
@@ -449,13 +449,13 @@ define(
                 }
             },
 
-            _toBuffering: function () {
+            _toBuffering: function _toBuffering () {
                 this._state = MediaPlayer.STATE.BUFFERING;
                 this._emitEvent(MediaPlayer.EVENT.BUFFERING);
                 this._setSentinels([this._exitBufferingSentinel]);
             },
 
-            _toPlaying: function () {
+            _toPlaying: function _toPlaying () {
                 this._state = MediaPlayer.STATE.PLAYING;
                 this._emitEvent(MediaPlayer.EVENT.PLAYING);
                 this._setSentinels([
@@ -465,7 +465,7 @@ define(
                 ]);
             },
 
-            _toPaused: function () {
+            _toPaused: function _toPaused () {
                 this._state = MediaPlayer.STATE.PAUSED;
                 this._emitEvent(MediaPlayer.EVENT.PAUSED);
                 this._setSentinels([
@@ -474,29 +474,29 @@ define(
                 ]);
             },
 
-            _toComplete: function () {
+            _toComplete: function _toComplete () {
                 this._state = MediaPlayer.STATE.COMPLETE;
                 this._emitEvent(MediaPlayer.EVENT.COMPLETE);
                 this._clearSentinels();
             },
 
-            _toEmpty: function () {
+            _toEmpty: function _toEmpty () {
                 this._wipe();
                 this._state = MediaPlayer.STATE.EMPTY;
             },
 
-            _toError: function(errorMessage) {
+            _toError: function _toError (errorMessage) {
                 this._wipe();
                 this._state = MediaPlayer.STATE.ERROR;
                 this._reportError(errorMessage);
                 throw 'ApiError: ' + errorMessage;
             },
 
-            _isNearToEnd: function(seconds) {
+            _isNearToEnd: function _isNearToEnd (seconds) {
                 return (this.getDuration() - seconds <= 1);
             },
 
-            _setSentinels: function(sentinels) {
+            _setSentinels: function _setSentinels (sentinels) {
                 this._sentinelLimits.pause.currentAttemptCount = 0;
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();
@@ -521,7 +521,7 @@ define(
                 }, 1100);
             },
 
-            _setSentinelLimits: function() {
+            _setSentinelLimits: function _setSentinelLimits () {
                 this._sentinelLimits = {
                     pause: {
                         maximumAttempts: 2,
@@ -538,11 +538,11 @@ define(
                 };
             },
 
-            _clearSentinels: function() {
+            _clearSentinels: function _clearSentinels () {
                 clearInterval(this._sentinelInterval);
             },
 
-            _enterBufferingSentinel: function() {
+            _enterBufferingSentinel: function _enterBufferingSentinel () {
                 var sentinelBufferingRequired = !this._timeHasAdvanced && !this._sentinelTimeIsNearEnd && (this._sentinelIntervalNumber > 1);
                 if(sentinelBufferingRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_ENTER_BUFFERING);
@@ -551,7 +551,7 @@ define(
                 return sentinelBufferingRequired;
             },
 
-            _exitBufferingSentinel: function() {
+            _exitBufferingSentinel: function _exitBufferingSentinel () {
                 var sentinelExitBufferingRequired = this._timeHasAdvanced;
                 if(sentinelExitBufferingRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_EXIT_BUFFERING);
@@ -560,7 +560,7 @@ define(
                 return sentinelExitBufferingRequired;
             },
 
-            _shouldBeSeekedSentinel: function() {
+            _shouldBeSeekedSentinel: function _shouldBeSeekedSentinel () {
                 if (this._sentinelSeekTime === undefined) {
                     return false;
                 }
@@ -585,7 +585,7 @@ define(
                 return sentinelActionTaken;
             },
 
-            _shouldBePausedSentinel: function() {
+            _shouldBePausedSentinel: function _shouldBePausedSentinel () {
                 var sentinelPauseRequired = this._timeHasAdvanced;
                 var sentinelActionTaken = false;
                 if (sentinelPauseRequired) {
@@ -597,7 +597,7 @@ define(
                 return sentinelActionTaken;
             },
 
-            _enterCompleteSentinel: function() {
+            _enterCompleteSentinel: function _enterCompleteSentinel () {
                 var sentinelCompleteRequired = !this._timeHasAdvanced && this._sentinelTimeIsNearEnd;
                 if(sentinelCompleteRequired) {
                     this._emitEvent(MediaPlayer.EVENT.SENTINEL_COMPLETE);
@@ -606,7 +606,7 @@ define(
                 return sentinelCompleteRequired;
             },
 
-            _nextSentinelAttempt: function(sentinelInfo, attemptFn) {
+            _nextSentinelAttempt: function _nextSentinelAttempt (sentinelInfo, attemptFn) {
                 var currentAttemptCount, maxAttemptCount;
 
                 sentinelInfo.currentAttemptCount += 1;
@@ -626,7 +626,7 @@ define(
                 return false;
             },
 
-            _setSeekSentinelTolerance: function() {
+            _setSeekSentinelTolerance: function _setSeekSentinelTolerance () {
                 var ON_DEMAND_SEEK_SENTINEL_TOLERANCE = 15;
                 var LIVE_SEEK_SENTINEL_TOLERANCE = 30;
 
