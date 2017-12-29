@@ -13,7 +13,7 @@
     "Application",
     "Layer"
   ],
-  "license": "https://github.com/fmtvp/tal/blob/master/LICENSE",
+  "license": "https://github.com/bbc/tal/blob/master/LICENSE",
   "ignore": [
         "jsdoc",
         "node-test",
