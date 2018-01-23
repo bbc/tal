@@ -1,5 +1,3 @@
-/* global Common */
-
 /**
  * @fileOverview Requirejs modifier for samsung_maple exit
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
@@ -8,15 +6,15 @@
 
 define(
     'antie/devices/exit/broadcast/samsung_maple',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by returning to broadcast using the Samsung API.
-         */
         Device.prototype.exitToBroadcast = function() {
-            new Common.API.Widget().sendExitEvent();
+            Exit.samsungMapleBroadcast();
         };
 
     }

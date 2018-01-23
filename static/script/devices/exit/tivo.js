@@ -7,17 +7,15 @@
 
 define(
     'antie/devices/exit/tivo',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by returning to the widget page using the tivo function.
-         */
         Device.prototype.exit = function() {
-            /* global tivo: true */
-            tivo.core.exit();
+            Exit.tivoCore();
         };
-
     }
 );

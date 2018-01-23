@@ -8,17 +8,15 @@
 
 define(
     'antie/devices/exit/samsung_tizen',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by invoking exit() on the current application.
-         */
         Device.prototype.exit = function() {
-            // From http://www.samsungdforum.com/tizenapiguide/
-            /* global tizen: true */
-            tizen.application.getCurrentApplication().exit();
+            Exit.samsungTizen();
         };
     }
 );

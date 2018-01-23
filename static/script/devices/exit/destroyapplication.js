@@ -10,36 +10,13 @@
 
 define(
     'antie/devices/exit/destroyapplication',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        // MIME type for the OIPF application manager, as defined by the spec (v1.2)
-        // Spec: http://www.oipf.tv/specifications/root/volume-5-declarative-application-environment-r112/download
-        var APPMANAGER_MIME_TYPE = 'application/oipfApplicationManager';
-
-        /**
-         * Exits the application by invoking Application.destroyApplication()
-         * after getting the OIPF application manager. In theory, according to
-         * the spec, this has the same effect as calling window.close().
-         */
-        Device.prototype.exit = function() {
-            var factory = window.oipfObjectFactory;
-
-            // Check that the OIPF factory is implemented and supports the application manager
-            if(factory && factory.isObjectSupported(APPMANAGER_MIME_TYPE)) {
-                var appManager = factory.createApplicationManagerObject();
-
-                if(appManager) {
-                    // Ask the application manager for an Application object for this app
-                    var ownerApp = appManager.getOwnerApplication(window.document);
-
-                    if(ownerApp) {
-                        // Destroy this app and finish
-                        ownerApp.destroyApplication();
-                    }
-                }
-            }
-        };
+        Exit.destroyApplication();
     }
 );

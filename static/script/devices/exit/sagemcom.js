@@ -6,16 +6,15 @@
 
 define(
     'antie/devices/exit/sagemcom',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by singalling the application iframe can be closed
-         */
         Device.prototype.exit = function() {
-            /* global parent: true */
-            parent.postMessage('JS_EVENT_QUIT_THIRD_PARTY', '*');
+            Exit.sagemcom();
         };
     }
 );

@@ -6,16 +6,15 @@
 
 define(
     'antie/devices/exit/closewindow',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by invoking the window.close method
-        */
         Device.prototype.exit = function() {
-            window.close();
+            Exit.closeWindow();
         };
-
     }
 );

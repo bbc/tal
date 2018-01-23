@@ -8,20 +8,15 @@
 
 define(
     'antie/devices/exit/openclosewindow',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by invoking window.open() on the current window,
-         * then window.close().
-         */
         Device.prototype.exit = function() {
-            // Workaround to make the browser think this window was opened via script
-            window.open('', '_self');
-
-            // Close the current window
-            window.close();
+            Exit.openCloseWindow();
         };
     }
 );

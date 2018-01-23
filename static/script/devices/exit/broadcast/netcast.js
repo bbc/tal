@@ -6,15 +6,15 @@
 
 define(
     'antie/devices/exit/broadcast/netcast',
-    ['antie/devices/browserdevice'],
-    function(Device) {
+    [
+        'antie/devices/browserdevice',
+        'antie/lib/tal-exit-strategies'
+    ],
+    function (Device, Exit) {
         'use strict';
 
-        /**
-         * Exits the application by returning to broadcast using the NetcastExit function.
-         */
         Device.prototype.exitToBroadcast = function() {
-            window.NetCastExit();
+            Exit.netcastBroadcast();
         };
 
     }
