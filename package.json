@@ -33,11 +33,9 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
-    "tal-exit-strategies": "github:bbc/tal-exit-strategies",
     "tal-page-strategies": "1.1.7"
   },
   "scripts": {
-    "pretest": "grunt copy:lib",
     "test": "grunt full --verbose",
     "test:unit": "grunt jasmine",
     "test:lint": "grunt lint"
