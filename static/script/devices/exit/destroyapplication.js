@@ -17,6 +17,8 @@ define(
     function (Device, Exit) {
         'use strict';
 
-        Exit.destroyApplication();
+        Device.prototype.exit = function() {
+            Exit.destroyApplication();
+        };
     }
 );
