@@ -10,15 +10,12 @@ function openCloseWindow () {
 }
 
 function destroyApplication () {
-  try {
-    var factory = window.oipfObjectFactory;
-    if (factory.isObjectSupported('application/oipfApplicationManager')) {
-      factory
-        .createApplicationManagerObject()
-        .getOwnerApplication(window.document)
-        .destroyApplication();
-    }
-  } catch (e) {}
+  if (window.oipfObjectFactory.isObjectSupported('application/oipfApplicationManager')) {
+    window.oipfObjectFactory
+      .createApplicationManagerObject()
+      .getOwnerApplication(window.document)
+      .destroyApplication();
+  }
 }
 
 function history () {
