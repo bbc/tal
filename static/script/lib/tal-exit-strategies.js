@@ -50,7 +50,7 @@ function netcastBroadcast () {
 }
 
 function samsungMapleBroadcast () {
-  new window.Common.API.Widget().sendReturnEvent();
+  new window.Common.API.Widget().sendExitEvent();
 }
 
 var modifierMap = {
