@@ -73,13 +73,6 @@ require(
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
             });
 
-            it('chokes on default exit()', function() {
-                expect(function() {
-                    // Method under test
-                    device.exit();
-                }).toThrowError('Not supported on this device.');
-            });
-
             it('calls exit() on default exitToBroadcast()', function() {
                 spyOn(device, 'exit');
 
