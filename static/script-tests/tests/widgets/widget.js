@@ -321,7 +321,7 @@
     };
 
     this.WidgetTest.prototype.testShowCallsShowElementWithCorrectArgs = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         queuedApplicationInit(
             queue,
@@ -340,7 +340,7 @@
                 var afterAnimationCallback = function() {
                 };
 
-                widget.show({
+                var animation = widget.show({
                     fps: 25,
                     duration: 1000,
                     onComplete : afterAnimationCallback
@@ -350,6 +350,7 @@
                 assertEquals(25, spy.getCall(0).args[0].fps);
                 assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
+                assertNotUndefined(animation);
             }
         );
     };
@@ -402,7 +403,7 @@
     };
 
     this.WidgetTest.prototype.testHideCallsHideElementWithCorrectArgs = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         queuedApplicationInit(
             queue,
@@ -421,7 +422,7 @@
                 var afterAnimationCallback = function() {
                 };
 
-                widget.hide({
+                var animation = widget.hide({
                     fps: 25,
                     duration: 1000,
                     onComplete : afterAnimationCallback
@@ -431,6 +432,7 @@
                 assertEquals(25, spy.getCall(0).args[0].fps);
                 assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
+                assertNotUndefined(animation);
             }
         );
     };
@@ -489,7 +491,7 @@
     };
 
     this.WidgetTest.prototype.testMoveToCallsMoveElementToWithCorrectArgs = function(queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         queuedApplicationInit(
             queue,
@@ -508,7 +510,7 @@
                 var afterAnimationCallback = function() {
                 };
 
-                widget.moveTo({
+                var animation = widget.moveTo({
                     to : {
                         top: 200,
                         left: 300
@@ -522,6 +524,7 @@
                 assertEquals(25, spy.getCall(0).args[0].fps);
                 assertEquals(1000, spy.getCall(0).args[0].duration);
                 assertEquals(afterAnimationCallback, spy.getCall(0).args[0].onComplete);
+                assertNotUndefined(animation);
             }
         );
     };
