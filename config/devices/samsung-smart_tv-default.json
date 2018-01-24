@@ -6,7 +6,6 @@
       "antie/devices/anim/styletopleft",
       "antie/devices/mediaplayer/samsung_maple",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/json2",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",
