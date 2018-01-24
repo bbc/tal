@@ -170,6 +170,8 @@ define(
                             }
                         }
                     }
+
+                    this._logger = LoggingStrategies.getStrategyForConfig(config);
                 }
             },
             /**
@@ -198,7 +200,7 @@ define(
              * @returns The current device logging object.
              */
             getLogger: function getLogger () {
-                return LoggingStrategies.getStrategyForConfig(this._config);
+                return this._logger;
             },
             /**
              * -PROTECTED- Creates a generic container element in the device's user-agent.

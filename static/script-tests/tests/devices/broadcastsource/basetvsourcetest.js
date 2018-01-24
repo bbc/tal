@@ -16,7 +16,6 @@
             'antie/devices/anim/styletopleft',
             'antie/devices/broadcastsource/basetvsource',
             'antie/devices/storage/cookie',
-            'antie/devices/logging/default',
             'antie/devices/exit/closewindow'
         ]},'input':{'map':{}},'layouts':[
             {'width':1280,'height':720,'module':'fixtures/layouts/default','classes':['browserdevice720p']}
