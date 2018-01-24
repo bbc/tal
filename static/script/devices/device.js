@@ -995,6 +995,26 @@ define(
             return config && config.networking && config.networking.supportsCORS;
         }
 
+        var DEAD_MODIFIERS = [
+            'antie/devices/exit/closewindow',
+            'antie/devices/exit/destroyapplication',
+            'antie/devices/exit/history',
+            'antie/devices/exit/netcast',
+            'antie/devices/exit/openclosewindow',
+            'antie/devices/exit/sagemcom',
+            'antie/devices/exit/samsung_maple',
+            'antie/devices/exit/samsung_tizen',
+            'antie/devices/exit/tivo',
+            'antie/devices/exit/broadcast/netcast',
+            'antie/devices/exit/broadcast/samsung_maple'
+        ];
+
+        function removeDeadModifiers (modifiers) {
+            return modifiers.filter(function (m) {
+                return DEAD_MODIFIERS.indexOf(m) === -1;
+            });
+        }
+
         /**
          * Loads a device configuration document, and its modifiers.
          * @name load
@@ -1006,10 +1026,7 @@ define(
          */
         Device.load = function(config, callbacks) {
             try {
-                // Remove exit strategy
-                var modifiers = config.modules.modifiers.filter(function (modifier) {
-                    return modifier.indexOf('exit') === -1;
-                });
+                var modifiers = removeDeadModifiers(config.modules.modifiers);
                 require([config.modules.base].concat(modifiers), function(DeviceClass) {
                     try {
                         callbacks.onSuccess(new DeviceClass(config));
