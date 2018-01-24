@@ -23,6 +23,7 @@ require(
                 mockXMLHttpRequest.status = 0;
 
                 device = new Device(antie.framework.deviceConfiguration);
+
                 spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
             });
 
@@ -71,15 +72,6 @@ require(
                 }).not.toThrow();
 
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
-            });
-
-            it('calls exit() on default exitToBroadcast()', function() {
-                spyOn(device, 'exit');
-
-                // Method under test
-                device.exitToBroadcast();
-
-                expect(device.exit).toHaveBeenCalledWith();
             });
 
             it('sends xhr request with specified method and data', function() {
