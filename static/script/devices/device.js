@@ -1011,7 +1011,9 @@ define(
             'antie/devices/exit/samsung_tizen',
             'antie/devices/exit/tivo',
             'antie/devices/exit/broadcast/netcast',
-            'antie/devices/exit/broadcast/samsung_maple'
+            'antie/devices/exit/broadcast/samsung_maple',
+            'antie/devices/data/nativejson',
+            'antie/devices/data/json2'
         ];
 
         function removeDeadModifiers (modifiers) {
