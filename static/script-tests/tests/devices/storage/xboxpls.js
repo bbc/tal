@@ -8,7 +8,7 @@ require(
         'antie/devices/storage/xboxpls',
         'antie/devices/browserdevice'
     ],
-    function(XBoxStorage, NativeJson, Device) {
+    function(XBoxStorage, Device) {
         'use strict';
 
         var device,
