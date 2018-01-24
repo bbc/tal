@@ -7,7 +7,6 @@
       "antie/devices/mediaplayer/html5memoryleakunfix",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/netcast",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]

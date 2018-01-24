@@ -7,8 +7,6 @@
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
-      "antie/devices/logging/onscreen",
       "antie/devices/exit/history"
     ]
   },

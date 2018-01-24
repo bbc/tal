@@ -7,9 +7,6 @@
       "antie/devices/mediaplayer/samsung_maple",
       "antie/devices/mediaplayer/live/none",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/samsung_maple",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]

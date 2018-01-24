@@ -7,7 +7,6 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/samsung_maple",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]

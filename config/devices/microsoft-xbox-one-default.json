@@ -6,9 +6,6 @@
       "antie/devices/anim/styletopleft",
       "antie/devices/mediaplayer/html5untyped",
       "antie/devices/mediaplayer/live/restartable",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "xboxone/devices/storage/xboxpls"      ]
       },
       "logging": {
