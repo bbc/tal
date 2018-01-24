@@ -7,7 +7,6 @@
       "antie/devices/mediaplayer/html5seekfinishedemitevent",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
       "antie/devices/logging/default",
       "antie/devices/storage/cookie",
       "antie/devices/exit/closewindow",

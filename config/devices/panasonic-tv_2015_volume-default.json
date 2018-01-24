@@ -7,7 +7,6 @@
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
       "antie/devices/logging/onscreen",
       "antie/devices/logging/xhr",

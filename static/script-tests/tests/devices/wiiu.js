@@ -16,7 +16,7 @@
     this.WiiUDevice.prototype.setUp = function() {
         this.sandbox = sinon.sandbox.create();
         stubNWFSpecificApis();
-        this.wiiuConfig = {'modules':{'base':'antie/devices/wiiu','modifiers':['antie/devices/data/json2','antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[
+        this.wiiuConfig = {'modules':{'base':'antie/devices/wiiu','modifiers':['antie/devices/anim/styletopleft']},'input':{'map':{}},'layouts':[
             {'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}
         ],'deviceConfigurationKey':'devices-html5-1'};
     };
