@@ -53,7 +53,7 @@ function samsungMapleBroadcast () {
   new window.Common.API.Widget().sendExitEvent();
 }
 
-var modifierMap = {
+var MAP = {
   'antie/devices/exit/closewindow': closeWindow,
   'antie/devices/exit/destroyapplication': destroyApplication,
   'antie/devices/exit/history': history,
@@ -67,12 +67,19 @@ var modifierMap = {
   'antie/devices/exit/broadcast/samsung_maple': samsungMapleBroadcast
 };
 
-function getStrategyForConfig (config) {
-  var modifier = config.modules.modifiers.reduce(function (m, c) {
-    return c.indexOf('exit') > -1 ? c : m
-  }, '');
+function getStrategyForConfig (deviceConfig, options) {
+  options = options || {};
 
-  return modifierMap[modifier]
+  var modifiers = deviceConfig.modules.modifiers;
+  var exitModifiers = modifiers.filter(function (m) { return m.match(/exit\//) });
+
+  if (!exitModifiers.length) return
+  if (exitModifiers.length === 1) return MAP[exitModifiers[0]]
+
+  var matcher = options.exitToBroadcast ? /exit\/broadcast/ : /exit\/(?!broadcast)/;
+  var modifier = exitModifiers.filter(function (m) { return m.match(matcher) })[0];
+
+  return MAP[modifier || exitModifiers[0]]
 }
 
 var index = {

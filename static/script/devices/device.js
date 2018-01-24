@@ -915,13 +915,18 @@ define(
              * Exits the application directly - no history.
              */
             exit: function exit () {
-                Exit.getStrategyForConfig(this._config)();
+                var exit = Exit.getStrategyForConfig(this._config);
+                exit && exit();
             },
             /**
              * Exits to broadcast if this function has been overloaded by a modifier. Otherwise, calls exit().
              */
             exitToBroadcast: function exitToBroadcast () {
-                this.exit();
+                var exit = Exit.getStrategyForConfig(this._config, { exitToBroadcast: true });
+                exit && exit();
+            },
+            hasExitStrategy: function () {
+                return !!Exit.getStrategyForConfig(this._config);
             },
             /**
              * Get a storage provider of a given type for the specified namespace.
