@@ -38,9 +38,10 @@ define(
         'antie/storageprovider',
         'antie/devices/storage/session',
         'antie/lib/tal-exit-strategies',
+        'antie/lib/tal-logging-strategies',
         'require'
     ],
-    function(Class, KeyEvent, StorageProvider, SessionStorage, Exit, require) {
+    function(Class, KeyEvent, StorageProvider, SessionStorage, Exit, LoggingStrategies, require) {
         'use strict';
 
         /**
@@ -170,66 +171,6 @@ define(
                         }
                     }
                 }
-
-                function ignore() {}
-
-                var ignoreLoggingMethods = {
-                    log: ignore,
-                    debug: ignore,
-                    info: ignore,
-                    warn: ignore,
-                    error: ignore
-                };
-
-                this.filteredLoggingMethods = filterLoggingMethods(config, selectLoggingStrategy(config, this.loggingStrategies));
-
-                function filterLoggingMethods(config, loggingMethods) {
-                    var filteredLogging = ignoreLoggingMethods;
-
-                    if (config.logging && config.logging.level) {
-                        var level = config.logging.level;
-                        /*eslint-disable */
-                        switch (level) {
-                        case 'all':
-                        case 'debug':
-                            filteredLogging.debug = loggingMethods.debug;
-                        case 'info':
-                            filteredLogging.info = loggingMethods.info;
-                            filteredLogging.log = loggingMethods.log;
-                        case 'warn':
-                            filteredLogging.warn = loggingMethods.warn;
-                        case 'error':
-                            filteredLogging.error = loggingMethods.error;
-                        }
-                        /*eslint-enable */
-                    }
-                    return filteredLogging;
-                }
-
-                //support functions for the above
-                function selectLoggingStrategy(config, loggingStrategies) {
-
-                    if (config.logging && config.logging.strategy) {
-                        var configuredLoggingStrategy = 'antie/' + 'devices/' + 'logging/' + config.logging.strategy;
-
-                        if (loggingStrategies[configuredLoggingStrategy]) {
-                            return loggingStrategies[configuredLoggingStrategy];
-                        }
-                    }
-
-                    //no logging methods set - use default logging
-                    var selectedLoggingStrategy = loggingStrategies[ 'antie/devices/logging/default' ];
-
-                    if (!selectedLoggingStrategy) {
-                        selectedLoggingStrategy = loggingStrategies[ 'antie/devices/logging/onscreen' ];
-                    }
-
-                    //still no available logging method - default to ignore
-                    if (!selectedLoggingStrategy) {
-                        selectedLoggingStrategy = ignoreLoggingMethods;
-                    }
-                    return selectedLoggingStrategy;
-                }
             },
             /**
              * Set a reference to the application the device is running.
@@ -257,7 +198,7 @@ define(
              * @returns The current device logging object.
              */
             getLogger: function getLogger () {
-                return this.filteredLoggingMethods;
+                return LoggingStrategies.getStrategyForConfig(this._config);
             },
             /**
              * -PROTECTED- Creates a generic container element in the device's user-agent.
@@ -1049,23 +990,6 @@ define(
                 }
             }
         };
-
-        /**
-         * Adds a logging method at device init time
-         * @name addLoggingMethod
-         * @memberOf antie.devices.Device
-         * @static
-         * @function
-         * @param {String} moduleId of require module that defined the logging methods - eg antie/devices/logging/default
-         * @param {Object} loggingMethods object that contains implementations of each logging interface ( log,debug,info,warn,error )
-         */
-
-        Device.addLoggingStrategy = function(moduleID, loggingMethods) {
-            Device.prototype.loggingStrategies[ moduleID ] = loggingMethods;
-        };
-
-        Device.prototype.loggingStrategies = {};
-        Device.prototype.filteredLoggingMethods = null;
 
         return Device;
     }
