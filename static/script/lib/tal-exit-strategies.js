@@ -68,9 +68,7 @@ var modifierMap = {
 };
 
 function getStrategyForConfig (config) {
-  config = config || {};
-
-  var modifier = (config.modifiers || []).reduce(function (m, c) {
+  var modifier = config.modules.modifiers.reduce(function (m, c) {
     return c.indexOf('exit') > -1 ? c : m
   }, '');
 
