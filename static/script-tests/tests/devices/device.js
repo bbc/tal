@@ -7,9 +7,10 @@ require(
     [
         'antie/class',
         'antie/devices/browserdevice',
-        'antie/devices/device'
+        'antie/devices/device',
+        'antie/lib/tal-exit-strategies'
     ],
-    function(Class, BrowserDevice, Device) {
+    function(Class, BrowserDevice, Device, Exit) {
         'use strict';
 
         describe('antie.devices.Device', function() {
@@ -29,6 +30,24 @@ require(
 
             it('should extend from Class', function() {
                 expect(device).toEqual(jasmine.any(Class));
+            });
+
+            it('should call getStrategyForConfig as expected on exit', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exit();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration);
+            });
+
+            it('should call getStrategyForConfig as expected on exitToBroadcast', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exitToBroadcast();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration, { exitToBroadcast: true });
             });
 
             it('does not support broadcastSource', function() {
