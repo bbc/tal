@@ -37,9 +37,10 @@ define(
         'antie/events/keyevent',
         'antie/storageprovider',
         'antie/devices/storage/session',
+        'antie/lib/tal-exit-strategies',
         'require'
     ],
-    function(Class, KeyEvent, StorageProvider, SessionStorage, require) {
+    function(Class, KeyEvent, StorageProvider, SessionStorage, Exit, require) {
         'use strict';
 
         /**
@@ -914,7 +915,7 @@ define(
              * Exits the application directly - no history.
              */
             exit: function exit () {
-                throw new Error('Not supported on this device.');
+                Exit.getStrategyForConfig(this._config)();
             },
             /**
              * Exits to broadcast if this function has been overloaded by a modifier. Otherwise, calls exit().
@@ -1005,7 +1006,11 @@ define(
          */
         Device.load = function(config, callbacks) {
             try {
-                require([config.modules.base].concat(config.modules.modifiers), function(DeviceClass) {
+                // Remove exit strategy
+                var modifiers = config.modules.modifiers.filter(function (modifier) {
+                    return modifier.indexOf('exit') === -1;
+                });
+                require([config.modules.base].concat(modifiers), function(DeviceClass) {
                     try {
                         callbacks.onSuccess(new DeviceClass(config));
                     } catch(ex) {
