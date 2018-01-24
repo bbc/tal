@@ -86,7 +86,6 @@
         return {modules:{base:'antie/devices/browserdevice',modifiers:[
             'antie/devices/anim/styletopleft',
             'antie/devices/broadcastsource/hbbtvsource',
-            'antie/devices/data/nativejson',
             'antie/devices/storage/cookie',
             'antie/devices/logging/default',
             'antie/devices/exit/closewindow'

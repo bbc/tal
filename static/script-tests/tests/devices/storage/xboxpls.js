@@ -6,7 +6,6 @@
 require(
     [
         'antie/devices/storage/xboxpls',
-        'antie/devices/data/nativejson',
         'antie/devices/browserdevice'
     ],
     function(XBoxStorage, NativeJson, Device) {

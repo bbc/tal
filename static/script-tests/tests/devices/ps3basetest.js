@@ -5,8 +5,7 @@
 
 require(
     [
-        'antie/devices/ps3base',
-        'antie/devices/data/nativejson'
+        'antie/devices/ps3base'
     ],
     function (PS3Base) {
         'use strict';
