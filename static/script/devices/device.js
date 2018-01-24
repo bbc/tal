@@ -67,6 +67,8 @@ define(
             init: function init (config) {
                 var kc;
 
+                console.log(JSON.stringify(config));
+
                 this._application = null;
                 this._config = config;
                 this._keyMap = {};
