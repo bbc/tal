@@ -33,9 +33,11 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
-    "tal-page-strategies": "1.1.7"
+    "tal-page-strategies": "1.1.7",
+    "tal-exit-strategies": "^0.2.1"
   },
   "scripts": {
+    "pretest": "grunt copy:lib",
     "test": "grunt full --verbose",
     "test:unit": "grunt jasmine",
     "test:lint": "grunt lint"
