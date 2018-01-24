@@ -36,7 +36,12 @@ require(
                         if (mayBePrefixed.indexOf(key) !== -1) {
                             style = getStyleWithPossiblePrefix(element, key);
                         }
-                        expect(style).toBe(styles[key]);
+
+                        if (Array.isArray(styles[key])) {
+                            expect(styles[key]).toContain(style);
+                        } else {
+                            expect(styles[key]).toBe(style);
+                        }
                     });
                 }
 
@@ -58,7 +63,10 @@ require(
                             top: '666px'
                         },
                         expectedTransitionStyles: {
-                            transform: 'translate3d(0px, 666px, 0px)'
+                            transform: [
+                                'translate3d(0, 666px, 0)', 
+                                'translate3d(0px, 666px, 0px)'
+                            ]
                         }
                     },
                     {
@@ -71,7 +79,10 @@ require(
                             left: '333px'
                         },
                         expectedTransitionStyles: {
-                            transform: 'translate3d(333px, 0px, 0px)'
+                            transform: [
+                                'translate3d(333px, 0, 0)', 
+                                'translate3d(333px, 0px, 0px)'
+                            ]
                         }
                     },
                     {
