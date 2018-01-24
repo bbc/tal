@@ -7,9 +7,10 @@ require(
     [
         'antie/class',
         'antie/devices/browserdevice',
-        'antie/devices/device'
+        'antie/devices/device',
+        'antie/lib/tal-exit-strategies'
     ],
-    function(Class, BrowserDevice, Device) {
+    function(Class, BrowserDevice, Device, Exit) {
         'use strict';
 
         describe('antie.devices.Device', function() {
@@ -23,11 +24,30 @@ require(
                 mockXMLHttpRequest.status = 0;
 
                 device = new Device(antie.framework.deviceConfiguration);
+
                 spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
             });
 
             it('should extend from Class', function() {
                 expect(device).toEqual(jasmine.any(Class));
+            });
+
+            it('should call getStrategyForConfig as expected on exit', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exit();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration);
+            });
+
+            it('should call getStrategyForConfig as expected on exitToBroadcast', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exitToBroadcast();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration, { exitToBroadcast: true });
             });
 
             it('does not support broadcastSource', function() {
@@ -71,22 +91,6 @@ require(
                 }).not.toThrow();
 
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
-            });
-
-            it('chokes on default exit()', function() {
-                expect(function() {
-                    // Method under test
-                    device.exit();
-                }).toThrowError('Not supported on this device.');
-            });
-
-            it('calls exit() on default exitToBroadcast()', function() {
-                spyOn(device, 'exit');
-
-                // Method under test
-                device.exitToBroadcast();
-
-                expect(device.exit).toHaveBeenCalledWith();
             });
 
             it('sends xhr request with specified method and data', function() {

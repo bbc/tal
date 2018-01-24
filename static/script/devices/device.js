@@ -37,9 +37,10 @@ define(
         'antie/events/keyevent',
         'antie/storageprovider',
         'antie/devices/storage/session',
+        'antie/lib/tal-exit-strategies',
         'require'
     ],
-    function(Class, KeyEvent, StorageProvider, SessionStorage, require) {
+    function(Class, KeyEvent, StorageProvider, SessionStorage, Exit, require) {
         'use strict';
 
         /**
@@ -914,13 +915,18 @@ define(
              * Exits the application directly - no history.
              */
             exit: function exit () {
-                throw new Error('Not supported on this device.');
+                var exit = Exit.getStrategyForConfig(this._config);
+                exit && exit();
             },
             /**
              * Exits to broadcast if this function has been overloaded by a modifier. Otherwise, calls exit().
              */
             exitToBroadcast: function exitToBroadcast () {
-                this.exit();
+                var exit = Exit.getStrategyForConfig(this._config, { exitToBroadcast: true });
+                exit && exit();
+            },
+            hasExitStrategy: function () {
+                return !!Exit.getStrategyForConfig(this._config);
             },
             /**
              * Get a storage provider of a given type for the specified namespace.
@@ -994,6 +1000,26 @@ define(
             return config && config.networking && config.networking.supportsCORS;
         }
 
+        var DEAD_MODIFIERS = [
+            'antie/devices/exit/closewindow',
+            'antie/devices/exit/destroyapplication',
+            'antie/devices/exit/history',
+            'antie/devices/exit/netcast',
+            'antie/devices/exit/openclosewindow',
+            'antie/devices/exit/sagemcom',
+            'antie/devices/exit/samsung_maple',
+            'antie/devices/exit/samsung_tizen',
+            'antie/devices/exit/tivo',
+            'antie/devices/exit/broadcast/netcast',
+            'antie/devices/exit/broadcast/samsung_maple'
+        ];
+
+        function removeDeadModifiers (modifiers) {
+            return modifiers.filter(function (m) {
+                return DEAD_MODIFIERS.indexOf(m) === -1;
+            });
+        }
+
         /**
          * Loads a device configuration document, and its modifiers.
          * @name load
@@ -1005,7 +1031,8 @@ define(
          */
         Device.load = function(config, callbacks) {
             try {
-                require([config.modules.base].concat(config.modules.modifiers), function(DeviceClass) {
+                var modifiers = removeDeadModifiers(config.modules.modifiers);
+                require([config.modules.base].concat(modifiers), function(DeviceClass) {
                     try {
                         callbacks.onSuccess(new DeviceClass(config));
                     } catch(ex) {

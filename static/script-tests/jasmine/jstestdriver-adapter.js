@@ -3,7 +3,7 @@ window.additionalTestFns = {};
 var unloadRequire;
 (function () {
     var requireModules = { };
-    
+
     var originalDef = require.def;
     var originalDefine = define;
     var originalLoad = require.load;
@@ -13,12 +13,17 @@ var unloadRequire;
         requireModules[name] = arguments;
         originalDef.apply(require, arguments);
     };
-    
+
     define = function() {
         var name = arguments[0];
         requireModules[name] = arguments;
         originalDefine.apply(require, arguments);
     };
+
+    define.amd = {
+        jQuery: false
+    };
+
     require.load = function(moduleName, contextName) {
         var module = requireModules[moduleName];
         if(module) {
@@ -32,7 +37,7 @@ var unloadRequire;
         }
         originalLoad.apply(require, arguments);
     };
-    
+
     unloadRequire = function() {
         var excluded = [
             'antie/application',
