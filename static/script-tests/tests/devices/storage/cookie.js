@@ -149,7 +149,7 @@
             var obj = {
                 'hello': ['house','street','town','region','country','continent','world','solar system','galaxy', 'universe']
             };
-            document.cookie = 'test1=' + encodeURIComponent(application.getDevice().encodeJson(obj));
+            document.cookie = 'test1=' + encodeURIComponent(JSON.stringify(obj));
 
             var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
 
@@ -168,7 +168,7 @@
             var obj = {
                 'hello': ['house','street','town','region','country','continent','world','solar system','galaxy', 'universe']
             };
-            var str = 'test1=' + encodeURIComponent(application.getDevice().encodeJson(obj));
+            var str = 'test1=' + encodeURIComponent(JSON.stringify(obj));
 
             var storage = getStorage(application, StorageProvider.STORAGE_TYPE_PERSISTENT, 'test1');
             storage.setItem('hello', obj.hello);
