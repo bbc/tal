@@ -414,39 +414,6 @@ define(
                 return clone;
             },
             /**
-             * Get the height (in pixels) of a given block of text (of a provided set of class names) when constrained to a fixed width.
-             *
-             * @deprecated This function does not always give accurate results. When measuring size, it only takes into account
-             * the classes on the text element being measured. It doesn't consider any CSS styles that may have been passed down
-             * through the DOM.
-             *
-             * @param {String} text The text to measure.
-             * @param {Integer} maxWidth The width the text is constrained to.
-             * @param {Array} classNames An array of class names which define the style of the text.
-             * @returns The height (in pixels) that is required to display this block of text.
-             */
-            getTextHeight: function getTextHeight (text, maxWidth, classNames) {
-                /// TODO: is there a more efficient way of doing this?
-                var cacheKey = maxWidth + ':' + classNames.join(' ') + ':' + text;
-                var height;
-                if (!(height = this._textSizeCache[cacheKey])) {
-                    if (!this._measureTextElement) {
-                        this._measureTextElement = this.createLabel('measure', null, 'fW');
-                        this._measureTextElement.style.display = 'block';
-                        this._measureTextElement.style.position = 'absolute';
-                        this._measureTextElement.style.top = '-10000px';
-                        this._measureTextElement.style.left = '-10000px';
-                        this.appendChildElement(document.body, this._measureTextElement);
-                    }
-                    this._measureTextElement.className = classNames.join(' ');
-                    this._measureTextElement.style.width = (typeof maxWidth === 'number') ? maxWidth + 'px' : maxWidth;
-                    this._measureTextElement.innerHTML = text;
-
-                    height = this._textSizeCache[cacheKey] = this._measureTextElement.clientHeight;
-                }
-                return height;
-            },
-            /**
              * Returns all direct children of an element which have the provided tagName.
              * @param {Element} el The element who's children you wish to search.
              * @param {String} tagName The tag name you are looking for.
