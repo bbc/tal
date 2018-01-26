@@ -33,7 +33,6 @@ define(
                     this._text = text;
                     init.base.call(this, id);
                 }
-                this._truncationMode = Label.TRUNCATION_MODE_NONE;
                 this._maxLines = 0;
                 this._enableHTML = enableHTML || false;
                 this._width = 0;
@@ -59,45 +58,10 @@ define(
             
             /**
              * Will return text as rendered on the device
-             * @param {antie.devices.Device} device The device to render to.
-             * @returns A string that will be displayed in the label after truncation, etc...
+             * @returns A string that will be displayed in the label.
              */
-            getTextAsRendered: function(device) {
-                var s;
-                if(this._width && this._maxLines && this._text && (this._truncationMode === Label.TRUNCATION_MODE_RIGHT_ELLIPSIS)) {
-                    var h = device.getTextHeight('fW', this._width, this.getClasses());
-                    var allowedHeight = h * this._maxLines;
-                    var currentHeight = device.getTextHeight(this._text, this._width, this.getClasses());
-
-                    var len = this._text.length;
-                    while(currentHeight > allowedHeight && len > 1) {
-                        len = Math.floor((len * allowedHeight) / currentHeight);
-                        currentHeight = device.getTextHeight(this._text.substring(0, len) + '...', this._width, this.getClasses());
-                    }
-                    while(currentHeight <= allowedHeight && len <= this._text.length) {
-                        len++;
-                        currentHeight = device.getTextHeight(this._text.substring(0, len) + '...', this._width, this.getClasses());
-                    }
-                    len--;
-
-                    if(len < this._text.length) {
-                        // truncate at word boundary
-                        var boundaryLen = len;
-                        while(boundaryLen && !/\w\W$/.test(this._text.substring(0, boundaryLen+1))) {
-                            boundaryLen--;
-                        }
-                        if(boundaryLen > 0) {
-                            s = this._text.substring(0, boundaryLen) + '...';
-                        } else {
-                            s = this._text.substring(0, len) + '...';
-                        }
-                    } else {
-                        s = this._text;
-                    }
-                } else {
-                    s = this._text;
-                }
-                return s;
+            getTextAsRendered: function() {
+                return this._text;
             },
             
             /**
@@ -118,15 +82,6 @@ define(
                 return this._text;
             },
             /**
-             * Sets the truncation mode (currently {@link antie.widgets.Label.TRUNCATION_MODE_NONE} or {@link antie.widgets.Label.TRUNCATION_MODE_RIGHT_ELLIPSIS}).
-             *
-             * @deprecated TRUNCATION_MODE_RIGHT_ELLIPSIS relies on browserdevice.getTextHeight(), which can be inaccurate.
-             * @param {String} mode The new truncation mode.
-             */
-            setTruncationMode: function setTruncationMode (mode) {
-                this._truncationMode = mode;
-            },
-            /**
              * Sets the maximum lines displayed when a truncation mode is set.
              * @param {String} lines The maximum number of lines to display.
              */
@@ -141,24 +96,6 @@ define(
                 this._width = width;
             }
         });
-
-        /**
-         * Do not truncate the text. Let the browser wrap to as many lines required to display all the text.
-         * @name TRUNCATION_MODE_NONE
-         * @memberOf antie.widgets.Label
-         * @constant
-         * @static
-         */
-        Label.TRUNCATION_MODE_NONE = 0;
-        /**
-         * Truncate text to fit into the number of lines specified by {@link antie.widgets.Label#setMaximumLines} by removing characters at the end of the string and append an ellipsis if text is truncated.
-         * @constant
-         * @name TRUNCATION_MODE_RIGHT_ELLIPSIS
-         * @memberOf antie.widgets.Label
-         * @static
-         */
-        Label.TRUNCATION_MODE_RIGHT_ELLIPSIS = 1;
-
         return Label;
     }
 );
