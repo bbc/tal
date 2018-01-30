@@ -59,7 +59,7 @@ define(
                         break;
                     }
                 });
-
+                
                 this.playState = BaseTvSource.STATE.UNKNOWN;
             },
 
@@ -82,7 +82,7 @@ define(
                 if (state === this.getState() && state !== BaseTvSource.STATE.PRESENTING) {
                     return;
                 }
-
+                
                 switch (state) {
                 case BaseTvSource.STATE.UNAVAILABLE:
                     this.playState = state;
@@ -208,21 +208,33 @@ define(
              * @param params.channelName
              */
             setChannelByName: function (params) {
+                var self = this;
+                
                 params.onSuccess = params.onSuccess || this.nop;
                 params.onError = params.onError || this.nop;
 
                 try {
-                    var currentChannelName = this.getCurrentChannelName();
-                    if (currentChannelName === params.channelName) {
-                        this.showCurrentChannel();
-                        params.onSuccess();
-                    } else {
-                        this._tuneToChannelByName({
-                            name: params.channelName,
-                            onError: params.onError,
-                            onSuccess: params.onSuccess
-                        });
-                    }
+                    var currentChannelName = this.getCurrentChannelName(),
+                        app = RuntimeContext.getCurrentApplication(),
+                        changeChannelHandler = function() {                         
+                            app.removeEventListener('tunerpresenting', changeChannelHandler);
+                            self._tuneToChannelByName({
+                                name: params.channelName,
+                                onError: params.onError,
+                                onSuccess: params.onSuccess
+                            });                        
+                        },
+                        sameChannelHandler = function() {            
+                            app.removeEventListener('tunerpresenting', sameChannelHandler);  
+                            params.onSuccess();
+                        };
+
+                    app.addEventListener(
+                        'tunerpresenting', 
+                        (currentChannelName === params.channelName ? sameChannelHandler : changeChannelHandler));
+                        
+                    this.showCurrentChannel();
+ 
                 } catch (error) {
                     params.onError({
                         name: 'ChannelError',
@@ -230,7 +242,7 @@ define(
                     });
                 }
             },
-
+            
             _setBroadcastToFullScreen: function () {
                 this.setPosition(0, 0, window.screen.width, window.screen.height);
             },
