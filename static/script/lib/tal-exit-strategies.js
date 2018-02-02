@@ -1,8 +1,4 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.TALExitStrategies = factory());
-}(this, (function () { 'use strict';
+define('antie/lib/tal-exit-strategies', function () { 'use strict';
 
 function closeWindow () {
   window.close();
@@ -86,7 +82,7 @@ function getStrategyForConfig (deviceConfig, options) {
   return MAP[modifier || exitModifiers[0]]
 }
 
-var index = {
+var talExitStrategies = {
   getStrategyForConfig: getStrategyForConfig,
   closeWindow: closeWindow,
   openCloseWindow: openCloseWindow,
@@ -99,8 +95,10 @@ var index = {
   tivoCore: tivoCore,
   netcastBroadcast: netcastBroadcast,
   samsungMapleBroadcast: samsungMapleBroadcast
-}
+};
 
-return index;
+var talExitStrategies$2 = talExitStrategies;
 
-})));
+return talExitStrategies$2;
+
+});

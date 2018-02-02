@@ -109,20 +109,6 @@ module.exports = function(grunt) {
                     destination: 'jsdoc'
                 }
             }
-        },
-        copy: {
-            lib: {
-                files: [
-                    {
-                        src: 'node_modules/tal-exit-strategies/lib/tal-exit-strategies.js',
-                        dest: 'static/script/lib/tal-exit-strategies.js'
-                    },
-                    {
-                        src: 'node_modules/tal-logging-strategies/lib/tal-logging-strategies.js',
-                        dest: 'static/script/lib/tal-logging-strategies.js'
-                    }
-                ]
-            }
         }
     });
 
@@ -133,7 +119,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('gruntify-eslint');
     grunt.loadNpmTasks('grunt-jsdoc');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('test', ['jasmine', 'eslint']);
     grunt.registerTask('lint', ['eslint']);
