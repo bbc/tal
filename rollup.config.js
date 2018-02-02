@@ -14,4 +14,17 @@ module.exports = [{
         commonjs(),
         nodeResolve()
     ]
+}, {
+    input: 'rollup/tal-logging-strategies.js',
+    output: {
+        file: 'static/script/lib/tal-logging-strategies.js',
+        format: 'amd',
+        amd: {
+            id: 'antie/lib/tal-logging-strategies'
+        }
+    },
+    plugins: [
+        commonjs(),
+        nodeResolve()
+    ]
 }];

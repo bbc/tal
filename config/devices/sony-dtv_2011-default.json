@@ -7,9 +7,6 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/history",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]

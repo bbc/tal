@@ -8,9 +8,6 @@
         "antie/devices/mediaplayer/live/seekable",
         "antie/devices/broadcastsource/tizentvsource",
         "antie/devices/storage/cookie",
-        "antie/devices/logging/onscreen",
-        "antie/devices/logging/xhr",
-        "antie/devices/logging/jstestdriver",
         "antie/devices/exit/samsung_tizen",
         "antie/devices/parentalguidance/appdefaultpghandler"
     ]

@@ -35,8 +35,9 @@
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
+    "tal-page-strategies": "1.1.7",
     "tal-exit-strategies": "^0.3.0",
-    "tal-page-strategies": "1.1.7"
+    "tal-logging-strategies": "^0.2.0"
   },
   "scripts": {
     "build": "rollup -c",
