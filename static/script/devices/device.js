@@ -956,7 +956,14 @@ define(
             'antie/devices/exit/broadcast/netcast',
             'antie/devices/exit/broadcast/samsung_maple',
             'antie/devices/data/nativejson',
-            'antie/devices/data/json2'
+            'antie/devices/data/json2',
+            'antie/devices/logging/alert',
+            'antie/devices/logging/consumelog',
+            'antie/devices/logging/saving',
+            'antie/devices/logging/default',
+            'antie/devices/logging/jstestdriver',
+            'antie/devices/logging/onscreen',
+            'antie/devices/logging/xhr'
         ];
 
         function removeDeadModifiers (modifiers) {
