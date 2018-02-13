@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing base antie.devices.anim.css3.existingtransitiondefinition class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -18,10 +18,10 @@ define(
                  * @param animation options object
                  * @param config animation configuration object
                  */
-                init: function(options, config) {
+                init: function init (options, config) {
                     var property, timeEasing;
                     config = config || {};
-                    this._super();
+                    init.base.call(this);
                     for(property in options.to) {
                         if(options.to.hasOwnProperty(property)) {
                             timeEasing = options.easing || config.easing;

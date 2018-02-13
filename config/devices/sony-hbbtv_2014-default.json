@@ -7,10 +7,6 @@
 			"antie/devices/mediaplayer/html5seekfinishedemitevent",
 			"antie/devices/mediaplayer/live/seekable",
 			"antie/devices/broadcastsource/hbbtvsource",
-			"antie/devices/data/nativejson",
-			"antie/devices/logging/onscreen",
-			"antie/devices/logging/xhr",
-			"antie/devices/logging/jstestdriver",
 			"antie/devices/storage/cookie",
 			"antie/devices/exit/destroyapplication",
 			"antie/devices/parentalguidance/appdefaultpghandler"
@@ -107,5 +103,16 @@
 	"networking": {
 		"supportsJSONP": true
 	},
+	"broadcast" : {
+		"currentChannelValidation": {
+			"enabled": true
+		}
+	},
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
+  },
     "restartTimeout": 3000
 }

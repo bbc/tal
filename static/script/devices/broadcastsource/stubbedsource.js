@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define('antie/devices/broadcastsource/stubbedsource',
@@ -23,10 +23,10 @@ define('antie/devices/broadcastsource/stubbedsource',
              * @constructor
              * @ignore
              */
-            init: function () {},
-            showCurrentChannel: function () {},
-            stopCurrentChannel: function () {},
-            getCurrentChannelName: function () {
+            init: function init () {},
+            showCurrentChannel: function showCurrentChannel () {},
+            stopCurrentChannel: function stopCurrentChannel () {},
+            getCurrentChannelName: function getCurrentChannelName () {
                 return 'BBC ONE N West';
             },
             getChannelNameList : function () {

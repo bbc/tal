@@ -7,11 +7,7 @@
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -81,7 +77,7 @@
 	  "54": "6",
       "55": "7",
 	  "56": "8",
-	  "57": "9"	  
+	  "57": "9"
     }
   },
   "accessibility": {
@@ -111,5 +107,16 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail",
+    "browserType": "chromium"
   }
 }

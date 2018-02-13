@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function () {
@@ -13,42 +13,6 @@
 
     this.CarouselCoreTest.prototype.tearDown = function () {
         this.sandbox.restore();
-    };
-
-    this.CarouselCoreTest.prototype.testCarouselCreatesOneMaskWithCorrectId = function (queue) {
-        var self = this;
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/carouselcore',
-                'antie/widgets/widget'
-            ],
-            function (application, CarouselCore, Widget) {
-                var createWidgetSpy;
-                createWidgetSpy = self.sandbox.spy(Widget.prototype, 'init').withArgs('myCarousel_CarouselMask');
-                new CarouselCore('myCarousel');
-                assertTrue(createWidgetSpy.calledOnce);
-            }
-        );
-    };
-
-    this.CarouselCoreTest.prototype.testCarouselCreatesOneWidgetStripWithCorrectId = function (queue) {
-        var self = this;
-        queuedApplicationInit(
-            queue,
-            'lib/mockapplication',
-            [
-                'antie/widgets/carousel/carouselcore',
-                'antie/widgets/container'
-            ],
-            function (application, CarouselCore, Container) {
-                var createContainerStub;
-                createContainerStub = self.sandbox.spy(Container.prototype, 'init').withArgs('myCarousel_WidgetStrip');
-                new CarouselCore('myCarousel');
-                assertTrue(createContainerStub.calledOnce);
-            }
-        );
     };
 
     this.CarouselCoreTest.prototype.testMaskAddedAsChildOfCarousel = function (queue) {

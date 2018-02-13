@@ -6,9 +6,7 @@
       "antie/devices/anim/styletopleft",
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -101,5 +99,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

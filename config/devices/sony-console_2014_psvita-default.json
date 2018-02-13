@@ -7,21 +7,13 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
       "antie/devices/anim/css3",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/history",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
   },
   "logging": {
     "level": "none"
-  },
-  "mediasets": {
-    "tv": "stb-all-h264",
-    "radio": "stb-aac"
   },
   "streaming": {
     "video": {
@@ -87,5 +79,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "console",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

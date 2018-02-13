@@ -6,8 +6,6 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/json2",
-      "antie/devices/logging/default",
       "antie/devices/storage/cookie",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -91,5 +89,10 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

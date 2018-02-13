@@ -2,7 +2,7 @@
  * @fileOverview Requirejs module containing base class for device
  * modifiers for media playback
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -27,7 +27,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function() {
+            init: function init () {
                 this._callbackManager = new CallbackManager();
             },
 
@@ -39,7 +39,7 @@ define(
              * @param {Object} thisArg The object to use as 'this' when calling the callback.
              * @param {Function} callback Function to which events are passed (e.g. to be bubbled up the component hierarchy).
              */
-            addEventCallback: function(thisArg, callback) {
+            addEventCallback: function addEventCallback (thisArg, callback) {
                 this._callbackManager.addCallback(thisArg, callback);
             },
 
@@ -48,14 +48,14 @@ define(
              * @param {Object} thisArg The object specified to use as 'this' when adding the callback.
              * @param {Function} callback Function to which events are no longer to be passed
              */
-            removeEventCallback: function(thisArg, callback) {
+            removeEventCallback: function removeEventCallback (thisArg, callback) {
                 this._callbackManager.removeCallback(thisArg, callback);
             },
 
             /**
              * Stop receiving events to any callbacks.
              */
-            removeAllEventCallbacks: function() {
+            removeAllEventCallbacks: function removeAllEventCallbacks () {
                 this._callbackManager.removeAllCallbacks();
             },
 
@@ -66,7 +66,7 @@ define(
              * @param {Object} [eventLabels] Optional additional event labels.
              * @protected
              */
-            _emitEvent: function(eventType, eventLabels) {
+            _emitEvent: function _emitEvent (eventType, eventLabels) {
 
                 var event = {
                     type: eventType,
@@ -101,7 +101,7 @@ define(
              * @param {Number} seconds The time value to clamp in seconds from the start of the media
              * @protected
              */
-            _getClampedTime: function(seconds) {
+            _getClampedTime: function _getClampedTime (seconds) {
                 var range = this.getSeekableRange();
                 var offsetFromEnd = this._getClampOffsetFromConfig();
                 var nearToEnd = Math.max(range.end - offsetFromEnd, range.start);
@@ -125,7 +125,7 @@ define(
              * @param {Number} seconds The time value to test, in seconds from the start of the media
              * @protected
              */
-            _isNearToCurrentTime: function(seconds) {
+            _isNearToCurrentTime: function _isNearToCurrentTime (seconds) {
                 var currentTime = this.getCurrentTime();
                 var targetTime = this._getClampedTime(seconds);
                 return Math.abs(currentTime - targetTime) <= this.CURRENT_TIME_TOLERANCE;
@@ -138,7 +138,7 @@ define(
              * @param {String} url location of the media resource to play
              * @param {String} mimeType type of media resource
              */
-            setSource: function (/*mediaType, url, mimeType*/) {
+            setSource: function setSource (/*mediaType, url, mimeType*/) {
                 throw new Error('setSource method has not been implemented');
             },
 
@@ -153,7 +153,7 @@ define(
              * This allows the media playback to complete normally.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
-            playFrom: function (/*seconds*/) {
+            playFrom: function playFrom (/*seconds*/) {
                 throw new Error('playFrom method has not been implemented');
             },
 
@@ -164,7 +164,7 @@ define(
              * This function can only be called from the STOPPED state; calling it from any other state is an error.
              * To begin playback from a specified time offset, use the playFrom function instead.
              */
-            beginPlayback: function () {
+            beginPlayback: function beginPlayback () {
                 throw new Error('beginPlayback method has not been implemented');
             },
 
@@ -177,7 +177,7 @@ define(
              * If trying to play at (or past) the very end of the media, this will actually begin playback before the end.
              * @param {Number} seconds Time to play from in seconds from the start of the media
              */
-            beginPlaybackFrom: function (/*seconds*/) {
+            beginPlaybackFrom: function beginPlaybackFrom (/*seconds*/) {
                 throw new Error('beginPlaybackFrom method has not been implemented');
             },
 
@@ -187,7 +187,7 @@ define(
              * If the media is buffering, call this to resume playback in a paused state once buffering ends.
              * Calling this in state EMPTY or STOPPED is an error.
              */
-            pause: function () {
+            pause: function pause () {
                 throw new Error('pause method has not been implemented');
             },
 
@@ -197,7 +197,7 @@ define(
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
              * Calling this in state EMPTY or STOPPED is an error.
              */
-            resume: function () {
+            resume: function resume () {
                 throw new Error('resume method has not been implemented');
             },
 
@@ -208,7 +208,7 @@ define(
              * Call reset after stop to unset the source.
              * Calling this in state EMPTY is an error.
              */
-            stop: function () {
+            stop: function stop () {
                 throw new Error('stop method has not been implemented');
             },
 
@@ -217,7 +217,7 @@ define(
              * When the media is stopped, calling reset will reset the player to a clean state with no source set.
              * Calling this in any state other than STOPPED or ERROR is an error.
              */
-            reset: function () {
+            reset: function reset () {
                 throw new Error('reset method has not been implemented');
             },
 
@@ -226,7 +226,7 @@ define(
              * If no source is set (in state EMPTY for example), then this returns undefined.
              * @return {String} The URL
              */
-            getSource: function () {
+            getSource: function getSource () {
                 throw new Error('getSource method has not been implemented');
             },
 
@@ -235,7 +235,7 @@ define(
              * If no source is set (in state EMPTY for example), then this returns undefined.
              * @return {String} The MIME type
              */
-            getMimeType: function () {
+            getMimeType: function getMimeType () {
                 throw new Error('getMimeType method has not been implemented');
             },
 
@@ -244,7 +244,7 @@ define(
              * If no current time is available, then this returns undefined.
              * @return {Number} The current play time in seconds from the start of the media.
              */
-            getCurrentTime: function () {
+            getCurrentTime: function getCurrentTime () {
                 throw new Error('getCurrentTime method has not been implemented');
             },
 
@@ -258,7 +258,7 @@ define(
              * If no range is available, this returns undefined.
              * @return {Object} Object with 'start' and 'end' times in seconds, or undefined.
              */
-            getSeekableRange: function () {
+            getSeekableRange: function getSeekableRange () {
                 throw new Error('getSeekableRange method has not been implemented');
             },
 
@@ -269,7 +269,7 @@ define(
              * If no duration is available, this returns undefined.
              * @return {Number} Duration of media in seconds, or Infinity, or undefined.
              */
-            getDuration: function() {
+            getDuration: function getDuration () {
 
                 switch (this.getState()) {
                 case MediaPlayer.STATE.STOPPED:
@@ -283,7 +283,7 @@ define(
                 }
             },
 
-            _getMediaDuration: function() {
+            _getMediaDuration: function _getMediaDuration () {
                 throw new Error('getMediaDuration method has not been implemented');
             },
 
@@ -291,7 +291,7 @@ define(
              * Get the current state of the Media PLayer state machine.
              * @return {antie.devices.mediaplayer.MediaPlayer.STATE} The current state of the Media Player state machine.
              */
-            getState: function () {
+            getState: function getState () {
                 throw new Error('getState method has not been implemented');
             },
 
@@ -299,11 +299,11 @@ define(
              * Get the underlying DOM element used for media playback. Its type and signature will vary by device. On devices that do not use HTML5 media playback this will not be a media element. In general this should not be used by client applications.
              * @return {Element} Underlying DOM element used for media playback on this device.
              */
-            getPlayerElement: function() {
+            getPlayerElement: function getPlayerElement () {
                 throw new Error('getPlayerElement method has not been implemented');
             },
 
-            _getClampOffsetFromConfig: function() {
+            _getClampOffsetFromConfig: function _getClampOffsetFromConfig () {
                 var clampOffsetFromEndOfRange;
                 var config = RuntimeContext.getDevice().getConfig();
                 if (config && config.streaming && config.streaming.overrides) {
@@ -317,7 +317,7 @@ define(
                 }
             },
 
-            _isLiveMedia: function () {
+            _isLiveMedia: function _isLiveMedia () {
                 return (this._type === MediaPlayer.TYPE.LIVE_VIDEO) || (this._type === MediaPlayer.TYPE.LIVE_AUDIO);
             }
         });

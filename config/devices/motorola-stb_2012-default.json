@@ -6,11 +6,7 @@
       "antie/devices/anim/styletopleft",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/nativejson",
       "antie/devices/exit/history",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -117,5 +113,10 @@
   ],
   "networking": {
     "supportsJSONP": true
-}
+},
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "other"
+  }
 }

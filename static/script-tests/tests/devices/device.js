@@ -1,15 +1,16 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 require(
     [
         'antie/class',
         'antie/devices/browserdevice',
-        'antie/devices/device'
+        'antie/devices/device',
+        'antie/lib/tal-exit-strategies'
     ],
-    function(Class, BrowserDevice, Device) {
+    function(Class, BrowserDevice, Device, Exit) {
         'use strict';
 
         describe('antie.devices.Device', function() {
@@ -23,11 +24,30 @@ require(
                 mockXMLHttpRequest.status = 0;
 
                 device = new Device(antie.framework.deviceConfiguration);
-                spyOn(device, '_newXMLHttpRequest').andReturn(mockXMLHttpRequest);
+
+                spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
             });
 
             it('should extend from Class', function() {
                 expect(device).toEqual(jasmine.any(Class));
+            });
+
+            it('should call getStrategyForConfig as expected on exit', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exit();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration);
+            });
+
+            it('should call getStrategyForConfig as expected on exitToBroadcast', function () {
+                var mock = jasmine.createSpy();
+                spyOn(Exit, 'getStrategyForConfig').and.callFake(mock);
+
+                device.exitToBroadcast();
+
+                expect(mock).toHaveBeenCalledWith(antie.framework.deviceConfiguration, { exitToBroadcast: true });
             });
 
             it('does not support broadcastSource', function() {
@@ -35,92 +55,42 @@ require(
             });
 
             it('chokes on call to Broadcast API', function() {
-                // expect(function() {
-                //     // Method under test
-                //     device.createBroadcastSource();
-                // }).toThrowError('Broadcast API not available on this device.');   // Jasmine 2.0
-
-                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
-                try {
+                expect(function() {
                     // Method under test
                     device.createBroadcastSource();
-                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
-                } catch (e) {
-                    expect(e.message).toBe('Broadcast API not available on this device.');
-                }
+                }).toThrowError('Broadcast API not available on this device.');
             });
 
-            it('asynchronously calls onSuccess callback when valid config is passed to Device.load', function() {
-                var done = false;
-
+            it('asynchronously calls onSuccess callback when valid config is passed to Device.load', function(done) {
                 var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
-                callbacks.onSuccess.andCallFake(function() {
-                    done = true;
+                callbacks.onSuccess.and.callFake(function(arg) {
+                    expect(arg).toEqual(jasmine.any(BrowserDevice));  // New instance of device named in antie.framework.deviceConfiguration.modules.base
+                    expect(arg.getConfig()).toBe(antie.framework.deviceConfiguration);
+                    done();
                 });
-                callbacks.onError.andCallFake(function() {
-                    done = true;
+                callbacks.onError.and.callFake(function() {
+                    expect(callbacks.onError).not.toHaveBeenCalled();
+                    done();
                 });
 
                 // This is the class that will be instantiated and passed to onSuccess
                 expect(antie.framework.deviceConfiguration.modules.base).toBe('antie/devices/browserdevice');
-
-                runs(function() {
-                    // Method under test
-                    Device.load(antie.framework.deviceConfiguration, callbacks);
-                });
-
-                // Wait for onSuccess to set done.  More verbose than Jasmine 2.0 but works fine.
-                waitsFor(
-                    function() {
-                        return done;
-                    },
-                    'timed out waiting for onSuccess callback',
-                    500
-                );
-
-                runs(function() {
-                    expect(callbacks.onSuccess).toHaveBeenCalledWith(jasmine.any(BrowserDevice));  // New instance of device named in antie.framework.deviceConfiguration.modules.base
-                    expect(callbacks.onSuccess.calls[0].args[0].getConfig()).toBe(antie.framework.deviceConfiguration);
-                    expect(callbacks.onError).not.toHaveBeenCalled();
-                });
+                Device.load(antie.framework.deviceConfiguration, callbacks);
             });
 
-            it('imediately calls onError callback when invalid config is passed to Device.load', function() {
+            it('imediately calls onError callback when invalid config is passed to Device.load', function(done) {
                 var callbacks = jasmine.createSpyObj('callbacks', ['onSuccess', 'onError']);
-
+                callbacks.onError.and.callFake(function (arg) {
+                    expect(arg).toEqual(jasmine.any(Object));
+                    expect(arg.name).toBe('TypeError');
+                    done();
+                });
                 expect(function() {
                     // Method under test
                     Device.load({}, callbacks);
                 }).not.toThrow();
 
                 expect(callbacks.onSuccess).not.toHaveBeenCalled();
-                expect(callbacks.onError).toHaveBeenCalledWith(jasmine.any(Object));
-                expect(callbacks.onError.calls[0].args[0].message).toMatch(/'undefined' is not an object/);
-            });
-
-            it('chokes on default exit()', function() {
-                // expect(function() {
-                //     // Method under test
-                //     device.exit();
-                // }).toThrowError('Not supported on this device.');   // Jasmine 2.0
-
-                // In the absence of Jasmine 2.0 toThrowError() we must check all this manually in a try/catch
-                try {
-                    // Method under test
-                    device.exit();
-                    expect('Error not thrown').toBe('Error thrown');  // Fail the test (in the absence of the Jasmine 2.4 fail() method)
-                } catch (e) {
-                    expect(e.message).toBe('Not supported on this device.');
-                }
-            });
-
-            it('calls exit() on default exitToBroadcast()', function() {
-                spyOn(device, 'exit');
-
-                // Method under test
-                device.exitToBroadcast();
-
-                expect(device.exit).toHaveBeenCalledWith();
             });
 
             it('sends xhr request with specified method and data', function() {
@@ -185,12 +155,12 @@ require(
 
                 expect(mockXMLHttpRequest.setRequestHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
                 expect(mockXMLHttpRequest.setRequestHeader).not.toHaveBeenCalledWith('notOwnProperty', 'gibberishn');
-                expect(mockXMLHttpRequest.setRequestHeader.calls.length).toBe(1);
+                expect(mockXMLHttpRequest.setRequestHeader.calls.count()).toBe(1);
             });
 
             it('calls onError if XMLHttpRequest open() throws an error', function() {
                 var SECURITY_ERR = {type: 'SECURITY_ERR'};
-                mockXMLHttpRequest.open.andCallFake(function() {
+                mockXMLHttpRequest.open.and.callFake(function() {
                     throw(SECURITY_ERR);
                 });
 
@@ -206,7 +176,7 @@ require(
 
             it('still does not call onLoad if XMLHttpRequest open() throws an error, even if no onError has been supplied', function() {
                 var SECURITY_ERR = {type: 'SECURITY_ERR'};
-                mockXMLHttpRequest.open.andCallFake(function() {
+                mockXMLHttpRequest.open.and.callFake(function() {
                     throw(SECURITY_ERR);
                 });
 
@@ -820,6 +790,25 @@ require(
 
             assert(successSpy.calledOnce);
             assert(successSpy.calledWith({ 'test' : 'myValue' }));
+        });
+    };
+
+    this.DefaultNetworkTest.prototype.testExecuteCrossDomainGetDoesNotErrorOnEmptyResponseFromLoadUrlWhenCorsIsSupported = function(queue) {
+        expectAsserts(3);
+
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
+            var device = new BrowserDevice({'networking': { 'supportsCORS': true }});
+            var testUrl = 'http://test';
+            var successSpy = this.sandbox.stub();
+
+            device.executeCrossDomainGet(testUrl, {onSuccess: successSpy});
+
+            assertEquals(1, this.requests.length);
+
+            this.requests[0].respond(204, { 'Content-Type': 'text/plain' }, '');
+
+            assert(successSpy.calledOnce);
+            assert(successSpy.calledWith({}));
         });
     };
 

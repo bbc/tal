@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing antie.AudioSource class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -23,7 +23,7 @@ define(
              * Get the media type of this source. In this case <code>MediaType.MEDIA_TYPE_AUDIO</code>.
              * @returns The media type of this content.
              */
-            getMediaType: function() {
+            getMediaType: function getMediaType () {
                 return MediaSource.MEDIA_TYPE_AUDIO;
             }
         });

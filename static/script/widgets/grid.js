@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.Grid class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -24,17 +24,23 @@ define(
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {Integer} cols The number of columns in the grid.
          * @param {Integer} rows The number of rows in the grid.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          */
         var Grid = Container.extend(/** @lends antie.widgets.Grid.prototype */ {
             /**
              * @constructor
              * @ignore
              */
-            init: function (id, cols, rows) {
-                this._super(id);
+            init: function init (id, cols, rows, horizontalWrapping, verticalWrapping) {
+                init.base.call(this, id);
                 this.addClass('grid');
+
                 this._cols = cols;
                 this._rows = rows;
+
+                this._horizontalWrapping =  !!horizontalWrapping;
+                this._verticalWrapping = !!verticalWrapping;
 
                 this._selectedRow = 0;
                 this._selectedCol = 0;
@@ -54,16 +60,16 @@ define(
              * @param {Integer} row The row the widget it in
              * @returns The widget in the specified column and row
              */
-            getWidgetAt: function (col, row) {
+            getWidgetAt: function getWidgetAt (col, row) {
                 return this._childWidgetOrder[(this._cols * row) + col];
             },
             /**
              * Positions a widget at the specified column and row.
              * @param {Integer} col The column to position the widget in
              * @param {Integer} row The row to position the widget in
-             * @returns The widget to position
+             * @param {antie.widgets.Widget} widget The widget to add
              */
-            setWidgetAt: function (col, row, widget) {
+            setWidgetAt: function setWidgetAt (col, row, widget) {
                 if (!this.hasChildWidget(widget.id)) {
                     this._childWidgets[widget.id] = widget;
                     this._childWidgetOrder[(this._cols * row) + col] = widget;
@@ -91,7 +97,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function (device) {
+            render: function render (device) {
                 if (!this.outputElement) {
                     this.outputElement = device.createContainer(this.id, this.getClasses());
                 } else {
@@ -126,18 +132,18 @@ define(
                 return this.outputElement;
             },
             /**
-             * Appends a child widget to this widget. Not supported for Grids.
+             * Appends a child widget to this widget. Not supported for Grids - use setWidgetAt() instead.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            appendChildWidget: function (/*widget*/) {
-                throw new Error('Not supported');
+            appendChildWidget: function appendChildWidget (/*widget*/) {
+                throw new Error('Not supported for Grids - use setWidgetAt() instead.');
             },
             /**
              * Inserts a child widget at the specified index. Not supported for Grids.
              * @param {Integer} index The index where to insert the child widget.
              * @param {antie.widgets.Widget} widget The child widget to add.
              */
-            insertChildWidget: function (/*index, widget*/) {
+            insertChildWidget: function insertChildWidget (/*index, widget*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -145,7 +151,7 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to remove.
              * @param {Boolean} [retainElement] Pass <code>true</code> to retain the child output element of the given widget
              */
-            removeChildWidget: function (/*widget, retainElement*/) {
+            removeChildWidget: function removeChildWidget (/*widget, retainElement*/) {
                 throw new Error('Not supported');
             },
             /**
@@ -164,9 +170,9 @@ define(
              * @param {antie.widgets.Widget} widget The child widget to set focus to.
              * @returns Boolean true if the child widget was focusable, otherwise boolean false.
              */
-            setActiveChildWidget: function (widget) {
+            setActiveChildWidget: function setActiveChildWidget (widget) {
                 var changed = this._activeChildWidget !== widget;
-                if (this._super(widget)) {
+                if (setActiveChildWidget.base.call(this, widget)) {
                     var selectedIndex = this.getIndexOfChildWidget(widget);
                     this._selectedRow = Math.floor(selectedIndex / this._cols);
                     this._selectedCol = Math.floor(selectedIndex % this._cols);
@@ -185,7 +191,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function (evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if (evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN &&
                     evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
@@ -204,11 +210,37 @@ define(
                     } else if (evt.keyCode === KeyEvent.VK_RIGHT) {
                         _newSelectedCol++;
                     }
-                    if (_newSelectedCol < 0 || _newSelectedCol >= this._cols) {
-                        break;
+
+                    if (_newSelectedCol < 0) {
+                        if(this._horizontalWrapping) {
+                            _newSelectedCol = this._cols - 1;
+                        } else {
+                            break;
+                        }
                     }
-                    if (_newSelectedRow < 0 || _newSelectedRow >= this._rows) {
-                        break;
+
+                    if(_newSelectedCol >= this._cols) {
+                        if(this._horizontalWrapping) {
+                            _newSelectedCol = 0;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if (_newSelectedRow < 0) {
+                        if(this._verticalWrapping) {
+                            _newSelectedRow = this._rows - 1;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    if(_newSelectedRow >= this._rows) {
+                        if(this._verticalWrapping) {
+                            _newSelectedRow = 0;
+                        } else {
+                            break;
+                        }
                     }
 
                     var _newSelectedIndex = (_newSelectedRow * this._cols) + _newSelectedCol;
@@ -230,7 +262,7 @@ define(
              * Broadcasts an event from the application level to every single
              * object it contains.
              */
-            broadcastEvent: function (evt) {
+            broadcastEvent: function broadcastEvent (evt) {
                 this.fireEvent(evt);
                 if (!evt.isPropagationStopped()) {
                     for (var i = 0; i < this._childWidgetOrder.length; i++) {
@@ -243,6 +275,18 @@ define(
                 }
             }
         });
+
+        Grid.WRAP_MODE = {
+            HORIZONTAL: {
+                ON: 1,
+                OFF: 0
+            },
+
+            VERTICAL: {
+                ON: 1,
+                OFF: 0
+            }
+        };
 
         return Grid;
     }

@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function() {
@@ -290,6 +290,238 @@
                 buttonC.bubbleEvent(new SelectEvent(buttonC));
 
                 assertEquals('Abc', keyboard.getText());
+            });
+    };
+
+    this.KeyboardTest.prototype.testTripleTapOfNewFirstCharacterWhenOneBeforeMaxLengthIsAccepted = function(queue) {
+        expectAsserts(2);
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 5, 1, ['a', 'b', 'c', 'd', 'e']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                keyboard.setMaximumLength(5);
+                keyboard.setText('abcd');
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+                assertEquals('abcda', keyboard.getText());
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testTripleTapOfNewSecondaryCharacterWhenOneBeforeMaxLengthIsAccepted = function(queue) {
+        expectAsserts(2);
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 5, 1, ['a', 'b', 'c', 'd', 'e']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                keyboard.setMaximumLength(5);
+                keyboard.setText('abcd');
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+                assertEquals('abcdb', keyboard.getText());
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testTripleTapOfTwoCharactersWhenOneBeforeMaxLengthFirstIsAccepted = function(queue) {
+        expectAsserts(2);
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c'],
+            '3': ['d', 'e', 'f']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 6, 1, ['a', 'b', 'c', 'd', 'e', 'f']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                keyboard.setMaximumLength(5);
+                keyboard.setText('abcd');
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_3));
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+                assertEquals('abcdd', keyboard.getText());
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testTripleTapOfNewFirstCharacterWhenAtMaxLengthIsIgnored = function(queue) {
+        expectAsserts(2);
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 5, 1, ['a', 'b', 'c', 'd', 'e']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                var maxLengthText = 'abcde';
+                keyboard.setMaximumLength(5);
+                keyboard.setText(maxLengthText);
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+                assertEquals('abcde', keyboard.getText());
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testTripleTapOfNewSecondaryCharacterWhenAtMaxLengthIsIgnored = function(queue) {
+        expectAsserts(2);
+        // Use JSON.parse/stringify to create a copy of the device config
+        var config = JSON.parse(JSON.stringify(antie.framework.deviceConfiguration));
+        config.input.multitap = {
+            '2': ['a', 'b', 'c']
+        };
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/events/keyevent'],
+            function(application, Keyboard, KeyEvent) {
+                var keyboard = new Keyboard('id', 5, 1, ['a', 'b', 'c', 'd', 'e']);
+                keyboard.setMultiTap(true);
+                keyboard.setCapitalisation(Keyboard.CAPITALISATION_LOWER);
+
+                var maxLengthText = 'abcde';
+                keyboard.setMaximumLength(5);
+                keyboard.setText(maxLengthText);
+
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_2));
+
+                assertEquals('abcde', keyboard.getText());
+            }, config);
+    };
+
+    this.KeyboardTest.prototype.testKeyboardModalityHorizontal = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, Grid, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 2, ['a', 'b', 'c',
+                                                         'd', 'e', 'f'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.ON,
+                                                         Grid.WRAP_MODE.VERTICAL.OFF);
+
+                //a -> b
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //b -> c
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //c -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //a -> b
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                assertEquals('b', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
+            });
+    };
+
+    this.KeyboardTest.prototype.testKeyboardModalityVertical = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, Grid, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
+                                                         'd', 'e', 'f',
+                                                         'g', 'h', 'i'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.OFF,
+                                                         Grid.WRAP_MODE.VERTICAL.ON);
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> g
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //g -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                assertEquals('d', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
+            });
+    };
+
+    this.KeyboardTest.prototype.testKeyboardModalityHorizontalVertical = function (queue) {
+        expectAsserts(1);
+
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            ['antie/widgets/keyboard', 'antie/widgets/grid', 'antie/events/keyevent'],
+            function(application, Keyboard, Grid, KeyEvent) {
+                var keyboard = new Keyboard('id', 3, 3, ['a', 'b', 'c',
+                                                         'd', 'e', 'f',
+                                                         'g', 'h', 'i'],
+                                                         Grid.WRAP_MODE.HORIZONTAL.ON,
+                                                         Grid.WRAP_MODE.VERTICAL.ON);
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> g
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //g -> a
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //a -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_DOWN));
+
+                //d -> e
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //e -> f
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //f -> d
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                //d -> e
+                keyboard.fireEvent(new KeyEvent('keydown', KeyEvent.VK_RIGHT));
+
+                assertEquals('e', keyboard.getActiveChildWidget().getChildWidgets()[0].getText());
             });
     };
 

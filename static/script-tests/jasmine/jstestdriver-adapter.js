@@ -2,38 +2,43 @@ window.additionalTestFns = {};
 
 var unloadRequire;
 (function () {
-	var requireModules = { };
+    var requireModules = { };
 
-	var originalDef = require.def;
-	var originalDefine = define;
-	var originalLoad = require.load;
+    var originalDef = require.def;
+    var originalDefine = define;
+    var originalLoad = require.load;
 
-	require.def = function() {
-		var name = arguments[0];
-		requireModules[name] = arguments;
-		originalDef.apply(require, arguments);
-	};
+    require.def = function() {
+        var name = arguments[0];
+        requireModules[name] = arguments;
+        originalDef.apply(require, arguments);
+    };
 
-	define = function() {
-		var name = arguments[0];
-		requireModules[name] = arguments;
-		originalDefine.apply(require, arguments);
-	};
-	require.load = function(moduleName, contextName) {
-		var module = requireModules[moduleName];
-		if(module) {
-			require.s.contexts._.specified[moduleName] = true;
-			require.s.contexts._.loaded[moduleName] = false;
-			setTimeout(function() {
-				require.def.apply(require, module);
-				require.completeLoad(moduleName, require.s.contexts._);
-			}, 0);
-			return;
-		}
-		originalLoad.apply(require, arguments);
-	};
+    define = function() {
+        var name = arguments[0];
+        requireModules[name] = arguments;
+        originalDefine.apply(require, arguments);
+    };
 
-	unloadRequire = function() {
+    define.amd = {
+        jQuery: false
+    };
+
+    require.load = function(moduleName, contextName) {
+        var module = requireModules[moduleName];
+        if(module) {
+            require.s.contexts._.specified[moduleName] = true;
+            require.s.contexts._.loaded[moduleName] = false;
+            setTimeout(function() {
+                require.def.apply(require, module);
+                require.completeLoad(moduleName, require.s.contexts._);
+            }, 0);
+            return;
+        }
+        originalLoad.apply(require, arguments);
+    };
+
+    unloadRequire = function() {
         var excluded = [
             'antie/application',
             'antie/audiosource',
@@ -166,8 +171,8 @@ var unloadRequire;
                     delete require.s.contexts._.loaded[name];
                 }
             }
-		}
-	};
+        }
+    };
 })();
 
 
@@ -182,11 +187,11 @@ var TestCase = function (description, testSuiteClass) {
         if(testSuiteClass.hasOwnProperty(propertyName)) {
             var fn = testSuiteClass[propertyName];
 
-            if (propertyName.indexOf("test") === 0) {
+            if (propertyName.indexOf('test') === 0) {
                 testFns[propertyName] = fn;
-            } else if (propertyName === "setUp") {
+            } else if (propertyName === 'setUp') {
                 setup = fn;
-            } else if (propertyName === "tearDown") {
+            } else if (propertyName === 'tearDown') {
                 tearDown = fn;
             } else {
                 otherFns[propertyName] = fn;
@@ -211,7 +216,6 @@ var TestCase = function (description, testSuiteClass) {
             }
 
             unloadRequire();
-            validateExpectAsserts.call(this);
         };
 
         afterEach(unloadRequireAndTearDown);
@@ -220,19 +224,15 @@ var TestCase = function (description, testSuiteClass) {
     describe(description, specDefinitions);
 };
 
-testCase = TestCase;
-
 window.testSuites = {};
-
+var thisContext = {};
 AsyncTestCase = function (testSuiteName) {
-    var testSuite = {};
+    var testSuite =  {};
     testSuite.prototype = {};
 
     window.testSuites[testSuiteName] = testSuite;
-
     return testSuite;
 };
-
 registerTestsWithJasmine = function () {
     for (var testSuiteName in window.testSuites) {
         if(window.testSuites.hasOwnProperty(testSuiteName)) {
@@ -246,11 +246,11 @@ registerTestsWithJasmine = function () {
                 if(testSuiteClass.prototype.hasOwnProperty(propertyName)) {
                     var fn = testSuiteClass.prototype[propertyName];
 
-                    if (propertyName.indexOf("test") === 0) {
+                    if (propertyName.indexOf('test') === 0) {
                         testFns[propertyName] = fn;
-                    } else if (propertyName === "setUp") {
+                    } else if (propertyName === 'setUp') {
                         setup = fn;
-                    } else if (propertyName === "tearDown") {
+                    } else if (propertyName === 'tearDown') {
                         tearDown = fn;
                     }
                 }
@@ -258,7 +258,7 @@ registerTestsWithJasmine = function () {
 
             var specDefinition = function () {
                 if (setup) {
-                    beforeEach(setup);
+                    beforeEach(setup.bind(thisContext));
                 }
 
                 for (var testName in testFns) {
@@ -268,7 +268,7 @@ registerTestsWithJasmine = function () {
                 }
 
                 if (tearDown) {
-                    afterEach(tearDown);
+                    afterEach(tearDown.bind(thisContext));
                 }
 
                 afterEach(function () {
@@ -276,44 +276,32 @@ registerTestsWithJasmine = function () {
                         window.fakeApplication.destroy();
                         window.fakeApplication = null;
                     }
-                    var div = document.getElementById("rootWidget");
+                    var div = document.getElementById('rootWidget');
                     if (div) {
                         div.parentNode.removeChild(div);
                     }
                     unloadRequire();
-                    validateExpectAsserts.call(this);
                 });
             };
 
-            describe(testSuiteName, specDefinition);
+            describe(testSuiteName, specDefinition.bind(thisContext));
         }
 
     }
 };
 
-function validateExpectAsserts() {
-    var expectedCount = window._currentExpectedAsserts;
-    if (expectedCount !== undefined) {
-        var actualCount = this.results().passedCount + this.results().failedCount;
-        if (actualCount !== expectedCount) {
-            this.fail('Expected ' + expectedCount + ' assertions, got ' + actualCount);
-        }
-        window._currentExpectedAsserts = undefined;
-    }
-}
-
 function createRunAsyncTestFunction(testFn) {
-    return function () {
-        runAsyncTest(testFn);
+    return function (done) {
+        runAsyncTest(testFn, done);
     };
 }
 
-function runAsyncTest(testFn) {
+function runAsyncTest(testFn, done) {
     var testHasRun = false;
 
     queuedApplicationInit = function(queue, applicationModuleName, otherDeps, testToRun, configOverride) {
-        var rootWidget = document.createElement("div");
-        rootWidget.id = "rootWidget";
+        var rootWidget = document.createElement('div');
+        rootWidget.id = 'rootWidget';
         document.body.appendChild(rootWidget);
 
         var wrappedTestToRun = function () {
@@ -323,8 +311,8 @@ function runAsyncTest(testFn) {
 
             var onReady = function () {
                 try {
-                    testToRun.apply(window.jasmineTestThisContext, loadedModules);
-                    rootWidget.innerHTML = "";
+                    testToRun.apply(thisContext, loadedModules);
+                    rootWidget.innerHTML = '';
                 } finally {
                     testHasRun = true;
                 }
@@ -340,7 +328,7 @@ function runAsyncTest(testFn) {
     queuedRequire = function(queue, deps, testToRun) {
         var wrappedTestToRun = function () {
             try {
-                testToRun.apply(window.jasmineTestThisContext, arguments);
+                testToRun.apply(thisContext, arguments);
             } finally {
                 testHasRun = true;
             }
@@ -349,39 +337,13 @@ function runAsyncTest(testFn) {
         require(deps, wrappedTestToRun);
     };
 
-    runs(testFn);
-
-    waitsFor(function () {
-        return testHasRun;
-    }, 30000);
-}
-
-
-jasmine.Block.prototype.execute = function(onComplete) {
-    var otherFns = additionalTestFns[this.spec.suite.description];
-
-    window.jasmineTestThisContext = this.spec;
-
-    for (var fnName in otherFns) {
-        if(otherFns.hasOwnProperty(fnName)) {
-            if (!(fnName in this.spec)) {
-                this.spec[fnName] = otherFns[fnName];
-            }
+    testFn.apply(thisContext);
+    setInterval(function () {
+        if (testHasRun) {
+            done();
         }
-    }
-
-    if (!jasmine.CATCH_EXCEPTIONS) {
-      this.func.apply(this.spec);
-    }
-    else {
-      try {
-        this.func.apply(this.spec);
-      } catch (e) {
-        this.spec.fail(e);
-      }
-    }
-    onComplete();
-};
+    }, 10);
+}
 
 testCase = TestCase;
 
@@ -484,13 +446,13 @@ assertFunction = function (msg, thing) {
     if (arguments.length < 2) {
         thing = msg;
     }
-    expect(typeof thing).toBe("function");
+    expect(typeof thing).toBe('function');
 };
 
 assertException = function (msg, fn, error) {
     if (arguments.length < 2) {
         fn = msg;
-    } else if (arguments.length === 2 &&  typeof(msg) === "function") {
+    } else if (arguments.length === 2 &&  typeof(msg) === 'function') {
         error = fn;
         fn = msg;
     }
@@ -512,27 +474,27 @@ assertClassName = function (msg, className, element) {
         className = msg;
     }
 
-    var classes = element.className.split(" ");
+    var classes = element.className.split(' ');
 
     expect(classes).toContain(className);
 };
 
 assertMatch = function (msg, regex, actual) {
-	if (arguments.length < 3) {
-		actual = regex;
-		regex = msg;
-	}
+    if (arguments.length < 3) {
+        actual = regex;
+        regex = msg;
+    }
 
-	expect(regex.test(actual)).toBe(true);
+    expect(regex.test(actual)).toBe(true);
 };
 
 assertNoMatch = function (msg, regex, actual) {
-	if (arguments.length < 3) {
-		actual = regex;
-		regex = msg;
-	}
+    if (arguments.length < 3) {
+        actual = regex;
+        regex = msg;
+    }
 
-	expect(regex.test(actual)).toBe(false);
+    expect(regex.test(actual)).toBe(false);
 };
 
 assertBoolean = function (msg, thing) {
@@ -540,7 +502,7 @@ assertBoolean = function (msg, thing) {
         thing = msg;
     }
 
-    expect(typeof thing).toBe("boolean");
+    expect(typeof thing).toBe('boolean');
 };
 
 jstestdriver = {

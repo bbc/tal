@@ -6,9 +6,7 @@
         "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/samsung_maple",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -106,5 +104,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
   }
 }

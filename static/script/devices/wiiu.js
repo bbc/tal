@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 /**
@@ -21,14 +21,14 @@ define(
 
         return BrowserDevice.extend({
             /* global nwf: true */
-            init: function(config) {
-                this._super(config);
+            init: function init (config) {
+                init.base.call(this, config);
             },
             /**
              * Adds key event listeners to WiiU Gamepad and WiiRemote, Wii U Pro controller is
              * currently unsupported in NWF
              */
-            addKeyEventListener: function() {
+            addKeyEventListener: function addKeyEventListener () {
                 this._registerWiiUGamePadInputControls();
                 this._registerWiiRemoteInputControls();
             },
@@ -70,7 +70,7 @@ define(
                     break;
                 }
             },
-            _onGamePadButtonRelease: function(buttonEvent) {
+            _onGamePadButtonRelease: function _onGamePadButtonRelease (buttonEvent) {
                 var controllerButton = nwf.input.ControllerButton;
                 switch (buttonEvent.button) {
                 case controllerButton.GAMEPAD_A:

@@ -6,8 +6,6 @@
 	    "antie/devices/anim/noanim",
 	    "antie/devices/mediaplayer/html5",
 	    "antie/devices/mediaplayer/live/none",
-	    "antie/devices/data/nativejson",
-	    "antie/devices/logging/default",
 	    "antie/devices/storage/cookie",
 	    "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -105,5 +103,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail"
   }
 }

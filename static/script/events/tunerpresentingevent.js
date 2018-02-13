@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.TunerPresentingEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -22,9 +22,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(channelName) {
+            init: function init (channelName) {
                 this.channel = channelName;
-                this._super('tunerpresenting');
+                init.base.call(this, 'tunerpresenting');
             }
         });
     }

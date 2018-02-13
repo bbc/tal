@@ -1,6 +1,6 @@
 {
   "name": "tal",
-  "version": "6.0.0",
+  "version": "8.1.1",
   "homepage": "http://fmtvp.github.io/tal/index.html",
   "description": "TAL was developed internally within the BBC as a way of vastly simplifying TV application development whilst increasing the reach of BBC TV applications such as iPlayer. Today all of the BBC’s HTML-based TV applications are built using TAL.",
   "main": "static/script/application.js",
@@ -13,7 +13,7 @@
     "Application",
     "Layer"
   ],
-  "license": "https://github.com/fmtvp/tal/blob/master/LICENSE",
+  "license": "https://github.com/bbc/tal/blob/master/LICENSE",
   "ignore": [
         "jsdoc",
         "node-test",

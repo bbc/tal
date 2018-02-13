@@ -6,10 +6,7 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/playable",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
-      "antie/devices/logging/onscreen",
       "antie/devices/exit/history"
     ]
   },
@@ -99,5 +96,9 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "serviceType": "retail"
   }
 }

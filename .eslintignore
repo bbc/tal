@@ -1,10 +1,8 @@
 static/script/class.js
 static/script/lib/*
 static/script/devices/googletv.js
-static/script/devices/data/json2.js
 static/script/widgets/horizontalcarousel.js
 static/script-tests/lib/*
 static/script-tests/jasmine/*
 static/script-tests/fixtures/*
 static/script-tests/api/*
-static/script/devices/mediaplayer/samsung_streaming.js

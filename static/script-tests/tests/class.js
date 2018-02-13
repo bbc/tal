@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function() {
@@ -104,14 +104,14 @@
                 }
             });
             var ExtendedThriceClass = ExtendedTwiceClass.extend({
-                overridableFunction: function() {
-                    return this._super();
+                overridableFunction: function overridableFunction () {
+                    return overridableFunction.base.call(this);
                 }
             });
 
             var obj3 = new ExtendedThriceClass();
 
-            assertEquals('_super() method executes overridden method in super class', 'subclass', obj3.overridableFunction());
+            assertEquals('base method executes overridden method in super class', 'subclass', obj3.overridableFunction());
         });
     };
 

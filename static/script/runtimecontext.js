@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.RunTimeContext class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -26,7 +26,7 @@ define(
              * Clears the currently executing application.
              * @private
              */
-            clearCurrentApplication: function() {
+            clearCurrentApplication: function clearCurrentApplication () {
                 applicationObject = undefined;
             },
 
@@ -34,7 +34,7 @@ define(
              * Sets the currently executing application.
              * @private
              */
-            setCurrentApplication: function(app) {
+            setCurrentApplication: function setCurrentApplication (app) {
                 if (applicationObject) {
                     throw new Error('RuntimeContext.setCurrentApplication called for a second time. You can only have one application instance running at any time.');
                 } else {
@@ -46,7 +46,7 @@ define(
              * Returns the currently executing application.
              * @private
              */
-            getCurrentApplication: function() {
+            getCurrentApplication: function getCurrentApplication () {
                 return applicationObject;
             },
 
@@ -54,7 +54,7 @@ define(
              * Returns the current device
              * @private
              */
-            getDevice: function() {
+            getDevice: function getDevice () {
                 return this.getCurrentApplication().getDevice();
             }
         });

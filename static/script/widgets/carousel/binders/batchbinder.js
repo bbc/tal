@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.carousel.binders.batchbinder class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -24,7 +24,7 @@ define(
              * by the source is reached.
              * @param widget The parent of the widgets to be created.
              */
-            appendAllTo: function (widget) {
+            appendAllTo: function appendAllTo (widget) {
                 this._bindAll(
                     widget,
                     this._appendItem,
@@ -33,11 +33,11 @@ define(
                 );
             },
 
-            _disableAutoCalc: function (ev) {
+            _disableAutoCalc: function _disableAutoCalc (ev) {
                 ev.target.autoCalculate(false);
             },
 
-            _enableAutoCalc: function (ev) {
+            _enableAutoCalc: function _enableAutoCalc (ev) {
                 ev.target.autoCalculate(true);
                 ev.target.recalculate();
             }

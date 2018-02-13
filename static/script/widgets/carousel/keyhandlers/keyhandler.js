@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.carousel.keyhandlers.keyhandler class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -24,7 +24,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function () {
+            init: function init () {
                 this._animationOptions = {};
             },
 
@@ -32,7 +32,7 @@ define(
              * Adds listeners to the supplied carousel to provided behaviour when navigation keys are pressed
              * @param carousel
              */
-            attach: function (carousel) {
+            attach: function attach (carousel) {
                 this._carousel = carousel;
                 this._addKeyListeners();
                 this._addAlignmentListeners();
@@ -47,11 +47,11 @@ define(
              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
-            setAnimationOptions: function (options) {
+            setAnimationOptions: function setAnimationOptions (options) {
                 this._animationOptions = options;
             },
 
-            _addKeyListeners: function () {
+            _addKeyListeners: function _addKeyListeners () {
                 var previousKey, nextKey, carousel, self;
                 self = this;
                 carousel = this._carousel;
@@ -77,7 +77,7 @@ define(
                 });
             },
 
-            _addAlignmentListeners: function () {
+            _addAlignmentListeners: function _addAlignmentListeners () {
 
             }
         });

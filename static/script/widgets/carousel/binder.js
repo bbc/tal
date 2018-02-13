@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.carousel.binder class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (formatter, dataSource) {
+            init: function init (formatter, dataSource) {
                 this._dataSource = dataSource;
                 this._formatter = formatter;
             },
@@ -36,11 +36,11 @@ define(
              * by the source is reached.
              * @param widget The parent of the widgets to be created.
              */
-            appendAllTo: function (widget) {
+            appendAllTo: function appendAllTo (widget) {
                 this._bindAll(widget, this._appendItem);
             },
 
-            _bindAll: function (widget, processItemFn, preBindFn, postBindFn) {
+            _bindAll: function _bindAll (widget, processItemFn, preBindFn, postBindFn) {
                 var callbacks, beforeBindEvent;
 
                 callbacks = this._getCallbacks(widget, processItemFn, postBindFn);
@@ -59,10 +59,10 @@ define(
 
             },
 
-            _getCallbacks: function (widget, processItemFn, postBindFn) {
+            _getCallbacks: function _getCallbacks (widget, processItemFn, postBindFn) {
                 var self = this;
                 return {
-                    onSuccess: function (data) {
+                    onSuccess: function onSuccess (data) {
                         var it, boundItem, dataBoundEvent;
                         if (data instanceof Iterator) {
                             it = data;
@@ -82,13 +82,13 @@ define(
 
                         widget.bubbleEvent(dataBoundEvent);
                     },
-                    onError: function (error) {
+                    onError: function onError (error) {
                         widget.bubbleEvent(new DataBoundEvent('databindingerror', widget, null, error));
                     }
                 };
             },
 
-            _appendItem: function (widget, item) {
+            _appendItem: function _appendItem (widget, item) {
                 return widget.appendChildWidget(item);
             }
         }

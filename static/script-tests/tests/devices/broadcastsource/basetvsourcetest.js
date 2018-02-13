@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function() {
@@ -15,9 +15,7 @@
         return {'modules':{'base':'antie/devices/browserdevice','modifiers':[
             'antie/devices/anim/styletopleft',
             'antie/devices/broadcastsource/basetvsource',
-            'antie/devices/data/nativejson',
             'antie/devices/storage/cookie',
-            'antie/devices/logging/default',
             'antie/devices/exit/closewindow'
         ]},'input':{'map':{}},'layouts':[
             {'width':1280,'height':720,'module':'fixtures/layouts/default','classes':['browserdevice720p']}

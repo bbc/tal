@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the after align event
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -23,10 +23,10 @@ define(
              * @constructor
              * @ignore
              */
-            init: function (target, alignedIndex) {
+            init: function init (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super('afteralign');
+                init.base.call(this, 'afteralign');
             }
         });
     }

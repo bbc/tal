@@ -6,12 +6,8 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/restartable",
-      "antie/devices/data/nativejson",
       "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
 	  "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -111,5 +107,10 @@
   "networking": {
     "supportsJSONP": true,
 	"supportCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "managed_service"
   }
 }

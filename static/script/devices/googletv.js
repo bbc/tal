@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.BrowserDevice subclass for Google TV devices.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define('antie/devices/googletv',
@@ -13,7 +13,7 @@ define('antie/devices/googletv',
 		'use strict';
 
 		return BrowserDevice.extend({
-			init: function(config) {
+			init: function init (config) {
 				// Change Application::getBestFitLayout to find the layout with a size
 				// closest to that of the browser resolution, then use CSS zoom to fit
 				// it to the exact screen size.
@@ -47,7 +47,7 @@ define('antie/devices/googletv',
 					return _selected;
 				};
 
-				this._super(config);
+				init.base.call(this, config);
 			}
 		});
 	}

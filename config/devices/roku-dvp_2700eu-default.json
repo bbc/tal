@@ -6,11 +6,7 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5seekfinishedemitevent",
       "antie/devices/mediaplayer/live/restartable",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
 	  "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -94,5 +90,10 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "streamer",
+    "serviceType": "retail"
   }
 }

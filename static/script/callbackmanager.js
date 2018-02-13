@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the CallbackManager utility class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define('antie/callbackmanager',
@@ -22,7 +22,7 @@ define('antie/callbackmanager',
              * @constructor
              * @ignore
              */
-            init: function() {
+            init: function init () {
                 this._callbacks = [ ];
             },
 
@@ -34,7 +34,7 @@ define('antie/callbackmanager',
              * @param {Object} thisArg The object to use as "this" when calling the callback.
              * @param {Function} callback The callback function
              */
-            addCallback: function(thisArg, callback) {
+            addCallback: function addCallback (thisArg, callback) {
                 if (this._getIndexOf(thisArg,callback) === undefined) {
                     this._callbacks.push([thisArg, callback]);
                 }
@@ -45,7 +45,7 @@ define('antie/callbackmanager',
              * @param {Object} thisArg The object that was used as "this" when adding the callback.
              * @param {Function} callback The callback function
              */
-            removeCallback: function(thisArg, callback) {
+            removeCallback: function removeCallback (thisArg, callback) {
                 var foundIndex = this._getIndexOf(thisArg,callback);
 
                 if (foundIndex !== undefined) {
@@ -53,7 +53,7 @@ define('antie/callbackmanager',
                 }
             },
 
-            _getIndexOf: function(thisArg, callback) {
+            _getIndexOf: function _getIndexOf (thisArg, callback) {
                 var result;
                 for (var i = 0; i < this._callbacks.length; i++) {
                     if (this._callbacks[i][0] === thisArg && this._callbacks[i][1] === callback) {
@@ -68,7 +68,7 @@ define('antie/callbackmanager',
             /**
              * Remove all callbacks.
              */
-            removeAllCallbacks: function() {
+            removeAllCallbacks: function removeAllCallbacks () {
                 this._callbacks = [ ];
             },
 
@@ -77,7 +77,7 @@ define('antie/callbackmanager',
              * @example manager.callAll(1);
              * @example manager.callAll(1,2,3,4);
              */
-            callAll: function() {
+            callAll: function callAll () {
                 // Convert arguments object to args array.
                 var args = Array.prototype.slice.call(arguments);
 

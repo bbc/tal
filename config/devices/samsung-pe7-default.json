@@ -7,11 +7,7 @@
       "antie/devices/mediaplayer/samsung_maple",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/broadcastsource/samsungtvsource",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/samsung_maple",
       "antie/devices/exit/broadcast/samsung_maple",
       "antie/devices/parentalguidance/appdefaultpghandler"
@@ -68,6 +64,7 @@
       "70": "STOP",
       "72": "FAST_FWD",
       "69": "REWIND",
+      "108" : "RED",
       "101": "1",
       "98": "2",
       "6": "3",
@@ -110,5 +107,10 @@
   },
   "broadcast": {
     "aitProfile": "dtg_local"
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

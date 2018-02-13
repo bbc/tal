@@ -6,10 +6,8 @@
             "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/restartable",
-            "antie/devices/data/nativejson",
             "antie/devices/broadcastsource/hbbtvsource",
             "antie/devices/storage/cookie",
-            "antie/devices/logging/consumelog",
             "antie/devices/exit/closewindow",
             "antie/devices/parentalguidance/youviewpghandler"
         ]

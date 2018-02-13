@@ -1,82 +1,56 @@
 /**
  * @fileOverview Requirejs module containing antie.Class top-level base class.
  *
- * Inspired by base2 and Prototype
- * @see http://ejohn.org/blog/simple-javascript-inheritance/
- *
- * @author John Resig <eresig@gmail.com>
+ * @see https://medium.com/netflix-techblog/improving-the-performance-of-our-javascript-inheritance-model-af376d75665
  */
 
 define('antie/class', function() {
-    "use strict";
-    var initializing = false, fnTest = /var xyz/.test(function () { var xyz; }) ? /\b_super\b/ : /.*/;
+    var initializing = false;
 
-    /**
-     * The base Class implementation (does nothing)
-     * @name antie.Class
-     * @class
-     * @abstract
-     */
-    function Class(){}
+    // The base Class implementation (does nothing)
+    var Class = function(){};
 
-    /**
-     * Create a new Class that inherits from this class
-     * @name extend
-     * @memberOf antie.Class
-     * @function
-     * @static
-     * @param {Object} prop Prototype to add to the new extended class.
-     */
-    Class.extend = function(prop) {
+    // Create a new Class that inherits from this class
+    Class.extend = function extend(prop) {
         var _super = this.prototype;
 
         // Instantiate a base class (but only create the instance,
         // don't run the init constructor)
         initializing = true;
-        var proto = new this();
+        var prototype = new this();
         initializing = false;
 
         // Copy the properties over onto the new prototype
         for (var name in prop) {
-            // Check if we're overwriting an existing function
-            proto[name] = typeof prop[name] === "function" &&
-                typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-                (function(name, fn){
-                    return function() {
-                        var tmp = this._super;
-
-                        // Add a new ._super() method that is the same method
-                        // but on the super-class
-                        this._super = _super[name];
-
-                        // The method only need to be bound temporarily, so we
-                        // remove it when we're done executing
-                        var ret = fn.apply(this, arguments);
-                        this._super = tmp;
-
-                        return ret;
-                    };
-                })(name, prop[name]) :
-            prop[name];
+            if (prop.hasOwnProperty(name)) {
+                // if we're overwriting an existing function
+                // set the base property
+                var value = prop[name];
+                if (typeof prop[name] === 'function' && typeof _super[name] === 'function'){
+                    value.base = _super[name];
+                }
+                prototype[name] = value;
+            }
         }
 
         // The dummy class constructor
-        var newClass = function() {
+        function Class() {
             // All construction is actually done in the init method
-            if ( !initializing && this.init )
+            if (!initializing && this.init) {
                 this.init.apply(this, arguments);
-        };
+            }
+        }
 
         // Populate our constructed prototype object
-        newClass.prototype = proto;
+        Class.prototype = prototype;
 
         // Enforce the constructor to be what we expect
-        proto.constructor = newClass;
+        Class.prototype.constructor = Class;
 
         // And make this class extendable
-        newClass.extend = Class.extend;
+        Class.extend = arguments.callee;
 
-        return newClass;
+        return Class;
     };
 
     return Class;

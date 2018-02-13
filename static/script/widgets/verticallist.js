@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.VerticalList class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -28,8 +28,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, itemFormatter, dataSource) {
-                this._super(id, itemFormatter, dataSource);
+            init: function init (id, itemFormatter, dataSource) {
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('verticallist');
 
                 var self = this;
@@ -43,7 +43,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function(evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if(evt.keyCode !== KeyEvent.VK_UP && evt.keyCode !== KeyEvent.VK_DOWN) {
                     return;
                 }

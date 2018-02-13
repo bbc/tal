@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.KeyEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -25,7 +25,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type, keyCode) {
+            init: function init (type, keyCode) {
                 var index;
                 this.keyCode = keyCode;
 
@@ -40,7 +40,7 @@ define(
                     this.keyChar = String.fromCharCode('A'.charCodeAt(0) + index);
                 }
 
-                this._super(type);
+                init.base.call(this, type);
             }
         });
 

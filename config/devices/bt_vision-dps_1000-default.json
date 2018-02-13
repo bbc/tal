@@ -6,10 +6,6 @@
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/cehtml",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/nativejson",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -105,5 +101,10 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "managed_service"
   }
 }

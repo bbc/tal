@@ -6,7 +6,7 @@
 
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 
@@ -35,7 +35,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(type) {
+            init: function init (type) {
                 this.type = type;
                 this._propagationStopped = false;
                 this._defaultPrevented = false;
@@ -44,7 +44,7 @@ define(
             /**
              * Stop propagation of the event through the widget tree.
              */
-            stopPropagation: function() {
+            stopPropagation: function stopPropagation () {
                 this._propagationStopped = true;
                 eventCount--;
                 if (!eventCount) {
@@ -55,20 +55,20 @@ define(
              * Check to see if the propagation of this event has been stopped.
              * @returns Boolean true if the event has been stopped, otherwise Boolean false.
              */
-            isPropagationStopped: function() {
+            isPropagationStopped: function isPropagationStopped () {
                 return this._propagationStopped;
             },
             /**
              * Prevent any default handler being called for this event.
              */
-            preventDefault: function() {
+            preventDefault: function preventDefault () {
                 this._defaultPrevented = true;
             },
             /**
              * Check to see if the default handler has been prevented.
              * @returns Boolean true if the default handler has been prevented.
              */
-            isDefaultPrevented: function() {
+            isDefaultPrevented: function isDefaultPrevented () {
                 return this._defaultPrevented;
             },
             /**
@@ -78,7 +78,7 @@ define(
              * @param {String} ev The event type to listen for (e.g. <code>emptyStack</code>)
              * @param {Function} func The handler to be called when the event is fired.
              */
-            addEventListener: function(ev, func) {
+            addEventListener: function addEventListener (ev, func) {
                 var listeners = eventListeners[ev];
                 if (typeof listeners === 'undefined') {
                     listeners = [];
@@ -95,7 +95,7 @@ define(
              * @param {String} ev The event type that the listener is to be removed from (e.g. <code>emptyStack</code>)
              * @param {Function} func The handler to be removed.
              */
-            removeEventListener: function(ev, func) {
+            removeEventListener: function removeEventListener (ev, func) {
                 var listeners = eventListeners[ev],
                     listener;
 
@@ -118,7 +118,7 @@ define(
              * @param {String} ev The event to fire (e.g. <code>emptyStack</code>).
              * @see antie.events.Event
              */
-            fireEvent: function(ev) {
+            fireEvent: function fireEvent (ev) {
                 var listeners = eventListeners[ev];
                 if(listeners) {
                     for(var func in listeners) {

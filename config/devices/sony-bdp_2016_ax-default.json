@@ -5,12 +5,8 @@
     "modifiers": [
       "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/restartable",
-      "antie/devices/data/nativejson",
+      "antie/devices/mediaplayer/live/seekable",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -104,5 +100,11 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": ["dial_capable"],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

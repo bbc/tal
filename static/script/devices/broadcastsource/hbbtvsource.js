@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing base antie.devices.broadcastsource.hbbtvsource class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -30,7 +30,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function () {
+            init: function init () {
 
                 var self = this;
                 this._broadcastVideoObject = document.getElementById(DOM_ELEMENT_ID);
@@ -71,15 +71,15 @@ define(
 
                 });
             },
-            showCurrentChannel: function () {
+            showCurrentChannel: function showCurrentChannel () {
                 this._broadcastVideoObject.bindToCurrentChannel();
                 this._setBroadcastVisible();
             },
-            _setBroadcastVisible: function () {
+            _setBroadcastVisible: function _setBroadcastVisible () {
                 this._setBroadcastToFullScreen();
                 this._broadcastVideoObject.style.visibility = 'visible';
             },
-            stopCurrentChannel: function () {
+            stopCurrentChannel: function stopCurrentChannel () {
                 try {
                     if (this._broadcastVideoObject.playState === this._playStates.UNREALIZED) {
                         this._broadcastVideoObject.bindToCurrentChannel();
@@ -92,7 +92,7 @@ define(
                 this._broadcastVideoObject.style.visibility = 'hidden';
                 this.setPosition(0, 0, 0, 0);
             },
-            getCurrentChannelName: function () {
+            getCurrentChannelName: function getCurrentChannelName () {
                 var channelConfig = this._broadcastVideoObject.currentChannel;
                 // maybe check the hbbtv docs to check return type
                 if (channelConfig === null) {
@@ -140,7 +140,7 @@ define(
                 }
             },
 
-            _setChannelByName: function(params) {
+            _setChannelByName: function _setChannelByName (params) {
                 try {
                     var channelList = this._getChannelList();
                     var channel;
@@ -186,7 +186,7 @@ define(
             destroy : function() {
                 // Not currently required for hbbtv
             },
-            _tuneToChannelObject: function (newChannel, onSuccess, onError) {
+            _tuneToChannelObject: function _tuneToChannelObject (newChannel, onSuccess, onError) {
                 var self = this;
                 var successEventListener = function(/* channel */) {
                     self._broadcastVideoObject.removeEventListener('ChannelChangeSucceeded', successEventListener);

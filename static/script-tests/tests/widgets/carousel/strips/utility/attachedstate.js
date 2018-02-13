@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function () {
@@ -32,10 +32,10 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
+                spyOn(child, 'render');
                 self.sandbox.stub(child, 'render');
                 state.append(context, parent, child);
-
-                sinon.assert.notCalled(child.render);
+                expect(child.render).not.toHaveBeenCalled();
             }
         );
     };
@@ -57,10 +57,9 @@
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
-                self.sandbox.stub(child, 'render');
+                spyOn(child, 'render');
                 state.prepend(context, parent, child);
-
-                sinon.assert.notCalled(child.render);
+                expect(child.render).not.toHaveBeenCalled();
             }
         );
     };
@@ -87,8 +86,8 @@
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
                 state.append(context, parent, child);
-                sinon.assert.notCalled(Device.prototype.appendChildElement);
 
+                expect(Device.prototype.appendChildElement).not.toHaveBeenCalled();
             }
         );
     };
@@ -114,11 +113,9 @@
                 var parentEl = 'parent';
                 parent.outputElement = parentEl;
                 child.outputElement = childEl;
-
                 state.prepend(context, parent, child);
 
-                sinon.assert.notCalled(Device.prototype.prependChildElement);
-
+                expect(Device.prototype.appendChildElement).not.toHaveBeenCalled();
             }
         );
     };
@@ -143,8 +140,7 @@
                 self.sandbox.stub(child, 'render');
                 state.append(context, parent, child);
 
-                sinon.assert.notCalled(WidgetContext.prototype.setState);
-
+                expect(WidgetContext.prototype.setState).not.toHaveBeenCalled();
             }
         );
     };
@@ -162,15 +158,13 @@
             ],
             function (application, AttachedState, WidgetContext, Widget, Device) {
                 stubWidgetToReturnStubAppAndDevice(self, Widget, Device, application);
-
                 var state = createState(self, WidgetContext, AttachedState);
                 var context = new WidgetContext();
                 var parent = new Widget();
                 var child = new Widget();
                 self.sandbox.stub(child, 'render');
                 state.prepend(context, parent, child);
-
-                sinon.assert.notCalled(WidgetContext.prototype.setState);
+                expect(WidgetContext.prototype.setState).not.toHaveBeenCalled();
             }
         );
     };
@@ -193,11 +187,8 @@
                 var child = new Widget();
                 child.outputElement = 'testElement';
                 state.detach(context, child);
-                sinon.assert.calledOnce(Device.prototype.removeElement);
-                sinon.assert.calledWith(
-                    Device.prototype.removeElement,
-                    'testElement'
-                );
+                expect(Device.prototype.removeElement.calls.count()).toBe(1);
+                expect(Device.prototype.removeElement).toHaveBeenCalledWith('testElement');
             }
         );
     };
@@ -220,11 +211,9 @@
                 var context = new WidgetContext();
                 var child = new Widget();
                 state.detach(context, child);
-                sinon.assert.calledOnce(WidgetContext.prototype.setState);
-                sinon.assert.calledWith(
-                    WidgetContext.prototype.setState,
-                    'RENDERED'
-                );
+
+                expect(WidgetContext.prototype.setState.calls.count()).toBe(1);
+                expect(WidgetContext.prototype.setState).toHaveBeenCalledWith('RENDERED');
             }
         );
     };
@@ -250,14 +239,22 @@
 
 
     var createState = function (self, Context, State) {
-        self.sandbox.stub(Context.prototype);
+        for (var i in Context.prototype) {
+            if(Context.prototype.hasOwnProperty(i)) {
+                spyOn(Context.prototype, i);
+            }
+        }
         return new State();
     };
 
     var stubWidgetToReturnStubAppAndDevice = function (self, Widget, Device, application) {
-        self.sandbox.stub(Device.prototype);
-        self.sandbox.stub(Widget.prototype, 'getCurrentApplication');
-        Widget.prototype.getCurrentApplication.returns(application);
-        self.sandbox.stub(application, 'getDevice').returns(new Device());
+        for (var i in Device.prototype) {
+            if(Device.prototype.hasOwnProperty(i)) {
+                spyOn(Device.prototype, i);
+            }
+        }
+        spyOn(Widget.prototype, 'getCurrentApplication').and.returnValue(application);
+
+        spyOn(application, 'getDevice').and.returnValue(new Device());
     };
 }());

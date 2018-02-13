@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -23,10 +23,10 @@ define(
         );
 
         var youViewPgHandler = BasePgHandler.extend({
-            isChallengeActive: function () {
+            isChallengeActive: function isChallengeActive () {
                 return devicePinEnabled;
             },
-            showChallenge: function (message, guidanceChallengeResponseCallBack) {
+            showChallenge: function showChallenge (message, guidanceChallengeResponseCallBack) {
 
                 var responseValues = youview.parentalControls.PinPromptResponseValue;
                 var onGuidanceChallengeResponse = guidanceChallengeResponseCallBack.onGuidanceChallengeResponse;
@@ -50,10 +50,10 @@ define(
                     }
                 );
             },
-            supportsMessage: function () {
+            supportsMessage: function supportsMessage () {
                 return false;
             },
-            isConfigurable: function () {
+            isConfigurable: function isConfigurable () {
                 return false;
             }
         });

@@ -7,10 +7,6 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
       "antie/devices/exit/destroyapplication",
       "antie/devices/parentalguidance/appdefaultpghandler"
@@ -33,7 +29,6 @@
           "hls",
           "plain"
         ],
-        "maximumBitRate": 3600,
         "maximumVideoLines": 1080
       }]
     },
@@ -103,5 +98,11 @@
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

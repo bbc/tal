@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.MediaSourceErrorEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -25,11 +25,11 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, code, url, last) {
+            init: function init (target, code, url, last) {
                 this.url = url;
                 this.last = last;
 
-                this._super(target, code);
+                init.base.call(this, target, code);
             }
         });
 

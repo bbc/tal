@@ -7,10 +7,6 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/storage/cookie",
       "antie/devices/exit/destroyapplication",
       "antie/devices/parentalguidance/appdefaultpghandler"
@@ -22,32 +18,35 @@
   "streaming": {
     "video": {
       "mediaURIFormat": "%href%",
-      "supported": [{
-        "protocols": [
-          "http"
-        ],
-        "encodings": [
-          "h264"
-        ],
-        "transferFormat": [
-          "hls",
-          "plain"
-        ],
-        "maximumBitRate": 3600,
-        "maximumVideoLines": 1080
-      }]
+      "supported": [
+        {
+          "protocols": [
+            "http"
+          ],
+          "encodings": [
+            "h264"
+          ],
+          "transferFormat": [
+            "hls",
+            "plain"
+          ],
+          "maximumVideoLines": 1080
+        }
+      ]
     },
     "audio": {
       "mediaURIFormat": "%href%",
-      "supported": [{
-        "encodings": [
-          "aac"
-        ],
-        "protocols": [
-          "http"
-        ],
-        "maximumBitRate": 192
-      }]
+      "supported": [
+        {
+          "encodings": [
+            "aac"
+          ],
+          "protocols": [
+            "http"
+          ],
+          "maximumBitRate": 192
+        }
+      ]
     }
   },
   "input": {
@@ -92,16 +91,24 @@
       ]
     }
   },
-  "layouts": [{
-    "width": 1280,
-    "height": 720,
-    "classes": [
-      "browserdevice720p"
-    ],
-    "module": "%application%/appui/layouts/720p"
-  }],
+  "layouts": [
+    {
+      "width": 1280,
+      "height": 720,
+      "classes": [
+        "browserdevice720p"
+      ],
+      "module": "%application%/appui/layouts/720p"
+    }
+  ],
   "networking": {
     "supportsJSONP": true,
     "supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "opera"
   }
 }

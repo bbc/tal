@@ -1,20 +1,17 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.HorizontalSlider class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
     'antie/widgets/horizontalslider',
     [
         'antie/widgets/button',
-        'antie/events/focusevent',
-        'antie/events/blurevent',
         'antie/events/keyevent',
-        'antie/events/selectevent',
         'antie/events/sliderchangeevent'
     ],
-    function(Button, FocusEvent, BlurEvent, KeyEvent, SelectEvent, SliderChangeEvent) {
+    function(Button, KeyEvent, SliderChangeEvent) {
         'use strict';
 
         /**
@@ -22,10 +19,7 @@ define(
          * @name antie.widgets.HorizontalSlider
          * @class
          * @extends antie.widgets.Container
-         * @requires antie.events.FocusEvent
-         * @requires antie.events.BlurEvent
          * @requires antie.events.KeyEvent
-         * @requires antie.events.SelectEvent
          * @requires antie.events.SliderChangeEvent
          * @param {String} [id] The unique ID of the widget. If excluded, a temporary internal ID will be used (but not included in any output).
          * @param {double} [initialValue] Initial value for the slider.
@@ -38,7 +32,7 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter) {
+            init: function init (id, initialValue, smallIncrement, largeIncrement, largeIncrementAfter) {
                 this._value = initialValue ? initialValue : 0;
                 this._smallIncrement = smallIncrement ? smallIncrement : 0.01;
                 this._largeIncrement = largeIncrement ? largeIncrement : 0.05;
@@ -46,7 +40,7 @@ define(
                 this._lastLeft = -1;
                 this._keyPressTimer = null;
 
-                this._super(id);
+                init.base.call(this, id);
                 this.addClass('horizontalslider');
 
                 this._currentIncrementCount = 0;
@@ -68,7 +62,7 @@ define(
              * @param {antie.devices.Device} device The device to render to.
              * @returns A device-specific object that represents the widget as displayed on the device (in a browser, a DOMElement);
              */
-            render: function(device) {
+            render: function render (device) {
                 this.outputElement = device.createContainer(this.id, this.getClasses());
                 this._button = device.createButton(this.id+'_slider');
                 this._left = device.createContainer(this.id+'_left');
@@ -83,7 +77,7 @@ define(
              * Moves the inner button to show the current value.
              * @private
              */
-            _moveButton: function() {
+            _moveButton: function _moveButton () {
                 if(this.outputElement) {
                     var device = this.getCurrentApplication().getDevice();
                     var elsize = device.getElementSize(this.outputElement);
@@ -116,7 +110,7 @@ define(
              * KeyDown handler. Allows quick presses of the left/right key to change the value.
              * @private
              */
-            _onKeyDown: function(evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
                 }
@@ -150,7 +144,7 @@ define(
              * key is held down for. Fires the sliderchange event.
              * @private
              */
-            _onKeyPress: function(evt) {
+            _onKeyPress: function _onKeyPress (evt) {
                 if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
                 }
@@ -188,7 +182,7 @@ define(
              * KeyUp handler. Resets the increment size and fires the sliderchangeend event.
              * @private
              */
-            _onKeyUp: function(evt) {
+            _onKeyUp: function _onKeyUp (evt) {
                 if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
                 }
@@ -210,14 +204,14 @@ define(
             /**
              * Returns the current value shown by the progress indicator.
              */
-            getValue: function() {
+            getValue: function getValue () {
                 return this._value;
             },
             /**
              * Sets the current value to be shown by the progress indicator.
              * @param {Float} val The value to show (between 0.0 and 1.0 inclusive).
              */
-            setValue: function(val) {
+            setValue: function setValue (val) {
                 this._value = val;
                 this._moveButton();
             },
@@ -226,7 +220,7 @@ define(
              * Sets the small increment
              * @param {Float} val The increment value (between 0.0 and 1.0 inclusive).
              */
-            setSmallIncrement: function(val) {
+            setSmallIncrement: function setSmallIncrement (val) {
                 this._smallIncrement = val;
             }
         });

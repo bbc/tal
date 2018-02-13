@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 require(
@@ -119,10 +119,10 @@ require(
             });
         });
 
-        describe('Mixed Type Sanitzation', function() {
+        describe('Mixed Type Sanitisation', function() {
 
             var el = document.createElement('div');
-            it ('returns mixed string with sanitsation implemented', function () {
+            it ('returns mixed string with sanitisation implemented', function () {
                 var string = '<div><h1>Title</h1><ul><li>list 1</li><li><script>nastiness</script>OK</li></ul></div>',
                     result = '<h1>Title</h1><ul><li>list 1</li><li>OK</li></ul>',
                     sanitiser = new Sanitiser(string);

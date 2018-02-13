@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.NetworkStatusChangeEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -22,9 +22,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(networkStatus) {
+            init: function init (networkStatus) {
                 this.networkStatus = networkStatus;
-                this._super('networkstatuschange');
+                init.base.call(this, 'networkstatuschange');
             }
         });
 

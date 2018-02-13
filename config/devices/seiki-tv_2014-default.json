@@ -3,15 +3,11 @@
   "modules": {
     "base": "antie/devices/browserdevice",
     "modifiers": [
-      "antie/devices/anim/css3",
+      "antie/devices/anim/noanim",
       "antie/devices/mediaplayer/html5",
-      "antie/devices/mediaplayer/live/playable",
-      "antie/devices/data/nativejson",
+      "antie/devices/mediaplayer/live/seekable",
       "antie/devices/broadcastsource/hbbtvsource",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/onscreen",
-      "antie/devices/logging/xhr",
-      "antie/devices/logging/jstestdriver",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -34,7 +30,6 @@
             "hls",
             "plain"
           ],
-          "maximumBitRate": 3600,
           "maximumVideoLines": 1080
         }
       ]
@@ -100,18 +95,16 @@
       "classes": [
         "browserdevice720p"
       ]
-    },
-          {
-      "width":1920,
-      "height":1080,
-      "module":"%application%/appui/layouts/1080p",
-      "classes":[
-        "browserdevice1080p"
-      ]
     }
+         
   ],
   "networking": {
     "supportsJSONP": true,
 	"supportsCORS": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }

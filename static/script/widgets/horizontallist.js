@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.HorizontalList class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -28,11 +28,11 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, itemFormatter, dataSource) {
+            init: function init (id, itemFormatter, dataSource) {
                 // we need to wrap our contents in a mask to support animation
                 this._maskElement = null;
 
-                this._super(id, itemFormatter, dataSource);
+                init.base.call(this, id, itemFormatter, dataSource);
                 this.addClass('horizontallist');
 
                 var self = this;
@@ -46,7 +46,7 @@ define(
              * @param {Integer} wrapMode    Pass <code>HorizontalList.WRAP_MODE_NONE</code> for no wrapping.
              *                              Pass <code>HorizontalList.WRAP_MODE_NONE</code> to allow navigation to wrap.
              */
-            setWrapMode: function(wrapMode) {
+            setWrapMode: function setWrapMode (wrapMode) {
                 this._wrapMode = wrapMode;
             },
 
@@ -56,7 +56,7 @@ define(
              * spatial navigation out of the list.
              * @param {antie.events.KeyEvent} evt The key event.
              */
-            _onKeyDown: function(evt) {
+            _onKeyDown: function _onKeyDown (evt) {
                 if(evt.keyCode !== KeyEvent.VK_LEFT && evt.keyCode !== KeyEvent.VK_RIGHT) {
                     return;
                 }

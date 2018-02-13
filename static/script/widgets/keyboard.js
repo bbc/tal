@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the on-screen keyboard widget.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -25,6 +25,8 @@ define(
          * @param {Integer} cols The number of columns of keys on the keyboard.
          * @param {Integer} rows The number of rows of keys on the keyboard.
          * @param {String} keys A string of characters which make up the keys, starting top-left and working row-by-row to the bottom-right.
+         * @param {boolean} horizontalWrapping Enable or disable horizontal wrapping.
+         * @param {boolean} verticalWrapping Enable or disable vertical wrapping.
          *          Special characters include:
          *              "-" DEL
          *              " " SPACE
@@ -35,8 +37,8 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(id, cols, rows, keys) {
-                this._super(id, cols, rows);
+            init: function init (id, cols, rows, keys, horizontalWrapping, verticalWrapping) {
+                init.base.call(this, id, cols, rows, horizontalWrapping, verticalWrapping);
 
                 this.addClass('keyboard');
 
@@ -69,7 +71,7 @@ define(
             },
 
             // Private function to append a properly-capitalised character to the end of the string.
-            _appendCharacter: function (letter) {
+            _appendCharacter: function _appendCharacter (letter) {
                 // allow no more characters to be appended if a maximum length has been reached
                 if((this._maximumLength !== null) && (this._currentText.length >= this._maximumLength)) {
                     return false;
@@ -91,7 +93,7 @@ define(
                 return true;
             },
 
-            _correctTitleCase: function () {
+            _correctTitleCase: function _correctTitleCase () {
                 if(this._capitalisation === Keyboard.CAPITALISATION_TITLE) {
                     this._currentText = this._currentText.replace(Keyboard.LAST_WORD_REGEXP, function(match) {
                         match = match.substring(0, 1).toUpperCase() + match.substring(1);
@@ -103,7 +105,7 @@ define(
                 }
             },
 
-            _onSelectHandler: function (evt) {
+            _onSelectHandler: function _onSelectHandler (evt) {
                 var letter = evt.target.getDataItem();
                 var changed = false;
                 switch(letter) {
@@ -128,11 +130,13 @@ define(
                 }
             },
 
-            _onKeyDownHandler: function (evt) {
+            _onKeyDownHandler: function _onKeyDownHandler (evt) {
                 if(evt.keyChar) {
                     evt.stopPropagation();
                     // If the device supports multitap, multitap is enabled and a number is pressed...
                     if(this._multitapConfig && this._multiTap && /[0-9]/.test(evt.keyChar)) {
+                        var atMaxLength = ((this._maximumLength !== null) && (this._currentText.length >= this._maximumLength));
+
                         if(this._multiTapTimeout) {
                             clearTimeout(this._multiTapTimeout);
                         }
@@ -140,6 +144,9 @@ define(
                         var chars = this._multitapConfig[evt.keyChar];
                         if((evt.keyChar === this._multiTapLastKey) && this._multiTapTimeout) {
                             this._currentText = this._currentText.substring(0, this._currentText.length - 1);
+                        } else if (atMaxLength){
+                            //at last character and trying to start a new multitap key
+                            return;
                         } else {
                             this._multiTapLastKeyIndex = -1;
                         }
@@ -196,7 +203,7 @@ define(
                 }
             },
 
-            _populateTheGridWithKeyButtons: function (id, cols, rows) {
+            _populateTheGridWithKeyButtons: function _populateTheGridWithKeyButtons (id, cols, rows) {
                 for(var col = 0; col < cols; col++) {
                     for(var row = 0; row < rows; row++) {
                         var keyIndexId = (row*cols)+col;
@@ -227,21 +234,21 @@ define(
              * Sets whether to support multi-tap on this keyboard. Note: the device must also support it.
              * @param {Boolean} multiTap Pass <code>true</code> to enable multi-tap.
              */
-            setMultiTap: function(multiTap) {
+            setMultiTap: function setMultiTap (multiTap) {
                 this._multiTap = multiTap;
             },
             /**
              * Gets whether to multi-tap is supported by this keyboard.
              * @returns Boolean <code>true</code> if multi-tap is supported by this keyboard.
              */
-            getMultiTap: function() {
+            getMultiTap: function getMultiTap () {
                 return this._multiTap;
             },
             /**
              * Sets the current text entered/to-be-edited by this keyboard.
              * @param {String} text String to be edited by this keyboard.
              */
-            setText: function(text) {
+            setText: function setText (text) {
                 this._currentText = text;
                 this._updateClasses();
             },
@@ -249,7 +256,7 @@ define(
              * Gets the text entered/edited by this keyboard.
              * @returns The text entered/edited by this keyboard.
              */
-            getText: function() {
+            getText: function getText () {
                 return this._currentText;
             },
             /**
@@ -257,28 +264,28 @@ define(
              * {@see Keyboard.CAPITALISATION_LOWER} and {@see Keyboard.CAPITALISATION_TITLE}
              * @param {Integer} capitalisation The capitalisation mode to use.
              */
-            setCapitalisation: function(capitalisation) {
+            setCapitalisation: function setCapitalisation (capitalisation) {
                 this._capitalisation = capitalisation;
             },
             /**
              * Gets the current capitalisation mode of the keyboard.
              * @returns The capitalisation mode of the keyboard.
              */
-            getCapitalisation: function() {
+            getCapitalisation: function getCapitalisation () {
                 return this._capitalisation;
             },
             /**
              * Sets the active child widget as the button for the specified character.
              * @param {String} character The character who's button should be the active child widget.
              */
-            setActiveChildKey: function(character) {
+            setActiveChildKey: function setActiveChildKey (character) {
                 this._focussedCharacter = character;
                 this.setActiveChildWidget(this._letterButtons[character]);
             },
-            focus: function() {
+            focus: function focus () {
                 this._letterButtons[this._focussedCharacter].focus();
             },
-            setFocusToActiveChildKey: function(character){
+            setFocusToActiveChildKey: function setFocusToActiveChildKey (character){
                 this.setActiveChildKey(character);
                 this.focus();
             },
@@ -286,18 +293,18 @@ define(
              * Sets the maximum number of characters that can be entered
              * @param {Integer} length The maxmimum number of characters that can be entered. Pass <code>null</code> to allow infinite characters.
              */
-            setMaximumLength: function(length) {
+            setMaximumLength: function setMaximumLength (length) {
                 this._maximumLength = length;
             },
             /**
              * Gets the maximum number of characters that can be entered
              * @returns The maximum number of characters that can be entered
              */
-            getMaximumLength: function() {
+            getMaximumLength: function getMaximumLength () {
                 return this._maximumLength;
             },
 
-            _updateClasses: function() {
+            _updateClasses: function _updateClasses () {
                 if((this._maximumLength !== null) && (this._currentText !== null) && (this._currentText.length >= this._maximumLength)) {
                     this.addClass('maxlength');
                     // Move focus to the DEL key, as it's

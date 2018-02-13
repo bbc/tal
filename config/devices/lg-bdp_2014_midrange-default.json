@@ -6,9 +6,7 @@
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5memoryleakunfix",
       "antie/devices/mediaplayer/live/playable",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/netcast",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -138,5 +136,11 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "bd",
+    "serviceType": "retail",
+    "browserType": "chromium"
   }
 }

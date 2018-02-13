@@ -7,8 +7,6 @@
       "antie/devices/mediaplayer/html5seekfinishedemitevent",
       "antie/devices/mediaplayer/live/restartable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/nativejson",
-      "antie/devices/logging/default",
       "antie/devices/storage/cookie",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
@@ -104,5 +102,15 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "broadcast" : {
+    "currentChannelValidation": {
+      "enabled": true
+    }
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "stb",
+    "serviceType": "retail"
   }
 }

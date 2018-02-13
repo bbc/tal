@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.carousel.strips.hidingstrip class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define('antie/widgets/carousel/strips/hidingstrip',
@@ -24,7 +24,7 @@ define('antie/widgets/carousel/strips/hidingstrip',
          * One of antie.widgets.carousel.orientations.Horizontal or antie.widgets.carousel.orientations.Vertical
          */
         HidingStrip = CullingStrip.extend(/** @lends antie.widgets.carousel.strips.HidingStrip.prototype */{
-            createContext: function (widget, parent) {
+            createContext: function createContext (widget, parent) {
                 return new WidgetContext(widget, parent, VISIBILITY_STATES);
             }
         });

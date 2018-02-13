@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.widgets.carousel.aligners.alignmentqueue class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -24,7 +24,7 @@ define(
                     easing: options.easing,
                     skipAnim: options.skipAnim,
                     fps: options.fps,
-                    onComplete: function () {
+                    onComplete: function onComplete () {
                         if (oldComplete) {
                             oldComplete();
                         }
@@ -47,7 +47,7 @@ define(
          * @param {Object} mask The carousel's mask object
          */
         return Class.extend({
-            init: function (mask) {
+            init: function init (mask) {
                 this._mask = mask;
                 this._setSkip(false);
                 this._queue = [];
@@ -64,7 +64,7 @@ define(
              * @param {Boolean} [options.skipAnim] If set true, the alignment will complete instantly then fire any provided callback
              * @param {Function} [options.onComplete] A function which will be executed on completion of the alignment animation.
              */
-            add: function (index, options) {
+            add: function add (index, options) {
                 var self = this;
 
                 var alignFunction = createAlignFunction(self, index, options);
@@ -77,7 +77,7 @@ define(
              * queue has already been started, but has not completed, this will
              * do nothing.
              */
-            start: function () {
+            start: function start () {
                 if (!this._started) {
                     this._runFirstInQueue();
                 }
@@ -87,14 +87,14 @@ define(
              * Completes all queued alignments in order, skipping any animation and
              * firing any associated callbacks in sequence.
              */
-            complete: function () {
+            complete: function complete () {
                 if (this._started) {
                     this._setSkip(true);
                     this._mask.stopAnimation();
                 }
             },
 
-            _runFirstInQueue: function () {
+            _runFirstInQueue: function _runFirstInQueue () {
                 if (this._queue.length > 0) {
                     this._started = true;
                     this._queue[0]();
@@ -104,12 +104,12 @@ define(
                 }
             },
 
-            _next: function () {
+            _next: function _next () {
                 this._queue.shift();
                 this._runFirstInQueue();
             },
 
-            _setSkip: function (skip) {
+            _setSkip: function _setSkip (skip) {
                 this._skip = skip;
             }
         });

@@ -1,6 +1,6 @@
 /**
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 (function () {
@@ -131,20 +131,6 @@
         queueTest(queue, testFunction);
     };
 
-    this.CarouselTest.prototype.testSetActiveChildWidgetWithMaskCallsContainerPrototype = function (queue) {
-        var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
-            var carousel;
-            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
-            self.sandbox.stub(CarouselCore.prototype, 'setActiveWidget');
-            carousel = new Carousel();
-            carousel.setActiveChildWidget(carousel._mask);
-            assertTrue(Container.prototype.setActiveChildWidget.calledOnce);
-            assertFalse(CarouselCore.prototype.setActiveWidget.called);
-        }
-        queueTest(queue, testFunction);
-    };
-
     this.CarouselTest.prototype.testSetActiveChildWidgetWithNonMaskCallsSetActiveWidget = function (queue) {
         var self = this;
         function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
@@ -155,21 +141,6 @@
             carousel.setActiveChildWidget(new Button());
             assertFalse(Container.prototype.setActiveChildWidget.called);
             assertTrue(CarouselCore.prototype.setActiveWidget.calledOnce);
-        }
-        queueTest(queue, testFunction);
-    };
-
-    this.CarouselTest.prototype.testHasChildWidgetWithMaskIdCallsCore = function (queue) {
-        var self = this;
-        function testFunction(application, Carousel, WidgetStrip, Mask, Navigator, Button, Container, CarouselCore) {
-            var carousel;
-            self.sandbox.stub(CarouselCore.prototype, 'hasChildWidget');
-            self.sandbox.stub(WidgetStrip.prototype, 'hasChildWidget');
-            stubClassPrototypes(self, [WidgetStrip, Mask, Button, Navigator, Container]);
-            carousel = new Carousel();
-            carousel.hasChildWidget(carousel._mask.id);
-            assertTrue(CarouselCore.prototype.hasChildWidget.calledOnce);
-            assertFalse(WidgetStrip.prototype.hasChildWidget.called);
         }
         queueTest(queue, testFunction);
     };

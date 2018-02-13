@@ -6,9 +6,7 @@
       "antie/devices/anim/css3",
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/none",
-      "antie/devices/data/nativejson",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/closewindow"
     ]
   },
@@ -123,5 +121,11 @@
     ],
     "networking": {
         "supportsJSONP": true
-    }
+    },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail",
+    "browserType": "chromium"
+  }
 }

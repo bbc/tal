@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.SelectedItemChangeEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -24,11 +24,11 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(target, item, index) {
+            init: function init (target, item, index) {
                 this.target = target;
                 this.item = item;
                 this.index = index;
-                this._super('selecteditemchange');
+                init.base.call(this, 'selecteditemchange');
             }
         });
     }

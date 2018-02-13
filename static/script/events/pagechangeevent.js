@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the antie.events.PageChangeEvent class.
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -22,10 +22,10 @@ define(
              * @constructor
              * @ignore
              */
-            init: function(countername, labels) {
+            init: function init (countername, labels) {
                 this.countername = countername;
                 this.labels = labels;
-                this._super('pagechange');
+                init.base.call(this, 'pagechange');
                 if (window.log) {
                     window.log('Page change:', countername, labels);
                 }

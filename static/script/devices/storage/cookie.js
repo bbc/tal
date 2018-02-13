@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs modifier for cookie based storage
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define(
@@ -37,6 +37,9 @@ define(
             if (opts.domain){
                 cookieDataArray.push('domain='+opts.domain);
             }
+            if (opts.secure){
+                cookieDataArray.push('secure');
+            }
             document.cookie = cookieDataArray.join('; ');
         }
 
@@ -68,15 +71,16 @@ define(
          * @param {Object} [opts]
          * @param {String} [opts.domain] The domain value of the cookie, if not provided this is not set on the cookie
          * @param {Boolean} [opts.isPathless] If <code>true</code> sets the path to '/' else retrieves the path from the location
-         * @param {String} [opt.path] The path to save the cookie against
+         * @param {String} [opts.path] The path to save the cookie against
+         * @param {Boolean} [opts.secure] The storage should be secure. Adds secure flag to cookie
          */
         var CookieStorage = StorageProvider.extend(/** @lends antie.devices.storage.CookieStorage.prototype */{
             /**
              * @constructor
              * @ignore
              */
-            init: function(namespace, opts) {
-                this._super();
+            init: function init (namespace, opts) {
+                init.base.call(this);
 
                 this._namespace = namespace;
                 this._opts = opts || {};
@@ -84,7 +88,9 @@ define(
                 var cookie = readCookie(namespace);
 
                 if(cookie) {
-                    this._valueCache = Device.prototype.decodeJson(cookie);
+                    try {
+                        this._valueCache = JSON.parse(cookie);
+                    } catch (e) { /* couldn't parse cookie, just ignore it */ }
                     if(this._valueCache) {
                         this._save();
                     } else {
@@ -92,16 +98,16 @@ define(
                     }
                 }
             },
-            setItem: function(key, value) {
-                this._super(key, value);
+            setItem: function setItem (key, value) {
+                setItem.base.call(this, key, value);
                 this._save();
             },
-            removeItem: function(key) {
-                this._super(key);
+            removeItem: function removeItem (key) {
+                removeItem.base.call(this, key);
                 this._save();
             },
-            clear: function() {
-                this._super();
+            clear: function clear () {
+                clear.base.call(this);
                 this._save();
 
                 // delete it from the stored namespaces
@@ -109,20 +115,11 @@ define(
                 // we get it
                 delete namespaces[this._namespace];
             },
-            _isEmpty: function() {
-                var prop;
-                for(prop in this._valueCache) {
-                    if(this._valueCache.hasOwnProperty(prop)) {
-                        return false;
-                    }
-                }
-                return true;
-            },
-            _save: function() {
-                if(this._isEmpty()) {
+            _save: function _save () {
+                if(this.isEmpty()) {
                     eraseCookie(this._namespace, this._opts);
                 } else {
-                    var json = Device.prototype.encodeJson(this._valueCache);
+                    var json = JSON.stringify(this._valueCache);
                     createCookie(this._namespace, json, undefined, this._opts);
                 }
             }

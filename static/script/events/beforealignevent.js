@@ -1,7 +1,7 @@
 /**
  * @fileOverview Requirejs module containing the before align event
  * @preserve Copyright (c) 2013-present British Broadcasting Corporation. All rights reserved.
- * @license See https://github.com/fmtvp/tal/blob/master/LICENSE for full licence
+ * @license See https://github.com/bbc/tal/blob/master/LICENSE for full licence
  */
 
 define('antie/events/beforealignevent',
@@ -22,10 +22,10 @@ define('antie/events/beforealignevent',
              * @constructor
              * @ignore
              */
-            init: function (target, alignedIndex) {
+            init: function init (target, alignedIndex) {
                 this.target = target;
                 this.alignedIndex = alignedIndex;
-                this._super('beforealign');
+                init.base.call(this, 'beforealign');
             }
         });
     }

@@ -7,9 +7,7 @@
       "antie/devices/mediaplayer/html5",
       "antie/devices/mediaplayer/live/playable",
       "antie/devices/broadcastsource/hbbtvsource",
-      "antie/devices/data/json2",
       "antie/devices/storage/cookie",
-      "antie/devices/logging/consumelog",
       "antie/devices/exit/closewindow",
       "antie/devices/parentalguidance/appdefaultpghandler"
     ]
@@ -145,5 +143,10 @@
   ],
   "networking": {
     "supportsJSONP": true
+  },
+  "capabilities": [],
+  "statLabels": {
+    "deviceType": "smarttv",
+    "serviceType": "retail"
   }
 }
