@@ -218,7 +218,7 @@ To use the key handlers, you must instantiate them and then attach them to a car
 
 {% highlight javascript %}
 var handler = new ActivateFirstHandler();
-hander.attach(carousel);
+handler.attach(carousel);
 {% endhighlight %}
 
 These Keyhandler classes listen for keypress events and call the carousel's alignement methods. They also listen for alignment events and call the carousel's activation methods.
