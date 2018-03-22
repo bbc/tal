@@ -97,11 +97,6 @@ module.exports = function(grunt) {
                 regExp: false
             }
         },
-        shell: {
-            coverage: {
-                command: 'cd static/script-tests/jasmine; pwd; ./coverage.sh -p;'
-            }
-        },
         jsdoc: {
             dist: {
                 src: ['static/script/*/**.js'],
@@ -125,7 +120,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('full', ['eslint', 'jasmine']);
     grunt.registerTask('default', 'full');
-    grunt.registerTask('coverage', 'Produce a coverage report of the main source files', ['jasmine:src:build', 'shell:coverage']);
     grunt.registerTask('spec', ['jasmine:src:build', 'openspec']);
 
     grunt.registerTask('openspec', 'Open the generated Jasmine spec file', function() {
