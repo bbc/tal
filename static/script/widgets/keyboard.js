@@ -186,6 +186,7 @@ define(
                     }
                 } else if(evt.keyCode === KeyEvent.VK_BACK_SPACE) {
                     if(this._currentText.length > 0) {
+                        this.setActiveChildKey('-');
                         this._currentText = this._currentText.substring(0, this._currentText.length - 1);
                         this._correctTitleCase();
 
