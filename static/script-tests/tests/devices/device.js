@@ -112,7 +112,10 @@ require(
                     timeout: 1000
                 };
 
-                device.loadURL('http://test.uri/', opts);
+                device = new Device({'networking': { 'supportsCORS': true }});
+                spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
+
+                device.executeCrossDomainGet('http://test.uri/', opts);
                 expect(mockXMLHttpRequest.timeout).toEqual(1000);
             });
 
