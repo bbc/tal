@@ -107,6 +107,15 @@ require(
                 expect(mockXMLHttpRequest.send).toHaveBeenCalledWith('<submit>Data</submit>');
             });
 
+            it('sends xhr request with specified timeout', function() {
+                var opts = {
+                    timeout: 1000
+                };
+
+                device.loadURL('http://test.uri/', opts);
+                expect(mockXMLHttpRequest.timeout).toEqual(1000);
+            });
+
             it('uses GET if there is no opts.method', function() {
                 spyOn(XMLHttpRequest.prototype, 'open');
                 spyOn(XMLHttpRequest.prototype, 'send');
