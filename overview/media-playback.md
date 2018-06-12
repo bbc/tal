@@ -4,16 +4,16 @@ title: Media Playback
 ---
 # Media Playback
 
-TAL provides an device-agnostic [media playback API via the `MediaPlayer`](/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
+TAL provides a device-agnostic [media playback API via the `MediaPlayer`](/tal/jsdoc/symbols/antie.devices.mediaplayer.MediaPlayer.html) class. This can be used to play video and audio files supported by the device.
 
 The framework only supports the the playback of one item of media at a time.
-Video can be only be played in full screen.
+Video can only be played in full screen mode.
 
 ## Accessing the media playback API
 
 You will need to use the [correct media player modifier](device-configuration.html) in the device's configuration file.
 
-Access the media player through the application's `Device` object.:
+Access the media player through the application's `Device` object:
 
 {% highlight javascript %}
 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
@@ -151,19 +151,19 @@ This will cause the playback state to change to `BUFFERING` and an event emitted
 
 When the device has loaded enough of the video to begin playback, the MediaPlayer will transition to the `PLAYING` state and an event of type `MediaPlayer.EVENT.PLAYING` emitted.
 
-The device may be connected to a slow network connection, meaning the rate of video download is slower than the playback speed.
-When this occurs, the MediaPlayer will enter the `BUFFERING` state asynchronously and an event emitted of type `MediaPlayer.EVENT.BUFFERING` (as above).
+The device may have a slow network connection, meaning the rate of video download is slower than the playback speed.
+When this occurs, the MediaPlayer will enter the `BUFFERING` state asynchronously and an event of type `MediaPlayer.EVENT.BUFFERING` (as above) will be emitted.
 By [adding an event callback](#media-playback-events) to listen to these events, you can update your application's interface to, for example, show a buffering spinner.
 
 `playFrom(seconds)` can be used to seek to different points in the media. If the seconds parameter is larger than the duration of the media, the value will be clamped and playback will begin from just before the end. Requests to seek within one second of the current time will be ignored to ensure consistent behaviour across devices.
 
 ## Hiding the background
 
-Some devices always composite html on top of video playback, so if you use any sort of non-transparent background, playback will not be visible.
+Some devices always composite HTML on top of video playback, so if you use any sort of non-transparent background, playback will not be visible.
 
 If this is the case, you will need to remove the background just before playback, then restore on stop.
 
-One way to do this is via a `background-none` css class:
+One way to do this is via a `background-none` CSS class:
 
 {% highlight css %}
 .background-none {
@@ -280,4 +280,4 @@ To get the available range in the media that can be seeked in, use `getSeekableR
 ## Errors
 API errors (e.g. calling `pause()` while in the `STOPPED` state) are treated as fatal errors and the media player transitions to the `ERROR` state and stops all playback. After this, the player must be `reset()`.
 
-However, device errors (network errors, playback errors, media incompatibility etc) are raised as error events in the API, but they do not cause a transition to the error state. This is because many device errors are non fatal, and playback can continue normally afterwards. It is recommended that apps similarly treat these error events as notifications, and do not display modal dialogs or end playback just because of a device error event.
+However, device errors (network errors, playback errors, media incompatibility etc.) are raised as error events in the API, but they do not cause a transition to the error state. This is because many device errors are non fatal, and playback can continue normally afterwards. It is recommended that apps similarly treat these error events as notifications, and do not display modal dialogs or end playback just because of a device error event.
