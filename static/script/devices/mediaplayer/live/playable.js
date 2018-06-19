@@ -38,14 +38,14 @@ define(
                 this._mediaPlayer.beginPlayback();
             },
 
-            setSource: function setSource (mediaType, sourceUrl, mimeType) {
+            setSource: function setSource (mediaType, sourceUrl, mimeType, opts) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
                     mediaType = MediaPlayer.TYPE.LIVE_VIDEO;
                 }
 
-                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
+                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType, opts);
             },
 
             stop: function stop () {

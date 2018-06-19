@@ -19,7 +19,7 @@ define(
 
         return function (OverrideClass) {
             var oldSetSource = OverrideClass.prototype.setSource;
-            OverrideClass.prototype.setSource = function (mediaType, url, mimeType) {
+            OverrideClass.prototype.setSource = function (mediaType, url, mimeType, opts) {
                 this._count = 0;
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._emitEvent(MediaPlayer.EVENT.SEEK_ATTEMPTED);
@@ -37,7 +37,7 @@ define(
                 } else {
                     this._timeoutHappened = true;
                 }
-                oldSetSource.call(this, mediaType, url, mimeType);
+                oldSetSource.call(this, mediaType, url, mimeType, opts);
             };
 
             var oldOnStatus = OverrideClass.prototype._onStatus;

@@ -83,7 +83,7 @@
         };
     };
 
-    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 3);
+    this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 4);
 
     this.LivePlayerSupportLevelSeekableTest.prototype.testSeekableLivePlayerBeginPlaybackCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlayback', 0);
 

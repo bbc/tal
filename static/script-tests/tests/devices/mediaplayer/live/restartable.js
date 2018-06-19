@@ -52,7 +52,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerBeginPlaybackFromCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlaybackFrom', 1);
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 3);
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 4);
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerStopCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop', 0);
 
