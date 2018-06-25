@@ -1559,7 +1559,7 @@ window.commonTests.mediaPlayer.html5.mixinTests = function (testCase, mediaPlaye
             clearEvents(self);
             fireSentinels(self);
 
-            assertNoEvents(self)
+            assertNoEvents(self);
             assertState(self, MediaPlayer.STATE.BUFFERING);
         });
     };
