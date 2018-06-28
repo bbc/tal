@@ -30,14 +30,14 @@ define(
                 this._mediaPlayer = RuntimeContext.getDevice().getMediaPlayer();
             },
 
-            setSource: function setSource (mediaType, sourceUrl, mimeType, opts) {
+            setSource: function setSource (mediaType, sourceUrl, mimeType, videoContainer, opts) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
                     mediaType = MediaPlayer.TYPE.LIVE_VIDEO;
                 }
 
-                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType, opts);
+                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType, videoContainer, opts);
             },
 
             beginPlayback: function beginPlayback () {

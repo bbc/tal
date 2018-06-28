@@ -26,6 +26,8 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
         return sandbox.stub(device, '_createElement', stubFunc);
     };
 
+    var videoContainer = document.createElement('div');
+
     // Setup device specific mocking
     var mockData;
     var clock;
@@ -184,7 +186,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var getToBuffering = function(self, MediaPlayer, startTime, setSourceOpts) {
-        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', setSourceOpts);
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', videoContainer, setSourceOpts);
         self._mediaPlayer.beginPlaybackFrom(startTime || 0);
         deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
     };
@@ -195,7 +197,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var getToPlayingInLive = function (self, MediaPlayer, startTime, setSourceOpts) {
-        self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4', setSourceOpts);
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'video/mp4', videoContainer, setSourceOpts);
         self._mediaPlayer.beginPlaybackFrom(startTime);
         deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -208,7 +210,7 @@ window.commonTests.mediaPlayer.cehtml.mixinTests = function (testCase, mediaPlay
     };
 
     var getToPlayingWithBeginPlayback = function (self, MediaPlayer, time, setSourceOpts) {
-        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', setSourceOpts);
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', videoContainer, setSourceOpts);
         self._mediaPlayer.beginPlayback();
         deviceMockingHooks.sendMetadata(self._mediaPlayer, time, { start: 0, end: 100 });
         deviceMockingHooks.finishBuffering(self._mediaPlayer);

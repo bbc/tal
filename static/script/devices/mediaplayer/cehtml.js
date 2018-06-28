@@ -34,7 +34,7 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function setSource (mediaType, url, mimeType, opts) {
+            setSource: function setSource (mediaType, url, mimeType, videoContainer, opts) {
                 opts = opts || {};
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._disableSentinels = opts.disableSentinels;
