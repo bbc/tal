@@ -366,12 +366,13 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameCallsOnSuccessIfChangingToCurrentChannel = function (queue) {
-        expectAsserts(2);
+        expectAsserts(3);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
-
+            
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -379,12 +380,14 @@
                 channelName: 'BBC One',
                 onSuccess: self.sandbox.stub(),
                 onError: self.sandbox.stub()
-            };
+            };            
+            
+            broadcastSource.setChannelByName(params);   
+            tizenApiSpyShow.args[0][0]();
 
-            broadcastSource.setChannelByName(params);
-
-            assert(params.onSuccess.calledOnce);
+            assert(params.onSuccess.calledOnce);     
             assert(params.onError.notCalled);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
         }, config);
     };
 
@@ -412,35 +415,13 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameRetrievesChannelListWhenChangingToDifferentChannel = function (queue) {
-        expectAsserts(1);
-
-        var self = this;
-        var config = getGenericTizenTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
-            var tizenApiSpy = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
-
-            var device = application.getDevice();
-            var broadcastSource = device.createBroadcastSource();
-
-            var params = {
-                channelName: 'BBC Two',
-                onSuccess: self.sandbox.stub(),
-                onError: self.sandbox.stub()
-            };
-
-            broadcastSource.setChannelByName(params);
-
-            assert(tizenApiSpy.calledOnce);
-        }, config);
-    };
-
-    this.tizentvSource.prototype.testSetChannelByNameCallsOnErrorWhenFailingToRetrieveChannelList = function (queue) {
         expectAsserts(2);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
-            self.sandbox.stub(tizen.tvchannel, 'getChannelList').throwsException('Incorrect!');
+            var tizenApiSpy = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -452,19 +433,48 @@
             };
 
             broadcastSource.setChannelByName(params);
+            tizenApiSpyShow.args[0][0]();
+
+            assert(tizenApiSpy.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
+        }, config);
+    };
+
+    this.tizentvSource.prototype.testSetChannelByNameCallsOnErrorWhenFailingToRetrieveChannelList = function (queue) {
+        expectAsserts(3);
+
+        var self = this;
+        var config = getGenericTizenTVConfig();
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
+            self.sandbox.stub(tizen.tvchannel, 'getChannelList').throwsException('Incorrect!');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
+
+            var device = application.getDevice();
+            var broadcastSource = device.createBroadcastSource();
+
+            var params = {
+                channelName: 'BBC Two',
+                onSuccess: self.sandbox.stub(),
+                onError: self.sandbox.stub()
+            };
+
+            broadcastSource.setChannelByName(params);
+            tizenApiSpyShow.args[0][0]();
 
             assert(params.onSuccess.notCalled);
             assert(params.onError.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
         }, config);
     };
 
     this.tizentvSource.prototype.testSetChannelByNameCallsOnErrorWhenChannelNotInChannelList = function (queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var tizenApiSpy = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -475,8 +485,11 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.setChannelByName(params);
+            broadcastSource.setChannelByName(params);            
+            tizenApiSpyShow.args[0][0]();
+            
             assert(tizenApiSpy.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
 
             var getChannelListSuccesFunc = tizenApiSpy.args[0][0];
 
@@ -498,14 +511,15 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameAttemptsToTuneToChannelInChannelList = function (queue) {
-        expectAsserts(8);
+        expectAsserts(9);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
             var getChannelListStub = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
             var tuneSpy = self.sandbox.spy(tizen.tvchannel, 'tune');
-
+            
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
 
@@ -514,12 +528,15 @@
                 onSuccess: self.sandbox.stub(),
                 onError: self.sandbox.stub()
             };
-
-            broadcastSource.setChannelByName(params);
+            
+            broadcastSource.setChannelByName(params);               
+            tizenApiSpyShow.args[0][0](); 
+            
             assert(getChannelListStub.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
 
             var getChannelListSuccessFunc = getChannelListStub.args[0][0];
-
+           
             getChannelListSuccessFunc(
                 [
                     {
@@ -550,7 +567,7 @@
                 sourceID: 0,
                 transportStreamID: 3
             };
-
+            
             assertEquals(expectedTuneChannelObj, tuneSpy.args[0][0]);
             assertObject(tuneSpy.args[0][1]);
             assertFunction(tuneSpy.args[0][1].onsuccess);
@@ -561,13 +578,14 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameCallsOnErrorIfTuneThrowsException = function (queue) {
-        expectAsserts(5);
+        expectAsserts(6);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var getChannelListStub = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
             var tuneStub = self.sandbox.stub(tizen.tvchannel, 'tune').throwsException('Incorrect!');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -578,8 +596,11 @@
                 onError: self.sandbox.stub()
             };
 
-            broadcastSource.setChannelByName(params);
+            broadcastSource.setChannelByName(params);          
+            tizenApiSpyShow.args[0][0]();
+            
             assert(getChannelListStub.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
 
             var getChannelListSuccessFunc = getChannelListStub.args[0][0];
 
@@ -610,13 +631,14 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameCallsOnErrorIfTuneErrors = function (queue) {
-        expectAsserts(5);
+        expectAsserts(6);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var getChannelListStub = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
             var tuneSpy = self.sandbox.spy(tizen.tvchannel, 'tune');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -628,7 +650,10 @@
             };
 
             broadcastSource.setChannelByName(params);
+            tizenApiSpyShow.args[0][0]();
+            
             assert(getChannelListStub.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
 
             var getChannelListSuccessFunc = getChannelListStub.args[0][0];
 
@@ -664,13 +689,14 @@
     };
 
     this.tizentvSource.prototype.testSetChannelByNameCallsOnSuccessIfTuneSucceeds = function (queue) {
-        expectAsserts(4);
+        expectAsserts(5);
 
         var self = this;
         var config = getGenericTizenTVConfig();
         queuedApplicationInit(queue, 'lib/mockapplication', [], function (application) {
             var getChannelListStub = self.sandbox.spy(tizen.tvchannel, 'getChannelList');
             var tuneSpy = self.sandbox.spy(tizen.tvchannel, 'tune');
+            var tizenApiSpyShow = self.sandbox.spy(tizen.tvwindow, 'show');
 
             var device = application.getDevice();
             var broadcastSource = device.createBroadcastSource();
@@ -682,7 +708,10 @@
             };
 
             broadcastSource.setChannelByName(params);
+            tizenApiSpyShow.args[0][0]();
+            
             assert(getChannelListStub.calledOnce);
+            assertTrue('Native Tizen show function called', tizenApiSpyShow.calledOnce);
 
             var getChannelListSuccessFunc = getChannelListStub.args[0][0];
 
