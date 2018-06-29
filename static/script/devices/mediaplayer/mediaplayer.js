@@ -137,10 +137,10 @@ define(
              * @param {antie.devices.mediaplayer.MediaPlayer.TYPE} mediaType Value from the MediaPlayer.TYPE enum; audio or video.
              * @param {String} url location of the media resource to play
              * @param {String} mimeType type of media resource
-             * @param {Element} videoContainer DOM element to render video in 
+             * @param {Element} sourceContainer DOM element to render source in 
              * @param {Boolean} opts.disableSentinels disables sentinels if modifier would normally have them
              */
-            setSource: function setSource (/*mediaType, url, mimeType, videoContainer, opts*/) {
+            setSource: function setSource (/*mediaType, url, mimeType, sourceContainer, opts*/) {
                 throw new Error('setSource method has not been implemented');
             },
 

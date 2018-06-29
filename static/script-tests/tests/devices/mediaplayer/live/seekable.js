@@ -14,7 +14,7 @@
         this.sandbox.restore();
     };
 
-    var videoContainer = document.createElement('div');
+    var sourceContainer = document.createElement('div');
 
     var config = {
         'modules': {'base': 'antie/devices/browserdevice', 'modifiers': ['antie/devices/mediaplayer/html5']},
@@ -252,16 +252,16 @@
 
             this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '', videoContainer);
+            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '', sourceContainer);
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '', videoContainer);
+            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '', sourceContainer);
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '', videoContainer);
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '', sourceContainer);
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', '', videoContainer);
+            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', '', sourceContainer);
             assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
         }, config);
     };

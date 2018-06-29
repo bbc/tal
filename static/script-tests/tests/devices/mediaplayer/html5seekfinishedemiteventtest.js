@@ -6,7 +6,7 @@
 (function() {
     this.HTML5SeekFinishedEmitEventTests = AsyncTestCase('HTML5SeekFinishedEmitEvent');
 
-    var videoContainer = document.createElement('div');
+    var sourceContainer = document.createElement('div');
 
     var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5seekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
     var configWithRestartTimeout = {'restartTimeout':10000, 'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5seekfinishedemitevent']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
@@ -38,7 +38,7 @@
     // ---------------
 
     var getToPlaying = function(self, MediaPlayer) {
-        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', videoContainer);
+        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
         self._mediaPlayer.beginPlaybackFrom(0);
         self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
         self.deviceMockingHooks.finishBuffering(self._mediaPlayer);

@@ -7,7 +7,7 @@
     this.HTML5UntypedMediaPlayerTests = AsyncTestCase('HTML5UntypedMediaPlayer');
 
     var config = {'modules':{'base':'antie/devices/browserdevice','modifiers':['antie/devices/mediaplayer/html5untyped']}, 'input':{'map':{}},'layouts':[{'width':960,'height':540,'module':'fixtures/layouts/default','classes':['browserdevice540p']}],'deviceConfigurationKey':'devices-html5-1'};
-    var videoContainer = document.createElement('div');
+    var sourceContainer = document.createElement('div');
 
     // ---------------
     // Mix in the base HTML5 tests to make sure the sub-modifier doesn't break basic functionality
@@ -27,7 +27,7 @@
         var self = this;
         this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
             assertEquals(0, self.stubCreateElementResults.video.children.length);
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', videoContainer);
+            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
             assertEquals(1, self.stubCreateElementResults.video.children.length);
             var childElement = self.stubCreateElementResults.video.firstChild;
             assertEquals('source', childElement.nodeName.toLowerCase());

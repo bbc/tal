@@ -55,14 +55,14 @@ define(
                 this._determineTimeSpentBuffering();
             },
 
-            setSource: function setSource (mediaType, sourceUrl, mimeType, videoContainer, opts) {
+            setSource: function setSource (mediaType, sourceUrl, mimeType, sourceContainer, opts) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
                     mediaType = MediaPlayer.TYPE.LIVE_VIDEO;
                 }
 
-                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType, videoContainer, opts);
+                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType, sourceContainer, opts);
             },
 
             pause: function pause (opts) {
