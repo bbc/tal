@@ -1,6 +1,6 @@
 @startuml
 [*] --> EMPTY
-EMPTY --> STOPPED : setSource()
+EMPTY --> STOPPED : initialiseMedia()
 STOPPED --> EMPTY : reset()
 STOPPED --> BUFFERING : beginPlaybackFrom()
 STOPPED --> BUFFERING : beginPlayback()
