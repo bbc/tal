@@ -175,7 +175,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -192,7 +192,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -209,7 +209,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -228,7 +228,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -247,7 +247,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -264,7 +264,7 @@
         expectAsserts(7);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -288,7 +288,7 @@
         expectAsserts(7);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -312,7 +312,7 @@
         expectAsserts(6);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -334,7 +334,7 @@
     this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsGetLiveDurationUpdateOnCurrentTimeGreaterThanEndRangeTolerance = function (queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 100 * 1000);
@@ -355,7 +355,7 @@
     this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsGetLiveDurationUpdateOnCurrentTimeLowerThanStartRangeTolerance = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -381,7 +381,7 @@
     this.SamsungStreaming2015MediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetLiveDuration = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 

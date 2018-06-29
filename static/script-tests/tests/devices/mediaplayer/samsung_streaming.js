@@ -171,13 +171,13 @@
         CURRENT_PLAYBACK_TIME : 14
     };
 
-    this.SamsungStreamingMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringSetSource = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsAddedDuringInitialiseMedia = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             assertUndefined('Expecting playerPlaugin.OnEvent to be undefined', playerPlugin.OnEvent);
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction('Expecting playerPlaugin.OnEvent to be function', playerPlugin.OnEvent);
         });
@@ -187,7 +187,7 @@
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction('Expecting playerPlaugin.OnEvent to be function', playerPlugin.OnEvent);
 
@@ -203,7 +203,7 @@
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction('Expecting playerPlaugin.OnEvent to be function', playerPlugin.OnEvent);
 
@@ -213,13 +213,13 @@
         });
     };
 
-    this.SamsungStreamingMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringSetSource = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testSamsungMapleListenerFunctionsReferencedOnObjectDuringInitialiseMedia = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
             assertUndefined(playerPlugin['OnEvent']);
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction(playerPlugin['OnEvent']);
         });
@@ -229,7 +229,7 @@
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction(playerPlugin['OnEvent']);
 
@@ -246,7 +246,7 @@
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             assertFunction(playerPlugin['OnEvent']);
 
@@ -264,7 +264,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -281,7 +281,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|COMPONENT=HLS'));
@@ -298,7 +298,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
@@ -314,7 +314,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
@@ -331,7 +331,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
@@ -350,7 +350,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
@@ -369,7 +369,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             assert(playerPlugin.Open.calledWith('StreamingPlayer', '1.0', 'StreamingPlayer'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL|HLSSLIDING|COMPONENT=HLS'));
@@ -386,7 +386,7 @@
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -417,7 +417,7 @@
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -448,7 +448,7 @@
         expectAsserts(6);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -470,7 +470,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateOnCurrentTimeGreaterThanEndRangeTolerance = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 100, { start: 0, end: 100 });
             playerPlugin.OnEvent(listenerEventCodes.CURRENT_PLAYBACK_TIME, 100 * 1000);
@@ -496,7 +496,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsGetPlayingRangeUpdateOnCurrentTimeLowerThanStartRangeTolerance = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -522,7 +522,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testHlsVodGetDurationUsedInsteadOfGetPlayingRange = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
 
@@ -533,22 +533,22 @@
     };
     /*HLS specific tests END*/
 
-    this.SamsungStreamingMediaPlayerTests.prototype.testSetSourceInitPlayerFailsReturningZero = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testinitialiseMediaInitPlayerFailsReturningZero = function(queue) {
         var initPlayerReturnCode = 0;
-        doTestSetSourceInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
+        doTestinitialiseMediaInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
     };
 
-    this.SamsungStreamingMediaPlayerTests.prototype.testSetSourceInitPlayerFailsReturningMinusOne = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testinitialiseMediaInitPlayerFailsReturningMinusOne = function(queue) {
         var initPlayerReturnCode = -1;
-        doTestSetSourceInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
+        doTestinitialiseMediaInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
     };
 
-    this.SamsungStreamingMediaPlayerTests.prototype.testSetSourceInitPlayerFailsReturningFalse = function(queue) {
+    this.SamsungStreamingMediaPlayerTests.prototype.testinitialiseMediaInitPlayerFailsReturningFalse = function(queue) {
         var initPlayerReturnCode = false;
-        doTestSetSourceInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
+        doTestinitialiseMediaInitPlayerFailsStartPlybackNotCalled(this, queue, initPlayerReturnCode);
     };
 
-    var doTestSetSourceInitPlayerFailsStartPlybackNotCalled = function(self, queue, initPlayerReturnCode) {
+    var doTestinitialiseMediaInitPlayerFailsStartPlybackNotCalled = function(self, queue, initPlayerReturnCode) {
         expectAsserts(5);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
             var eventHandler = self.sandbox.stub();
@@ -556,7 +556,7 @@
             playerPlugin._methods.InitPlayer.returns(initPlayerReturnCode);
 
             try {
-                self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+                self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
                 self._mediaPlayer.beginPlayback();
             } catch (e) {}
 
@@ -574,7 +574,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
@@ -592,7 +592,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
@@ -607,7 +607,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testBeginPlaybackFromSetsCurrentTimeAndCallsPlayOnMediaElementWhenInStoppedState = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.beginPlaybackFrom(10);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 100 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -625,7 +625,7 @@
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
             assert(playerPlugin._methods.InitPlayer.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assert(playerPlugin.Open.calledWith('Player', '1.010', 'Player'));
             assert(playerPlugin.Open.calledOnce);
             assert(playerPlugin._methods.InitPlayer.calledWith('testURL'));
@@ -643,7 +643,7 @@
         // http://www.samsungdforum.com/Guide/tec00118/index.html
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -663,7 +663,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testJumpOnDeviceWhenPlayFromCalledInInitialBufferingState = function(queue) {
         expectAsserts(10);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
 
             assert(playerPlugin._methods.InitPlayer.calledOnce);
@@ -693,7 +693,7 @@
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.beginPlaybackFrom(0);
             assertEquals(MediaPlayer.STATE.BUFFERING, this._mediaPlayer.getState());
             var numEvents = eventHandler.callCount;
@@ -729,7 +729,7 @@
     var doTestPlayFromNearCurrentTimeInPlayingStateBuffersThenPlays = function(self, queue, initialTimeMs, targetTimeSecs) {
         expectAsserts(3);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -749,7 +749,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPlayingBuffersAndSeeks = function(queue) {
         expectAsserts(10);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -777,7 +777,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPlayingBuffersAndSeeks = function(queue) {
         expectAsserts(11);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -803,7 +803,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPlayingThenPlayFromWhileBufferingSeeksAndPlays = function(queue) {
         expectAsserts(14);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -840,7 +840,7 @@
     var doTestPlayFromNearCurrentTimeWhenPausedBuffersThenPlays = function(self, queue, initialTimeMs, targetTimeSecs) {
         expectAsserts(5);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -882,7 +882,7 @@
         expectAsserts(10);
         var self = this;
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -911,7 +911,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromDifferentTimeWhenPausedResumesAfterJump = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -930,7 +930,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromEarlierTimeWhenPausedBuffersAndSeeks = function(queue) {
         expectAsserts(11);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(50);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 50, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -959,7 +959,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testResumeWhenPausedCallsResume = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -977,7 +977,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPauseCallsPauseWhenPlaying = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -994,7 +994,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testStopCallsStopWhenPlaying = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1011,7 +1011,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaStoppedOnTransitionToErrorState = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1038,7 +1038,7 @@
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -1056,7 +1056,7 @@
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -1074,7 +1074,7 @@
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -1092,7 +1092,7 @@
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -1110,7 +1110,7 @@
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
 
             var eventHandler = this.sandbox.stub();
             this._mediaPlayer.addEventCallback(null, eventHandler);
@@ -1127,7 +1127,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPlayingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             playerPlugin._range = { start: 0, end: 60 };
             playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
@@ -1147,7 +1147,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstMidStreamBufferingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             playerPlugin._range = { start: 0, end: 60 };
             playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
@@ -1170,7 +1170,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstInitialBufferingClampsToJustBeforeEnd = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
 
             assert(playerPlugin._methods.JumpForward.notCalled);
@@ -1193,7 +1193,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstPausedClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             playerPlugin._range = { start: 0, end: 60 };
             playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
@@ -1213,7 +1213,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromTimeGreaterThanDurationWhilstCompleteClampsToJustBeforeEnd = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             playerPlugin._range = { start: 0, end: 60 };
             playerPlugin._methods.GetDuration.returns(playerPlugin._range.end * 1000);
@@ -1232,7 +1232,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromAfterMediaCompletedCallsStopBeforeResumePlay = function(queue) {
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1254,7 +1254,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromWhileAtNonZeroTimeGCausesRelativeJump = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1274,7 +1274,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testStatusMessageIncludesUpdatedTime = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1300,7 +1300,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenDeviceIsAbleToPauseAfterBuffering = function(queue) {
         expectAsserts(2);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
 
@@ -1315,7 +1315,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsRemainsInBufferingStateWhenDeviceIsUnableToPauseAfterBuffering = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
 
@@ -1345,7 +1345,7 @@
     var doTestPausingBeforeMetaDataLoadsResultsInSecondAttemptToPauseAfterBufferingWhenInitialPauseFails = function(self, queue, pauseReturnCode) {
         expectAsserts(2);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             self._mediaPlayer.pause();
 
@@ -1363,7 +1363,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsThenResumingWhileAttemptingToPauseResultsInPlayingState = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
 
@@ -1382,7 +1382,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPausingBeforeMetaDataLoadsResultsInPausedStateWhenPausedAfterMultipleAttempts = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
 
@@ -1406,7 +1406,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testStatusEventsOnlyEmittedInPlayingState = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
@@ -1424,7 +1424,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromWhilePlayingBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(30);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1446,7 +1446,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromWhilePausedBeforeFirstStatusEventDefersJumpAndJumpsByCorrectAmount = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(30);
             this._mediaPlayer.pause();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
@@ -1473,7 +1473,7 @@
 
             var addStub = this.sandbox.stub(window, 'addEventListener');
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlayback();
 
             var filtered = addStub.withArgs('hide', sinon.match.func, false);
@@ -1494,7 +1494,7 @@
 
             var addStub = this.sandbox.stub(window, 'addEventListener');
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlayback();
 
             var filtered = addStub.withArgs('unload', sinon.match.func, false);
@@ -1512,7 +1512,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaPlayerIgnorePeriodicRenderingCompleteEventInCompleteState = function (queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlayback();
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1539,14 +1539,14 @@
         expectAsserts(6);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             assert(playerPlugin.Open.calledOnce);
 
             assert(playerPlugin.Close.notCalled);
             this._mediaPlayer.reset();
             assert(playerPlugin.Close.calledOnce);
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             assert(playerPlugin.Close.calledOnce);
             assert(playerPlugin.Open.calledTwice);
         });
@@ -1556,7 +1556,7 @@
         expectAsserts(7);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
             assert(playerPlugin.Open.notCalled);
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlayback();
             assert(playerPlugin.Open.calledOnce);
 
@@ -1578,7 +1578,7 @@
             var addStub = this.sandbox.stub(window, 'addEventListener');
             var removeStub = this.sandbox.stub(window, 'removeEventListener');
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
 
             var filteredAdd = addStub.withArgs('hide', sinon.match.func, false);
             assert(filteredAdd.calledOnce);
@@ -1602,7 +1602,7 @@
             var addStub = this.sandbox.stub(window, 'addEventListener');
             var removeStub = this.sandbox.stub(window, 'removeEventListener');
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
 
             var filteredAdd = addStub.withArgs('unload', sinon.match.func, false);
             assert(filteredAdd.calledOnce);
@@ -1622,7 +1622,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testCurrentTimeIsUpdatedByOnCurrentPlayTimeEvents = function(queue) {
         expectAsserts(4);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1643,7 +1643,7 @@
 
     this.SamsungStreamingMediaPlayerTests.prototype.testRangeIsUpdatedByBufferingCompleteEvents = function(queue) {
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             playerPlugin._methods.GetPlayingRange.returns('0-60');
             playerPlugin._methods.GetDuration.returns(60 * 1000);
@@ -1673,7 +1673,7 @@
     var doTestFailedJumpWhilePlayingReturnsToPlayingState = function(self, queue, jumpReturnCode) {
         expectAsserts(5);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -1712,7 +1712,7 @@
     var doTestFailedJumpWhilePausedReturnsToPlayingState = function(self, queue, jumpReturnCode) {
         expectAsserts(5);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -1737,7 +1737,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testFailedDeferredJumpRemainsInBufferingState = function(queue) {
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.playFrom(30);
 
@@ -1761,7 +1761,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testFailedDeferredJumpResultsInRepeatedAttemptsToJumpUntilSuccess = function(queue) {
         expectAsserts(8);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.playFrom(30);
 
@@ -1797,7 +1797,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testDeferredJumpsDoNotReenterBufferingState = function(queue) {
         expectAsserts(3);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.playFrom(30);
 
@@ -1837,7 +1837,7 @@
     var doTestDeferredSeekIsCancelledWhenTargetIsNearCurrentTime = function(self, queue, targetTime) {
         expectAsserts(4);
         runMediaPlayerTest(self, queue, function(MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             self._mediaPlayer.beginPlaybackFrom(30);
 
             assertEquals(MediaPlayer.STATE.BUFFERING, self._mediaPlayer.getState());
@@ -1863,7 +1863,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testPlayFromAndPauseBeforeMetaDataLoadsResultsInSeekFirstThenPauseWithCurrentTime = function(queue) {
         expectAsserts(5);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.playFrom(30);
             this._mediaPlayer.pause();
@@ -1887,7 +1887,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testDeferredSeekDoesNotPersistAfterReset = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1897,7 +1897,7 @@
             this._mediaPlayer.stop();
             this._mediaPlayer.reset();
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1911,7 +1911,7 @@
         expectAsserts(2);
         playerPlugin._methods.Pause.returns(0);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             this._mediaPlayer.pause();
 
@@ -1923,7 +1923,7 @@
             this._mediaPlayer.stop();
             this._mediaPlayer.reset();
 
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testUrl', 'testMimeType');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 30, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1937,7 +1937,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppended = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'test/url', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'test/url', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1948,7 +1948,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsFragmentAppendedWithXMpegUrl = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'test/url', 'application/x-mpegURL');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'test/url', 'application/x-mpegURL');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1959,7 +1959,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsLiveFragmentAppended = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'test/url', 'application/vnd.apple.mpegurl');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'test/url', 'application/vnd.apple.mpegurl');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1970,7 +1970,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testMediaUrlGetsSpecialHlsLiveFragmentAppendedWithXMpegUrl = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, 'test/url', 'application/x-mpegURL');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, 'test/url', 'application/x-mpegURL');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1981,7 +1981,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testGetSourceDoesNotHaveSpecialHlsFragmentAppended = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function(MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'test/url', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'test/url', 'video/mp4');
             this._mediaPlayer.beginPlaybackFrom(0);
             deviceMockingHooks.sendMetadata(this._mediaPlayer, 0, { start: 0, end: 60 });
             deviceMockingHooks.finishBuffering(this._mediaPlayer);
@@ -1992,7 +1992,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testCallingStopFromStoppedStateDoesNotCallDeviceStop = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4');
             playerPlugin._methods.Stop.reset();
 
             this._mediaPlayer.stop();
@@ -2003,7 +2003,7 @@
     this.SamsungStreamingMediaPlayerTests.prototype.testGetPlayerElement = function(queue) {
         expectAsserts(1);
         runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
+            this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'testURL', 'video/mp4');
             assertEquals(playerPlugin, this._mediaPlayer.getPlayerElement());
         });
     };

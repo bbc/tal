@@ -38,7 +38,7 @@
     // ---------------
 
     var getToPlaying = function(self, MediaPlayer) {
-        self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
+        self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
         self._mediaPlayer.beginPlaybackFrom(0);
         self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
         self.deviceMockingHooks.finishBuffering(self._mediaPlayer);

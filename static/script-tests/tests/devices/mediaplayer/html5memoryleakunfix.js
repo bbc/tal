@@ -27,7 +27,7 @@
         expectAsserts(2);
         var self = this;
         this.runMediaPlayerTest(this, queue, function (MediaPlayer) {
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
             self.stubCreateElementResults.video.load.reset();
             self.sandbox.stub(self.stubCreateElementResults.video, 'removeAttribute');
 

@@ -18,8 +18,8 @@ define(
         'use strict';
 
         return function (OverrideClass) {
-            var oldSetSource = OverrideClass.prototype.setSource;
-            OverrideClass.prototype.setSource = function (mediaType, url, mimeType, sourceContainer, opts) {
+            var oldInitialiseMedia = OverrideClass.prototype.initialiseMedia;
+            OverrideClass.prototype.initialiseMedia = function (mediaType, url, mimeType, sourceContainer, opts) {
                 this._count = 0;
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._emitEvent(MediaPlayer.EVENT.SEEK_ATTEMPTED);
@@ -37,7 +37,7 @@ define(
                 } else {
                     this._timeoutHappened = true;
                 }
-                oldSetSource.call(this, mediaType, url, mimeType, sourceContainer, opts);
+                oldInitialiseMedia.call(this, mediaType, url, mimeType, sourceContainer, opts);
             };
 
             var oldOnStatus = OverrideClass.prototype._onStatus;

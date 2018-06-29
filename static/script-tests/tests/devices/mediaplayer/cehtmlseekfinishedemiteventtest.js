@@ -43,7 +43,7 @@
             var eventHandler = self.sandbox.stub();
             self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
             self._mediaPlayer.beginPlaybackFrom(1000);
             self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -68,7 +68,7 @@
             var eventHandler = self.sandbox.stub();
             self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
             self._mediaPlayer.beginPlaybackFrom(1000);
             self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             self.deviceMockingHooks.finishBuffering(self._mediaPlayer);
@@ -97,7 +97,7 @@
             var eventHandler = self.sandbox.stub();
             self._mediaPlayer.addEventCallback(null, eventHandler);
 
-            self._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
+            self._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, 'http://testurl/', 'video/mp4', sourceContainer);
             self._mediaPlayer.beginPlaybackFrom(1000);
             self.deviceMockingHooks.sendMetadata(self._mediaPlayer, 0, { start: 0, end: 100 });
             self.deviceMockingHooks.finishBuffering(self._mediaPlayer);

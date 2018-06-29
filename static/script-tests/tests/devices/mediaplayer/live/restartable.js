@@ -54,7 +54,7 @@
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerBeginPlaybackFromCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('beginPlaybackFrom', 1);
 
-    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerSetSourceCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('setSource', 5);
+    this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerInitialiseMediaCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('initialiseMedia', 5);
 
     this.LivePlayerSupportLevelRestartableTest.prototype.testLivePlayerStopCallsFunctionInMediaPlayer = testFunctionsInLivePlayerCallMediaPlayerFunctions('stop', 0);
 
@@ -131,19 +131,19 @@
             var device = new Device(antie.framework.deviceConfiguration);
             var livePlayer = device.getLivePlayer();
 
-            this.sandbox.stub(livePlayer._mediaPlayer, 'setSource');
+            this.sandbox.stub(livePlayer._mediaPlayer, 'initialiseMedia');
 
-            livePlayer.setSource(MediaPlayer.TYPE.VIDEO, '', '', sourceContainer);
-            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
+            livePlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, '', '', sourceContainer);
+            assert(livePlayer._mediaPlayer.initialiseMedia.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.AUDIO, '', '', sourceContainer);
-            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
+            livePlayer.initialiseMedia(MediaPlayer.TYPE.AUDIO, '', '', sourceContainer);
+            assert(livePlayer._mediaPlayer.initialiseMedia.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_VIDEO, '', '', sourceContainer);
-            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
+            livePlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_VIDEO, '', '', sourceContainer);
+            assert(livePlayer._mediaPlayer.initialiseMedia.calledWith(MediaPlayer.TYPE.LIVE_VIDEO));
 
-            livePlayer.setSource(MediaPlayer.TYPE.LIVE_AUDIO, '', ''), sourceContainer;
-            assert(livePlayer._mediaPlayer.setSource.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
+            livePlayer.initialiseMedia(MediaPlayer.TYPE.LIVE_AUDIO, '', '', sourceContainer);
+            assert(livePlayer._mediaPlayer.initialiseMedia.calledWith(MediaPlayer.TYPE.LIVE_AUDIO));
         }, config);
     };
 
