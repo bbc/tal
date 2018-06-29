@@ -276,8 +276,8 @@
         };
     };
 
-    this.MediaPlayerTest.prototype.testMediaPlayerSetSourceThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
-        mediaPlayer.setSource('url', 'mime');
+    this.MediaPlayerTest.prototype.testMediaPlayerInitialiseMediaThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {
+        mediaPlayer.initialiseMedia('url', 'mime');
     });
 
     this.MediaPlayerTest.prototype.testMediaPlayerPlayFromThrowsAnExceptionWhenNotOverridden = testThatMediaPlayerFunctionThrowsError(function(mediaPlayer) {

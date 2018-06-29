@@ -132,20 +132,21 @@ define(
             },
 
             /**
-             * Set the media resource to be played.
+             * Intialise the media resource to be played.
              * Calling this in any state other than EMPTY is an error.
              * @param {antie.devices.mediaplayer.MediaPlayer.TYPE} mediaType Value from the MediaPlayer.TYPE enum; audio or video.
              * @param {String} url location of the media resource to play
              * @param {String} mimeType type of media resource
+             * @param {Element} sourceContainer DOM element to render source in 
              * @param {Boolean} opts.disableSentinels disables sentinels if modifier would normally have them
              */
-            setSource: function setSource (/*mediaType, url, mimeType, opts*/) {
-                throw new Error('setSource method has not been implemented');
+            initialiseMedia: function initialiseMedia (/*mediaType, url, mimeType, sourceContainer, opts*/) {
+                throw new Error('initialiseMedia method has not been implemented');
             },
 
             /**
              * Request that the media seeks to and starts playing from Time.
-             * A media source must have been set with setSource before calling this.
+             * A media source must have been intialised with initialiseMedia before calling this.
              * This may transition to the buffering state if enough media data is not yet available to play.
              * If the media is buffering, call this to resume playback in a playing state once buffering ends.
              * Calling this in state EMPTY or STOPPED is an error.
@@ -171,7 +172,7 @@ define(
 
             /**
              * Begin playback of the media resource from Time.
-             * A media source must have been set with setSource before calling this.
+             * A media source must have been initialised with initialiseMedia before calling this.
              * This can be used to resume media after changing source.
              * This function can only be called from the STOPPED state; calling it from any other state is an error.
              * Clamps the time to the seekable range of the media.

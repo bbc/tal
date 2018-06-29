@@ -39,7 +39,7 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function setSource (mediaType, url, mimeType) {
+            initialiseMedia: function initialiseMedia (mediaType, url, mimeType) {
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._type = mediaType;
                     this._source = url;

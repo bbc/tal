@@ -35,7 +35,7 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function setSource (mediaType, url, mimeType, opts) {
+            initialiseMedia: function initialiseMedia (mediaType, url, mimeType, sourceContainer, opts) {
                 opts = opts || {};
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
                     this._disableSentinels = opts.disableSentinels;
@@ -96,8 +96,7 @@ define(
                     this._mediaElement.addEventListener('loadedmetadata', this._wrapOnMetadata, false);
                     this._mediaElement.addEventListener('pause', this._wrapOnPause, false);
 
-                    var appElement = RuntimeContext.getCurrentApplication().getRootWidget().outputElement;
-                    device.prependChildElement(appElement, this._mediaElement);
+                    device.prependChildElement(sourceContainer, this._mediaElement);
 
                     this._sourceElement = this._generateSourceElement(url, mimeType);
                     this._sourceElement.addEventListener('error', this._wrapOnSourceError, false);
