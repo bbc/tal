@@ -64,7 +64,7 @@ The playback state can be accessed using `getState()`.
 
 #### In state `EMPTY`
 * On entry to state: clear source url
-* Call `setSource(url)` : store the url and transition to `STOPPED`
+* Call `initialiseMedia(url)` : store the url and transition to `STOPPED`
 * Call `playFrom(), beginPlayback(), beginPlaybackFrom(), pause(), resume() or stop()`: transition to `ERROR`
 
 #### In state `STOPPED`
@@ -72,7 +72,7 @@ The playback state can be accessed using `getState()`.
 * Call `beginPlaybackFrom(time)` : request playback from 'time' (clamped to the available range), transition to `BUFFERING`
 * Call `reset()` : transition to `EMPTY`
 * Call `beginPlayback()` : begin playback from wherever the device can (could be anywhere for Live, usually media start for VOD), transition to `BUFFERING`
-* Call `setSource(), playFrom() pause(), resume() or stop()`: transition to `ERROR`
+* Call `initialiseMedia(), playFrom() pause(), resume() or stop()`: transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `STOPPED`
 
 #### In state `BUFFERING`
@@ -81,7 +81,7 @@ The playback state can be accessed using `getState()`.
 * Call `stop()` : transition to `STOPPED`
 * Call `pause()` : When buffering is complete, remember to pause playback and transition to `PAUSED` when sufficient data is available
 * Call `resume()` : When buffering is complete, remember to resume playback and transition to `PLAYING` when sufficient data is available
-* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource()`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or initialiseMedia()`: transition to `ERROR`
 * If sufficient data is available for playback, transition to either `PLAYING` or `PAUSED` as required
 * If the implementation can determine the duration before it's ready to play, then it should fire event type `MediaPlayer.EVENT.STATUS`
 
@@ -91,7 +91,7 @@ The playback state can be accessed using `getState()`.
 * Call `playFrom(time)` : seek to time (clamped to the available range) and transition to BUFFERING
 * Call `stop()` : transition to `STOPPED`
 * Call `resume()` : do nothing
-* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or initialiseMedia()`: transition to `ERROR`
 * At regular intervals (< 1s): fire `MediaPlayer.EVENT.STATUS`
 * On media completion: transition to `COMPLETE`
 * If buffering starts, transition to `BUFFERING`
@@ -102,13 +102,13 @@ The playback state can be accessed using `getState()`.
 * Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
 * Call `stop()` : transition to `STOPPED`
 * Call `pause()` : do nothing
-* Call `beginPlayback(), beginPlaybackFrom(), reset() or setSource()`: transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset() or initialiseMedia()`: transition to `ERROR`
 
 #### In state `COMPLETE`
 * On entry to state: fire event type `MediaPlayer.EVENT.COMPLETE`
 * Call `stop()` : transition to `STOPPED`
 * Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
-* Call `beginPlayback(), beginPlaybackFrom(), reset(), setSource(), pause() or resume()` : transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset(), intialiseMedia(), pause() or resume()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `COMPLETE`
 
 #### In state `ERROR`
@@ -117,23 +117,23 @@ The playback state can be accessed using `getState()`.
 * Call `setSource(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
-## Setting the media (audio or video) source
+## Initalising the media (audio or video)
 
-To set the source of the media, the MediaPlayer must be in the `EMPTY` state.
-You can set the media source by using the `setSource()` method.
-It takes a mediaType (`MediaPlayer.TYPE.VIDEO` or `MediaPlayer.TYPE.AUDIO`), a url and the mimeType of the file.
+To initialise the media, the MediaPlayer must be in the `EMPTY` state.
+You initialise the media by using the `initialiseMedia()` method.
+It takes a mediaType (`MediaPlayer.TYPE.VIDEO` or `MediaPlayer.TYPE.AUDIO`), a url, the mimeType of the file and a DOM element to render the media into.
 
 For example, to load a video:
 
 {% highlight javascript %}
-this._mediaPlayer.setSource(MediaPlayer.TYPE.VIDEO, "http://example.com/video.mp4","video/mp4");
+this._mediaPlayer.initialise(MediaPlayer.TYPE.VIDEO, "http://example.com/video.mp4","video/mp4", sourceContainer);
 {% endhighlight %}
 
-If setting the source is successful, the playback state will change to `STOPPED` and an event will be emitted of type `MediaPlayer.EVENT.STOPPED`.
+If initialising the media is successful, the playback state will change to `STOPPED` and an event will be emitted of type `MediaPlayer.EVENT.STOPPED`.
 
 From the `STOPPED` state, `MediaPlayer` can be used to access the properties of the media source (`getSource()`, `getMimeType()`, `getMimeType()`);
 
-To change the media source, applications must ensure the MediaPlayer is in the `STOPPED` state and call `reset()` to transition to the `EMPTY` state before calling `setSource()` with a different URL.
+To change the media source, applications must ensure the MediaPlayer is in the `STOPPED` state and call `reset()` to transition to the `EMPTY` state before calling `initialiseMedia()` with a different URL.
 
 ## Playing and seeking through media
 
