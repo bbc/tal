@@ -126,7 +126,7 @@ It takes a mediaType (`MediaPlayer.TYPE.VIDEO` or `MediaPlayer.TYPE.AUDIO`), a u
 For example, to load a video:
 
 {% highlight javascript %}
-this._mediaPlayer.initialise(MediaPlayer.TYPE.VIDEO, "http://example.com/video.mp4","video/mp4", sourceContainer);
+this._mediaPlayer.initialiseMedia(MediaPlayer.TYPE.VIDEO, "http://example.com/video.mp4", "video/mp4", sourceContainer);
 {% endhighlight %}
 
 If initialising the media is successful, the playback state will change to `STOPPED` and an event will be emitted of type `MediaPlayer.EVENT.STOPPED`.
