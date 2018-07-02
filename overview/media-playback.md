@@ -108,13 +108,13 @@ The playback state can be accessed using `getState()`.
 * On entry to state: fire event type `MediaPlayer.EVENT.COMPLETE`
 * Call `stop()` : transition to `STOPPED`
 * Call `playFrom(time)`: seek to time (clamped to the available range) and transition to `BUFFERING`
-* Call `beginPlayback(), beginPlaybackFrom(), reset(), intialiseMedia(), pause() or resume()` : transition to `ERROR`
+* Call `beginPlayback(), beginPlaybackFrom(), reset(), initialiseMedia(), pause() or resume()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `COMPLETE`
 
 #### In state `ERROR`
 * On entry to state: fire event type `MediaPlayer.EVENT.ERROR`
 * Call `reset()` : transition to `EMPTY`
-* Call `intialiseMedia(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
+* Call `initialiseMedia(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
 ## Initalising the media (audio or video)
