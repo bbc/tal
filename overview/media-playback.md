@@ -114,7 +114,7 @@ The playback state can be accessed using `getState()`.
 #### In state `ERROR`
 * On entry to state: fire event type `MediaPlayer.EVENT.ERROR`
 * Call `reset()` : transition to `EMPTY`
-* Call `setSource(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
+* Call `intialiseMedia(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
 ## Initalising the media (audio or video)
