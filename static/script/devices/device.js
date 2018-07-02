@@ -616,6 +616,9 @@ define(
              */
             loadURL: function loadURL (url, opts) {
                 var xhr = this._newXMLHttpRequest();
+                if (opts.timeout) {
+                    xhr.timeout = opts.timeout;
+                }
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
                         xhr.onreadystatechange = null;
@@ -776,6 +779,10 @@ define(
                         modifiedOpts.headers = {
                             Authorization: 'Bearer ' + opts.bearerToken
                         };
+                    }
+
+                    if (opts.timeout) {
+                        modifiedOpts.timeout = opts.timeout;
                     }
 
                     this.loadURL(url, modifiedOpts);

@@ -21,7 +21,7 @@ define(
          * Live player for devices that support restarting while playing live streams, but cannot seek within them.
          * Implements only a subset of functions in the underlying {antie.devices.mediaplayer.MediaPlayer}:
          * - beginPlayback (start playing from the live point, or wherever the device feels like)
-         * - setSource, stop, reset, getState, getSource, getMimeType, addEventCallback, removeEventCallback,
+         * - initialiseMedia, stop, reset, getState, getSource, getMimeType, addEventCallback, removeEventCallback,
          *   removeAllEventCallbacks
          * - beginPlaybackFrom (start playing from an offset)
          * - pause, resume
@@ -55,14 +55,14 @@ define(
                 this._determineTimeSpentBuffering();
             },
 
-            setSource: function setSource (mediaType, sourceUrl, mimeType) {
+            initialiseMedia: function initialiseMedia (mediaType, sourceUrl, mimeType, sourceContainer, opts) {
                 if (mediaType === MediaPlayer.TYPE.AUDIO) {
                     mediaType = MediaPlayer.TYPE.LIVE_AUDIO;
                 } else {
                     mediaType = MediaPlayer.TYPE.LIVE_VIDEO;
                 }
 
-                this._mediaPlayer.setSource(mediaType, sourceUrl, mimeType);
+                this._mediaPlayer.initialiseMedia(mediaType, sourceUrl, mimeType, sourceContainer, opts);
             },
 
             pause: function pause (opts) {

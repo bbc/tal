@@ -34,3 +34,9 @@ and [documentation](https://bbc.github.io/tal/other/contributing.html) to learn 
 ## Testing
 
 For developers who want to modify and contribute to TAL, we have a page on [testing](https://bbc.github.io/tal/testing.html) which you should follow before starting development.
+
+## Releasing (FOR MAINTAINERS)
+
+See https://confluence.dev.bbc.co.uk/display/tvpjsfrmwk/TAL+Deployment+Process+for+Cosmos.
+
+

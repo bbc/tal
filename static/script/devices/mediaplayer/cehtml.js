@@ -34,8 +34,10 @@ define(
             /**
              * @inheritDoc
              */
-            setSource: function setSource (mediaType, url, mimeType) {
+            initialiseMedia: function initialiseMedia (mediaType, url, mimeType, sourceContainer, opts) {
+                opts = opts || {};
                 if (this.getState() === MediaPlayer.STATE.EMPTY) {
+                    this._disableSentinels = opts.disableSentinels;
                     this._type = mediaType;
                     this._source = url;
                     this._mimeType = mimeType;
@@ -497,6 +499,10 @@ define(
             },
 
             _setSentinels: function _setSentinels (sentinels) {
+                if (this._disableSentinels) {
+                    return;
+                }
+
                 this._sentinelLimits.pause.currentAttemptCount = 0;
                 var self = this;
                 this._timeAtLastSenintelInterval = this.getCurrentTime();

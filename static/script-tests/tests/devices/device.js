@@ -111,6 +111,18 @@ require(
                 expect(mockXMLHttpRequest.send).toHaveBeenCalledWith('<submit>Data</submit>');
             });
 
+            it('sends xhr request with specified timeout', function() {
+                var opts = {
+                    timeout: 1000
+                };
+
+                device = new Device({'networking': { 'supportsCORS': true }});
+                spyOn(device, '_newXMLHttpRequest').and.returnValue(mockXMLHttpRequest);
+
+                device.executeCrossDomainGet('http://test.uri/', opts);
+                expect(mockXMLHttpRequest.timeout).toEqual(1000);
+            });
+
             it('uses GET if there is no opts.method', function() {
                 spyOn(XMLHttpRequest.prototype, 'open');
                 spyOn(XMLHttpRequest.prototype, 'send');
