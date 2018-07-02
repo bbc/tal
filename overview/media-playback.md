@@ -117,7 +117,7 @@ The playback state can be accessed using `getState()`.
 * Call `initialiseMedia(), beginPlayback(), beginPlaybackFrom(), pause(), resume(), stop() or playFrom()` : transition to `ERROR`
 * Device metadata/start-buffering/finish-buffering : stay in `ERROR`
 
-## Initalising the media (audio or video)
+## Initialising the media (audio or video)
 
 To initialise the media, the MediaPlayer must be in the `EMPTY` state.
 You initialise the media by using the `initialiseMedia()` method.
