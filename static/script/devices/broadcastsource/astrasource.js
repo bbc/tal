@@ -59,7 +59,7 @@ define(
             },
             _removeBroadcastVideoTag: function _removeBroadcastVideoTag() {
 
-              if(!this._videoTag) {
+              if(this._videoTag) {
                 this._videoTag.parentNode.removeChild(this._videoTag);
                 this._videoTag = null;
               }
