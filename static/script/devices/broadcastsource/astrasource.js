@@ -25,7 +25,7 @@ define(
             init: function init () {
 
                 var self = this;
-                this._videoTag = document.getElementByTag(DOM_ELEMENT_TAG)[0];
+                this._videoTag = document.getElementsByTagName(DOM_ELEMENT_TAG)[0];
 
                 // adding as instance rather then class var as module instantiated via method
                 this._playStates = {
