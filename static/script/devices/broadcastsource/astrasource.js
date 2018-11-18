@@ -24,7 +24,6 @@ define(
              */
             init: function init () {
 
-                var self = this;
                 this._videoTag = document.getElementsByTagName(DOM_ELEMENT_TAG)[0];
 
                 // adding as instance rather then class var as module instantiated via method
@@ -39,19 +38,19 @@ define(
 
             },
             _createAndSetBroadcastVideoTag: function _createAndSetVideoTag() {
-              this._videoTag = document.createElement('video');
-              this._videoTag.autoplay = "autoplay";
-              this._videoTag.style = "position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;";
-              var sourceTag = document.createElement('source');
-              sourceTag.src = "rec://srv/cur";
-              sourceTag.type = "video/x-dvb";
+                this._videoTag = document.createElement('video');
+                this._videoTag.autoplay = 'autoplay';
+                this._videoTag.style = 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;';
+                var sourceTag = document.createElement('source');
+                sourceTag.src = 'rec://srv/cur';
+                sourceTag.type = 'video/x-dvb';
 
-              this._videoTag.appendChild(sourceTag);
-              document.body.appendChild(this._videoTag);
+                this._videoTag.appendChild(sourceTag);
+                document.body.appendChild(this._videoTag);
 
-              this.playState = this._playStates.PRESENTING;
-              //emit a TunerPresentingEvent
-              RuntimeContext.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(""));
+                this.playState = this._playStates.PRESENTING;
+                //emit a TunerPresentingEvent
+                RuntimeContext.getCurrentApplication().broadcastEvent(new TunerPresentingEvent(''));
 
             },
             showCurrentChannel: function showCurrentChannel() {
@@ -59,24 +58,24 @@ define(
             },
             _removeBroadcastVideoTag: function _removeBroadcastVideoTag() {
 
-              if(this._videoTag) {
-                this._videoTag.parentNode.removeChild(this._videoTag);
-                this._videoTag = null;
-              }
+                if(this._videoTag) {
+                    this._videoTag.parentNode.removeChild(this._videoTag);
+                    this._videoTag = null;
+                }
 
-              this.playState = this._playStates.STOPPED;
-              //emit a TunerStoppedEvent
-              RuntimeContext.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
+                this.playState = this._playStates.STOPPED;
+                //emit a TunerStoppedEvent
+                RuntimeContext.getCurrentApplication().broadcastEvent(new TunerStoppedEvent());
             },
             stopCurrentChannel: function stopCurrentChannel () {
-              this._removeBroadcastVideoTag();
+                this._removeBroadcastVideoTag();
             },
             getCurrentChannelName: function getCurrentChannelName () {
-              // not available for this source yet
-              return "";
+                // not available for this source yet
+                return '';
             },
-            getChannelNameList : function (params) {
-              // not implemented/supported
+            getChannelNameList : function () {
+                // not implemented/supported
             },
             setPosition : function(top, left, width, height) {
                 this._videoTag.style.top = top + 'px';

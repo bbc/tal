@@ -18,6 +18,7 @@ define(
          */
         Device.prototype.exit = function() {
             /* Call into named 'Android' namespace to have Java handle exit. */
+            /* global Android */
             Android.nativeApplicationExit();
         };
     }
