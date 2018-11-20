@@ -272,6 +272,7 @@ define(
              * @returns Boolean true if animation was called, otherwise false
              */
             show : function(options) {
+                options = options || {};
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
@@ -291,6 +292,7 @@ define(
              * @returns Boolean true if animation was called, otherwise false
              */
             hide : function(options) {
+                options = options || {};
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
@@ -310,6 +312,7 @@ define(
              * @returns Boolean true if animation was called, otherwise false
              */
             moveTo : function(options) {
+                options = options || {};
                 if (this.outputElement) {
                     options.el = this.outputElement;
                     var device = this.getCurrentApplication().getDevice();
