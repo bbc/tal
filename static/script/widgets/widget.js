@@ -146,6 +146,13 @@ define(
                 }
             },
             /**
+             * Returns an Object of event listeners.
+             * if the widget has none it will return an empty Object
+             */
+            getWidgetEventListeners: function(){
+                return this._eventListeners;
+            },
+            /**
              * Fires an event on this object, triggering any event listeners bound to this widget only.
              * Note: this does not bubble or propagate the event to other widgets, for that functionality
              * see {@link #bubbleEvent}.
