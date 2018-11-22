@@ -39,9 +39,15 @@ define(
 
             },
             _createAndSetBroadcastVideoTag: function _createAndSetVideoTag() {
+
               this._videoTag = document.createElement('video');
               this._videoTag.autoplay = "autoplay";
-              this._videoTag.style = "position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;";
+              this._videoTag.style["position"] = "absolute";
+              this._videoTag.style["top"] = "0px";
+              this._videoTag.style["left"] = "0px";
+              this._videoTag.style["width"] = "100%";
+              this._videoTag.style["height"] = "100%";
+
               var sourceTag = document.createElement('source');
               sourceTag.src = "rec://srv/cur";
               sourceTag.type = "video/x-dvb";
