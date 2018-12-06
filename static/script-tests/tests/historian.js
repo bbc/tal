@@ -247,7 +247,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/#&*history=broadcast');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true');
                 assertFalse('hasHistory()', historian.hasHistory());
             }
         );
@@ -260,7 +260,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com&*history=broadcast');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com');
                 assert('hasHistory()', historian.hasHistory());
             }
         );
@@ -273,7 +273,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com&*history=broadcast');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com');
                 assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );
@@ -286,7 +286,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test#&*history=broadcast');
+                var historian = new Historian('http://www.test.com/test?broadcast=true');
                 assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );

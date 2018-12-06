@@ -18,9 +18,10 @@ define(
              * @constructor
              * @ignore
              */
-            init: function init (currentUrl) {
+            init: function init (currentUrl, UrlAppParams) {
                 var i;
 
+                this._urlParams = UrlAppParams;
                 this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
                 this._currentUrl = this._historyArray.shift(); // non-history portion of the URL
                 for(i = 0; i !== this._historyArray.length; i += 1) {
@@ -121,16 +122,16 @@ define(
              * @returns {Boolean} True if the history stack contains one or more valid return URLs.
              */
             hasHistory: function hasHistory () {
-                var historyMinimumLength = this.hasBroadcastOrigin() ? 2 : 1;
+                var historyMinimumLength = 1;
                 return this._historyArray.length >= historyMinimumLength;
             },
 
             /**
-             * Returns a Boolean to indicate whether the first entry in the history stack is the special 'broadcast' entry.
-             * @returns {Boolean} True if the first entry in the history stack is the special 'broadcast' entry.
+             * Returns a Boolean to indicate whether the URL contains a 'broadcast' query parameter.
+             * @returns {Boolean} True if the URL contains a 'broadcast' query parameter.
              */
             hasBroadcastOrigin: function hasBroadcastOrigin () {
-                return this._historyArray.length > 0 && this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
+                return this._urlParams.length > 0 && this._urlParams[Historian.BROADCAST_ENTRY] === true;
             }
         });
 
