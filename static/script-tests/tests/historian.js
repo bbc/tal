@@ -22,7 +22,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com/test2/');
+                historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com/test2/', {});
                 assertEquals('http://www.test2.com/test2/', historian.back());
             }
         );
@@ -36,7 +36,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/');
+                historian = new Historian('http://www.test.com/test/', {});
                 assertEquals('', historian.back());
             }
         );
@@ -50,7 +50,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com/test2/&*history=http://www.test3.com/test3/');
+                historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com/test2/&*history=http://www.test3.com/test3/', {});
                 assertEquals('http://www.test2.com/test2/#&*history=http://www.test3.com/test3/', historian.back());
             }
         );
@@ -63,7 +63,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/');
+                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/', {});
                 assertEquals('http://www.test2.com/test2/', historian.back());
             }
         );
@@ -76,7 +76,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route');
+                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route', {});
                 assertEquals('http://www.test2.com/test2/#/some/other/route', historian.back());
             }
         );
@@ -89,7 +89,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route');
+                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route', {});
                 assertEquals('http://www.test2.com/test2/#/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route', historian.back());
             }
         );
@@ -102,7 +102,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route');
+                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route', {});
                 assertEquals('http://www.example.com#&*history=http://www.test.com/test/&*route=/some/route/&*history=http://www.test2.com/test2/&*route=/some/other/route&*history=http://www.test3.com/test3/&*route=/yet/another/route', historian.forward('http://www.example.com'));
             }
         );
@@ -115,7 +115,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/');
+                historian = new Historian('http://www.test.com/test/', {});
                 assertEquals('http://www.test2.com/test2/#&*history=http://www.test.com/test/',
                              historian.forward('http://www.test2.com/test2/'));
             }
@@ -129,7 +129,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/');
+                historian = new Historian('http://www.test.com/test/', {});
                 assertEquals('http://www.test2.com/test2/#/favourites/&*history=http://www.test.com/test/',
                              historian.forward('http://www.test2.com/test2/#/favourites/'));
             }
@@ -143,7 +143,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/Experimental/');
+                historian = new Historian('http://www.test.com/test/#/Experimental/', {});
                 assertEquals('http://www.test2.com/test2/#&*history=http://www.test.com/test/&*route=/Experimental/',
                              historian.forward('http://www.test2.com/test2/'));
             }
@@ -158,7 +158,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/Experimental/');
+                historian = new Historian('http://www.test.com/test/#/Experimental/', {});
                 assertEquals('http://www.test2.com/test2/#favourites/&*history=http://www.test.com/test/&*route=/Experimental/',
                              historian.forward('http://www.test2.com/test2/#favourites/'));
             }
@@ -173,7 +173,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('');
+                historian = new Historian('', {});
                 assertEquals('http://www.test2.com/test2/#favourites/',
                              historian.forward('http://www.test2.com/test2/#favourites/'));
             }
@@ -188,7 +188,7 @@
             ],
             function(Historian) {
                 var historian;
-                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/');
+                historian = new Historian('http://www.test.com/test/#/some/route/&*history=http://www.test2.com/test2/', {});
                 assertEquals('&*history=http://www.test2.com/test2/',
                              historian.toString());
             }
@@ -204,7 +204,7 @@
             function(Historian) {
                 // url is 983 characters
                 var historian, forwardUrl;
-                historian = new Historian('http://www.111.com/test/#/some/route/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/');
+                historian = new Historian('http://www.111.com/test/#/some/route/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/&*history=http://www.999.com/test2/&*history=http://www.000.com/test2/&*history=http://www.111.com/test2/&*history=http://www.222.com/test2/&*history=http://www.333.com/test2/&*history=http://www.444.com/test2/&*history=http://www.555.com/test2/&*history=http://www.666.com/test2/&*history=http://www.777.com/test2/&*history=http://www.888.com/test2/', {});
                 // url we get back has to be under 1000 characters, despite the fact this url should take it over the edge
                 forwardUrl = historian.forward('http://www.example.com/long-url-is-long/relatively-speaking');
 
@@ -221,7 +221,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/');
+                var historian = new Historian('http://www.test.com/test/', {});
                 assertFalse('hasHistory()', historian.hasHistory());
             }
         );
@@ -234,7 +234,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com');
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com', {});
                 assert('hasHistory()', historian.hasHistory());
             }
         );
@@ -247,7 +247,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/?broadcast=true');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true', {'broadcast': 'true'});
                 assertFalse('hasHistory()', historian.hasHistory());
             }
         );
@@ -260,7 +260,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com', {'broadcast': 'true'});
                 assert('hasHistory()', historian.hasHistory());
             }
         );
@@ -273,7 +273,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com');
+                var historian = new Historian('http://www.test.com/test/?broadcast=true#&*history=http://www.test2.com', {'broadcast': 'true'});
                 assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );
@@ -286,7 +286,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test?broadcast=true');
+                var historian = new Historian('http://www.test.com/test?broadcast=true', {'broadcast': 'true'});
                 assert('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );
@@ -299,7 +299,7 @@
                 'antie/historian'
             ],
             function(Historian) {
-                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com');
+                var historian = new Historian('http://www.test.com/test/#&*history=http://www.test2.com', {'broadcast': 'false'});
                 assertFalse('hasBroadcastOrigin()', historian.hasBroadcastOrigin());
             }
         );
