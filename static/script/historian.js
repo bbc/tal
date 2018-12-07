@@ -131,7 +131,7 @@ define(
              * @returns {Boolean} True if the URL contains a 'broadcast' query parameter.
              */
             hasBroadcastOrigin: function hasBroadcastOrigin () {
-                return this._urlParams.length > 0 && this._urlParams[Historian.BROADCAST_ENTRY] === true;
+                return this._urlParams[Historian.BROADCAST_ENTRY] === 'true';
             }
         });
 

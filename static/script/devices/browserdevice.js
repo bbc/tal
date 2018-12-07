@@ -560,7 +560,7 @@ define(
              * @returns {antie.Historian} an object that can be used to get a back or forward url between applications while preserving history
              */
             getHistorian: function getHistorian () {
-                return new Historian(decodeURI(this.getWindowLocation().href), this._application.getCurrentAppURLParams());
+                return new Historian(decodeURI(this.getWindowLocation().href), this._application.getCurrentAppURLParameters());
             },
 
             /**
