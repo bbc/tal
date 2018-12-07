@@ -86,7 +86,8 @@
                 // Configure BrowserDevice.getWindowLocation() to return canned data
                 this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
                     return {
-                        href: 'http://www.test.com/?broadcast=true'
+                        href: 'http://www.test.com/?broadcast=true',
+                        search: '?broadcast=true'
                     };
                 });
 

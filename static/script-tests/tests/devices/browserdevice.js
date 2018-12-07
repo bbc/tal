@@ -866,9 +866,10 @@
     this.BrowserDeviceTest.prototype.testSetCurrentRoutePreservesHistory = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
             window.location.hash = '#test1/test2/test3&*history=http://www.sometest.com/test';
+            device.setApplication(application);
             device.setCurrentRoute(['test4', 'test5', 'test6']);
             assertEquals('&*history=http://www.sometest.com/test', device.getHistorian().toString());
         });
@@ -878,9 +879,10 @@
     this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoHistory = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
             window.location.hash = '#test1/test2/test3';
+            device.setApplication(application);
             device.setCurrentRoute(['test4', 'test5', 'test6']);
             assertEquals('#test4/test5/test6', window.location.hash);
         });
@@ -890,9 +892,10 @@
     this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteButHistory = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
             window.location.hash = '#test1/test2/test3&*history=http://www.test.com';
+            device.setApplication(application);
             device.setCurrentRoute([]);
             assertEquals('#&*history=http://www.test.com', window.location.hash);
         });
@@ -901,9 +904,10 @@
     this.BrowserDeviceTest.prototype.testSetCurrentRouteWithNoRouteOrHistory = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
             window.location.hash = '#test1/test2/test3';
+            device.setApplication(application);
             device.setCurrentRoute([]);
             assertEquals('', window.location.hash);
         });
@@ -912,16 +916,18 @@
     this.BrowserDeviceTest.prototype.testGetHistory = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(
+        queuedApplicationInit(
             queue,
+            'lib/mockapplication',
             [
                 'antie/devices/browserdevice',
                 'antie/historian'
             ],
-            function(BrowserDevice, Historian) {
+            function(application, BrowserDevice, Historian) {
                 var historySpy;
                 historySpy = this.sandbox.spy(Historian.prototype, 'init');
                 var device = new BrowserDevice(antie.framework.deviceConfiguration);
+                device.setApplication(application);
                 device._windowLocation = {
                     href: 'http://www.test0.com/blah/#test1/test2/test3&*history=http://www.test.com&*history=http://www.test2.com'
                 };
@@ -933,8 +939,9 @@
     this.BrowserDeviceTest.prototype.testSetCurrentRoute = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            device.setApplication(application);
             device.setCurrentRoute(['test4','test5','test6']);
             assertEquals('#test4/test5/test6', window.location.hash);
         });
@@ -943,8 +950,9 @@
     this.BrowserDeviceTest.prototype.testGetReferer = function(queue) {
         expectAsserts(1);
 
-        queuedRequire(queue, ['antie/devices/browserdevice'], function(BrowserDevice) {
+        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/devices/browserdevice'], function(application, BrowserDevice) {
             var device = new BrowserDevice(antie.framework.deviceConfiguration);
+            device.setApplication(application);
             var referrer = device.getReferrer();
             assertEquals(document.referrer, referrer);
         });
