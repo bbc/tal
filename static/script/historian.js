@@ -18,10 +18,9 @@ define(
              * @constructor
              * @ignore
              */
-            init: function init (currentUrl, UrlAppParams) {
+            init: function init (currentUrl) {
                 var i;
 
-                this._urlParams = UrlAppParams;
                 this._historyArray = currentUrl.split(Historian.HISTORY_TOKEN);
                 this._currentUrl = this._historyArray.shift(); // non-history portion of the URL
                 for(i = 0; i !== this._historyArray.length; i += 1) {
@@ -124,20 +123,11 @@ define(
             hasHistory: function hasHistory () {
                 var historyMinimumLength = 1;
                 return this._historyArray.length >= historyMinimumLength;
-            },
-
-            /**
-             * Returns a Boolean to indicate whether the URL contains a 'broadcast' query parameter.
-             * @returns {Boolean} True if the URL contains a 'broadcast' query parameter.
-             */
-            hasBroadcastOrigin: function hasBroadcastOrigin () {
-                return this._urlParams[Historian.BROADCAST_ENTRY] === 'true';
             }
         });
 
         Historian.HISTORY_TOKEN = '&*history=';
         Historian.ROUTE_TOKEN = '&*route=';
-        Historian.BROADCAST_ENTRY = 'broadcast';
 
         return Historian;
     }
