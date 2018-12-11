@@ -214,7 +214,7 @@
         );
     };
 
-    this.ApplicationExitTest.prototype.testHasBroadcastOriginWithNoBroadcastUrlParameterReturnsFalse = function(queue) {
+    this.ApplicationExitTest.prototype.testHasBroadcastOriginWithBroadcastUrlParameterReturnsTrue = function(queue) {
         queuedApplicationInit(
             queue,
             'lib/mockapplication',
