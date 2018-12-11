@@ -115,8 +115,7 @@ define(
     });
 
     Device.prototype.isBroadcastSourceSupported = function() {
-      // we should consider alternatives to using hash fragment
-      return this.getHistorian().hasBroadcastOrigin();
+      return RuntimeContext.getCurrentApplication().getCurrentAppURLParameters().broadcast === 'true';
     };
 
     /**

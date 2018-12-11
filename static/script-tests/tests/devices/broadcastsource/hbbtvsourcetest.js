@@ -309,32 +309,34 @@
         }, config);
     };
 
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianDoesNotHaveBroadcastOriginReturnsFalse = function(queue) {
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenUrlDoesNotHaveBroadcastParameterReturnsFalse = function(queue) {
         expectAsserts(1);
 
         var config = getGenericHBBTVConfig();
         var self = this;
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/historian'], function(application, Historian) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
 
-            self.sandbox.stub(Historian.prototype, 'hasBroadcastOrigin', function() {
-                return false;
+            self.sandbox.stub(application, 'getCurrentAppURLParameters', function() {
+                return {};
             });
 
             assertFalse(device.isBroadcastSourceSupported());
         }, config);
     };
 
-    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenHistorianHasBroadcastOriginReturnsTrue = function(queue) {
+    this.hbbtvSource.prototype.testIsBroadcastSourceSupportedWhenUrlHasBroadcastParameterReturnsTrue = function(queue) {
         expectAsserts(1);
 
         var self = this;
         var config = getGenericHBBTVConfig();
-        queuedApplicationInit(queue, 'lib/mockapplication', ['antie/historian'], function(application, Historian) {
+        queuedApplicationInit(queue, 'lib/mockapplication', [], function(application) {
             var device = application.getDevice();
 
-            self.sandbox.stub(Historian.prototype, 'hasBroadcastOrigin', function() {
-                return true;
+            self.sandbox.stub(application, 'getCurrentAppURLParameters', function() {
+                return {
+                    broadcast: 'true'
+                };
             });
 
             assertTrue(device.isBroadcastSourceSupported());
