@@ -192,4 +192,46 @@
             }
         );
     };
+
+    this.ApplicationExitTest.prototype.testHasBroadcastOriginWithNoBroadcastUrlParameterReturnsFalse = function(queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/browserdevice'
+            ],
+            function(application, BrowserDevice) {
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: 'http://www.test.com/',
+                        search: '?'
+                    };
+                });
+
+                assertFalse(application.hasBroadcastOrigin());
+            }
+        );
+    };
+
+    this.ApplicationExitTest.prototype.testHasBroadcastOriginWithNoBroadcastUrlParameterReturnsFalse = function(queue) {
+        queuedApplicationInit(
+            queue,
+            'lib/mockapplication',
+            [
+                'antie/devices/browserdevice'
+            ],
+            function(application, BrowserDevice) {
+                // Configure BrowserDevice.getWindowLocation() to return canned data
+                this.sandbox.stub(BrowserDevice.prototype, 'getWindowLocation', function() {
+                    return {
+                        href: 'http://www.test.com/?broadcast=true',
+                        search: '?broadcast=true'
+                    };
+                });
+
+                assert(application.hasBroadcastOrigin());
+            }
+        );
+    };
 }());

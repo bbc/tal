@@ -115,7 +115,7 @@ define(
     });
 
     Device.prototype.isBroadcastSourceSupported = function() {
-      return RuntimeContext.getCurrentApplication().getCurrentAppURLParameters().broadcast === 'true';
+      return RuntimeContext.getCurrentApplication().hasBroadcastOrigin();
     };
 
     /**
