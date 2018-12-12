@@ -117,7 +117,7 @@ define(
             },
 
             /**
-             * Returns a Boolean to indicate whether the history stack contains valid return URLs. This excludes the 'return to broadcast' special case.
+             * Returns a Boolean to indicate whether the history stack contains valid return URLs.
              * @returns {Boolean} True if the history stack contains one or more valid return URLs.
              */
             hasHistory: function hasHistory () {
