@@ -117,26 +117,17 @@ define(
             },
 
             /**
-             * Returns a Boolean to indicate whether the history stack contains valid return URLs. This excludes the 'return to broadcast' special case.
+             * Returns a Boolean to indicate whether the history stack contains valid return URLs.
              * @returns {Boolean} True if the history stack contains one or more valid return URLs.
              */
             hasHistory: function hasHistory () {
-                var historyMinimumLength = this.hasBroadcastOrigin() ? 2 : 1;
+                var historyMinimumLength = 1;
                 return this._historyArray.length >= historyMinimumLength;
-            },
-
-            /**
-             * Returns a Boolean to indicate whether the first entry in the history stack is the special 'broadcast' entry.
-             * @returns {Boolean} True if the first entry in the history stack is the special 'broadcast' entry.
-             */
-            hasBroadcastOrigin: function hasBroadcastOrigin () {
-                return this._historyArray.length > 0 && this._historyArray[this._historyArray.length - 1] === Historian.HISTORY_TOKEN + Historian.BROADCAST_ENTRY;
             }
         });
 
         Historian.HISTORY_TOKEN = '&*history=';
         Historian.ROUTE_TOKEN = '&*route=';
-        Historian.BROADCAST_ENTRY = 'broadcast';
 
         return Historian;
     }

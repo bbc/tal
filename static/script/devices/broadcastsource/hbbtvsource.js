@@ -270,7 +270,7 @@ define(
         });
 
         Device.prototype.isBroadcastSourceSupported = function() {
-            return this.getHistorian().hasBroadcastOrigin();
+            return RuntimeContext.getCurrentApplication().hasBroadcastOrigin();
         };
 
         /**

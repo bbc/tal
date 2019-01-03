@@ -496,12 +496,22 @@ define('antie/application',
             },
 
             /**
+             * Returns a Boolean value to indicate whether the application has a parameter in its URL indicating
+             * it was launched with broadcast trust. Use isBroadcastSourceSupported() on {@link antie.devices.Device}
+             * to see whether a broadcast API is also available for your device.
+             * @returns {Boolean} True if the URL query contains a broadcast=true entry.
+             */
+            hasBroadcastOrigin: function () {
+                return this.getCurrentAppURLParameters().broadcast === 'true';
+            },
+
+            /**
              * Exits the application by using the configured exit strategy for the device, even if there is a parent TAL
              * application in the history stack. Will exit to broadcast if the first TAL application was launched from
              * broadcast and a broadcast exit modifier is loaded.
              */
             exit: function exit () {
-                if (this.getDevice().getHistorian().hasBroadcastOrigin()) {
+                if (this.hasBroadcastOrigin()) {
                     this.getDevice().exitToBroadcast();
                 } else {
                     this.getDevice().exit();
