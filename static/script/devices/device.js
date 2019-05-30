@@ -95,6 +95,8 @@ define(
                         'VOLUME_UP': KeyEvent.VK_VOLUME_UP,
                         'VOLUME_DOWN': KeyEvent.VK_VOLUME_DOWN,
                         'MUTE': KeyEvent.VK_MUTE,
+                        'CHANNEL_UP': KeyEvent.VK_CHANNEL_UP,
+                        'CHANNEL_DOWN': KeyEvent.VK_CHANNEL_DOWN,
                         'RED' : KeyEvent.VK_RED,
                         'GREEN' : KeyEvent.VK_GREEN,
                         'YELLOW' : KeyEvent.VK_YELLOW,

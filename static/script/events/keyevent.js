@@ -164,6 +164,9 @@ define(
         KeyEvent.VK_VOLUME_DOWN = 448;
         KeyEvent.VK_MUTE = 449;
 
+        KeyEvent.VK_CHANNEL_UP = 427;
+        KeyEvent.VK_CHANNEL_DOWN = 428;
+
         return KeyEvent;
     }
 );
