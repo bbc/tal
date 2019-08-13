@@ -142,7 +142,7 @@ define(
 
                 listener = listeners.indexOf(func);
                 if (~listener) {
-                    listeners.splice(listener, 1);
+                  listeners[listener] = null;
                 }
             },
             /**
@@ -155,16 +155,21 @@ define(
             fireEvent: function fireEvent (ev) {
                 var listeners = this._eventListeners[ev.type];
                 if (listeners) {
+                  var filtered = [];
                     for (var func in listeners) {
                         if(listeners.hasOwnProperty(func)) {
                             try {
                                 listeners[func](ev);
+                                if (listeners[func]) {
+                                  filtered[func] = listeners[func]
+                                }
                             } catch (exception) {
                                 var logger = this.getCurrentApplication().getDevice().getLogger();
                                 logger.error('Error in ' + ev.type + ' event listener on widget ' + this.id + ': ' + exception.message, exception, listeners[func]);
                             }
                         }
-                    }
+                    };
+                    this._eventListeners[ev.type] = filtered
                 }
             },
             /**
