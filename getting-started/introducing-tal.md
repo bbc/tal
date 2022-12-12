@@ -7,7 +7,6 @@ title: Getting Started | Introducing TAL
 
 <p class="lead">The <em>TV Application Layer (TAL)</em> is an open source library for building applications for Connected TV devices.</p>
 
----
 ## Deprecation Announcement 12/12/2022
 
 Today we are announcing the deprecation of *TAL*. This will allow us to concentrate on future work, which
@@ -21,7 +20,8 @@ TAL will not be actively maintained.
 
 We will answer any questions found in the issues backlog as best we can. There will soon be a email address you
 can use to contact us. This readme will be updated when this becomes available. 
----
+
+## About TAL 
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
 whilst increasing the reach of BBC TV applications such as *iPlayer*. Today all of the BBC's HTML-based
