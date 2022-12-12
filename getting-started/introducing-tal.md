@@ -19,7 +19,8 @@ As part of the deprecation, pull requests will be disabled and outstanding issue
 TAL will not be actively maintained. 
 
 We will answer any questions found in the issues backlog as best we can. There will soon be a email address you
-can use to contact us. This readme will be updated when this becomes available. 
+can use to contact us. This page will be updated when this becomes available. For further information please check
+out the [repository](https://github.com/bbc/tal).
 
 ## About TAL 
 
