@@ -20,8 +20,9 @@ project. Going forward, we will provide regular updates on the future of TAL.
 As part of the deprecation, pull requests will be disabled and outstanding issues will be closed.
 TAL will not be actively maintained. 
 
-We will answer any questions found in the issues backlog as best we can. 
-There will soon be a email address you can use to contact us. This readme will be updated when this becomes available. 
+We will answer any questions found in the issues backlog as best we can. There will soon be a email address you
+can use to contact us. This readme will be updated when this becomes available. 
+
 ---
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
