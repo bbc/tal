@@ -2,8 +2,27 @@
 
 ![TAL](https://bbc.github.io/tal/img/tal-logo-bw-small.jpg)
 
+![maintenance-status](https://img.shields.io/badge/maintenance-deprecated-red.svg)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 [![Build Status](https://travis-ci.org/bbc/tal.svg?branch=master)](https://travis-ci.org/bbc/tal/branches)
 [![npm version](https://badge.fury.io/js/tal.svg)](https://badge.fury.io/js/tal)
+
+---
+## Deprecation Announcement 12/12/2022
+
+Today we are announcing the deprecation of TAL. This will allow us to concentrate on future work, which
+we hope to share details of soon.
+
+We apologise that we were not active in keeping the TAL community up to date with the status of the
+project. Going forward, we will provide regular updates on the future of TAL. 
+
+As part of the deprecation, pull requests will be disabled and outstanding issues will be closed.
+TAL will not be actively maintained. 
+
+We will answer any questions found in the issues backlog as best we can. 
+There will soon be a email address you can use to contact us. This readme will be updated when this becomes available. 
+---
 
 *TAL* was developed internally within the BBC as a way of vastly simplifying TV application development
 whilst increasing the reach of BBC TV applications such as *iPlayer*. Today all of the BBC's HTML-based
