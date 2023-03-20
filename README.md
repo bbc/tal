@@ -8,7 +8,13 @@
 [![Build Status](https://travis-ci.org/bbc/tal.svg?branch=master)](https://travis-ci.org/bbc/tal/branches)
 [![npm version](https://badge.fury.io/js/tal.svg)](https://badge.fury.io/js/tal)
 
+
 ---
+## Contact us at BBC TV Open Source 20/03/2023
+
+We have now created a mailbox where you can [contact us](mailto:tvopensource@bbc.co.uk) with any questions related to TAL or the
+future of this project. We hope to share some details of the replacement to TAL soon. 
+
 ## Deprecation Announcement 12/12/2022
 
 Today we are announcing the deprecation of *TAL*. This will allow us to concentrate on future work, which
