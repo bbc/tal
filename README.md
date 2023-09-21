@@ -13,7 +13,7 @@
 ## Contact us at BBC TV Open Source 20/03/2023
 
 We have now created a mailbox where you can [contact us](mailto:tvopensource@bbc.co.uk) with any questions related to TAL or the
-future of this project. We hope to share some details of the replacement to TAL soon. 
+future of this project. We aim to respond to emails within a week. We hope to share some details of the replacement to TAL soon.
 
 ## Deprecation Announcement 12/12/2022
 
@@ -21,13 +21,13 @@ Today we are announcing the deprecation of *TAL*. This will allow us to concentr
 we hope to share details of soon.
 
 We apologise that we were not active in keeping the TAL community up to date with the status of the
-project. Going forward, we will provide regular updates on the future of *TAL*. 
+project. Going forward, we will provide regular updates on the future of *TAL*.
 
 As part of the deprecation, pull requests will be disabled and outstanding issues will be closed.
-TAL will not be actively maintained. 
+TAL will not be actively maintained.
 
 We will answer any questions found in the issues backlog as best we can. There will soon be a email address you
-can use to contact us. This readme will be updated when this becomes available. 
+can use to contact us. This readme will be updated when this becomes available.
 
 ---
 
@@ -64,5 +64,3 @@ For developers who want to modify and contribute to TAL, we have a page on [test
 ## Releasing (FOR MAINTAINERS)
 
 See https://confluence.dev.bbc.co.uk/display/tvpjsfrmwk/TAL+Deployment+Process+for+Cosmos.
-
-
