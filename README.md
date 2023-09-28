@@ -10,6 +10,15 @@
 
 
 ---
+## TAL Replacement update 28/09/2023
+
+We are working towards an approach of modular packages focused on specific features such as playback, navigation, and device abstraction. As part of this work, we are in the process of making internal TV packages open source. Some of these have been released already including:
+
+- [Bigscreen Player](https://github.com/bbc/bigscreen-player)
+- [LRUD Spatial](https://github.com/bbc/lrud-spatial)
+- [Melanite](https://github.com/bbc/melanite)
+
+Looking further to the future, we are developing an open source demo app, including associated documentation. This will enable the wider community to understand how these packages work together to build a TV application.
 ## Contact us at BBC TV Open Source 20/03/2023
 
 We have now created a mailbox where you can [contact us](mailto:tvopensource@bbc.co.uk) with any questions related to TAL or the
