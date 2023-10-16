@@ -12,7 +12,7 @@
 ---
 ## TAL Replacement update 28/09/2023
 
-We are working towards an approach of modular packages focused on specific features such as playback, navigation, and device abstraction. As part of this work, we are in the process of making internal TV packages open source. Some of these have been released already including:
+We are working towards an approach of modular packages focused on specific features such as playback, navigation, and device abstraction. We do not intend to provide a UI framework, and these packages should work with a number of front-end frameworks. As part of this work, we are in the process of making internal TV packages open source. Some of these have been released already including:
 
 - [Bigscreen Player](https://github.com/bbc/bigscreen-player)
 - [LRUD Spatial](https://github.com/bbc/lrud-spatial)
